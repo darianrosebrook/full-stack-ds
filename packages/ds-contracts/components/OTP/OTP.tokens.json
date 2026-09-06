@@ -44,11 +44,6 @@
     "fallback": "#b8b8b8",
     "layer": "semantic"
   },
-  "otp.size.padding.default": {
-    "resolvesTo": "core.spacing.size.07",
-    "fallback": "24px",
-    "layer": "core"
-  },
   "otp.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "6px",

@@ -88,9 +88,6 @@ export class DetailsElement extends LitElement {
       --fsds-details-typography-line-height-body: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-details-typography-font-weight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-details-size-padding-compact: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-details-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-details-typography-font-size-body: var(--fsds-semantic-typography-body-03, 14px);
-      --fsds-details-typography-font-size-compact: var(--fsds-semantic-typography-body-04, 12px);
     }
 
     .details__summary:hover:not([aria-disabled="true"]) {
@@ -319,9 +316,6 @@ export class DetailsContentElement extends LitElement {
       --fsds-details-typography-line-height-body: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-details-typography-font-weight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-details-size-padding-compact: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-details-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-details-typography-font-size-body: var(--fsds-semantic-typography-body-03, 14px);
-      --fsds-details-typography-font-size-compact: var(--fsds-semantic-typography-body-04, 12px);
     }
 
     .details__summary:hover:not([aria-disabled="true"]) {

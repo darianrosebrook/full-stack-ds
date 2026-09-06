@@ -5,16 +5,6 @@ import { resolveComponentTokens, type ComponentTokenScopes, type FsdsTheme } fro
 // @generated:start tokens
 export const codeSnippetTokenScopes = {
   "root": {
-    "box-model.padding": {
-      name: "box-model.padding",
-      cssVar: "--fsds-box-model-padding",
-      literal: 0,
-    },
-    "box-model.padding-block": {
-      name: "box-model.padding-block",
-      cssVar: "--fsds-box-model-padding-block",
-      literal: 0,
-    },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
@@ -26,11 +16,6 @@ export const codeSnippetTokenScopes = {
       cssVar: "--fsds-box-model-padding-block-end",
       ref: "semantic.surface.size.padding-block",
       fallback: 16,
-    },
-    "box-model.padding-inline": {
-      name: "box-model.padding-inline",
-      cssVar: "--fsds-box-model-padding-inline",
-      literal: 0,
     },
     "box-model.padding-inline-start": {
       name: "box-model.padding-inline-start",
@@ -50,35 +35,15 @@ export const codeSnippetTokenScopes = {
       ref: "semantic.display.size.gap",
       fallback: 4,
     },
-    "box-model.width": {
-      name: "box-model.width",
-      cssVar: "--fsds-box-model-width",
-      literal: "auto",
-    },
     "box-model.min-width": {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       literal: 0,
     },
-    "box-model.max-width": {
-      name: "box-model.max-width",
-      cssVar: "--fsds-box-model-max-width",
-      literal: "none",
-    },
-    "box-model.height": {
-      name: "box-model.height",
-      cssVar: "--fsds-box-model-height",
-      literal: "auto",
-    },
     "box-model.min-height": {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       literal: 0,
-    },
-    "box-model.max-height": {
-      name: "box-model.max-height",
-      cssVar: "--fsds-box-model-max-height",
-      literal: "none",
     },
     "code-snippet.color.background.default": {
       name: "code-snippet.color.background.default",
@@ -98,18 +63,6 @@ export const codeSnippetTokenScopes = {
       ref: "semantic.color.border.subtle",
       fallback: "#d0d0d0",
     },
-    "code-snippet.size.padding.inline": {
-      name: "code-snippet.size.padding.inline",
-      cssVar: "--fsds-code-snippet-size-padding-inline",
-      ref: "core.spacing.size.02",
-      fallback: 2,
-    },
-    "code-snippet.size.padding.block": {
-      name: "code-snippet.size.padding.block",
-      cssVar: "--fsds-code-snippet-size-padding-block",
-      ref: "core.spacing.size.01",
-      fallback: 1,
-    },
     "code-snippet.size.radius.default": {
       name: "code-snippet.size.radius.default",
       cssVar: "--fsds-code-snippet-size-radius-default",
@@ -127,18 +80,6 @@ export const codeSnippetTokenScopes = {
       cssVar: "--fsds-code-snippet-size-font-size-default",
       ref: "core.typography.ramp.3",
       fallback: 14,
-    },
-    "code-snippet.typography.lineHeight.default": {
-      name: "code-snippet.typography.lineHeight.default",
-      cssVar: "--fsds-code-snippet-typography-line-height-default",
-      ref: "semantic.typography.line.height.body",
-      fallback: "1.5",
-    },
-    "code-snippet.elevation.kbd": {
-      name: "code-snippet.elevation.kbd",
-      cssVar: "--fsds-code-snippet-elevation-kbd",
-      ref: "semantic.elevation.surface.raised",
-      fallback: "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
     },
   },
 } satisfies ComponentTokenScopes;

@@ -9,11 +9,6 @@
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "table.color.textMuted": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#474647",
-    "layer": "semantic"
-  },
   "table.color.border": {
     "resolvesTo": "semantic.color.border.light",
     "fallback": "#b8b8b8",
@@ -43,16 +38,6 @@
     "resolvesTo": "core.spacing.size.04",
     "fallback": "8px",
     "layer": "core"
-  },
-  "table.spacing.sortGap": {
-    "resolvesTo": "core.spacing.size.02",
-    "fallback": "2px",
-    "layer": "core"
-  },
-  "table.size.cellHeight": {
-    "resolvesTo": "semantic.control.size.md.height",
-    "fallback": "32px",
-    "layer": "semantic"
   },
   "table.size.radius": {
     "resolvesTo": "semantic.shape.control.radius.default",
@@ -93,20 +78,5 @@
     "resolvesTo": "semantic.color.background.accentSubtle",
     "fallback": "#95dafb",
     "layer": "semantic"
-  },
-  "table.focus.width": {
-    "resolvesTo": "semantic.shape.control.border.focusWidth",
-    "fallback": "2px",
-    "layer": "semantic"
-  },
-  "table.focus.color": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d92d2e",
-    "layer": "semantic"
-  },
-  "table.focus.offset": {
-    "resolvesTo": "core.spacing.size.01",
-    "fallback": "1px",
-    "layer": "core"
   }
 }

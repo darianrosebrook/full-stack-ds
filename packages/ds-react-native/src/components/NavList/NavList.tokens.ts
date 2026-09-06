@@ -5,16 +5,6 @@ import { resolveComponentTokens, type ComponentTokenScopes, type FsdsTheme } fro
 // @generated:start tokens
 export const navListTokenScopes = {
   "root": {
-    "box-model.padding": {
-      name: "box-model.padding",
-      cssVar: "--fsds-box-model-padding",
-      literal: 0,
-    },
-    "box-model.padding-block": {
-      name: "box-model.padding-block",
-      cssVar: "--fsds-box-model-padding-block",
-      literal: 0,
-    },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
@@ -23,11 +13,6 @@ export const navListTokenScopes = {
     "box-model.padding-block-end": {
       name: "box-model.padding-block-end",
       cssVar: "--fsds-box-model-padding-block-end",
-      literal: 0,
-    },
-    "box-model.padding-inline": {
-      name: "box-model.padding-inline",
-      cssVar: "--fsds-box-model-padding-inline",
       literal: 0,
     },
     "box-model.padding-inline-start": {
@@ -46,53 +31,15 @@ export const navListTokenScopes = {
       ref: "semantic.structure.size.gap",
       fallback: 16,
     },
-    "box-model.width": {
-      name: "box-model.width",
-      cssVar: "--fsds-box-model-width",
-      literal: "auto",
-    },
     "box-model.min-width": {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       literal: 0,
     },
-    "box-model.max-width": {
-      name: "box-model.max-width",
-      cssVar: "--fsds-box-model-max-width",
-      literal: "none",
-    },
-    "box-model.height": {
-      name: "box-model.height",
-      cssVar: "--fsds-box-model-height",
-      literal: "auto",
-    },
     "box-model.min-height": {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       literal: 0,
-    },
-    "box-model.max-height": {
-      name: "box-model.max-height",
-      cssVar: "--fsds-box-model-max-height",
-      literal: "none",
-    },
-    "nav-list.color.foreground.default": {
-      name: "nav-list.color.foreground.default",
-      cssVar: "--fsds-nav-list-color-foreground-default",
-      ref: "semantic.color.foreground.secondary",
-      fallback: "#474647",
-    },
-    "nav-list.color.foreground.hover": {
-      name: "nav-list.color.foreground.hover",
-      cssVar: "--fsds-nav-list-color-foreground-hover",
-      ref: "semantic.color.foreground.primary",
-      fallback: "#141414",
-    },
-    "nav-list.color.foreground.current": {
-      name: "nav-list.color.foreground.current",
-      cssVar: "--fsds-nav-list-color-foreground-current",
-      ref: "semantic.color.foreground.primary",
-      fallback: "#141414",
     },
     "nav-list.color.background.default": {
       name: "nav-list.color.background.default",
@@ -100,77 +47,11 @@ export const navListTokenScopes = {
       ref: "semantic.color.background.transparent",
       fallback: "transparent",
     },
-    "nav-list.color.background.hover": {
-      name: "nav-list.color.background.hover",
-      cssVar: "--fsds-nav-list-color-background-hover",
-      ref: "semantic.color.background.subtle",
-      fallback: "#f7f7f7",
-    },
-    "nav-list.stateLayer.hover": {
-      name: "nav-list.stateLayer.hover",
-      cssVar: "--fsds-nav-list-state-layer-hover",
-      ref: "semantic.interaction.stateLayer.hover",
-      fallback: "0.04",
-    },
-    "nav-list.stateLayer.selected": {
-      name: "nav-list.stateLayer.selected",
-      cssVar: "--fsds-nav-list-state-layer-selected",
-      ref: "semantic.interaction.stateLayer.selected",
-      fallback: "0.08",
-    },
-    "nav-list.color.background.current": {
-      name: "nav-list.color.background.current",
-      cssVar: "--fsds-nav-list-color-background-current",
-      ref: "semantic.color.background.accentSubtle",
-      fallback: "#95dafb",
-    },
-    "nav-list.color.outline.focus": {
-      name: "nav-list.color.outline.focus",
-      cssVar: "--fsds-nav-list-color-outline-focus",
-      ref: "semantic.color.border.accent",
-      fallback: "#d92d2e",
-    },
-    "nav-list.size.padding.block": {
-      name: "nav-list.size.padding.block",
-      cssVar: "--fsds-nav-list-size-padding-block",
-      ref: "core.spacing.size.02",
-      fallback: 2,
-    },
-    "nav-list.size.padding.inline": {
-      name: "nav-list.size.padding.inline",
-      cssVar: "--fsds-nav-list-size-padding-inline",
-      ref: "core.spacing.size.04",
-      fallback: 8,
-    },
     "nav-list.size.radius.default": {
       name: "nav-list.size.radius.default",
       cssVar: "--fsds-nav-list-size-radius-default",
       ref: "semantic.shape.control.radius.default",
       fallback: 6,
-    },
-    "nav-list.size.gap.list": {
-      name: "nav-list.size.gap.list",
-      cssVar: "--fsds-nav-list-size-gap-list",
-      ref: "core.spacing.size.01",
-      fallback: 1,
-    },
-    "nav-list.size.gap.group": {
-      name: "nav-list.size.gap.group",
-      cssVar: "--fsds-nav-list-size-gap-group",
-      ref: "core.spacing.size.04",
-      fallback: 8,
-    },
-    "nav-list.size.fontSize.item": {
-      name: "nav-list.size.fontSize.item",
-      cssVar: "--fsds-nav-list-size-font-size-item",
-      ref: "semantic.typography.body.03",
-      fallback: 14,
-    },
-    "nav-list.size.fontSize.groupLabel": {
-      name: "nav-list.size.fontSize.groupLabel",
-      cssVar: "--fsds-nav-list-size-font-size-group-label",
-      ref: "semantic.typography.caption.03",
-      fallback: 10,
     },
   },
 } satisfies ComponentTokenScopes;

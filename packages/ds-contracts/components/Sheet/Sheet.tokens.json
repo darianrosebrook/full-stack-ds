@@ -109,20 +109,5 @@
     "resolvesTo": "semantic.elevation.surface.floating",
     "fallback": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a",
     "layer": "semantic"
-  },
-  "sheet.focus.width": {
-    "resolvesTo": "semantic.shape.control.border.focusWidth",
-    "fallback": "2px",
-    "layer": "semantic"
-  },
-  "sheet.focus.color": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d92d2e",
-    "layer": "semantic"
-  },
-  "sheet.color.backgroundHover": {
-    "resolvesTo": "semantic.interaction.background.hover",
-    "fallback": "#f7f7f7",
-    "layer": "semantic"
   }
 }

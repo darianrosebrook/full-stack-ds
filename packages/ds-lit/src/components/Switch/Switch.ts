@@ -115,36 +115,6 @@ export class SwitchElement extends LitElement {
       }
     }
 
-    .switch--sm {
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-small-padding-block, 2px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-small-padding-block, 2px);
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-small-padding-inline, 4px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-small-padding-inline, 4px);
-      --fsds-box-model-gap: var(--fsds-semantic-action-size-small-gap, 4px);
-      --fsds-box-model-min-height: var(--fsds-semantic-action-size-small-min-height, 24px);
-      --fsds-box-model-min-width: var(--fsds-semantic-action-size-small-min-width, 24px);
-    }
-
-    .switch--md {
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 4px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-medium-padding-block, 4px);
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-medium-padding-inline, 8px);
-      --fsds-box-model-gap: var(--fsds-semantic-action-size-medium-gap, 8px);
-      --fsds-box-model-min-height: var(--fsds-semantic-action-size-medium-min-height, 32px);
-      --fsds-box-model-min-width: var(--fsds-semantic-action-size-medium-min-width, 32px);
-    }
-
-    .switch--lg {
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-large-padding-block, 8px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-action-size-large-padding-block, 8px);
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-action-size-large-padding-inline, 16px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-action-size-large-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-action-size-large-gap, 12px);
-      --fsds-box-model-min-height: var(--fsds-semantic-action-size-large-min-height, 48px);
-      --fsds-box-model-min-width: var(--fsds-semantic-action-size-large-min-width, 48px);
-    }
-
     @layer components.defaults {
     .switch {
       padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-action-size-medium-padding-block, 4px));
@@ -209,6 +179,36 @@ export class SwitchElement extends LitElement {
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       border: 0;
+    }
+
+    .switch--sm {
+      padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-action-size-small-padding-block, 2px));
+      padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-action-size-small-padding-block, 2px));
+      padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-action-size-small-padding-inline, 4px));
+      padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-action-size-small-padding-inline, 4px));
+      gap: var(--fsds-box-model-gap, var(--fsds-semantic-action-size-small-gap, 4px));
+      min-height: var(--fsds-box-model-min-height, var(--fsds-semantic-action-size-small-min-height, 24px));
+      min-width: var(--fsds-box-model-min-width, var(--fsds-semantic-action-size-small-min-width, 24px));
+    }
+
+    .switch--md {
+      padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-action-size-medium-padding-block, 4px));
+      padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-action-size-medium-padding-block, 4px));
+      padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-action-size-medium-padding-inline, 8px));
+      padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-action-size-medium-padding-inline, 8px));
+      gap: var(--fsds-box-model-gap, var(--fsds-semantic-action-size-medium-gap, 8px));
+      min-height: var(--fsds-box-model-min-height, var(--fsds-semantic-action-size-medium-min-height, 32px));
+      min-width: var(--fsds-box-model-min-width, var(--fsds-semantic-action-size-medium-min-width, 32px));
+    }
+
+    .switch--lg {
+      padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-action-size-large-padding-block, 8px));
+      padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-action-size-large-padding-block, 8px));
+      padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-action-size-large-padding-inline, 16px));
+      padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-action-size-large-padding-inline, 16px));
+      gap: var(--fsds-box-model-gap, var(--fsds-semantic-action-size-large-gap, 12px));
+      min-height: var(--fsds-box-model-min-height, var(--fsds-semantic-action-size-large-min-height, 48px));
+      min-width: var(--fsds-box-model-min-width, var(--fsds-semantic-action-size-large-min-width, 48px));
     }
 
     .switch--sm .switch__track {

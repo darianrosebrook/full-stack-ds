@@ -5,16 +5,6 @@ import { resolveComponentTokens, type ComponentTokenScopes, type FsdsTheme } fro
 // @generated:start tokens
 export const detailsTokenScopes = {
   "root": {
-    "box-model.padding": {
-      name: "box-model.padding",
-      cssVar: "--fsds-box-model-padding",
-      literal: 0,
-    },
-    "box-model.padding-block": {
-      name: "box-model.padding-block",
-      cssVar: "--fsds-box-model-padding-block",
-      literal: 0,
-    },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
       cssVar: "--fsds-box-model-padding-block-start",
@@ -23,11 +13,6 @@ export const detailsTokenScopes = {
     "box-model.padding-block-end": {
       name: "box-model.padding-block-end",
       cssVar: "--fsds-box-model-padding-block-end",
-      literal: 0,
-    },
-    "box-model.padding-inline": {
-      name: "box-model.padding-inline",
-      cssVar: "--fsds-box-model-padding-inline",
       literal: 0,
     },
     "box-model.padding-inline-start": {
@@ -46,41 +31,15 @@ export const detailsTokenScopes = {
       ref: "semantic.structure.size.gap",
       fallback: 16,
     },
-    "box-model.width": {
-      name: "box-model.width",
-      cssVar: "--fsds-box-model-width",
-      literal: "auto",
-    },
     "box-model.min-width": {
       name: "box-model.min-width",
       cssVar: "--fsds-box-model-min-width",
       literal: 0,
     },
-    "box-model.max-width": {
-      name: "box-model.max-width",
-      cssVar: "--fsds-box-model-max-width",
-      literal: "none",
-    },
-    "box-model.height": {
-      name: "box-model.height",
-      cssVar: "--fsds-box-model-height",
-      literal: "auto",
-    },
     "box-model.min-height": {
       name: "box-model.min-height",
       cssVar: "--fsds-box-model-min-height",
       literal: 0,
-    },
-    "box-model.max-height": {
-      name: "box-model.max-height",
-      cssVar: "--fsds-box-model-max-height",
-      literal: "none",
-    },
-    "details.size.padding.default": {
-      name: "details.size.padding.default",
-      cssVar: "--fsds-details-size-padding-default",
-      ref: "core.spacing.size.06",
-      fallback: 16,
     },
     "details.size.radius.default": {
       name: "details.size.radius.default",
@@ -88,23 +47,11 @@ export const detailsTokenScopes = {
       ref: "semantic.shape.control.radius.default",
       fallback: 6,
     },
-    "details.size.icon": {
-      name: "details.size.icon",
-      cssVar: "--fsds-details-size-icon",
-      ref: "core.spacing.size.05",
-      fallback: 12,
-    },
     "details.color.background.default": {
       name: "details.color.background.default",
       cssVar: "--fsds-details-color-background-default",
       ref: "semantic.color.background.primary",
       fallback: "#ffffff",
-    },
-    "details.color.background.hover": {
-      name: "details.color.background.hover",
-      cssVar: "--fsds-details-color-background-hover",
-      ref: "semantic.color.background.hover",
-      fallback: "#f7f7f7",
     },
     "details.color.foreground.primary": {
       name: "details.color.foreground.primary",
@@ -118,102 +65,8 @@ export const detailsTokenScopes = {
       ref: "semantic.color.border.primary",
       fallback: "#a0a0a1",
     },
-    "details.color.border.hover": {
-      name: "details.color.border.hover",
-      cssVar: "--fsds-details-color-border-hover",
-      ref: "semantic.color.border.bold",
-      fallback: "#888889",
-    },
-    "details.focus.ring.width": {
-      name: "details.focus.ring.width",
-      cssVar: "--fsds-details-focus-ring-width",
-      ref: "semantic.shape.control.border.focusWidth",
-      fallback: 2,
-    },
-    "details.focus.ring.color": {
-      name: "details.focus.ring.color",
-      cssVar: "--fsds-details-focus-ring-color",
-      ref: "semantic.color.border.accent",
-      fallback: "#d92d2e",
-    },
-    "details.focus.ring.offset": {
-      name: "details.focus.ring.offset",
-      cssVar: "--fsds-details-focus-ring-offset",
-      ref: "core.spacing.size.02",
-      fallback: 2,
-    },
-    "details.spacing.gap.default": {
-      name: "details.spacing.gap.default",
-      cssVar: "--fsds-details-spacing-gap-default",
-      ref: "core.spacing.size.02",
-      fallback: 2,
-    },
-    "details.typography.lineHeight.body": {
-      name: "details.typography.lineHeight.body",
-      cssVar: "--fsds-details-typography-line-height-body",
-      ref: "semantic.typography.line.height.body",
-      fallback: "1.5",
-    },
-    "details.typography.fontWeight.medium": {
-      name: "details.typography.fontWeight.medium",
-      cssVar: "--fsds-details-typography-font-weight-medium",
-      ref: "semantic.typography.font.weight.medium",
-      fallback: "500",
-    },
-    "details.size.padding.compact": {
-      name: "details.size.padding.compact",
-      cssVar: "--fsds-details-size-padding-compact",
-      ref: "core.spacing.size.04",
-      fallback: 8,
-    },
-    "details.size.padding.page": {
-      name: "details.size.padding.page",
-      cssVar: "--fsds-details-size-padding-page",
-      ref: "core.spacing.size.07",
-      fallback: 24,
-    },
-    "details.typography.fontSize.body": {
-      name: "details.typography.fontSize.body",
-      cssVar: "--fsds-details-typography-font-size-body",
-      ref: "semantic.typography.body.03",
-      fallback: 14,
-    },
-    "details.typography.fontSize.compact": {
-      name: "details.typography.fontSize.compact",
-      cssVar: "--fsds-details-typography-font-size-compact",
-      ref: "semantic.typography.body.04",
-      fallback: 12,
-    },
-  },
-  "hover": {
-    "details.color.background.default": {
-      name: "details.color.background.default",
-      cssVar: "--fsds-details-color-background-default",
-      ref: "semantic.color.background.hover",
-      fallback: "#f7f7f7",
-    },
-  },
-  "variant_compact": {
-    "details.size.padding.default": {
-      name: "details.size.padding.default",
-      cssVar: "--fsds-details-size-padding-default",
-      ref: "details.size.padding.compact",
-      fallback: 8,
-    },
-    "details.typography.lineHeight.body": {
-      name: "details.typography.lineHeight.body",
-      cssVar: "--fsds-details-typography-line-height-body",
-      ref: "core.spacing.size.06",
-      fallback: 16,
-    },
   },
   "variant_inline": {
-    "details.size.padding.default": {
-      name: "details.size.padding.default",
-      cssVar: "--fsds-details-size-padding-default",
-      ref: "core.spacing.size.07",
-      fallback: 24,
-    },
     "details.color.background.default": {
       name: "details.color.background.default",
       cssVar: "--fsds-details-color-background-default",

@@ -1,3 +1,4 @@
+import { nativeSlotArguments, nativeTokenScopes } from "../../native-token-consumption.js";
 /**
  * SwiftUI View struct emission.
  *
@@ -68,6 +69,12 @@ export function swiftExportName(componentName: string): string {
 }
 
 export function generateSwiftUIComponentSource(ir: ComponentIR): string {
+  const source = emitSwiftUIComponentSource(ir);
+  const used = nativeSlotArguments(source, ["colorSlot", "pxSlot"]);
+  return emitSwiftUIComponentSource({ ...ir, tokenScopes: nativeTokenScopes(ir, used, true) });
+}
+
+function emitSwiftUIComponentSource(ir: ComponentIR): string {
   const collapseIntents = collectCollapseIntents(ir);
   const isNativeToggle = collapseIntents.has("native-toggle-affordance");
 
@@ -407,7 +414,7 @@ function emitTextControlComponent(ir: ComponentIR): string {
       `hold static stored properties.`,
   );
   lines.push(`enum ${ir.name}Tokens {`);
-  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [`);
+  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [${ir.tokenScopes.length === 0 ? ":" : ""}`);
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
@@ -2707,7 +2714,7 @@ function emitActionComponent(ir: ComponentIR): string {
       `hold static stored properties.`,
   );
   lines.push(`enum ${ir.name}Tokens {`);
-  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [`);
+  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [${ir.tokenScopes.length === 0 ? ":" : ""}`);
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
@@ -3060,7 +3067,7 @@ function emitComposerComponent(
       `hold static stored properties.`,
   );
   lines.push(`enum ${ir.name}Tokens {`);
-  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [`);
+  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [${ir.tokenScopes.length === 0 ? ":" : ""}`);
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {
@@ -3412,7 +3419,7 @@ export function emitTokenScopesSection(
       `hold static stored properties.`,
   );
   lines.push(`enum ${ir.name}Tokens {`);
-  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [`);
+  lines.push(`${INDENT}public static let scopes: FsdsComponentTokenScopes = [${ir.tokenScopes.length === 0 ? ":" : ""}`);
   for (const scope of ir.tokenScopes) {
     lines.push(`${INDENT}${INDENT}"${scope.scope}": [`);
     for (const value of scope.values) {

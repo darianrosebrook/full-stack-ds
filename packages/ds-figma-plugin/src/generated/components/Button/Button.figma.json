@@ -542,9 +542,6 @@
           "--fsds-button-text-weight": "var(--fsds-semantic-typography-font-weight-medium, 500)",
           "--fsds-button-motion-duration-fast": "var(--fsds-core-motion-duration-short, 150ms)",
           "--fsds-button-motion-easing-standard": "var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1))",
-          "--fsds-button-size-padding-block-medium": "var(--fsds-core-spacing-size-04, 8px)",
-          "--fsds-button-size-padding-inline-medium": "var(--fsds-core-spacing-size-05, 12px)",
-          "--fsds-button-size-min-height-medium": "var(--fsds-core-dimension-action-min-height, 36px)",
           "--fsds-button-size-font-size-medium": "var(--fsds-semantic-typography-action-02, 1rem)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
@@ -584,9 +581,6 @@
           "--fsds-box-model-padding-inline-start": "var(--fsds-core-spacing-size-04, 8px)",
           "--fsds-box-model-padding-inline-end": "var(--fsds-core-spacing-size-04, 8px)",
           "--fsds-box-model-min-height": "var(--fsds-core-dimension-action-min-height-small, 28px)",
-          "--fsds-button-size-padding-block-medium": "var(--fsds-core-spacing-size-03, 4px)",
-          "--fsds-button-size-padding-inline-medium": "var(--fsds-core-spacing-size-04, 8px)",
-          "--fsds-button-size-min-height-medium": "var(--fsds-core-dimension-action-min-height-small, 28px)",
           "--fsds-button-size-font-size-medium": "var(--fsds-semantic-typography-action-03, 0.875rem)"
         }
       },
@@ -598,9 +592,6 @@
           "--fsds-box-model-padding-inline-start": "var(--fsds-core-spacing-size-05, 12px)",
           "--fsds-box-model-padding-inline-end": "var(--fsds-core-spacing-size-05, 12px)",
           "--fsds-box-model-min-height": "var(--fsds-core-dimension-action-min-height, 36px)",
-          "--fsds-button-size-padding-block-medium": "var(--fsds-core-spacing-size-04, 8px)",
-          "--fsds-button-size-padding-inline-medium": "var(--fsds-core-spacing-size-05, 12px)",
-          "--fsds-button-size-min-height-medium": "var(--fsds-core-dimension-action-min-height, 36px)",
           "--fsds-button-size-font-size-medium": "var(--fsds-semantic-typography-action-02, 1rem)"
         }
       },
@@ -612,9 +603,6 @@
           "--fsds-box-model-padding-inline-start": "var(--fsds-core-spacing-size-06, 16px)",
           "--fsds-box-model-padding-inline-end": "var(--fsds-core-spacing-size-06, 16px)",
           "--fsds-box-model-min-height": "var(--fsds-core-dimension-action-min-height-large, 48px)",
-          "--fsds-button-size-padding-block-medium": "var(--fsds-core-spacing-size-05, 12px)",
-          "--fsds-button-size-padding-inline-medium": "var(--fsds-core-spacing-size-06, 16px)",
-          "--fsds-button-size-min-height-medium": "var(--fsds-core-dimension-action-min-height-large, 48px)",
           "--fsds-button-size-font-size-medium": "var(--fsds-semantic-typography-action-01, 1.125rem)"
         }
       },

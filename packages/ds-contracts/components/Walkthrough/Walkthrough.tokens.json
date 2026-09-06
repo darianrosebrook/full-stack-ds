@@ -79,11 +79,6 @@
     "fallback": "4px",
     "layer": "core"
   },
-  "walkthrough.dots.active": {
-    "resolvesTo": "semantic.color.action.background.primary.default",
-    "fallback": "#0566fe",
-    "layer": "semantic"
-  },
   "walkthrough.dots.idle": {
     "resolvesTo": "semantic.color.border.subtle",
     "fallback": "#d0d0d0",

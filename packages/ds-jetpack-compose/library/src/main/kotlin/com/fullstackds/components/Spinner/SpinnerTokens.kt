@@ -9,16 +9,6 @@ import com.fullstackds.tokens.ComponentTokenScopes
 // @generated:start component
 val spinnerTokenScopes: ComponentTokenScopes = mapOf(
     "root" to mapOf(
-        "box-model.padding" to ComponentTokenDefinition(
-            name = "box-model.padding",
-            cssVar = "--fsds-box-model-padding",
-            literal = "0",
-        ),
-        "box-model.padding-block" to ComponentTokenDefinition(
-            name = "box-model.padding-block",
-            cssVar = "--fsds-box-model-padding-block",
-            literal = "0",
-        ),
         "box-model.padding-block-start" to ComponentTokenDefinition(
             name = "box-model.padding-block-start",
             cssVar = "--fsds-box-model-padding-block-start",
@@ -27,11 +17,6 @@ val spinnerTokenScopes: ComponentTokenScopes = mapOf(
         "box-model.padding-block-end" to ComponentTokenDefinition(
             name = "box-model.padding-block-end",
             cssVar = "--fsds-box-model-padding-block-end",
-            literal = "0",
-        ),
-        "box-model.padding-inline" to ComponentTokenDefinition(
-            name = "box-model.padding-inline",
-            cssVar = "--fsds-box-model-padding-inline",
             literal = "0",
         ),
         "box-model.padding-inline-start" to ComponentTokenDefinition(
@@ -44,40 +29,10 @@ val spinnerTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-box-model-padding-inline-end",
             literal = "0",
         ),
-        "box-model.gap" to ComponentTokenDefinition(
-            name = "box-model.gap",
-            cssVar = "--fsds-box-model-gap",
-            literal = "0",
-        ),
-        "box-model.width" to ComponentTokenDefinition(
-            name = "box-model.width",
-            cssVar = "--fsds-box-model-width",
-            literal = "auto",
-        ),
-        "box-model.min-width" to ComponentTokenDefinition(
-            name = "box-model.min-width",
-            cssVar = "--fsds-box-model-min-width",
-            literal = "0",
-        ),
-        "box-model.max-width" to ComponentTokenDefinition(
-            name = "box-model.max-width",
-            cssVar = "--fsds-box-model-max-width",
-            literal = "none",
-        ),
-        "box-model.height" to ComponentTokenDefinition(
-            name = "box-model.height",
-            cssVar = "--fsds-box-model-height",
-            literal = "auto",
-        ),
         "box-model.min-height" to ComponentTokenDefinition(
             name = "box-model.min-height",
             cssVar = "--fsds-box-model-min-height",
             literal = "0",
-        ),
-        "box-model.max-height" to ComponentTokenDefinition(
-            name = "box-model.max-height",
-            cssVar = "--fsds-box-model-max-height",
-            literal = "none",
         ),
         "spinner.size.xs" to ComponentTokenDefinition(
             name = "spinner.size.xs",
@@ -117,23 +72,6 @@ val spinnerTokenScopes: ComponentTokenScopes = mapOf(
             name = "spinner.thickness.bold",
             cssVar = "--fsds-spinner-thickness-bold",
             literal = "4px",
-        ),
-        "spinner.color.accent" to ComponentTokenDefinition(
-            name = "spinner.color.accent",
-            cssVar = "--fsds-spinner-color-accent",
-            ref = "semantic.color.background.accent",
-            fallback = "#d92d2e",
-        ),
-        "spinner.color.track" to ComponentTokenDefinition(
-            name = "spinner.color.track",
-            cssVar = "--fsds-spinner-color-track",
-            ref = "semantic.color.border.subtle",
-            fallback = "#d0d0d0",
-        ),
-        "spinner.anim.duration" to ComponentTokenDefinition(
-            name = "spinner.anim.duration",
-            cssVar = "--fsds-spinner-anim-duration",
-            literal = "800ms",
         ),
     ),
 )

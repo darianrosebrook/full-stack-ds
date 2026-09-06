@@ -9,11 +9,6 @@
     "fallback": "#d92d2e",
     "layer": "semantic"
   },
-  "truncate.color.background.primary": {
-    "resolvesTo": "semantic.color.background.primary",
-    "fallback": "#ffffff",
-    "layer": "semantic"
-  },
   "truncate.typography.fontWeight": {
     "resolvesTo": "semantic.typography.font.weight.medium",
     "fallback": "500",
@@ -23,10 +18,5 @@
     "resolvesTo": "core.spacing.size.02",
     "fallback": "2px",
     "layer": "core"
-  },
-  "truncate.color.foreground.linkHover": {
-    "resolvesTo": "semantic.color.foreground.linkHover",
-    "fallback": "#b31b1b",
-    "layer": "semantic"
   }
 }

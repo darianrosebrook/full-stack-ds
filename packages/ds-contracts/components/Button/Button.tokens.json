@@ -109,21 +109,6 @@
     "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
     "layer": "core"
   },
-  "button.size.padding-block.medium": {
-    "resolvesTo": "core.spacing.size.04",
-    "fallback": "8px",
-    "layer": "core"
-  },
-  "button.size.padding-inline.medium": {
-    "resolvesTo": "core.spacing.size.05",
-    "fallback": "12px",
-    "layer": "core"
-  },
-  "button.size.minHeight.medium": {
-    "resolvesTo": "core.dimension.actionMinHeight",
-    "fallback": "36px",
-    "layer": "core"
-  },
   "button.size.fontSize.medium": {
     "resolvesTo": "semantic.typography.action.02",
     "fallback": "1rem",

@@ -9,16 +9,6 @@ import com.fullstackds.tokens.ComponentTokenScopes
 // @generated:start component
 val blockquoteTokenScopes: ComponentTokenScopes = mapOf(
     "root" to mapOf(
-        "box-model.padding" to ComponentTokenDefinition(
-            name = "box-model.padding",
-            cssVar = "--fsds-box-model-padding",
-            literal = "0",
-        ),
-        "box-model.padding-block" to ComponentTokenDefinition(
-            name = "box-model.padding-block",
-            cssVar = "--fsds-box-model-padding-block",
-            literal = "0",
-        ),
         "box-model.padding-block-start" to ComponentTokenDefinition(
             name = "box-model.padding-block-start",
             cssVar = "--fsds-box-model-padding-block-start",
@@ -30,11 +20,6 @@ val blockquoteTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-box-model-padding-block-end",
             ref = "semantic.surface.size.padding-block",
             fallback = "16px",
-        ),
-        "box-model.padding-inline" to ComponentTokenDefinition(
-            name = "box-model.padding-inline",
-            cssVar = "--fsds-box-model-padding-inline",
-            literal = "0",
         ),
         "box-model.padding-inline-start" to ComponentTokenDefinition(
             name = "box-model.padding-inline-start",
@@ -48,42 +33,10 @@ val blockquoteTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.surface.size.padding-inline",
             fallback = "16px",
         ),
-        "box-model.gap" to ComponentTokenDefinition(
-            name = "box-model.gap",
-            cssVar = "--fsds-box-model-gap",
-            ref = "semantic.surface.size.gap",
-            fallback = "8px",
-        ),
-        "box-model.width" to ComponentTokenDefinition(
-            name = "box-model.width",
-            cssVar = "--fsds-box-model-width",
-            literal = "auto",
-        ),
-        "box-model.min-width" to ComponentTokenDefinition(
-            name = "box-model.min-width",
-            cssVar = "--fsds-box-model-min-width",
-            ref = "semantic.surface.size.min-width",
-            fallback = "64px",
-        ),
-        "box-model.max-width" to ComponentTokenDefinition(
-            name = "box-model.max-width",
-            cssVar = "--fsds-box-model-max-width",
-            literal = "none",
-        ),
-        "box-model.height" to ComponentTokenDefinition(
-            name = "box-model.height",
-            cssVar = "--fsds-box-model-height",
-            literal = "auto",
-        ),
         "box-model.min-height" to ComponentTokenDefinition(
             name = "box-model.min-height",
             cssVar = "--fsds-box-model-min-height",
             literal = "0",
-        ),
-        "box-model.max-height" to ComponentTokenDefinition(
-            name = "box-model.max-height",
-            cssVar = "--fsds-box-model-max-height",
-            literal = "none",
         ),
         "blockquote.color.foreground.primary" to ComponentTokenDefinition(
             name = "blockquote.color.foreground.primary",
@@ -97,71 +50,11 @@ val blockquoteTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.color.background.secondary",
             fallback = "#f7f7f7",
         ),
-        "blockquote.color.border.default" to ComponentTokenDefinition(
-            name = "blockquote.color.border.default",
-            cssVar = "--fsds-blockquote-color-border-default",
-            ref = "semantic.color.border.accent",
-            fallback = "#d92d2e",
-        ),
-        "blockquote.typography.fontStyle" to ComponentTokenDefinition(
-            name = "blockquote.typography.fontStyle",
-            cssVar = "--fsds-blockquote-typography-font-style",
-            ref = "semantic.typography.font.style.italic",
-            fallback = "italic",
-        ),
-        "blockquote.typography.fontWeight" to ComponentTokenDefinition(
-            name = "blockquote.typography.fontWeight",
-            cssVar = "--fsds-blockquote-typography-font-weight",
-            ref = "semantic.typography.font.weight.medium",
-            fallback = "500",
-        ),
-        "blockquote.size.padding.default" to ComponentTokenDefinition(
-            name = "blockquote.size.padding.default",
-            cssVar = "--fsds-blockquote-size-padding-default",
-            ref = "core.spacing.size.05",
-            fallback = "12px",
-        ),
-        "blockquote.size.padding.sm" to ComponentTokenDefinition(
-            name = "blockquote.size.padding.sm",
-            cssVar = "--fsds-blockquote-size-padding-sm",
-            ref = "core.spacing.size.04",
-            fallback = "8px",
-        ),
-        "blockquote.size.padding.lg" to ComponentTokenDefinition(
-            name = "blockquote.size.padding.lg",
-            cssVar = "--fsds-blockquote-size-padding-lg",
-            ref = "core.spacing.size.07",
-            fallback = "24px",
-        ),
         "blockquote.size.radius.default" to ComponentTokenDefinition(
             name = "blockquote.size.radius.default",
             cssVar = "--fsds-blockquote-size-radius-default",
             ref = "semantic.shape.control.radius.default",
             fallback = "6px",
-        ),
-        "blockquote.size.border.accent" to ComponentTokenDefinition(
-            name = "blockquote.size.border.accent",
-            cssVar = "--fsds-blockquote-size-border-accent",
-            ref = "core.spacing.size.03",
-            fallback = "4px",
-        ),
-        "blockquote.size.fontSize.sm" to ComponentTokenDefinition(
-            name = "blockquote.size.fontSize.sm",
-            cssVar = "--fsds-blockquote-size-font-size-sm",
-            ref = "core.typography.ramp.3",
-            fallback = "0.875rem",
-        ),
-        "blockquote.size.fontSize.md" to ComponentTokenDefinition(
-            name = "blockquote.size.fontSize.md",
-            cssVar = "--fsds-blockquote-size-font-size-md",
-            ref = "core.typography.ramp.4",
-            fallback = "1rem",
-        ),
-        "blockquote.size.fontSize.lg" to ComponentTokenDefinition(
-            name = "blockquote.size.fontSize.lg",
-            cssVar = "--fsds-blockquote-size-font-size-lg",
-            ref = "core.typography.ramp.5",
-            fallback = "1.125rem",
         ),
     ),
     "variant_default" to mapOf(
@@ -179,12 +72,6 @@ val blockquoteTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.color.background.primary",
             fallback = "#ffffff",
         ),
-        "blockquote.size.padding.default" to ComponentTokenDefinition(
-            name = "blockquote.size.padding.default",
-            cssVar = "--fsds-blockquote-size-padding-default",
-            ref = "core.spacing.size.05",
-            fallback = "12px",
-        ),
     ),
     "variant_highlighted" to mapOf(
         "blockquote.color.background.default" to ComponentTokenDefinition(
@@ -198,48 +85,6 @@ val blockquoteTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-blockquote-color-foreground-primary",
             ref = "semantic.color.foreground.primary",
             fallback = "#141414",
-        ),
-    ),
-    "variant_sm" to mapOf(
-        "blockquote.size.padding.default" to ComponentTokenDefinition(
-            name = "blockquote.size.padding.default",
-            cssVar = "--fsds-blockquote-size-padding-default",
-            ref = "blockquote.size.padding.sm",
-            fallback = "8px",
-        ),
-        "blockquote.size.fontSize.md" to ComponentTokenDefinition(
-            name = "blockquote.size.fontSize.md",
-            cssVar = "--fsds-blockquote-size-font-size-md",
-            ref = "blockquote.size.fontSize.sm",
-            fallback = "0.875rem",
-        ),
-    ),
-    "variant_md" to mapOf(
-        "blockquote.size.padding.default" to ComponentTokenDefinition(
-            name = "blockquote.size.padding.default",
-            cssVar = "--fsds-blockquote-size-padding-default",
-            ref = "core.spacing.size.05",
-            fallback = "12px",
-        ),
-        "blockquote.size.fontSize.md" to ComponentTokenDefinition(
-            name = "blockquote.size.fontSize.md",
-            cssVar = "--fsds-blockquote-size-font-size-md",
-            ref = "core.typography.ramp.4",
-            fallback = "1rem",
-        ),
-    ),
-    "variant_lg" to mapOf(
-        "blockquote.size.padding.default" to ComponentTokenDefinition(
-            name = "blockquote.size.padding.default",
-            cssVar = "--fsds-blockquote-size-padding-default",
-            ref = "blockquote.size.padding.lg",
-            fallback = "24px",
-        ),
-        "blockquote.size.fontSize.md" to ComponentTokenDefinition(
-            name = "blockquote.size.fontSize.md",
-            cssVar = "--fsds-blockquote-size-font-size-md",
-            ref = "blockquote.size.fontSize.lg",
-            fallback = "1.125rem",
         ),
     ),
 )

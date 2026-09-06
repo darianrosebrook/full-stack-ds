@@ -78,7 +78,6 @@ export class PostcardElement extends LitElement {
       --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-postcard-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-postcard-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
-      --fsds-postcard-size-radius-full: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-postcard-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-postcard-typography-display-name-font-size: var(--fsds-semantic-typography-body-02, 16px);
@@ -301,7 +300,6 @@ export class PostcardHeaderElement extends LitElement {
       --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-postcard-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-postcard-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
-      --fsds-postcard-size-radius-full: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-postcard-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-postcard-typography-display-name-font-size: var(--fsds-semantic-typography-body-02, 16px);
@@ -488,7 +486,6 @@ export class PostcardContentElement extends LitElement {
       --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-postcard-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-postcard-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
-      --fsds-postcard-size-radius-full: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-postcard-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-postcard-typography-display-name-font-size: var(--fsds-semantic-typography-body-02, 16px);
@@ -675,7 +672,6 @@ export class PostcardFooterElement extends LitElement {
       --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-postcard-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-postcard-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
-      --fsds-postcard-size-radius-full: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-postcard-size-border-default: var(--fsds-semantic-shape-control-border-default-width, 1px);
       --fsds-postcard-typography-display-name-font-size: var(--fsds-semantic-typography-body-02, 16px);

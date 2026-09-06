@@ -115,7 +115,6 @@
           "--fsds-box-model-min-height": "0",
           "--fsds-box-model-max-height": "none",
           "--fsds-label-color-text-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
-          "--fsds-label-typo-weight-default": "var(--fsds-semantic-typography-font-weight-medium, 500)",
           "--fsds-label-typo-line-height-default": "var(--fsds-semantic-typography-line-height-tight, 1.2)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",

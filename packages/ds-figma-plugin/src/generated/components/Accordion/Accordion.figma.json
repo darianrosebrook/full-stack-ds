@@ -740,7 +740,6 @@
           "--fsds-accordion-border-color": "var(--fsds-semantic-color-border-light, #b8b8b8)",
           "--fsds-accordion-border-radius": "var(--fsds-semantic-shape-radius-small, 4px)",
           "--fsds-accordion-spacing-gap": "var(--fsds-core-spacing-size-07, 24px)",
-          "--fsds-accordion-spacing-padding-x": "var(--fsds-core-spacing-size-00, 0px)",
           "--fsds-accordion-spacing-padding-y": "var(--fsds-core-spacing-size-04, 8px)",
           "--fsds-accordion-text-weight": "var(--fsds-semantic-typography-font-weight-medium, 500)",
           "--fsds-accordion-text-size": "var(--fsds-semantic-typography-body-02, 16px)",

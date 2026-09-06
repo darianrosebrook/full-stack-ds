@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { validateComponentTokenConsumption } from "./validation/component-token-consumption.js";
 /**
  * Contract-driven codegen CLI.
  *
@@ -559,6 +560,7 @@ function main(): void {
           allContracts: allContractsByName,
         }),
         ...validateContractTokens(result.value),
+        ...validateComponentTokenConsumption(result.value),
         ...validateContractFallbackCompleteness(result.value),
         ...validateContractFallbackStale(result.value),
         ...validateContractEmittedCss(result.value),

@@ -16,6 +16,7 @@ import {
   type RnSurfaceLowering,
 } from "./surface-emit.js";
 import { resolveSurfaceAutoDismiss } from "../../semantics.js";
+import { consumedNativeTokenScopes, reactNativeTokenReads } from "./token-consumption.js";
 import {
   getGroupHostOrnamentPart,
   getGroupHostPart,
@@ -87,10 +88,13 @@ export function compoundSelectionSubcomponentNames(ir: ComponentIR): {
 export function generateReactNativeComponentSource(
   ir: ComponentIR,
 ): ReactNativeComponentFiles {
+  const componentFile = generateReactNativeComponentFile(ir);
+  const stylesFile = generateReactNativeStylesFile(ir);
+  const tokenScopes = consumedNativeTokenScopes(ir, reactNativeTokenReads([componentFile, stylesFile]));
   return {
-    componentFile: generateReactNativeComponentFile(ir),
-    stylesFile: generateReactNativeStylesFile(ir),
-    tokensFile: generateReactNativeTokensFile(ir),
+    componentFile,
+    stylesFile,
+    tokensFile: generateReactNativeTokensFile({ ...ir, tokenScopes }),
   };
 }
 

@@ -72,19 +72,14 @@ export class NavListElement extends LitElement {
       --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
       --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #f7f7f7);
       --fsds-nav-list-state-layer-hover: var(--fsds-semantic-interaction-state-layer-hover, 0.04);
       --fsds-nav-list-state-layer-selected: var(--fsds-semantic-interaction-state-layer-selected, 0.08);
-      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
       --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 2px);
       --fsds-nav-list-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
       --fsds-nav-list-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-nav-list-size-gap-list: var(--fsds-core-spacing-size-01, 1px);
-      --fsds-nav-list-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-nav-list-size-font-size-item: var(--fsds-semantic-typography-body-03, 14px);
-      --fsds-nav-list-size-font-size-group-label: var(--fsds-semantic-typography-caption-03, 10px);
     }
 
     @layer components.defaults {
@@ -224,19 +219,14 @@ export class NavListListElement extends LitElement {
       --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
       --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #f7f7f7);
       --fsds-nav-list-state-layer-hover: var(--fsds-semantic-interaction-state-layer-hover, 0.04);
       --fsds-nav-list-state-layer-selected: var(--fsds-semantic-interaction-state-layer-selected, 0.08);
-      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
       --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 2px);
       --fsds-nav-list-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
       --fsds-nav-list-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-nav-list-size-gap-list: var(--fsds-core-spacing-size-01, 1px);
-      --fsds-nav-list-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-nav-list-size-font-size-item: var(--fsds-semantic-typography-body-03, 14px);
-      --fsds-nav-list-size-font-size-group-label: var(--fsds-semantic-typography-caption-03, 10px);
     }
 
     @layer components.defaults {
@@ -355,19 +345,14 @@ export class NavListItemElement extends LitElement {
       --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #474647);
       --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
       --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #f7f7f7);
       --fsds-nav-list-state-layer-hover: var(--fsds-semantic-interaction-state-layer-hover, 0.04);
       --fsds-nav-list-state-layer-selected: var(--fsds-semantic-interaction-state-layer-selected, 0.08);
-      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accent-subtle, #95dafb);
       --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d92d2e);
       --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 2px);
       --fsds-nav-list-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
       --fsds-nav-list-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 6px);
       --fsds-nav-list-size-gap-list: var(--fsds-core-spacing-size-01, 1px);
-      --fsds-nav-list-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-nav-list-size-font-size-item: var(--fsds-semantic-typography-body-03, 14px);
-      --fsds-nav-list-size-font-size-group-label: var(--fsds-semantic-typography-caption-03, 10px);
     }
 
     @layer components.defaults {

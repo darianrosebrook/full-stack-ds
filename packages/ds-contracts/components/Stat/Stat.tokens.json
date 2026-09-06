@@ -9,11 +9,6 @@
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "stat.color.foreground.label": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#474647",
-    "layer": "semantic"
-  },
   "stat.color.foreground.trend.up": {
     "resolvesTo": "semantic.color.feedback.foreground.success.default",
     "fallback": "#497f21",
@@ -44,27 +39,12 @@
     "fallback": "32px",
     "layer": "semantic"
   },
-  "stat.size.label": {
-    "resolvesTo": "semantic.typography.caption.02",
-    "fallback": "12px",
-    "layer": "semantic"
-  },
-  "stat.size.gap": {
-    "resolvesTo": "core.spacing.size.02",
-    "fallback": "2px",
-    "layer": "core"
-  },
   "stat.typography.lineHeight.value": {
     "literal": "1.1"
   },
   "stat.typography.weight.value": {
     "resolvesTo": "semantic.typography.font.weight.bold",
     "fallback": "700",
-    "layer": "semantic"
-  },
-  "stat.typography.weight.label": {
-    "resolvesTo": "semantic.typography.font.weight.medium",
-    "fallback": "500",
     "layer": "semantic"
   }
 }

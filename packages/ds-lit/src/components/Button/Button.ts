@@ -87,45 +87,18 @@ export class ButtonElement extends LitElement {
       --fsds-button-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-button-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-button-motion-easing-standard: var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
-      --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
-      --fsds-button-size-min-height-medium: var(--fsds-core-dimension-action-min-height, 36px);
       --fsds-button-size-font-size-medium: var(--fsds-semantic-typography-action-02, 1rem);
     }
 
     .button--small {
-      --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height-small, 28px);
-      --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-button-size-min-height-medium: var(--fsds-core-dimension-action-min-height-small, 28px);
       --fsds-button-size-font-size-medium: var(--fsds-semantic-typography-action-03, 0.875rem);
     }
 
     .button--medium {
-      --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-05, 12px);
-      --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-05, 12px);
-      --fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height, 36px);
-      --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
-      --fsds-button-size-min-height-medium: var(--fsds-core-dimension-action-min-height, 36px);
       --fsds-button-size-font-size-medium: var(--fsds-semantic-typography-action-02, 1rem);
     }
 
     .button--large {
-      --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-05, 12px);
-      --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-05, 12px);
-      --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height-large, 48px);
-      --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-05, 12px);
-      --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-button-size-min-height-medium: var(--fsds-core-dimension-action-min-height-large, 48px);
       --fsds-button-size-font-size-medium: var(--fsds-semantic-typography-action-01, 1.125rem);
     }
 
@@ -229,6 +202,30 @@ export class ButtonElement extends LitElement {
       &[aria-busy="true"] .button__loadingText {
         opacity: var(--fsds-button-design-condition-ac2be5befb6d-appearance-opacity, 0.7);
       }
+    }
+
+    .button--small {
+      padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-core-spacing-size-03, 4px));
+      padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-core-spacing-size-03, 4px));
+      padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-core-spacing-size-04, 8px));
+      padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-core-spacing-size-04, 8px));
+      min-height: var(--fsds-box-model-min-height, var(--fsds-core-dimension-action-min-height-small, 28px));
+    }
+
+    .button--medium {
+      padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-core-spacing-size-04, 8px));
+      padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-core-spacing-size-04, 8px));
+      padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-core-spacing-size-05, 12px));
+      padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-core-spacing-size-05, 12px));
+      min-height: var(--fsds-box-model-min-height, var(--fsds-core-dimension-action-min-height, 36px));
+    }
+
+    .button--large {
+      padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-core-spacing-size-05, 12px));
+      padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-core-spacing-size-05, 12px));
+      padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-core-spacing-size-06, 16px));
+      padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-core-spacing-size-06, 16px));
+      min-height: var(--fsds-box-model-min-height, var(--fsds-core-dimension-action-min-height-large, 48px));
     }
 
     .button__spinner {

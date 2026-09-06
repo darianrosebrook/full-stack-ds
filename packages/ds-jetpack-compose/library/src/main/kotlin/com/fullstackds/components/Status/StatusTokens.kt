@@ -9,16 +9,6 @@ import com.fullstackds.tokens.ComponentTokenScopes
 // @generated:start component
 val statusTokenScopes: ComponentTokenScopes = mapOf(
     "root" to mapOf(
-        "box-model.padding" to ComponentTokenDefinition(
-            name = "box-model.padding",
-            cssVar = "--fsds-box-model-padding",
-            literal = "0",
-        ),
-        "box-model.padding-block" to ComponentTokenDefinition(
-            name = "box-model.padding-block",
-            cssVar = "--fsds-box-model-padding-block",
-            literal = "0",
-        ),
         "box-model.padding-block-start" to ComponentTokenDefinition(
             name = "box-model.padding-block-start",
             cssVar = "--fsds-box-model-padding-block-start",
@@ -30,11 +20,6 @@ val statusTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-box-model-padding-block-end",
             ref = "semantic.glyph.badge.size.md.paddingY",
             fallback = "2px",
-        ),
-        "box-model.padding-inline" to ComponentTokenDefinition(
-            name = "box-model.padding-inline",
-            cssVar = "--fsds-box-model-padding-inline",
-            literal = "0",
         ),
         "box-model.padding-inline-start" to ComponentTokenDefinition(
             name = "box-model.padding-inline-start",
@@ -48,41 +33,10 @@ val statusTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.glyph.badge.size.md.paddingX",
             fallback = "8px",
         ),
-        "box-model.gap" to ComponentTokenDefinition(
-            name = "box-model.gap",
-            cssVar = "--fsds-box-model-gap",
-            ref = "semantic.glyph.badge.size.md.gap",
-            fallback = "4px",
-        ),
-        "box-model.width" to ComponentTokenDefinition(
-            name = "box-model.width",
-            cssVar = "--fsds-box-model-width",
-            literal = "auto",
-        ),
-        "box-model.min-width" to ComponentTokenDefinition(
-            name = "box-model.min-width",
-            cssVar = "--fsds-box-model-min-width",
-            literal = "0",
-        ),
-        "box-model.max-width" to ComponentTokenDefinition(
-            name = "box-model.max-width",
-            cssVar = "--fsds-box-model-max-width",
-            literal = "none",
-        ),
-        "box-model.height" to ComponentTokenDefinition(
-            name = "box-model.height",
-            cssVar = "--fsds-box-model-height",
-            literal = "auto",
-        ),
         "box-model.min-height" to ComponentTokenDefinition(
             name = "box-model.min-height",
             cssVar = "--fsds-box-model-min-height",
             literal = "0",
-        ),
-        "box-model.max-height" to ComponentTokenDefinition(
-            name = "box-model.max-height",
-            cssVar = "--fsds-box-model-max-height",
-            literal = "none",
         ),
         "status.color.background.default" to ComponentTokenDefinition(
             name = "status.color.background.default",
@@ -96,47 +50,11 @@ val statusTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.color.foreground.secondary",
             fallback = "#474647",
         ),
-        "status.color.border.default" to ComponentTokenDefinition(
-            name = "status.color.border.default",
-            cssVar = "--fsds-status-color-border-default",
-            ref = "semantic.color.border.subtle",
-            fallback = "#d0d0d0",
-        ),
         "status.size.radius.default" to ComponentTokenDefinition(
             name = "status.size.radius.default",
             cssVar = "--fsds-status-size-radius-default",
             ref = "semantic.shape.control.radius.pill",
             fallback = "9999px",
-        ),
-        "status.size.minHeight" to ComponentTokenDefinition(
-            name = "status.size.minHeight",
-            cssVar = "--fsds-status-size-min-height",
-            ref = "semantic.glyph.badge.size.md.minHeight",
-            fallback = "24px",
-        ),
-        "status.size.fontSize" to ComponentTokenDefinition(
-            name = "status.size.fontSize",
-            cssVar = "--fsds-status-size-font-size",
-            ref = "semantic.glyph.badge.size.md.fontSize",
-            fallback = "12px",
-        ),
-        "status.size.border.default" to ComponentTokenDefinition(
-            name = "status.size.border.default",
-            cssVar = "--fsds-status-size-border-default",
-            ref = "semantic.shape.control.border.defaultWidth",
-            fallback = "1px",
-        ),
-        "status.text.weight" to ComponentTokenDefinition(
-            name = "status.text.weight",
-            cssVar = "--fsds-status-text-weight",
-            ref = "semantic.typography.font.weight.medium",
-            fallback = "500",
-        ),
-        "status.typography.lineHeight" to ComponentTokenDefinition(
-            name = "status.typography.lineHeight",
-            cssVar = "--fsds-status-typography-line-height",
-            ref = "semantic.typography.line.height.collapse",
-            fallback = "1",
         ),
     ),
     "variant_info" to mapOf(
@@ -152,12 +70,6 @@ val statusTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.color.foreground.on.info.subtle",
             fallback = "#013ab0",
         ),
-        "status.color.border.default" to ComponentTokenDefinition(
-            name = "status.color.border.default",
-            cssVar = "--fsds-status-color-border-default",
-            ref = "semantic.color.border.info",
-            fallback = "#034fd6",
-        ),
     ),
     "variant_success" to mapOf(
         "status.color.background.default" to ComponentTokenDefinition(
@@ -171,12 +83,6 @@ val statusTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-status-color-foreground-primary",
             ref = "semantic.color.foreground.on.success.subtle",
             fallback = "#2c4f09",
-        ),
-        "status.color.border.default" to ComponentTokenDefinition(
-            name = "status.color.border.default",
-            cssVar = "--fsds-status-color-border-default",
-            ref = "semantic.color.border.success",
-            fallback = "#3a6614",
         ),
     ),
     "variant_warning" to mapOf(
@@ -192,12 +98,6 @@ val statusTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.color.foreground.on.warning.subtle",
             fallback = "#6c3a00",
         ),
-        "status.color.border.default" to ComponentTokenDefinition(
-            name = "status.color.border.default",
-            cssVar = "--fsds-status-color-border-default",
-            ref = "semantic.color.border.warning",
-            fallback = "#8b4b00",
-        ),
     ),
     "variant_danger" to mapOf(
         "status.color.background.default" to ComponentTokenDefinition(
@@ -212,12 +112,6 @@ val statusTokenScopes: ComponentTokenScopes = mapOf(
             ref = "semantic.color.foreground.on.danger.subtle",
             fallback = "#900909",
         ),
-        "status.color.border.default" to ComponentTokenDefinition(
-            name = "status.color.border.default",
-            cssVar = "--fsds-status-color-border-default",
-            ref = "semantic.color.border.danger",
-            fallback = "#b31b1b",
-        ),
     ),
     "variant_error" to mapOf(
         "status.color.background.default" to ComponentTokenDefinition(
@@ -231,12 +125,6 @@ val statusTokenScopes: ComponentTokenScopes = mapOf(
             cssVar = "--fsds-status-color-foreground-primary",
             ref = "semantic.color.foreground.on.danger.subtle",
             fallback = "#900909",
-        ),
-        "status.color.border.default" to ComponentTokenDefinition(
-            name = "status.color.border.default",
-            cssVar = "--fsds-status-color-border-default",
-            ref = "semantic.color.border.danger",
-            fallback = "#b31b1b",
         ),
     ),
 )

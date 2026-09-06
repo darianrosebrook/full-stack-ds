@@ -70,7 +70,6 @@ export class LabelElement extends LitElement {
 
     .label {
       --fsds-label-color-text-default: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-label-typo-weight-default: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-label-typo-line-height-default: var(--fsds-semantic-typography-line-height-tight, 1.2);
     }
 

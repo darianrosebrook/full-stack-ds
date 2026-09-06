@@ -1,3 +1,5 @@
+import { nativeSlotArguments, nativeTokenScopes } from "../../native-token-consumption.js";
+import { resolveSurfaceAutoDismiss } from "../../../semantics.js";
 /**
  * SwiftUI surface emission.
  *
@@ -43,7 +45,12 @@ function regionPropertyName(part: string): string {
 
 export function generateSwiftUISurfaceFiles(ir: ComponentIR): SwiftUISurfaceFiles {
   const withTypes = (body: string): string => {
-    const sections = [emitTypes(ir), body];
+    // Project only the data section: compile-time decisions still see the full IR.
+    const used = nativeSlotArguments(body, ["colorSlot", "pxSlot"]);
+    const original = emitTokenScopesSection(ir).join("\n");
+    const projected = emitTokenScopesSection({ ...ir, tokenScopes: nativeTokenScopes(ir, used, true) }).join("\n");
+    if (!body.includes(original)) throw new Error(`Missing Swift token section for ${ir.name}`);
+    const sections = [emitTypes(ir), body.replace(original, projected)];
     return sections.filter((x) => x.trim().length > 0).join("\n\n") + "\n";
   };
   if (!ir.surface) {
@@ -517,13 +524,8 @@ function emitAnchoredSurface(ir: ComponentIR): string {
 function emitToastSurface(ir: ComponentIR): string {
   const chrome = resolveChrome(ir);
   const regions = ir.compoundParts.map((part) => regionPropertyName(part.name));
-  // Dwell from the motion token scopes (presence budget): first ms-valued
-  // token under the root scope. Absence means no auto-dismiss.
-  const dwell = ir.tokenScopes
-    .find((scope) => scope.scope === "root")
-    ?.values.find((v) => /ms$/.test(v.rawValue ?? ""))
-    ?.rawValue?.replace(/ms$/, "");
-  const dwellMs = dwell ? Number(dwell) : null;
+  // Dismissal is a behavior policy, never the first unrelated animation duration.
+  const dwellMs = resolveSurfaceAutoDismiss(ir)?.defaultMs ?? null;
   const ephemeral = ir.surface?.presence === "ephemeral";
 
   const lines: string[] = [];

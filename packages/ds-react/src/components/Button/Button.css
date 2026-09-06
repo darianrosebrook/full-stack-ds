@@ -56,6 +56,30 @@
   }
 }
 
+.button--small {
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-core-spacing-size-03, 4px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-core-spacing-size-03, 4px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-core-spacing-size-04, 8px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-core-spacing-size-04, 8px));
+  min-height: var(--fsds-box-model-min-height, var(--fsds-core-dimension-action-min-height-small, 28px));
+}
+
+.button--medium {
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-core-spacing-size-04, 8px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-core-spacing-size-04, 8px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-core-spacing-size-05, 12px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-core-spacing-size-05, 12px));
+  min-height: var(--fsds-box-model-min-height, var(--fsds-core-dimension-action-min-height, 36px));
+}
+
+.button--large {
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-core-spacing-size-05, 12px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-core-spacing-size-05, 12px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-core-spacing-size-06, 16px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-core-spacing-size-06, 16px));
+  min-height: var(--fsds-box-model-min-height, var(--fsds-core-dimension-action-min-height-large, 48px));
+}
+
 .button__spinner {
   display: inline-block;
   width: 1em;

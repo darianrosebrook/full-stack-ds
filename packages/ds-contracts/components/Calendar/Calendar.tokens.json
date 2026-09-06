@@ -24,11 +24,6 @@
     "fallback": "#d0d0d0",
     "layer": "semantic"
   },
-  "calendar.color.border.accent": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d92d2e",
-    "layer": "semantic"
-  },
   "calendar.color.day.hover": {
     "resolvesTo": "semantic.interaction.background.hover",
     "fallback": "#f7f7f7",
@@ -42,11 +37,6 @@
   "calendar.color.day.selected.foreground": {
     "resolvesTo": "semantic.color.foreground.inverse",
     "fallback": "#fafafa",
-    "layer": "semantic"
-  },
-  "calendar.color.day.range.background": {
-    "resolvesTo": "semantic.color.background.accentSubtle",
-    "fallback": "#95dafb",
     "layer": "semantic"
   },
   "calendar.color.today.ring": {
@@ -92,11 +82,6 @@
   "calendar.typography.day.size": {
     "resolvesTo": "semantic.typography.body.03",
     "fallback": "14px",
-    "layer": "semantic"
-  },
-  "calendar.typography.weekday.size": {
-    "resolvesTo": "semantic.typography.caption.02",
-    "fallback": "12px",
     "layer": "semantic"
   },
   "calendar.focus.ring.width": {

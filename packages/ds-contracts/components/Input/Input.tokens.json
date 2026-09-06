@@ -94,11 +94,6 @@
     "fallback": "1px",
     "layer": "semantic"
   },
-  "input.space.inline.default": {
-    "resolvesTo": "core.spacing.size.05",
-    "fallback": "12px",
-    "layer": "core"
-  },
   "input.color.focus.default": {
     "resolvesTo": "semantic.color.border.focus",
     "fallback": "#0566fe",

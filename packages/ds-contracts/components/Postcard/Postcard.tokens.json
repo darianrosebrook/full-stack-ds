@@ -64,11 +64,6 @@
     "fallback": "6px",
     "layer": "semantic"
   },
-  "postcard.size.radius.full": {
-    "resolvesTo": "semantic.shape.control.radius.pill",
-    "fallback": "9999px",
-    "layer": "semantic"
-  },
   "postcard.size.gap.default": {
     "resolvesTo": "core.spacing.size.05",
     "fallback": "12px",

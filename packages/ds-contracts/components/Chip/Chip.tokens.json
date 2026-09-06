@@ -14,11 +14,6 @@
     "fallback": "#d0d0d0",
     "layer": "semantic"
   },
-  "chip.color.background.active": {
-    "resolvesTo": "semantic.color.action.background.secondary.active",
-    "fallback": "#b8b8b8",
-    "layer": "semantic"
-  },
   "chip.color.foreground.default": {
     "resolvesTo": "semantic.color.action.foreground.secondary.default",
     "fallback": "#141414",
@@ -68,26 +63,6 @@
     "resolvesTo": "core.motion.duration.short",
     "fallback": "150ms",
     "layer": "core"
-  },
-  "chip.focus.ring.width": {
-    "resolvesTo": "semantic.focus.ring.width",
-    "fallback": "2px",
-    "layer": "semantic"
-  },
-  "chip.focus.ring.color": {
-    "resolvesTo": "semantic.focus.ring.color",
-    "fallback": "#0566fe",
-    "layer": "semantic"
-  },
-  "chip.focus.ring.style": {
-    "resolvesTo": "semantic.focus.ring.style",
-    "fallback": "solid",
-    "layer": "semantic"
-  },
-  "chip.focus.ring.offset": {
-    "resolvesTo": "semantic.focus.ring.offset",
-    "fallback": "2px",
-    "layer": "semantic"
   },
   "chip.size.minHeight": {
     "resolvesTo": "core.dimension.actionMinHeight",

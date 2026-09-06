@@ -154,18 +154,6 @@
       "resolvesTo": "core.dimension.actionMinHeightSmall",
       "fallback": "28px"
     },
-    "button.size.padding-block.medium": {
-      "resolvesTo": "core.spacing.size.03",
-      "fallback": "4px"
-    },
-    "button.size.padding-inline.medium": {
-      "resolvesTo": "core.spacing.size.04",
-      "fallback": "8px"
-    },
-    "button.size.minHeight.medium": {
-      "resolvesTo": "core.dimension.actionMinHeightSmall",
-      "fallback": "28px"
-    },
     "button.size.fontSize.medium": {
       "resolvesTo": "semantic.typography.action.03",
       "fallback": "0.875rem"
@@ -192,18 +180,6 @@
       "resolvesTo": "core.dimension.actionMinHeight",
       "fallback": "36px"
     },
-    "button.size.padding-block.medium": {
-      "resolvesTo": "core.spacing.size.04",
-      "fallback": "8px"
-    },
-    "button.size.padding-inline.medium": {
-      "resolvesTo": "core.spacing.size.05",
-      "fallback": "12px"
-    },
-    "button.size.minHeight.medium": {
-      "resolvesTo": "core.dimension.actionMinHeight",
-      "fallback": "36px"
-    },
     "button.size.fontSize.medium": {
       "resolvesTo": "semantic.typography.action.02",
       "fallback": "1rem"
@@ -227,18 +203,6 @@
       "fallback": "16px"
     },
     "box-model.min-height": {
-      "resolvesTo": "core.dimension.actionMinHeightLarge",
-      "fallback": "48px"
-    },
-    "button.size.padding-block.medium": {
-      "resolvesTo": "core.spacing.size.05",
-      "fallback": "12px"
-    },
-    "button.size.padding-inline.medium": {
-      "resolvesTo": "core.spacing.size.06",
-      "fallback": "16px"
-    },
-    "button.size.minHeight.medium": {
       "resolvesTo": "core.dimension.actionMinHeightLarge",
       "fallback": "48px"
     },
