@@ -74,3 +74,11 @@ contracts:
   - name: 'native-disclosure'
     type: behavior
     path: 'packages/ds-contracts/components/Details/Details.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Homepage matrix mouse, Enter and Space activation reveals all loader-derived corpus rows and collapses; passed on integration and canonical main preview"
+    recorded_at: "2026-09-06T05:49:51.729Z"
+    command: "FSDS_E2E_BASE=http://localhost:5174 FSDS_E2E_PORT=5174 pnpm exec playwright test e2e/details-disclosure.spec.ts --grep 'homepage parity' --workers=1"
+    exit_code: 0
+    commit_sha: d9134efc
