@@ -44,3 +44,8 @@ evidence:
     evidence_ref: "Unity 6000.5.3f1 StylingTests: Editor typography spacing focus; Player selected disabled and portaled theme; tmp/unity-styling/results.xml and screenshots/runtime-controls-640.png"
     recorded_at: "2026-09-06T07:55:51.322Z"
     commit_sha: d4cfca8b
+  - criterion_id: A2
+    status: pass
+    evidence_ref: StylingTests narrow Player viewport bounds wrapping reachable scrolling; tmp/unity-styling/screenshots/runtime-popover-320.png and runtime-popover-640.png
+    recorded_at: "2026-09-06T07:55:53.650Z"
+    commit_sha: d4cfca8b
