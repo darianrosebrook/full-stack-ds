@@ -1,0 +1,46 @@
+id: FIX-NATIVE-TOKEN-CONSUMPTION-01
+title: 'Repair native token projection and consumption parity gate'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-06T09:13:04.656Z'
+updated_at: '2026-09-06T09:13:04.656Z'
+created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
+blast_radius:
+  modules:
+    - 'Compose token generation and native consumption validation'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/native-token-consumption.ts'
+    - 'packages/ds-codegen/src/frameworks/native-token-consumption.test.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/'
+    - 'packages/ds-codegen/src/validation/component-token-consumption.ts'
+    - 'scripts/compose-parity-diff.mjs'
+    - 'scripts/compose-parity-diff.test.mjs'
+    - 'scripts/dead-slot-audit/'
+    - 'packages/ds-jetpack-compose/'
+    - 'docs/architecture/design/component-token-consumption.md'
+    - 'package.json'
+  out: []
+invariants:
+  - 'Emit only the token dependency closure used by each target; preserve supported bindings and fallbacks without compatibility aliases or per-component emitter lore.'
+acceptance:
+  - id: A1
+    given: 'native components with layered and direct token reads'
+    when: 'emitted token scopes are projected'
+    then: 'every supported lookup retains its definition and fallback while unused declarations are absent'
+  - id: A2
+    given: 'legitimate target-specific token use and corrupted emissions'
+    when: 'the native parity gate runs'
+    then: 'target differences are allowed and missing bindings, unused declarations, identity drift, and unsupported chrome loss are rejected'
+  - id: A3
+    given: 'regenerated source and regression checks'
+    when: 'repository pre-push runs'
+    then: 'all selected gate families pass without bypasses'
+non_functional: {}
+contracts:
+  - name: 'native-token-consumption'
+    type: contract-test
+    path: 'packages/ds-codegen/src/frameworks/native-token-consumption.test.ts'
