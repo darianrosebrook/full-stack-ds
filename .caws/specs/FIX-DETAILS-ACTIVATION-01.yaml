@@ -10,6 +10,7 @@ created_by_session: '01a074e4-7308-7fc1-afa3-495ead6426ec'
 blast_radius:
   modules:
     - 'Details contract and web event realization'
+    - 'Shared interaction IR, host binding adapters and state/presence realization'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -50,6 +51,9 @@ scope:
   out: []
 invariants:
   - 'Disclosure state remains owned by the declared channel; no component-name emitter exceptions or homepage workaround.'
+  - 'Trigger and content bindings derive from contract capabilities; renaming a component cannot change its transition or presence behavior.'
+  - 'Controlled channels notify their owner exactly once; uncontrolled defaults initialize once; host ref and listener cleanup preserve consumer composition.'
+  - 'Hidden panel semantics prevail over component display styling; mouse and keyboard verification includes rendered visibility.'
 acceptance:
   - id: A1
     given: 'the existing homepage matrix'
