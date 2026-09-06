@@ -191,6 +191,12 @@ export class TextElement extends LitElement {
       font-size: var(--fsds-text-design-root-typography-size, var(--fsds-text-size-md, 1rem));
       line-height: var(--fsds-text-design-root-typography-line-height, var(--fsds-text-typography-line-height-body, 1.5));
       margin: 0;
+
+      &[data-truncate="true"] {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
 
     .text--display {
@@ -346,7 +352,7 @@ export class TextElement extends LitElement {
   }
 
   override render() {
-    return html`${this.as === "span" ? html`<span class="${this.computeClasses()}" data-fsds-box=""></span>` : this.as === "div" ? html`<div class="${this.computeClasses()}" data-fsds-box=""></div>` : this.as === "h1" ? html`<h1 class="${this.computeClasses()}" data-fsds-box=""></h1>` : this.as === "h2" ? html`<h2 class="${this.computeClasses()}" data-fsds-box=""></h2>` : this.as === "h3" ? html`<h3 class="${this.computeClasses()}" data-fsds-box=""></h3>` : this.as === "h4" ? html`<h4 class="${this.computeClasses()}" data-fsds-box=""></h4>` : this.as === "h5" ? html`<h5 class="${this.computeClasses()}" data-fsds-box=""></h5>` : this.as === "h6" ? html`<h6 class="${this.computeClasses()}" data-fsds-box=""></h6>` : html`<p class="${this.computeClasses()}" data-fsds-box=""></p>`}`;
+    return html`${this.as === "span" ? html`<span class="${this.computeClasses()}" data-truncate=${(this.truncate ? "true" : "false")} data-fsds-box=""></span>` : this.as === "div" ? html`<div class="${this.computeClasses()}" data-truncate=${(this.truncate ? "true" : "false")} data-fsds-box=""></div>` : this.as === "h1" ? html`<h1 class="${this.computeClasses()}" data-truncate=${(this.truncate ? "true" : "false")} data-fsds-box=""></h1>` : this.as === "h2" ? html`<h2 class="${this.computeClasses()}" data-truncate=${(this.truncate ? "true" : "false")} data-fsds-box=""></h2>` : this.as === "h3" ? html`<h3 class="${this.computeClasses()}" data-truncate=${(this.truncate ? "true" : "false")} data-fsds-box=""></h3>` : this.as === "h4" ? html`<h4 class="${this.computeClasses()}" data-truncate=${(this.truncate ? "true" : "false")} data-fsds-box=""></h4>` : this.as === "h5" ? html`<h5 class="${this.computeClasses()}" data-truncate=${(this.truncate ? "true" : "false")} data-fsds-box=""></h5>` : this.as === "h6" ? html`<h6 class="${this.computeClasses()}" data-truncate=${(this.truncate ? "true" : "false")} data-fsds-box=""></h6>` : html`<p class="${this.computeClasses()}" data-truncate=${(this.truncate ? "true" : "false")} data-fsds-box=""></p>`}`;
   }
 }
 

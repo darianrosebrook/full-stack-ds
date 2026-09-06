@@ -19,6 +19,12 @@
   font-size: var(--fsds-text-design-root-typography-size, var(--fsds-text-size-md, 1rem));
   line-height: var(--fsds-text-design-root-typography-line-height, var(--fsds-text-typography-line-height-body, 1.5));
   margin: 0;
+
+  &[data-truncate="true"] {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
 .text--display {

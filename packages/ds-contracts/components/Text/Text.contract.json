@@ -17,7 +17,10 @@
     },
     "dom": {
       "tag": "p",
-      "part": "root"
+      "part": "root",
+      "bindings": {
+        "data-truncate": "conditional:prop:truncate|literal:true|literal:false"
+      }
     }
   },
   "props": {

@@ -72,7 +72,7 @@ export function Text({
   const As = as ?? "p";
 
   return (
-  <Stack layout="native" as={As} className={`${classNames}`} data-testid={testId} data-fsds-component="text" data-fsds-box="" {...rest} />
+  <Stack layout="native" as={As} className={`${classNames}`} data-truncate={(truncate ? "true" : "false")} data-testid={testId} data-fsds-component="text" data-fsds-box="" {...rest} />
   );
 }
 // @generated:end
