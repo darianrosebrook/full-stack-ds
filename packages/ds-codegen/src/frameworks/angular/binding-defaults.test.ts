@@ -238,3 +238,38 @@ describe("FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: no-default props stay bare 
     expect(src).not.toMatch(/decorative \?\? /);
   });
 });
+
+
+describe("Angular polymorphic content projection", () => {
+  const contract: ComponentContract = {
+    name: "FixtureSemanticCaption",
+    layer: "primitive",
+    cssPrefix: "fixture-semantic-caption",
+    anatomy: { parts: ["root"], dom: {
+      tag: "p", part: "root", children: [{ tag: "children" }],
+    } },
+    props: { designed: { members: [{
+      name: "as", propType: { kind: "ref", to: "CaptionElement" },
+      description: "Semantic host element.",
+    }] } },
+    types: { CaptionElement: { kind: "union", values: ["p", "span"] } },
+  };
+
+  it("projects the same child through each selectable host using one outlet", () => {
+    const src = generateAngularComponentSource(buildComponentIR(contract));
+    expect(src.match(/<ng-content/g)).toHaveLength(1);
+    expect(src).toContain('imports: [NgClass, NgSwitch, NgSwitchCase, NgTemplateOutlet]');
+    expect(src).toMatch(/<p[^>]*ngSwitchCase[^>]*>\s*<ng-container \[ngTemplateOutlet\]/);
+    expect(src).toMatch(/<span[^>]*ngSwitchCase[^>]*>\s*<ng-container \[ngTemplateOutlet\]/);
+  });
+
+  it("does not import a template outlet for an empty polymorphic host", () => {
+    const empty = { ...contract, anatomy: {
+      parts: ["root"], dom: { tag: "p", part: "root" },
+    } };
+    const src = generateAngularComponentSource(buildComponentIR(empty));
+    expect(src).toContain('ngSwitchCase');
+    expect(src).not.toContain('NgTemplateOutlet');
+    expect(src).not.toContain('ngTemplateOutlet');
+  });
+});

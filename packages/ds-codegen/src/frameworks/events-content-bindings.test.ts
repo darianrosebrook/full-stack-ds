@@ -255,7 +255,7 @@ describe("polymorphic root lowering", () => {
 
   it("Angular branches root tags through NgSwitch", () => {
     const src = generateAngularComponentSource(polymorphicIr);
-    expect(src).toContain(`import { NgClass, NgSwitch, NgSwitchCase } from "@angular/common";`);
+    expect(src).toContain(`import { NgClass, NgSwitch, NgSwitchCase, NgTemplateOutlet } from "@angular/common";`);
     expect(src).toContain(`<ng-container [ngSwitch]="this.as || 'code'">`);
     const kbd = src.match(/<kbd\s[^>]*>/)?.[0];
     expect(kbd).toContain('[ngClass]="classes()"');

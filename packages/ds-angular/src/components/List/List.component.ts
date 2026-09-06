@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgSwitch, NgSwitchCase } from "@angular/common";
+import { NgClass, NgSwitch, NgSwitchCase, NgTemplateOutlet } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -23,17 +23,20 @@ export type ListSize = "sm" | "md" | "lg";
 @Component({
   selector: "fsds-list",
   standalone: true,
-  imports: [NgClass, NgSwitch, NgSwitchCase],
+  imports: [NgClass, NgSwitch, NgSwitchCase, NgTemplateOutlet],
   host: { "data-fsds-component": "list" },
-  template: `<ng-container [ngSwitch]="this.as || 'ul'">
+  template: `<ng-template #fsdsPolymorphicBody>
+  <ng-content />
+</ng-template>
+<ng-container [ngSwitch]="this.as || 'ul'">
   <ul [ngClass]="classes()" data-fsds-box="" *ngSwitchCase="'ul'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </ul>
   <ol [ngClass]="classes()" data-fsds-box="" *ngSwitchCase="'ol'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </ol>
   <dl [ngClass]="classes()" data-fsds-box="" *ngSwitchCase="'dl'">
-    <ng-content />
+    <ng-container [ngTemplateOutlet]="fsdsPolymorphicBody" />
   </dl>
 </ng-container>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

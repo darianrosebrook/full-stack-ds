@@ -30,9 +30,10 @@ interface Props {
   transform?: TextTransform;
   truncate?: boolean;
   class?: string;
+  children?: import('svelte').Snippet;
 }
 
-let { as, variant, size, weight, align, transform, truncate, class: className }: Props = $props();
+let { as, variant, size, weight, align, transform, truncate, class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes
@@ -54,4 +55,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<svelte:element this={as ?? "p"} class={classes} data-fsds-component="text" data-fsds-box=""></svelte:element>
+<svelte:element this={as ?? "p"} class={classes} data-truncate={(truncate ? "true" : "false")} data-fsds-component="text" data-fsds-box="">
+  {@render children?.()}
+</svelte:element>

@@ -5,7 +5,7 @@ status: implemented
 title: Component design property bindings
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: 0f79972563d046ae6f219f62219d7ce9c3be5e13
+verified_at_commit: b4b87a0890eef1b1e3083cc2be2ba0df7aa822f1
 governs:
   - packages/ds-codegen/src/design-properties.ts
   - packages/ds-contracts/component.styles.schema.json
@@ -88,3 +88,24 @@ The inspector has a Design properties section grouped by source part/condition a
 - `e2e/fixtures/design-bindings-gallery.tsx` is a real generated React composition for visual and interaction review. Screenshots go to ignored Playwright output.
 
 These witnesses do not prove every conditional selector is reachable, arbitrary retokening is accessible, full cross-framework visual parity, native runtime overrides, or complete coverage of design-tool paint/effect features. Broader binding coverage and visual fidelity remain separate claims.
+
+## Single-line text in composed feeds
+
+The Pinterest caption attempt exposed a declared but discarded `Text.truncate`
+prop. `TEXT-TRUNCATE-BINDING-01` binds it to a finite string-valued DOM state and
+realizes single-line clipping through the Text style sidecar. Explicit string
+values matter: a boolean presence attribute is not equivalent to the selector
+value `true`. No emitter special case is required. False or absent truncation
+restores normal wrapping. `e2e/text-truncation.spec.ts` checks constrained width,
+clipped overflow, ellipsis, and clearing across the five Web DOM targets. This
+is a Web realization claim; it does not establish native truncation parity.
+
+The same attempt found the missing Text anatomy children outlet despite its
+A2UI child allowance. The outlet is now explicit, so generated public types
+and child projection agree; React rest-spread behavior is no longer relied on.
+
+Angular additionally needs one projection outlet shared by its selectable host
+tags. Its emitter now declares that body once as a template fragment and places
+it inside the active host, following [Angular's projection guidance](https://angular.dev/guide/components/content-projection).
+The browser check switches between paragraph, inline, and heading hosts before
+checking truncation; this guards against silently losing the supplied child.
