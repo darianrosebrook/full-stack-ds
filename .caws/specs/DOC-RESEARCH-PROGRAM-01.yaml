@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "merge 41a3072c: docs/research-program.md added with the domain table; README.md/docs README/Home/ArchitectureView/AboutDialog/package.json reframed — grep 'design-system experiment' README.md now returns nothing, grep 'The components are the demo' src/views/Home.tsx returns the new headline"
     recorded_at: "2026-09-06T21:12:53.497Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm test in worktree: 280 files, 3814 tests passed incl. updated ChromeT2.surfaces.test.tsx and AboutDialog.test.tsx; typecheck and lint clean"
+    recorded_at: "2026-09-06T21:12:53.968Z"
