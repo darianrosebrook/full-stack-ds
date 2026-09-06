@@ -71,3 +71,8 @@ contracts:
   - name: 'design-properties'
     type: schema
     path: 'packages/ds-contracts/component.tokens.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Source 75fc3357 / merge e94247ee: pnpm test --maxWorkers=2 (design-properties and semantic-usage tests); node scripts/migrate-design-bindings.mjs (1035 bindings, 51 components, zero remaining mechanical additions); audit:dead-slots proves new addresses consumed, with 82 legacy gaps explicitly retained."
+    recorded_at: "2026-09-06T05:42:07.511Z"
