@@ -5,7 +5,7 @@ status: implemented
 title: Component token consumption
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: bba5beae
+verified_at_commit: cdaa1cb1
 governs:
   - packages/ds-codegen/src/css-token-consumption.ts
   - packages/ds-codegen/src/validation/component-token-consumption.ts
@@ -24,7 +24,11 @@ Component-scoped tokens are an executable interface. A declared address must rea
 
 Web token sheets and Lit inline styles contain only the used declaration closure. Public `design.*` override addresses remain unset and are consumed at the property, retaining the authored fallback chain. Shared box-model defaults remain at consumers, including variant and part defaults. Variant defaults previously occupied side override variables and defeated a consumer's axis/shorthand override; property fallbacks now preserve the shared layer precedence. No per-component reset pool is emitted.
 
-Native output is projected independently. React Native token dictionaries follow actual typed `tokens.<scope>[name]` reads; Compose follows its emitted `layeredSlot` calls and axis branches; SwiftUI follows emitted color and dimension suffix lookups. Each keeps the referenced definitions and their resolution dependencies. The registry allowlists govern which explicit native targets may establish a source consumer. Figma descriptors carry contract metadata, not proof of live Figma controls.
+Native output is projected independently. React Native token dictionaries follow actual typed `tokens.<scope>[name]` reads; Compose follows its emitted `layeredSlot` calls and axis branches plus direct `componentTokenScopes[scope]?.get(name)` reads; SwiftUI follows emitted color and dimension suffix lookups. Direct Compose reads retain only the addressed scope. Compose's resolver reads reference values from the theme map, so a reference does not justify copying another component-table definition. The registry allowlists govern which explicit native targets may establish a source consumer. Figma descriptors carry contract metadata, not proof of live Figma controls.
+
+`parity:compose-tokens` checks the emitted Compose dictionaries in both directions: each lookup has a definition in its addressed scope, and each definition has a consumer. Shared Compose/RN addresses must agree, while target-specific consumed vocabularies may differ. The existing supported chrome-role, content-color propagation and modifier-order checks remain obligations. Rejection fixtures run with the gate in CI and pre-push; generated toggle dictionaries also run through the Kotlin theme resolver to verify state fallbacks and override precedence. These checks replace the obsolete requirement to stamp identical native token lists.
+
+The projected-content Compose control path consumes all four logical padding edges through `PaddingValues(start, top, end, bottom)`. Its parity obligation uses those canonical box-model slots, replacing the retired size-padding vocabulary; an end-edge override is independent of its starting edge.
 
 Compile-time behavior defaults are distinct from runtime CSS overrides. Toast's notification dwell remains a behavior input and a React Native theme lookup. Web CSS does not declare an inert duration variable. SwiftUI now selects that same dismissal policy instead of using the first unrelated animation duration.
 
