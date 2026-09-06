@@ -5,7 +5,7 @@ mode: refactor
 lifecycle_state: active
 worktree: token-consumption
 created_at: '2026-09-06T05:48:28.365Z'
-updated_at: '2026-09-06T05:48:34.543Z'
+updated_at: '2026-09-06T05:52:30.742Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
@@ -29,7 +29,14 @@ scope:
     - 'e2e'
     - 'docs/architecture'
     - 'docs/current-implementation-snapshot.md'
+    - packages/ds-codegen/package.json
   out: []
+  support:
+    - pnpm-lock.yaml
+    - package.json
+    - AGENTS.md
+    - docs/normal-form.md
+    - doc-freshness-baseline.json
 invariants:
   - 'Semantic vocabulary may be unset or unconsumed; component declarations must have a real property or behavior consumer, with no compatibility-only aliases.'
   - 'Preserve supported component decisions and authored defaults; source absence alone is not authority to remove behavior or anatomy.'
