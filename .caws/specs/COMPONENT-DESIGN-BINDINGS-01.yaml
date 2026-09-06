@@ -76,3 +76,7 @@ evidence:
     status: pass
     evidence_ref: "Source 75fc3357 / merge e94247ee: pnpm test --maxWorkers=2 (design-properties and semantic-usage tests); node scripts/migrate-design-bindings.mjs (1035 bindings, 51 components, zero remaining mechanical additions); audit:dead-slots proves new addresses consumed, with 82 legacy gaps explicitly retained."
     recorded_at: "2026-09-06T05:42:07.511Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Source 75fc3357: e2e/design-bindings.spec.ts verifies missing semantic CSS, fallback restoration after clear, independent part overrides, and generated Button/Card controls across React/Vue/Svelte/Angular/Lit. audit:token-resolvability: zero unresolved references, including nested fallback reads."
+    recorded_at: "2026-09-06T05:42:10.250Z"
