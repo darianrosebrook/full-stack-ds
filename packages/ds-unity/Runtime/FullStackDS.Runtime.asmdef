@@ -1,0 +1,5 @@
+{
+  "name": "FullStackDS.Runtime",
+  "rootNamespace": "FullStackDS",
+  "autoReferenced": true
+}
