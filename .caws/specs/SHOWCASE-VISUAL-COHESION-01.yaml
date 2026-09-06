@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: showcase-visual-cohesion
 created_at: '2026-09-06T04:07:33.499Z'
-updated_at: '2026-09-06T04:07:45.172Z'
+updated_at: '2026-09-06T04:10:21.998Z'
 created_by_session: '01a06ed3-9fec-7332-b38d-37990ff8be07'
 blast_radius:
   modules:
@@ -29,6 +29,8 @@ scope:
     - 'packages/ds-angular/src/components'
     - 'packages/ds-lit/src/components'
     - 'packages/ds-react-native/src/components'
+    - packages/ds-figma-plugin/src/generated/components
+    - packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components
   out: []
 invariants:
   - 'Component semantics and reusable visual behavior remain contract-authored; showcase CSS only composes or themes those components.'
