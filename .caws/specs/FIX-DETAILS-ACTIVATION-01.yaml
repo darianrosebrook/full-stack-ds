@@ -1,0 +1,46 @@
+id: FIX-DETAILS-ACTIVATION-01
+title: 'Connect native disclosure activation to the governed state channel'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-06T04:07:47.038Z'
+updated_at: '2026-09-06T04:07:47.038Z'
+created_by_session: '01a074e4-7308-7fc1-afa3-495ead6426ec'
+blast_radius:
+  modules:
+    - 'Details contract and web event realization'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/components/Details'
+    - 'packages/ds-codegen/src/semantics.ts'
+    - 'packages/ds-codegen/src/native-disclosure.test.ts'
+    - 'packages/ds-codegen/src/frameworks/react/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/vue/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/svelte/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/angular/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/lit/component-source.ts'
+    - 'packages/ds-*/src/components/Details/**'
+    - 'e2e/details-disclosure.spec.ts'
+  out: []
+invariants:
+  - 'Disclosure state remains owned by the declared channel; no component-name emitter exceptions or homepage workaround.'
+acceptance:
+  - id: A1
+    given: 'the existing homepage matrix'
+    when: 'the summary is activated by mouse or keyboard'
+    then: 'all component rows become visible and can be collapsed again'
+  - id: A2
+    given: 'controlled or disabled Details'
+    when: 'the summary is activated'
+    then: 'controlled state stays authoritative, callbacks request the next value once, and disabled activation makes no change'
+  - id: A3
+    given: 'the shared Details contract'
+    when: 'all targets are regenerated and required repository gates run'
+    then: 'the five web realizations pass admission and behavioral regression checks'
+non_functional: {}
+contracts:
+  - name: 'native-disclosure'
+    type: behavior
+    path: 'packages/ds-contracts/components/Details/Details.contract.json'
