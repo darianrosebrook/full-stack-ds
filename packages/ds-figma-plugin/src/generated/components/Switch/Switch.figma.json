@@ -343,6 +343,42 @@
         }
       },
       {
+        "selector": ".switch--sm",
+        "declarations": {
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-action-size-small-padding-block, 2px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-action-size-small-padding-block, 2px)",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-action-size-small-padding-inline, 4px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-action-size-small-padding-inline, 4px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-action-size-small-gap, 4px)",
+          "--fsds-box-model-min-height": "var(--fsds-semantic-action-size-small-min-height, 24px)",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-action-size-small-min-width, 24px)"
+        }
+      },
+      {
+        "selector": ".switch--md",
+        "declarations": {
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-action-size-medium-padding-block, 4px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-action-size-medium-padding-block, 4px)",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-action-size-medium-padding-inline, 8px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-action-size-medium-padding-inline, 8px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-action-size-medium-gap, 8px)",
+          "--fsds-box-model-min-height": "var(--fsds-semantic-action-size-medium-min-height, 32px)",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-action-size-medium-min-width, 32px)"
+        }
+      },
+      {
+        "selector": ".switch--lg",
+        "declarations": {
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-action-size-large-padding-block, 8px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-action-size-large-padding-block, 8px)",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-action-size-large-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-action-size-large-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-action-size-large-gap, 12px)",
+          "--fsds-box-model-min-height": "var(--fsds-semantic-action-size-large-min-height, 48px)",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-action-size-large-min-width, 48px)"
+        }
+      },
+      {
         "selector": ".switch--sm .switch__track",
         "declarations": {
           "width": "var(--fsds-switch-size-sm-track-width, 32px)",

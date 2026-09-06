@@ -309,7 +309,7 @@ button {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding-bottom: var(--fsds-core-spacing-size-07);
+  padding: 0 var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-07);
 }
 
 /*
@@ -590,16 +590,17 @@ button {
 }
 
 .nutrition-facts {
-  --fsds-nutrition-facts-background: #fff;
-  --fsds-nutrition-facts-ink: #000;
-  --fsds-nutrition-facts-muted: #333;
-  --fsds-nutrition-facts-rule: #000;
-  --fsds-nutrition-facts-hairline: #000;
+  --fsds-nutrition-facts-background: var(--fsds-semantic-color-background-elevated);
+  --fsds-nutrition-facts-ink: var(--fsds-semantic-color-foreground-primary);
+  --fsds-nutrition-facts-muted: var(--fsds-semantic-color-foreground-secondary);
+  --fsds-nutrition-facts-rule: var(--fsds-semantic-color-foreground-primary);
+  --fsds-nutrition-facts-hairline: var(--fsds-semantic-color-border-default);
   --fsds-nutrition-facts-padding: var(--fsds-core-spacing-size-05);
   --fsds-nutrition-facts-title-size: 1.5rem;
   --fsds-nutrition-facts-body-size: var(--fsds-core-typography-ramp-2);
 
-  max-width: 720px;
+  width: 100%;
+  max-width: none;
   padding: var(--fsds-nutrition-facts-padding);
   color: var(--fsds-nutrition-facts-ink);
   background: var(--fsds-nutrition-facts-background);

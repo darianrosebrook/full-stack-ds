@@ -289,5 +289,137 @@ val switchTokenScopes: ComponentTokenScopes = mapOf(
             fallback = "#d0d0d0",
         ),
     ),
+    "variant_sm" to mapOf(
+        "box-model.padding-block-start" to ComponentTokenDefinition(
+            name = "box-model.padding-block-start",
+            cssVar = "--fsds-box-model-padding-block-start",
+            ref = "semantic.action.size.small.padding-block",
+            fallback = "2px",
+        ),
+        "box-model.padding-block-end" to ComponentTokenDefinition(
+            name = "box-model.padding-block-end",
+            cssVar = "--fsds-box-model-padding-block-end",
+            ref = "semantic.action.size.small.padding-block",
+            fallback = "2px",
+        ),
+        "box-model.padding-inline-start" to ComponentTokenDefinition(
+            name = "box-model.padding-inline-start",
+            cssVar = "--fsds-box-model-padding-inline-start",
+            ref = "semantic.action.size.small.padding-inline",
+            fallback = "4px",
+        ),
+        "box-model.padding-inline-end" to ComponentTokenDefinition(
+            name = "box-model.padding-inline-end",
+            cssVar = "--fsds-box-model-padding-inline-end",
+            ref = "semantic.action.size.small.padding-inline",
+            fallback = "4px",
+        ),
+        "box-model.gap" to ComponentTokenDefinition(
+            name = "box-model.gap",
+            cssVar = "--fsds-box-model-gap",
+            ref = "semantic.action.size.small.gap",
+            fallback = "4px",
+        ),
+        "box-model.min-height" to ComponentTokenDefinition(
+            name = "box-model.min-height",
+            cssVar = "--fsds-box-model-min-height",
+            ref = "semantic.action.size.small.min-height",
+            fallback = "24px",
+        ),
+        "box-model.min-width" to ComponentTokenDefinition(
+            name = "box-model.min-width",
+            cssVar = "--fsds-box-model-min-width",
+            ref = "semantic.action.size.small.min-width",
+            fallback = "24px",
+        ),
+    ),
+    "variant_md" to mapOf(
+        "box-model.padding-block-start" to ComponentTokenDefinition(
+            name = "box-model.padding-block-start",
+            cssVar = "--fsds-box-model-padding-block-start",
+            ref = "semantic.action.size.medium.padding-block",
+            fallback = "4px",
+        ),
+        "box-model.padding-block-end" to ComponentTokenDefinition(
+            name = "box-model.padding-block-end",
+            cssVar = "--fsds-box-model-padding-block-end",
+            ref = "semantic.action.size.medium.padding-block",
+            fallback = "4px",
+        ),
+        "box-model.padding-inline-start" to ComponentTokenDefinition(
+            name = "box-model.padding-inline-start",
+            cssVar = "--fsds-box-model-padding-inline-start",
+            ref = "semantic.action.size.medium.padding-inline",
+            fallback = "8px",
+        ),
+        "box-model.padding-inline-end" to ComponentTokenDefinition(
+            name = "box-model.padding-inline-end",
+            cssVar = "--fsds-box-model-padding-inline-end",
+            ref = "semantic.action.size.medium.padding-inline",
+            fallback = "8px",
+        ),
+        "box-model.gap" to ComponentTokenDefinition(
+            name = "box-model.gap",
+            cssVar = "--fsds-box-model-gap",
+            ref = "semantic.action.size.medium.gap",
+            fallback = "8px",
+        ),
+        "box-model.min-height" to ComponentTokenDefinition(
+            name = "box-model.min-height",
+            cssVar = "--fsds-box-model-min-height",
+            ref = "semantic.action.size.medium.min-height",
+            fallback = "32px",
+        ),
+        "box-model.min-width" to ComponentTokenDefinition(
+            name = "box-model.min-width",
+            cssVar = "--fsds-box-model-min-width",
+            ref = "semantic.action.size.medium.min-width",
+            fallback = "32px",
+        ),
+    ),
+    "variant_lg" to mapOf(
+        "box-model.padding-block-start" to ComponentTokenDefinition(
+            name = "box-model.padding-block-start",
+            cssVar = "--fsds-box-model-padding-block-start",
+            ref = "semantic.action.size.large.padding-block",
+            fallback = "8px",
+        ),
+        "box-model.padding-block-end" to ComponentTokenDefinition(
+            name = "box-model.padding-block-end",
+            cssVar = "--fsds-box-model-padding-block-end",
+            ref = "semantic.action.size.large.padding-block",
+            fallback = "8px",
+        ),
+        "box-model.padding-inline-start" to ComponentTokenDefinition(
+            name = "box-model.padding-inline-start",
+            cssVar = "--fsds-box-model-padding-inline-start",
+            ref = "semantic.action.size.large.padding-inline",
+            fallback = "16px",
+        ),
+        "box-model.padding-inline-end" to ComponentTokenDefinition(
+            name = "box-model.padding-inline-end",
+            cssVar = "--fsds-box-model-padding-inline-end",
+            ref = "semantic.action.size.large.padding-inline",
+            fallback = "16px",
+        ),
+        "box-model.gap" to ComponentTokenDefinition(
+            name = "box-model.gap",
+            cssVar = "--fsds-box-model-gap",
+            ref = "semantic.action.size.large.gap",
+            fallback = "12px",
+        ),
+        "box-model.min-height" to ComponentTokenDefinition(
+            name = "box-model.min-height",
+            cssVar = "--fsds-box-model-min-height",
+            ref = "semantic.action.size.large.min-height",
+            fallback = "48px",
+        ),
+        "box-model.min-width" to ComponentTokenDefinition(
+            name = "box-model.min-width",
+            cssVar = "--fsds-box-model-min-width",
+            ref = "semantic.action.size.large.min-width",
+            fallback = "48px",
+        ),
+    ),
 )
 // @generated:end

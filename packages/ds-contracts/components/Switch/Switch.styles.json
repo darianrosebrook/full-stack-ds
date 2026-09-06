@@ -243,6 +243,96 @@
       "fallback": "#d0d0d0"
     }
   },
+  "--sm": {
+    "box-model.padding-block-start": {
+      "resolvesTo": "semantic.action.size.small.padding-block",
+      "fallback": "2px"
+    },
+    "box-model.padding-block-end": {
+      "resolvesTo": "semantic.action.size.small.padding-block",
+      "fallback": "2px"
+    },
+    "box-model.padding-inline-start": {
+      "resolvesTo": "semantic.action.size.small.padding-inline",
+      "fallback": "4px"
+    },
+    "box-model.padding-inline-end": {
+      "resolvesTo": "semantic.action.size.small.padding-inline",
+      "fallback": "4px"
+    },
+    "box-model.gap": {
+      "resolvesTo": "semantic.action.size.small.gap",
+      "fallback": "4px"
+    },
+    "box-model.min-height": {
+      "resolvesTo": "semantic.action.size.small.min-height",
+      "fallback": "24px"
+    },
+    "box-model.min-width": {
+      "resolvesTo": "semantic.action.size.small.min-width",
+      "fallback": "24px"
+    }
+  },
+  "--md": {
+    "box-model.padding-block-start": {
+      "resolvesTo": "semantic.action.size.medium.padding-block",
+      "fallback": "4px"
+    },
+    "box-model.padding-block-end": {
+      "resolvesTo": "semantic.action.size.medium.padding-block",
+      "fallback": "4px"
+    },
+    "box-model.padding-inline-start": {
+      "resolvesTo": "semantic.action.size.medium.padding-inline",
+      "fallback": "8px"
+    },
+    "box-model.padding-inline-end": {
+      "resolvesTo": "semantic.action.size.medium.padding-inline",
+      "fallback": "8px"
+    },
+    "box-model.gap": {
+      "resolvesTo": "semantic.action.size.medium.gap",
+      "fallback": "8px"
+    },
+    "box-model.min-height": {
+      "resolvesTo": "semantic.action.size.medium.min-height",
+      "fallback": "32px"
+    },
+    "box-model.min-width": {
+      "resolvesTo": "semantic.action.size.medium.min-width",
+      "fallback": "32px"
+    }
+  },
+  "--lg": {
+    "box-model.padding-block-start": {
+      "resolvesTo": "semantic.action.size.large.padding-block",
+      "fallback": "8px"
+    },
+    "box-model.padding-block-end": {
+      "resolvesTo": "semantic.action.size.large.padding-block",
+      "fallback": "8px"
+    },
+    "box-model.padding-inline-start": {
+      "resolvesTo": "semantic.action.size.large.padding-inline",
+      "fallback": "16px"
+    },
+    "box-model.padding-inline-end": {
+      "resolvesTo": "semantic.action.size.large.padding-inline",
+      "fallback": "16px"
+    },
+    "box-model.gap": {
+      "resolvesTo": "semantic.action.size.large.gap",
+      "fallback": "12px"
+    },
+    "box-model.min-height": {
+      "resolvesTo": "semantic.action.size.large.min-height",
+      "fallback": "48px"
+    },
+    "box-model.min-width": {
+      "resolvesTo": "semantic.action.size.large.min-width",
+      "fallback": "48px"
+    }
+  },
   ".switch--sm .switch__track": {
     "width": {
       "resolvesTo": "switch.size.sm.track.width",

@@ -96,6 +96,7 @@ function PropControl({
       return (
         <span className="fsds-pp__toggle">
           <Switch
+            size="sm"
             checked={Boolean(value)}
             onChange={(checked) => onChange(checked)}
             aria-label={control.label}
