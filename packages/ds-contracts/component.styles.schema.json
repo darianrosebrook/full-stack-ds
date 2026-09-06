@@ -18,11 +18,16 @@
       "additionalProperties": false,
       "oneOf": [
         {
-          "required": ["resolvesTo"],
+          "required": [
+            "resolvesTo"
+          ],
           "description": "Slot or global-token reference. First segment of the dotted path decides namespace: <cssPrefix>.* resolves to a slot declared in this contract's tokens.json; core.* / semantic.* resolves to the global token graph."
         },
         {
-          "required": ["literal", "platforms"]
+          "required": [
+            "literal",
+            "platforms"
+          ]
         }
       ],
       "properties": {
@@ -32,7 +37,7 @@
         },
         "fallback": {
           "type": "string",
-          "description": "Optional fallback for the var() reference at the consumer site. Usually unneeded — the slot's own fallback chains via the cascade."
+          "description": "Optional fallback for the var() reference at the consumer site. Usually unneeded \u2014 the slot's own fallback chains via the cascade."
         },
         "literal": {
           "type": "string",
@@ -43,10 +48,33 @@
           "description": "Targets that should honor this declaration. Required on `literal`; optional on `resolvesTo` (defaults to all three platforms).",
           "items": {
             "type": "string",
-            "enum": ["web", "ios", "android"]
+            "enum": [
+              "web",
+              "ios",
+              "android"
+            ]
           },
           "uniqueItems": true,
           "minItems": 1
+        },
+        "design": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "property",
+            "slot"
+          ],
+          "properties": {
+            "property": {
+              "type": "string",
+              "description": "Closed design-property identity, validated against the CSS consumer by the IR."
+            },
+            "slot": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9.-]*\\.design\\.[a-z0-9.-]+$",
+              "description": "Initially unset component override. The existing resolution is its default."
+            }
+          }
         }
       }
     }

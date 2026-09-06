@@ -1,3 +1,4 @@
+import { buildDesignBindings, designValue, type DesignBindingIR } from './design-properties.js';
 /**
  * Component IR: the framework-neutral derivation of a validated contract.
  *
@@ -1648,6 +1649,7 @@ export interface ComponentIR {
    * CSS. Additive — web emitters ignore this and read `cssBlocks`.
    */
   tokenFacts: TokenFactIR[];
+  designBindings: DesignBindingIR[];
 
   /**
    * Component-local token scopes as typed data. This mirrors the web
@@ -1872,6 +1874,7 @@ export function buildComponentIR(
   const keyframes = buildKeyframes(contract);
   const motion = buildMotion(contract);
   const tokenFacts = buildTokenFacts(contract.tokens ?? {});
+  const designBindings = buildDesignBindings(contract);
   const tokenScopes = buildTokenScopes(contract, cssPrefix);
 
   const behavior = buildBehaviorIR(contract, styledProps);
@@ -2010,6 +2013,7 @@ export function buildComponentIR(
     keyframes,
     motion,
     tokenFacts,
+    designBindings,
     tokenScopes,
     behavior,
     surface,
@@ -6276,7 +6280,7 @@ function renderStyleBlock(
       // a literal CSS value (e.g. `transparent` for ghost/tertiary
       // variants). The literal flows straight through as the custom-
       // property's value.
-      declarations[outputKey] = entry.literal;
+      declarations[outputKey] = designValue(entry, entry.literal, platformTarget);
       continue;
     }
     if (typeof entry.resolvesTo === "string") {
@@ -6287,7 +6291,7 @@ function renderStyleBlock(
         typeof entry.fallback === "string"
           ? `var(${ref}, ${entry.fallback})`
           : `var(${ref})`;
-      declarations[outputKey] = value;
+      declarations[outputKey] = designValue(entry, value, platformTarget);
     }
   }
   return declarations;

@@ -496,6 +496,8 @@ export type StylePlatform = 'web' | 'ios' | 'android';
  * an intentional literal (`literal` + `platforms`).
  */
 export interface StyleEntry {
+  /** An independently settable, initially unset component design property. */
+  design?: { property: string; slot: string };
   /**
    * Dotted path. If the first segment matches the contract's `cssPrefix`,
    * the path refers to a slot declared in this contract's tokens.json
