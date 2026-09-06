@@ -36,14 +36,17 @@ namespace FullStackDS
         }
         public BooleanControl()
         {
+            Theme.Attach(this);
+            Trigger.AddToClassList("fsds-toggle-trigger");
+            track.AddToClassList("fsds-toggle-track");
+            thumb.AddToClassList("fsds-toggle-thumb");
+            caption.AddToClassList("fsds-toggle-caption");
             Trigger.clicked += () => RequestValue(!current);
             Trigger.style.flexDirection = FlexDirection.Row;
             Trigger.style.alignItems = Align.Center;
             track.style.flexDirection = FlexDirection.Row;
             track.style.alignItems = Align.Center;
             TrackWidth = 36; TrackHeight = 20; ThumbSize = 16;
-            Skin.Round(track, 12); Skin.Round(thumb, 10);
-            thumb.style.backgroundColor = Color.white;
             track.Add(thumb); Trigger.Add(track); Trigger.Add(caption); hierarchy.Add(Trigger);
             SetValueWithoutNotify(false);
         }
@@ -63,24 +66,6 @@ namespace FullStackDS
         {
             current = next;
             EnableInClassList("is-checked", next);
-            track.style.backgroundColor = next ? Skin.Accent : Skin.Muted;
-            track.style.justifyContent = next ? Justify.FlexEnd : Justify.FlexStart;
-        }
-    }
-    internal static class Skin
-    {
-        internal static readonly Color Accent = new Color(.20f, .43f, .83f);
-        internal static readonly Color Muted = new Color(.30f, .32f, .36f);
-        internal static readonly Color Panel = new Color(.15f, .16f, .19f);
-        internal static void Round(VisualElement node, float radius)
-        {
-            node.style.borderTopLeftRadius = radius; node.style.borderTopRightRadius = radius;
-            node.style.borderBottomLeftRadius = radius; node.style.borderBottomRightRadius = radius;
-        }
-        internal static void Padding(VisualElement node, float amount)
-        {
-            node.style.paddingLeft = amount; node.style.paddingRight = amount;
-            node.style.paddingTop = amount; node.style.paddingBottom = amount;
         }
     }
 }

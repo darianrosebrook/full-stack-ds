@@ -12,6 +12,7 @@ namespace FullStackDS
         public Button Trigger { get; } = new Button();
         public VisualElement Content { get; } = new VisualElement();
         private readonly Label marker = new Label();
+        private readonly Label caption = new Label();
         private string key = "";
         internal ItemGroup Owner;
         [UxmlAttribute] public string Value
@@ -23,7 +24,7 @@ namespace FullStackDS
                 key = value;
             }
         }
-        [UxmlAttribute] public string Label { get => Trigger.text; set => Trigger.text = value; }
+        [UxmlAttribute] public string Label { get => caption.text; set => caption.text = value; }
         [UxmlAttribute] public bool Disabled
         {
             get => !enabledSelf;
@@ -32,11 +33,16 @@ namespace FullStackDS
         public override VisualElement contentContainer => Content;
         public SelectionItem()
         {
+            Theme.Attach(this);
+            AddToClassList("fsds-item");
+            Content.AddToClassList("fsds-item-content");
+            marker.AddToClassList("fsds-disclosure-marker");
+            caption.AddToClassList("fsds-item-caption");
+            Trigger.Add(caption);
             hierarchy.Add(Trigger); hierarchy.Add(Content);
             Trigger.clicked += () => Owner?.Activate(this);
             Trigger.RegisterCallback<KeyDownEvent>(e => Owner?.Navigate(this, e));
             Content.focusable = true; Content.tabIndex = 0;
-            Skin.Padding(Content, 8);
             RegisterCallback<AttachToPanelEvent>(_ => schedule.Execute(() => {
                 var group = GetFirstAncestorOfType<ItemGroup>();
                 group?.SynchronizeChildren();
@@ -50,11 +56,12 @@ namespace FullStackDS
         {
             EnableInClassList("is-selected", selected);
             Trigger.EnableInClassList("is-selected", selected);
-            Trigger.style.backgroundColor = selected ? Skin.Accent : Skin.Muted;
+            Trigger.EnableInClassList("fsds-tab-trigger", tabs);
+            Trigger.EnableInClassList("fsds-disclosure-trigger", !tabs);
             if (!tabs) {
                 marker.text = selected ? "−" : "+";
                 if (marker.parent != Trigger) Trigger.Add(marker);
-            }
+            } else marker.RemoveFromHierarchy();
             if (unmount && !selected) Content.RemoveFromHierarchy();
             else {
                 if (Content.parent != this) hierarchy.Add(Content);
@@ -141,6 +148,8 @@ namespace FullStackDS
         }
         public ItemGroup()
         {
+            Theme.Attach(this);
+            strip.AddToClassList("fsds-tab-list");
             hierarchy.Add(strip); hierarchy.Add(itemsHost);
             itemsHost.style.flexGrow = 1;
             RegisterCallback<AttachToPanelEvent>(_ => schedule.Execute(SynchronizeChildren));
@@ -234,9 +243,11 @@ namespace FullStackDS
                 item.Present(isSelected, tabs, unmount);
                 item.Trigger.tabIndex = tabs ? (item == active ? 0 : -1) : 0;
                 if (tabs) {
-                    Skin.Round(item.Trigger, appearance == "pills" ? 12 : 0);
+                    float radius = appearance == "pills" ? 20 : 6;
+                    item.Trigger.style.borderTopLeftRadius = radius; item.Trigger.style.borderTopRightRadius = radius;
+                    item.Trigger.style.borderBottomLeftRadius = radius; item.Trigger.style.borderBottomRightRadius = radius;
                     item.Trigger.style.borderBottomWidth = isSelected && appearance == "underline" ? 3 : 0;
-                    item.Trigger.style.borderBottomColor = Skin.Accent;
+
                 }
             }
         }

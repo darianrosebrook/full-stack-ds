@@ -39,6 +39,7 @@ if (process.argv.includes('--compile-only')) {
   process.exit(0);
 }
 fs.mkdirSync(path.join(project, 'Assets'), { recursive: true });
+fs.writeFileSync(path.join(project, 'Assets/RuntimeTheme.tss'), '@import url("unity-theme://default");\n');
 fs.mkdirSync(path.join(project, 'ProjectSettings'), { recursive: true });
 fs.mkdirSync(path.join(project, 'Packages'), { recursive: true });
 fs.writeFileSync(path.join(project, 'ProjectSettings/ProjectVersion.txt'), 'm_EditorVersion: 6000.5.3f1\n');
