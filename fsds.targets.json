@@ -132,6 +132,18 @@
         "ToggleSwitch",
         "Truncate"
       ]
+    },
+    {
+      "id": "unity",
+      "source": {
+        "kind": "builtin"
+      },
+      "components": [
+        "Switch",
+        "Accordion",
+        "Popover",
+        "Tabs"
+      ]
     }
   ]
 }

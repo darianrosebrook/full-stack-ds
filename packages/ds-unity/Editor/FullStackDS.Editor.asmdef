@@ -1,0 +1,10 @@
+{
+  "name": "FullStackDS.Editor",
+  "rootNamespace": "FullStackDS.Editor",
+  "references": [
+    "FullStackDS.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
+}
