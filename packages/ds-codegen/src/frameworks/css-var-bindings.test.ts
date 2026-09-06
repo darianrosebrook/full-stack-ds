@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ComponentContract } from "../contract.js";
+import type { ComponentContract, ContractDomNode } from "../contract.js";
 import { buildComponentIR } from "../ir.js";
 import { generateReactComponentSource } from "./react/component-source.js";
 import { generateVueComponentSource } from "./vue/component-source.js";
@@ -55,6 +55,50 @@ const CONTRACT: ComponentContract = {
 };
 
 const ir = buildComponentIR(CONTRACT);
+
+function mappedSurface(): ComponentContract & { anatomy: { parts: string[]; dom: ContractDomNode } } {
+  return {
+    name: 'MediaSurface', layer: 'primitive',
+    types: { Presentation: { kind: 'union', values: ['bleed', 'complete'] } },
+    props: { designed: { members: [{ name: 'presentation', propType: { kind: 'ref', to: 'Presentation' } }] } },
+    anatomy: { parts: ['root'], dom: { tag: 'div', part: 'root', cssVariableBindings: {
+      '--fsds-media-surface-fit': { kind: 'map', source: 'prop:presentation', values: { bleed: 'cover', complete: 'contain' }, fallback: 'fill' },
+    } } },
+  };
+}
+
+describe('finite CSS-variable projections', () => {
+  it('normalizes a component-independent map and lowers it through every web emitter', () => {
+    const mapped = buildComponentIR(mappedSurface());
+    expect(mapped.dom?.cssVarBindings).toEqual([{
+      varName: '--fsds-media-surface-fit',
+      value: { kind: 'valueMap', source: { kind: 'prop', prop: 'presentation' }, values: { bleed: 'cover', complete: 'contain' }, fallback: 'fill' },
+    }]);
+    const sources = [generateReactComponentSource(mapped, '../../primitives'),generateVueComponentSource(mapped),generateSvelteComponentSource(mapped),generateLitComponentSource(mapped),generateAngularComponentSource(mapped)];
+    for(const source of sources) {
+      expect(source).toContain('--fsds-media-surface-fit');
+      expect(source).toMatch(/presentation[^\n]*bleed[^\n]*cover[^\n]*complete[^\n]*contain[^\n]*fill/);
+    }
+  });
+  it('rejects incomplete maps without a fallback', () => {
+    const contract=mappedSurface();
+    contract.anatomy!.dom!.cssVariableBindings!['--fsds-media-surface-fit']={kind:'map',source:'prop:presentation',values:{bleed:'cover'}};
+    expect(()=>buildComponentIR(contract)).toThrow(/complete/);
+  });
+  it('rejects out-of-domain map entries even with a fallback', () => {
+    const contract=mappedSurface();
+    contract.anatomy!.dom!.cssVariableBindings!['--fsds-media-surface-fit']={kind:'map',source:'prop:presentation',values:{typo:'cover'},fallback:'fill'};
+    expect(()=>buildComponentIR(contract)).toThrow(/typo/);
+  });
+  it('rejects undeclared sources and foreign component namespaces', () => {
+    const contract=mappedSurface();
+    contract.anatomy!.dom!.cssVariableBindings!['--fsds-media-surface-fit']={kind:'map',source:'prop:absent',values:{},fallback:'fill'};
+    expect(()=>buildComponentIR(contract)).toThrow(/absent/);
+    const foreign=mappedSurface();
+    foreign.anatomy.dom.cssVariableBindings={'--fsds-other-fit':'prop:presentation'};
+    expect(()=>buildComponentIR(foreign)).toThrow(/must match --fsds-media-surface/);
+  });
+});
 
 describe("IR-DOM-CSS-VAR-BINDING-01: cssVariableBindings lowering", () => {
   describe("React", () => {

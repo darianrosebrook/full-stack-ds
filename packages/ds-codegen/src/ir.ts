@@ -2652,6 +2652,9 @@ function validateDomNode(
   if (node.cssVarBindings.length > 0) {
     const expected = new RegExp(`^--fsds-${cssPrefix}(-[a-z0-9]+)+$`);
     for (const { varName, value } of node.cssVarBindings) {
+      if (value.kind === 'valueMap') {
+        validateValueMapBinding(value, varName, propTypeIR, componentTypes, componentName);
+      }
       if (!expected.test(varName)) {
         throw new Error(
           `[${componentName}] DOM cssVariableBindings name '${varName}' ` +
@@ -3858,7 +3861,7 @@ function parseCssVarBindings(node: ContractDomNode): CssVarBindingIR[] {
   if (!node.cssVariableBindings) return [];
   return Object.entries(node.cssVariableBindings).map(([varName, expr]) => ({
     varName,
-    value: parseBindingExpression(expr),
+    value: parseDomBindingExpression(expr),
   }));
 }
 

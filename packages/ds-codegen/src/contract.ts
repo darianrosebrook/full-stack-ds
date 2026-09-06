@@ -296,7 +296,7 @@ export interface ContractDomNode {
    *   Svelte → `on:click={prop}`
    *   Angular→ `(click)="prop && prop()"`
    *   Lit    → `@click=${this.prop}`
-   * Values use the same `prop:`/`channel:`/`literal:` grammar as `bindings`.
+   * Values use the same expression grammar or finite value maps as `bindings`.
    * Channel value strategies for event handlers reuse the existing
    * `channel:<name>.onChange` semantics.
    */
@@ -346,7 +346,7 @@ export interface ContractDomNode {
    * Svelte `style:--x={v}`; Angular `[style.--x]`). Mutually exclusive with
    * a literal `style` attribute on the same node.
    */
-  cssVariableBindings?: Record<string, string>;
+  cssVariableBindings?: Record<string, string | ContractValueMapBinding>;
   /**
    * Icon-catalog glyph rendering directive — renders this `svg` node's
    * viewBox and `<path>` children from `@full-stack-ds/iconography`, looked
