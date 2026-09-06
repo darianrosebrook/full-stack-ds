@@ -830,12 +830,6 @@ button {
   white-space: nowrap;
 }
 
-.pill--accent {
-  color: var(--fsds-semantic-color-foreground-accent);
-  background: var(--fsds-semantic-color-background-accent-subtle);
-  border-color: transparent;
-}
-
 .pill--mono {
   font-family: var(--fsds-core-typography-font-family-mono);
   font-size: var(--fsds-core-typography-ramp-2);
