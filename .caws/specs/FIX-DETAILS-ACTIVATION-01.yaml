@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: details-activation
 created_at: '2026-09-06T04:07:47.038Z'
-updated_at: '2026-09-06T04:14:36.345Z'
+updated_at: '2026-09-06T04:19:49.424Z'
 created_by_session: '01a074e4-7308-7fc1-afa3-495ead6426ec'
 blast_radius:
   modules:
@@ -26,6 +26,7 @@ scope:
     - 'e2e/details-disclosure.spec.ts'
     - packages/ds-codegen/src/frameworks/react-native/component-source.ts
     - packages/ds-react-native/src/components/Select/Select.tsx
+    - packages/ds-codegen/src/prop-surface-inventory.test.ts
   out: []
 invariants:
   - 'Disclosure state remains owned by the declared channel; no component-name emitter exceptions or homepage workaround.'
