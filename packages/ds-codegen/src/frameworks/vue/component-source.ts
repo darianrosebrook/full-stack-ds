@@ -74,6 +74,8 @@ import {
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
+  resolveNativeDisclosureActivation,
+  nativeDisclosureActivationEnabled,
   resolveSurfaceAutoDismiss,
   portalsRootToBody,
   selectorAnchoredRootPortal,
@@ -2178,6 +2180,11 @@ function renderVueDomNode(
   // no-op when undefined. Channel events delegate to the existing
   // channel-handler logic.
   for (const [eventName, expr] of Object.entries(node.events)) {
+    const disclosure = resolveNativeDisclosureActivation(node.tag, eventName, expr, ctx.channelByName);
+    if (disclosure) {
+      attrs.push(`@click="(e: MouseEvent) => { e.preventDefault(); if (${nativeDisclosureActivationEnabled("(e.currentTarget as HTMLElement)")}) { behavior.set${capitalize(disclosure.name)}(!behavior.${disclosure.name}.value); } }"`);
+      continue;
+    }
     const rendered = renderVueEvent(eventName, expr, ctx);
     if (rendered === null) continue;
     attrs.push(rendered);

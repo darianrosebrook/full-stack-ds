@@ -1786,6 +1786,10 @@ function emitNodeProps(
       );
       continue;
     }
+    if (name === "aria-disabled") {
+      accessibilityState.push(`disabled: ${rnBooleanishExpr(expr)}`);
+      continue;
+    }
     if (name === "aria-checked") {
       accessibilityState.push(`checked: ${rnBooleanishExpr(expr)}`);
       continue;

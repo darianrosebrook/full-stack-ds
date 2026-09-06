@@ -194,7 +194,7 @@ export class DetailsElement extends LitElement {
 
   override render() {
     return html`<details class="${this.computeClasses()}" role="group" ?open=${this.behavior.open}>
-  <summary class=${'details__summary'} aria-controls=${ifDefined([this.open ? 'details-content' : null].filter(Boolean).join(' ') || undefined)}>
+  <summary class=${'details__summary'} @click=${(e: MouseEvent) => { e.preventDefault(); if ((e.currentTarget as HTMLElement).getAttribute('aria-disabled') !== 'true') { this.behavior.setOpen(!this.behavior.open); } }} aria-disabled=${ifDefined(this.disabled === undefined ? undefined : (this.disabled ? 'true' : 'false'))} aria-controls=${ifDefined([this.open ? 'details-content' : null].filter(Boolean).join(' ') || undefined)}>
     <span class=${'details__summaryContent'}>
       <fsds-icon class=${'details__icon'} name="chevron-down" size="sm"></fsds-icon>
       <span class=${'details__summaryText'}>${this.summary}</span>

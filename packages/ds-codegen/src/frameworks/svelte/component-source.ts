@@ -77,6 +77,8 @@ import { translateNonReactType } from "../../non-react-types.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
+  resolveNativeDisclosureActivation,
+  nativeDisclosureActivationEnabled,
   resolveSurfaceAutoDismiss,
   portalsRootToBody,
   selectorAnchoredRootPortal,
@@ -1983,6 +1985,11 @@ function renderSvelteDomNode(
     (node.componentInstance?.events ?? []).map((e) => [e.name, e]),
   );
   for (const [eventName, expr] of Object.entries(node.events)) {
+    const disclosure = resolveNativeDisclosureActivation(node.tag, eventName, expr, ctx.channelByName);
+    if (disclosure) {
+      attrs.push(`onclick={(e) => { e.preventDefault(); if (${nativeDisclosureActivationEnabled("e.currentTarget")}) { ${ctx.hookVar}.set${capitalizeSvelte(disclosure.name)}(!${ctx.hookVar}.${disclosure.name}); } }}`);
+      continue;
+    }
     const refEvent = refEventByName.get(eventName);
     if (refEvent?.targetHandlerProp) {
       const handlerExpr = renderSvelteEventHandlerExpr(expr, ctx);

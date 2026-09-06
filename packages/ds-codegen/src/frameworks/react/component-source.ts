@@ -38,6 +38,8 @@ import {
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
+  resolveNativeDisclosureActivation,
+  nativeDisclosureActivationEnabled,
   resolveSurfaceAutoDismiss,
   portalsRootToBody,
   selectorAnchoredRootPortal,
@@ -2583,6 +2585,11 @@ function renderReactDomNode(
   // for channel-routed events too. Legacy `bindings.onX` paths feed
   // through the attribute loop below until the retention drops.
   for (const [eventName, expr] of Object.entries(node.events)) {
+    const disclosure = resolveNativeDisclosureActivation(node.tag, eventName, expr, ctx.channelByName);
+    if (disclosure) {
+      attrs.push(`onClick={(e) => { e.preventDefault(); if (${nativeDisclosureActivationEnabled("e.currentTarget")}) { set${capitalize(disclosure.name)}(!${disclosure.name}); } }}`);
+      continue;
+    }
     const reactEventName =
       ctx.formControlPart === node.part &&
       ctx.formControlEvent === eventName &&

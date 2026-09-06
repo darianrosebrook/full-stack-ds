@@ -27,6 +27,16 @@ describe("Details — unit", () => {
     expect(classTokens(root)).toContain("details");
   });
 
+  it("toggles the open channel from the summary click", async () => {
+    const { element } = await renderElement("fsds-details");
+    const seen: boolean[] = [];
+    (element as LitTestElement & { onOpenChange?: (v: boolean) => void }).onOpenChange = (v: boolean) => seen.push(v);
+    await (element as LitTestElement).updateComplete;
+    const host = element.shadowRoot?.querySelector(".details__summary") as HTMLElement;
+    host.click();
+    expect(seen).toEqual([true]);
+  });
+
   it("applies variant=default variant class", async () => {
     const { element } = await renderElement("fsds-details", { "open": true, "variant": "default" });
     const root = element.shadowRoot?.firstElementChild ?? element;

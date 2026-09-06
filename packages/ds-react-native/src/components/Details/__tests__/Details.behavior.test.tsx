@@ -1,6 +1,7 @@
 // Hand-written behavioral companion to the generated Details scaffold.
 import { describe, expect, it } from "vitest";
 import TestRenderer, { act, type ReactTestRenderer } from "react-test-renderer";
+import { View } from "react-native";
 import { Details } from "../Details";
 
 function mountDetails(props: Record<string, unknown> = { summary: "More" }) {
@@ -15,6 +16,12 @@ const host = (r: ReactTestRenderer) =>
   r.root.findAllByProps({ testID: "subject" }).at(-1)!;
 
 describe("Details — behavioral surfaces", () => {
+  it.each([false, true])("exposes the declared disabled=%s state on the summary", (disabled) => {
+    const root = host(mountDetails({ disabled }));
+    const summaries = root.findAllByType(View).filter(node => node.props.accessibilityState !== undefined);
+    expect(summaries.map(node => node.props.accessibilityState)).toEqual([{ disabled }]);
+  });
+
   it("renders string children", () => {
     const renderer = mountDetails({ children: "More info" });
     expect(host(renderer).findAllByType("Text" as never).length).toBeGreaterThan(0);

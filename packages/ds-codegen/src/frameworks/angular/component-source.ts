@@ -57,6 +57,8 @@ import {
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
+  resolveNativeDisclosureActivation,
+  nativeDisclosureActivationEnabled,
   resolveSurfaceAutoDismiss,
   portalsRootToBody,
   selectorAnchoredRootPortal,
@@ -1402,6 +1404,25 @@ function collectChannelUpdates(
   return seen;
 }
 
+// Native disclosures use a channel-backed open property. Angular computed
+// values cannot track plain @Input fields: bridge those controlled inputs to
+// signals, and initialize defaults on the first read after input assignment.
+// Applies by native activation capability; removable when every channel input
+// in this backend has a reactive input bridge.
+function nativeDisclosureChannels(ir: ComponentIR): Map<string, NormalizedChannelIR> {
+  const result = new Map<string, NormalizedChannelIR>();
+  const channels = new Map(ir.behavior.normalizedChannels.map(ch => [ch.name, ch]));
+  const visit = (node: DomNodeIR): void => {
+    for (const [event, binding] of Object.entries(node.events)) {
+      const channel = resolveNativeDisclosureActivation(node.tag, event, binding, channels);
+      if (channel) result.set(channel.valueProp, channel);
+    }
+    node.children.forEach(visit);
+  };
+  if (ir.dom?.tag === "details") visit(ir.dom);
+  return result;
+}
+
 function generateDomTreeImports(ir: ComponentIR): string {
   const coreNames = [
     "Component",
@@ -1417,6 +1438,7 @@ function generateDomTreeImports(ir: ComponentIR): string {
   ) {
     coreNames.push("effect");
   }
+  if (nativeDisclosureChannels(ir).size > 0) coreNames.push("signal");
   // When any dom node uses `if: "children"`, the component needs AfterContentInit
   // and ElementRef to detect content projection at runtime.
   if (ir.dom && treeHasChildrenGuard(ir.dom)) {
@@ -1538,11 +1560,11 @@ function angularCamelIdent(kebab: string): string {
   );
 }
 
-function angularIdRefGuardExpr(ref: IdRefIR): string | undefined {
+function angularIdRefGuardExpr(ref: IdRefIR, channelAccessors?: ReadonlyMap<string, string>): string | undefined {
   // slotGate is not lowerable in Angular (projected-content presence is
   // not statically knowable) — only the when clause gates.
   if (!ref.when) return undefined;
-  const accessor = `this.${ref.when.prop}`;
+  const accessor = channelAccessors?.get(ref.when.prop) ?? `this.${ref.when.prop}`;
   if (ref.when.op === "eq") {
     return `${accessor} ${ref.when.negated ? "!==" : "==="} '${ref.when.value}'`;
   }
@@ -1552,6 +1574,7 @@ function angularIdRefGuardExpr(ref: IdRefIR): string | undefined {
 function angularIdRefListExpr(
   refs: IdRefIR[],
   passthroughProp: string | undefined,
+  channelAccessors?: ReadonlyMap<string, string>,
 ): string {
   const idFor = (slug: string) => `\`\${this.instanceId}-${slug}\``;
   if (refs.length === 0 && !passthroughProp) return "undefined";
@@ -1559,7 +1582,7 @@ function angularIdRefListExpr(
     return idFor(refs[0].slug);
   }
   const parts = refs.map((ref) => {
-    const guard = angularIdRefGuardExpr(ref);
+    const guard = angularIdRefGuardExpr(ref, channelAccessors);
     return guard ? `${guard} ? ${idFor(ref.slug)} : null` : idFor(ref.slug);
   });
   if (passthroughProp) parts.push(`this.${passthroughProp}`);
@@ -1574,6 +1597,12 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   const channels = ir.behavior.normalizedChannels;
   const channelByName = new Map(channels.map((c) => [c.name, c]));
   const hasHook = channels.length > 0;
+  const disclosureChannels = nativeDisclosureChannels(ir);
+  const disclosureChannelAccessors = new Map<string, string>();
+  for (const ch of disclosureChannels.values()) {
+    disclosureChannelAccessors.set(ch.valueProp, `this.behavior.${ch.name}()`);
+    disclosureChannelAccessors.set(ch.name, `this.behavior.${ch.name}()`);
+  }
 
   const overlayClickTrigger = ir.behavior.normalizedDismissalTriggers.find(
     (t) => t.event === "overlayClick",
@@ -1654,7 +1683,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
         idRefGetterLines.push(
           ``,
           `  get ${getterName}(): string | undefined {`,
-          `    return ${angularIdRefListExpr(refAttr.refs, refAttr.passthroughProp)};`,
+          `    return ${angularIdRefListExpr(refAttr.refs, refAttr.passthroughProp, disclosureChannelAccessors)};`,
           `  }`,
         );
       }
@@ -1805,7 +1834,13 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   for (const p of ir.styledProps) {
     if (ANGULAR_RESERVED.has(p.name)) continue;
     const propLine = generateInputProp(p);
-    if (propLine) {
+    if (disclosureChannels.has(p.name)) {
+      const type = lowerAngularPropType(p.propType);
+      lines.push(`  private readonly input${capitalizeAngular(p.safeName)} = signal<${type} | undefined>(undefined);`);
+      lines.push(`  @Input() get ${p.safeName}(): ${type} | undefined { return this.input${capitalizeAngular(p.safeName)}(); }`);
+      lines.push(`  set ${p.safeName}(value: ${type} | undefined) { this.input${capitalizeAngular(p.safeName)}.set(value); }`);
+      declaredProps.add(p.name);
+    } else if (propLine) {
       lines.push(propLine);
       declaredProps.add(p.name);
     }
@@ -1869,7 +1904,13 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     lines.push(``);
     lines.push(`  private destroyRef = inject(DestroyRef);`);
     // Build the hook call
-    lines.push(`  protected behavior = use${ir.name}({`);
+    if (disclosureChannels.size > 0) {
+      lines.push(`  private initializedBehavior?: ReturnType<typeof use${ir.name}>;`);
+      lines.push(`  protected get behavior(): ReturnType<typeof use${ir.name}> {`);
+      lines.push(`    return this.initializedBehavior ??= use${ir.name}({`);
+    } else {
+      lines.push(`  protected behavior = use${ir.name}({`);
+    }
     for (const ch of channels) {
       lines.push(`    ${ch.valueProp}: () => this.${ch.valueProp},`);
       if (ch.defaultValueProp) {
@@ -1888,6 +1929,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     }
     lines.push(`    destroyRef: this.destroyRef,`);
     lines.push(`  });`);
+    if (disclosureChannels.size > 0) lines.push(`  }`);
     // Ephemeral-surface auto-dismiss (WCAG 2.2.1). The effect tracks the
     // behavior's open signal; sync() restarts/clears the timer; pause
     // listeners land on the template root.
@@ -2344,7 +2386,7 @@ function generateDomTreeClassesComputed(ir: ComponentIR): string[] {
   // only plain @Input properties — non-signals — so the computation would
   // cache the initial value forever. Emit a getter method instead so each
   // call reflects current @Input values.
-  const hasSignalDeps = channels.length > 0;
+  const hasSignalDeps = channels.length > 0 && nativeDisclosureChannels(ir).size === 0;
   const lines: string[] = hasSignalDeps
     ? [
         `  classes = computed(() =>`,
@@ -2518,6 +2560,11 @@ function renderAngularDomNode(
   // produces `(click)="behavior.X()"`. Legacy `bindings.onX` is filtered
   // below to avoid double-emit.
   for (const [eventName, expr] of Object.entries(node.events)) {
+    const disclosure = resolveNativeDisclosureActivation(node.tag, eventName, expr, ctx.channelByName);
+    if (disclosure) {
+      attrs.push(`(click)="$event.preventDefault(); ${nativeDisclosureActivationEnabled("$any($event.currentTarget)")} && behavior.set${capitalizeAngular(disclosure.name)}(!behavior.${disclosure.name}())"`);
+      continue;
+    }
     const rendered = renderAngularEvent(eventName, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);

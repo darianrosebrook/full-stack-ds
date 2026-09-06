@@ -58,6 +58,12 @@
         {
           "tag": "summary",
           "part": "summary",
+          "bindings": {
+            "aria-disabled": "prop:disabled"
+          },
+          "events": {
+            "click": "channel:open.onChange"
+          },
           "children": [
             {
               "tag": "span",
@@ -115,7 +121,11 @@
         },
         {
           "name": "onOpenChange",
-          "type": "(open: boolean) => void",
+          "propType": {
+            "kind": "callback",
+            "params": [{ "name": "open", "type": { "kind": "boolean" } }],
+            "returns": { "kind": "void" }
+          },
           "description": "Called when open state changes."
         },
         {
