@@ -1,0 +1,48 @@
+id: NATIVE-STYLE-SUPPORT-01
+title: 'Realize native root clipping and reject unsupported SwiftUI composer radii'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-06T07:13:40.613Z'
+updated_at: '2026-09-06T07:13:40.613Z'
+created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
+blast_radius:
+  modules:
+    - 'Native root style projection and SwiftUI composer token consumers'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/ir.ts'
+    - 'packages/ds-codegen/src/frameworks/native-style-support.test.ts'
+    - 'packages/ds-codegen/src/frameworks/react-native/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts'
+    - 'packages/ds-react-native/src/components'
+    - 'packages/ds-swiftui/Sources/DsSwiftUI/Components'
+    - 'packages/ds-swiftui/Sources/DsSwiftUI/Tokens/FsdsTheme.swift'
+    - 'packages/ds-swiftui/Tests/DsSwiftUITests/FsdsThemeTests.swift'
+    - 'scripts/design-contract-recon.mjs'
+    - 'docs/architecture/design/design-contract-recon.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'Web design metadata remains Web scoped and native realization uses normalized contract facts without component identity dispatch.'
+  - 'Absent radius overrides preserve authored defaults; unsupported SwiftUI composer radius values must be rejected explicitly instead of coerced to zero.'
+acceptance:
+  - id: A1
+    given: 'root overflow visible and hidden with native platform applicability'
+    when: 'React Native and SwiftUI region composers emit'
+    then: 'clipping remains distinct and unsupported root overflow requests are diagnosed within these supported paths'
+  - id: A2
+    given: 'SwiftUI region composer radius overrides'
+    when: 'valid absolute values and unsupported percentage units reach the runtime'
+    then: 'absolute values including zero resolve and unsupported values fail explicitly at the generated consumer'
+  - id: A3
+    given: 'the updated native realization'
+    when: 'regression tests, native execution probes, metadata erasure, and repository gates run'
+    then: 'evidence records the fixed witnesses and accurately bounds unsupported native styling'
+non_functional: {}
+contracts:
+  - name: 'native-style-support'
+    type: behavior
+    path: 'packages/ds-codegen/src/frameworks/native-style-support.test.ts'
