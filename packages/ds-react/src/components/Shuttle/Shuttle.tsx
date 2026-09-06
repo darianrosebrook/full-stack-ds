@@ -73,7 +73,7 @@ export function Shuttle({
     .join(" ");
 
   return (
-  <Stack layout="native" as="ul" className={`${classNames}`} role="listbox" aria-label={ariaLabel} data-testid={testId} data-fsds-component="shuttle" {...rest}>
+  <Stack layout="native" as="ul" className={`${classNames}`} role="listbox" aria-label={ariaLabel} data-testid={testId} data-fsds-component="shuttle" data-fsds-box="" {...rest}>
     {(selection ?? []).map((item, index) => (
       <li className="shuttle__item" role="option" aria-selected="true" key={index}>
         <span>

@@ -23,7 +23,7 @@ export type ProgressIntent = "info" | "success" | "warning" | "danger";
   standalone: true,
   imports: [NgClass, NgIf],
   host: { "data-fsds-component": "progress" },
-  template: `<div [ngClass]="classes()" role="progressbar" [attr.aria-valuenow]="value" aria-valuemin="0" aria-valuemax="100" [attr.aria-label]="label">
+  template: `<div [ngClass]="classes()" role="progressbar" [attr.aria-valuenow]="value" aria-valuemin="0" aria-valuemax="100" [attr.aria-label]="label" data-fsds-box="">
   <span [ngClass]="'progress__track'" aria-hidden="true">
     <span [ngClass]="'progress__fill'" [style.--fsds-progress-fill-width]="value"></span>
   </span>

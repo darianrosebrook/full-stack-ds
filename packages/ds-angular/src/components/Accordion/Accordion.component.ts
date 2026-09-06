@@ -43,7 +43,7 @@ export type AccordionType = "single" | "multiple";
     },
   ],
   host: { "data-fsds-component": "accordion" },
-  template: `<div [ngClass]="classes()" (keydown)="handleKeyDown($event)"><ng-content /></div>`,
+  template: `<div data-fsds-box="" [ngClass]="classes()" (keydown)="handleKeyDown($event)"><ng-content /></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionComponent implements OnChanges {

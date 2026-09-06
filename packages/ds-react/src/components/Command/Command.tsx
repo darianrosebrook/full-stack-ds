@@ -252,7 +252,7 @@ export function Command({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="command" {...rest}>
+    <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="command" data-fsds-box="" {...rest}>
       {open ? (
         <div className="command__overlay" aria-hidden="true" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} />
       ) : null}

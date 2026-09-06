@@ -227,7 +227,7 @@ export function Card({
       role="group"
       className={classNames}
       data-testid={testId}
-      data-fsds-component="card"
+      data-fsds-component="card" data-fsds-box=""
       {...rest}
     >
       {children}

@@ -50,7 +50,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} role="progressbar" aria-valuenow={value} aria-valuemin="0" aria-valuemax="100" aria-label={label} data-fsds-component="progress">
+<div class={classes} role="progressbar" aria-valuenow={value} aria-valuemin="0" aria-valuemax="100" aria-label={label} data-fsds-component="progress" data-fsds-box="">
   <span class={'progress__track'} aria-hidden="true">
     <span class={'progress__fill'} style:--fsds-progress-fill-width={value}></span>
   </span>

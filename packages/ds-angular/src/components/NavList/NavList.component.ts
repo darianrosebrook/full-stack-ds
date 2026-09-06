@@ -22,7 +22,7 @@ export type NavListOrientation = "vertical" | "horizontal";
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "nav-list" },
-  template: `<nav [ngClass]="classes()" [attr.aria-label]="ariaLabel">
+  template: `<nav [ngClass]="classes()" [attr.aria-label]="ariaLabel" data-fsds-box="">
   <ul [ngClass]="'nav-list__list'">
     <ng-content />
   </ul>

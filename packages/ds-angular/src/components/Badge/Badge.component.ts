@@ -24,7 +24,7 @@ export type BadgeSize = "sm" | "md" | "lg";
   standalone: true,
   imports: [NgClass, NgIf],
   host: { "data-fsds-component": "badge" },
-  template: `<span [ngClass]="classes()">
+  template: `<span [ngClass]="classes()" data-fsds-box="">
   <ng-container *ngIf="icon">
     <span [ngClass]="'badge__icon'" aria-hidden="true">
       {{ icon }}

@@ -35,7 +35,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} aria-label={name} data-fsds-component="avatar" role="img">
+<div class={classes} aria-label={name} data-fsds-component="avatar" data-fsds-box="" role="img">
   {#if src}
   <Image class={'avatar__image'} src={src} alt="" />
   {/if}

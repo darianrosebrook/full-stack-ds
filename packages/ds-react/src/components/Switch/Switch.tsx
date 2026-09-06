@@ -70,7 +70,7 @@ export function Switch({
   const fieldAssociation = useFieldAssociation();
 
   return (
-  <Stack layout="native" as="label" className={`${classNames}`} data-testid={testId} data-fsds-component="switch" {...rest}>
+  <Stack layout="native" as="label" className={`${classNames}`} data-testid={testId} data-fsds-component="switch" data-fsds-box="" {...rest}>
     <input className="switch__input" type="checkbox" role="switch" onChange={(e) => setChecked((e.currentTarget as HTMLInputElement).checked)} checked={checked} disabled={disabled} name={name} value={value} id={fieldAssociation?.controlId} aria-describedby={fieldAssociation?.describedBy} />
     <span className="switch__track" aria-hidden="true">
       <span className="switch__thumb" />

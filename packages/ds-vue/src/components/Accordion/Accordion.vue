@@ -121,6 +121,7 @@ const classNames = computed(() => [
 
 <template>
   <div
+    data-fsds-component="accordion" data-fsds-box=""
     ref="rootRef"
     :class="classNames"
     :data-testid="props['data-testid']"

@@ -1417,7 +1417,7 @@ function generateDisclosureStateRootComponent(ir: ComponentIR): string {
   lines.push(`        ref={rootRef}`);
   lines.push(`        className={classNames}`);
   lines.push(`        data-testid={testId}`);
-  lines.push(`        data-fsds-component="${ir.cssPrefix}"`);
+  lines.push(`        data-fsds-component="${ir.cssPrefix}" data-fsds-box=""`);
   lines.push(`        onKeyDown={handleKeyDown}`);
   lines.push(`        {...rest}`);
   lines.push(`      >`);
@@ -1530,7 +1530,7 @@ function generateCompoundStateRootComponent(ir: ComponentIR): string {
   lines.push(`      <div`);
   lines.push(`        className={classNames}`);
   lines.push(`        data-testid={testId}`);
-  lines.push(`        data-fsds-component="${ir.cssPrefix}"`);
+  lines.push(`        data-fsds-component="${ir.cssPrefix}" data-fsds-box=""`);
   lines.push(`        {...rest}`);
   lines.push(`      >`);
   lines.push(`        {children}`);
@@ -1626,7 +1626,7 @@ function generateRootComponent(ir: ComponentIR): string {
   if (roleProp) jsxAttrs.push(`      ${roleProp}`);
   jsxAttrs.push(`      className={classNames}`);
   jsxAttrs.push(`      data-testid={testId}`);
-  jsxAttrs.push(`      data-fsds-component="${ir.cssPrefix}"`);
+  jsxAttrs.push(`      data-fsds-component="${ir.cssPrefix}" data-fsds-box=""`);
   jsxAttrs.push(`      {...rest}`);
 
   const lines: string[] = [];
@@ -2754,7 +2754,7 @@ function renderReactDomNode(
     // Identification attribute for audit/devtools (ICONOGRAPHY-TOKEN-DISCIPLINE-02
     // Phase 5). NOT a CSS selector hook — does not change cascade behavior.
     if (ctx.cssPrefix) {
-      attrs.push(`data-fsds-component="${ctx.cssPrefix}"`);
+      attrs.push(`data-fsds-component="${ctx.cssPrefix}" data-fsds-box=""`);
     }
     if (ctx.autoDismissPause) {
       attrs.push(`{...autoDismissPauseProps}`);

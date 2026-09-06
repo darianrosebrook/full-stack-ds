@@ -176,7 +176,7 @@ function emitRootSfc(
     `// @custom:end`,
     `</script>`,
     ``,
-    `<span class={classes} data-testid={dataTestid}>`,
+    `<span data-fsds-component="${cssPrefix}" data-fsds-box="" class={classes} data-testid={dataTestid}>`,
     `  {@render children?.()}`,
     `</span>`,
     ``,

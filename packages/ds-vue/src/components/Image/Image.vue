@@ -59,5 +59,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <img :class="classNames" :src="props.src" :alt="props.alt" :width="props.width" :height="props.height" :loading="props.loading" :sizes="props.sizes" role="img" :data-testid="props['data-testid']" data-fsds-component="image" />
+  <img :class="classNames" :src="props.src" :alt="props.alt" :width="props.width" :height="props.height" :loading="props.loading" :sizes="props.sizes" role="img" :data-testid="props['data-testid']" data-fsds-component="image" data-fsds-box="" />
 </template>

@@ -251,7 +251,7 @@ export function Accordion({
         ref={rootRef}
         className={classNames}
         data-testid={testId}
-        data-fsds-component="accordion"
+        data-fsds-component="accordion" data-fsds-box=""
         onKeyDown={handleKeyDown}
         {...rest}
       >

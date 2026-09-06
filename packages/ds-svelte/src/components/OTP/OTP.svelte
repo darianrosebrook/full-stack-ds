@@ -58,7 +58,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} role="group" aria-label={label} aria-describedby={ariaDescribedby} data-fsds-component="otp">
+<div class={classes} role="group" aria-label={label} aria-describedby={ariaDescribedby} data-fsds-component="otp" data-fsds-box="">
   <div class={'otp__group'}>
     {#each Array(length) as _, index (index)}
     <input class={'otp__field'} type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" oninput={(e) => behavior.setValue(String(behavior.value ?? '').padEnd(index, ' ').slice(0, index) + String((e.currentTarget as HTMLInputElement).value ?? '').slice(-1) + String(behavior.value ?? '').slice(index + 1))} disabled={disabled} aria-label={fieldLabel} aria-readonly={readOnly} data-otp-index={index} />

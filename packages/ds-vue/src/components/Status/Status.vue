@@ -42,7 +42,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <span :class="classNames" :data-testid="props['data-testid']" data-fsds-component="status">
+  <span :class="classNames" :data-testid="props['data-testid']" data-fsds-component="status" data-fsds-box="">
     <Icon :class="'status__icon'" size="sm" :name="(props.status === 'info' ? 'info' : (props.status === 'success' ? 'check' : (props.status === 'warning' ? 'triangle-alert' : (props.status === 'danger' ? 'triangle-alert' : 'triangle-alert'))))" />
     <span :class="'status__label'">
       <slot />

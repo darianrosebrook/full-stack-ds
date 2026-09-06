@@ -49,7 +49,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <a :class="classNames" :href="props.href" :target="props.target" :rel="props.rel" :data-testid="props['data-testid']" data-fsds-component="links">
+  <a :class="classNames" :href="props.href" :target="props.target" :rel="props.rel" :data-testid="props['data-testid']" data-fsds-component="links" data-fsds-box="">
     <slot />
   </a>
 </template>

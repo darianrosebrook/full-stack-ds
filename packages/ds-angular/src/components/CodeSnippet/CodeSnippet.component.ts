@@ -22,13 +22,13 @@ export type CodeSnippetElement = "code" | "kbd" | "samp";
   imports: [NgClass, NgSwitch, NgSwitchCase],
   host: { "data-fsds-component": "code-snippet" },
   template: `<ng-container [ngSwitch]="this.as || 'code'">
-  <code [ngClass]="classes()" spellcheck="false" *ngSwitchCase="'code'">
+  <code [ngClass]="classes()" spellcheck="false" data-fsds-box="" *ngSwitchCase="'code'">
     {{ text }}
   </code>
-  <kbd [ngClass]="classes()" spellcheck="false" *ngSwitchCase="'kbd'">
+  <kbd [ngClass]="classes()" spellcheck="false" data-fsds-box="" *ngSwitchCase="'kbd'">
     {{ text }}
   </kbd>
-  <samp [ngClass]="classes()" spellcheck="false" *ngSwitchCase="'samp'">
+  <samp [ngClass]="classes()" spellcheck="false" data-fsds-box="" *ngSwitchCase="'samp'">
     {{ text }}
   </samp>
 </ng-container>`,

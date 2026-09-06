@@ -50,7 +50,8 @@ export type TooltipPlacement = "top" | "bottom" | "left" | "right" | "auto";
       deps: [],
     },
   ],
-  template: `<span [ngClass]="classes()"><ng-content /></span>`,
+  host: { "data-fsds-component": "tooltip" },
+  template: `<span data-fsds-box="" [ngClass]="classes()"><ng-content /></span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipComponent implements OnChanges, OnInit {

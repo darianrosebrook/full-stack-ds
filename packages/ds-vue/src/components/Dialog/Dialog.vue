@@ -77,7 +77,7 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="dialog">
+    <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="dialog" data-fsds-box="">
       <div v-if="behavior.openness.value" :class="'dialog__backdrop'" aria-hidden="true" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)"></div>
       <div v-if="behavior.openness.value" :class="'dialog__modal'" role="dialog" aria-modal="true" :aria-label="props.ariaLabel" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[`${instanceId}-body`, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
         <div :class="'dialog__header'">

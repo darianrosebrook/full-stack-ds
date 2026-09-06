@@ -72,7 +72,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-label={triggerLabel} aria-expanded={behavior.open} aria-disabled={disabled} data-fsds-component="select">
+<div class={classes} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-label={triggerLabel} aria-expanded={behavior.open} aria-disabled={disabled} data-fsds-component="select" data-fsds-box="">
   <button class={'select__trigger'} type="button" onclick={() => behavior.setOpen(!behavior.open)} disabled={disabled} aria-label={triggerLabel} aria-expanded={behavior.open} aria-controls={`${instanceId}-options`}>
     <span class={'select__text'}></span>
   </button>

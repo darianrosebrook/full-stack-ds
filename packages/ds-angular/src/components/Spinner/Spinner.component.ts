@@ -22,7 +22,7 @@ export type SpinnerThickness = "hairline" | "regular" | "bold";
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "spinner" },
-  template: `<div [ngClass]="classes()" [attr.aria-label]="label" [attr.aria-hidden]="ariaHidden">
+  template: `<div [ngClass]="classes()" [attr.aria-label]="label" [attr.aria-hidden]="ariaHidden" data-fsds-box="">
   <span [ngClass]="'spinner__visual'" aria-hidden="true"></span>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

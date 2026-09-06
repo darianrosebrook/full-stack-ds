@@ -68,7 +68,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="group" :aria-label="props.label" :aria-describedby="props.ariaDescribedby" :data-testid="props['data-testid']" data-fsds-component="otp">
+  <div :class="classNames" role="group" :aria-label="props.label" :aria-describedby="props.ariaDescribedby" :data-testid="props['data-testid']" data-fsds-component="otp" data-fsds-box="">
     <div :class="'otp__group'">
       <input v-for="(_, index) in Array(props.length)" :key="index" :class="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" @input="(e) => behavior.setValue(String(behavior.value.value ?? '').padEnd(index, ' ').slice(0, index) + String((e.target as HTMLInputElement).value ?? '').slice(-1) + String(behavior.value.value ?? '').slice(index + 1))" :disabled="props.disabled" :aria-label="props.fieldLabel" :aria-readonly="props.readOnly" :data-otp-index="index" />
     </div>

@@ -12,7 +12,7 @@ function fixtureCss() {
 }
 
 test('shared box controls preserve defaults, support shorthand and sides, and isolate nested components', async ({page}) => {
-  await page.setContent('<div class="card" data-fsds-component="card"><div class="card__media">Media</div><button class="button" data-fsds-component="button">Nested</button></div><div class="card" data-fsds-component="card">Sibling</div>');
+  await page.setContent('<div class="card" data-fsds-box="" data-fsds-component="card"><div class="card__media">Media</div><button class="button" data-fsds-box="" data-fsds-component="button">Nested</button></div><div class="card" data-fsds-box="" data-fsds-component="card">Sibling</div>');
   await page.addStyleTag({content: fixtureCss()});
   const card = page.locator('.card').first();
   const button = page.locator('.button');
@@ -34,7 +34,7 @@ test('shared box controls preserve defaults, support shorthand and sides, and is
 });
 
 test('part overrides stay independent with missing semantic tokens and consumer layers win', async ({page}) => {
-  await page.setContent('<div class="card" data-fsds-component="card"><div class="card__media">Media</div></div>');
+  await page.setContent('<div class="card" data-fsds-box="" data-fsds-component="card"><div class="card__media">Media</div></div>');
   await page.addStyleTag({content:fixtureCss()});
   await expect(page.locator('.card')).toHaveCSS('border-radius','8px');
   await expect(page.locator('.card__media')).toHaveCSS('border-radius','8px');
@@ -59,6 +59,26 @@ for (const framework of ['react','vue','svelte','angular','lit']) {
     await expect(button).toHaveCSS('border-top-width',baseline);
     await button.click();
     await expect(button).toBeVisible();
+  });
+}
+
+for (const framework of ['react','vue','svelte','angular','lit']) {
+  test(`${framework}: Card spacing accepts component and shared overrides`, async ({page}) => {
+    await page.goto(`/preview/${framework}/Card`);
+    await page.locator('body[data-fsds-ready]').waitFor();
+    const card = page.locator('.card').first();
+    const boundary = page.locator('[data-fsds-component="card"]').first();
+    await expect(card).toHaveAttribute('data-fsds-box','');
+    await card.evaluate(el => (el as HTMLElement).style.setProperty('--fsds-card-design-root-spacing-gap','37px'));
+    await expect(card).toHaveCSS('gap','37px');
+    await boundary.evaluate(el => (el as HTMLElement).style.setProperty('--fsds-box-model-gap','23px'));
+    await expect(card).toHaveCSS('gap','23px');
+    await boundary.evaluate(el => (el as HTMLElement).style.removeProperty('--fsds-box-model-gap'));
+    await expect(card).toHaveCSS('gap','37px');
+    await card.evaluate(el => (el as HTMLElement).style.removeProperty('--fsds-card-design-root-spacing-gap'));
+    await expect(card).toHaveCSS('gap','4px');
+    await boundary.evaluate(el => (el as HTMLElement).style.setProperty('--fsds-box-model-padding','9px 11px'));
+    await expect(card).toHaveCSS('padding','9px 11px');
   });
 }
 

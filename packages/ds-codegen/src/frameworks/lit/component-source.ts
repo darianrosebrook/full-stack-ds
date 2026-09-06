@@ -709,11 +709,11 @@ function generateClassBody(ir: ComponentIR): string {
     lines.push(generateClassMapObject(ir));
     lines.push(`    };`);
     lines.push(
-      `    return html\`<fsds-stack${asAttr} class=\${classMap(classes)}><slot></slot></fsds-stack>\`;`,
+      `    return html\`<fsds-stack${asAttr} data-fsds-box="" class=\${classMap(classes)}><slot></slot></fsds-stack>\`;`,
     );
   } else {
     lines.push(
-      `    return html\`<fsds-stack${asAttr} class="${ir.classRecipe.base}"><slot></slot></fsds-stack>\`;`,
+      `    return html\`<fsds-stack${asAttr} data-fsds-box="" class="${ir.classRecipe.base}"><slot></slot></fsds-stack>\`;`,
     );
   }
   lines.push(`  }`);
@@ -844,6 +844,7 @@ function generateCompoundStateRootClass(ir: ComponentIR): string {
   lines.push(``);
   lines.push(`  override connectedCallback(): void {`);
   lines.push(`    super.connectedCallback();`);
+  lines.push(`    this.setAttribute("data-fsds-component", "${ir.cssPrefix}");`);
   lines.push(`    // Sync the behavior's internal state from defaultValue if no controlled`);
   lines.push(`    // value was set. This handles the case where defaultValue is set after`);
   lines.push(`    // element construction (property set order issue with class fields).`);
@@ -886,11 +887,11 @@ function generateCompoundStateRootClass(ir: ComponentIR): string {
     lines.push(generateClassMapObject(ir));
     lines.push(`    };`);
     lines.push(
-      `    return html\`<div class=\${classMap(classes)}><slot></slot></div>\`;`,
+      `    return html\`<div data-fsds-box="" class=\${classMap(classes)}><slot></slot></div>\`;`,
     );
   } else {
     lines.push(
-      `    return html\`<div class="${cssBase}"><slot></slot></div>\`;`,
+      `    return html\`<div data-fsds-box="" class="${cssBase}"><slot></slot></div>\`;`,
     );
   }
   lines.push(`  }`);
@@ -1292,9 +1293,9 @@ function generateDisclosureRootClass(ir: ComponentIR): string {
     lines.push(`    const classes = {`);
     lines.push(generateClassMapObject(ir));
     lines.push(`    };`);
-    lines.push(`    return html\`<div class=\${classMap(classes)}><slot></slot></div>\`;`);
+    lines.push(`    return html\`<div data-fsds-box="" class=\${classMap(classes)}><slot></slot></div>\`;`);
   } else {
-    lines.push(`    return html\`<div class="${cssBase}"><slot></slot></div>\`;`);
+    lines.push(`    return html\`<div data-fsds-box="" class="${cssBase}"><slot></slot></div>\`;`);
   }
   lines.push(`  }`);
   lines.push(`}`);
@@ -2688,6 +2689,7 @@ function renderLitDomNode(
   }
 
   if (ctx.isRoot) {
+    attrs.push(`data-fsds-box=""`);
     attrs.unshift(`class="\${this.computeClasses()}"`);
     if (ctx.autoDismissPause) {
       attrs.push(

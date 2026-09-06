@@ -380,7 +380,7 @@ function emitRootClass(
     `  }`,
     ``,
     `  override render() {`,
-    `    return html\`<span class="\${this._classes()}"><slot></slot></span>\`;`,
+    `    return html\`<span data-fsds-box="" class="\${this._classes()}"><slot></slot></span>\`;`,
     `  }`,
     ``,
     `  private _classes(): string {`,

@@ -26,13 +26,13 @@ export type ListSize = "sm" | "md" | "lg";
   imports: [NgClass, NgSwitch, NgSwitchCase],
   host: { "data-fsds-component": "list" },
   template: `<ng-container [ngSwitch]="this.as || 'ul'">
-  <ul [ngClass]="classes()" *ngSwitchCase="'ul'">
+  <ul [ngClass]="classes()" data-fsds-box="" *ngSwitchCase="'ul'">
     <ng-content />
   </ul>
-  <ol [ngClass]="classes()" *ngSwitchCase="'ol'">
+  <ol [ngClass]="classes()" data-fsds-box="" *ngSwitchCase="'ol'">
     <ng-content />
   </ol>
-  <dl [ngClass]="classes()" *ngSwitchCase="'dl'">
+  <dl [ngClass]="classes()" data-fsds-box="" *ngSwitchCase="'dl'">
     <ng-content />
   </dl>
 </ng-container>`,

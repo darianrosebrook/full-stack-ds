@@ -68,7 +68,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="application" :data-testid="props['data-testid']" data-fsds-component="calendar">
+  <div :class="classNames" role="application" :data-testid="props['data-testid']" data-fsds-component="calendar" data-fsds-box="">
     <div :class="'calendar__header'">
       <button :class="'calendar__nav'" aria-label="Previous month"></button>
       <span :class="'calendar__caption'">

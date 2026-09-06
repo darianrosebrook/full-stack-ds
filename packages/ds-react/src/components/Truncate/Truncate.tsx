@@ -82,7 +82,7 @@ export function Truncate({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="truncate" {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="truncate" data-fsds-box="" {...rest}>
     <span className="truncate__content" style={{ "--fsds-truncate-content-lines": lines } as CSSProperties}>
       {children}
     </span>

@@ -89,7 +89,7 @@ export function OTP({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="group" aria-label={label} aria-describedby={ariaDescribedby} data-testid={testId} data-fsds-component="otp" {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="group" aria-label={label} aria-describedby={ariaDescribedby} data-testid={testId} data-fsds-component="otp" data-fsds-box="" {...rest}>
     <div className="otp__group">
       {Array.from({ length: length }, (_, index) => <input className="otp__field" type="text" inputMode="numeric" autoComplete="one-time-code" maxLength={1} onInput={(e) => setValue(String(value ?? '').padEnd(index, ' ').slice(0, index) + String(e.currentTarget.value ?? '').slice(-1) + String(value ?? '').slice(index + 1))} disabled={disabled} aria-label={fieldLabel} aria-readonly={readOnly} data-otp-index={index} key={index} />)}
     </div>

@@ -143,7 +143,7 @@ export function Tooltip({
         placement,
       }}
     >
-      <span className={classNames} data-testid={testId}>
+      <span data-fsds-component="tooltip" data-fsds-box="" className={classNames} data-testid={testId}>
         {children}
       </span>
     </TooltipContext.Provider>

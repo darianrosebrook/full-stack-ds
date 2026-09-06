@@ -4,8 +4,7 @@
  * Generates `primitives/Stack.component.ts` from the framework-neutral
  * `PrimitiveIR`. All layout facts (class prefix, display map, axis map,
  * token-driven gap) come from the IR; this emitter only knows how to render
- * them as an Angular standalone component using @HostBinding getters (Angular
- * has no per-component stylesheet in this primitive, unlike React/Vue). There
+ * them as an Angular standalone component using reactive host classes and layered styles. There
  * is no Stack-specific branching.
  */
 import type { PrimitiveIR } from "../../primitive-contract.js";
@@ -32,26 +31,18 @@ export function generateAngularStackPrimitiveSource(ir: PrimitiveIR): string {
   const variantUnion = variants.map((v) => `"${v}"`).join(" | ");
   const modeUnion = modes.map((m) => `"${m}"`).join(" | ");
 
-  const displaySwitchCases = Object.entries(ir.layout.displayByMode)
-    .map(([mode, display]) => {
-      const returnValue = display === null ? "null" : `"${display}"`;
-      return `      case "${mode}":\n        return ${returnValue};`;
-    })
-    .join("\n");
-
-  const axisModeChecks = ir.axisModes
-    .map((mode) => `this.layout === "${mode}"`)
-    .join(" || ");
-
-  const [firstVariant, secondVariant] = variants;
-  const flexDirectionExpr =
-    variants.length === 2
-      ? `this.variant === "${secondVariant}" ? "${ir.layout.axisByVariant[secondVariant]}" : "${ir.layout.axisByVariant[firstVariant]}"`
-      : variants
-          .map((v) => `this.variant === "${v}" ? "${ir.layout.axisByVariant[v]}" : `)
-          .join("") + "null";
-
-  const gapCssVar = ir.layout.gap?.cssVar ?? "";
+  // Classes remain reactive host bindings; primitive style facts participate
+  // in the same layer order as component defaults and consumer overrides.
+  const rules = Object.entries(ir.layout.displayByMode)
+    .filter(([, display]) => display !== null)
+    .map(([mode, display]) => `:host(.${block}--layout-${mode}) { display: ${display}; }`);
+  for (const mode of ir.axisModes) {
+    if (ir.layout.gap) rules.push(`:host(.${block}--layout-${mode}) { gap: var(${ir.layout.gap.cssVar}, 0); }`);
+    for (const [variant, axis] of Object.entries(ir.layout.axisByVariant)) {
+      rules.push(`:host(.${block}--layout-${mode}.${block}--${variant}) { flex-direction: ${axis}; }`);
+    }
+  }
+  const primitiveStyles = `@layer components.primitive {\n${rules.join("\n")}\n}`;
 
   return `${BANNER}
 import {
@@ -86,6 +77,7 @@ import {
   standalone: true,
   imports: [],
   template: \`<ng-content />\`,
+  styles: [\`${primitiveStyles}\`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ${ir.name}Component {
@@ -100,27 +92,6 @@ export class ${ir.name}Component {
     return ["${block}", \`${block}--layout-\${this.layout}\`, \`${block}--\${this.variant}\`, this.className]
       .filter(Boolean)
       .join(" ");
-  }
-
-  @HostBinding("style.display")
-  get hostDisplay(): string | null {
-    switch (this.layout) {
-${displaySwitchCases}
-    }
-  }
-
-  @HostBinding("style.flex-direction")
-  get hostFlexDirection(): string | null {
-    return ${axisModeChecks}
-      ? ${flexDirectionExpr}
-      : null;
-  }
-
-  @HostBinding("style.gap")
-  get hostGap(): string | null {
-    return ${axisModeChecks}
-      ? "var(${gapCssVar}, 0)"
-      : null;
   }
 
   @HostBinding("attr.role")

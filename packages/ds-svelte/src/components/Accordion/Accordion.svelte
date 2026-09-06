@@ -125,6 +125,6 @@ const classes = $derived(
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div bind:this={rootRef} class={classes} data-testid={dataTestid} onkeydown={handleKeyDown}>
+<div data-fsds-component="accordion" data-fsds-box="" bind:this={rootRef} class={classes} data-testid={dataTestid} onkeydown={handleKeyDown}>
   {@render children?.()}
 </div>

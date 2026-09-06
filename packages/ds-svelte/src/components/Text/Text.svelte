@@ -54,4 +54,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<svelte:element this={as ?? "p"} class={classes} data-fsds-component="text"></svelte:element>
+<svelte:element this={as ?? "p"} class={classes} data-fsds-component="text" data-fsds-box=""></svelte:element>

@@ -51,7 +51,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-fsds-component="skeleton">
+<div class={classes} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-fsds-component="skeleton" data-fsds-box="">
   {#if lines}
   <div class={'skeleton__stack'}>
     {#each Array(lines) as _, index (index)}

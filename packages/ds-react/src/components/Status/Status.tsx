@@ -47,7 +47,7 @@ export function Status({
     .join(" ");
 
   return (
-  <Stack layout="native" as="span" className={`${classNames}`} data-testid={testId} data-fsds-component="status" {...rest}>
+  <Stack layout="native" as="span" className={`${classNames}`} data-testid={testId} data-fsds-component="status" data-fsds-box="" {...rest}>
     <Icon className="status__icon" size="sm" name={(status === "info" ? "info" : (status === "success" ? "check" : (status === "warning" ? "triangle-alert" : (status === "danger" ? "triangle-alert" : "triangle-alert"))))} />
     <span className="status__label">
       {children}

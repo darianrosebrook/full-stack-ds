@@ -278,7 +278,7 @@ export function Tabs({
       <div
         className={classNames}
         data-testid={testId}
-        data-fsds-component="tabs"
+        data-fsds-component="tabs" data-fsds-box=""
         {...rest}
       >
         {children}

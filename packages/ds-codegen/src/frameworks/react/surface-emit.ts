@@ -260,7 +260,7 @@ ${destructuredCloseProps}
         getTriggerHandlers: surface.getTriggerHandlers,${positioningEnabled ? `\n        anchorEl: surface.anchorEl,\n        contentEl: surface.contentEl,\n        placement,` : ""}
       }}
     >
-      <span className={classNames} data-testid={testId}>
+      <span data-fsds-component="${cssPrefix}" data-fsds-box="" className={classNames} data-testid={testId}>
         {children}
       </span>
     </${name}Context.Provider>

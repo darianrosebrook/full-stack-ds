@@ -48,7 +48,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<span class={classes} data-fsds-component="badge">
+<span class={classes} data-fsds-component="badge" data-fsds-box="">
   {#if icon}
   <span class={'badge__icon'} aria-hidden="true">{icon}</span>
   {/if}

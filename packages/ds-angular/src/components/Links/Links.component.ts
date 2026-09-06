@@ -22,7 +22,7 @@ export type LinkSize = "small" | "medium" | "large";
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "links" },
-  template: `<a [ngClass]="classes()" [href]="href" [target]="target" [rel]="rel">
+  template: `<a [ngClass]="classes()" [href]="href" [target]="target" [rel]="rel" data-fsds-box="">
   <ng-content />
 </a>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

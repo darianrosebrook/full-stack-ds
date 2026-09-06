@@ -23,7 +23,7 @@ import { useShowMore } from "./useShowMore.js";
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "show-more" },
-  template: `<div [ngClass]="classes()">
+  template: `<div [ngClass]="classes()" data-fsds-box="">
   <div [ngClass]="'show-more__content'" [style.--fsds-show-more-content-max-lines]="(maxLines ?? 3)">
     <ng-content />
   </div>

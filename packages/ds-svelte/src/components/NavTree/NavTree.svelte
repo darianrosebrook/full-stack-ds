@@ -49,7 +49,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<li class={classes} data-fsds-component="nav-tree" role="listitem">
+<li class={classes} data-fsds-component="nav-tree" data-fsds-box="" role="listitem">
   <div class={'nav-tree__heading'}>
     {#if icon}
     <span class={'nav-tree__icon'} aria-hidden="true">

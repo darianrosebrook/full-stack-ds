@@ -25,7 +25,7 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgIf],
   host: { "data-fsds-component": "dialog" },
-  template: `<div [ngClass]="classes()">
+  template: `<div [ngClass]="classes()" data-fsds-box="">
   <ng-container *ngIf="behavior.openness()">
     <div [ngClass]="'dialog__backdrop'" aria-hidden="true" role="presentation" (click)="closeOnBackdropClick !== false && behavior.setOpenness(false)"></div>
   </ng-container>

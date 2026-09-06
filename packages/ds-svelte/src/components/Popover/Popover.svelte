@@ -68,6 +68,6 @@ const classes = $derived(
 
 // @custom:end
 </script>
-<span class={classes} data-testid={dataTestid}>
+<span data-fsds-component="popover" data-fsds-box="" class={classes} data-testid={dataTestid}>
   {@render children?.()}
 </span>

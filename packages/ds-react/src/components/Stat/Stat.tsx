@@ -51,7 +51,7 @@ export function Stat({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="stat" {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} data-fsds-component="stat" data-fsds-box="" {...rest}>
     {children}
   </Stack>
   );

@@ -21,7 +21,7 @@ import { NgClass } from "@angular/common";
   standalone: true,
   imports: [NgClass],
   host: { "data-fsds-component": "divider" },
-  template: `<hr [ngClass]="classes()" />`,
+  template: `<hr [ngClass]="classes()" data-fsds-box="" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DividerComponent {

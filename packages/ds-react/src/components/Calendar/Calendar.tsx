@@ -90,7 +90,7 @@ export function Calendar({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="application" data-testid={testId} data-fsds-component="calendar" {...rest}>
+  <div className={`${classNames}`} role="application" data-testid={testId} data-fsds-component="calendar" data-fsds-box="" {...rest}>
     <div className="calendar__header">
       <button className="calendar__nav" aria-label="Previous month" />
       <span className="calendar__caption">

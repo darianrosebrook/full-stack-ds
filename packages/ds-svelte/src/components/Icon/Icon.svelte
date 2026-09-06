@@ -40,7 +40,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<span class={classes} role={(decorative ? "presentation" : "img")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-fsds-component="icon">
+<span class={classes} role={(decorative ? "presentation" : "img")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-fsds-component="icon" data-fsds-box="">
   {#if iconGlyph}
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" data-fsds-icon={iconGlyph.name} viewBox={iconGlyph.viewBox} width={iconGlyphPx ?? iconGlyph.size} height={iconGlyphPx ?? iconGlyph.size}>
     {#each iconGlyph.paths as glyphPath, glyphIndex (glyphIndex)}

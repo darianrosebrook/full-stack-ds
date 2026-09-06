@@ -50,7 +50,7 @@ export function CodeBlock({
     .join(" ");
 
   return (
-  <Stack layout="native" as="pre" className={`${classNames}`} data-language={language} data-testid={testId} data-fsds-component="code-block" {...rest}>
+  <Stack layout="native" as="pre" className={`${classNames}`} data-language={language} data-testid={testId} data-fsds-component="code-block" data-fsds-box="" {...rest}>
     <code className="code-block__code" spellCheck="false" data-language={language}>
       {highlight ? (tokenizeCode(code, language).map((token, tokenIndex) => (<span key={tokenIndex} className="code-block__token" data-token={token.kind}>{token.text}</span>))) : (code)}
     </code>

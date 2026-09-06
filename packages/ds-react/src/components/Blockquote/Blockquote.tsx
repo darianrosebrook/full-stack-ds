@@ -53,7 +53,7 @@ export function Blockquote({
     .join(" ");
 
   return (
-  <Stack layout="native" as="blockquote" className={`${classNames}`} data-testid={testId} data-fsds-component="blockquote" {...rest}>
+  <Stack layout="native" as="blockquote" className={`${classNames}`} data-testid={testId} data-fsds-component="blockquote" data-fsds-box="" {...rest}>
     {children}
   </Stack>
   );

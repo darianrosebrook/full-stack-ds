@@ -533,7 +533,7 @@ export function emitLitInlineCss(ir: ComponentIR): string {
 
   const keyframesBody = ir.keyframes.map(formatKeyframes).join("\n").trimEnd();
 
-  const parts: string[] = [emitBoxModelBoundaryCss()];
+  const parts: string[] = [emitBoxModelBoundaryCss(true)];
   if (tokensGroups.length > 0) parts.push(tokensGroups.join("\n\n"));
   if (propertyGroups.length > 0) parts.push(`@layer components.defaults {\n${propertyGroups.join("\n\n")}\n}`);
   if (keyframesBody) parts.push(keyframesBody);

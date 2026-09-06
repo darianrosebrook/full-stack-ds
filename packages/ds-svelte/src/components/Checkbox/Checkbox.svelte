@@ -63,7 +63,7 @@ const fieldAssociation = useFieldAssociation();
 // @custom:end
 </script>
 
-<label class={classes} data-fsds-component="checkbox">
+<label class={classes} data-fsds-component="checkbox" data-fsds-box="">
   <input class={'checkbox__input'} type="checkbox" onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} checked={behavior.checked} disabled={disabled} name={name} value={value} aria-label={ariaLabel} aria-labelledby={ariaLabelledby} aria-checked={(indeterminate ? "mixed" : behavior.checked)} indeterminate={indeterminate} id={fieldAssociation?.().controlId} aria-describedby={fieldAssociation?.().describedBy} />
   <span class={'checkbox__indicator'} aria-hidden="true"></span>
 </label>

@@ -27,7 +27,7 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgIf, IconComponent],
   host: { "data-fsds-component": "details" },
-  template: `<details [ngClass]="classes()" [open]="behavior.open()">
+  template: `<details [ngClass]="classes()" [open]="behavior.open()" data-fsds-box="">
   <summary [ngClass]="'details__summary'" [attr.aria-controls]="summaryAriaControls">
     <span [ngClass]="'details__summaryContent'">
       <fsds-icon [ngClass]="'details__icon'" name="chevron-down" size="sm"></fsds-icon>

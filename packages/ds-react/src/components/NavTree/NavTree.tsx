@@ -94,7 +94,7 @@ export function NavTree({
   const iconGlyph = resolveIcon(icon ?? "", iconGlyphPx ?? Number.NaN);
 
   return (
-  <Stack layout="native" as="li" className={`${classNames}`} role="listitem" data-testid={testId} data-fsds-component="nav-tree" {...rest}>
+  <Stack layout="native" as="li" className={`${classNames}`} role="listitem" data-testid={testId} data-fsds-component="nav-tree" data-fsds-box="" {...rest}>
     <div className="nav-tree__heading">
       {icon ? (
         <span className="nav-tree__icon" aria-hidden="true">

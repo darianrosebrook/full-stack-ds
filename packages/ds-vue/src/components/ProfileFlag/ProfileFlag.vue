@@ -40,7 +40,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="profile-flag">
+  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="profile-flag" data-fsds-box="">
     <slot />
   </div>
 </template>
