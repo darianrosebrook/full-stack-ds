@@ -4,7 +4,7 @@ risk_tier: 2
 mode: fix
 lifecycle_state: active
 created_at: '2026-09-06T09:13:04.656Z'
-updated_at: '2026-09-06T09:24:09.067Z'
+updated_at: '2026-09-06T09:29:21.446Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
@@ -26,6 +26,7 @@ scope:
     - .github/workflows/ci.yml
     - .githooks/pre-push
     - docs/normal-form.md
+    - packages/ds-swiftui/Sources/DsSwiftUI/Tokens/FsdsTheme.swift
   out: []
 invariants:
   - 'Emit only the token dependency closure used by each target; preserve supported bindings and fallbacks without compatibility aliases or per-component emitter lore.'
