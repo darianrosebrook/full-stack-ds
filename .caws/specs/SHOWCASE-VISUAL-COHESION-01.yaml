@@ -93,3 +93,12 @@ evidence:
     exit_code: 0
     artifact_path: e2e/showcase-visual-cohesion.spec.ts
     commit_sha: "79d65055"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: Playwright measured a 16px effective inline inset from the sidebar navigation panel edge.
+    recorded_at: "2026-09-06T04:24:10.866Z"
+    test_nodeid: "Showcase visual cohesion > sidebar navigation content is inset from the panel edge"
+    command: FSDS_E2E_PORT=5181 pnpm exec playwright test e2e/showcase-visual-cohesion.spec.ts --project=chromium
+    exit_code: 0
+    artifact_path: e2e/showcase-visual-cohesion.spec.ts
+    commit_sha: "79d65055"
