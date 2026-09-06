@@ -94,3 +94,30 @@ the media repairs. Exact product fidelity, custom fonts/photos, full playback,
 shortest-column layout/virtualization, image-error recovery, and arbitrary motion
 remain outside this evidence. The remaining work is named by those product or
 component capabilities, not by an undifferentiated token-coverage percentage.
+
+## Feed refinement and Pin navigation
+
+The supplied Pin-detail screenshot became the reference for a second pass:
+compact navigation, denser recommendation cards, smaller captions and overflow
+actions. The feed now uses original editorial boards and preserves the music
+page's separate artwork. Activating a Pin opens its own query-string URL with
+the full image, information, a board chooser, local save/like/comment controls,
+and related Pins. Browser Back restores the feed and its focused Pin. Narrow
+layouts stack the detail and recommendations.
+
+The caption attempt exposed `Text.truncate` as declared but unconsumed. The
+upstream `TEXT-TRUNCATE-BINDING-01` repair uses the existing conditional binding
+syntax and style sidecar; the fixture does not supply a private truncation rule.
+The stricter fixture typecheck also exposed the missing Text children outlet;
+projection checks then exposed Angular content loss across polymorphic hosts.
+Both are repaired upstream, with a shared Angular template for the projected body.
+The browser suite checks navigation, direct links, invalid Pin ids, local state,
+keyboard access, overflow menus, and both viewport layouts.
+
+Save, board, like, comment, and hide state is in-memory for the current page
+session. Comments do not post to Pinterest or any service. Copy-link uses the
+local browser clipboard and reports failure if unavailable. Recommendations
+are a fixed local collection, not personalization. The reference's account
+analytics, advertising tools, photo assets, and complete icon set are not
+reproduced. CSS columns retain their sequential reading order and bounded
+collection; this remains a composition witness, not a virtualized feed.

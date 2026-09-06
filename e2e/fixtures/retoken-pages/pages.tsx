@@ -5,6 +5,7 @@ import { Stack } from '../../../packages/ds-react/src/primitives';
 import '../../../packages/ds-tokens/generated/tokens.css';
 import { artwork, studies } from './artwork';
 import './theme.css';
+import { Pinterest } from './pinterest';
 
 const page = new URLSearchParams(location.search).get('page') ?? 'spotify';
 
@@ -66,31 +67,6 @@ function Spotify() {
       <Stack className="playback"><Stack variant="horizontal" className="transport"><Button className="quiet" ariaLabel="Previous mix" onClick={()=>setSelected((selected+11)%12)}><Icon name="arrow-left"/></Button><Button className="play-button" ariaPressed={playing} onClick={()=>setPlaying(!playing)}>{playing?'Pause':'Play'}</Button><Button className="quiet" ariaLabel="Next mix" onClick={()=>setSelected((selected+1)%12)}><Icon name="arrow-right"/></Button></Stack><div className="timeline"><Text className="small muted">1:24</Text><Progress value={36} label="Track position"/><Text className="small muted">3:54</Text></div></Stack>
       <Text className="muted small player-note" align="right">Visual playback preview</Text>
     </footer>
-  </main>;
-}
-
-function Pinterest() {
-  const [query,setQuery] = useState('');
-  const [saved,setSaved] = useState<number[]>([]);
-  const [onlySaved,setOnlySaved] = useState(false);
-  const shown=studies.map((study,index)=>({...study,index})).filter(s=>(!onlySaved||saved.includes(s.index))&&`${s.title} ${s.maker}`.toLowerCase().includes(query.toLowerCase()));
-  return <main className="retoken pinterest">
-    <header className="pin-header">
-      <Text weight="bold" className="wordmark">Pinboard</Text>
-      <Button ariaPressed={!onlySaved} className={!onlySaved?'selected':'quiet'} onClick={()=>setOnlySaved(false)}>Home</Button>
-      <Button ariaPressed={onlySaved} className={onlySaved?'selected':'quiet'} onClick={()=>setOnlySaved(true)}>Saved ({saved.length})</Button>
-      <Search value={query} onChange={setQuery}/>
-      <Button className="quiet" ariaLabel="Switch to music page" onClick={()=>{location.search='?page=spotify';}}><Icon name="panel-left"/></Button>
-    </header>
-    <Stack className="feed-heading"><Text as="h1" weight="bold" className="section-title">{onlySaved?'Your saved ideas':'A little inspiration for today'}</Text><Text className="muted">Spaces, shapes, and slower days</Text></Stack>
-    <div className="pin-feed">{shown.map(study=><div className="pin-placement" key={study.title}>
-      <Card className="pin" data-testid={`pin-${study.index}`}>
-        <CardMedia><Image size="full" src={artwork(study.index)} alt={study.title} aspectRatio={study.ratio} objectFit="cover" objectPosition="50% 30%"/></CardMedia>
-        <CardContent><Text weight="bold">{study.title}</Text><Text className="muted small">{study.maker}</Text></CardContent>
-      </Card>
-      <div className="pin-action"><Button className="save-button" ariaLabel={`${saved.includes(study.index)?'Unsave':'Save'} ${study.title}`} ariaPressed={saved.includes(study.index)} onClick={()=>setSaved(saved.includes(study.index)?saved.filter(i=>i!==study.index):[...saved,study.index])}>{saved.includes(study.index)?'Saved':'Save'}</Button></div>
-    </div>)}</div>
-    {shown.length===0&&<Text className="empty-state" role="status">No ideas found</Text>}
   </main>;
 }
 
