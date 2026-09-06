@@ -72,3 +72,11 @@ evidence:
     exit_code: 0
     artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/token-consumption/evidence.json
     commit_sha: "8b60da3afb6394634cdb239d14670f5b301b73b6"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: CSS property-root dependency closure and native emitted lookup/dictionary checks pass across the corpus; disconnected aliases and cycles are rejected by focused tests; variant box defaults remain at consumers
+    recorded_at: "2026-09-06T06:27:13.184Z"
+    command: "pnpm run audit:dead-slots"
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/token-consumption/audit.json
+    commit_sha: "8b60da3afb6394634cdb239d14670f5b301b73b6"
