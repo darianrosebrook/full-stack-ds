@@ -560,6 +560,20 @@
       "kind": "test",
       "spec": "RAIL-CUSTOM-REGION-GATE-01",
       "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-angular/src/components/ShowMore/__tests__/ShowMore.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "INTEGRATE-INTERACTION-SUBSTRATE-01",
+      "note": "Hand-authored channel lifecycle regression coverage merged in f0e85046 and integrated by INTEGRATE-INTERACTION-SUBSTRATE-01: defaults apply once after inputs arrive; controlled updates preserve parent authority and notify exactly once. Reviewed during FIX-NATIVE-TOKEN-CONSUMPTION-01. This registers existing test coverage, not a component-source exception or deferred implementation."
+    },
+    {
+      "file": "packages/ds-lit/src/components/ShowMore/__tests__/ShowMore.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "INTEGRATE-INTERACTION-SUBSTRATE-01",
+      "note": "Hand-authored channel lifecycle regression coverage merged in f0e85046 and integrated by INTEGRATE-INTERACTION-SUBSTRATE-01: defaults apply once after inputs arrive; controlled updates preserve parent authority and notify exactly once. Reviewed during FIX-NATIVE-TOKEN-CONSUMPTION-01. This registers existing test coverage, not a component-source exception or deferred implementation."
     }
   ]
 }
