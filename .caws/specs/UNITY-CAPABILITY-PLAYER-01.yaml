@@ -46,3 +46,8 @@ evidence:
     evidence_ref: "capabilities.test.ts: corpus enumeration, unknown valid prop exposed, API versus semantics distinction; tmp/unity-capability-player/capabilities.json"
     recorded_at: "2026-09-06T08:26:52.533Z"
     commit_sha: "3044082d"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "node scripts/unity-player.mjs: fresh minimal OSXPlayer run 9e7113e5-da40-4802-9e9b-8b8c0df36f90 passed 11 exact checks; source hashes result and screenshot in tmp/unity-capability-player; optional Editor tests pass 17 without imposing Test Framework on consumers"
+    recorded_at: "2026-09-06T08:26:54.096Z"
+    commit_sha: "18abc116"
