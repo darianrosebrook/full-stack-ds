@@ -54,10 +54,17 @@ export function inspectComponentTokenConsumption(contract: ComponentContract, wo
 /** No debt allowance: an unused component declaration is a contract error. */
 export function validateComponentTokenConsumption(contract: ComponentContract, workspaceRoot = process.cwd()): ValidationIssue[] {
   const { slots, web } = inspectComponentTokenConsumption(contract, workspaceRoot);
+  const declaredVars = new Set(slots.map(slot => slot.cssVar));
   return [
     ...slots.filter(slot => !slot.web && !slot.native && !slot.behavior).map(slot => ({
       pointer: slot.path,
       message: `[COMPONENT_TOKEN_UNCONSUMED] ${slot.slot} has no property or behavior consumer; remove the declaration or bind the supported decision.`,
+    })),
+    // Raw custom-property declarations in style blocks cannot bypass the
+    // sidecar obligation merely by omitting a dotted token name.
+    ...[...web.declarations.keys()].filter(name => !declaredVars.has(name) && !web.consumed.has(name)).map(name => ({
+      pointer: "/styles",
+      message: `[COMPONENT_TOKEN_UNCONSUMED] ${name} has no property consumer; remove the declaration or bind the supported decision.`,
     })),
     ...web.cycles.map(cycle => ({
       pointer: "/tokens",

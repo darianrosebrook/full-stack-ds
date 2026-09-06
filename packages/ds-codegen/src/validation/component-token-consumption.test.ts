@@ -42,6 +42,14 @@ describe("component token consumption contract", () => {
     c.styles = {};
     expect(validateComponentTokenConsumption(c).map(issue => issue.pointer)).toEqual(["/tokens/test.leaf", "/tokens/test.alias"]);
   });
+  it("does not allow raw CSS custom properties to bypass the component obligation", () => {
+    const c = fixture();
+    c.styles = { root: { "--fsds-test-orphan": { literal: "9px", platforms: ["web"] } } };
+    expect(validateComponentTokenConsumption(c)).toEqual([{
+      pointer: "/styles",
+      message: "[COMPONENT_TOKEN_UNCONSUMED] --fsds-test-orphan has no property consumer; remove the declaration or bind the supported decision.",
+    }]);
+  });
   it("does not turn unrelated semantic vocabulary into component obligations", () => {
     const c = fixture();
     c.styles = { root: { color: { resolvesTo: "semantic.color.foreground.primary", fallback: "#111" } } };
