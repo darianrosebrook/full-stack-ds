@@ -24,3 +24,9 @@ At source commit `c3b29662`, Unity 6000.5.3f1 ran `node scripts/unity-tests.mjs`
 The initial graphics-disabled run failed during panel setup; it supplied no behavior evidence. The first graphics-enabled run exposed a test-policy overlap: outside pointer focus changes also trigger blur. The final pointer case disables blur to isolate the outside-pointer policy; a separate real-focus case verifies blur across the anchor/content boundary.
 
 The local evidence files are `tmp/unity-pilot/results.xml` and `tmp/unity-pilot/editor.log`, reproduced by the command above. They are not committed build artifacts. The existing root/framework suites and admission rail also passed during the slice; those checks do not extend Unity's narrow runtime claim. Player builds, screen-reader behavior and full visual parity remain outside this pilot.
+
+## Runtime styling follow-up
+
+`UNITY-RUNTIME-STYLING-01` addresses the Editor-default inheritance exposed by the consuming RC project: low-contrast Player text, partial native button styling, crowded disclosure labels and an unthemed portaled popover. The shared runtime now attaches a package-owned USS resource to controls and floating content. This leaves contract lowering unchanged and keeps consumer panel scaling outside package authority.
+
+`StylingTests.cs` checks Editor typography, switch/disclosure spacing and focus, then enters Play mode to render Player panels at 640×800 and 320×600 with Constant Pixel Size. It checks selected/disabled states, floating text/button styles, viewport containment and reachable scrolling. The runner writes screenshot witnesses beside its logs. These bounded checks do not establish arbitrary-resolution visual parity or player-build admission. The USS palette remains Unity-specific; full design-token and brand projection is future work.

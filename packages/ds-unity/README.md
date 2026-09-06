@@ -36,6 +36,14 @@ Values assigned before attachment provide initial state. For owner-controlled st
 
 Popover portals content to its current panel root. It uses the anchor/content union for outside-pointer and blur dismissal, returns focus to the trigger on Escape, and flips/shifts at panel edges. Dismissal flags remain configurable. Removing a Popover unregisters its panel callbacks and removes the floating content.
 
+## Runtime styling
+
+Controls attach the package stylesheet automatically in both Editor and Player panels. Popover content attaches it independently when moved to the panel root. Call `FullStackDS.Theme.Attach(container)` to apply the same text and button styling to a surrounding consumer container. The imported sample also includes the stylesheet for its layout and background.
+
+The stylesheet lives in `Runtime/Resources/FullStackDS/Controls.uss`: explicit typography, selected/disabled/focus states, switch spacing and wrapped, scrollable floating content. These are Unity pilot defaults, not a generated projection of the complete token graph. Consumer overrides should target the `fsds-*` classes; floating content lives outside the originating container, so apply overrides to `popover.Content` as well.
+
+`PanelSettings` still owns screen scaling. The visual witnesses use **Constant Pixel Size**, scale 1, at 640×800 and 320×600. A consumer using **Scale With Screen Size** and a 960×640 reference can shrink the entire interface in a small Game view. Choose the scale mode and reference resolution for your game; the package does not overwrite them. Reimport the sample from Package Manager to update a previously copied sample.
+
 ## Regenerate and verify
 
 From the repository root:
@@ -46,7 +54,7 @@ pnpm exec vitest run packages/ds-codegen/src/frameworks/unity/factory.test.ts
 pnpm run test:unity
 ```
 
-`test:unity` copies the package and sample into `tmp/unity-pilot/project`, then runs real Unity EditMode tests. It needs an activated Editor license and a graphics device for the live Editor panels. Set `UNITY_EDITOR` to the Editor executable when using a different installation. Logs and NUnit XML stay in `tmp/unity-pilot`.
+`test:unity` copies the package and sample into `tmp/unity-pilot/project`, then runs real Unity EditMode tests. It needs an activated Editor license and a graphics device for the live Editor panels. Set `UNITY_EDITOR` to the Editor executable when using a different installation. Logs and NUnit XML stay in `tmp/unity-pilot`. Styling tests enter Play mode, render a real Player panel into a texture, and save PNG witnesses under `tmp/unity-pilot/screenshots`; Editor typography, spacing and focus are checked through resolved styles and geometry.
 
 `node scripts/unity-tests.mjs --compile-only` is a separate diagnostic using the installed macOS Unity SDK, real Unity assemblies and Unity's UXML source generator. It checks runtime, Editor showcase and sample compilation; it does **not** run Unity, import UXML or execute tests.
 
@@ -54,4 +62,4 @@ pnpm run test:unity
 
 The allowlist is in the repository's `fsds.targets.json`. The Unity backend is selected by `--target=all` but is outside the TypeScript admission rail. Its EditMode lane is local and explicit, not an existing CI gate.
 
-This slice implements the interactions above. It does not claim full framework parity, screen-reader integration, controller/gamepad navigation, player-build admission, or visual correctness. Default-size switch geometry uses typed token fallback facts; the remaining visual skin is a small Unity-specific base theme. Dynamic brands, other switch sizes, token-color projection, motion, exact compound anatomy, icon-catalog fidelity, browser form props and DOM IDs are not ported. The disclosure marker uses a text affordance rather than the iconography catalog. Tabs keeps an inactive panel's object state even when detached.
+This slice implements the interactions above. It does not claim full framework parity, screen-reader integration, controller/gamepad navigation, player-build admission, or full visual parity. Default-size switch geometry uses typed token fallback facts; the remaining visual skin is a small Unity-specific base theme. Dynamic brands, other switch sizes, token-color projection, motion, exact compound anatomy, icon-catalog fidelity, browser form props and DOM IDs are not ported. The disclosure marker uses a text affordance rather than the iconography catalog. Tabs keeps an inactive panel's object state even when detached.

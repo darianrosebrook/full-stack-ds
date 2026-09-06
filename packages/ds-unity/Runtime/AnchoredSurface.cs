@@ -8,7 +8,7 @@ namespace FullStackDS
     public partial class AnchoredSurface : VisualElement, INotifyValueChanged<bool>
     {
         public Button Trigger { get; } = new Button();
-        public VisualElement Content { get; } = new VisualElement();
+        public VisualElement Content { get; } = new ScrollView(ScrollViewMode.Vertical);
         private bool current;
         private VisualElement panelRoot;
         private string placement = "bottom";
@@ -42,13 +42,12 @@ namespace FullStackDS
         }
         public AnchoredSurface()
         {
+            Theme.Attach(this); Theme.Attach(Content);
+            Content.AddToClassList("fsds-surface");
             hierarchy.Add(Trigger);
             Trigger.clicked += () => RequestValue(!current);
             Content.style.position = Position.Absolute;
-            Content.style.backgroundColor = Skin.Panel;
-            Content.style.minWidth = 180;
             Content.focusable = true;
-            Skin.Padding(Content, 12); Skin.Round(Content, 6);
             Content.RegisterCallback<GeometryChangedEvent>(_ => Reposition());
             Trigger.RegisterCallback<GeometryChangedEvent>(_ => Reposition());
             RegisterCallback<AttachToPanelEvent>(OnAttach);
@@ -130,6 +129,12 @@ namespace FullStackDS
             Vector2 start = panelRoot.WorldToLocal(anchor.position);
             Rect localAnchor = new Rect(start, anchor.size);
             Rect bounds = panelRoot.contentRect;
+            // The floating node is outside UIDocument; carry its styles locally
+            // and constrain its scroll viewport before measuring placement.
+            float maxWidth = Mathf.Max(0, bounds.width - 16);
+            float maxHeight = Mathf.Max(0, bounds.height - 16);
+            Content.style.maxWidth = maxWidth;
+            Content.style.maxHeight = maxHeight;
             Vector2 size = Content.layout.size;
             if (float.IsNaN(size.x) || float.IsNaN(size.y)) return;
             Vector2 point = CalculatePosition(localAnchor, size, bounds.size, placement);

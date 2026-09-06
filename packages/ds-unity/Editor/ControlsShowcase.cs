@@ -9,6 +9,9 @@ namespace FullStackDS.Editor
         public static void Open() => GetWindow<ControlsShowcase>("Full Stack DS");
         public void CreateGUI()
         {
+            Theme.Attach(rootVisualElement);
+            rootVisualElement.AddToClassList("fsds-sample");
+            minSize = new UnityEngine.Vector2(320, 480);
             var sound = new Switch { Label = "Enable sound", Checked = true };
             var accordion = new Accordion { Collapsible = true };
             var first = new AccordionItem { Value = "graphics", Label = "Graphics" };
@@ -25,9 +28,11 @@ namespace FullStackDS.Editor
             var popover = new Popover { Label = "About these controls" };
             popover.Add(new Label("Generated from the same contracts as the web packages."));
             popover.Add(new Button(() => popover.Open = false) { text = "Close" });
-            rootVisualElement.style.paddingLeft = 20;
-            rootVisualElement.style.paddingRight = 20;
-            rootVisualElement.Add(new Label("Full Stack DS · Unity UI Toolkit"));
+            var title = new Label("Your experience"); title.AddToClassList("fsds-sample-title");
+            rootVisualElement.Add(title);
+            var description = new Label("Full Stack DS · Unity UI Toolkit"); description.AddToClassList("fsds-sample-description");
+            rootVisualElement.Add(description);
+            accordion.AddToClassList("fsds-sample-section"); tabs.AddToClassList("fsds-sample-section"); popover.AddToClassList("fsds-sample-section");
             rootVisualElement.Add(sound); rootVisualElement.Add(accordion);
             rootVisualElement.Add(tabs); rootVisualElement.Add(popover);
         }
