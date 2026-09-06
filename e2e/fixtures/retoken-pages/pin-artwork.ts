@@ -20,7 +20,7 @@ export const pins = [
   { title: 'A modular identity for a changing world', maker: 'North Assembly', kind: 'cards', paper: '#eaeae5', ink: '#252c36', accent: '#7993bd', ratio: 'photo' },
 ] as const;
 
-const escape = (s:string) => s.replaceAll('&','&amp;').replaceAll('<','&lt;');
+const escape = (s:string) => s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const text = (x:number,y:number,s:string,size=24,extra='') =>
   `<text x="${x}" y="${y}" font-family="Arial, sans-serif" font-size="${size}" ${extra}>${escape(s)}</text>`;
 const rules = (x:number,y:number,w:number,count:number) =>

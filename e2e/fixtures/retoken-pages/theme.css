@@ -85,7 +85,7 @@ body { margin: 0; font-family: Arial, sans-serif; }
 .pin-feed { columns: 220px; column-gap: 16px; }
 .pin-placement { position: relative; break-inside: avoid; margin-bottom: 18px; min-width: 0; }
 .pin-open { display: block; border-radius: inherit; }
-.pin-open:focus-visible { outline: 3px solid #3477de; outline-offset: 3px; }
+.pin-open:focus-visible { outline: 3px solid #3477de; outline-offset: -3px; }
 .pin-caption { display: flex; align-items: flex-start; gap: 4px; padding: 0 4px; min-width: 0; }
 .pin-caption-copy { flex: 1; min-width: 0; }
 .pin-caption .text { --fsds-text-design-root-typography-size: 13px; --fsds-text-design-root-typography-line-height: 1.3; }
