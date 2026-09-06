@@ -55,7 +55,7 @@ const results = path.join(evidence, 'results.xml');
 fs.rmSync(results, { force: true });
 const log = path.join(evidence, 'editor.log');
 console.log(`Unity package lane: ${editor}\nProject: ${project}\nLog: ${log}`);
-const run = spawnSync(editor, ['-batchmode', '-nographics', '-projectPath', project, '-runTests', '-testPlatform', 'EditMode', '-testResults', results, '-logFile', log], { stdio: 'inherit', timeout: 600_000 });
+const run = spawnSync(editor, ['-batchmode', '-projectPath', project, '-runTests', '-testPlatform', 'EditMode', '-testResults', results, '-logFile', log], { stdio: 'inherit', timeout: 600_000 });
 if (run.error) throw run.error;
 if (!fs.existsSync(results)) {
   const output = fs.existsSync(log) ? fs.readFileSync(log, 'utf8') : '';

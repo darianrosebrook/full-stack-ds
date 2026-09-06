@@ -141,7 +141,8 @@ namespace FullStackDS.Tests
         }
         [Test] public void PopoverPointerBoundaryExcludesItsOwnContent()
         {
-            var popover = Mount(new Popover()); var inner = new Button(); popover.Add(inner);
+            // Isolate pointer dismissal; pointer focus changes independently exercise blur.
+            var popover = Mount(new Popover { CloseOnBlur = false }); var inner = new Button(); popover.Add(inner);
             var outside = Mount(new Button()); popover.Open = true;
             using (var evt = PointerDownEvent.GetPooled()) { evt.target = inner; inner.SendEvent(evt); }
             Assert.That(popover.Open, Is.True);
