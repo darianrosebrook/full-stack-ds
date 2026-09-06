@@ -170,7 +170,7 @@ describe("Text — unit", () => {
 
 describe("Text — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Text as Component, { props: {}, attrs: { "data-testid": "text" }, slots: { "default": "content" } });
+    const wrapper = mount(Text as Component, { props: {}, attrs: { "data-testid": "text" }, slots: { "default": "<span>content</span>" } });
     const results = await axe(wrapper.element, componentAxeOptions);
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });

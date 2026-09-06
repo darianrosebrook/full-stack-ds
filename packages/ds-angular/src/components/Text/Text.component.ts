@@ -27,15 +27,33 @@ export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
   imports: [NgClass, NgSwitch, NgSwitchCase],
   host: { "data-fsds-component": "text" },
   template: `<ng-container [ngSwitch]="this.as || 'p'">
-  <p [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'p'"></p>
-  <span [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'span'"></span>
-  <div [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'div'"></div>
-  <h1 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h1'"></h1>
-  <h2 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h2'"></h2>
-  <h3 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h3'"></h3>
-  <h4 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h4'"></h4>
-  <h5 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h5'"></h5>
-  <h6 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h6'"></h6>
+  <p [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'p'">
+    <ng-content />
+  </p>
+  <span [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'span'">
+    <ng-content />
+  </span>
+  <div [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'div'">
+    <ng-content />
+  </div>
+  <h1 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h1'">
+    <ng-content />
+  </h1>
+  <h2 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h2'">
+    <ng-content />
+  </h2>
+  <h3 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h3'">
+    <ng-content />
+  </h3>
+  <h4 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h4'">
+    <ng-content />
+  </h4>
+  <h5 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h5'">
+    <ng-content />
+  </h5>
+  <h6 [ngClass]="classes()" [attr.data-truncate]="(truncate ? 'true' : 'false')" data-fsds-box="" *ngSwitchCase="'h6'">
+    <ng-content />
+  </h6>
 </ng-container>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

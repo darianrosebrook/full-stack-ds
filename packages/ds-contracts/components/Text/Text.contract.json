@@ -20,7 +20,8 @@
       "part": "root",
       "bindings": {
         "data-truncate": "conditional:prop:truncate|literal:true|literal:false"
-      }
+      },
+      "children": [{ "tag": "children" }]
     }
   },
   "props": {

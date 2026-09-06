@@ -86,7 +86,7 @@ public struct Text<Content: View>: View {
         weight: TextWeight? = nil,
         align: TextAlign? = nil,
         transform: TextTransform? = nil,
-        @ViewBuilder content: () -> Content = { EmptyView() }
+        @ViewBuilder content: () -> Content
     ) {
         self.variant = variant
         self.size = size

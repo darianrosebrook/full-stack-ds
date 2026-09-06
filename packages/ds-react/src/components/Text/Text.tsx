@@ -37,6 +37,7 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLParagraphElement>, "a
   truncate?: boolean;
   className?: string;
   "data-testid"?: string;
+  children?: ReactNode;
 }
 // @generated:end
 
@@ -53,6 +54,7 @@ export function Text({
   transform,
   className,
   "data-testid": testId,
+  children,
   as,
   truncate,
   ...rest
@@ -72,7 +74,9 @@ export function Text({
   const As = as ?? "p";
 
   return (
-  <Stack layout="native" as={As} className={`${classNames}`} data-truncate={(truncate ? "true" : "false")} data-testid={testId} data-fsds-component="text" data-fsds-box="" {...rest} />
+  <Stack layout="native" as={As} className={`${classNames}`} data-truncate={(truncate ? "true" : "false")} data-testid={testId} data-fsds-component="text" data-fsds-box="" {...rest}>
+    {children}
+  </Stack>
   );
 }
 // @generated:end
