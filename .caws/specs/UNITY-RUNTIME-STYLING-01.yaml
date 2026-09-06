@@ -38,3 +38,9 @@ contracts:
   - name: 'unity-runtime-style'
     type: behavior
     path: 'packages/ds-unity/Tests/Editor/StylingTests.cs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Unity 6000.5.3f1 StylingTests: Editor typography spacing focus; Player selected disabled and portaled theme; tmp/unity-styling/results.xml and screenshots/runtime-controls-640.png"
+    recorded_at: "2026-09-06T07:55:51.322Z"
+    commit_sha: d4cfca8b
