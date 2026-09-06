@@ -2,9 +2,10 @@ id: SHOWCASE-DOGFOODING-CONSUMPTION-01
 title: 'Ratchet showcase dogfooding and adopt shared chrome components'
 risk_tier: 2
 mode: refactor
-lifecycle_state: draft
+lifecycle_state: active
+worktree: showcase-dogfooding
 created_at: '2026-09-06T04:53:49.987Z'
-updated_at: '2026-09-06T04:53:49.987Z'
+updated_at: '2026-09-06T04:53:56.541Z'
 created_by_session: '01a06ed3-9fec-7332-b38d-37990ff8be07'
 blast_radius:
   modules:
