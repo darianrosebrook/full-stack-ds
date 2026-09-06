@@ -32,3 +32,8 @@ acceptance:
     then: 'given canonical and worktree documentation; when claim and link checks run; then both pass without broadening proof claims'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Commit 71cb4128, merged 296f9563: ledger and target guidance checked against Unity result run 9e7113e5-da40-4802-9e9b-8b8c0df36f90, Godot comparison run 5af9bd21-83b8-4e79-ad7c-6fa825ccc9a2, verification/main.gd Theme.get_color probe, and engine runner source. Godot loaded resource values are explicitly distinguished from rendered consumption."
+    recorded_at: "2026-09-06T09:05:32.269Z"
