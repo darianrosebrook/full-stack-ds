@@ -5,7 +5,7 @@ status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: 7e590872
+verified_at_commit: a2a6d1c4a8464b9d70fec585451cde84f19d5d2a
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -47,6 +47,8 @@ This document argues from one concrete codebase. The current evidence is:
 This is sufficient to evaluate how far the seven properties hold in this repository. It is not sufficient, by itself, to prove that every declared fact is influential or correct, or that every compositional system must converge on this shape. The claim's broader scope is left for readers to test against systems they know.
 
 The component design-binding campaign (`COMPONENT-DESIGN-BINDINGS-01`) adds another bounded instance of this split: style sidecars declare a closed design property and an independent override address; the IR publishes those facts; Web CSS supplies override/fallback syntax without changing the default style facts used by native emitters. Its browser witnesses cover editing, clearing, state interaction, and shared box scoping. They do not establish complete cross-platform retokening. `COMPONENT-TOKEN-CONSUMPTION-01` retires unused component declarations and requires property or behavior consumers, while each target emits only its used token closure; this static obligation still does not prove every selector is reachable or every visual decision is adequate. See [component design bindings](architecture/design/component-design-bindings.md).
+
+The native clipping follow-up preserves a root clipping fact with platform applicability in the IR, then lowers it separately from rounded background paint. SwiftUI region composers explicitly reject unsupported radius units at consumption. The [native follow-up](architecture/design/design-contract-recon.md#native-follow-up) records the macOS pixel and generated-consumer witnesses and their limits; it does not extend the Web override API to native targets.
 
 ## The discipline this is an instance of
 
