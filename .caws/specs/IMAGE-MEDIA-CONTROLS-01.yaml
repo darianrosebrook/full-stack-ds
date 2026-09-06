@@ -2,9 +2,11 @@ id: IMAGE-MEDIA-CONTROLS-01
 title: 'Realize Image media props and scoped design overrides from contracts'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Media controls and framework repairs are merged with runtime and visual evidence; A1 command metadata corrected to match the preserved log.'
 created_at: '2026-09-06T07:59:07.471Z'
-updated_at: '2026-09-06T08:18:28.391Z'
+updated_at: '2026-09-06T08:18:32.802Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
