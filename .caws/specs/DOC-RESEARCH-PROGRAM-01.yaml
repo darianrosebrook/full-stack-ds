@@ -2,9 +2,11 @@ id: DOC-RESEARCH-PROGRAM-01
 title: 'Reframe entry surfaces around the normal-form research program'
 risk_tier: 2
 mode: doc
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Entry surfaces reframed around the normal-form research program; components demoted to existence proof.'
 created_at: '2026-09-06T21:02:05.937Z'
-updated_at: '2026-09-06T21:02:12.648Z'
+updated_at: '2026-09-06T21:13:00.119Z'
 created_by_session: 'session-9308efef-b330-47b6-9664-3e2007fbc865'
 blast_radius:
   modules:
