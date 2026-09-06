@@ -54,3 +54,9 @@ evidence:
     exit_code: 0
     artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/design-contract-recon/report.json
     commit_sha: b27a8202
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Committed recon retains Web binding implementation and localizes native clipping and radius-unit limitations without a production rewrite. Governed rail, 3765 root tests, 2527 framework tests with two existing skips, 24 browser checks and three probe self-checks pass; source and probe hashes verified after local merge."
+    recorded_at: "2026-09-06T07:00:17.351Z"
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/design-contract-recon/report.json
+    commit_sha: ab9e1231330bf6ef905a2c9cba115a0e139e20c0
