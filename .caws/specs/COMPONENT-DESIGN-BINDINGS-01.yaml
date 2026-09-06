@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: design-bindings
 created_at: '2026-09-06T04:33:27.240Z'
-updated_at: '2026-09-06T05:03:16.502Z'
+updated_at: '2026-09-06T05:05:21.849Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
@@ -42,6 +42,7 @@ scope:
   support:
     - docs/normal-form.md
     - doc-freshness-baseline.json
+    - README.md
 invariants:
   - 'Semantic tokens may be unset or unconsumed; exposed component properties must remain settable with typed bindings and conservative fallbacks.'
   - 'Component semantics remain contract-owned; shared defaults are namespaced and layered; consumers can override without specificity escalation.'
