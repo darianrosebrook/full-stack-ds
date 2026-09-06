@@ -43,3 +43,11 @@ evidence:
     command: "git show 224d2a21:docs/architecture/design/retoken-page-attempts.md"
     exit_code: 0
     commit_sha: "224d2a21"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: Four browser composition tests and reviewed desktop/narrow screenshots; media failures explicitly retained
+    recorded_at: "2026-09-06T08:02:32.842Z"
+    command: FSDS_E2E_PORT=5198 pnpm exec playwright test e2e/retoken-pages.spec.ts --workers=2
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/retoken-pages/before
+    commit_sha: "224d2a21"
