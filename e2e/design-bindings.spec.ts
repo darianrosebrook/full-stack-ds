@@ -69,13 +69,13 @@ for (const framework of ['react','vue','svelte','angular','lit']) {
     const card = page.locator('.card').first();
     const boundary = page.locator('[data-fsds-component="card"]').first();
     await expect(card).toHaveAttribute('data-fsds-box','');
-    await card.evaluate(el => (el as HTMLElement).style.setProperty('--fsds-card-design-root-spacing-gap','37px'));
+    await boundary.evaluate(el => (el as HTMLElement).style.setProperty('--fsds-card-design-root-spacing-gap','37px'));
     await expect(card).toHaveCSS('gap','37px');
     await boundary.evaluate(el => (el as HTMLElement).style.setProperty('--fsds-box-model-gap','23px'));
     await expect(card).toHaveCSS('gap','23px');
     await boundary.evaluate(el => (el as HTMLElement).style.removeProperty('--fsds-box-model-gap'));
     await expect(card).toHaveCSS('gap','37px');
-    await card.evaluate(el => (el as HTMLElement).style.removeProperty('--fsds-card-design-root-spacing-gap'));
+    await boundary.evaluate(el => (el as HTMLElement).style.removeProperty('--fsds-card-design-root-spacing-gap'));
     await expect(card).toHaveCSS('gap','4px');
     await boundary.evaluate(el => (el as HTMLElement).style.setProperty('--fsds-box-model-padding','9px 11px'));
     await expect(card).toHaveCSS('padding','9px 11px');
