@@ -54,7 +54,11 @@
       "literal": "left",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.alignment",
+        "slot": "select.design.text.typography.alignment"
+      }
     }
   },
   "trigger": {
@@ -78,45 +82,85 @@
     },
     "gap": {
       "resolvesTo": "select.size.padding.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "select.design.trigger.spacing.gap"
+      }
     },
     "padding": {
       "resolvesTo": "select.size.padding.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "select.design.trigger.spacing.padding"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "select.design.trigger.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "select.size.border.default",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "select.design.trigger.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "select.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "select.design.trigger.shape.radius"
+      }
     },
     "border-color": {
       "resolvesTo": "select.color.border.default",
-      "fallback": "#a0a0a1"
+      "fallback": "#a0a0a1",
+      "design": {
+        "property": "border.color",
+        "slot": "select.design.trigger.border.color"
+      }
     },
     "background-color": {
       "resolvesTo": "select.color.background.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "select.design.trigger.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "select.color.foreground.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "select.design.trigger.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "select.font.size.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "select.design.trigger.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "select.font.lineHeight.default",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "select.design.trigger.typography.line-height"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -140,35 +184,63 @@
   "content": {
     "background-color": {
       "resolvesTo": "select.color.background.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "select.design.content.background.fill"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "select.design.content.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "select.size.border.default",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "select.design.content.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "select.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "select.design.content.shape.radius"
+      }
     },
     "border-color": {
       "resolvesTo": "select.color.border.default",
-      "fallback": "#a0a0a1"
+      "fallback": "#a0a0a1",
+      "design": {
+        "property": "border.color",
+        "slot": "select.design.content.border.color"
+      }
     },
     "box-shadow": {
       "literal": "0 4px 16px rgba(0,0,0,0.12)",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "elevation.shadow",
+        "slot": "select.design.content.elevation.shadow"
+      }
     },
     "padding": {
       "resolvesTo": "select.size.padding.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "select.design.content.spacing.padding"
+      }
     },
     "max-height": {
       "literal": "320px",
@@ -196,7 +268,11 @@
     },
     "gap": {
       "resolvesTo": "select.size.padding.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "select.design.content.spacing.gap"
+      }
     }
   },
   "search": {
@@ -214,37 +290,69 @@
     },
     "padding": {
       "resolvesTo": "select.size.padding.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "select.design.search.spacing.padding"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "select.design.search.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "select.size.border.default",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "select.design.search.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "select.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "select.design.search.shape.radius"
+      }
     },
     "border-color": {
       "resolvesTo": "select.color.border.default",
-      "fallback": "#a0a0a1"
+      "fallback": "#a0a0a1",
+      "design": {
+        "property": "border.color",
+        "slot": "select.design.search.border.color"
+      }
     },
     "background-color": {
       "resolvesTo": "select.color.background.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "select.design.search.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "select.color.foreground.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "select.design.search.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "select.font.size.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "select.design.search.typography.size"
+      }
     }
   },
   "options": {
@@ -264,7 +372,11 @@
       "literal": "2px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.gap",
+        "slot": "select.design.options.spacing.gap"
+      }
     },
     "list-style": {
       "literal": "none",
@@ -276,7 +388,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "select.design.options.spacing.padding"
+      }
     },
     "margin": {
       "literal": "0",
@@ -300,19 +416,35 @@
     },
     "gap": {
       "resolvesTo": "select.size.padding.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "select.design.option.spacing.gap"
+      }
     },
     "padding": {
       "resolvesTo": "select.size.padding.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "select.design.option.spacing.padding"
+      }
     },
     "border-radius": {
       "resolvesTo": "select.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "select.design.option.shape.radius"
+      }
     },
     "color": {
       "resolvesTo": "select.color.foreground.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "select.design.option.foreground.color"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -326,33 +458,61 @@
       "literal": "center",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.alignment",
+        "slot": "select.design.empty-state.typography.alignment"
+      }
     },
     "padding": {
       "resolvesTo": "select.size.padding.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "select.design.empty-state.spacing.padding"
+      }
     },
     "color": {
       "resolvesTo": "select.color.placeholder.default",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "select.design.empty-state.foreground.color"
+      }
     }
   },
   ".select__trigger:focus-visible": {
     "outline-width": {
       "resolvesTo": "select.focus.ring.width",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.width",
+        "slot": "select.design.condition-c1f07e6a65af.focus.width"
+      }
     },
     "outline-color": {
       "resolvesTo": "select.focus.ring.color",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "focus.color",
+        "slot": "select.design.condition-c1f07e6a65af.focus.color"
+      }
     },
     "outline-style": {
       "resolvesTo": "select.focus.ring.style",
-      "fallback": "solid"
+      "fallback": "solid",
+      "design": {
+        "property": "focus.style",
+        "slot": "select.design.condition-c1f07e6a65af.focus.style"
+      }
     },
     "outline-offset": {
       "resolvesTo": "select.focus.ring.offset",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.offset",
+        "slot": "select.design.condition-c1f07e6a65af.focus.offset"
+      }
     },
     "select.color.border.default": {
       "resolvesTo": "semantic.color.border.accent",
@@ -390,7 +550,11 @@
       "literal": "0.5",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "appearance.opacity",
+        "slot": "select.design.condition-98ff1c58463e.appearance.opacity"
+      }
     },
     "select.color.background.default": {
       "resolvesTo": "semantic.color.background.disabled",
@@ -428,19 +592,31 @@
   ".select--sm .select__trigger": {
     "height": {
       "resolvesTo": "select.size.sm.height",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "select.design.condition-37dc4084a16a.sizing.height"
+      }
     }
   },
   ".select--md .select__trigger": {
     "height": {
       "resolvesTo": "select.size.md.height",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "select.design.condition-33ea5912860e.sizing.height"
+      }
     }
   },
   ".select--lg .select__trigger": {
     "height": {
       "resolvesTo": "select.size.lg.height",
-      "fallback": "48px"
+      "fallback": "48px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "select.design.condition-d393d0052010.sizing.height"
+      }
     }
   }
 }

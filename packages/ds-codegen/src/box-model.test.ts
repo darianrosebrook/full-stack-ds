@@ -20,6 +20,7 @@ import { buildComponentIR } from "./ir.js";
 import { emitCss, emitTokensCss } from "./css.js";
 import {
   _resetBoxModelCache,
+  emitBoxModelBoundaryCss,
   isBoxModelKey,
   loadBoxModelPrimitive,
   mergeBoxModelDefaults,
@@ -186,21 +187,14 @@ describe("mergeBoxModelDefaults", () => {
 });
 
 describe("emitTokensCss with box-model defaults", () => {
-  it("emits all 14 box-model slots on a button.tokens.css", () => {
+  it("emits shared boundary resets once and leaves component defaults at consumer sites", () => {
     const contract = loadButtonContract();
-    const withTokens = {
-      ...contract,
-      tokens: mergeBoxModelDefaults(contract.tokens),
-    };
-    const ir = buildComponentIR(withTokens);
-    const out = emitTokensCss(ir);
+    const ir = buildComponentIR({ ...contract, tokens: mergeBoxModelDefaults(contract.tokens) });
+    expect(emitTokensCss(ir)).not.toContain("--fsds-box-model-");
     for (const slot of EXPECTED_SLOTS) {
-      const cssVar = `--fsds-${slot.replace(/\./g, "-")}`;
-      expect(out, `expected ${cssVar} in emitted CSS`).toContain(cssVar);
+      expect(emitBoxModelBoundaryCss()).toContain(`--fsds-${slot.replace(/\./g, "-")}: initial;`);
     }
-    expect(out).toContain("--fsds-box-model-padding: 0;");
-    expect(out).toContain("--fsds-box-model-width: auto;");
-    expect(out).toContain("--fsds-box-model-max-width: none;");
+    expect(emitCss(ir)).toContain("width: var(--fsds-box-model-width, auto)");
   });
 
   it("author override emits as var(--graph, fallback) instead of literal", () => {
@@ -216,12 +210,9 @@ describe("emitTokensCss with box-model defaults", () => {
       tokens: mergeBoxModelDefaults(authored),
     };
     const ir = buildComponentIR(withTokens);
-    const out = emitTokensCss(ir);
-    expect(out).toContain(
-      "--fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-05, 12px);",
-    );
-    // Other defaults still literal.
-    expect(out).toContain("--fsds-box-model-padding-inline-end: 0;");
+    const out = emitCss(ir);
+    expect(out).toContain("padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-core-spacing-size-05, 12px));");
+    expect(out).toContain("padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);");
   });
 
   it("emits Button size variants as box-model slot redefinitions", () => {
@@ -231,7 +222,7 @@ describe("emitTokensCss with box-model defaults", () => {
     const css = emitCss(ir);
 
     expect(css).toContain(
-      "font-size: var(--fsds-button-size-font-size-medium, 1rem);",
+      "font-size: var(--fsds-button-design-root-typography-size, var(--fsds-button-size-font-size-medium, 1rem));",
     );
     expect(tokensCss).toContain(
       "--fsds-box-model-min-height: var(--fsds-core-dimension-action-min-height-small, 28px);",
@@ -281,10 +272,9 @@ describe("portal-aware emission", () => {
     // (cssPrefix kebab-cases the component name: PortalProbe → portal-probe.)
     // `[^}]*` so the regex can't escape the block via the closing brace.
     expect(out).toMatch(/:root\s*\{[^}]*--fsds-portalprobe-color-bg/);
-    // Box-model slot still on the cssPrefix selector (not on :root).
-    expect(out).toMatch(
-      /\.portal-probe\s*\{[^}]*--fsds-box-model-padding-block-start: 0;/,
-    );
+    // The shared namespace is never hoisted; each component boundary resets it.
+    expect(emitBoxModelBoundaryCss()).toContain(":where([data-fsds-component])");
+    expect(emitCss(portalIr)).toContain("padding-block-start: var(--fsds-box-model-padding-block-start, 0)");
     expect(out).not.toMatch(/:root\s*\{[^}]*--fsds-box-model-/);
   });
 });

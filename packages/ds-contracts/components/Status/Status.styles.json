@@ -40,43 +40,83 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "status.design.root.border.style"
+      }
     },
     "background-color": {
       "resolvesTo": "status.color.background.default",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "status.design.root.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "status.color.foreground.primary",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "status.design.root.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "status.color.border.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "status.design.root.border.color"
+      }
     },
     "border-width": {
       "resolvesTo": "status.size.border.default",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "status.design.root.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "status.size.radius.default",
-      "fallback": "9999px"
+      "fallback": "9999px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "status.design.root.shape.radius"
+      }
     },
     "min-height": {
       "resolvesTo": "status.size.minHeight",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.min-height",
+        "slot": "status.design.root.sizing.min-height"
+      }
     },
     "font-size": {
       "resolvesTo": "status.size.fontSize",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "typography.size",
+        "slot": "status.design.root.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "status.text.weight",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "status.design.root.typography.weight"
+      }
     },
     "line-height": {
       "resolvesTo": "status.typography.lineHeight",
-      "fallback": "1"
+      "fallback": "1",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "status.design.root.typography.line-height"
+      }
     }
   },
   "icon": {
@@ -120,7 +160,11 @@
     },
     "color": {
       "resolvesTo": "status.color.foreground.primary",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "status.design.label.foreground.color"
+      }
     }
   },
   "--info": {

@@ -119,7 +119,7 @@ ${displaySwitchCases}
   @HostBinding("style.gap")
   get hostGap(): string | null {
     return ${axisModeChecks}
-      ? "var(${gapCssVar})"
+      ? "var(${gapCssVar}, 0)"
       : null;
   }
 

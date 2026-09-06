@@ -1,18 +1,20 @@
+@import "../../primitives/box-model.css";
 @import "./Dialog.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .dialog {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-surface-size-padding-block, 16px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-surface-size-padding-block, 16px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-surface-size-padding-inline, 16px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-surface-size-padding-inline, 16px));
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-surface-size-gap, 8px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, var(--fsds-semantic-surface-size-min-width, 64px));
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
   position: fixed;
   inset: 0;
   z-index: 1000;
@@ -32,15 +34,15 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: var(--fsds-dialog-color-background-default, #ffffff);
-  color: var(--fsds-dialog-color-foreground-default, #141414);
-  border-color: var(--fsds-dialog-color-border-default, #d0d0d0);
-  border-style: solid;
-  border-width: 1px;
-  border-radius: var(--fsds-dialog-size-radius-default, 16px);
-  box-shadow: var(--fsds-dialog-elevation-default, 0px 12px 16px #0000000f, 0px 25px 50px #00000026);
-  width: var(--fsds-dialog-size-md-width, 500px);
-  max-width: var(--fsds-dialog-size-md-max-width, 90vw);
+  background-color: var(--fsds-dialog-design-modal-background-fill, var(--fsds-dialog-color-background-default, #ffffff));
+  color: var(--fsds-dialog-design-modal-foreground-color, var(--fsds-dialog-color-foreground-default, #141414));
+  border-color: var(--fsds-dialog-design-modal-border-color, var(--fsds-dialog-color-border-default, #d0d0d0));
+  border-style: var(--fsds-dialog-design-modal-border-style, solid);
+  border-width: var(--fsds-dialog-design-modal-border-width, 1px);
+  border-radius: var(--fsds-dialog-design-modal-shape-radius, var(--fsds-dialog-size-radius-default, 16px));
+  box-shadow: var(--fsds-dialog-design-modal-elevation-shadow, var(--fsds-dialog-elevation-default, 0px 12px 16px #0000000f, 0px 25px 50px #00000026));
+  width: var(--fsds-dialog-design-modal-sizing-width, var(--fsds-dialog-size-md-width, 500px));
+  max-width: var(--fsds-dialog-design-modal-sizing-max-width, var(--fsds-dialog-size-md-max-width, 90vw));
   max-height: 90vh;
   pointer-events: auto;
   box-sizing: border-box;
@@ -54,17 +56,17 @@
   padding-right: var(--fsds-dialog-spacing-body-padding-right, 24px);
   padding-bottom: var(--fsds-dialog-spacing-header-padding-top, 16px);
   padding-left: var(--fsds-dialog-spacing-body-padding-right, 24px);
-  border-bottom-color: var(--fsds-dialog-color-border-default, #d0d0d0);
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
+  border-bottom-color: var(--fsds-dialog-design-header-border-bottom-color, var(--fsds-dialog-color-border-default, #d0d0d0));
+  border-bottom-style: var(--fsds-dialog-design-header-border-bottom-style, solid);
+  border-bottom-width: var(--fsds-dialog-design-header-border-bottom-width, 1px);
 }
 
 .dialog__title {
   margin: 0;
-  font-size: var(--fsds-dialog-typography-title-font-size, 18px);
-  font-weight: var(--fsds-dialog-typography-title-font-weight, 700);
-  line-height: var(--fsds-dialog-typography-title-line-height, 1);
-  color: var(--fsds-dialog-color-foreground-default, #141414);
+  font-size: var(--fsds-dialog-design-title-typography-size, var(--fsds-dialog-typography-title-font-size, 18px));
+  font-weight: var(--fsds-dialog-design-title-typography-weight, var(--fsds-dialog-typography-title-font-weight, 700));
+  line-height: var(--fsds-dialog-design-title-typography-line-height, var(--fsds-dialog-typography-title-line-height, 1));
+  color: var(--fsds-dialog-design-title-foreground-color, var(--fsds-dialog-color-foreground-default, #141414));
 }
 
 .dialog__body {
@@ -80,55 +82,56 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: var(--fsds-dialog-spacing-footer-gap, 4px);
+  gap: var(--fsds-dialog-design-footer-spacing-gap, var(--fsds-dialog-spacing-footer-gap, 4px));
   padding-top: var(--fsds-dialog-spacing-header-padding-top, 16px);
   padding-right: var(--fsds-dialog-spacing-body-padding-right, 24px);
   padding-bottom: var(--fsds-dialog-spacing-header-padding-top, 16px);
   padding-left: var(--fsds-dialog-spacing-body-padding-right, 24px);
-  border-top-color: var(--fsds-dialog-color-border-default, #d0d0d0);
-  border-top-style: solid;
-  border-top-width: 1px;
+  border-top-color: var(--fsds-dialog-design-footer-border-top-color, var(--fsds-dialog-color-border-default, #d0d0d0));
+  border-top-style: var(--fsds-dialog-design-footer-border-top-style, solid);
+  border-top-width: var(--fsds-dialog-design-footer-border-top-width, 1px);
 }
 
 .dialog__closeButton {
   position: absolute;
   top: var(--fsds-dialog-spacing-header-padding-top, 16px);
   right: var(--fsds-dialog-spacing-body-padding-right, 24px);
-  width: var(--fsds-dialog-size-close-button-size, 32px);
-  height: var(--fsds-dialog-size-close-button-size, 32px);
+  width: var(--fsds-dialog-design-close-button-sizing-width, var(--fsds-dialog-size-close-button-size, 32px));
+  height: var(--fsds-dialog-design-close-button-sizing-height, var(--fsds-dialog-size-close-button-size, 32px));
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
+  background-color: var(--fsds-dialog-design-close-button-background-fill, transparent);
   border: 0;
-  border-radius: 9999px;
+  border-radius: var(--fsds-dialog-design-close-button-shape-radius, 9999px);
   cursor: pointer;
 }
 
 .dialog--sm .dialog__modal {
-  width: var(--fsds-dialog-size-sm-width, 400px);
-  max-width: var(--fsds-dialog-size-sm-max-width, 90vw);
+  width: var(--fsds-dialog-design-condition-c6049c96ab74-sizing-width, var(--fsds-dialog-size-sm-width, 400px));
+  max-width: var(--fsds-dialog-design-condition-c6049c96ab74-sizing-max-width, var(--fsds-dialog-size-sm-max-width, 90vw));
 }
 
 .dialog--lg .dialog__modal {
-  width: var(--fsds-dialog-size-lg-width, 700px);
-  max-width: var(--fsds-dialog-size-lg-max-width, 90vw);
+  width: var(--fsds-dialog-design-condition-3fb7229a17a8-sizing-width, var(--fsds-dialog-size-lg-width, 700px));
+  max-width: var(--fsds-dialog-design-condition-3fb7229a17a8-sizing-max-width, var(--fsds-dialog-size-lg-max-width, 90vw));
 }
 
 .dialog--xl .dialog__modal {
-  width: var(--fsds-dialog-size-xl-width, 900px);
-  max-width: var(--fsds-dialog-size-xl-max-width, 95vw);
+  width: var(--fsds-dialog-design-condition-81887f72fc05-sizing-width, var(--fsds-dialog-size-xl-width, 900px));
+  max-width: var(--fsds-dialog-design-condition-81887f72fc05-sizing-max-width, var(--fsds-dialog-size-xl-max-width, 95vw));
 }
 
 .dialog--full .dialog__modal {
-  width: var(--fsds-dialog-size-full-width, 100vw);
-  height: var(--fsds-dialog-size-full-height, 100vh);
+  width: var(--fsds-dialog-design-condition-aa10b66155cb-sizing-width, var(--fsds-dialog-size-full-width, 100vw));
+  height: var(--fsds-dialog-design-condition-aa10b66155cb-sizing-height, var(--fsds-dialog-size-full-height, 100vh));
   max-width: 100vw;
   max-height: 100vh;
-  border-radius: 0;
+  border-radius: var(--fsds-dialog-design-condition-aa10b66155cb-shape-radius, 0);
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

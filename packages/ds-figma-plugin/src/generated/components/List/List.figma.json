@@ -64,6 +64,166 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "list.design.root.foreground.color",
+      "cssVar": "--fsds-list-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "list.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".list"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "list.design.root.border.color",
+      "cssVar": "--fsds-list-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "list.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".list"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "list.design.root.spacing.padding",
+      "cssVar": "--fsds-list-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "list.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".list"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "list.design.condition-f14e3fae918a.typography.size",
+      "cssVar": "--fsds-list-design-condition-f14e3fae918a-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": ".list--size-sm",
+      "part": null,
+      "defaultValue": "14px",
+      "resolvesTo": "list.size.sm",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".list--size-sm"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "list.design.condition-8791efdf7f0f.typography.size",
+      "cssVar": "--fsds-list-design-condition-8791efdf7f0f-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": ".list--size-md",
+      "part": null,
+      "defaultValue": "16px",
+      "resolvesTo": "list.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".list--size-md"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "list.design.condition-b1a65b7b2e57.typography.size",
+      "cssVar": "--fsds-list-design-condition-b1a65b7b2e57-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": ".list--size-lg",
+      "part": null,
+      "defaultValue": "18px",
+      "resolvesTo": "list.size.lg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".list--size-lg"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "list.design.condition-45022d26848f.spacing.padding",
+      "cssVar": "--fsds-list-design-condition-45022d26848f-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": ".list--variant-unstyled",
+      "part": null,
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".list--variant-unstyled"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "list.design.condition-49c5416e5f1d.spacing.gap",
+      "cssVar": "--fsds-list-design-condition-49c5416e5f1d-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": ".list--variant-inline",
+      "part": null,
+      "defaultValue": "12px",
+      "resolvesTo": "list.spacing.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".list--variant-inline"
+    },
+    {
+      "property": "border.block-start.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "list.design.condition-d02d544e812f.border.block-start.width",
+      "cssVar": "--fsds-list-design-condition-d02d544e812f-border-block-start-width",
+      "cssProperty": "border-block-start-width",
+      "selectorKey": ".list--variant-divided > * + *",
+      "part": null,
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".list--variant-divided > * + *"
+    },
+    {
+      "property": "border.block-start.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "list.design.condition-d02d544e812f.border.block-start.color",
+      "cssVar": "--fsds-list-design-condition-d02d544e812f-border-block-start-color",
+      "cssProperty": "border-block-start-color",
+      "selectorKey": ".list--variant-divided > * + *",
+      "part": null,
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "list.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".list--variant-divided > * + *"
+    }
+  ],
   "variants": {
     "as": [
       "ul",

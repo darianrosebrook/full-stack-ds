@@ -125,6 +125,294 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "button.design.root.border.style",
+      "cssVar": "--fsds-button-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "button.design.root.background.fill",
+      "cssVar": "--fsds-button-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#0566fe",
+      "resolvesTo": "button.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "button.design.root.foreground.color",
+      "cssVar": "--fsds-button-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#fafafa",
+      "resolvesTo": "button.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "button.design.root.border.color",
+      "cssVar": "--fsds-button-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "button.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "button.design.root.spacing.gap",
+      "cssVar": "--fsds-button-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "button.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "button.design.root.shape.radius",
+      "cssVar": "--fsds-button-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "9999px",
+      "resolvesTo": "button.size.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "button.design.root.border.width",
+      "cssVar": "--fsds-button-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "button.size.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "button.design.root.typography.size",
+      "cssVar": "--fsds-button-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1rem",
+      "resolvesTo": "button.size.fontSize.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "button.design.root.typography.weight",
+      "cssVar": "--fsds-button-design-root-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "500",
+      "resolvesTo": "button.text.weight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "button.design.root.motion.duration",
+      "cssVar": "--fsds-button-design-root-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "150ms",
+      "resolvesTo": "button.motion.duration.fast",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "motion.easing",
+      "group": "motion",
+      "valueType": "easing",
+      "slot": "button.design.root.motion.easing",
+      "cssVar": "--fsds-button-design-root-motion-easing",
+      "cssProperty": "transition-timing-function",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "resolvesTo": "button.motion.easing.standard",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "button.design.hover.background.fill",
+      "cssVar": "--fsds-button-design-hover-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "button.color.background.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button:hover:not(:disabled)"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "button.design.hover.border.color",
+      "cssVar": "--fsds-button-design-hover-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#888889",
+      "resolvesTo": "button.color.border.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button:hover:not(:disabled)"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "button.design.active.background.fill",
+      "cssVar": "--fsds-button-design-active-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "active",
+      "part": null,
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "button.color.background.active",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button:active:not(:disabled)"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "button.design.focus.border.color",
+      "cssVar": "--fsds-button-design-focus-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "button.color.border.focus",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "button.design.disabled.background.fill",
+      "cssVar": "--fsds-button-design-disabled-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "disabled",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "button.color.background.disabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button:disabled"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "button.design.disabled.foreground.color",
+      "cssVar": "--fsds-button-design-disabled-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "disabled",
+      "part": null,
+      "defaultValue": "#727272",
+      "resolvesTo": "button.color.foreground.disabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button:disabled"
+    },
+    {
+      "property": "appearance.opacity",
+      "group": "appearance",
+      "valueType": "number",
+      "slot": "button.design.condition-ac2be5befb6d.appearance.opacity",
+      "cssVar": "--fsds-button-design-condition-ac2be5befb6d-appearance-opacity",
+      "cssProperty": "opacity",
+      "selectorKey": ".button[aria-busy=\"true\"] .button__loadingText",
+      "part": null,
+      "defaultValue": "0.7",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".button[aria-busy=\"true\"] .button__loadingText"
+    }
+  ],
   "variants": {
     "size": [
       "small",

@@ -66,7 +66,7 @@ export function PropertiesScratchView() {
     const { tokens } = deriveControls(component.contract);
     return {
       props: buildPropMap(component.contract, propValues),
-      tokenCss: tokenOverridesToCss(tokenValues, tokens),
+      tokenCss: tokenOverridesToCss(tokenValues, tokens, component.name),
     };
   }, [component, propValues, tokenValues]);
 

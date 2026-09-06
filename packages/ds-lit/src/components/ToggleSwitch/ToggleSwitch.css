@@ -1,48 +1,50 @@
+@import "../../primitives/box-model.css";
 @import "./ToggleSwitch.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .toggle-switch {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-action-size-medium-padding-block, 4px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-action-size-medium-padding-block, 4px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-action-size-medium-padding-inline, 8px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-action-size-medium-padding-inline, 8px));
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-action-size-medium-gap, 8px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, var(--fsds-semantic-action-size-medium-min-width, 32px));
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, var(--fsds-semantic-action-size-medium-min-height, 32px));
+  max-height: var(--fsds-box-model-max-height, none);
   display: inline-flex;
   align-items: center;
-  background-color: var(--fsds-toggle-switch-color-background-default, #f7f7f7);
-  color: var(--fsds-toggle-switch-color-foreground-default, #141414);
-  border-color: var(--fsds-toggle-switch-color-border-default, #b8b8b8);
-  border-radius: var(--fsds-toggle-switch-border-radius-default, 9999px);
-  transition-duration: var(--fsds-toggle-switch-motion-duration-fast, 150ms);
-  border-style: solid;
-  border-width: 1px;
+  background-color: var(--fsds-toggle-switch-design-root-background-fill, var(--fsds-toggle-switch-color-background-default, #f7f7f7));
+  color: var(--fsds-toggle-switch-design-root-foreground-color, var(--fsds-toggle-switch-color-foreground-default, #141414));
+  border-color: var(--fsds-toggle-switch-design-root-border-color, var(--fsds-toggle-switch-color-border-default, #b8b8b8));
+  border-radius: var(--fsds-toggle-switch-design-root-shape-radius, var(--fsds-toggle-switch-border-radius-default, 9999px));
+  transition-duration: var(--fsds-toggle-switch-design-root-motion-duration, var(--fsds-toggle-switch-motion-duration-fast, 150ms));
+  border-style: var(--fsds-toggle-switch-design-root-border-style, solid);
+  border-width: var(--fsds-toggle-switch-design-root-border-width, 1px);
   cursor: pointer;
   box-sizing: border-box;
 
   &:hover:not(:disabled) {
-    background-color: var(--fsds-toggle-switch-color-background-hover, #f7f7f7);
+    background-color: var(--fsds-toggle-switch-design-hover-background-fill, var(--fsds-toggle-switch-color-background-hover, #f7f7f7));
   }
 
   &[aria-checked="true"] {
-    background-color: var(--fsds-toggle-switch-color-background-checked, #0566fe);
+    background-color: var(--fsds-toggle-switch-design-condition-0530483abaa8-background-fill, var(--fsds-toggle-switch-color-background-checked, #0566fe));
   }
 
   &:disabled {
-    background-color: var(--fsds-toggle-switch-color-background-disabled, #d0d0d0);
+    background-color: var(--fsds-toggle-switch-design-disabled-background-fill, var(--fsds-toggle-switch-color-background-disabled, #d0d0d0));
     cursor: not-allowed;
   }
 
   &:focus-visible:not(:disabled) {
-    outline-width: var(--fsds-toggle-switch-focus-ring-width, 2px);
-    outline-color: var(--fsds-toggle-switch-focus-ring-color, #0566fe);
-    outline-style: var(--fsds-toggle-switch-focus-ring-style, solid);
-    outline-offset: var(--fsds-toggle-switch-focus-ring-offset, 2px);
+    outline-width: var(--fsds-toggle-switch-design-focus-focus-width, var(--fsds-toggle-switch-focus-ring-width, 2px));
+    outline-color: var(--fsds-toggle-switch-design-focus-focus-color, var(--fsds-toggle-switch-focus-ring-color, #0566fe));
+    outline-style: var(--fsds-toggle-switch-design-focus-focus-style, var(--fsds-toggle-switch-focus-ring-style, solid));
+    outline-offset: var(--fsds-toggle-switch-design-focus-focus-offset, var(--fsds-toggle-switch-focus-ring-offset, 2px));
   }
 }
 /* @generated:end */
@@ -57,6 +59,7 @@
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

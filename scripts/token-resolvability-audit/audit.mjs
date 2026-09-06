@@ -39,13 +39,16 @@
  * the IR surfaces identically in each. The global sheet must be checked too:
  * theme/brand/density layers can read graph names without any component CSS
  * participating, and omitting that surface previously let broken density
- * aliases pass. Read-only — this rail changes no token, contract, or artifact.
+ * aliases pass. Contract-declared design overrides are intentionally unset;
+ * they are admitted only with an emitted fallback. Every nested fallback
+ * reference is still checked, so that exception cannot hide a graph typo. Read-only — this rail changes no token, contract, or artifact.
  */
 
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { buildDesignBindings } from "../../packages/ds-codegen/dist/design-properties.js";
 import { diffLedger, loadLedger, reportRatchet } from "../lib/ledger-ratchet.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -75,8 +78,22 @@ export function declaredNames(css) {
  */
 export function readReferences(css) {
   const reads = [];
-  for (const m of css.matchAll(/var\(\s*(--fsds-[A-Za-z0-9_-]+)\s*(?:,([^;]*?))?\)/g)) {
-    reads.push({ name: m[1], fallback: (m[2] ?? "").trim() || null });
+  // Match every opening independently, including nested fallback references.
+  // Consuming the whole outer var() with a regex would hide its inner graph reads.
+  for (const m of css.matchAll(/var\(\s*(--fsds-[A-Za-z0-9_-]+)/g)) {
+    let cursor = m.index + m[0].length;
+    while (/\s/.test(css[cursor] ?? '') && cursor < css.length) cursor++;
+    let fallback = null;
+    if (css[cursor] === ',') {
+      const start = ++cursor;
+      let depth = 0;
+      for (; cursor < css.length; cursor++) {
+        if (css[cursor] === '(') depth++;
+        else if (css[cursor] === ')') { if (depth === 0) break; depth--; }
+      }
+      fallback = css.slice(start, cursor).trim() || null;
+    }
+    reads.push({ name: m[1], fallback });
   }
   return reads;
 }
@@ -186,11 +203,13 @@ export function auditCssReferences(
   graph = new Map(),
   runtimeDeclared = new Set(),
   candidateDeclared = availableDeclared,
+  optionalOverrides = new Set(),
 ) {
   const findings = new Map();
   for (const { name, fallback } of readReferences(css)) {
     if (availableDeclared.has(name)) continue;
     if (runtimeDeclared.has(name)) continue;
+    if (optionalOverrides.has(name) && fallback !== null) continue;
     if (findings.has(name)) continue;
 
     const declaredAs = kebabCandidate(name, candidateDeclared);
@@ -227,6 +246,10 @@ export function auditComponent(component, globalDeclared, primitiveDeclared, gra
     ...globalDeclared,
     ...primitiveDeclared,
   ]);
+  const contractDir = resolve(REPO, 'packages/ds-contracts/components', component);
+  const contract = JSON.parse(readText(resolve(contractDir, `${component}.contract.json`)));
+  const styleSource = readText(resolve(contractDir, `${component}.styles.json`));
+  const optionalOverrides = new Set(buildDesignBindings({ ...contract, styles: styleSource ? JSON.parse(styleSource) : {} }).map(binding => binding.cssVar));
   return auditCssReferences(
     component,
     `${structure}\n${tokens}`,
@@ -234,6 +257,7 @@ export function auditComponent(component, globalDeclared, primitiveDeclared, gra
     graph,
     runtime,
     globalDeclared,
+    optionalOverrides,
   );
 }
 

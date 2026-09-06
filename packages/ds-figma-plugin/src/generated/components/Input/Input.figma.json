@@ -118,6 +118,439 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "input.design.root.border.style",
+      "cssVar": "--fsds-input-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "input.design.root.border.width",
+      "cssVar": "--fsds-input-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "input.size.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "input.design.root.background.fill",
+      "cssVar": "--fsds-input-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "input.color.bg.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "input.design.root.foreground.color",
+      "cssVar": "--fsds-input-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "input.color.text.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "input.design.root.border.color",
+      "cssVar": "--fsds-input-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#a0a0a1",
+      "resolvesTo": "input.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "sizing.min-height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "input.design.root.sizing.min-height",
+      "cssVar": "--fsds-input-design-root-sizing-min-height",
+      "cssProperty": "min-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "32px",
+      "resolvesTo": "input.size.height.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "input.design.root.shape.radius",
+      "cssVar": "--fsds-input-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "input.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "input.design.root.typography.size",
+      "cssVar": "--fsds-input-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1rem",
+      "resolvesTo": "input.typography.size.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "input.design.root.typography.line-height",
+      "cssVar": "--fsds-input-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.5",
+      "resolvesTo": "input.typography.line-height.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "spacing.padding-block",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "input.design.root.spacing.padding-block",
+      "cssVar": "--fsds-input-design-root-spacing-padding-block",
+      "cssProperty": "padding-block",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "4px",
+      "resolvesTo": "input.size.padding-block.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "spacing.padding-inline",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "input.design.root.spacing.padding-inline",
+      "cssVar": "--fsds-input-design-root-spacing-padding-inline",
+      "cssProperty": "padding-inline",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "input.size.padding-inline.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "input.design.root.motion.duration",
+      "cssVar": "--fsds-input-design-root-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "150ms",
+      "resolvesTo": "input.motion.duration.fast",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "motion.easing",
+      "group": "motion",
+      "valueType": "easing",
+      "slot": "input.design.root.motion.easing",
+      "cssVar": "--fsds-input-design-root-motion-easing",
+      "cssProperty": "transition-timing-function",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "resolvesTo": "input.motion.easing.standard",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "input.design.condition-bd9b5883064e.foreground.color",
+      "cssVar": "--fsds-input-design-condition-bd9b5883064e-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "::placeholder",
+      "part": null,
+      "defaultValue": "#888889",
+      "resolvesTo": "input.color.text.placeholder",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input::placeholder"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "input.design.hover.border.color",
+      "cssVar": "--fsds-input-design-hover-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#888889",
+      "resolvesTo": "input.color.border.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input:hover:not(:disabled)"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "input.design.focus.border.color",
+      "cssVar": "--fsds-input-design-focus-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "input.color.focus.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "input.design.focus.focus.width",
+      "cssVar": "--fsds-input-design-focus-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "input.focus.ring.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "input.design.focus.focus.color",
+      "cssVar": "--fsds-input-design-focus-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "input.focus.ring.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "input.design.focus.focus.style",
+      "cssVar": "--fsds-input-design-focus-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "solid",
+      "resolvesTo": "input.focus.ring.style",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "input.design.focus.focus.offset",
+      "cssVar": "--fsds-input-design-focus-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "input.focus.ring.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "input.design.condition-273725daa81e.border.color",
+      "cssVar": "--fsds-input-design-condition-273725daa81e-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "--invalid",
+      "part": null,
+      "defaultValue": "#b31b1b",
+      "resolvesTo": "input.color.invalid.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input--invalid"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "input.design.condition-8805a1996611.border.color",
+      "cssVar": "--fsds-input-design-condition-8805a1996611-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".input--invalid:focus-visible",
+      "part": null,
+      "defaultValue": "#b31b1b",
+      "resolvesTo": "input.color.invalid.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input--invalid:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "input.design.condition-8805a1996611.focus.color",
+      "cssVar": "--fsds-input-design-condition-8805a1996611-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": ".input--invalid:focus-visible",
+      "part": null,
+      "defaultValue": "#b31b1b",
+      "resolvesTo": "semantic.focus.ring.intent.danger",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input--invalid:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "input.design.disabled.background.fill",
+      "cssVar": "--fsds-input-design-disabled-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "disabled",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "input.color.bg.disabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input:disabled"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "input.design.disabled.border.color",
+      "cssVar": "--fsds-input-design-disabled-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "disabled",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "input.color.border.disabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input:disabled"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "input.design.disabled.foreground.color",
+      "cssVar": "--fsds-input-design-disabled-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "disabled",
+      "part": null,
+      "defaultValue": "#727272",
+      "resolvesTo": "input.color.text.disabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input:disabled"
+    },
+    {
+      "property": "appearance.opacity",
+      "group": "appearance",
+      "valueType": "number",
+      "slot": "input.design.disabled.appearance.opacity",
+      "cssVar": "--fsds-input-design-disabled-appearance-opacity",
+      "cssProperty": "opacity",
+      "selectorKey": "disabled",
+      "part": null,
+      "defaultValue": "0.5",
+      "resolvesTo": "input.opacity.disabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".input:disabled"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [

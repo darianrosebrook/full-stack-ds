@@ -1,65 +1,67 @@
+@import "../../primitives/box-model.css";
 @import "./Input.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .input {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-input-size-height-default, 32px);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-input-size-medium-padding-block, 4px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-input-size-medium-padding-block, 4px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-input-size-medium-padding-inline, 8px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-input-size-medium-padding-inline, 8px));
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-input-size-medium-gap, 8px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-input-design-root-sizing-min-height, var(--fsds-input-size-height-default, 32px));
+  max-height: var(--fsds-box-model-max-height, none);
   box-sizing: border-box;
-  border-style: solid;
-  border-width: var(--fsds-input-size-border-default, 1px);
-  background-color: var(--fsds-input-color-bg-default, #ffffff);
-  color: var(--fsds-input-color-text-default, #141414);
-  border-color: var(--fsds-input-color-border-default, #a0a0a1);
-  border-radius: var(--fsds-input-size-radius-default, 6px);
-  font-size: var(--fsds-input-typography-size-default, 1rem);
-  line-height: var(--fsds-input-typography-line-height-default, 1.5);
-  padding-block: var(--fsds-input-size-padding-block-default, 4px);
-  padding-inline: var(--fsds-input-size-padding-inline-default, 8px);
+  border-style: var(--fsds-input-design-root-border-style, solid);
+  border-width: var(--fsds-input-design-root-border-width, var(--fsds-input-size-border-default, 1px));
+  background-color: var(--fsds-input-design-root-background-fill, var(--fsds-input-color-bg-default, #ffffff));
+  color: var(--fsds-input-design-root-foreground-color, var(--fsds-input-color-text-default, #141414));
+  border-color: var(--fsds-input-design-root-border-color, var(--fsds-input-color-border-default, #a0a0a1));
+  border-radius: var(--fsds-input-design-root-shape-radius, var(--fsds-input-size-radius-default, 6px));
+  font-size: var(--fsds-input-design-root-typography-size, var(--fsds-input-typography-size-default, 1rem));
+  line-height: var(--fsds-input-design-root-typography-line-height, var(--fsds-input-typography-line-height-default, 1.5));
+  padding-block: var(--fsds-input-design-root-spacing-padding-block, var(--fsds-input-size-padding-block-default, 4px));
+  padding-inline: var(--fsds-input-design-root-spacing-padding-inline, var(--fsds-input-size-padding-inline-default, 8px));
   transition-property: background-color, border-color, color, outline-color;
-  transition-duration: var(--fsds-input-motion-duration-fast, 150ms);
-  transition-timing-function: var(--fsds-input-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+  transition-duration: var(--fsds-input-design-root-motion-duration, var(--fsds-input-motion-duration-fast, 150ms));
+  transition-timing-function: var(--fsds-input-design-root-motion-easing, var(--fsds-input-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1)));
 
   &::placeholder {
-    color: var(--fsds-input-color-text-placeholder, #888889);
+    color: var(--fsds-input-design-condition-bd9b5883064e-foreground-color, var(--fsds-input-color-text-placeholder, #888889));
   }
 
   &:hover:not(:disabled) {
-    border-color: var(--fsds-input-color-border-hover, #888889);
+    border-color: var(--fsds-input-design-hover-border-color, var(--fsds-input-color-border-hover, #888889));
   }
 
   &:focus-visible:not(:disabled) {
-    border-color: var(--fsds-input-color-focus-default, #0566fe);
-    outline-width: var(--fsds-input-focus-ring-width, 2px);
-    outline-color: var(--fsds-input-focus-ring-color, #0566fe);
-    outline-style: var(--fsds-input-focus-ring-style, solid);
-    outline-offset: var(--fsds-input-focus-ring-offset, 2px);
+    border-color: var(--fsds-input-design-focus-border-color, var(--fsds-input-color-focus-default, #0566fe));
+    outline-width: var(--fsds-input-design-focus-focus-width, var(--fsds-input-focus-ring-width, 2px));
+    outline-color: var(--fsds-input-design-focus-focus-color, var(--fsds-input-focus-ring-color, #0566fe));
+    outline-style: var(--fsds-input-design-focus-focus-style, var(--fsds-input-focus-ring-style, solid));
+    outline-offset: var(--fsds-input-design-focus-focus-offset, var(--fsds-input-focus-ring-offset, 2px));
   }
 
   &:disabled {
-    background-color: var(--fsds-input-color-bg-disabled, #b8b8b8);
-    border-color: var(--fsds-input-color-border-disabled, #b8b8b8);
-    color: var(--fsds-input-color-text-disabled, #727272);
-    opacity: var(--fsds-input-opacity-disabled, 0.5);
+    background-color: var(--fsds-input-design-disabled-background-fill, var(--fsds-input-color-bg-disabled, #b8b8b8));
+    border-color: var(--fsds-input-design-disabled-border-color, var(--fsds-input-color-border-disabled, #b8b8b8));
+    color: var(--fsds-input-design-disabled-foreground-color, var(--fsds-input-color-text-disabled, #727272));
+    opacity: var(--fsds-input-design-disabled-appearance-opacity, var(--fsds-input-opacity-disabled, 0.5));
     cursor: not-allowed;
   }
 }
 
 .input--invalid {
-  border-color: var(--fsds-input-color-invalid-default, #b31b1b);
+  border-color: var(--fsds-input-design-condition-273725daa81e-border-color, var(--fsds-input-color-invalid-default, #b31b1b));
 }
 
 .input--invalid:focus-visible:not(:disabled) {
-  border-color: var(--fsds-input-color-invalid-default, #b31b1b);
-  outline-color: var(--fsds-semantic-focus-ring-intent-danger, #b31b1b);
+  border-color: var(--fsds-input-design-condition-8805a1996611-border-color, var(--fsds-input-color-invalid-default, #b31b1b));
+  outline-color: var(--fsds-input-design-condition-8805a1996611-focus-color, var(--fsds-semantic-focus-ring-intent-danger, #b31b1b));
 }
 /* @generated:end */
 
@@ -73,6 +75,7 @@
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

@@ -28,6 +28,120 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "profile-flag.design.root.background.fill",
+      "cssVar": "--fsds-profile-flag-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "profile-flag.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".profile-flag"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "profile-flag.design.root.border.color",
+      "cssVar": "--fsds-profile-flag-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "profile-flag.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".profile-flag"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "profile-flag.design.root.foreground.color",
+      "cssVar": "--fsds-profile-flag-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "profile-flag.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".profile-flag"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "profile-flag.design.root.shape.radius",
+      "cssVar": "--fsds-profile-flag-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "profile-flag.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".profile-flag"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "profile-flag.design.root.spacing.gap",
+      "cssVar": "--fsds-profile-flag-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "4px",
+      "resolvesTo": "profile-flag.spacing.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".profile-flag"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "profile-flag.design.root.spacing.padding",
+      "cssVar": "--fsds-profile-flag-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "profile-flag.spacing.padding.right",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".profile-flag"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "profile-flag.design.hover.border.color",
+      "cssVar": "--fsds-profile-flag-design-hover-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#888889",
+      "resolvesTo": "profile-flag.color.border.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".profile-flag:hover"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [

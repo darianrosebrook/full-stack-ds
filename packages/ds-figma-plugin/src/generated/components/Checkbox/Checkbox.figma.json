@@ -125,6 +125,182 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "checkbox.design.input.spacing.padding",
+      "cssVar": "--fsds-checkbox-design-input-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "input",
+      "part": "input",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox__input"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "checkbox.design.indicator.shape.radius",
+      "cssVar": "--fsds-checkbox-design-indicator-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "indicator",
+      "part": "indicator",
+      "defaultValue": "4px",
+      "resolvesTo": "checkbox.border.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox__indicator"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "checkbox.design.indicator.border.color",
+      "cssVar": "--fsds-checkbox-design-indicator-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "indicator",
+      "part": "indicator",
+      "defaultValue": "#a0a0a1",
+      "resolvesTo": "checkbox.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox__indicator"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "checkbox.design.indicator.background.fill",
+      "cssVar": "--fsds-checkbox-design-indicator-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "indicator",
+      "part": "indicator",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "checkbox.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox__indicator"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "checkbox.design.indicator.border.style",
+      "cssVar": "--fsds-checkbox-design-indicator-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "indicator",
+      "part": "indicator",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox__indicator"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "checkbox.design.indicator.border.width",
+      "cssVar": "--fsds-checkbox-design-indicator-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "indicator",
+      "part": "indicator",
+      "defaultValue": "1px",
+      "resolvesTo": "checkbox.border.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox__indicator"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "checkbox.design.indicator.motion.duration",
+      "cssVar": "--fsds-checkbox-design-indicator-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "indicator",
+      "part": "indicator",
+      "defaultValue": "150ms",
+      "resolvesTo": "checkbox.transition.duration",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox__indicator"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "checkbox.design.condition-0c6bee9c3217.focus.width",
+      "cssVar": "--fsds-checkbox-design-condition-0c6bee9c3217-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": ".checkbox:has(.checkbox__input:focus-visible) .checkbox__indicator",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "checkbox.focus.ring.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox:has(.checkbox__input:focus-visible) .checkbox__indicator"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "checkbox.design.condition-0c6bee9c3217.focus.color",
+      "cssVar": "--fsds-checkbox-design-condition-0c6bee9c3217-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": ".checkbox:has(.checkbox__input:focus-visible) .checkbox__indicator",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "checkbox.focus.ring.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox:has(.checkbox__input:focus-visible) .checkbox__indicator"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "checkbox.design.condition-0c6bee9c3217.focus.style",
+      "cssVar": "--fsds-checkbox-design-condition-0c6bee9c3217-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": ".checkbox:has(.checkbox__input:focus-visible) .checkbox__indicator",
+      "part": null,
+      "defaultValue": "solid",
+      "resolvesTo": "checkbox.focus.ring.style",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox:has(.checkbox__input:focus-visible) .checkbox__indicator"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "checkbox.design.condition-0c6bee9c3217.focus.offset",
+      "cssVar": "--fsds-checkbox-design-condition-0c6bee9c3217-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".checkbox:has(.checkbox__input:focus-visible) .checkbox__indicator",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "checkbox.focus.ring.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".checkbox:has(.checkbox__input:focus-visible) .checkbox__indicator"
+    }
+  ],
   "variants": {
     "size": [
       "sm",

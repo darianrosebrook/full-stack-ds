@@ -201,6 +201,703 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "typography.alignment",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "select.design.text.typography.alignment",
+      "cssVar": "--fsds-select-design-text-typography-alignment",
+      "cssProperty": "text-align",
+      "selectorKey": "text",
+      "part": "text",
+      "defaultValue": "left",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__text"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "select.design.trigger.spacing.gap",
+      "cssVar": "--fsds-select-design-trigger-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "4px",
+      "resolvesTo": "select.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "select.design.trigger.spacing.padding",
+      "cssVar": "--fsds-select-design-trigger-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "4px",
+      "resolvesTo": "select.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "select.design.trigger.border.style",
+      "cssVar": "--fsds-select-design-trigger-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "select.design.trigger.border.width",
+      "cssVar": "--fsds-select-design-trigger-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "1px",
+      "resolvesTo": "select.size.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "select.design.trigger.shape.radius",
+      "cssVar": "--fsds-select-design-trigger-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "6px",
+      "resolvesTo": "select.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "select.design.trigger.border.color",
+      "cssVar": "--fsds-select-design-trigger-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "#a0a0a1",
+      "resolvesTo": "select.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "select.design.trigger.background.fill",
+      "cssVar": "--fsds-select-design-trigger-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "select.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "select.design.trigger.foreground.color",
+      "cssVar": "--fsds-select-design-trigger-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "#141414",
+      "resolvesTo": "select.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "select.design.trigger.typography.size",
+      "cssVar": "--fsds-select-design-trigger-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "16px",
+      "resolvesTo": "select.font.size.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "select.design.trigger.typography.line-height",
+      "cssVar": "--fsds-select-design-trigger-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "trigger",
+      "part": "trigger",
+      "defaultValue": "1.5",
+      "resolvesTo": "select.font.lineHeight.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "select.design.content.background.fill",
+      "cssVar": "--fsds-select-design-content-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "select.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__content"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "select.design.content.border.style",
+      "cssVar": "--fsds-select-design-content-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__content"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "select.design.content.border.width",
+      "cssVar": "--fsds-select-design-content-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "1px",
+      "resolvesTo": "select.size.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__content"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "select.design.content.shape.radius",
+      "cssVar": "--fsds-select-design-content-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "6px",
+      "resolvesTo": "select.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__content"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "select.design.content.border.color",
+      "cssVar": "--fsds-select-design-content-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "#a0a0a1",
+      "resolvesTo": "select.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__content"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "select.design.content.elevation.shadow",
+      "cssVar": "--fsds-select-design-content-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "0 4px 16px rgba(0,0,0,0.12)",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__content"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "select.design.content.spacing.padding",
+      "cssVar": "--fsds-select-design-content-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "4px",
+      "resolvesTo": "select.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__content"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "select.design.content.spacing.gap",
+      "cssVar": "--fsds-select-design-content-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "4px",
+      "resolvesTo": "select.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__content"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "select.design.search.spacing.padding",
+      "cssVar": "--fsds-select-design-search-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "search",
+      "part": "search",
+      "defaultValue": "4px",
+      "resolvesTo": "select.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__search"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "select.design.search.border.style",
+      "cssVar": "--fsds-select-design-search-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "search",
+      "part": "search",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__search"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "select.design.search.border.width",
+      "cssVar": "--fsds-select-design-search-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "search",
+      "part": "search",
+      "defaultValue": "1px",
+      "resolvesTo": "select.size.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__search"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "select.design.search.shape.radius",
+      "cssVar": "--fsds-select-design-search-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "search",
+      "part": "search",
+      "defaultValue": "6px",
+      "resolvesTo": "select.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__search"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "select.design.search.border.color",
+      "cssVar": "--fsds-select-design-search-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "search",
+      "part": "search",
+      "defaultValue": "#a0a0a1",
+      "resolvesTo": "select.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__search"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "select.design.search.background.fill",
+      "cssVar": "--fsds-select-design-search-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "search",
+      "part": "search",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "select.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__search"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "select.design.search.foreground.color",
+      "cssVar": "--fsds-select-design-search-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "search",
+      "part": "search",
+      "defaultValue": "#141414",
+      "resolvesTo": "select.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__search"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "select.design.search.typography.size",
+      "cssVar": "--fsds-select-design-search-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "search",
+      "part": "search",
+      "defaultValue": "16px",
+      "resolvesTo": "select.font.size.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__search"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "select.design.options.spacing.gap",
+      "cssVar": "--fsds-select-design-options-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "options",
+      "part": "options",
+      "defaultValue": "2px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__options"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "select.design.options.spacing.padding",
+      "cssVar": "--fsds-select-design-options-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "options",
+      "part": "options",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__options"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "select.design.option.spacing.gap",
+      "cssVar": "--fsds-select-design-option-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "option",
+      "part": "option",
+      "defaultValue": "4px",
+      "resolvesTo": "select.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__option"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "select.design.option.spacing.padding",
+      "cssVar": "--fsds-select-design-option-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "option",
+      "part": "option",
+      "defaultValue": "4px",
+      "resolvesTo": "select.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__option"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "select.design.option.shape.radius",
+      "cssVar": "--fsds-select-design-option-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "option",
+      "part": "option",
+      "defaultValue": "6px",
+      "resolvesTo": "select.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__option"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "select.design.option.foreground.color",
+      "cssVar": "--fsds-select-design-option-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "option",
+      "part": "option",
+      "defaultValue": "#141414",
+      "resolvesTo": "select.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__option"
+    },
+    {
+      "property": "typography.alignment",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "select.design.empty-state.typography.alignment",
+      "cssVar": "--fsds-select-design-empty-state-typography-alignment",
+      "cssProperty": "text-align",
+      "selectorKey": "emptyState",
+      "part": "emptyState",
+      "defaultValue": "center",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__emptyState"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "select.design.empty-state.spacing.padding",
+      "cssVar": "--fsds-select-design-empty-state-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "emptyState",
+      "part": "emptyState",
+      "defaultValue": "4px",
+      "resolvesTo": "select.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__emptyState"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "select.design.empty-state.foreground.color",
+      "cssVar": "--fsds-select-design-empty-state-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "emptyState",
+      "part": "emptyState",
+      "defaultValue": "#474647",
+      "resolvesTo": "select.color.placeholder.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__emptyState"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "select.design.condition-c1f07e6a65af.focus.width",
+      "cssVar": "--fsds-select-design-condition-c1f07e6a65af-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": ".select__trigger:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "select.focus.ring.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "select.design.condition-c1f07e6a65af.focus.color",
+      "cssVar": "--fsds-select-design-condition-c1f07e6a65af-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": ".select__trigger:focus-visible",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "select.focus.ring.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "select.design.condition-c1f07e6a65af.focus.style",
+      "cssVar": "--fsds-select-design-condition-c1f07e6a65af-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": ".select__trigger:focus-visible",
+      "part": null,
+      "defaultValue": "solid",
+      "resolvesTo": "select.focus.ring.style",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "select.design.condition-c1f07e6a65af.focus.offset",
+      "cssVar": "--fsds-select-design-condition-c1f07e6a65af-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".select__trigger:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "select.focus.ring.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select__trigger:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "appearance.opacity",
+      "group": "appearance",
+      "valueType": "number",
+      "slot": "select.design.condition-98ff1c58463e.appearance.opacity",
+      "cssVar": "--fsds-select-design-condition-98ff1c58463e-appearance-opacity",
+      "cssProperty": "opacity",
+      "selectorKey": ".select--disabled .select__trigger",
+      "part": null,
+      "defaultValue": "0.5",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select--disabled .select__trigger"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "select.design.condition-37dc4084a16a.sizing.height",
+      "cssVar": "--fsds-select-design-condition-37dc4084a16a-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".select--sm .select__trigger",
+      "part": null,
+      "defaultValue": "24px",
+      "resolvesTo": "select.size.sm.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select--sm .select__trigger"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "select.design.condition-33ea5912860e.sizing.height",
+      "cssVar": "--fsds-select-design-condition-33ea5912860e-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".select--md .select__trigger",
+      "part": null,
+      "defaultValue": "32px",
+      "resolvesTo": "select.size.md.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select--md .select__trigger"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "select.design.condition-d393d0052010.sizing.height",
+      "cssVar": "--fsds-select-design-condition-d393d0052010-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".select--lg .select__trigger",
+      "part": null,
+      "defaultValue": "48px",
+      "resolvesTo": "select.size.lg.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".select--lg .select__trigger"
+    }
+  ],
   "variants": {
     "size": [
       "sm",

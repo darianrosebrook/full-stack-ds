@@ -3,14 +3,6 @@
   "gaps": [
     {
       "component": "Accordion",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Accordion",
       "slot": "accordion.border.width",
       "status": "dead",
       "disposition": "review",
@@ -24,14 +16,6 @@
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"paddingX\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-    },
-    {
-      "component": "Alert",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Alert",
@@ -80,14 +64,6 @@
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"fontSize\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-    },
-    {
-      "component": "AlertNotice",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "AlertNotice",
@@ -163,14 +139,6 @@
     },
     {
       "component": "Button",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Button",
       "slot": "button.size.padding-block.medium",
       "status": "dead",
       "disposition": "unconsumed-vocabulary",
@@ -218,22 +186,6 @@
       "note": "no rule matched: \"size\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
-      "component": "Card",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Chip",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
       "component": "Chip",
       "slot": "chip.color.background.active",
       "status": "dead",
@@ -274,22 +226,6 @@
       "note": "no rule matched: \"offset\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
     },
     {
-      "component": "Chip",
-      "slot": "box-model.min-height",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Details",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
       "component": "Details",
       "slot": "details.size.padding.page",
       "status": "dead",
@@ -312,14 +248,6 @@
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"compact\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-    },
-    {
-      "component": "Field",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Field",
@@ -387,14 +315,6 @@
     },
     {
       "component": "Input",
-      "slot": "box-model.min-height",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"min-height\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Input",
       "slot": "input.space.inline.default",
       "status": "dead",
       "disposition": "wire",
@@ -408,14 +328,6 @@
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-    },
-    {
-      "component": "Links",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "NavList",
@@ -464,14 +376,6 @@
       "disposition": "wire",
       "spec": "FEAT-DEAD-SLOT-WIRE-01",
       "note": "\"default\" is a declared variant/state value and no styling block redefines this slot; consumption is genuinely missing"
-    },
-    {
-      "component": "Postcard",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Postcard",
@@ -659,14 +563,6 @@
     },
     {
       "component": "Tabs",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Tabs",
       "slot": "tabs.color.focus",
       "status": "dead",
       "disposition": "wire",
@@ -680,22 +576,6 @@
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"listWidth\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-    },
-    {
-      "component": "TextField",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
-    },
-    {
-      "component": "Toast",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Toast",
@@ -768,14 +648,6 @@
       "disposition": "review",
       "spec": "TRIAGE-DEAD-SLOT-REVIEW-01",
       "note": "no rule matched: \"linkHover\" is not an axis value, no sibling re-point redefines it, and its anatomy part (if any) does render — needs human adjudication"
-    },
-    {
-      "component": "Walkthrough",
-      "slot": "box-model.gap",
-      "status": "shadowed",
-      "disposition": "shadowed",
-      "spec": "NONE-inert-by-design",
-      "note": "styles.root overrides \"gap\", outranking the primitive consumer emitted by renderBoxModelConsumers()"
     },
     {
       "component": "Walkthrough",

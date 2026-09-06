@@ -106,6 +106,436 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "switch.design.track.background.fill",
+      "cssVar": "--fsds-switch-design-track-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "track",
+      "part": "track",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "switch.color.track.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__track"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "switch.design.track.border.color",
+      "cssVar": "--fsds-switch-design-track-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "track",
+      "part": "track",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "switch.color.track.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__track"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.track.sizing.width",
+      "cssVar": "--fsds-switch-design-track-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "track",
+      "part": "track",
+      "defaultValue": "48px",
+      "resolvesTo": "switch.size.md.track.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__track"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.track.sizing.height",
+      "cssVar": "--fsds-switch-design-track-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "track",
+      "part": "track",
+      "defaultValue": "24px",
+      "resolvesTo": "switch.size.md.track.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__track"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "switch.design.track.shape.radius",
+      "cssVar": "--fsds-switch-design-track-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "track",
+      "part": "track",
+      "defaultValue": "9999px",
+      "resolvesTo": "switch.size.md.track.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__track"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "switch.design.track.spacing.padding",
+      "cssVar": "--fsds-switch-design-track-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "track",
+      "part": "track",
+      "defaultValue": "1px",
+      "resolvesTo": "switch.size.md.track.padding",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__track"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "switch.design.track.border.style",
+      "cssVar": "--fsds-switch-design-track-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "track",
+      "part": "track",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__track"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "switch.design.track.border.width",
+      "cssVar": "--fsds-switch-design-track-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "track",
+      "part": "track",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__track"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "switch.design.thumb.background.fill",
+      "cssVar": "--fsds-switch-design-thumb-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "thumb",
+      "part": "thumb",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "switch.color.thumb.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__thumb"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "switch.design.thumb.elevation.shadow",
+      "cssVar": "--fsds-switch-design-thumb-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": "thumb",
+      "part": "thumb",
+      "defaultValue": "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
+      "resolvesTo": "switch.color.thumb.shadow.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__thumb"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.thumb.sizing.width",
+      "cssVar": "--fsds-switch-design-thumb-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "thumb",
+      "part": "thumb",
+      "defaultValue": "16px",
+      "resolvesTo": "switch.size.md.thumb.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__thumb"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.thumb.sizing.height",
+      "cssVar": "--fsds-switch-design-thumb-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "thumb",
+      "part": "thumb",
+      "defaultValue": "16px",
+      "resolvesTo": "switch.size.md.thumb.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__thumb"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "switch.design.thumb.shape.radius",
+      "cssVar": "--fsds-switch-design-thumb-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "thumb",
+      "part": "thumb",
+      "defaultValue": "50%",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__thumb"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "switch.design.input.focus.color",
+      "cssVar": "--fsds-switch-design-input-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": "input",
+      "part": "input",
+      "defaultValue": "#0566fe",
+      "resolvesTo": "switch.color.input.outline.focus",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__input"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "switch.design.input.spacing.padding",
+      "cssVar": "--fsds-switch-design-input-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "input",
+      "part": "input",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch__input"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-3199c3ad1795.sizing.width",
+      "cssVar": "--fsds-switch-design-condition-3199c3ad1795-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".switch--sm .switch__track",
+      "part": null,
+      "defaultValue": "32px",
+      "resolvesTo": "switch.size.sm.track.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--sm .switch__track"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-3199c3ad1795.sizing.height",
+      "cssVar": "--fsds-switch-design-condition-3199c3ad1795-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".switch--sm .switch__track",
+      "part": null,
+      "defaultValue": "16px",
+      "resolvesTo": "switch.size.sm.track.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--sm .switch__track"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-3199c3ad1795.shape.radius",
+      "cssVar": "--fsds-switch-design-condition-3199c3ad1795-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".switch--sm .switch__track",
+      "part": null,
+      "defaultValue": "9999px",
+      "resolvesTo": "switch.size.sm.track.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--sm .switch__track"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-3199c3ad1795.spacing.padding",
+      "cssVar": "--fsds-switch-design-condition-3199c3ad1795-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": ".switch--sm .switch__track",
+      "part": null,
+      "defaultValue": "1px",
+      "resolvesTo": "switch.size.sm.track.padding",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--sm .switch__track"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-97b936929ea8.sizing.width",
+      "cssVar": "--fsds-switch-design-condition-97b936929ea8-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".switch--sm .switch__thumb",
+      "part": null,
+      "defaultValue": "12px",
+      "resolvesTo": "switch.size.sm.thumb.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--sm .switch__thumb"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-97b936929ea8.sizing.height",
+      "cssVar": "--fsds-switch-design-condition-97b936929ea8-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".switch--sm .switch__thumb",
+      "part": null,
+      "defaultValue": "12px",
+      "resolvesTo": "switch.size.sm.thumb.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--sm .switch__thumb"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-88d6e6531fe5.sizing.width",
+      "cssVar": "--fsds-switch-design-condition-88d6e6531fe5-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".switch--lg .switch__track",
+      "part": null,
+      "defaultValue": "64px",
+      "resolvesTo": "switch.size.lg.track.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--lg .switch__track"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-88d6e6531fe5.sizing.height",
+      "cssVar": "--fsds-switch-design-condition-88d6e6531fe5-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".switch--lg .switch__track",
+      "part": null,
+      "defaultValue": "32px",
+      "resolvesTo": "switch.size.lg.track.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--lg .switch__track"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-88d6e6531fe5.shape.radius",
+      "cssVar": "--fsds-switch-design-condition-88d6e6531fe5-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".switch--lg .switch__track",
+      "part": null,
+      "defaultValue": "9999px",
+      "resolvesTo": "switch.size.lg.track.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--lg .switch__track"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-88d6e6531fe5.spacing.padding",
+      "cssVar": "--fsds-switch-design-condition-88d6e6531fe5-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": ".switch--lg .switch__track",
+      "part": null,
+      "defaultValue": "1px",
+      "resolvesTo": "switch.size.lg.track.padding",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--lg .switch__track"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-9a61de98af78.sizing.width",
+      "cssVar": "--fsds-switch-design-condition-9a61de98af78-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".switch--lg .switch__thumb",
+      "part": null,
+      "defaultValue": "24px",
+      "resolvesTo": "switch.size.lg.thumb.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--lg .switch__thumb"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "switch.design.condition-9a61de98af78.sizing.height",
+      "cssVar": "--fsds-switch-design-condition-9a61de98af78-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".switch--lg .switch__thumb",
+      "part": null,
+      "defaultValue": "24px",
+      "resolvesTo": "switch.size.lg.thumb.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".switch--lg .switch__thumb"
+    }
+  ],
   "variants": {
     "size": [
       "sm",

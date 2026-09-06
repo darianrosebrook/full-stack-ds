@@ -1,5 +1,5 @@
 /** Closed common design vocabulary. CSS is a realization mapping, not an open property bag. */
-import type { ComponentContract, StyleEntry } from './contract.js';
+import type { ComponentContract } from './contract.js';
 import { tokenSlug } from './token-path.js';
 
 export type DesignValueType = 'color' | 'dimension' | 'number' | 'fontFamily' | 'shadow' | 'duration' | 'easing' | 'enum';
@@ -42,6 +42,8 @@ export interface DesignBindingIR extends DesignPropertyDefinition {
   cssVar: string;
   cssProperty: string;
   selectorKey: string;
+  /** Expanded and suppression-guarded by the component IR. */
+  selector?: string;
   /** Null for a complex selector: no guessed anatomy or state identity. */
   part: string | null;
   defaultValue: string;
@@ -62,6 +64,7 @@ export function buildDesignBindings(contract: Pick<ComponentContract, 'name' | '
       if (!definition || definition.property !== entry.design.property) {
         throw new Error(`Design property ${entry.design.property} does not bind ${cssProperty}; expected ${definition?.property ?? 'a registered property'}`);
       }
+      if (entry.platforms && !entry.platforms.includes('web')) throw new Error('Design overrides currently require a web consumer');
       const { slot } = entry.design;
       if (!slot.startsWith(`${prefix}.design.`) || !/^[a-z][a-z0-9.-]*$/.test(slot)) throw new Error(`Design slot ${slot} must use the ${prefix}.design namespace`);
       if (slots.has(slot)) throw new Error(`Duplicate design slot ${slot}: independently addressed consumers require distinct slots`);
@@ -73,9 +76,4 @@ export function buildDesignBindings(contract: Pick<ComponentContract, 'name' | '
     }
   }
   return bindings;
-}
-
-/** Unset public slots keep their original semantic source and concrete fallback. */
-export function designValue(entry: StyleEntry, value: string, platform: string): string {
-  return entry.design && platform === 'web' ? `var(--${tokenSlug(entry.design.slot)}, ${value})` : value;
 }

@@ -192,6 +192,527 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "dialog.design.modal.background.fill",
+      "cssVar": "--fsds-dialog-design-modal-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "dialog.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "dialog.design.modal.foreground.color",
+      "cssVar": "--fsds-dialog-design-modal-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "#141414",
+      "resolvesTo": "dialog.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "dialog.design.modal.border.color",
+      "cssVar": "--fsds-dialog-design-modal-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "dialog.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "dialog.design.modal.border.style",
+      "cssVar": "--fsds-dialog-design-modal-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "dialog.design.modal.border.width",
+      "cssVar": "--fsds-dialog-design-modal-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "dialog.design.modal.shape.radius",
+      "cssVar": "--fsds-dialog-design-modal-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "16px",
+      "resolvesTo": "dialog.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "dialog.design.modal.elevation.shadow",
+      "cssVar": "--fsds-dialog-design-modal-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "0px 12px 16px #0000000f, 0px 25px 50px #00000026",
+      "resolvesTo": "dialog.elevation.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.modal.sizing.width",
+      "cssVar": "--fsds-dialog-design-modal-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "500px",
+      "resolvesTo": "dialog.size.md.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
+      "property": "sizing.max-width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.modal.sizing.max-width",
+      "cssVar": "--fsds-dialog-design-modal-sizing-max-width",
+      "cssProperty": "max-width",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "90vw",
+      "resolvesTo": "dialog.size.md.maxWidth",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
+      "property": "border.bottom.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "dialog.design.header.border.bottom.color",
+      "cssVar": "--fsds-dialog-design-header-border-bottom-color",
+      "cssProperty": "border-bottom-color",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "dialog.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__header"
+    },
+    {
+      "property": "border.bottom.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "dialog.design.header.border.bottom.style",
+      "cssVar": "--fsds-dialog-design-header-border-bottom-style",
+      "cssProperty": "border-bottom-style",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__header"
+    },
+    {
+      "property": "border.bottom.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "dialog.design.header.border.bottom.width",
+      "cssVar": "--fsds-dialog-design-header-border-bottom-width",
+      "cssProperty": "border-bottom-width",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__header"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "dialog.design.title.typography.size",
+      "cssVar": "--fsds-dialog-design-title-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "18px",
+      "resolvesTo": "dialog.typography.title.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__title"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "dialog.design.title.typography.weight",
+      "cssVar": "--fsds-dialog-design-title-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "700",
+      "resolvesTo": "dialog.typography.title.fontWeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__title"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "dialog.design.title.typography.line-height",
+      "cssVar": "--fsds-dialog-design-title-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "1",
+      "resolvesTo": "dialog.typography.title.lineHeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__title"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "dialog.design.title.foreground.color",
+      "cssVar": "--fsds-dialog-design-title-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "#141414",
+      "resolvesTo": "dialog.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__title"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "dialog.design.footer.spacing.gap",
+      "cssVar": "--fsds-dialog-design-footer-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "4px",
+      "resolvesTo": "dialog.spacing.footer.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__footer"
+    },
+    {
+      "property": "border.top.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "dialog.design.footer.border.top.color",
+      "cssVar": "--fsds-dialog-design-footer-border-top-color",
+      "cssProperty": "border-top-color",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "dialog.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__footer"
+    },
+    {
+      "property": "border.top.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "dialog.design.footer.border.top.style",
+      "cssVar": "--fsds-dialog-design-footer-border-top-style",
+      "cssProperty": "border-top-style",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__footer"
+    },
+    {
+      "property": "border.top.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "dialog.design.footer.border.top.width",
+      "cssVar": "--fsds-dialog-design-footer-border-top-width",
+      "cssProperty": "border-top-width",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__footer"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.close-button.sizing.width",
+      "cssVar": "--fsds-dialog-design-close-button-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "closeButton",
+      "part": "closeButton",
+      "defaultValue": "32px",
+      "resolvesTo": "dialog.size.closeButton.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__closeButton"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.close-button.sizing.height",
+      "cssVar": "--fsds-dialog-design-close-button-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "closeButton",
+      "part": "closeButton",
+      "defaultValue": "32px",
+      "resolvesTo": "dialog.size.closeButton.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__closeButton"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "dialog.design.close-button.background.fill",
+      "cssVar": "--fsds-dialog-design-close-button-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "closeButton",
+      "part": "closeButton",
+      "defaultValue": "transparent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__closeButton"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "dialog.design.close-button.shape.radius",
+      "cssVar": "--fsds-dialog-design-close-button-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "closeButton",
+      "part": "closeButton",
+      "defaultValue": "9999px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__closeButton"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.condition-c6049c96ab74.sizing.width",
+      "cssVar": "--fsds-dialog-design-condition-c6049c96ab74-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".dialog--sm .dialog__modal",
+      "part": null,
+      "defaultValue": "400px",
+      "resolvesTo": "dialog.size.sm.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog--sm .dialog__modal"
+    },
+    {
+      "property": "sizing.max-width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.condition-c6049c96ab74.sizing.max-width",
+      "cssVar": "--fsds-dialog-design-condition-c6049c96ab74-sizing-max-width",
+      "cssProperty": "max-width",
+      "selectorKey": ".dialog--sm .dialog__modal",
+      "part": null,
+      "defaultValue": "90vw",
+      "resolvesTo": "dialog.size.sm.maxWidth",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog--sm .dialog__modal"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.condition-3fb7229a17a8.sizing.width",
+      "cssVar": "--fsds-dialog-design-condition-3fb7229a17a8-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".dialog--lg .dialog__modal",
+      "part": null,
+      "defaultValue": "700px",
+      "resolvesTo": "dialog.size.lg.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog--lg .dialog__modal"
+    },
+    {
+      "property": "sizing.max-width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.condition-3fb7229a17a8.sizing.max-width",
+      "cssVar": "--fsds-dialog-design-condition-3fb7229a17a8-sizing-max-width",
+      "cssProperty": "max-width",
+      "selectorKey": ".dialog--lg .dialog__modal",
+      "part": null,
+      "defaultValue": "90vw",
+      "resolvesTo": "dialog.size.lg.maxWidth",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog--lg .dialog__modal"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.condition-81887f72fc05.sizing.width",
+      "cssVar": "--fsds-dialog-design-condition-81887f72fc05-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".dialog--xl .dialog__modal",
+      "part": null,
+      "defaultValue": "900px",
+      "resolvesTo": "dialog.size.xl.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog--xl .dialog__modal"
+    },
+    {
+      "property": "sizing.max-width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.condition-81887f72fc05.sizing.max-width",
+      "cssVar": "--fsds-dialog-design-condition-81887f72fc05-sizing-max-width",
+      "cssProperty": "max-width",
+      "selectorKey": ".dialog--xl .dialog__modal",
+      "part": null,
+      "defaultValue": "95vw",
+      "resolvesTo": "dialog.size.xl.maxWidth",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog--xl .dialog__modal"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.condition-aa10b66155cb.sizing.width",
+      "cssVar": "--fsds-dialog-design-condition-aa10b66155cb-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": ".dialog--full .dialog__modal",
+      "part": null,
+      "defaultValue": "100vw",
+      "resolvesTo": "dialog.size.full.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog--full .dialog__modal"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.condition-aa10b66155cb.sizing.height",
+      "cssVar": "--fsds-dialog-design-condition-aa10b66155cb-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": ".dialog--full .dialog__modal",
+      "part": null,
+      "defaultValue": "100vh",
+      "resolvesTo": "dialog.size.full.height",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog--full .dialog__modal"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "dialog.design.condition-aa10b66155cb.shape.radius",
+      "cssVar": "--fsds-dialog-design-condition-aa10b66155cb-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".dialog--full .dialog__modal",
+      "part": null,
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog--full .dialog__modal"
+    }
+  ],
   "variants": {
     "size": [
       "sm",

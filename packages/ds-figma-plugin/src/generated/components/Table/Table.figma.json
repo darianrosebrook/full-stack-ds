@@ -101,6 +101,356 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "table.design.root.foreground.color",
+      "cssVar": "--fsds-table-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "table.color.text",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "table.design.root.typography.size",
+      "cssVar": "--fsds-table-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "14px",
+      "resolvesTo": "table.text.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "table.design.root.typography.line-height",
+      "cssVar": "--fsds-table-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.5",
+      "resolvesTo": "table.text.lineHeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "table.design.container.border.color",
+      "cssVar": "--fsds-table-design-container-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "container",
+      "part": "container",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "table.color.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__container"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "table.design.container.border.width",
+      "cssVar": "--fsds-table-design-container-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "container",
+      "part": "container",
+      "defaultValue": "1px",
+      "resolvesTo": "table.border.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__container"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "table.design.container.shape.radius",
+      "cssVar": "--fsds-table-design-container-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "container",
+      "part": "container",
+      "defaultValue": "6px",
+      "resolvesTo": "table.size.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__container"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "table.design.caption.typography.size",
+      "cssVar": "--fsds-table-design-caption-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "caption",
+      "part": "caption",
+      "defaultValue": "12px",
+      "resolvesTo": "table.text.sizeCaption",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__caption"
+    },
+    {
+      "property": "typography.alignment",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "table.design.caption.typography.alignment",
+      "cssVar": "--fsds-table-design-caption-typography-alignment",
+      "cssProperty": "text-align",
+      "selectorKey": "caption",
+      "part": "caption",
+      "defaultValue": "start",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__caption"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "table.design.head.background.fill",
+      "cssVar": "--fsds-table-design-head-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "head",
+      "part": "head",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "table.color.background.footer",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__head"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "table.design.footer.background.fill",
+      "cssVar": "--fsds-table-design-footer-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "table.color.background.footer",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__footer"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "table.design.footer.typography.weight",
+      "cssVar": "--fsds-table-design-footer-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "500",
+      "resolvesTo": "table.text.weightFooter",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__footer"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "table.design.header-cell.typography.weight",
+      "cssVar": "--fsds-table-design-header-cell-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "headerCell",
+      "part": "headerCell",
+      "defaultValue": "700",
+      "resolvesTo": "table.text.weightHead",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__headerCell"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "table.design.header-cell.foreground.color",
+      "cssVar": "--fsds-table-design-header-cell-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "headerCell",
+      "part": "headerCell",
+      "defaultValue": "#141414",
+      "resolvesTo": "table.color.text",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__headerCell"
+    },
+    {
+      "property": "border.bottom.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "table.design.header-cell.border.bottom.width",
+      "cssVar": "--fsds-table-design-header-cell-border-bottom-width",
+      "cssProperty": "border-bottom-width",
+      "selectorKey": "headerCell",
+      "part": "headerCell",
+      "defaultValue": "1px",
+      "resolvesTo": "table.border.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__headerCell"
+    },
+    {
+      "property": "border.bottom.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "table.design.header-cell.border.bottom.color",
+      "cssVar": "--fsds-table-design-header-cell-border-bottom-color",
+      "cssProperty": "border-bottom-color",
+      "selectorKey": "headerCell",
+      "part": "headerCell",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "table.color.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__headerCell"
+    },
+    {
+      "property": "border.bottom.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "table.design.header-cell.border.bottom.style",
+      "cssVar": "--fsds-table-design-header-cell-border-bottom-style",
+      "cssProperty": "border-bottom-style",
+      "selectorKey": "headerCell",
+      "part": "headerCell",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__headerCell"
+    },
+    {
+      "property": "typography.alignment",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "table.design.header-cell.typography.alignment",
+      "cssVar": "--fsds-table-design-header-cell-typography-alignment",
+      "cssProperty": "text-align",
+      "selectorKey": "headerCell",
+      "part": "headerCell",
+      "defaultValue": "start",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__headerCell"
+    },
+    {
+      "property": "border.bottom.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "table.design.cell.border.bottom.width",
+      "cssVar": "--fsds-table-design-cell-border-bottom-width",
+      "cssProperty": "border-bottom-width",
+      "selectorKey": "cell",
+      "part": "cell",
+      "defaultValue": "1px",
+      "resolvesTo": "table.border.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__cell"
+    },
+    {
+      "property": "border.bottom.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "table.design.cell.border.bottom.color",
+      "cssVar": "--fsds-table-design-cell-border-bottom-color",
+      "cssProperty": "border-bottom-color",
+      "selectorKey": "cell",
+      "part": "cell",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "table.color.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__cell"
+    },
+    {
+      "property": "border.bottom.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "table.design.cell.border.bottom.style",
+      "cssVar": "--fsds-table-design-cell-border-bottom-style",
+      "cssProperty": "border-bottom-style",
+      "selectorKey": "cell",
+      "part": "cell",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table__cell"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "table.design.hover.background.fill",
+      "cssVar": "--fsds-table-design-hover-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "table.color.background.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table:hover"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "table.design.selected.background.fill",
+      "cssVar": "--fsds-table-design-selected-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "selected",
+      "part": null,
+      "defaultValue": "#95dafb",
+      "resolvesTo": "table.color.background.selected",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".table[aria-selected=\"true\"]"
+    }
+  ],
   "variants": {},
   "states": {
     "flat": [

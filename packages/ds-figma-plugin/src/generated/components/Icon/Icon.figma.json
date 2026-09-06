@@ -55,6 +55,151 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "icon.design.root.foreground.color",
+      "cssVar": "--fsds-icon-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "currentColor",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".icon"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "icon.design.condition-24964d7ed3a7.sizing.width",
+      "cssVar": "--fsds-icon-design-condition-24964d7ed3a7-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "--sm",
+      "part": null,
+      "defaultValue": "16px",
+      "resolvesTo": "icon.size.sm",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".icon--sm"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "icon.design.condition-24964d7ed3a7.sizing.height",
+      "cssVar": "--fsds-icon-design-condition-24964d7ed3a7-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "--sm",
+      "part": null,
+      "defaultValue": "16px",
+      "resolvesTo": "icon.size.sm",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".icon--sm"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "icon.design.condition-dc35d39122c5.sizing.width",
+      "cssVar": "--fsds-icon-design-condition-dc35d39122c5-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "--md",
+      "part": null,
+      "defaultValue": "20px",
+      "resolvesTo": "icon.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".icon--md"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "icon.design.condition-dc35d39122c5.sizing.height",
+      "cssVar": "--fsds-icon-design-condition-dc35d39122c5-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "--md",
+      "part": null,
+      "defaultValue": "20px",
+      "resolvesTo": "icon.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".icon--md"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "icon.design.condition-72800fd5573d.sizing.width",
+      "cssVar": "--fsds-icon-design-condition-72800fd5573d-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "--lg",
+      "part": null,
+      "defaultValue": "24px",
+      "resolvesTo": "icon.size.lg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".icon--lg"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "icon.design.condition-72800fd5573d.sizing.height",
+      "cssVar": "--fsds-icon-design-condition-72800fd5573d-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "--lg",
+      "part": null,
+      "defaultValue": "24px",
+      "resolvesTo": "icon.size.lg",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".icon--lg"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "icon.design.condition-bcfaa22e125a.sizing.width",
+      "cssVar": "--fsds-icon-design-condition-bcfaa22e125a-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "--xl",
+      "part": null,
+      "defaultValue": "32px",
+      "resolvesTo": "icon.size.xl",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".icon--xl"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "icon.design.condition-bcfaa22e125a.sizing.height",
+      "cssVar": "--fsds-icon-design-condition-bcfaa22e125a-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "--xl",
+      "part": null,
+      "defaultValue": "32px",
+      "resolvesTo": "icon.size.xl",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".icon--xl"
+    }
+  ],
   "variants": {
     "size": [
       "sm",

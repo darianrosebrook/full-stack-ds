@@ -1,20 +1,6 @@
 @layer components {
 /* @generated:start tokens */
 .chip {
-  --fsds-box-model-padding: 0;
-  --fsds-box-model-padding-block: 0;
-  --fsds-box-model-padding-block-start: 0;
-  --fsds-box-model-padding-block-end: 0;
-  --fsds-box-model-padding-inline: 0;
-  --fsds-box-model-padding-inline-start: 0;
-  --fsds-box-model-padding-inline-end: 0;
-  --fsds-box-model-gap: var(--fsds-semantic-display-size-gap, 4px);
-  --fsds-box-model-width: auto;
-  --fsds-box-model-min-width: 0;
-  --fsds-box-model-max-width: none;
-  --fsds-box-model-height: auto;
-  --fsds-box-model-min-height: 0;
-  --fsds-box-model-max-height: none;
   --fsds-chip-color-background-default: var(--fsds-semantic-color-action-background-secondary-default, #fafafa);
   --fsds-chip-color-background-hover: var(--fsds-semantic-color-action-background-secondary-hover, #d0d0d0);
   --fsds-chip-color-background-active: var(--fsds-semantic-color-action-background-secondary-active, #b8b8b8);

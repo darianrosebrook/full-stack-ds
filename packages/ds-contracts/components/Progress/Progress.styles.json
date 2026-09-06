@@ -2,21 +2,37 @@
   "root": {
     "color": {
       "resolvesTo": "progress.color.text.default",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "progress.design.root.foreground.color"
+      }
     },
     "gap": {
       "resolvesTo": "progress.spacing.gap",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "progress.design.root.spacing.gap"
+      }
     },
     "transition-duration": {
       "resolvesTo": "progress.motion.duration.indeterminate",
-      "fallback": "1500ms"
+      "fallback": "1500ms",
+      "design": {
+        "property": "motion.duration",
+        "slot": "progress.design.root.motion.duration"
+      }
     }
   },
   "track": {
     "background-color": {
       "resolvesTo": "progress.color.track.background",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "progress.design.track.background.fill"
+      }
     },
     "display": {
       "literal": "block",
@@ -46,7 +62,11 @@
   "fill": {
     "background-color": {
       "resolvesTo": "progress.color.fill.info",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "background.fill",
+        "slot": "progress.design.fill.background.fill"
+      }
     },
     "display": {
       "literal": "block",
@@ -76,13 +96,21 @@
     },
     "color": {
       "resolvesTo": "progress.color.text.default",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "progress.design.value.foreground.color"
+      }
     },
     "font-size": {
       "literal": "0.875em",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.size",
+        "slot": "progress.design.value.typography.size"
+      }
     },
     "margin-left": {
       "resolvesTo": "progress.spacing.gap",
@@ -92,25 +120,41 @@
   ".progress--info .progress__fill": {
     "background-color": {
       "resolvesTo": "progress.color.fill.info",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "background.fill",
+        "slot": "progress.design.condition-b054611f82c6.background.fill"
+      }
     }
   },
   ".progress--success .progress__fill": {
     "background-color": {
       "resolvesTo": "progress.color.fill.success",
-      "fallback": "#497f21"
+      "fallback": "#497f21",
+      "design": {
+        "property": "background.fill",
+        "slot": "progress.design.condition-d88c0aa44206.background.fill"
+      }
     }
   },
   ".progress--warning .progress__fill": {
     "background-color": {
       "resolvesTo": "progress.color.fill.warning",
-      "fallback": "#ae5d00"
+      "fallback": "#ae5d00",
+      "design": {
+        "property": "background.fill",
+        "slot": "progress.design.condition-542ca89dfc3d.background.fill"
+      }
     }
   },
   ".progress--danger .progress__fill": {
     "background-color": {
       "resolvesTo": "progress.color.fill.danger",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "background.fill",
+        "slot": "progress.design.condition-fdd1c2c16a8f.background.fill"
+      }
     }
   }
 }

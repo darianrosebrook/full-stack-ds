@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { getCssPrefix } from "../../packages/ds-codegen/dist/contract.js";
 /**
  * VARIANT-STYLE-REALIZATION-AUDIT-01 — variant/style realization audit.
  *
@@ -59,12 +60,9 @@ function variantDefault(contract, dim) {
   return null; // unknown — no value is treated as base-covered
 }
 
-/** cssPrefix = the first BEM root class in the generated tokens.css (authoritative). */
+/** Component identity comes from the contract, not optional root slot declarations. */
 function cssPrefix(component) {
-  const tokensCss = readText(resolve(REACT, component, `${component}.tokens.css`));
-  const css = readText(resolve(REACT, component, `${component}.css`));
-  const m = tokensCss.match(/\.([a-zA-Z][\w-]*)\s*\{/) || css.match(/\.([a-zA-Z][\w-]*)\s*\{/);
-  return m ? m[1] : component.toLowerCase();
+  return getCssPrefix(readJSON(resolve(CONTRACTS, component, `${component}.contract.json`)));
 }
 
 /**

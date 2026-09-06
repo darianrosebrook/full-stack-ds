@@ -1,56 +1,58 @@
+@import "../../primitives/box-model.css";
 @import "./Button.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .button {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-button-size-gap-default, 8px);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-action-size-medium-padding-block, 4px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-action-size-medium-padding-block, 4px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-action-size-medium-padding-inline, 8px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-action-size-medium-padding-inline, 8px));
+  gap: var(--fsds-button-design-root-spacing-gap, var(--fsds-button-size-gap-default, 8px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, var(--fsds-semantic-action-size-medium-min-width, 32px));
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, var(--fsds-semantic-action-size-medium-min-height, 32px));
+  max-height: var(--fsds-box-model-max-height, none);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   cursor: pointer;
-  border-style: solid;
+  border-style: var(--fsds-button-design-root-border-style, solid);
   white-space: nowrap;
   user-select: none;
-  background-color: var(--fsds-button-color-background-default, #0566fe);
-  color: var(--fsds-button-color-foreground-default, #fafafa);
-  border-color: var(--fsds-button-color-border-default, #b8b8b8);
-  border-radius: var(--fsds-button-size-radius, 9999px);
-  border-width: var(--fsds-button-size-border, 1px);
-  font-size: var(--fsds-button-size-font-size-medium, 1rem);
-  font-weight: var(--fsds-button-text-weight, 500);
-  transition-duration: var(--fsds-button-motion-duration-fast, 150ms);
-  transition-timing-function: var(--fsds-button-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+  background-color: var(--fsds-button-design-root-background-fill, var(--fsds-button-color-background-default, #0566fe));
+  color: var(--fsds-button-design-root-foreground-color, var(--fsds-button-color-foreground-default, #fafafa));
+  border-color: var(--fsds-button-design-root-border-color, var(--fsds-button-color-border-default, #b8b8b8));
+  border-radius: var(--fsds-button-design-root-shape-radius, var(--fsds-button-size-radius, 9999px));
+  border-width: var(--fsds-button-design-root-border-width, var(--fsds-button-size-border, 1px));
+  font-size: var(--fsds-button-design-root-typography-size, var(--fsds-button-size-font-size-medium, 1rem));
+  font-weight: var(--fsds-button-design-root-typography-weight, var(--fsds-button-text-weight, 500));
+  transition-duration: var(--fsds-button-design-root-motion-duration, var(--fsds-button-motion-duration-fast, 150ms));
+  transition-timing-function: var(--fsds-button-design-root-motion-easing, var(--fsds-button-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1)));
 
   &:hover:not(:disabled) {
-    background-color: var(--fsds-button-color-background-hover, #f7f7f7);
-    border-color: var(--fsds-button-color-border-hover, #888889);
+    background-color: var(--fsds-button-design-hover-background-fill, var(--fsds-button-color-background-hover, #f7f7f7));
+    border-color: var(--fsds-button-design-hover-border-color, var(--fsds-button-color-border-hover, #888889));
   }
 
   &:active:not(:disabled) {
-    background-color: var(--fsds-button-color-background-active, #d0d0d0);
+    background-color: var(--fsds-button-design-active-background-fill, var(--fsds-button-color-background-active, #d0d0d0));
   }
 
   &:focus-visible:not(:disabled) {
-    border-color: var(--fsds-button-color-border-focus, #0566fe);
+    border-color: var(--fsds-button-design-focus-border-color, var(--fsds-button-color-border-focus, #0566fe));
   }
 
   &:disabled {
-    background-color: var(--fsds-button-color-background-disabled, #b8b8b8);
-    color: var(--fsds-button-color-foreground-disabled, #727272);
+    background-color: var(--fsds-button-design-disabled-background-fill, var(--fsds-button-color-background-disabled, #b8b8b8));
+    color: var(--fsds-button-design-disabled-foreground-color, var(--fsds-button-color-foreground-disabled, #727272));
   }
 
   &[aria-busy="true"] .button__loadingText {
-    opacity: 0.7;
+    opacity: var(--fsds-button-design-condition-ac2be5befb6d-appearance-opacity, 0.7);
   }
 }
 
@@ -91,6 +93,7 @@
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

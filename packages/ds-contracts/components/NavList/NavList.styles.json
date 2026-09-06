@@ -22,7 +22,11 @@
     },
     "gap": {
       "resolvesTo": "nav-list.size.gap.list",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "nav-list.design.list.spacing.gap"
+      }
     },
     "list-style": {
       "literal": "none",
@@ -40,7 +44,11 @@
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "nav-list.design.list.spacing.padding"
+      }
     }
   },
   "item": {
@@ -52,19 +60,35 @@
     },
     "color": {
       "resolvesTo": "nav-list.color.foreground.default",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "nav-list.design.item.foreground.color"
+      }
     },
     "padding-block": {
       "resolvesTo": "nav-list.size.padding.block",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "spacing.padding-block",
+        "slot": "nav-list.design.item.spacing.padding-block"
+      }
     },
     "padding-inline": {
       "resolvesTo": "nav-list.size.padding.inline",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.padding-inline",
+        "slot": "nav-list.design.item.spacing.padding-inline"
+      }
     },
     "border-radius": {
       "resolvesTo": "nav-list.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "nav-list.design.item.shape.radius"
+      }
     },
     "transition-property": {
       "literal": "background-color, color",
@@ -76,7 +100,11 @@
       "literal": "120ms",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "motion.duration",
+        "slot": "nav-list.design.item.motion.duration"
+      }
     }
   },
   ".nav-list__item:hover": {
@@ -84,11 +112,19 @@
       "literal": "color-mix(in srgb, var(--fsds-nav-list-color-background-hover, #d0d0d0) calc(var(--fsds-nav-list-state-layer-hover, 0.04) * 100%), transparent)",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "background.fill",
+        "slot": "nav-list.design.condition-6eb1fb141fc8.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "nav-list.color.foreground.hover",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "nav-list.design.condition-6eb1fb141fc8.foreground.color"
+      }
     }
   },
   ".nav-list__item:focus-visible": {
@@ -96,23 +132,39 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "focus.style",
+        "slot": "nav-list.design.condition-d48c60eed8cf.focus.style"
+      }
     },
     "outline-width": {
       "literal": "2px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "focus.width",
+        "slot": "nav-list.design.condition-d48c60eed8cf.focus.width"
+      }
     },
     "outline-color": {
       "resolvesTo": "nav-list.color.outline.focus",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "focus.color",
+        "slot": "nav-list.design.condition-d48c60eed8cf.focus.color"
+      }
     },
     "outline-offset": {
       "literal": "-2px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "focus.offset",
+        "slot": "nav-list.design.condition-d48c60eed8cf.focus.offset"
+      }
     }
   },
   ".nav-list__item[aria-current=\"page\"]": {
@@ -120,11 +172,19 @@
       "literal": "color-mix(in srgb, currentColor calc(var(--fsds-nav-list-state-layer-selected, 0.08) * 100%), transparent)",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "background.fill",
+        "slot": "nav-list.design.condition-64c35a3ee9a3.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "nav-list.color.foreground.current",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "nav-list.design.condition-64c35a3ee9a3.foreground.color"
+      }
     }
   }
 }

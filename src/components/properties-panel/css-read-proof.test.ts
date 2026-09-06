@@ -35,11 +35,11 @@ describe("extractReadVars", () => {
 });
 
 describe("readCssVarsFor — corpus ground truth", () => {
-  it("Button's generated CSS reads the component-prefixed gap slot and NOT box-model.gap (the A3 defect pair)", () => {
+  it("Button reads its default gap and the shared box override", () => {
     const reads = readCssVarsFor("Button");
     expect(reads).not.toBeNull();
     expect(reads!.has("--fsds-button-size-gap-default")).toBe(true);
-    expect(reads!.has("--fsds-box-model-gap")).toBe(false);
+    expect(reads!.has("--fsds-box-model-gap")).toBe(true);
   });
 
   it("aggregates every css file of a component (multi-file surfaces)", () => {
@@ -48,7 +48,7 @@ describe("readCssVarsFor — corpus ground truth", () => {
     const reads = readCssVarsFor("Tabs");
     expect(reads).not.toBeNull();
     expect(reads!.has("--fsds-tabs-spacing-gap")).toBe(true);
-    expect(reads!.has("--fsds-box-model-gap")).toBe(false);
+    expect(reads!.has("--fsds-box-model-gap")).toBe(true);
   });
 
   it("returns null for an unknown component (no proof source, not empty proof)", () => {

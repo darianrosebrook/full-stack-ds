@@ -101,6 +101,17 @@ check("an undeclared global CSS read becomes a named finding", () => {
   assert.equal(findings[0].fallback, "8px");
 });
 
+check("an optional design override preserves scrutiny of nested fallback references", () => {
+  const optional = new Set(['--fsds-card-design-root-background-fill']);
+  const audit = css => auditCssReferences('Card', css, new Set(), new Map(), new Set(), new Set(), optional);
+  assert.deepEqual(audit('color: var(--fsds-card-design-root-background-fill, #fff)'), []);
+  assert.equal(audit('color: var(--fsds-card-design-root-background-fill)')[0].name, '--fsds-card-design-root-background-fill');
+  const nested = audit('color: var(--fsds-card-design-root-background-fill, var(--fsds-semantic-typo, rgb(0, 0, 0)))');
+  assert.deepEqual(nested.map(row => row.name), ['--fsds-semantic-typo']);
+  assert.equal(nested[0].fallback, 'rgb(0, 0, 0)');
+  assert.equal(audit('color: var(--fsds-card-design-root-typo, #fff)')[0].name, '--fsds-card-design-root-typo');
+});
+
 // --- the casing seam this rail was built to surface ------------------------
 
 check("kebabCandidate names the declared spelling of a camelCase miss", () => {

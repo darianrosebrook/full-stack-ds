@@ -1,20 +1,6 @@
 @layer components {
 /* @generated:start tokens */
 .text {
-  --fsds-box-model-padding: 0;
-  --fsds-box-model-padding-block: 0;
-  --fsds-box-model-padding-block-start: 0;
-  --fsds-box-model-padding-block-end: 0;
-  --fsds-box-model-padding-inline: 0;
-  --fsds-box-model-padding-inline-start: 0;
-  --fsds-box-model-padding-inline-end: 0;
-  --fsds-box-model-gap: var(--fsds-semantic-display-size-gap, 4px);
-  --fsds-box-model-width: auto;
-  --fsds-box-model-min-width: 0;
-  --fsds-box-model-max-width: none;
-  --fsds-box-model-height: auto;
-  --fsds-box-model-min-height: 0;
-  --fsds-box-model-max-height: none;
   --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-text-typography-font-weight-light: var(--fsds-semantic-typography-font-weight-light, 300);
   --fsds-text-typography-font-weight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);

@@ -1,3 +1,4 @@
+import type { DesignBindingIR } from '../../design-properties.js';
 export const FIGMA_COMPONENT_DESCRIPTOR_SCHEMA_VERSION = 1 as const;
 export const FIGMA_COMPONENT_DESCRIPTOR_SOURCE = "@full-stack-ds/codegen/frameworks/figma" as const;
 
@@ -27,6 +28,8 @@ export type FigmaComponentDescriptorV1 = {
     defaultExpr: string | null;
     nodeKind: string | null;
   }>;
+  /** Binding metadata only; live Figma editing is not asserted. */
+  designBindings?: DesignBindingIR[];
   variants: Record<string, string[]>;
   states: unknown;
   classRecipe: unknown;

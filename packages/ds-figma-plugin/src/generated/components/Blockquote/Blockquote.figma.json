@@ -46,6 +46,325 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "blockquote.design.root.foreground.color",
+      "cssVar": "--fsds-blockquote-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#474647",
+      "resolvesTo": "blockquote.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "blockquote.design.root.background.fill",
+      "cssVar": "--fsds-blockquote-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "blockquote.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "blockquote.design.root.border.color",
+      "cssVar": "--fsds-blockquote-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "blockquote.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "blockquote.design.root.border.style",
+      "cssVar": "--fsds-blockquote-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "blockquote.design.root.border.width",
+      "cssVar": "--fsds-blockquote-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "blockquote.design.root.shape.radius",
+      "cssVar": "--fsds-blockquote-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "blockquote.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "blockquote.design.root.spacing.padding",
+      "cssVar": "--fsds-blockquote-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "12px",
+      "resolvesTo": "blockquote.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "blockquote.design.root.typography.size",
+      "cssVar": "--fsds-blockquote-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1rem",
+      "resolvesTo": "blockquote.size.fontSize.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote"
+    },
+    {
+      "property": "typography.style",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "blockquote.design.root.typography.style",
+      "cssVar": "--fsds-blockquote-design-root-typography-style",
+      "cssProperty": "font-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "italic",
+      "resolvesTo": "blockquote.typography.fontStyle",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "blockquote.design.root.typography.weight",
+      "cssVar": "--fsds-blockquote-design-root-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "500",
+      "resolvesTo": "blockquote.typography.fontWeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "blockquote.design.condition-2265c444f472.border.width",
+      "cssVar": "--fsds-blockquote-design-condition-2265c444f472-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "--default",
+      "part": null,
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote--default"
+    },
+    {
+      "property": "border.inline-start.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "blockquote.design.condition-324ffc53428a.border.inline-start.width",
+      "cssVar": "--fsds-blockquote-design-condition-324ffc53428a-border-inline-start-width",
+      "cssProperty": "border-inline-start-width",
+      "selectorKey": "--bordered",
+      "part": null,
+      "defaultValue": "4px",
+      "resolvesTo": "blockquote.size.border.accent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote--bordered"
+    },
+    {
+      "property": "border.inline-start.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "blockquote.design.condition-324ffc53428a.border.inline-start.color",
+      "cssVar": "--fsds-blockquote-design-condition-324ffc53428a-border-inline-start-color",
+      "cssProperty": "border-inline-start-color",
+      "selectorKey": "--bordered",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "blockquote.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote--bordered"
+    },
+    {
+      "property": "spacing.padding-inline-start",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "blockquote.design.condition-324ffc53428a.spacing.padding-inline-start",
+      "cssVar": "--fsds-blockquote-design-condition-324ffc53428a-spacing-padding-inline-start",
+      "cssProperty": "padding-inline-start",
+      "selectorKey": "--bordered",
+      "part": null,
+      "defaultValue": "12px",
+      "resolvesTo": "blockquote.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote--bordered"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "blockquote.design.condition-24964d7ed3a7.typography.size",
+      "cssVar": "--fsds-blockquote-design-condition-24964d7ed3a7-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--sm",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "blockquote.size.fontSize.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote--sm"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "blockquote.design.condition-24964d7ed3a7.spacing.padding",
+      "cssVar": "--fsds-blockquote-design-condition-24964d7ed3a7-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "--sm",
+      "part": null,
+      "defaultValue": "12px",
+      "resolvesTo": "blockquote.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote--sm"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "blockquote.design.condition-dc35d39122c5.typography.size",
+      "cssVar": "--fsds-blockquote-design-condition-dc35d39122c5-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--md",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "blockquote.size.fontSize.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote--md"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "blockquote.design.condition-dc35d39122c5.spacing.padding",
+      "cssVar": "--fsds-blockquote-design-condition-dc35d39122c5-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "--md",
+      "part": null,
+      "defaultValue": "12px",
+      "resolvesTo": "blockquote.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote--md"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "blockquote.design.condition-72800fd5573d.typography.size",
+      "cssVar": "--fsds-blockquote-design-condition-72800fd5573d-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--lg",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "blockquote.size.fontSize.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote--lg"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "blockquote.design.condition-72800fd5573d.spacing.padding",
+      "cssVar": "--fsds-blockquote-design-condition-72800fd5573d-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "--lg",
+      "part": null,
+      "defaultValue": "12px",
+      "resolvesTo": "blockquote.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".blockquote--lg"
+    }
+  ],
   "variants": {
     "variant": [
       "default",

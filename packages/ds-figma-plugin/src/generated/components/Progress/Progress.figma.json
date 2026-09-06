@@ -106,6 +106,183 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "progress.design.root.foreground.color",
+      "cssVar": "--fsds-progress-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#474647",
+      "resolvesTo": "progress.color.text.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "progress.design.root.spacing.gap",
+      "cssVar": "--fsds-progress-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "2px",
+      "resolvesTo": "progress.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "progress.design.root.motion.duration",
+      "cssVar": "--fsds-progress-design-root-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1500ms",
+      "resolvesTo": "progress.motion.duration.indeterminate",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "progress.design.track.background.fill",
+      "cssVar": "--fsds-progress-design-track-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "track",
+      "part": "track",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "progress.color.track.background",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress__track"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "progress.design.fill.background.fill",
+      "cssVar": "--fsds-progress-design-fill-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "fill",
+      "part": "fill",
+      "defaultValue": "#0566fe",
+      "resolvesTo": "progress.color.fill.info",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress__fill"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "progress.design.value.foreground.color",
+      "cssVar": "--fsds-progress-design-value-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "value",
+      "part": "value",
+      "defaultValue": "#474647",
+      "resolvesTo": "progress.color.text.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress__value"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "progress.design.value.typography.size",
+      "cssVar": "--fsds-progress-design-value-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "value",
+      "part": "value",
+      "defaultValue": "0.875em",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress__value"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "progress.design.condition-b054611f82c6.background.fill",
+      "cssVar": "--fsds-progress-design-condition-b054611f82c6-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".progress--info .progress__fill",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "progress.color.fill.info",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress--info .progress__fill"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "progress.design.condition-d88c0aa44206.background.fill",
+      "cssVar": "--fsds-progress-design-condition-d88c0aa44206-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".progress--success .progress__fill",
+      "part": null,
+      "defaultValue": "#497f21",
+      "resolvesTo": "progress.color.fill.success",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress--success .progress__fill"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "progress.design.condition-542ca89dfc3d.background.fill",
+      "cssVar": "--fsds-progress-design-condition-542ca89dfc3d-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".progress--warning .progress__fill",
+      "part": null,
+      "defaultValue": "#ae5d00",
+      "resolvesTo": "progress.color.fill.warning",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress--warning .progress__fill"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "progress.design.condition-fdd1c2c16a8f.background.fill",
+      "cssVar": "--fsds-progress-design-condition-fdd1c2c16a8f-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".progress--danger .progress__fill",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "progress.color.fill.danger",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".progress--danger .progress__fill"
+    }
+  ],
   "variants": {
     "variant": [
       "linear",

@@ -73,7 +73,7 @@ export function DeveloperView({
     // Material rows so inherited box-model slots also expand resolvesTo —
     // a profile-sourced ref override must hit its semantic var to win over
     // the component-scoped declaration in <Name>.tokens.css.
-    return tokenOverridesToCss(tokenOverrides ?? {}, materialTokenRows(component));
+    return tokenOverridesToCss(tokenOverrides ?? {}, materialTokenRows(component), component.name);
   }, [component, tokenOverrides]);
   const config = useMemo<PreviewConfig>(() => {
     return {

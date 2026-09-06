@@ -1,132 +1,134 @@
+@import "../../primitives/box-model.css";
 @import "./Text.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .text {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
-  color: var(--fsds-text-color-foreground-primary, #141414);
-  font-size: var(--fsds-text-size-md, 1rem);
-  line-height: var(--fsds-text-typography-line-height-body, 1.5);
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-display-size-gap, 4px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
+  color: var(--fsds-text-design-root-foreground-color, var(--fsds-text-color-foreground-primary, #141414));
+  font-size: var(--fsds-text-design-root-typography-size, var(--fsds-text-size-md, 1rem));
+  line-height: var(--fsds-text-design-root-typography-line-height, var(--fsds-text-typography-line-height-body, 1.5));
   margin: 0;
 }
 
 .text--display {
-  font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-font-weight-bold, 700);
-  line-height: var(--fsds-text-typography-line-height-heading, 1);
-  letter-spacing: var(--fsds-text-typography-letter-spacing-tight, -0.018rem);
+  font-size: var(--fsds-text-design-condition-7aecafa55fab-typography-size, var(--fsds-text-size-md, 1rem));
+  font-weight: var(--fsds-text-design-condition-7aecafa55fab-typography-weight, var(--fsds-text-typography-font-weight-bold, 700));
+  line-height: var(--fsds-text-design-condition-7aecafa55fab-typography-line-height, var(--fsds-text-typography-line-height-heading, 1));
+  letter-spacing: var(--fsds-text-design-condition-7aecafa55fab-typography-tracking, var(--fsds-text-typography-letter-spacing-tight, -0.018rem));
 }
 
 .text--headline {
-  font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-font-weight-bold, 700);
-  line-height: var(--fsds-text-typography-line-height-heading, 1);
-  letter-spacing: var(--fsds-text-typography-letter-spacing-tight, -0.018rem);
+  font-size: var(--fsds-text-design-condition-8819f782ecc4-typography-size, var(--fsds-text-size-md, 1rem));
+  font-weight: var(--fsds-text-design-condition-8819f782ecc4-typography-weight, var(--fsds-text-typography-font-weight-bold, 700));
+  line-height: var(--fsds-text-design-condition-8819f782ecc4-typography-line-height, var(--fsds-text-typography-line-height-heading, 1));
+  letter-spacing: var(--fsds-text-design-condition-8819f782ecc4-typography-tracking, var(--fsds-text-typography-letter-spacing-tight, -0.018rem));
 }
 
 .text--title {
-  font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-font-weight-bold, 700);
-  line-height: var(--fsds-text-typography-line-height-heading, 1);
+  font-size: var(--fsds-text-design-condition-ad1d0c32b0fa-typography-size, var(--fsds-text-size-md, 1rem));
+  font-weight: var(--fsds-text-design-condition-ad1d0c32b0fa-typography-weight, var(--fsds-text-typography-font-weight-bold, 700));
+  line-height: var(--fsds-text-design-condition-ad1d0c32b0fa-typography-line-height, var(--fsds-text-typography-line-height-heading, 1));
 }
 
 .text--body {
-  font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-font-weight-regular, 400);
-  line-height: var(--fsds-text-typography-line-height-body, 1.5);
+  font-size: var(--fsds-text-design-condition-2ccff328366e-typography-size, var(--fsds-text-size-md, 1rem));
+  font-weight: var(--fsds-text-design-condition-2ccff328366e-typography-weight, var(--fsds-text-typography-font-weight-regular, 400));
+  line-height: var(--fsds-text-design-condition-2ccff328366e-typography-line-height, var(--fsds-text-typography-line-height-body, 1.5));
 }
 
 .text--caption {
-  font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-font-weight-regular, 400);
-  line-height: var(--fsds-text-typography-line-height-tight, 1.2);
+  font-size: var(--fsds-text-design-condition-e697e79ba40b-typography-size, var(--fsds-text-size-md, 1rem));
+  font-weight: var(--fsds-text-design-condition-e697e79ba40b-typography-weight, var(--fsds-text-typography-font-weight-regular, 400));
+  line-height: var(--fsds-text-design-condition-e697e79ba40b-typography-line-height, var(--fsds-text-typography-line-height-tight, 1.2));
 }
 
 .text--overline {
-  font-size: var(--fsds-text-size-md, 1rem);
-  font-weight: var(--fsds-text-typography-font-weight-medium, 500);
-  line-height: var(--fsds-text-typography-line-height-tight, 1.2);
+  font-size: var(--fsds-text-design-condition-9b05002ba0aa-typography-size, var(--fsds-text-size-md, 1rem));
+  font-weight: var(--fsds-text-design-condition-9b05002ba0aa-typography-weight, var(--fsds-text-typography-font-weight-medium, 500));
+  line-height: var(--fsds-text-design-condition-9b05002ba0aa-typography-line-height, var(--fsds-text-typography-line-height-tight, 1.2));
   text-transform: uppercase;
-  letter-spacing: var(--fsds-text-typography-letter-spacing-wide, 0.018rem);
+  letter-spacing: var(--fsds-text-design-condition-9b05002ba0aa-typography-tracking, var(--fsds-text-typography-letter-spacing-wide, 0.018rem));
 }
 
 .text--code {
-  font-size: var(--fsds-text-size-md, 1rem);
-  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-  line-height: var(--fsds-text-typography-line-height-body, 1.5);
+  font-size: var(--fsds-text-design-condition-3a2bffe9ebbb-typography-size, var(--fsds-text-size-md, 1rem));
+  font-family: var(--fsds-text-design-condition-3a2bffe9ebbb-typography-family, ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace);
+  line-height: var(--fsds-text-design-condition-3a2bffe9ebbb-typography-line-height, var(--fsds-text-typography-line-height-body, 1.5));
 }
 
 .text--xs {
-  font-size: var(--fsds-text-size-md, 1rem);
+  font-size: var(--fsds-text-design-condition-ac39d57baace-typography-size, var(--fsds-text-size-md, 1rem));
 }
 
 .text--sm {
-  font-size: var(--fsds-text-size-md, 1rem);
+  font-size: var(--fsds-text-design-condition-24964d7ed3a7-typography-size, var(--fsds-text-size-md, 1rem));
 }
 
 .text--md {
-  font-size: var(--fsds-text-size-md, 1rem);
+  font-size: var(--fsds-text-design-condition-dc35d39122c5-typography-size, var(--fsds-text-size-md, 1rem));
 }
 
 .text--lg {
-  font-size: var(--fsds-text-size-md, 1rem);
+  font-size: var(--fsds-text-design-condition-72800fd5573d-typography-size, var(--fsds-text-size-md, 1rem));
 }
 
 .text--xl {
-  font-size: var(--fsds-text-size-md, 1rem);
+  font-size: var(--fsds-text-design-condition-bcfaa22e125a-typography-size, var(--fsds-text-size-md, 1rem));
 }
 
 .text--2xl {
-  font-size: var(--fsds-text-size-md, 1rem);
+  font-size: var(--fsds-text-design-condition-b6534e1dde7a-typography-size, var(--fsds-text-size-md, 1rem));
 }
 
 .text--3xl {
-  font-size: var(--fsds-text-size-md, 1rem);
+  font-size: var(--fsds-text-design-condition-c64026a43137-typography-size, var(--fsds-text-size-md, 1rem));
 }
 
 .text--light {
-  font-weight: var(--fsds-text-typography-font-weight-light, 300);
+  font-weight: var(--fsds-text-design-condition-2f78ecef044e-typography-weight, var(--fsds-text-typography-font-weight-light, 300));
 }
 
 .text--normal {
-  font-weight: var(--fsds-text-typography-font-weight-regular, 400);
+  font-weight: var(--fsds-text-design-condition-223331540ae2-typography-weight, var(--fsds-text-typography-font-weight-regular, 400));
 }
 
 .text--medium {
-  font-weight: var(--fsds-text-typography-font-weight-medium, 500);
+  font-weight: var(--fsds-text-design-condition-a9821c9eea70-typography-weight, var(--fsds-text-typography-font-weight-medium, 500));
 }
 
 .text--semibold {
-  font-weight: var(--fsds-text-typography-font-weight-medium, 500);
+  font-weight: var(--fsds-text-design-condition-eae8588b0e7e-typography-weight, var(--fsds-text-typography-font-weight-medium, 500));
 }
 
 .text--bold {
-  font-weight: var(--fsds-text-typography-font-weight-bold, 700);
+  font-weight: var(--fsds-text-design-condition-7e6b52652555-typography-weight, var(--fsds-text-typography-font-weight-bold, 700));
 }
 
 .text--left {
-  text-align: left;
+  text-align: var(--fsds-text-design-condition-47358d2a8919-typography-alignment, left);
 }
 
 .text--center {
-  text-align: center;
+  text-align: var(--fsds-text-design-condition-ebb0f544c082-typography-alignment, center);
 }
 
 .text--right {
-  text-align: right;
+  text-align: var(--fsds-text-design-condition-1cb2ef480bf6-typography-alignment, right);
 }
 
 .text--justify {
-  text-align: justify;
+  text-align: var(--fsds-text-design-condition-7acb888507a7-typography-alignment, justify);
 }
 
 .text--none {
@@ -146,6 +148,7 @@
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

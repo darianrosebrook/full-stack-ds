@@ -1,4 +1,4 @@
-import { buildDesignBindings, designValue, type DesignBindingIR } from './design-properties.js';
+import { buildDesignBindings, type DesignBindingIR } from './design-properties.js';
 /**
  * Component IR: the framework-neutral derivation of a validated contract.
  *
@@ -1874,7 +1874,13 @@ export function buildComponentIR(
   const keyframes = buildKeyframes(contract);
   const motion = buildMotion(contract);
   const tokenFacts = buildTokenFacts(contract.tokens ?? {});
-  const designBindings = buildDesignBindings(contract);
+  const designBindings = buildDesignBindings(contract).map(binding => ({
+    ...binding,
+    selector: binding.selectorKey === "root" ? `.${cssPrefix}` : guardInteractionSelector(
+      expandStylesKey(binding.selectorKey, cssPrefix, expandOptionsForContract(contract, cssPrefix)),
+      suppressionGuardFor(contract),
+    ),
+  }));
   const tokenScopes = buildTokenScopes(contract, cssPrefix);
 
   const behavior = buildBehaviorIR(contract, styledProps);
@@ -6280,7 +6286,7 @@ function renderStyleBlock(
       // a literal CSS value (e.g. `transparent` for ghost/tertiary
       // variants). The literal flows straight through as the custom-
       // property's value.
-      declarations[outputKey] = designValue(entry, entry.literal, platformTarget);
+      declarations[outputKey] = entry.literal;
       continue;
     }
     if (typeof entry.resolvesTo === "string") {
@@ -6291,7 +6297,7 @@ function renderStyleBlock(
         typeof entry.fallback === "string"
           ? `var(${ref}, ${entry.fallback})`
           : `var(${ref})`;
-      declarations[outputKey] = designValue(entry, value, platformTarget);
+      declarations[outputKey] = value;
     }
   }
   return declarations;

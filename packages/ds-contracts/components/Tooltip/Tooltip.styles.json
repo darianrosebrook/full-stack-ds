@@ -24,27 +24,51 @@
   "content": {
     "background-color": {
       "resolvesTo": "tooltip.color.background.default",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "background.fill",
+        "slot": "tooltip.design.content.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "tooltip.color.foreground.default",
-      "fallback": "#fafafa"
+      "fallback": "#fafafa",
+      "design": {
+        "property": "foreground.color",
+        "slot": "tooltip.design.content.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "tooltip.color.border.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "tooltip.design.content.border.color"
+      }
     },
     "border-radius": {
       "resolvesTo": "tooltip.size.radius.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "tooltip.design.content.shape.radius"
+      }
     },
     "padding": {
       "resolvesTo": "tooltip.size.padding.x",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "tooltip.design.content.spacing.padding"
+      }
     },
     "max-width": {
       "resolvesTo": "tooltip.size.maxWidth",
-      "fallback": "200px"
+      "fallback": "200px",
+      "design": {
+        "property": "sizing.max-width",
+        "slot": "tooltip.design.content.sizing.max-width"
+      }
     },
     "z-index": {
       "resolvesTo": "tooltip.layer.content",
@@ -52,7 +76,11 @@
     },
     "font-size": {
       "resolvesTo": "tooltip.typography.fontSize",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "tooltip.design.content.typography.size"
+      }
     },
     "display": {
       "literal": "inline-block",
@@ -64,13 +92,21 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "tooltip.design.content.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "tooltip.design.content.border.width"
+      }
     }
   }
 }

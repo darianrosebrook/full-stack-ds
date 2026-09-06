@@ -82,6 +82,691 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "text.design.root.foreground.color",
+      "cssVar": "--fsds-text-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "text.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.root.typography.size",
+      "cssVar": "--fsds-text-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.root.typography.line-height",
+      "cssVar": "--fsds-text-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.5",
+      "resolvesTo": "text.typography.lineHeight.body",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-7aecafa55fab.typography.size",
+      "cssVar": "--fsds-text-design-condition-7aecafa55fab-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--display",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--display"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-7aecafa55fab.typography.weight",
+      "cssVar": "--fsds-text-design-condition-7aecafa55fab-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--display",
+      "part": null,
+      "defaultValue": "700",
+      "resolvesTo": "text.typography.fontWeight.bold",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--display"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-7aecafa55fab.typography.line-height",
+      "cssVar": "--fsds-text-design-condition-7aecafa55fab-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "--display",
+      "part": null,
+      "defaultValue": "1",
+      "resolvesTo": "text.typography.lineHeight.heading",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--display"
+    },
+    {
+      "property": "typography.tracking",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-7aecafa55fab.typography.tracking",
+      "cssVar": "--fsds-text-design-condition-7aecafa55fab-typography-tracking",
+      "cssProperty": "letter-spacing",
+      "selectorKey": "--display",
+      "part": null,
+      "defaultValue": "-0.018rem",
+      "resolvesTo": "text.typography.letterSpacing.tight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--display"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-8819f782ecc4.typography.size",
+      "cssVar": "--fsds-text-design-condition-8819f782ecc4-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--headline",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--headline"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-8819f782ecc4.typography.weight",
+      "cssVar": "--fsds-text-design-condition-8819f782ecc4-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--headline",
+      "part": null,
+      "defaultValue": "700",
+      "resolvesTo": "text.typography.fontWeight.bold",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--headline"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-8819f782ecc4.typography.line-height",
+      "cssVar": "--fsds-text-design-condition-8819f782ecc4-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "--headline",
+      "part": null,
+      "defaultValue": "1",
+      "resolvesTo": "text.typography.lineHeight.heading",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--headline"
+    },
+    {
+      "property": "typography.tracking",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-8819f782ecc4.typography.tracking",
+      "cssVar": "--fsds-text-design-condition-8819f782ecc4-typography-tracking",
+      "cssProperty": "letter-spacing",
+      "selectorKey": "--headline",
+      "part": null,
+      "defaultValue": "-0.018rem",
+      "resolvesTo": "text.typography.letterSpacing.tight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--headline"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-ad1d0c32b0fa.typography.size",
+      "cssVar": "--fsds-text-design-condition-ad1d0c32b0fa-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--title",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--title"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-ad1d0c32b0fa.typography.weight",
+      "cssVar": "--fsds-text-design-condition-ad1d0c32b0fa-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--title",
+      "part": null,
+      "defaultValue": "700",
+      "resolvesTo": "text.typography.fontWeight.bold",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--title"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-ad1d0c32b0fa.typography.line-height",
+      "cssVar": "--fsds-text-design-condition-ad1d0c32b0fa-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "--title",
+      "part": null,
+      "defaultValue": "1",
+      "resolvesTo": "text.typography.lineHeight.heading",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--title"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-2ccff328366e.typography.size",
+      "cssVar": "--fsds-text-design-condition-2ccff328366e-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--body",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--body"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-2ccff328366e.typography.weight",
+      "cssVar": "--fsds-text-design-condition-2ccff328366e-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--body",
+      "part": null,
+      "defaultValue": "400",
+      "resolvesTo": "text.typography.fontWeight.regular",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--body"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-2ccff328366e.typography.line-height",
+      "cssVar": "--fsds-text-design-condition-2ccff328366e-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "--body",
+      "part": null,
+      "defaultValue": "1.5",
+      "resolvesTo": "text.typography.lineHeight.body",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--body"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-e697e79ba40b.typography.size",
+      "cssVar": "--fsds-text-design-condition-e697e79ba40b-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--caption",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--caption"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-e697e79ba40b.typography.weight",
+      "cssVar": "--fsds-text-design-condition-e697e79ba40b-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--caption",
+      "part": null,
+      "defaultValue": "400",
+      "resolvesTo": "text.typography.fontWeight.regular",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--caption"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-e697e79ba40b.typography.line-height",
+      "cssVar": "--fsds-text-design-condition-e697e79ba40b-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "--caption",
+      "part": null,
+      "defaultValue": "1.2",
+      "resolvesTo": "text.typography.lineHeight.tight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--caption"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-9b05002ba0aa.typography.size",
+      "cssVar": "--fsds-text-design-condition-9b05002ba0aa-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--overline",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--overline"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-9b05002ba0aa.typography.weight",
+      "cssVar": "--fsds-text-design-condition-9b05002ba0aa-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--overline",
+      "part": null,
+      "defaultValue": "500",
+      "resolvesTo": "text.typography.fontWeight.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--overline"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-9b05002ba0aa.typography.line-height",
+      "cssVar": "--fsds-text-design-condition-9b05002ba0aa-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "--overline",
+      "part": null,
+      "defaultValue": "1.2",
+      "resolvesTo": "text.typography.lineHeight.tight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--overline"
+    },
+    {
+      "property": "typography.tracking",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-9b05002ba0aa.typography.tracking",
+      "cssVar": "--fsds-text-design-condition-9b05002ba0aa-typography-tracking",
+      "cssProperty": "letter-spacing",
+      "selectorKey": "--overline",
+      "part": null,
+      "defaultValue": "0.018rem",
+      "resolvesTo": "text.typography.letterSpacing.wide",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--overline"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-3a2bffe9ebbb.typography.size",
+      "cssVar": "--fsds-text-design-condition-3a2bffe9ebbb-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--code",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--code"
+    },
+    {
+      "property": "typography.family",
+      "group": "typography",
+      "valueType": "fontFamily",
+      "slot": "text.design.condition-3a2bffe9ebbb.typography.family",
+      "cssVar": "--fsds-text-design-condition-3a2bffe9ebbb-typography-family",
+      "cssProperty": "font-family",
+      "selectorKey": "--code",
+      "part": null,
+      "defaultValue": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--code"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-3a2bffe9ebbb.typography.line-height",
+      "cssVar": "--fsds-text-design-condition-3a2bffe9ebbb-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "--code",
+      "part": null,
+      "defaultValue": "1.5",
+      "resolvesTo": "text.typography.lineHeight.body",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--code"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-ac39d57baace.typography.size",
+      "cssVar": "--fsds-text-design-condition-ac39d57baace-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--xs",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--xs"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-24964d7ed3a7.typography.size",
+      "cssVar": "--fsds-text-design-condition-24964d7ed3a7-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--sm",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--sm"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-dc35d39122c5.typography.size",
+      "cssVar": "--fsds-text-design-condition-dc35d39122c5-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--md",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--md"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-72800fd5573d.typography.size",
+      "cssVar": "--fsds-text-design-condition-72800fd5573d-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--lg",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--lg"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-bcfaa22e125a.typography.size",
+      "cssVar": "--fsds-text-design-condition-bcfaa22e125a-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--xl",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--xl"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-b6534e1dde7a.typography.size",
+      "cssVar": "--fsds-text-design-condition-b6534e1dde7a-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--2xl",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--2xl"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "text.design.condition-c64026a43137.typography.size",
+      "cssVar": "--fsds-text-design-condition-c64026a43137-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--3xl",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "text.size.md",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--3xl"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-2f78ecef044e.typography.weight",
+      "cssVar": "--fsds-text-design-condition-2f78ecef044e-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--light",
+      "part": null,
+      "defaultValue": "300",
+      "resolvesTo": "text.typography.fontWeight.light",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--light"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-223331540ae2.typography.weight",
+      "cssVar": "--fsds-text-design-condition-223331540ae2-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--normal",
+      "part": null,
+      "defaultValue": "400",
+      "resolvesTo": "text.typography.fontWeight.regular",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--normal"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-a9821c9eea70.typography.weight",
+      "cssVar": "--fsds-text-design-condition-a9821c9eea70-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--medium",
+      "part": null,
+      "defaultValue": "500",
+      "resolvesTo": "text.typography.fontWeight.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--medium"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-eae8588b0e7e.typography.weight",
+      "cssVar": "--fsds-text-design-condition-eae8588b0e7e-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--semibold",
+      "part": null,
+      "defaultValue": "500",
+      "resolvesTo": "text.typography.fontWeight.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--semibold"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "text.design.condition-7e6b52652555.typography.weight",
+      "cssVar": "--fsds-text-design-condition-7e6b52652555-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "--bold",
+      "part": null,
+      "defaultValue": "700",
+      "resolvesTo": "text.typography.fontWeight.bold",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--bold"
+    },
+    {
+      "property": "typography.alignment",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "text.design.condition-47358d2a8919.typography.alignment",
+      "cssVar": "--fsds-text-design-condition-47358d2a8919-typography-alignment",
+      "cssProperty": "text-align",
+      "selectorKey": "--left",
+      "part": null,
+      "defaultValue": "left",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--left"
+    },
+    {
+      "property": "typography.alignment",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "text.design.condition-ebb0f544c082.typography.alignment",
+      "cssVar": "--fsds-text-design-condition-ebb0f544c082-typography-alignment",
+      "cssProperty": "text-align",
+      "selectorKey": "--center",
+      "part": null,
+      "defaultValue": "center",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--center"
+    },
+    {
+      "property": "typography.alignment",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "text.design.condition-1cb2ef480bf6.typography.alignment",
+      "cssVar": "--fsds-text-design-condition-1cb2ef480bf6-typography-alignment",
+      "cssProperty": "text-align",
+      "selectorKey": "--right",
+      "part": null,
+      "defaultValue": "right",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--right"
+    },
+    {
+      "property": "typography.alignment",
+      "group": "typography",
+      "valueType": "enum",
+      "slot": "text.design.condition-7acb888507a7.typography.alignment",
+      "cssVar": "--fsds-text-design-condition-7acb888507a7-typography-alignment",
+      "cssProperty": "text-align",
+      "selectorKey": "--justify",
+      "part": null,
+      "defaultValue": "justify",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".text--justify"
+    }
+  ],
   "variants": {
     "variant": [
       "display",

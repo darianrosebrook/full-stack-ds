@@ -2,23 +2,43 @@
   "root": {
     "background-color": {
       "resolvesTo": "postcard.color.background.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "postcard.design.root.background.fill"
+      }
     },
     "padding": {
       "resolvesTo": "postcard.size.padding.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "postcard.design.root.spacing.padding"
+      }
     },
     "border-radius": {
       "resolvesTo": "postcard.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "postcard.design.root.shape.radius"
+      }
     },
     "gap": {
       "resolvesTo": "postcard.size.gap.default",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "postcard.design.root.spacing.gap"
+      }
     },
     "line-height": {
       "resolvesTo": "postcard.typography.content.lineHeight",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "postcard.design.root.typography.line-height"
+      }
     },
     "display": {
       "literal": "flex",
@@ -36,11 +56,19 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "postcard.design.root.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "postcard.size.border.default",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "postcard.design.root.border.width"
+      }
     },
     "box-sizing": {
       "literal": "border-box",
@@ -50,27 +78,47 @@
     },
     "border-color": {
       "resolvesTo": "postcard.color.border.default",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "postcard.design.root.border.color"
+      }
     },
     "color": {
       "resolvesTo": "postcard.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "postcard.design.root.foreground.color"
+      }
     }
   },
   "hover": {
     "background-color": {
       "resolvesTo": "postcard.color.background.hover",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "postcard.design.hover.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "postcard.color.border.hover",
-      "fallback": "#888889"
+      "fallback": "#888889",
+      "design": {
+        "property": "border.color",
+        "slot": "postcard.design.hover.border.color"
+      }
     }
   },
   "content": {
     "line-height": {
       "resolvesTo": "postcard.typography.content.lineHeight",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "postcard.design.content.typography.line-height"
+      }
     },
     "display": {
       "literal": "flex",
@@ -86,15 +134,27 @@
     },
     "gap": {
       "resolvesTo": "postcard.size.gap.default",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "postcard.design.content.spacing.gap"
+      }
     },
     "color": {
       "resolvesTo": "postcard.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "postcard.design.content.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "postcard.typography.content.fontSize",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "postcard.design.content.typography.size"
+      }
     }
   },
   "header": {
@@ -118,7 +178,11 @@
     },
     "gap": {
       "resolvesTo": "postcard.size.gap.default",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "postcard.design.header.spacing.gap"
+      }
     }
   },
   "userInfo": {
@@ -148,21 +212,37 @@
   "displayName": {
     "font-weight": {
       "resolvesTo": "postcard.typography.displayName.fontWeight",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "postcard.design.display-name.typography.weight"
+      }
     },
     "font-size": {
       "resolvesTo": "postcard.typography.displayName.fontSize",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "postcard.design.display-name.typography.size"
+      }
     },
     "color": {
       "resolvesTo": "postcard.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "postcard.design.display-name.foreground.color"
+      }
     }
   },
   "handle": {
     "font-size": {
       "resolvesTo": "postcard.typography.handle.fontSize",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "postcard.design.handle.typography.size"
+      }
     },
     "postcard.color.foreground.primary": {
       "resolvesTo": "semantic.color.foreground.secondary",
@@ -172,7 +252,11 @@
   "timestamp": {
     "font-size": {
       "resolvesTo": "postcard.typography.footer.fontSize",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "postcard.design.timestamp.typography.size"
+      }
     },
     "flex-shrink": {
       "literal": "0",
@@ -200,7 +284,11 @@
     },
     "gap": {
       "resolvesTo": "postcard.size.gap.default",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "postcard.design.footer.spacing.gap"
+      }
     },
     "padding-top": {
       "resolvesTo": "postcard.size.padding.default",
@@ -208,21 +296,37 @@
     },
     "border-top-color": {
       "resolvesTo": "postcard.color.border.default",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.top.color",
+        "slot": "postcard.design.footer.border.top.color"
+      }
     },
     "border-top-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.top.style",
+        "slot": "postcard.design.footer.border.top.style"
+      }
     },
     "border-top-width": {
       "resolvesTo": "postcard.size.border.default",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.top.width",
+        "slot": "postcard.design.footer.border.top.width"
+      }
     },
     "font-size": {
       "resolvesTo": "postcard.typography.footer.fontSize",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "postcard.design.footer.typography.size"
+      }
     }
   },
   "stats": {
@@ -240,7 +344,11 @@
     },
     "gap": {
       "resolvesTo": "postcard.size.gap.default",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "postcard.design.stats.spacing.gap"
+      }
     }
   },
   "stat": {
@@ -258,7 +366,11 @@
     },
     "font-size": {
       "resolvesTo": "postcard.typography.footer.fontSize",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "postcard.design.stat.typography.size"
+      }
     },
     "postcard.size.gap.default": {
       "resolvesTo": "core.spacing.size.03",

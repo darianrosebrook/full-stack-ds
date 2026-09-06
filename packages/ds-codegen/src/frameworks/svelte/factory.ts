@@ -1,3 +1,4 @@
+import { emitBoxModelBoundaryCss } from '../../box-model.js';
 /**
  * Svelte 5 FrameworkEmitter.
  *
@@ -169,6 +170,7 @@ export function createSvelteEmitter(): FrameworkEmitter {
 
     emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
       return [
+        { relativePath: "box-model.css", contents: emitBoxModelBoundaryCss() },
         {
           relativePath: `${ir.name}.svelte`,
           contents: generateSvelteStackPrimitiveSource(ir),

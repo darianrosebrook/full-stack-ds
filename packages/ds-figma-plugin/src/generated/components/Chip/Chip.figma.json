@@ -168,6 +168,263 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "chip.design.root.border.style",
+      "cssVar": "--fsds-chip-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "chip.design.root.background.fill",
+      "cssVar": "--fsds-chip-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#fafafa",
+      "resolvesTo": "chip.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "chip.design.root.foreground.color",
+      "cssVar": "--fsds-chip-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "chip.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "chip.design.root.border.color",
+      "cssVar": "--fsds-chip-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#a0a0a1",
+      "resolvesTo": "chip.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "chip.design.root.border.width",
+      "cssVar": "--fsds-chip-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "chip.size.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "spacing.padding-block",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "chip.design.root.spacing.padding-block",
+      "cssVar": "--fsds-chip-design-root-spacing-padding-block",
+      "cssProperty": "padding-block",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "2px",
+      "resolvesTo": "chip.size.padding.vertical",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "spacing.padding-inline",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "chip.design.root.spacing.padding-inline",
+      "cssVar": "--fsds-chip-design-root-spacing-padding-inline",
+      "cssProperty": "padding-inline",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "chip.size.padding.horizontal",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "chip.design.root.spacing.gap",
+      "cssVar": "--fsds-chip-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "2px",
+      "resolvesTo": "chip.size.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "chip.design.root.shape.radius",
+      "cssVar": "--fsds-chip-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "9999px",
+      "resolvesTo": "chip.size.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "sizing.min-height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "chip.design.root.sizing.min-height",
+      "cssVar": "--fsds-chip-design-root-sizing-min-height",
+      "cssProperty": "min-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "36px",
+      "resolvesTo": "chip.size.minHeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "chip.design.root.typography.size",
+      "cssVar": "--fsds-chip-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "12px",
+      "resolvesTo": "chip.text.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "chip.design.root.typography.weight",
+      "cssVar": "--fsds-chip-design-root-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "500",
+      "resolvesTo": "chip.text.weight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "chip.design.root.motion.duration",
+      "cssVar": "--fsds-chip-design-root-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "150ms",
+      "resolvesTo": "chip.motion.duration.fast",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "chip.design.hover.background.fill",
+      "cssVar": "--fsds-chip-design-hover-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "chip.color.background.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip:hover:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "chip.design.text.typography.size",
+      "cssVar": "--fsds-chip-design-text-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "text",
+      "part": "text",
+      "defaultValue": "12px",
+      "resolvesTo": "chip.text.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip__text"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "chip.design.text.typography.weight",
+      "cssVar": "--fsds-chip-design-text-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "text",
+      "part": "text",
+      "defaultValue": "500",
+      "resolvesTo": "chip.text.weight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".chip__text"
+    }
+  ],
   "variants": {
     "variant": [
       "default",

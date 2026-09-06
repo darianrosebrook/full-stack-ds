@@ -58,7 +58,11 @@
     },
     "background-color": {
       "resolvesTo": "sheet.color.overlay",
-      "fallback": "rgba(0,0,0,0.40)"
+      "fallback": "rgba(0,0,0,0.40)",
+      "design": {
+        "property": "background.fill",
+        "slot": "sheet.design.overlay.background.fill"
+      }
     },
     "pointer-events": {
       "literal": "auto",
@@ -88,29 +92,53 @@
     },
     "background-color": {
       "resolvesTo": "sheet.color.background",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "sheet.design.content.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "sheet.color.text",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "sheet.design.content.foreground.color"
+      }
     },
     "border-color": {
       "resolvesTo": "sheet.color.border",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "sheet.design.content.border.color"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "sheet.design.content.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "sheet.border.width",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "sheet.design.content.border.width"
+      }
     },
     "box-shadow": {
       "resolvesTo": "sheet.shadow",
-      "fallback": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a"
+      "fallback": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a",
+      "design": {
+        "property": "elevation.shadow",
+        "slot": "sheet.design.content.elevation.shadow"
+      }
     },
     "max-height": {
       "literal": "100vh",
@@ -120,7 +148,11 @@
     },
     "width": {
       "resolvesTo": "sheet.size.width",
-      "fallback": "400px"
+      "fallback": "400px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "sheet.design.content.sizing.width"
+      }
     },
     "pointer-events": {
       "literal": "auto",
@@ -156,27 +188,47 @@
     },
     "padding": {
       "resolvesTo": "sheet.spacing.padding",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "sheet.design.header.spacing.padding"
+      }
     },
     "border-bottom-color": {
       "resolvesTo": "sheet.color.border",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.bottom.color",
+        "slot": "sheet.design.header.border.bottom.color"
+      }
     },
     "border-bottom-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.bottom.style",
+        "slot": "sheet.design.header.border.bottom.style"
+      }
     },
     "border-bottom-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.bottom.width",
+        "slot": "sheet.design.header.border.bottom.width"
+      }
     },
     "gap": {
       "resolvesTo": "sheet.spacing.gap",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "sheet.design.header.spacing.gap"
+      }
     }
   },
   "title": {
@@ -188,15 +240,27 @@
     },
     "font-size": {
       "resolvesTo": "sheet.text.sizeTitle",
-      "fallback": "14px"
+      "fallback": "14px",
+      "design": {
+        "property": "typography.size",
+        "slot": "sheet.design.title.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "sheet.text.weightTitle",
-      "fallback": "500"
+      "fallback": "500",
+      "design": {
+        "property": "typography.weight",
+        "slot": "sheet.design.title.typography.weight"
+      }
     },
     "color": {
       "resolvesTo": "sheet.color.textTitle",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "sheet.design.title.foreground.color"
+      }
     },
     "flex": {
       "literal": "1 1 auto",
@@ -214,11 +278,19 @@
     },
     "color": {
       "resolvesTo": "sheet.color.textDescription",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "sheet.design.description.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "sheet.text.size",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "sheet.design.description.typography.size"
+      }
     }
   },
   "body": {
@@ -230,11 +302,19 @@
     },
     "padding": {
       "resolvesTo": "sheet.spacing.padding",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "sheet.design.body.spacing.padding"
+      }
     },
     "color": {
       "resolvesTo": "sheet.color.text",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "sheet.design.body.foreground.color"
+      }
     },
     "overflow-y": {
       "literal": "auto",
@@ -264,27 +344,47 @@
     },
     "gap": {
       "resolvesTo": "sheet.spacing.gap",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "sheet.design.footer.spacing.gap"
+      }
     },
     "padding": {
       "resolvesTo": "sheet.spacing.padding",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "sheet.design.footer.spacing.padding"
+      }
     },
     "border-top-color": {
       "resolvesTo": "sheet.color.border",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.top.color",
+        "slot": "sheet.design.footer.border.top.color"
+      }
     },
     "border-top-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.top.style",
+        "slot": "sheet.design.footer.border.top.style"
+      }
     },
     "border-top-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.top.width",
+        "slot": "sheet.design.footer.border.top.width"
+      }
     }
   },
   "close": {
@@ -304,11 +404,19 @@
     },
     "width": {
       "resolvesTo": "sheet.size.close",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "sheet.design.close.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "sheet.size.close",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "sheet.design.close.sizing.height"
+      }
     },
     "display": {
       "literal": "inline-flex",
@@ -332,7 +440,11 @@
       "literal": "transparent",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "background.fill",
+        "slot": "sheet.design.close.background.fill"
+      }
     },
     "border": {
       "literal": "0",
@@ -344,11 +456,19 @@
       "literal": "9999px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "shape.radius",
+        "slot": "sheet.design.close.shape.radius"
+      }
     },
     "color": {
       "resolvesTo": "sheet.color.textDescription",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "sheet.design.close.foreground.color"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -384,7 +504,11 @@
     },
     "width": {
       "resolvesTo": "sheet.size.width",
-      "fallback": "400px"
+      "fallback": "400px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "sheet.design.condition-3353c09caca2.sizing.width"
+      }
     },
     "max-height": {
       "literal": "100vh",
@@ -394,7 +518,11 @@
     },
     "border-radius": {
       "resolvesTo": "sheet.border.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "sheet.design.condition-3353c09caca2.shape.radius"
+      }
     }
   },
   ".sheet--left .sheet__content": {
@@ -424,7 +552,11 @@
     },
     "width": {
       "resolvesTo": "sheet.size.width",
-      "fallback": "400px"
+      "fallback": "400px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "sheet.design.condition-d23e02c83c85.sizing.width"
+      }
     },
     "max-height": {
       "literal": "100vh",
@@ -434,7 +566,11 @@
     },
     "border-radius": {
       "resolvesTo": "sheet.border.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "sheet.design.condition-d23e02c83c85.shape.radius"
+      }
     }
   },
   ".sheet--top .sheet__content": {
@@ -470,11 +606,19 @@
     },
     "max-height": {
       "resolvesTo": "sheet.size.height",
-      "fallback": "300px"
+      "fallback": "300px",
+      "design": {
+        "property": "sizing.max-height",
+        "slot": "sheet.design.condition-6c34977b12bc.sizing.max-height"
+      }
     },
     "border-radius": {
       "resolvesTo": "sheet.border.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "sheet.design.condition-6c34977b12bc.shape.radius"
+      }
     }
   },
   ".sheet--bottom .sheet__content": {
@@ -510,11 +654,19 @@
     },
     "max-height": {
       "resolvesTo": "sheet.size.height",
-      "fallback": "300px"
+      "fallback": "300px",
+      "design": {
+        "property": "sizing.max-height",
+        "slot": "sheet.design.condition-82e96a66a421.sizing.max-height"
+      }
     },
     "border-radius": {
       "resolvesTo": "sheet.border.radius",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "sheet.design.condition-82e96a66a421.shape.radius"
+      }
     }
   }
 }

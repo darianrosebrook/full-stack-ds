@@ -1,3 +1,4 @@
+import { emitBoxModelBoundaryCss } from '../../box-model.js';
 /**
  * React FrameworkEmitter implementation.
  *
@@ -81,6 +82,7 @@ export function createReactEmitter(
     emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
       const base = ir.name.toLowerCase();
       return [
+        { relativePath: "box-model.css", contents: emitBoxModelBoundaryCss() },
         {
           relativePath: `${base}.tsx`,
           contents: generateReactStackPrimitiveSource(ir),

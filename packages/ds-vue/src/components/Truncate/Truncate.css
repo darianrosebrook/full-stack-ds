@@ -1,18 +1,20 @@
+@import "../../primitives/box-model.css";
 @import "./Truncate.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .truncate {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-display-size-gap, 4px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
   display: block;
 }
 
@@ -33,16 +35,17 @@
 .truncate__toggle {
   display: inline-flex;
   align-items: center;
-  color: var(--fsds-truncate-color-foreground-link, #d92d2e);
-  font-weight: var(--fsds-truncate-typography-font-weight, 500);
+  color: var(--fsds-truncate-design-toggle-foreground-color, var(--fsds-truncate-color-foreground-link, #d92d2e));
+  font-weight: var(--fsds-truncate-design-toggle-typography-weight, var(--fsds-truncate-typography-font-weight, 500));
   margin-top: var(--fsds-truncate-spacing-toggle, 2px);
   background: none;
   border: none;
-  padding: 0;
+  padding: var(--fsds-truncate-design-toggle-spacing-padding, 0);
   cursor: pointer;
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

@@ -1,20 +1,6 @@
 @layer components {
 /* @generated:start tokens */
 .links {
-  --fsds-box-model-padding: 0;
-  --fsds-box-model-padding-block: 0;
-  --fsds-box-model-padding-block-start: 0;
-  --fsds-box-model-padding-block-end: 0;
-  --fsds-box-model-padding-inline: 0;
-  --fsds-box-model-padding-inline-start: 0;
-  --fsds-box-model-padding-inline-end: 0;
-  --fsds-box-model-gap: var(--fsds-semantic-display-size-gap, 4px);
-  --fsds-box-model-width: auto;
-  --fsds-box-model-min-width: 0;
-  --fsds-box-model-max-width: none;
-  --fsds-box-model-height: auto;
-  --fsds-box-model-min-height: 0;
-  --fsds-box-model-max-height: none;
   --fsds-links-color-foreground-default: var(--fsds-semantic-color-foreground-link, #d92d2e);
   --fsds-links-color-foreground-hover: var(--fsds-semantic-color-foreground-link-hover, #b31b1b);
   --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-link-visited, #e55b5a);

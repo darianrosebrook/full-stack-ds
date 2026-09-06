@@ -14,61 +14,109 @@
     },
     "background-color": {
       "resolvesTo": "image.color.background.default",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "image.design.root.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "image.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "image.design.root.foreground.color"
+      }
     }
   },
   ".image--size-xs": {
     "width": {
       "resolvesTo": "image.size.xs",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "image.design.condition-97f4094db01a.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "image.size.xs",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "image.design.condition-97f4094db01a.sizing.height"
+      }
     }
   },
   ".image--size-sm": {
     "width": {
       "resolvesTo": "image.size.sm",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "image.design.condition-2d67a81a05e1.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "image.size.sm",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "image.design.condition-2d67a81a05e1.sizing.height"
+      }
     }
   },
   ".image--size-md": {
     "width": {
       "resolvesTo": "image.size.md",
-      "fallback": "48px"
+      "fallback": "48px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "image.design.condition-8e1efb4eb84e.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "image.size.md",
-      "fallback": "48px"
+      "fallback": "48px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "image.design.condition-8e1efb4eb84e.sizing.height"
+      }
     }
   },
   ".image--size-lg": {
     "width": {
       "resolvesTo": "image.size.lg",
-      "fallback": "64px"
+      "fallback": "64px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "image.design.condition-d030467f8081.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "image.size.lg",
-      "fallback": "64px"
+      "fallback": "64px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "image.design.condition-d030467f8081.sizing.height"
+      }
     }
   },
   ".image--size-xl": {
     "width": {
       "resolvesTo": "image.size.xl",
-      "fallback": "96px"
+      "fallback": "96px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "image.design.condition-f5bb7eeb08f7.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "image.size.xl",
-      "fallback": "96px"
+      "fallback": "96px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "image.design.condition-f5bb7eeb08f7.sizing.height"
+      }
     }
   },
   ".image--size-full": {
@@ -88,31 +136,51 @@
   ".image--radius-none": {
     "border-radius": {
       "resolvesTo": "image.radius.none",
-      "fallback": "0px"
+      "fallback": "0px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "image.design.condition-7ff92e698786.shape.radius"
+      }
     }
   },
   ".image--radius-sm": {
     "border-radius": {
       "resolvesTo": "image.radius.sm",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "image.design.condition-82add41f9b7f.shape.radius"
+      }
     }
   },
   ".image--radius-md": {
     "border-radius": {
       "resolvesTo": "image.radius.md",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "image.design.condition-7453c4d117a5.shape.radius"
+      }
     }
   },
   ".image--radius-lg": {
     "border-radius": {
       "resolvesTo": "image.radius.lg",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "image.design.condition-339951a6bd4f.shape.radius"
+      }
     }
   },
   ".image--radius-full": {
     "border-radius": {
       "resolvesTo": "image.radius.full",
-      "fallback": "9999px"
+      "fallback": "9999px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "image.design.condition-6872d88ea9c6.shape.radius"
+      }
     }
   }
 }

@@ -2,11 +2,19 @@
   "root": {
     "color": {
       "resolvesTo": "links.color.foreground.default",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "foreground.color",
+        "slot": "links.design.root.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "links.size.fontSize.medium",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "links.design.root.typography.size"
+      }
     },
     "text-decoration-color": {
       "resolvesTo": "links.color.underline.default",
@@ -26,7 +34,11 @@
     },
     "gap": {
       "resolvesTo": "links.spacing.gap.default",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "links.design.root.spacing.gap"
+      }
     },
     "transition-property": {
       "literal": "color, text-decoration-color",
@@ -36,7 +48,11 @@
     },
     "transition-duration": {
       "resolvesTo": "links.motion.duration.fast",
-      "fallback": "150ms"
+      "fallback": "150ms",
+      "design": {
+        "property": "motion.duration",
+        "slot": "links.design.root.motion.duration"
+      }
     },
     "cursor": {
       "literal": "pointer",
@@ -52,7 +68,11 @@
     },
     "font-size": {
       "resolvesTo": "links.size.fontSize.medium",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "links.design.condition-42b522a9c46e.typography.size"
+      }
     }
   },
   "--medium": {
@@ -62,7 +82,11 @@
     },
     "font-size": {
       "resolvesTo": "links.size.fontSize.medium",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "links.design.condition-a9821c9eea70.typography.size"
+      }
     }
   },
   "--large": {
@@ -72,13 +96,21 @@
     },
     "font-size": {
       "resolvesTo": "links.size.fontSize.medium",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "links.design.condition-cbbd2740a3e5.typography.size"
+      }
     }
   },
   "hover": {
     "color": {
       "resolvesTo": "links.color.foreground.hover",
-      "fallback": "#b31b1b"
+      "fallback": "#b31b1b",
+      "design": {
+        "property": "foreground.color",
+        "slot": "links.design.hover.foreground.color"
+      }
     },
     "text-decoration-color": {
       "resolvesTo": "links.color.foreground.hover",
@@ -88,13 +120,21 @@
   "visited": {
     "color": {
       "resolvesTo": "links.color.foreground.visited",
-      "fallback": "#e55b5a"
+      "fallback": "#e55b5a",
+      "design": {
+        "property": "foreground.color",
+        "slot": "links.design.visited.foreground.color"
+      }
     }
   },
   "disabled": {
     "color": {
       "resolvesTo": "links.color.foreground.disabled",
-      "fallback": "#727272"
+      "fallback": "#727272",
+      "design": {
+        "property": "foreground.color",
+        "slot": "links.design.disabled.foreground.color"
+      }
     },
     "cursor": {
       "literal": "not-allowed",
@@ -118,23 +158,43 @@
   "focus": {
     "outline-width": {
       "resolvesTo": "links.focus.ring.width",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.width",
+        "slot": "links.design.focus.focus.width"
+      }
     },
     "outline-color": {
       "resolvesTo": "links.focus.ring.color",
-      "fallback": "#0566fe"
+      "fallback": "#0566fe",
+      "design": {
+        "property": "focus.color",
+        "slot": "links.design.focus.focus.color"
+      }
     },
     "outline-style": {
       "resolvesTo": "links.focus.ring.style",
-      "fallback": "solid"
+      "fallback": "solid",
+      "design": {
+        "property": "focus.style",
+        "slot": "links.design.focus.focus.style"
+      }
     },
     "outline-offset": {
       "resolvesTo": "links.focus.ring.offset",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "focus.offset",
+        "slot": "links.design.focus.focus.offset"
+      }
     },
     "border-radius": {
       "resolvesTo": "links.focus.ring.radius",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "links.design.focus.shape.radius"
+      }
     }
   }
 }

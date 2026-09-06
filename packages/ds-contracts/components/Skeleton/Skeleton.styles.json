@@ -8,19 +8,35 @@
     },
     "background-color": {
       "resolvesTo": "skeleton.color.base",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "skeleton.design.root.background.fill"
+      }
     },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "skeleton.design.root.shape.radius"
+      }
     },
     "transition-duration": {
       "resolvesTo": "skeleton.anim.duration",
-      "fallback": "400ms"
+      "fallback": "400ms",
+      "design": {
+        "property": "motion.duration",
+        "slot": "skeleton.design.root.motion.duration"
+      }
     },
     "transition-timing-function": {
       "resolvesTo": "skeleton.anim.easing",
-      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)"
+      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "design": {
+        "property": "motion.easing",
+        "slot": "skeleton.design.root.motion.easing"
+      }
     },
     "animation": {
       "literal": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
@@ -38,11 +54,19 @@
     },
     "background-color": {
       "resolvesTo": "skeleton.color.base",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "skeleton.design.shape.background.fill"
+      }
     },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "skeleton.design.shape.shape.radius"
+      }
     }
   },
   ".skeleton:has(.skeleton__stack)": {
@@ -50,7 +74,11 @@
       "literal": "transparent",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "background.fill",
+        "slot": "skeleton.design.condition-bb9852400063.background.fill"
+      }
     },
     "animation": {
       "literal": "none",
@@ -68,7 +96,11 @@
   ".skeleton:has(.skeleton__stack) .skeleton__shape": {
     "height": {
       "resolvesTo": "skeleton.shape.height.text",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "sizing.height",
+        "slot": "skeleton.design.condition-f1cb085b34e5.sizing.height"
+      }
     },
     "animation": {
       "literal": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
@@ -92,7 +124,11 @@
     },
     "gap": {
       "resolvesTo": "skeleton.gap.md",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "skeleton.design.stack.spacing.gap"
+      }
     }
   },
   "--block": {
@@ -102,7 +138,11 @@
     },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "skeleton.design.condition-bd614435ddb4.shape.radius"
+      }
     }
   },
   "--text": {
@@ -116,11 +156,19 @@
     },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "skeleton.design.condition-1c40d16552ca.shape.radius"
+      }
     },
     "height": {
       "resolvesTo": "skeleton.shape.height.text",
-      "fallback": "1rem"
+      "fallback": "1rem",
+      "design": {
+        "property": "sizing.height",
+        "slot": "skeleton.design.condition-1c40d16552ca.sizing.height"
+      }
     }
   },
   "--avatar": {
@@ -130,7 +178,11 @@
     },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "skeleton.design.condition-6c84e66d0bf9.shape.radius"
+      }
     },
     "aspect-ratio": {
       "literal": "1",
@@ -146,7 +198,11 @@
     },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "skeleton.design.condition-36338882e838.shape.radius"
+      }
     },
     "aspect-ratio": {
       "literal": "16 / 9",
@@ -168,7 +224,11 @@
     },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "skeleton.design.condition-5c609fce7db7.shape.radius"
+      }
     },
     "aspect-ratio": {
       "literal": "4 / 3",
@@ -190,7 +250,11 @@
     },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md",
-      "fallback": "8px"
+      "fallback": "8px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "skeleton.design.condition-97dab48677d5.shape.radius"
+      }
     },
     "height": {
       "literal": "36px",

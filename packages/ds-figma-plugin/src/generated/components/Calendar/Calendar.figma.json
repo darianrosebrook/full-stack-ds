@@ -166,6 +166,572 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "calendar.design.root.background.fill",
+      "cssVar": "--fsds-calendar-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "calendar.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "calendar.design.root.foreground.color",
+      "cssVar": "--fsds-calendar-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "calendar.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "calendar.design.root.border.color",
+      "cssVar": "--fsds-calendar-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "calendar.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "calendar.design.root.border.width",
+      "cssVar": "--fsds-calendar-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "calendar.design.root.border.style",
+      "cssVar": "--fsds-calendar-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "calendar.design.root.spacing.padding",
+      "cssVar": "--fsds-calendar-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "calendar.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "calendar.design.root.shape.radius",
+      "cssVar": "--fsds-calendar-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "calendar.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "calendar.design.root.elevation.shadow",
+      "cssVar": "--fsds-calendar-design-root-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "0px 4px 6px #0000000d, 0px 10px 15px #0000001a",
+      "resolvesTo": "calendar.elevation.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "calendar.design.nav.sizing.width",
+      "cssVar": "--fsds-calendar-design-nav-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "nav",
+      "part": "nav",
+      "defaultValue": "24px",
+      "resolvesTo": "calendar.size.nav",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__nav"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "calendar.design.nav.sizing.height",
+      "cssVar": "--fsds-calendar-design-nav-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "nav",
+      "part": "nav",
+      "defaultValue": "24px",
+      "resolvesTo": "calendar.size.nav",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__nav"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "calendar.design.nav.shape.radius",
+      "cssVar": "--fsds-calendar-design-nav-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "nav",
+      "part": "nav",
+      "defaultValue": "4px",
+      "resolvesTo": "calendar.size.radius.day",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__nav"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "calendar.design.nav.foreground.color",
+      "cssVar": "--fsds-calendar-design-nav-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "nav",
+      "part": "nav",
+      "defaultValue": "#474647",
+      "resolvesTo": "calendar.color.foreground.muted",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__nav"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "calendar.design.nav.typography.size",
+      "cssVar": "--fsds-calendar-design-nav-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "nav",
+      "part": "nav",
+      "defaultValue": "16px",
+      "resolvesTo": "calendar.typography.caption.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__nav"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "calendar.design.nav.typography.line-height",
+      "cssVar": "--fsds-calendar-design-nav-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "nav",
+      "part": "nav",
+      "defaultValue": "1",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__nav"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "calendar.design.condition-6584d030955c.background.fill",
+      "cssVar": "--fsds-calendar-design-condition-6584d030955c-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".calendar__nav:hover",
+      "part": null,
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "calendar.color.day.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__nav:hover:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "calendar.design.condition-6584d030955c.foreground.color",
+      "cssVar": "--fsds-calendar-design-condition-6584d030955c-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".calendar__nav:hover",
+      "part": null,
+      "defaultValue": "#141414",
+      "resolvesTo": "calendar.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__nav:hover:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "calendar.design.caption.typography.size",
+      "cssVar": "--fsds-calendar-design-caption-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "caption",
+      "part": "caption",
+      "defaultValue": "16px",
+      "resolvesTo": "calendar.typography.caption.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__caption"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "calendar.design.caption.typography.weight",
+      "cssVar": "--fsds-calendar-design-caption-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "caption",
+      "part": "caption",
+      "defaultValue": "600",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__caption"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "calendar.design.caption.foreground.color",
+      "cssVar": "--fsds-calendar-design-caption-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "caption",
+      "part": "caption",
+      "defaultValue": "#141414",
+      "resolvesTo": "calendar.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__caption"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "calendar.design.caption.typography.line-height",
+      "cssVar": "--fsds-calendar-design-caption-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "caption",
+      "part": "caption",
+      "defaultValue": "1.2",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__caption"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "calendar.design.grid.spacing.gap",
+      "cssVar": "--fsds-calendar-design-grid-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "grid",
+      "part": "grid",
+      "defaultValue": "2px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__grid"
+    },
+    {
+      "property": "sizing.min-width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "calendar.design.cell.sizing.min-width",
+      "cssVar": "--fsds-calendar-design-cell-sizing-min-width",
+      "cssProperty": "min-width",
+      "selectorKey": "cell",
+      "part": "cell",
+      "defaultValue": "32px",
+      "resolvesTo": "calendar.size.cell",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__cell"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "calendar.design.cell.spacing.padding",
+      "cssVar": "--fsds-calendar-design-cell-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "cell",
+      "part": "cell",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__cell"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "calendar.design.day.foreground.color",
+      "cssVar": "--fsds-calendar-design-day-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "day",
+      "part": "day",
+      "defaultValue": "inherit",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__day"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "calendar.design.day.typography.size",
+      "cssVar": "--fsds-calendar-design-day-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "day",
+      "part": "day",
+      "defaultValue": "14px",
+      "resolvesTo": "calendar.typography.day.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__day"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "calendar.design.day.shape.radius",
+      "cssVar": "--fsds-calendar-design-day-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "day",
+      "part": "day",
+      "defaultValue": "4px",
+      "resolvesTo": "calendar.size.radius.day",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__day"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "calendar.design.condition-929097c4f87c.background.fill",
+      "cssVar": "--fsds-calendar-design-condition-929097c4f87c-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".calendar__day:hover",
+      "part": null,
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "calendar.color.day.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__day:hover:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "calendar.design.condition-f2bc584abce8.focus.width",
+      "cssVar": "--fsds-calendar-design-condition-f2bc584abce8-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": ".calendar__day:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "calendar.focus.ring.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__day:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "calendar.design.condition-f2bc584abce8.focus.color",
+      "cssVar": "--fsds-calendar-design-condition-f2bc584abce8-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": ".calendar__day:focus-visible",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "calendar.color.focus.ring",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__day:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "calendar.design.condition-f2bc584abce8.focus.offset",
+      "cssVar": "--fsds-calendar-design-condition-f2bc584abce8-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".calendar__day:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "calendar.focus.ring.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__day:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "calendar.design.condition-f2bc584abce8.focus.style",
+      "cssVar": "--fsds-calendar-design-condition-f2bc584abce8-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": ".calendar__day:focus-visible",
+      "part": null,
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__day:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "calendar.design.condition-f43aab96a58c.background.fill",
+      "cssVar": "--fsds-calendar-design-condition-f43aab96a58c-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".calendar__cell[aria-selected=\"true\"] .calendar__day",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "calendar.color.day.selected.background",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__cell[aria-selected=\"true\"] .calendar__day"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "calendar.design.condition-f43aab96a58c.foreground.color",
+      "cssVar": "--fsds-calendar-design-condition-f43aab96a58c-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".calendar__cell[aria-selected=\"true\"] .calendar__day",
+      "part": null,
+      "defaultValue": "#fafafa",
+      "resolvesTo": "calendar.color.day.selected.foreground",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__cell[aria-selected=\"true\"] .calendar__day"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "calendar.design.condition-f43aab96a58c.typography.weight",
+      "cssVar": "--fsds-calendar-design-condition-f43aab96a58c-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": ".calendar__cell[aria-selected=\"true\"] .calendar__day",
+      "part": null,
+      "defaultValue": "600",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__cell[aria-selected=\"true\"] .calendar__day"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "calendar.design.condition-789437ce1e22.elevation.shadow",
+      "cssVar": "--fsds-calendar-design-condition-789437ce1e22-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": ".calendar__cell[aria-current=\"date\"] .calendar__day",
+      "part": null,
+      "defaultValue": "inset 0 0 0 1px var(--fsds-calendar-color-today-ring)",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__cell[aria-current=\"date\"] .calendar__day"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "calendar.design.condition-789437ce1e22.typography.weight",
+      "cssVar": "--fsds-calendar-design-condition-789437ce1e22-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": ".calendar__cell[aria-current=\"date\"] .calendar__day",
+      "part": null,
+      "defaultValue": "600",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".calendar__cell[aria-current=\"date\"] .calendar__day"
+    }
+  ],
   "variants": {
     "mode": [
       "single",

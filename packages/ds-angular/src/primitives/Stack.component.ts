@@ -75,7 +75,7 @@ export class StackComponent {
   @HostBinding("style.gap")
   get hostGap(): string | null {
     return this.layout === "stack" || this.layout === "inline-stack"
-      ? "var(--fsds-semantic-spacing-gap-stack)"
+      ? "var(--fsds-semantic-spacing-gap-stack, 0)"
       : null;
   }
 

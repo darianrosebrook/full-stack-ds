@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { getCssPrefix } from "../../packages/ds-codegen/dist/contract.js";
 /**
  * PSEUDO-STATE-STYLING-RAIL-01 — pseudo/state styling realization audit.
  *
@@ -87,12 +88,9 @@ export const DERIVABLE_STATE_TO_PSEUDO = {
   selected: '[aria-selected="true"]',
 };
 
-/** cssPrefix = the first BEM root class in the generated tokens.css (authoritative). */
+/** Component identity comes from the contract, not optional root slot declarations. */
 function cssPrefix(component) {
-  const tokensCss = readText(resolve(REACT, component, `${component}.tokens.css`));
-  const css = readText(resolve(REACT, component, `${component}.css`));
-  const m = tokensCss.match(/\.([a-zA-Z][\w-]*)\s*\{/) || css.match(/\.([a-zA-Z][\w-]*)\s*\{/);
-  return m ? m[1] : component.toLowerCase();
+  return getCssPrefix(readJSON(resolve(CONTRACTS, component, `${component}.contract.json`)));
 }
 
 const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

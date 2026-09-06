@@ -105,6 +105,481 @@
       "nodeKind": "node-ref"
     }
   ],
+  "designBindings": [
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "alert-notice.design.root.border.style",
+      "cssVar": "--fsds-alert-notice-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "alert-notice.design.root.border.width",
+      "cssVar": "--fsds-alert-notice-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "alert-notice.design.root.background.fill",
+      "cssVar": "--fsds-alert-notice-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#fac2c2",
+      "resolvesTo": "alert-notice.color.background.danger",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "alert-notice.design.root.foreground.color",
+      "cssVar": "--fsds-alert-notice-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#900909",
+      "resolvesTo": "alert-notice.color.foreground.danger",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "alert-notice.design.root.border.color",
+      "cssVar": "--fsds-alert-notice-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#b31b1b",
+      "resolvesTo": "alert-notice.color.border.danger",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "alert-notice.design.root.spacing.padding",
+      "cssVar": "--fsds-alert-notice-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "alert-notice.size.padding",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "alert-notice.design.root.shape.radius",
+      "cssVar": "--fsds-alert-notice-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "alert-notice.size.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "alert-notice.design.root.spacing.gap",
+      "cssVar": "--fsds-alert-notice-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "alert-notice.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "alert-notice.design.root.typography.size",
+      "cssVar": "--fsds-alert-notice-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "14px",
+      "resolvesTo": "alert-notice.text.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "alert-notice.design.root.typography.weight",
+      "cssVar": "--fsds-alert-notice-design-root-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "400",
+      "resolvesTo": "alert-notice.text.weight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "alert-notice.design.body.spacing.gap",
+      "cssVar": "--fsds-alert-notice-design-body-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "body",
+      "part": "body",
+      "defaultValue": "8px",
+      "resolvesTo": "alert-notice.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice__body"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "alert-notice.design.dismiss.spacing.padding",
+      "cssVar": "--fsds-alert-notice-design-dismiss-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "dismiss",
+      "part": "dismiss",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice__dismiss"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "alert-notice.design.dismiss.foreground.color",
+      "cssVar": "--fsds-alert-notice-design-dismiss-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "dismiss",
+      "part": "dismiss",
+      "defaultValue": "inherit",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice__dismiss"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "alert-notice.design.dismiss.typography.line-height",
+      "cssVar": "--fsds-alert-notice-design-dismiss-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "dismiss",
+      "part": "dismiss",
+      "defaultValue": "1",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice__dismiss"
+    },
+    {
+      "property": "appearance.opacity",
+      "group": "appearance",
+      "valueType": "number",
+      "slot": "alert-notice.design.condition-e375831e57be.appearance.opacity",
+      "cssVar": "--fsds-alert-notice-design-condition-e375831e57be-appearance-opacity",
+      "cssProperty": "opacity",
+      "selectorKey": ".alert-notice__dismiss:hover",
+      "part": null,
+      "defaultValue": "0.7",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice__dismiss:hover"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "alert-notice.design.condition-9ed815ed65bb.focus.offset",
+      "cssVar": "--fsds-alert-notice-design-condition-9ed815ed65bb-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".alert-notice__dismiss:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice__dismiss:focus-visible"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "alert-notice.design.title.typography.weight",
+      "cssVar": "--fsds-alert-notice-design-title-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "700",
+      "resolvesTo": "alert-notice.typography.title.fontWeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice__title"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "alert-notice.design.title.typography.size",
+      "cssVar": "--fsds-alert-notice-design-title-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "16px",
+      "resolvesTo": "alert-notice.typography.title.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice__title"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-182cc1d47525.background.fill",
+      "cssVar": "--fsds-alert-notice-design-condition-182cc1d47525-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".alert-notice--info",
+      "part": null,
+      "defaultValue": "#95dafb",
+      "resolvesTo": "alert-notice.color.background.info",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--info"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-182cc1d47525.foreground.color",
+      "cssVar": "--fsds-alert-notice-design-condition-182cc1d47525-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".alert-notice--info",
+      "part": null,
+      "defaultValue": "#013ab0",
+      "resolvesTo": "alert-notice.color.foreground.info",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--info"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-182cc1d47525.border.color",
+      "cssVar": "--fsds-alert-notice-design-condition-182cc1d47525-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".alert-notice--info",
+      "part": null,
+      "defaultValue": "#034fd6",
+      "resolvesTo": "alert-notice.color.border.info",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--info"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-a13a779ed375.background.fill",
+      "cssVar": "--fsds-alert-notice-design-condition-a13a779ed375-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".alert-notice--success",
+      "part": null,
+      "defaultValue": "#b3dba7",
+      "resolvesTo": "alert-notice.color.background.success",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--success"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-a13a779ed375.foreground.color",
+      "cssVar": "--fsds-alert-notice-design-condition-a13a779ed375-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".alert-notice--success",
+      "part": null,
+      "defaultValue": "#2c4f09",
+      "resolvesTo": "alert-notice.color.foreground.success",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--success"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-a13a779ed375.border.color",
+      "cssVar": "--fsds-alert-notice-design-condition-a13a779ed375-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".alert-notice--success",
+      "part": null,
+      "defaultValue": "#3a6614",
+      "resolvesTo": "alert-notice.color.border.success",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--success"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-2962e1fcfbab.background.fill",
+      "cssVar": "--fsds-alert-notice-design-condition-2962e1fcfbab-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".alert-notice--warning",
+      "part": null,
+      "defaultValue": "#fdc67f",
+      "resolvesTo": "alert-notice.color.background.warning",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--warning"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-2962e1fcfbab.foreground.color",
+      "cssVar": "--fsds-alert-notice-design-condition-2962e1fcfbab-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".alert-notice--warning",
+      "part": null,
+      "defaultValue": "#6c3a00",
+      "resolvesTo": "alert-notice.color.foreground.warning",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--warning"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-2962e1fcfbab.border.color",
+      "cssVar": "--fsds-alert-notice-design-condition-2962e1fcfbab-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".alert-notice--warning",
+      "part": null,
+      "defaultValue": "#8b4b00",
+      "resolvesTo": "alert-notice.color.border.warning",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--warning"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-0b9f98f51d02.background.fill",
+      "cssVar": "--fsds-alert-notice-design-condition-0b9f98f51d02-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".alert-notice--error",
+      "part": null,
+      "defaultValue": "#fac2c2",
+      "resolvesTo": "alert-notice.color.background.danger",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--error"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-0b9f98f51d02.foreground.color",
+      "cssVar": "--fsds-alert-notice-design-condition-0b9f98f51d02-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".alert-notice--error",
+      "part": null,
+      "defaultValue": "#900909",
+      "resolvesTo": "alert-notice.color.foreground.danger",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--error"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "alert-notice.design.condition-0b9f98f51d02.border.color",
+      "cssVar": "--fsds-alert-notice-design-condition-0b9f98f51d02-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": ".alert-notice--error",
+      "part": null,
+      "defaultValue": "#b31b1b",
+      "resolvesTo": "alert-notice.color.border.danger",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert-notice--error"
+    }
+  ],
   "variants": {
     "status": [
       "info",

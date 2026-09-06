@@ -230,6 +230,12 @@ export function PropertiesPanel({
   const overrideCount =
     Object.keys(propValues).length + Object.keys(tokenValues).length;
   // Which token row's picker is open (by slot), and whether it's color-only.
+  const [designScope, setDesignScope] = useState('root');
+  const bindings = component.designBindings ?? [];
+  const designScopes = [...new Set(bindings.map(b => b.selectorKey))];
+  const activeDesignScope = designScopes.includes(designScope) ? designScope : designScopes[0];
+  const activeBindings = bindings.filter(b => b.selectorKey === activeDesignScope);
+  const designGroups = [...new Set(activeBindings.map(b => b.group))];
   const [pickerSlot, setPickerSlot] = useState<string | null>(null);
   const pickerRow = materialRows.find((t) => t.slot === pickerSlot) ?? null;
 
@@ -463,6 +469,28 @@ export function PropertiesPanel({
               </div>
             )}
           </div>
+        </PropertySection>
+      )}
+
+      {bindings.length > 0 && (
+        <PropertySection title="Design properties">
+          <label className="fsds-pp__label" htmlFor="fsds-design-scope">Part / condition</label>
+          <select id="fsds-design-scope" className="fsds-pp__input" value={activeDesignScope} onChange={e => setDesignScope(e.target.value)}>
+            {designScopes.map(scope => <option key={scope} value={scope}>{scope}</option>)}
+          </select>
+          {designGroups.map(group => (
+            <PropertySection key={group} title={group}>
+              {activeBindings.filter(b => b.group === group).map(binding => (
+                <div key={binding.slot} className="fsds-pp__field" data-design-binding={binding.slot}>
+                  <label className="fsds-pp__label" htmlFor={binding.slot}>{binding.cssProperty}</label>
+                  <input id={binding.slot} className="fsds-pp__input" aria-label={`${binding.slot} value`}
+                    value={tokenValues[binding.slot] ?? ''} placeholder={binding.defaultValue}
+                    title={`Default: ${binding.resolvesTo ?? binding.defaultValue}. Clear to restore the default.`}
+                    onChange={e => onTokenChange(binding.slot, e.target.value)} />
+                </div>
+              ))}
+            </PropertySection>
+          ))}
         </PropertySection>
       )}
 

@@ -17,7 +17,7 @@
  *      and produces a non-trivial slot count.
  */
 import { strict as assert } from "node:assert";
-import { classify, ALL_COMPONENTS } from "./audit.mjs";
+import { classify, ALL_COMPONENTS, slotHasConsumer } from "./audit.mjs";
 
 let pass = 0;
 let fail = 0;
@@ -109,6 +109,23 @@ check("a slot present in tokens.css only as its own declaration stays dead", () 
     const slot = c.slots.find((s) => s.slot === name);
     assert.equal(slot.status, "dead", `${name} must not be credited by its own declaration`);
   }
+});
+
+check("new public design addresses have real CSS consumers", () => {
+  const bindings = ALL_COMPONENTS().flatMap(name => classify(name).slots).filter(slot => slot.source.startsWith('design:'));
+  assert.ok(bindings.length > 0, 'the migration must publish design controls');
+  for (const slot of bindings) assert.equal(slot.status, 'consumed', slot.slot);
+});
+
+check("a declaration or similarly named override cannot satisfy a missing consumer", () => {
+  const name = '--fsds-card-design-media-shape-radius';
+  assert.equal(slotHasConsumer(name, `${name}: 9px`, `border-radius: var(${name}-extra, 1px)`), false);
+  assert.equal(slotHasConsumer(name, `border-radius: var(${name}, 8px)`), true);
+});
+
+check("the shared stylesheet makes formerly shadowed box gap controls usable", () => {
+  assert.equal(classify('Button').slots.find(slot => slot.slot === 'box-model.gap').status, 'consumed');
+  assert.equal(classify('Walkthrough').prefix, 'walkthrough');
 });
 
 // ---- 4. CORPUS FLOOR: classifier runs over the full corpus cleanly ----

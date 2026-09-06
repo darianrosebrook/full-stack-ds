@@ -136,6 +136,454 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "postcard.design.root.background.fill",
+      "cssVar": "--fsds-postcard-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "postcard.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "postcard.design.root.spacing.padding",
+      "cssVar": "--fsds-postcard-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "postcard.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "postcard.design.root.shape.radius",
+      "cssVar": "--fsds-postcard-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "postcard.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "postcard.design.root.spacing.gap",
+      "cssVar": "--fsds-postcard-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "12px",
+      "resolvesTo": "postcard.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "postcard.design.root.typography.line-height",
+      "cssVar": "--fsds-postcard-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.5",
+      "resolvesTo": "postcard.typography.content.lineHeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "postcard.design.root.border.style",
+      "cssVar": "--fsds-postcard-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "postcard.design.root.border.width",
+      "cssVar": "--fsds-postcard-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "postcard.size.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "postcard.design.root.border.color",
+      "cssVar": "--fsds-postcard-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "postcard.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "postcard.design.root.foreground.color",
+      "cssVar": "--fsds-postcard-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "postcard.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "postcard.design.hover.background.fill",
+      "cssVar": "--fsds-postcard-design-hover-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "postcard.color.background.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard:hover"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "postcard.design.hover.border.color",
+      "cssVar": "--fsds-postcard-design-hover-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#888889",
+      "resolvesTo": "postcard.color.border.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard:hover"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "postcard.design.content.typography.line-height",
+      "cssVar": "--fsds-postcard-design-content-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "1.5",
+      "resolvesTo": "postcard.typography.content.lineHeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__content"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "postcard.design.content.spacing.gap",
+      "cssVar": "--fsds-postcard-design-content-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "12px",
+      "resolvesTo": "postcard.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__content"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "postcard.design.content.foreground.color",
+      "cssVar": "--fsds-postcard-design-content-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "#141414",
+      "resolvesTo": "postcard.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__content"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "postcard.design.content.typography.size",
+      "cssVar": "--fsds-postcard-design-content-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "16px",
+      "resolvesTo": "postcard.typography.content.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__content"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "postcard.design.header.spacing.gap",
+      "cssVar": "--fsds-postcard-design-header-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "12px",
+      "resolvesTo": "postcard.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__header"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "postcard.design.display-name.typography.weight",
+      "cssVar": "--fsds-postcard-design-display-name-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "displayName",
+      "part": "displayName",
+      "defaultValue": "500",
+      "resolvesTo": "postcard.typography.displayName.fontWeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__displayName"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "postcard.design.display-name.typography.size",
+      "cssVar": "--fsds-postcard-design-display-name-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "displayName",
+      "part": "displayName",
+      "defaultValue": "16px",
+      "resolvesTo": "postcard.typography.displayName.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__displayName"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "postcard.design.display-name.foreground.color",
+      "cssVar": "--fsds-postcard-design-display-name-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "displayName",
+      "part": "displayName",
+      "defaultValue": "#141414",
+      "resolvesTo": "postcard.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__displayName"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "postcard.design.handle.typography.size",
+      "cssVar": "--fsds-postcard-design-handle-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "handle",
+      "part": "handle",
+      "defaultValue": "14px",
+      "resolvesTo": "postcard.typography.handle.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__handle"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "postcard.design.timestamp.typography.size",
+      "cssVar": "--fsds-postcard-design-timestamp-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "timestamp",
+      "part": "timestamp",
+      "defaultValue": "14px",
+      "resolvesTo": "postcard.typography.footer.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__timestamp"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "postcard.design.footer.spacing.gap",
+      "cssVar": "--fsds-postcard-design-footer-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "12px",
+      "resolvesTo": "postcard.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__footer"
+    },
+    {
+      "property": "border.top.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "postcard.design.footer.border.top.color",
+      "cssVar": "--fsds-postcard-design-footer-border-top-color",
+      "cssProperty": "border-top-color",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "postcard.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__footer"
+    },
+    {
+      "property": "border.top.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "postcard.design.footer.border.top.style",
+      "cssVar": "--fsds-postcard-design-footer-border-top-style",
+      "cssProperty": "border-top-style",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__footer"
+    },
+    {
+      "property": "border.top.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "postcard.design.footer.border.top.width",
+      "cssVar": "--fsds-postcard-design-footer-border-top-width",
+      "cssProperty": "border-top-width",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "1px",
+      "resolvesTo": "postcard.size.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__footer"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "postcard.design.footer.typography.size",
+      "cssVar": "--fsds-postcard-design-footer-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "14px",
+      "resolvesTo": "postcard.typography.footer.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__footer"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "postcard.design.stats.spacing.gap",
+      "cssVar": "--fsds-postcard-design-stats-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "stats",
+      "part": "stats",
+      "defaultValue": "12px",
+      "resolvesTo": "postcard.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__stats"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "postcard.design.stat.typography.size",
+      "cssVar": "--fsds-postcard-design-stat-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "stat",
+      "part": "stat",
+      "defaultValue": "14px",
+      "resolvesTo": "postcard.typography.footer.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".postcard__stat"
+    }
+  ],
   "variants": {
     "type": [
       "image",

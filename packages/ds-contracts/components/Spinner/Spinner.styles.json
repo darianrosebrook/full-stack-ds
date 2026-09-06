@@ -2,7 +2,11 @@
   "root": {
     "transition-duration": {
       "resolvesTo": "spinner.anim.duration",
-      "fallback": "800ms"
+      "fallback": "800ms",
+      "design": {
+        "property": "motion.duration",
+        "slot": "spinner.design.root.motion.duration"
+      }
     }
   },
   "visual": {
@@ -34,25 +38,45 @@
       "literal": "50%",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "shape.radius",
+        "slot": "spinner.design.visual.shape.radius"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "spinner.design.visual.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "spinner.thickness.regular",
-      "fallback": "3px"
+      "fallback": "3px",
+      "design": {
+        "property": "border.width",
+        "slot": "spinner.design.visual.border.width"
+      }
     },
     "border-color": {
       "resolvesTo": "spinner.color.track",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "spinner.design.visual.border.color"
+      }
     },
     "border-top-color": {
       "resolvesTo": "spinner.color.accent",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "border.top.color",
+        "slot": "spinner.design.visual.border.top.color"
+      }
     },
     "animation": {
       "literal": "spin var(--fsds-spinner-anim-duration, 800ms) linear infinite",
@@ -64,43 +88,71 @@
   "--xs": {
     "font-size": {
       "resolvesTo": "spinner.size.xs",
-      "fallback": "12px"
+      "fallback": "12px",
+      "design": {
+        "property": "typography.size",
+        "slot": "spinner.design.condition-ac39d57baace.typography.size"
+      }
     }
   },
   "--sm": {
     "font-size": {
       "resolvesTo": "spinner.size.sm",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "typography.size",
+        "slot": "spinner.design.condition-24964d7ed3a7.typography.size"
+      }
     }
   },
   "--md": {
     "font-size": {
       "resolvesTo": "spinner.size.md",
-      "fallback": "20px"
+      "fallback": "20px",
+      "design": {
+        "property": "typography.size",
+        "slot": "spinner.design.condition-dc35d39122c5.typography.size"
+      }
     }
   },
   "--lg": {
     "font-size": {
       "resolvesTo": "spinner.size.lg",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "typography.size",
+        "slot": "spinner.design.condition-72800fd5573d.typography.size"
+      }
     }
   },
   ".spinner--hairline .spinner__visual": {
     "border-width": {
       "resolvesTo": "spinner.thickness.hairline",
-      "fallback": "2px"
+      "fallback": "2px",
+      "design": {
+        "property": "border.width",
+        "slot": "spinner.design.condition-ddd83ecdda11.border.width"
+      }
     }
   },
   ".spinner--regular .spinner__visual": {
     "border-width": {
       "resolvesTo": "spinner.thickness.regular",
-      "fallback": "3px"
+      "fallback": "3px",
+      "design": {
+        "property": "border.width",
+        "slot": "spinner.design.condition-5fe4ba5b6059.border.width"
+      }
     }
   },
   ".spinner--bold .spinner__visual": {
     "border-width": {
       "resolvesTo": "spinner.thickness.bold",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "border.width",
+        "slot": "spinner.design.condition-f69ec4fadb37.border.width"
+      }
     }
   }
 }

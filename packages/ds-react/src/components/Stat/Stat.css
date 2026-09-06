@@ -1,47 +1,50 @@
+@import "../../primitives/box-model.css";
 @import "./Stat.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .stat {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-display-size-gap, 4px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
   display: block;
-  color: var(--fsds-stat-color-foreground-value, #141414);
-  font-size: var(--fsds-stat-size-value-md, 24px);
-  font-weight: var(--fsds-stat-typography-weight-value, 700);
-  line-height: var(--fsds-stat-typography-line-height-value, 1.1);
-  letter-spacing: -0.02em;
+  color: var(--fsds-stat-design-root-foreground-color, var(--fsds-stat-color-foreground-value, #141414));
+  font-size: var(--fsds-stat-design-root-typography-size, var(--fsds-stat-size-value-md, 24px));
+  font-weight: var(--fsds-stat-design-root-typography-weight, var(--fsds-stat-typography-weight-value, 700));
+  line-height: var(--fsds-stat-design-root-typography-line-height, var(--fsds-stat-typography-line-height-value, 1.1));
+  letter-spacing: var(--fsds-stat-design-root-typography-tracking, -0.02em);
 }
 
 .stat--up {
-  color: var(--fsds-stat-color-foreground-trend-up, #497f21);
+  color: var(--fsds-stat-design-condition-150f0c29952e-foreground-color, var(--fsds-stat-color-foreground-trend-up, #497f21));
 }
 
 .stat--down {
-  color: var(--fsds-stat-color-foreground-trend-down, #d92d2e);
+  color: var(--fsds-stat-design-condition-c3362b4b3c5b-foreground-color, var(--fsds-stat-color-foreground-trend-down, #d92d2e));
 }
 
 .stat--neutral {
-  color: var(--fsds-stat-color-foreground-trend-neutral, #474647);
+  color: var(--fsds-stat-design-condition-611d8c5b8be1-foreground-color, var(--fsds-stat-color-foreground-trend-neutral, #474647));
 }
 
 .stat--sm {
-  font-size: var(--fsds-stat-size-value-sm, 18px);
+  font-size: var(--fsds-stat-design-condition-24964d7ed3a7-typography-size, var(--fsds-stat-size-value-sm, 18px));
 }
 
 .stat--lg {
-  font-size: var(--fsds-stat-size-value-lg, 32px);
+  font-size: var(--fsds-stat-design-condition-72800fd5573d-typography-size, var(--fsds-stat-size-value-lg, 32px));
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

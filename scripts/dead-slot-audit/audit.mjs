@@ -30,6 +30,7 @@ import { fileURLToPath } from "node:url";
 
 import { diffLedger, loadLedger, reportRatchet } from "../lib/ledger-ratchet.mjs";
 import { classifyDisposition, renderedPartsOf } from "./disposition.mjs";
+import { getCssPrefix } from "../../packages/ds-codegen/dist/contract.js";
 import { tokenSlug } from "../../packages/ds-codegen/dist/token-path.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -69,15 +70,9 @@ function slotToCssVar(slotKey) {
   return `--${tokenSlug(slotKey)}`;
 }
 
-/**
- * cssPrefix = the first BEM root class in the generated tokens.css. Mirrors
- * pseudo-state-audit/audit.mjs#cssPrefix so the two audits agree on identity.
- */
+/** The contract owns prefix identity, even when root slot declarations are absent. */
 function cssPrefix(component) {
-  const tokensCss = readText(resolve(REACT, component, `${component}.tokens.css`));
-  const css = readText(resolve(REACT, component, `${component}.css`));
-  const m = tokensCss.match(/\.([a-zA-Z][\w-]*)\s*\{/) || css.match(/\.([a-zA-Z][\w-]*)\s*\{/);
-  return m ? m[1] : component.toLowerCase();
+  return getCssPrefix(readJSON(resolve(CONTRACTS, component, `${component}.contract.json`)));
 }
 
 /**
@@ -85,10 +80,9 @@ function cssPrefix(component) {
  *   - <Component>.tokens.json: top-level keys are slot names.
  *   - <Component>.styles.json: property keys containing "." within each
  *     selector block are slot redefinitions (the same slot namespace).
- * box-model.* slots are declared by the primitive and auto-emitted on every
- * component's root; they are included (they ARE slots the component carries),
- * but a box-model slot consumed by ANY component counts as consumed for that
- * component (the box-model consumer block is shared).
+ * Design override addresses come from style-entry metadata. Shared box
+ * consumers are followed through the emitted import; mere declarations do
+ * not count as consumption.
  *
  * @returns {{ slot: string, cssVar: string, source: "tokens"|"styles"|"styles:<selector>" }[]}
  */
@@ -110,11 +104,12 @@ function declaredSlots(component) {
   if (styles && typeof styles === "object") {
     for (const [selector, block] of Object.entries(styles)) {
       if (!block || typeof block !== "object") continue;
-      for (const property of Object.keys(block)) {
+      for (const [property, entry] of Object.entries(block)) {
         // Slot-path keys contain a dot (e.g. "button.color.background.default").
         // Plain CSS property keys ("padding", "color") are consumer-site
         // declarations, not slot redefinitions — they don't declare a slot.
         if (property.includes(".")) add(property, `styles:${selector}`);
+        if (entry?.design) add(entry.design.slot, `design:${selector}`);
       }
     }
   }
@@ -134,6 +129,8 @@ function declaredSlots(component) {
 export function classify(component) {
   const prefix = cssPrefix(component);
   const structureCss = readText(resolve(REACT, component, `${component}.css`));
+  const sharedCss = structureCss.includes('@import "../../primitives/box-model.css"')
+    ? readText(resolve(REACT, '../primitives/box-model.css')) : '';
   // Disposition inputs. Read once per component, not once per slot.
   const tokens = readJSON(resolve(CONTRACTS, component, `${component}.tokens.json`));
   const styles = readJSON(resolve(CONTRACTS, component, `${component}.styles.json`));
@@ -162,12 +159,7 @@ export function classify(component) {
   const tokensCss = readText(resolve(REACT, component, `${component}.tokens.css`));
 
   const slots = declaredSlots(component).map((s) => {
-    // Boundary-safe: require the cssVar followed by a non-identifier char so
-    // --foo-medium doesn't match when searching for --foo-medium-extra.
-    const re = new RegExp(`${escapeRe(s.cssVar)}(?![A-Za-z0-9_-])`);
-    const readRe = new RegExp(`var\\(\\s*${escapeRe(s.cssVar)}(?![A-Za-z0-9_-])`);
-    const status =
-      re.test(structureCss) || readRe.test(tokensCss) ? "consumed" : "dead";
+    const status = slotHasConsumer(s.cssVar, structureCss, tokensCss, sharedCss) ? "consumed" : "dead";
     if (status === "consumed") return { ...s, status };
     // Every dead slot carries its diagnosis and the evidence for it, so the
     // reviewer audits the rule rather than 134 individual rows — and so the
@@ -205,6 +197,12 @@ export function classify(component) {
   // neither consumed nor a defect.
   const dead = slots.length - consumed - shadowed;
   return { component, prefix, total: slots.length, consumed, shadowed, dead, slots };
+}
+
+/** Count reads, including imported shared consumers, never declaration LHSs. */
+export function slotHasConsumer(cssVar, ...sheets) {
+  const read = new RegExp(`var\\(\\s*${escapeRe(cssVar)}(?![A-Za-z0-9_-])`);
+  return sheets.some(css => read.test(css));
 }
 
 function escapeRe(s) {

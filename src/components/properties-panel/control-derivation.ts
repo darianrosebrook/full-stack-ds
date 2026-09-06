@@ -412,6 +412,7 @@ export function buildPropMap(
 export function tokenOverridesToCss(
   overrides: Record<string, string>,
   rows?: TokenRowDescriptor[],
+  componentName?: string,
 ): string {
   const resolvesBySlot = new Map(
     (rows ?? []).map((r) => [r.slot, r.resolvesTo]),
@@ -419,17 +420,24 @@ export function tokenOverridesToCss(
   // Use a Map so a slot var and its semantic var don't duplicate, and so the
   // last write wins deterministically.
   const decls = new Map<string, string>();
+  const boxDecls = new Map<string, string>();
   for (const [slot, value] of Object.entries(overrides)) {
     if (value == null || String(value).trim() === "") continue;
+    if (componentName && slot.startsWith("box-model.")) {
+      boxDecls.set(slotToCssVar(slot), value);
+      continue;
+    }
     decls.set(slotToCssVar(slot), value);
     const resolvesTo = resolvesBySlot.get(slot);
     if (resolvesTo) decls.set(resolvesToCssVar(resolvesTo), value);
   }
-  if (decls.size === 0) return "";
+  if (decls.size === 0 && boxDecls.size === 0) return "";
   const body = [...decls.entries()]
     .map(([cssVar, value]) => `  ${cssVar}: ${value};`)
     .join("\n");
-  return `:root {\n${body}\n}\n`;
+  const prefix = componentName?.replace(/([a-z0-9])([A-Z])/g, "$1-$2").replace(/([A-Z])([A-Z][a-z])/g, "$1-$2").toLowerCase();
+  const boxBody = [...boxDecls].map(([cssVar, value]) => `  ${cssVar}: ${value};`).join("\n");
+  return `${decls.size ? `:root {\n${body}\n}\n` : ""}${boxDecls.size ? `:where([data-fsds-component="${prefix}"]) {\n${boxBody}\n}\n` : ""}`;
 }
 
 /**

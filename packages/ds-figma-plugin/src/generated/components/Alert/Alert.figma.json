@@ -105,6 +105,289 @@
       "nodeKind": "node-ref"
     }
   ],
+  "designBindings": [
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "alert.design.root.border.style",
+      "cssVar": "--fsds-alert-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "alert.design.root.border.width",
+      "cssVar": "--fsds-alert-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "alert.design.root.spacing.padding",
+      "cssVar": "--fsds-alert-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "alert.size.padding",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "alert.design.root.shape.radius",
+      "cssVar": "--fsds-alert-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "6px",
+      "resolvesTo": "alert.size.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "alert.design.root.spacing.gap",
+      "cssVar": "--fsds-alert-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "alert.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "alert.design.root.typography.size",
+      "cssVar": "--fsds-alert-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "14px",
+      "resolvesTo": "alert.text.size",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "alert.design.root.typography.weight",
+      "cssVar": "--fsds-alert-design-root-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "400",
+      "resolvesTo": "alert.text.weight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "alert.design.root.background.fill",
+      "cssVar": "--fsds-alert-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "alert.color.background.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "alert.design.root.foreground.color",
+      "cssVar": "--fsds-alert-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "alert.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "alert.design.root.border.color",
+      "cssVar": "--fsds-alert-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#a0a0a1",
+      "resolvesTo": "alert.color.border.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "alert.design.body.spacing.gap",
+      "cssVar": "--fsds-alert-design-body-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "body",
+      "part": "body",
+      "defaultValue": "8px",
+      "resolvesTo": "alert.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert__body"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "alert.design.dismiss.spacing.padding",
+      "cssVar": "--fsds-alert-design-dismiss-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "dismiss",
+      "part": "dismiss",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert__dismiss"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "alert.design.dismiss.foreground.color",
+      "cssVar": "--fsds-alert-design-dismiss-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "dismiss",
+      "part": "dismiss",
+      "defaultValue": "inherit",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert__dismiss"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "alert.design.dismiss.typography.line-height",
+      "cssVar": "--fsds-alert-design-dismiss-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "dismiss",
+      "part": "dismiss",
+      "defaultValue": "1",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert__dismiss"
+    },
+    {
+      "property": "appearance.opacity",
+      "group": "appearance",
+      "valueType": "number",
+      "slot": "alert.design.condition-713bb5876e6d.appearance.opacity",
+      "cssVar": "--fsds-alert-design-condition-713bb5876e6d-appearance-opacity",
+      "cssProperty": "opacity",
+      "selectorKey": ".alert__dismiss:hover",
+      "part": null,
+      "defaultValue": "0.7",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert__dismiss:hover"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "alert.design.condition-366042b99cd1.focus.offset",
+      "cssVar": "--fsds-alert-design-condition-366042b99cd1-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".alert__dismiss:focus-visible",
+      "part": null,
+      "defaultValue": "2px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert__dismiss:focus-visible"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "alert.design.title.typography.weight",
+      "cssVar": "--fsds-alert-design-title-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "700",
+      "resolvesTo": "alert.typography.title.fontWeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert__title"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "alert.design.title.typography.size",
+      "cssVar": "--fsds-alert-design-title-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "title",
+      "part": "title",
+      "defaultValue": "16px",
+      "resolvesTo": "alert.typography.title.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".alert__title"
+    }
+  ],
   "variants": {
     "intent": [
       "info",

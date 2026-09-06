@@ -2,43 +2,79 @@
   "root": {
     "background-color": {
       "resolvesTo": "code-block.color.background.default",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "code-block.design.root.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "code-block.color.border.default",
-      "fallback": "#d0d0d0"
+      "fallback": "#d0d0d0",
+      "design": {
+        "property": "border.color",
+        "slot": "code-block.design.root.border.color"
+      }
     },
     "border-style": {
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "code-block.design.root.border.style"
+      }
     },
     "border-width": {
       "resolvesTo": "code-block.size.border.default",
-      "fallback": "1px"
+      "fallback": "1px",
+      "design": {
+        "property": "border.width",
+        "slot": "code-block.design.root.border.width"
+      }
     },
     "border-radius": {
       "resolvesTo": "code-block.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "code-block.design.root.shape.radius"
+      }
     },
     "color": {
       "resolvesTo": "code-block.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-block.design.root.foreground.color"
+      }
     },
     "font-family": {
       "literal": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.family",
+        "slot": "code-block.design.root.typography.family"
+      }
     },
     "font-size": {
       "resolvesTo": "code-block.size.fontSize.default",
-      "fallback": "0.875rem"
+      "fallback": "0.875rem",
+      "design": {
+        "property": "typography.size",
+        "slot": "code-block.design.root.typography.size"
+      }
     },
     "line-height": {
       "resolvesTo": "code-block.typography.lineHeight.default",
-      "fallback": "1.5"
+      "fallback": "1.5",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "code-block.design.root.typography.line-height"
+      }
     },
     "margin": {
       "literal": "0",
@@ -54,7 +90,11 @@
     },
     "padding": {
       "resolvesTo": "code-block.size.padding.default",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "code-block.design.root.spacing.padding"
+      }
     },
     "tab-size": {
       "literal": "2",
@@ -80,67 +120,111 @@
       "literal": "inherit",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.family",
+        "slot": "code-block.design.code.typography.family"
+      }
     },
     "font-size": {
       "literal": "inherit",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.size",
+        "slot": "code-block.design.code.typography.size"
+      }
     }
   },
   ".code-block__token[data-token=\"plain\"]": {
     "color": {
       "resolvesTo": "code-block.token.color.plain",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-block.design.condition-b26259dbe6d6.foreground.color"
+      }
     }
   },
   ".code-block__token[data-token=\"comment\"]": {
     "color": {
       "resolvesTo": "code-block.token.color.comment",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-block.design.condition-8d8c610b44f8.foreground.color"
+      }
     }
   },
   ".code-block__token[data-token=\"keyword\"]": {
     "color": {
       "resolvesTo": "code-block.token.color.keyword",
-      "fallback": "#013ab0"
+      "fallback": "#013ab0",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-block.design.condition-4b23b87f0ae5.foreground.color"
+      }
     }
   },
   ".code-block__token[data-token=\"definition\"]": {
     "color": {
       "resolvesTo": "code-block.token.color.definition",
-      "fallback": "#900909"
+      "fallback": "#900909",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-block.design.condition-e64795b05064.foreground.color"
+      }
     }
   },
   ".code-block__token[data-token=\"punctuation\"]": {
     "color": {
       "resolvesTo": "code-block.token.color.punctuation",
-      "fallback": "#013ab0"
+      "fallback": "#013ab0",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-block.design.condition-6acac665cbb0.foreground.color"
+      }
     }
   },
   ".code-block__token[data-token=\"property\"]": {
     "color": {
       "resolvesTo": "code-block.token.color.property",
-      "fallback": "#6c3a00"
+      "fallback": "#6c3a00",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-block.design.condition-bb5556a6dabf.foreground.color"
+      }
     }
   },
   ".code-block__token[data-token=\"static\"]": {
     "color": {
       "resolvesTo": "code-block.token.color.static",
-      "fallback": "#900909"
+      "fallback": "#900909",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-block.design.condition-460d112a4b91.foreground.color"
+      }
     }
   },
   ".code-block__token[data-token=\"string\"]": {
     "color": {
       "resolvesTo": "code-block.token.color.string",
-      "fallback": "#900909"
+      "fallback": "#900909",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-block.design.condition-02a586e46f1c.foreground.color"
+      }
     }
   },
   ".code-block__token[data-token=\"tag\"]": {
     "color": {
       "resolvesTo": "code-block.token.color.tag",
-      "fallback": "#900909"
+      "fallback": "#900909",
+      "design": {
+        "property": "foreground.color",
+        "slot": "code-block.design.condition-106897d75995.foreground.color"
+      }
     }
   }
 }

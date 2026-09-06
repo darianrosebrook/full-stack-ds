@@ -80,6 +80,230 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "badge.design.root.border.style",
+      "cssVar": "--fsds-badge-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "badge.design.root.background.fill",
+      "cssVar": "--fsds-badge-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "badge.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "badge.design.root.foreground.color",
+      "cssVar": "--fsds-badge-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "badge.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "badge.design.root.border.color",
+      "cssVar": "--fsds-badge-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "badge.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "badge.design.root.border.width",
+      "cssVar": "--fsds-badge-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "badge.size.border",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "badge.design.root.shape.radius",
+      "cssVar": "--fsds-badge-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "9999px",
+      "resolvesTo": "badge.size.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "badge.design.root.spacing.gap",
+      "cssVar": "--fsds-badge-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "4px",
+      "resolvesTo": "badge.spacing.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "spacing.padding-block",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "badge.design.root.spacing.padding-block",
+      "cssVar": "--fsds-badge-design-root-spacing-padding-block",
+      "cssProperty": "padding-block",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "2px",
+      "resolvesTo": "badge.size.paddingY",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "spacing.padding-inline",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "badge.design.root.spacing.padding-inline",
+      "cssVar": "--fsds-badge-design-root-spacing-padding-inline",
+      "cssProperty": "padding-inline",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "badge.size.paddingX",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "sizing.min-height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "badge.design.root.sizing.min-height",
+      "cssVar": "--fsds-badge-design-root-sizing-min-height",
+      "cssProperty": "min-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "24px",
+      "resolvesTo": "badge.size.minHeight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "badge.design.root.typography.size",
+      "cssVar": "--fsds-badge-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "12px",
+      "resolvesTo": "badge.size.fontSize",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "badge.design.root.typography.weight",
+      "cssVar": "--fsds-badge-design-root-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "500",
+      "resolvesTo": "badge.text.weight",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "badge.design.root.typography.line-height",
+      "cssVar": "--fsds-badge-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "badge.design.hover.background.fill",
+      "cssVar": "--fsds-badge-design-hover-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "badge.color.background.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".badge:hover"
+    }
+  ],
   "variants": {
     "variant": [
       "default",

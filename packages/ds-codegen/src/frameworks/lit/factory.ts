@@ -1,3 +1,4 @@
+import { emitBoxModelBoundaryCss } from '../../box-model.js';
 /**
  * Lit FrameworkEmitter.
  *
@@ -125,6 +126,7 @@ export function createLitEmitter(): FrameworkEmitter {
 
     emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
       return [
+        { relativePath: "box-model.css", contents: emitBoxModelBoundaryCss() },
         {
           relativePath: `${ir.name}.ts`,
           contents: generateLitStackPrimitiveSource(ir),

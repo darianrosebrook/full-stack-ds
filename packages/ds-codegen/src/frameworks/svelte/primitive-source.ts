@@ -41,7 +41,7 @@ export function generateSvelteStackPrimitiveSource(ir: PrimitiveIR): string {
   const styleBlocks: string[] = [];
   const baseDecls = ["box-sizing: border-box;"];
   if (ir.layout.gap) {
-    baseDecls.push(`gap: var(${ir.layout.gap.cssVar});`);
+    baseDecls.push(`gap: var(${ir.layout.gap.cssVar}, 0);`);
   }
   styleBlocks.push(`  .${block} {\n    ${baseDecls.join("\n    ")}\n  }`);
 
@@ -91,7 +91,9 @@ export function generateSvelteStackPrimitiveSource(ir: PrimitiveIR): string {
 </svelte:element>
 
 <style>
+@layer components.primitive {
 ${styleBlocks.join("\n\n")}
+}
 </style>
 `;
 }

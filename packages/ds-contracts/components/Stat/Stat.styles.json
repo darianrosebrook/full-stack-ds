@@ -8,58 +8,98 @@
     },
     "color": {
       "resolvesTo": "stat.color.foreground.value",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "stat.design.root.foreground.color"
+      }
     },
     "font-size": {
       "resolvesTo": "stat.size.value.md",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "typography.size",
+        "slot": "stat.design.root.typography.size"
+      }
     },
     "font-weight": {
       "resolvesTo": "stat.typography.weight.value",
-      "fallback": "700"
+      "fallback": "700",
+      "design": {
+        "property": "typography.weight",
+        "slot": "stat.design.root.typography.weight"
+      }
     },
     "line-height": {
       "resolvesTo": "stat.typography.lineHeight.value",
       "platforms": [
         "web"
       ],
-      "fallback": "1.1"
+      "fallback": "1.1",
+      "design": {
+        "property": "typography.line-height",
+        "slot": "stat.design.root.typography.line-height"
+      }
     },
     "letter-spacing": {
       "literal": "-0.02em",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "typography.tracking",
+        "slot": "stat.design.root.typography.tracking"
+      }
     }
   },
   "--up": {
     "color": {
       "resolvesTo": "stat.color.foreground.trend.up",
-      "fallback": "#497f21"
+      "fallback": "#497f21",
+      "design": {
+        "property": "foreground.color",
+        "slot": "stat.design.condition-150f0c29952e.foreground.color"
+      }
     }
   },
   "--down": {
     "color": {
       "resolvesTo": "stat.color.foreground.trend.down",
-      "fallback": "#d92d2e"
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "foreground.color",
+        "slot": "stat.design.condition-c3362b4b3c5b.foreground.color"
+      }
     }
   },
   "--neutral": {
     "color": {
       "resolvesTo": "stat.color.foreground.trend.neutral",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "stat.design.condition-611d8c5b8be1.foreground.color"
+      }
     }
   },
   "--sm": {
     "font-size": {
       "resolvesTo": "stat.size.value.sm",
-      "fallback": "18px"
+      "fallback": "18px",
+      "design": {
+        "property": "typography.size",
+        "slot": "stat.design.condition-24964d7ed3a7.typography.size"
+      }
     }
   },
   "--lg": {
     "font-size": {
       "resolvesTo": "stat.size.value.lg",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "typography.size",
+        "slot": "stat.design.condition-72800fd5573d.typography.size"
+      }
     }
   }
 }

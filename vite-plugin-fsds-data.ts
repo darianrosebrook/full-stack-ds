@@ -1,3 +1,5 @@
+import { buildDesignBindings } from './packages/ds-codegen/src/design-properties';
+import type { ComponentContract as CodegenContract } from './packages/ds-codegen/src/contract';
 import { readFile, readdir } from "node:fs/promises";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { execSync } from "node:child_process";
@@ -248,10 +250,12 @@ async function gatherComponentSources(rootDir: string, componentName: string): P
           const file = await tryFile(compDir, filename);
           if (file) {
             const tokens = await tryFile(compDir, `${componentName}.tokens.css`);
+            const boxModel = await tryFile(path.join(compDir, "../../primitives"), "box-model.css");
+            const consumerCode = file.code.replace(/@import\s+["']\.\.\/\.\.\/primitives\/box-model\.css["'];?\s*\n?/, "");
             if (tokens) {
               slot.css = {
                 ...file,
-                code: `${tokens.code}\n${file.code.replace(
+                code: `${boxModel?.code ?? ""}\n${tokens.code}\n${consumerCode.replace(
                   new RegExp(`@import\\s+["']\\./${componentName}\\.tokens\\.css["'];?\\s*\\n?`),
                   "",
                 )}`,
@@ -504,6 +508,12 @@ export async function buildBundle(rootDir: string) {
       }
     }
 
+    const stylesText = await safeRead(path.join(componentsDir, folder, `${folder}.styles.json`));
+    const designBindings = buildDesignBindings({
+      ...(contract as unknown as CodegenContract),
+      styles: stylesText ? JSON.parse(stylesText) : {},
+    });
+
     // Usage sidecar: optional JSONL of curated composition examples.
     const usagePath = path.join(componentsDir, folder, `${folder}.usage.jsonl`);
     const usageText = await safeRead(usagePath);
@@ -525,6 +535,7 @@ export async function buildBundle(rootDir: string) {
       usage,
       usageComposition: deriveUsageComposition(contract as never),
       boxModelSurface,
+      designBindings,
     });
   }
 

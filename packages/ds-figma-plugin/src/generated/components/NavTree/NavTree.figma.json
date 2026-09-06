@@ -103,6 +103,538 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.heading.spacing.gap",
+      "cssVar": "--fsds-nav-tree-design-heading-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "heading",
+      "part": "heading",
+      "defaultValue": "4px",
+      "resolvesTo": "nav-tree.size.gap.heading",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__heading"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.heading.typography.size",
+      "cssVar": "--fsds-nav-tree-design-heading-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "heading",
+      "part": "heading",
+      "defaultValue": "10px",
+      "resolvesTo": "nav-tree.size.fontSize.heading",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__heading"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "nav-tree.design.heading.typography.weight",
+      "cssVar": "--fsds-nav-tree-design-heading-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "heading",
+      "part": "heading",
+      "defaultValue": "600",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__heading"
+    },
+    {
+      "property": "typography.tracking",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.heading.typography.tracking",
+      "cssVar": "--fsds-nav-tree-design-heading-typography-tracking",
+      "cssProperty": "letter-spacing",
+      "selectorKey": "heading",
+      "part": "heading",
+      "defaultValue": "0.04em",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__heading"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "nav-tree.design.heading.foreground.color",
+      "cssVar": "--fsds-nav-tree-design-heading-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "heading",
+      "part": "heading",
+      "defaultValue": "#474647",
+      "resolvesTo": "nav-tree.color.foreground.heading",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__heading"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "nav-tree.design.icon.foreground.color",
+      "cssVar": "--fsds-nav-tree-design-icon-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "icon",
+      "part": "icon",
+      "defaultValue": "inherit",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__icon"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "nav-tree.design.heading-link.foreground.color",
+      "cssVar": "--fsds-nav-tree-design-heading-link-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "headingLink",
+      "part": "headingLink",
+      "defaultValue": "#474647",
+      "resolvesTo": "nav-tree.color.foreground.heading",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLink"
+    },
+    {
+      "property": "spacing.padding-block",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.heading-link.spacing.padding-block",
+      "cssVar": "--fsds-nav-tree-design-heading-link-spacing-padding-block",
+      "cssProperty": "padding-block",
+      "selectorKey": "headingLink",
+      "part": "headingLink",
+      "defaultValue": "2px",
+      "resolvesTo": "nav-tree.size.padding.block",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLink"
+    },
+    {
+      "property": "spacing.padding-inline",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.heading-link.spacing.padding-inline",
+      "cssVar": "--fsds-nav-tree-design-heading-link-spacing-padding-inline",
+      "cssProperty": "padding-inline",
+      "selectorKey": "headingLink",
+      "part": "headingLink",
+      "defaultValue": "8px",
+      "resolvesTo": "nav-tree.size.padding.inline",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLink"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.heading-link.shape.radius",
+      "cssVar": "--fsds-nav-tree-design-heading-link-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "headingLink",
+      "part": "headingLink",
+      "defaultValue": "6px",
+      "resolvesTo": "nav-tree.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLink"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "nav-tree.design.heading-link.motion.duration",
+      "cssVar": "--fsds-nav-tree-design-heading-link-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "headingLink",
+      "part": "headingLink",
+      "defaultValue": "120ms",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLink"
+    },
+    {
+      "property": "spacing.padding-block",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.heading-label.spacing.padding-block",
+      "cssVar": "--fsds-nav-tree-design-heading-label-spacing-padding-block",
+      "cssProperty": "padding-block",
+      "selectorKey": "headingLabel",
+      "part": "headingLabel",
+      "defaultValue": "2px",
+      "resolvesTo": "nav-tree.size.padding.block",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLabel"
+    },
+    {
+      "property": "spacing.padding-inline",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.heading-label.spacing.padding-inline",
+      "cssVar": "--fsds-nav-tree-design-heading-label-spacing-padding-inline",
+      "cssProperty": "padding-inline",
+      "selectorKey": "headingLabel",
+      "part": "headingLabel",
+      "defaultValue": "8px",
+      "resolvesTo": "nav-tree.size.padding.inline",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLabel"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.heading-label.shape.radius",
+      "cssVar": "--fsds-nav-tree-design-heading-label-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "headingLabel",
+      "part": "headingLabel",
+      "defaultValue": "6px",
+      "resolvesTo": "nav-tree.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLabel"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.list.spacing.gap",
+      "cssVar": "--fsds-nav-tree-design-list-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "list",
+      "part": "list",
+      "defaultValue": "1px",
+      "resolvesTo": "nav-tree.size.gap.item",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__list"
+    },
+    {
+      "property": "spacing.padding-block",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.list.spacing.padding-block",
+      "cssVar": "--fsds-nav-tree-design-list-spacing-padding-block",
+      "cssProperty": "padding-block",
+      "selectorKey": "list",
+      "part": "list",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__list"
+    },
+    {
+      "property": "spacing.padding-inline-start",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.list.spacing.padding-inline-start",
+      "cssVar": "--fsds-nav-tree-design-list-spacing-padding-inline-start",
+      "cssProperty": "padding-inline-start",
+      "selectorKey": "list",
+      "part": "list",
+      "defaultValue": "16px",
+      "resolvesTo": "nav-tree.size.indent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__list"
+    },
+    {
+      "property": "spacing.padding-inline-end",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.list.spacing.padding-inline-end",
+      "cssVar": "--fsds-nav-tree-design-list-spacing-padding-inline-end",
+      "cssProperty": "padding-inline-end",
+      "selectorKey": "list",
+      "part": "list",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__list"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "nav-tree.design.item.foreground.color",
+      "cssVar": "--fsds-nav-tree-design-item-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "#474647",
+      "resolvesTo": "nav-tree.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.item.typography.size",
+      "cssVar": "--fsds-nav-tree-design-item-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "14px",
+      "resolvesTo": "nav-tree.size.fontSize.item",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.condition-a5ce9422d04f.spacing.gap",
+      "cssVar": "--fsds-nav-tree-design-condition-a5ce9422d04f-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": ".nav-tree__item > *",
+      "part": null,
+      "defaultValue": "4px",
+      "resolvesTo": "nav-tree.size.gap.heading",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "nav-tree.design.condition-a5ce9422d04f.foreground.color",
+      "cssVar": "--fsds-nav-tree-design-condition-a5ce9422d04f-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".nav-tree__item > *",
+      "part": null,
+      "defaultValue": "inherit",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *"
+    },
+    {
+      "property": "spacing.padding-block",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.condition-a5ce9422d04f.spacing.padding-block",
+      "cssVar": "--fsds-nav-tree-design-condition-a5ce9422d04f-spacing-padding-block",
+      "cssProperty": "padding-block",
+      "selectorKey": ".nav-tree__item > *",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "nav-tree.size.padding.block",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.condition-a5ce9422d04f.shape.radius",
+      "cssVar": "--fsds-nav-tree-design-condition-a5ce9422d04f-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": ".nav-tree__item > *",
+      "part": null,
+      "defaultValue": "6px",
+      "resolvesTo": "nav-tree.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "nav-tree.design.condition-a5ce9422d04f.motion.duration",
+      "cssVar": "--fsds-nav-tree-design-condition-a5ce9422d04f-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": ".nav-tree__item > *",
+      "part": null,
+      "defaultValue": "120ms",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "nav-tree.design.condition-474d5cfdf987.background.fill",
+      "cssVar": "--fsds-nav-tree-design-condition-474d5cfdf987-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".nav-tree__item > *:hover",
+      "part": null,
+      "defaultValue": "color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-hover, 0.04) * 100%), transparent)",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *:hover"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "nav-tree.design.condition-474d5cfdf987.foreground.color",
+      "cssVar": "--fsds-nav-tree-design-condition-474d5cfdf987-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".nav-tree__item > *:hover",
+      "part": null,
+      "defaultValue": "#141414",
+      "resolvesTo": "nav-tree.color.foreground.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *:hover"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.condition-62c009a6b895.focus.offset",
+      "cssVar": "--fsds-nav-tree-design-condition-62c009a6b895-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".nav-tree__item > *:focus-visible",
+      "part": null,
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *:focus-visible"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "nav-tree.design.condition-ad856367fa22.background.fill",
+      "cssVar": "--fsds-nav-tree-design-condition-ad856367fa22-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".nav-tree__item > *[aria-current=\"page\"]",
+      "part": null,
+      "defaultValue": "color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-selected, 0.08) * 100%), transparent)",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *[aria-current=\"page\"]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "nav-tree.design.condition-ad856367fa22.foreground.color",
+      "cssVar": "--fsds-nav-tree-design-condition-ad856367fa22-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".nav-tree__item > *[aria-current=\"page\"]",
+      "part": null,
+      "defaultValue": "#141414",
+      "resolvesTo": "nav-tree.color.foreground.current",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *[aria-current=\"page\"]"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "nav-tree.design.condition-ad856367fa22.typography.weight",
+      "cssVar": "--fsds-nav-tree-design-condition-ad856367fa22-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": ".nav-tree__item > *[aria-current=\"page\"]",
+      "part": null,
+      "defaultValue": "600",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__item > *[aria-current=\"page\"]"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "nav-tree.design.condition-0db823818de5.background.fill",
+      "cssVar": "--fsds-nav-tree-design-condition-0db823818de5-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".nav-tree__headingLink:hover",
+      "part": null,
+      "defaultValue": "color-mix(in srgb, currentColor calc(var(--fsds-nav-tree-state-layer-hover, 0.04) * 100%), transparent)",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLink:hover"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "nav-tree.design.condition-0db823818de5.foreground.color",
+      "cssVar": "--fsds-nav-tree-design-condition-0db823818de5-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".nav-tree__headingLink:hover",
+      "part": null,
+      "defaultValue": "#141414",
+      "resolvesTo": "nav-tree.color.foreground.headingHover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLink:hover"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "nav-tree.design.condition-9ee8c188e4b8.focus.offset",
+      "cssVar": "--fsds-nav-tree-design-condition-9ee8c188e4b8-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".nav-tree__headingLink:focus-visible",
+      "part": null,
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".nav-tree__headingLink:focus-visible"
+    }
+  ],
   "variants": {
     "iconSize": [
       "sm",

@@ -1,23 +1,26 @@
+@import "../../primitives/box-model.css";
 @import "./Label.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .label {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
-  color: var(--fsds-label-color-text-default, #141414);
-  line-height: var(--fsds-label-typo-line-height-default, 1.2);
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-display-size-gap, 4px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
+  color: var(--fsds-label-design-root-foreground-color, var(--fsds-label-color-text-default, #141414));
+  line-height: var(--fsds-label-design-root-typography-line-height, var(--fsds-label-typo-line-height-default, 1.2));
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

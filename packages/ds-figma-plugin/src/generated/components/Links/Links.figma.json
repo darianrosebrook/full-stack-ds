@@ -64,6 +64,248 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "links.design.root.foreground.color",
+      "cssVar": "--fsds-links-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "links.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "links.design.root.typography.size",
+      "cssVar": "--fsds-links-design-root-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1rem",
+      "resolvesTo": "links.size.fontSize.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "links.design.root.spacing.gap",
+      "cssVar": "--fsds-links-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "2px",
+      "resolvesTo": "links.spacing.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "links.design.root.motion.duration",
+      "cssVar": "--fsds-links-design-root-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "150ms",
+      "resolvesTo": "links.motion.duration.fast",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "links.design.condition-42b522a9c46e.typography.size",
+      "cssVar": "--fsds-links-design-condition-42b522a9c46e-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--small",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "links.size.fontSize.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links--small"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "links.design.condition-a9821c9eea70.typography.size",
+      "cssVar": "--fsds-links-design-condition-a9821c9eea70-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--medium",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "links.size.fontSize.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links--medium"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "links.design.condition-cbbd2740a3e5.typography.size",
+      "cssVar": "--fsds-links-design-condition-cbbd2740a3e5-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "--large",
+      "part": null,
+      "defaultValue": "1rem",
+      "resolvesTo": "links.size.fontSize.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links--large"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "links.design.hover.foreground.color",
+      "cssVar": "--fsds-links-design-hover-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#b31b1b",
+      "resolvesTo": "links.color.foreground.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links:hover:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "links.design.visited.foreground.color",
+      "cssVar": "--fsds-links-design-visited-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "visited",
+      "part": null,
+      "defaultValue": "#e55b5a",
+      "resolvesTo": "links.color.foreground.visited",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links:visited"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "links.design.disabled.foreground.color",
+      "cssVar": "--fsds-links-design-disabled-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "disabled",
+      "part": null,
+      "defaultValue": "#727272",
+      "resolvesTo": "links.color.foreground.disabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links[aria-disabled=\"true\"]"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "links.design.focus.focus.width",
+      "cssVar": "--fsds-links-design-focus-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "links.focus.ring.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "links.design.focus.focus.color",
+      "cssVar": "--fsds-links-design-focus-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "links.focus.ring.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "links.design.focus.focus.style",
+      "cssVar": "--fsds-links-design-focus-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "solid",
+      "resolvesTo": "links.focus.ring.style",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "links.design.focus.focus.offset",
+      "cssVar": "--fsds-links-design-focus-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "links.focus.ring.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links:focus-visible:not([aria-disabled=\"true\"])"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "links.design.focus.shape.radius",
+      "cssVar": "--fsds-links-design-focus-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "4px",
+      "resolvesTo": "links.focus.ring.radius",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".links:focus-visible:not([aria-disabled=\"true\"])"
+    }
+  ],
   "variants": {
     "size": [
       "small",

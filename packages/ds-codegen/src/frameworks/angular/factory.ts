@@ -1,3 +1,4 @@
+import { emitBoxModelBoundaryCss } from '../../box-model.js';
 /**
  * Angular FrameworkEmitter.
  *
@@ -123,6 +124,7 @@ export function createAngularEmitter(): FrameworkEmitter {
 
     emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
       return [
+        { relativePath: "box-model.css", contents: emitBoxModelBoundaryCss() },
         {
           relativePath: `${ir.name}.component.ts`,
           contents: generateAngularStackPrimitiveSource(ir),

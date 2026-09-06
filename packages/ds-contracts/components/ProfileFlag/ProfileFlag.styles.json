@@ -2,33 +2,61 @@
   "root": {
     "background-color": {
       "resolvesTo": "profile-flag.color.background.default",
-      "fallback": "#ffffff"
+      "fallback": "#ffffff",
+      "design": {
+        "property": "background.fill",
+        "slot": "profile-flag.design.root.background.fill"
+      }
     },
     "border-color": {
       "resolvesTo": "profile-flag.color.border.default",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "profile-flag.design.root.border.color"
+      }
     },
     "color": {
       "resolvesTo": "profile-flag.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "profile-flag.design.root.foreground.color"
+      }
     },
     "border-radius": {
       "resolvesTo": "profile-flag.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "profile-flag.design.root.shape.radius"
+      }
     },
     "gap": {
       "resolvesTo": "profile-flag.spacing.gap.default",
-      "fallback": "4px"
+      "fallback": "4px",
+      "design": {
+        "property": "spacing.gap",
+        "slot": "profile-flag.design.root.spacing.gap"
+      }
     },
     "padding": {
       "resolvesTo": "profile-flag.spacing.padding.right",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "profile-flag.design.root.spacing.padding"
+      }
     }
   },
   "hover": {
     "border-color": {
       "resolvesTo": "profile-flag.color.border.hover",
-      "fallback": "#888889"
+      "fallback": "#888889",
+      "design": {
+        "property": "border.color",
+        "slot": "profile-flag.design.hover.border.color"
+      }
     }
   }
 }

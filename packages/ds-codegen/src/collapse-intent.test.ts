@@ -79,6 +79,12 @@ describe("FEAT-MOBILE-DISCLOSURE-001: name-independence is falsifiable (A1, full
     const details = loadContract("Details");
     const renamed = { ...details, name: "ZzNotDetails" } as ComponentContract;
 
+    // Renaming also moves explicitly owned public design addresses.
+    for (const block of Object.values(renamed.styles ?? {})) {
+      for (const entry of Object.values(block)) {
+        if (entry.design) entry.design.slot = entry.design.slot.replace(/^details\./, "zz-not-details.");
+      }
+    }
     const ir = buildComponentIR(renamed);
     expect(ir.name).toBe("ZzNotDetails"); // guard: the rename actually took
 

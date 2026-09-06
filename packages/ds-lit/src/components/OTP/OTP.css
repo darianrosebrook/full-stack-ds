@@ -1,18 +1,20 @@
+@import "../../primitives/box-model.css";
 @import "./OTP.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .otp {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-input-size-medium-padding-block, 4px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-input-size-medium-padding-block, 4px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-input-size-medium-padding-inline, 8px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-input-size-medium-padding-inline, 8px));
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-input-size-medium-gap, 8px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, var(--fsds-semantic-input-size-medium-min-height, 32px));
+  max-height: var(--fsds-box-model-max-height, none);
   display: inline-flex;
   align-items: center;
 }
@@ -20,38 +22,39 @@
 .otp__group {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--fsds-otp-design-group-spacing-gap, 4px);
 }
 
 .otp__field {
   display: block;
   width: 40px;
   height: 40px;
-  text-align: center;
-  font-size: 1rem;
+  text-align: var(--fsds-otp-design-field-typography-alignment, center);
+  font-size: var(--fsds-otp-design-field-typography-size, 1rem);
   box-sizing: border-box;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: var(--fsds-otp-size-radius-default, 6px);
-  border-color: var(--fsds-otp-color-border-default, #b8b8b8);
-  background-color: var(--fsds-otp-color-background-default, #f7f7f7);
-  color: var(--fsds-otp-color-foreground-primary, #141414);
+  border-style: var(--fsds-otp-design-field-border-style, solid);
+  border-width: var(--fsds-otp-design-field-border-width, 1px);
+  border-radius: var(--fsds-otp-design-field-shape-radius, var(--fsds-otp-size-radius-default, 6px));
+  border-color: var(--fsds-otp-design-field-border-color, var(--fsds-otp-color-border-default, #b8b8b8));
+  background-color: var(--fsds-otp-design-field-background-fill, var(--fsds-otp-color-background-default, #f7f7f7));
+  color: var(--fsds-otp-design-field-foreground-color, var(--fsds-otp-color-foreground-primary, #141414));
 }
 
 .otp__field:focus-visible:not([aria-disabled="true"]) {
-  border-color: var(--fsds-otp-color-border-accent, #d92d2e);
-  outline-width: var(--fsds-otp-focus-ring-width, 2px);
-  outline-color: var(--fsds-otp-focus-ring-color, #0566fe);
-  outline-style: var(--fsds-otp-focus-ring-style, solid);
-  outline-offset: var(--fsds-otp-focus-ring-offset, 2px);
+  border-color: var(--fsds-otp-design-condition-2b8ec1586f15-border-color, var(--fsds-otp-color-border-accent, #d92d2e));
+  outline-width: var(--fsds-otp-design-condition-2b8ec1586f15-focus-width, var(--fsds-otp-focus-ring-width, 2px));
+  outline-color: var(--fsds-otp-design-condition-2b8ec1586f15-focus-color, var(--fsds-otp-focus-ring-color, #0566fe));
+  outline-style: var(--fsds-otp-design-condition-2b8ec1586f15-focus-style, var(--fsds-otp-focus-ring-style, solid));
+  outline-offset: var(--fsds-otp-design-condition-2b8ec1586f15-focus-offset, var(--fsds-otp-focus-ring-offset, 2px));
 }
 
 .otp__field:disabled {
-  opacity: 0.5;
+  opacity: var(--fsds-otp-design-condition-82e351952582-appearance-opacity, 0.5);
   cursor: not-allowed;
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

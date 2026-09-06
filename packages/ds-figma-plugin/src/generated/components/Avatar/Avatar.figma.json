@@ -79,6 +79,295 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "avatar.design.root.shape.radius",
+      "cssVar": "--fsds-avatar-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "9999px",
+      "resolvesTo": "avatar.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "avatar.design.root.background.fill",
+      "cssVar": "--fsds-avatar-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "avatar.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "avatar.design.root.foreground.color",
+      "cssVar": "--fsds-avatar-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "avatar.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "avatar.design.root.border.color",
+      "cssVar": "--fsds-avatar-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "avatar.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "avatar.design.root.border.style",
+      "cssVar": "--fsds-avatar-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "avatar.design.root.border.width",
+      "cssVar": "--fsds-avatar-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "resolvesTo": "avatar.size.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "avatar.design.root.sizing.width",
+      "cssVar": "--fsds-avatar-design-root-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "avatar.size.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "avatar.design.root.sizing.height",
+      "cssVar": "--fsds-avatar-design-root-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "avatar.size.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar"
+    },
+    {
+      "property": "typography.weight",
+      "group": "typography",
+      "valueType": "number",
+      "slot": "avatar.design.root.typography.weight",
+      "cssVar": "--fsds-avatar-design-root-typography-weight",
+      "cssProperty": "font-weight",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "500",
+      "resolvesTo": "avatar.typography.fontWeight.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar"
+    },
+    {
+      "property": "typography.family",
+      "group": "typography",
+      "valueType": "fontFamily",
+      "slot": "avatar.design.root.typography.family",
+      "cssVar": "--fsds-avatar-design-root-typography-family",
+      "cssProperty": "font-family",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "\"Inter\", sans-serif",
+      "resolvesTo": "avatar.typography.fontFamily.sans",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "avatar.design.condition-42b522a9c46e.sizing.width",
+      "cssVar": "--fsds-avatar-design-condition-42b522a9c46e-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "--small",
+      "part": null,
+      "defaultValue": "16px",
+      "resolvesTo": "avatar.size.small",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar--small"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "avatar.design.condition-42b522a9c46e.sizing.height",
+      "cssVar": "--fsds-avatar-design-condition-42b522a9c46e-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "--small",
+      "part": null,
+      "defaultValue": "16px",
+      "resolvesTo": "avatar.size.small",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar--small"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "avatar.design.condition-a9821c9eea70.sizing.width",
+      "cssVar": "--fsds-avatar-design-condition-a9821c9eea70-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "--medium",
+      "part": null,
+      "defaultValue": "24px",
+      "resolvesTo": "avatar.size.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar--medium"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "avatar.design.condition-a9821c9eea70.sizing.height",
+      "cssVar": "--fsds-avatar-design-condition-a9821c9eea70-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "--medium",
+      "part": null,
+      "defaultValue": "24px",
+      "resolvesTo": "avatar.size.medium",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar--medium"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "avatar.design.condition-cbbd2740a3e5.sizing.width",
+      "cssVar": "--fsds-avatar-design-condition-cbbd2740a3e5-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "--large",
+      "part": null,
+      "defaultValue": "32px",
+      "resolvesTo": "avatar.size.large",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar--large"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "avatar.design.condition-cbbd2740a3e5.sizing.height",
+      "cssVar": "--fsds-avatar-design-condition-cbbd2740a3e5-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "--large",
+      "part": null,
+      "defaultValue": "32px",
+      "resolvesTo": "avatar.size.large",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar--large"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "avatar.design.condition-ee2a0b1d0aee.sizing.width",
+      "cssVar": "--fsds-avatar-design-condition-ee2a0b1d0aee-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "--extra-large",
+      "part": null,
+      "defaultValue": "48px",
+      "resolvesTo": "avatar.size.extra-large",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar--extra-large"
+    },
+    {
+      "property": "sizing.height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "avatar.design.condition-ee2a0b1d0aee.sizing.height",
+      "cssVar": "--fsds-avatar-design-condition-ee2a0b1d0aee-sizing-height",
+      "cssProperty": "height",
+      "selectorKey": "--extra-large",
+      "part": null,
+      "defaultValue": "48px",
+      "resolvesTo": "avatar.size.extra-large",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".avatar--extra-large"
+    }
+  ],
   "variants": {
     "size": [
       "small",

@@ -68,7 +68,7 @@ function surfaceStaticStylesLine(
   return [
     `  static override styles = css\``,
     `    ${hostRule}`,
-    ...escaped.split("\n").map((line) => `    ${line}`.trimEnd() || "    "),
+    ...escaped.split("\n").map((line) => `    ${line}`.trimEnd()),
     `  \`;`,
   ];
 }

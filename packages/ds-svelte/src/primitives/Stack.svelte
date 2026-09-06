@@ -30,9 +30,10 @@
 </svelte:element>
 
 <style>
+@layer components.primitive {
   .FSDS-stack {
     box-sizing: border-box;
-    gap: var(--fsds-semantic-spacing-gap-stack);
+    gap: var(--fsds-semantic-spacing-gap-stack, 0);
   }
 
   .FSDS-stack--layout-stack {
@@ -64,4 +65,5 @@
   .FSDS-stack--layout-inline-stack.FSDS-stack--horizontal {
     flex-direction: row;
   }
+}
 </style>

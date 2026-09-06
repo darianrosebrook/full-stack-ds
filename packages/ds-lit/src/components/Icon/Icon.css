@@ -1,4 +1,6 @@
+@import "../../primitives/box-model.css";
 @import "./Icon.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .icon {
@@ -7,41 +9,42 @@
   justify-content: center;
   flex-shrink: 0;
   box-sizing: border-box;
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
-  color: currentColor;
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, 0);
+  width: var(--fsds-box-model-width, var(--fsds-semantic-glyph-size-medium-extent, 16px));
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, var(--fsds-semantic-glyph-size-medium-extent, 16px));
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
+  color: var(--fsds-icon-design-root-foreground-color, currentColor);
 }
 
 .icon--sm {
-  width: var(--fsds-icon-size-sm, 16px);
-  height: var(--fsds-icon-size-sm, 16px);
+  width: var(--fsds-icon-design-condition-24964d7ed3a7-sizing-width, var(--fsds-icon-size-sm, 16px));
+  height: var(--fsds-icon-design-condition-24964d7ed3a7-sizing-height, var(--fsds-icon-size-sm, 16px));
 }
 
 .icon--md {
-  width: var(--fsds-icon-size-md, 20px);
-  height: var(--fsds-icon-size-md, 20px);
+  width: var(--fsds-icon-design-condition-dc35d39122c5-sizing-width, var(--fsds-icon-size-md, 20px));
+  height: var(--fsds-icon-design-condition-dc35d39122c5-sizing-height, var(--fsds-icon-size-md, 20px));
 }
 
 .icon--lg {
-  width: var(--fsds-icon-size-lg, 24px);
-  height: var(--fsds-icon-size-lg, 24px);
+  width: var(--fsds-icon-design-condition-72800fd5573d-sizing-width, var(--fsds-icon-size-lg, 24px));
+  height: var(--fsds-icon-design-condition-72800fd5573d-sizing-height, var(--fsds-icon-size-lg, 24px));
 }
 
 .icon--xl {
-  width: var(--fsds-icon-size-xl, 32px);
-  height: var(--fsds-icon-size-xl, 32px);
+  width: var(--fsds-icon-design-condition-bcfaa22e125a-sizing-width, var(--fsds-icon-size-xl, 32px));
+  height: var(--fsds-icon-design-condition-bcfaa22e125a-sizing-height, var(--fsds-icon-size-xl, 32px));
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

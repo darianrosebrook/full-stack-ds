@@ -1,37 +1,39 @@
+@import "../../primitives/box-model.css";
 @import "./Chip.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .chip {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-chip-size-gap, 2px);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-chip-size-min-height, 36px);
-  max-height: var(--fsds-box-model-max-height);
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-chip-design-root-spacing-gap, var(--fsds-chip-size-gap, 2px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, 0);
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-chip-design-root-sizing-min-height, var(--fsds-chip-size-min-height, 36px));
+  max-height: var(--fsds-box-model-max-height, none);
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  border-style: solid;
+  border-style: var(--fsds-chip-design-root-border-style, solid);
   white-space: nowrap;
   user-select: none;
-  background-color: var(--fsds-chip-color-background-default, #fafafa);
-  color: var(--fsds-chip-color-foreground-default, #141414);
-  border-color: var(--fsds-chip-color-border-default, #a0a0a1);
-  border-width: var(--fsds-chip-size-border, 1px);
-  padding-block: var(--fsds-chip-size-padding-vertical, 2px);
-  padding-inline: var(--fsds-chip-size-padding-horizontal, 8px);
-  border-radius: var(--fsds-chip-size-radius, 9999px);
-  font-size: var(--fsds-chip-text-size, 12px);
-  font-weight: var(--fsds-chip-text-weight, 500);
-  transition-duration: var(--fsds-chip-motion-duration-fast, 150ms);
+  background-color: var(--fsds-chip-design-root-background-fill, var(--fsds-chip-color-background-default, #fafafa));
+  color: var(--fsds-chip-design-root-foreground-color, var(--fsds-chip-color-foreground-default, #141414));
+  border-color: var(--fsds-chip-design-root-border-color, var(--fsds-chip-color-border-default, #a0a0a1));
+  border-width: var(--fsds-chip-design-root-border-width, var(--fsds-chip-size-border, 1px));
+  padding-block: var(--fsds-chip-design-root-spacing-padding-block, var(--fsds-chip-size-padding-vertical, 2px));
+  padding-inline: var(--fsds-chip-design-root-spacing-padding-inline, var(--fsds-chip-size-padding-horizontal, 8px));
+  border-radius: var(--fsds-chip-design-root-shape-radius, var(--fsds-chip-size-radius, 9999px));
+  font-size: var(--fsds-chip-design-root-typography-size, var(--fsds-chip-text-size, 12px));
+  font-weight: var(--fsds-chip-design-root-typography-weight, var(--fsds-chip-text-weight, 500));
+  transition-duration: var(--fsds-chip-design-root-motion-duration, var(--fsds-chip-motion-duration-fast, 150ms));
 
   &:hover:not([aria-disabled="true"]) {
-    background-color: var(--fsds-chip-color-background-hover, #d0d0d0);
+    background-color: var(--fsds-chip-design-hover-background-fill, var(--fsds-chip-color-background-hover, #d0d0d0));
   }
 }
 
@@ -59,8 +61,8 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  font-size: var(--fsds-chip-text-size, 12px);
-  font-weight: var(--fsds-chip-text-weight, 500);
+  font-size: var(--fsds-chip-design-text-typography-size, var(--fsds-chip-text-size, 12px));
+  font-weight: var(--fsds-chip-design-text-typography-weight, var(--fsds-chip-text-weight, 500));
 }
 /* @generated:end */
 
@@ -74,6 +76,7 @@
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

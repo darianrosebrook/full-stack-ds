@@ -4,7 +4,11 @@
       "literal": "currentColor",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "foreground.color",
+        "slot": "icon.design.root.foreground.color"
+      }
     },
     "box-sizing": {
       "literal": "border-box",
@@ -16,41 +20,73 @@
   "--sm": {
     "width": {
       "resolvesTo": "icon.size.sm",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "icon.design.condition-24964d7ed3a7.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "icon.size.sm",
-      "fallback": "16px"
+      "fallback": "16px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "icon.design.condition-24964d7ed3a7.sizing.height"
+      }
     }
   },
   "--md": {
     "width": {
       "resolvesTo": "icon.size.md",
-      "fallback": "20px"
+      "fallback": "20px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "icon.design.condition-dc35d39122c5.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "icon.size.md",
-      "fallback": "20px"
+      "fallback": "20px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "icon.design.condition-dc35d39122c5.sizing.height"
+      }
     }
   },
   "--lg": {
     "width": {
       "resolvesTo": "icon.size.lg",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "icon.design.condition-72800fd5573d.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "icon.size.lg",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "icon.design.condition-72800fd5573d.sizing.height"
+      }
     }
   },
   "--xl": {
     "width": {
       "resolvesTo": "icon.size.xl",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.width",
+        "slot": "icon.design.condition-bcfaa22e125a.sizing.width"
+      }
     },
     "height": {
       "resolvesTo": "icon.size.xl",
-      "fallback": "32px"
+      "fallback": "32px",
+      "design": {
+        "property": "sizing.height",
+        "slot": "icon.design.condition-bcfaa22e125a.sizing.height"
+      }
     }
   }
 }

@@ -1,22 +1,24 @@
+@import "../../primitives/box-model.css";
 @import "./ShowMore.tokens.css";
+@layer components.defaults {
 
 /* @generated:start styles */
 .show-more {
-  padding-block-start: var(--fsds-box-model-padding-block-start);
-  padding-block-end: var(--fsds-box-model-padding-block-end);
-  padding-inline-start: var(--fsds-box-model-padding-inline-start);
-  padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
-  min-width: var(--fsds-box-model-min-width);
-  max-width: var(--fsds-box-model-max-width);
-  height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
-  max-height: var(--fsds-box-model-max-height);
-  background-color: var(--fsds-show-more-color-background-default, #f7f7f7);
-  color: var(--fsds-show-more-color-foreground-secondary, #474647);
-  padding: var(--fsds-show-more-size-padding-default, 24px);
-  border-radius: var(--fsds-show-more-size-radius-default, 6px);
+  padding-block-start: var(--fsds-box-model-padding-block-start, var(--fsds-semantic-action-size-medium-padding-block, 4px));
+  padding-block-end: var(--fsds-box-model-padding-block-end, var(--fsds-semantic-action-size-medium-padding-block, 4px));
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, var(--fsds-semantic-action-size-medium-padding-inline, 8px));
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, var(--fsds-semantic-action-size-medium-padding-inline, 8px));
+  gap: var(--fsds-box-model-gap, var(--fsds-semantic-action-size-medium-gap, 8px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: var(--fsds-box-model-min-width, var(--fsds-semantic-action-size-medium-min-width, 32px));
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, var(--fsds-semantic-action-size-medium-min-height, 32px));
+  max-height: var(--fsds-box-model-max-height, none);
+  background-color: var(--fsds-show-more-design-root-background-fill, var(--fsds-show-more-color-background-default, #f7f7f7));
+  color: var(--fsds-show-more-design-root-foreground-color, var(--fsds-show-more-color-foreground-secondary, #474647));
+  padding: var(--fsds-show-more-design-root-spacing-padding, var(--fsds-show-more-size-padding-default, 24px));
+  border-radius: var(--fsds-show-more-design-root-shape-radius, var(--fsds-show-more-size-radius-default, 6px));
 }
 
 .show-more__content {
@@ -36,16 +38,17 @@
 .show-more__trigger {
   display: inline-flex;
   align-items: center;
-  color: var(--fsds-show-more-color-foreground-primary, #141414);
+  color: var(--fsds-show-more-design-trigger-foreground-color, var(--fsds-show-more-color-foreground-primary, #141414));
   background: none;
-  border-style: solid;
-  border-width: 1px;
-  border-color: var(--fsds-show-more-color-border-default, #b8b8b8);
-  padding: 0;
+  border-style: var(--fsds-show-more-design-trigger-border-style, solid);
+  border-width: var(--fsds-show-more-design-trigger-border-width, 1px);
+  border-color: var(--fsds-show-more-design-trigger-border-color, var(--fsds-show-more-color-border-default, #b8b8b8));
+  padding: var(--fsds-show-more-design-trigger-spacing-padding, 0);
   cursor: pointer;
 }
 /* @generated:end */
 
+}
 /* @custom:start overrides */
 
 /* @custom:end */

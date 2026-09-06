@@ -135,6 +135,7 @@ export function toFigmaComponentDescriptor(ir: ComponentIR): FigmaComponentDescr
       defaultExpr: prop.defaultExpr ?? null,
       nodeKind: prop.nodeKind ?? null,
     })),
+    designBindings: ir.designBindings,
     variants: ir.variants,
     states: ir.states,
     classRecipe: ir.classRecipe,

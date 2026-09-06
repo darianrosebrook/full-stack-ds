@@ -118,6 +118,812 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "card.design.root.background.fill",
+      "cssVar": "--fsds-card-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "card.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "card.design.root.border.color",
+      "cssVar": "--fsds-card-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "card.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "card.design.root.foreground.color",
+      "cssVar": "--fsds-card-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "card.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "card.design.root.spacing.padding",
+      "cssVar": "--fsds-card-design-root-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "16px",
+      "resolvesTo": "card.size.padding.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "card.design.root.shape.radius",
+      "cssVar": "--fsds-card-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "8px",
+      "resolvesTo": "card.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "card.design.root.spacing.gap",
+      "cssVar": "--fsds-card-design-root-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "4px",
+      "resolvesTo": "card.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "card.design.root.typography.line-height",
+      "cssVar": "--fsds-card-design-root-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1.5",
+      "resolvesTo": "card.typography.lineHeight.normal",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "card.design.root.border.style",
+      "cssVar": "--fsds-card-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "card.design.root.border.width",
+      "cssVar": "--fsds-card-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "card.design.root.elevation.shadow",
+      "cssVar": "--fsds-card-design-root-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
+      "resolvesTo": "card.elevation.resting",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "card.design.root.motion.duration",
+      "cssVar": "--fsds-card-design-root-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "150ms",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "motion.easing",
+      "group": "motion",
+      "valueType": "easing",
+      "slot": "card.design.root.motion.easing",
+      "cssVar": "--fsds-card-design-root-motion-easing",
+      "cssProperty": "transition-timing-function",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "card.design.condition-0e2417fefe62.background.fill",
+      "cssVar": "--fsds-card-design-condition-0e2417fefe62-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".card--interactive:hover",
+      "part": null,
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "card.color.background.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--interactive:hover"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "card.design.condition-0e2417fefe62.elevation.shadow",
+      "cssVar": "--fsds-card-design-condition-0e2417fefe62-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": ".card--interactive:hover",
+      "part": null,
+      "defaultValue": "0px 2px 4px #0000000f, 0px 4px 8px #0000001a",
+      "resolvesTo": "card.elevation.raised",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--interactive:hover"
+    },
+    {
+      "property": "elevation.shadow",
+      "group": "elevation",
+      "valueType": "shadow",
+      "slot": "card.design.condition-b595dc1094f9.elevation.shadow",
+      "cssVar": "--fsds-card-design-condition-b595dc1094f9-elevation-shadow",
+      "cssProperty": "box-shadow",
+      "selectorKey": ".card--interactive:active",
+      "part": null,
+      "defaultValue": "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",
+      "resolvesTo": "card.elevation.resting",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--interactive:active"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "card.design.focus.focus.width",
+      "cssVar": "--fsds-card-design-focus-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "card.focus.ring.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card:focus-visible"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "card.design.focus.focus.color",
+      "cssVar": "--fsds-card-design-focus-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "card.color.focus.ring",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card:focus-visible"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "card.design.focus.focus.offset",
+      "cssVar": "--fsds-card-design-focus-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "card.focus.ring.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card:focus-visible"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "card.design.focus.focus.style",
+      "cssVar": "--fsds-card-design-focus-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card:focus-visible"
+    },
+    {
+      "property": "border.inline-start.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "card.design.condition-0d72af7a8245.border.inline-start.width",
+      "cssVar": "--fsds-card-design-condition-0d72af7a8245-border-inline-start-width",
+      "cssProperty": "border-inline-start-width",
+      "selectorKey": "--completed",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "card.size.statusAccent.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--completed"
+    },
+    {
+      "property": "border.inline-start.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "card.design.condition-0d72af7a8245.border.inline-start.color",
+      "cssVar": "--fsds-card-design-condition-0d72af7a8245-border-inline-start-color",
+      "cssProperty": "border-inline-start-color",
+      "selectorKey": "--completed",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "card.color.statusAccent.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--completed"
+    },
+    {
+      "property": "border.inline-start.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "card.design.condition-35277c40062a.border.inline-start.width",
+      "cssVar": "--fsds-card-design-condition-35277c40062a-border-inline-start-width",
+      "cssProperty": "border-inline-start-width",
+      "selectorKey": "--in-progress",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "card.size.statusAccent.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--in-progress"
+    },
+    {
+      "property": "border.inline-start.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "card.design.condition-35277c40062a.border.inline-start.color",
+      "cssVar": "--fsds-card-design-condition-35277c40062a-border-inline-start-color",
+      "cssProperty": "border-inline-start-color",
+      "selectorKey": "--in-progress",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "card.color.statusAccent.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--in-progress"
+    },
+    {
+      "property": "border.inline-start.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "card.design.condition-0ece19181290.border.inline-start.width",
+      "cssVar": "--fsds-card-design-condition-0ece19181290-border-inline-start-width",
+      "cssProperty": "border-inline-start-width",
+      "selectorKey": "--planned",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "card.size.statusAccent.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--planned"
+    },
+    {
+      "property": "border.inline-start.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "card.design.condition-0ece19181290.border.inline-start.color",
+      "cssVar": "--fsds-card-design-condition-0ece19181290-border-inline-start-color",
+      "cssProperty": "border-inline-start-color",
+      "selectorKey": "--planned",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "card.color.statusAccent.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--planned"
+    },
+    {
+      "property": "border.inline-start.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "card.design.condition-ddee479df9ee.border.inline-start.width",
+      "cssVar": "--fsds-card-design-condition-ddee479df9ee-border-inline-start-width",
+      "cssProperty": "border-inline-start-width",
+      "selectorKey": "--deprecated",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "card.size.statusAccent.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--deprecated"
+    },
+    {
+      "property": "border.inline-start.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "card.design.condition-ddee479df9ee.border.inline-start.color",
+      "cssVar": "--fsds-card-design-condition-ddee479df9ee-border-inline-start-color",
+      "cssProperty": "border-inline-start-color",
+      "selectorKey": "--deprecated",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "card.color.statusAccent.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--deprecated"
+    },
+    {
+      "property": "border.inline-start.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "card.design.condition-b5aef02c39e1.border.inline-start.width",
+      "cssVar": "--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width",
+      "cssProperty": "border-inline-start-width",
+      "selectorKey": "--category",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "card.size.statusAccent.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--category"
+    },
+    {
+      "property": "border.inline-start.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "card.design.condition-b5aef02c39e1.border.inline-start.color",
+      "cssVar": "--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color",
+      "cssProperty": "border-inline-start-color",
+      "selectorKey": "--category",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "card.color.statusAccent.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--category"
+    },
+    {
+      "property": "border.inline-start.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "card.design.condition-a5c1a383a389.border.inline-start.width",
+      "cssVar": "--fsds-card-design-condition-a5c1a383a389-border-inline-start-width",
+      "cssProperty": "border-inline-start-width",
+      "selectorKey": "--complexity",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "card.size.statusAccent.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--complexity"
+    },
+    {
+      "property": "border.inline-start.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "card.design.condition-a5c1a383a389.border.inline-start.color",
+      "cssVar": "--fsds-card-design-condition-a5c1a383a389-border-inline-start-color",
+      "cssProperty": "border-inline-start-color",
+      "selectorKey": "--complexity",
+      "part": null,
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "card.color.statusAccent.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--complexity"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "card.design.condition-6f2ce0f02c89.spacing.padding",
+      "cssVar": "--fsds-card-design-condition-6f2ce0f02c89-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "--inset",
+      "part": null,
+      "defaultValue": "8px",
+      "resolvesTo": "card.size.padding.inset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card--inset"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "card.design.header.spacing.gap",
+      "cssVar": "--fsds-card-design-header-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "4px",
+      "resolvesTo": "card.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__header"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "card.design.header.typography.line-height",
+      "cssVar": "--fsds-card-design-header-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "1",
+      "resolvesTo": "card.typography.lineHeight.heading",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__header"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "card.design.header.foreground.color",
+      "cssVar": "--fsds-card-design-header-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "header",
+      "part": "header",
+      "defaultValue": "#141414",
+      "resolvesTo": "card.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__header"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "card.design.media.shape.radius",
+      "cssVar": "--fsds-card-design-media-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "media",
+      "part": "media",
+      "defaultValue": "8px",
+      "resolvesTo": "card.size.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__media"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "card.design.content.spacing.gap",
+      "cssVar": "--fsds-card-design-content-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "4px",
+      "resolvesTo": "card.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__content"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "card.design.content.foreground.color",
+      "cssVar": "--fsds-card-design-content-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "content",
+      "part": "content",
+      "defaultValue": "#141414",
+      "resolvesTo": "card.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__content"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "card.design.footer.spacing.gap",
+      "cssVar": "--fsds-card-design-footer-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "4px",
+      "resolvesTo": "card.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__footer"
+    },
+    {
+      "property": "border.top.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "card.design.footer.border.top.color",
+      "cssVar": "--fsds-card-design-footer-border-top-color",
+      "cssProperty": "border-top-color",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "card.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__footer"
+    },
+    {
+      "property": "border.top.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "card.design.footer.border.top.style",
+      "cssVar": "--fsds-card-design-footer-border-top-style",
+      "cssProperty": "border-top-style",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__footer"
+    },
+    {
+      "property": "border.top.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "card.design.footer.border.top.width",
+      "cssVar": "--fsds-card-design-footer-border-top-width",
+      "cssProperty": "border-top-width",
+      "selectorKey": "footer",
+      "part": "footer",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__footer"
+    },
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "card.design.actions.spacing.gap",
+      "cssVar": "--fsds-card-design-actions-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "actions",
+      "part": "actions",
+      "defaultValue": "4px",
+      "resolvesTo": "card.size.gap.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__actions"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "card.design.badge.background.fill",
+      "cssVar": "--fsds-card-design-badge-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "badge",
+      "part": "badge",
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "card.color.badge.accent.background",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__badge"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "card.design.badge.foreground.color",
+      "cssVar": "--fsds-card-design-badge-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "badge",
+      "part": "badge",
+      "defaultValue": "#ffffff",
+      "resolvesTo": "card.color.badge.accent.foreground",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__badge"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "card.design.badge.spacing.padding",
+      "cssVar": "--fsds-card-design-badge-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "badge",
+      "part": "badge",
+      "defaultValue": "2px 8px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__badge"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "card.design.badge.shape.radius",
+      "cssVar": "--fsds-card-design-badge-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "badge",
+      "part": "badge",
+      "defaultValue": "9999px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__badge"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "card.design.badge.typography.size",
+      "cssVar": "--fsds-card-design-badge-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "badge",
+      "part": "badge",
+      "defaultValue": "0.75em",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__badge"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "card.design.badge.typography.line-height",
+      "cssVar": "--fsds-card-design-badge-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "badge",
+      "part": "badge",
+      "defaultValue": "1.4",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__badge"
+    },
+    {
+      "property": "typography.size",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "card.design.note.typography.size",
+      "cssVar": "--fsds-card-design-note-typography-size",
+      "cssProperty": "font-size",
+      "selectorKey": "note",
+      "part": "note",
+      "defaultValue": "0.875em",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__note"
+    },
+    {
+      "property": "typography.line-height",
+      "group": "typography",
+      "valueType": "dimension",
+      "slot": "card.design.note.typography.line-height",
+      "cssVar": "--fsds-card-design-note-typography-line-height",
+      "cssProperty": "line-height",
+      "selectorKey": "note",
+      "part": "note",
+      "defaultValue": "1.5",
+      "resolvesTo": "card.typography.lineHeight.normal",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".card__note"
+    }
+  ],
   "variants": {
     "status": [
       "completed",

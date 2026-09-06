@@ -2,19 +2,35 @@
   "root": {
     "background-color": {
       "resolvesTo": "show-more.color.background.default",
-      "fallback": "#f7f7f7"
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "show-more.design.root.background.fill"
+      }
     },
     "color": {
       "resolvesTo": "show-more.color.foreground.secondary",
-      "fallback": "#474647"
+      "fallback": "#474647",
+      "design": {
+        "property": "foreground.color",
+        "slot": "show-more.design.root.foreground.color"
+      }
     },
     "padding": {
       "resolvesTo": "show-more.size.padding.default",
-      "fallback": "24px"
+      "fallback": "24px",
+      "design": {
+        "property": "spacing.padding",
+        "slot": "show-more.design.root.spacing.padding"
+      }
     },
     "border-radius": {
       "resolvesTo": "show-more.size.radius.default",
-      "fallback": "6px"
+      "fallback": "6px",
+      "design": {
+        "property": "shape.radius",
+        "slot": "show-more.design.root.shape.radius"
+      }
     }
   },
   "content": {
@@ -84,7 +100,11 @@
     },
     "color": {
       "resolvesTo": "show-more.color.foreground.primary",
-      "fallback": "#141414"
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "show-more.design.trigger.foreground.color"
+      }
     },
     "background": {
       "literal": "none",
@@ -96,23 +116,39 @@
       "literal": "solid",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.style",
+        "slot": "show-more.design.trigger.border.style"
+      }
     },
     "border-width": {
       "literal": "1px",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "border.width",
+        "slot": "show-more.design.trigger.border.width"
+      }
     },
     "border-color": {
       "resolvesTo": "show-more.color.border.default",
-      "fallback": "#b8b8b8"
+      "fallback": "#b8b8b8",
+      "design": {
+        "property": "border.color",
+        "slot": "show-more.design.trigger.border.color"
+      }
     },
     "padding": {
       "literal": "0",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "show-more.design.trigger.spacing.padding"
+      }
     },
     "cursor": {
       "literal": "pointer",

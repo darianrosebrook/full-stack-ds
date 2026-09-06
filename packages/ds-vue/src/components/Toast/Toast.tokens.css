@@ -18,23 +18,6 @@
   --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
 }
 
-.toast {
-  --fsds-box-model-padding: 0;
-  --fsds-box-model-padding-block: 0;
-  --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
-  --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
-  --fsds-box-model-padding-inline: 0;
-  --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
-  --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
-  --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 8px);
-  --fsds-box-model-width: auto;
-  --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
-  --fsds-box-model-max-width: none;
-  --fsds-box-model-height: auto;
-  --fsds-box-model-min-height: 0;
-  --fsds-box-model-max-height: none;
-}
-
 .toast--info {
   --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #95dafb);
   --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #013ab0);

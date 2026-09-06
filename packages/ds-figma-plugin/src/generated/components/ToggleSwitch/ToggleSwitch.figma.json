@@ -98,6 +98,230 @@
       "nodeKind": null
     }
   ],
+  "designBindings": [
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "toggle-switch.design.root.background.fill",
+      "cssVar": "--fsds-toggle-switch-design-root-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "toggle-switch.color.background.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "toggle-switch.design.root.foreground.color",
+      "cssVar": "--fsds-toggle-switch-design-root-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#141414",
+      "resolvesTo": "toggle-switch.color.foreground.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch"
+    },
+    {
+      "property": "border.color",
+      "group": "border",
+      "valueType": "color",
+      "slot": "toggle-switch.design.root.border.color",
+      "cssVar": "--fsds-toggle-switch-design-root-border-color",
+      "cssProperty": "border-color",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "#b8b8b8",
+      "resolvesTo": "toggle-switch.color.border.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "toggle-switch.design.root.shape.radius",
+      "cssVar": "--fsds-toggle-switch-design-root-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "9999px",
+      "resolvesTo": "toggle-switch.border.radius.default",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch"
+    },
+    {
+      "property": "motion.duration",
+      "group": "motion",
+      "valueType": "duration",
+      "slot": "toggle-switch.design.root.motion.duration",
+      "cssVar": "--fsds-toggle-switch-design-root-motion-duration",
+      "cssProperty": "transition-duration",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "150ms",
+      "resolvesTo": "toggle-switch.motion.duration.fast",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch"
+    },
+    {
+      "property": "border.style",
+      "group": "border",
+      "valueType": "enum",
+      "slot": "toggle-switch.design.root.border.style",
+      "cssVar": "--fsds-toggle-switch-design-root-border-style",
+      "cssProperty": "border-style",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "solid",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch"
+    },
+    {
+      "property": "border.width",
+      "group": "border",
+      "valueType": "dimension",
+      "slot": "toggle-switch.design.root.border.width",
+      "cssVar": "--fsds-toggle-switch-design-root-border-width",
+      "cssProperty": "border-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "1px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "toggle-switch.design.hover.background.fill",
+      "cssVar": "--fsds-toggle-switch-design-hover-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "hover",
+      "part": null,
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "toggle-switch.color.background.hover",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch:hover:not(:disabled)"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "toggle-switch.design.condition-0530483abaa8.background.fill",
+      "cssVar": "--fsds-toggle-switch-design-condition-0530483abaa8-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "[aria-checked=\"true\"]",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "toggle-switch.color.background.checked",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch[aria-checked=\"true\"]"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "toggle-switch.design.disabled.background.fill",
+      "cssVar": "--fsds-toggle-switch-design-disabled-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "disabled",
+      "part": null,
+      "defaultValue": "#d0d0d0",
+      "resolvesTo": "toggle-switch.color.background.disabled",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch:disabled"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "toggle-switch.design.focus.focus.width",
+      "cssVar": "--fsds-toggle-switch-design-focus-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "toggle-switch.focus.ring.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "toggle-switch.design.focus.focus.color",
+      "cssVar": "--fsds-toggle-switch-design-focus-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "toggle-switch.focus.ring.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "toggle-switch.design.focus.focus.style",
+      "cssVar": "--fsds-toggle-switch-design-focus-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "solid",
+      "resolvesTo": "toggle-switch.focus.ring.style",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch:focus-visible:not(:disabled)"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "toggle-switch.design.focus.focus.offset",
+      "cssVar": "--fsds-toggle-switch-design-focus-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": "focus",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "toggle-switch.focus.ring.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".toggle-switch:focus-visible:not(:disabled)"
+    }
+  ],
   "variants": {
     "size": [
       "small",
