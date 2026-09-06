@@ -5,7 +5,7 @@ status: implemented
 title: Component design property bindings
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: b9fc2c41
+verified_at_commit: 75fc3357
 governs:
   - packages/ds-codegen/src/design-properties.ts
   - packages/ds-contracts/component.styles.schema.json
@@ -68,7 +68,7 @@ See [the box-model contract](./box-model-primitive.md) for default and shorthand
 
 The mechanical pass exposes common visual properties, existing token-backed sizing, and spacing. Literal intrinsic sizing, layout algorithms, arbitrary transforms, animation triggers, images, and content remain component/composition decisions. Layout registry entries require explicit adoption. Legacy token names remain compatible; this pass does not claim that every historical unused component token has acquired a meaningful consumer. The existing unread-token presentation remains honest for that residual surface.
 
-The inspector has a Design properties section grouped by source part/condition and property family. It edits the dedicated slot without repointing the shared semantic default. Empty input clears the override. The existing box editor now targets the selected component's boundary, and its read proof includes the imported shared box controls.
+The inspector has a Design properties section grouped by source part/condition and property family. It edits the dedicated slot through the generated Input without repointing the shared semantic default. Empty input clears the override. Part selection reuses the inspector's existing native selector, preserving keyboard behavior; moving between parts retains each override. The existing box editor now targets the selected component's boundary, and its read proof includes the imported shared box controls.
 
 ## Evidence and limits
 
