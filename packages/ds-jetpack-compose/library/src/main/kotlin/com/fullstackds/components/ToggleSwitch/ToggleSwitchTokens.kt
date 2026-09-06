@@ -8,5 +8,43 @@ import com.fullstackds.tokens.ComponentTokenScopes
 
 // @generated:start component
 val toggleSwitchTokenScopes: ComponentTokenScopes = mapOf(
+    "root" to mapOf(
+        "box-model.padding-block-start" to ComponentTokenDefinition(
+            name = "box-model.padding-block-start",
+            cssVar = "--fsds-box-model-padding-block-start",
+            ref = "semantic.action.size.medium.padding-block",
+            fallback = "4px",
+        ),
+        "box-model.padding-block-end" to ComponentTokenDefinition(
+            name = "box-model.padding-block-end",
+            cssVar = "--fsds-box-model-padding-block-end",
+            ref = "semantic.action.size.medium.padding-block",
+            fallback = "4px",
+        ),
+        "box-model.padding-inline-start" to ComponentTokenDefinition(
+            name = "box-model.padding-inline-start",
+            cssVar = "--fsds-box-model-padding-inline-start",
+            ref = "semantic.action.size.medium.padding-inline",
+            fallback = "8px",
+        ),
+        "box-model.padding-inline-end" to ComponentTokenDefinition(
+            name = "box-model.padding-inline-end",
+            cssVar = "--fsds-box-model-padding-inline-end",
+            ref = "semantic.action.size.medium.padding-inline",
+            fallback = "8px",
+        ),
+        "box-model.min-width" to ComponentTokenDefinition(
+            name = "box-model.min-width",
+            cssVar = "--fsds-box-model-min-width",
+            ref = "semantic.action.size.medium.min-width",
+            fallback = "32px",
+        ),
+        "box-model.min-height" to ComponentTokenDefinition(
+            name = "box-model.min-height",
+            cssVar = "--fsds-box-model-min-height",
+            ref = "semantic.action.size.medium.min-height",
+            fallback = "32px",
+        ),
+    ),
 )
 // @generated:end

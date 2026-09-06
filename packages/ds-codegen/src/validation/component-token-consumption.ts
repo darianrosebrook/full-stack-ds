@@ -7,7 +7,7 @@ import type { ValidationIssue } from "../validate.js";
 import { generateReactNativeComponentSource } from "../frameworks/react-native/component-source.js";
 import { consumedNativeTokenScopes, reactNativeTokenReads } from "../frameworks/react-native/token-consumption.js";
 
-import { nativeSlotArguments, nativeTokenScopes } from "../frameworks/native-token-consumption.js";
+import { nativeSlotArguments, nativeTokenScopes, composeTokenReads, consumedComposeTokenScopes } from "../frameworks/native-token-consumption.js";
 import { generateJetpackComposeComponentSource } from "../frameworks/jetpack-compose/component-source.js";
 import { createSwiftUIEmitter } from "../frameworks/swift/swiftui/factory.js";
 
@@ -22,7 +22,7 @@ export function inspectComponentTokenConsumption(contract: ComponentContract, wo
   const nativeFiles = generateReactNativeComponentSource(ir);
   const native = new Set([
     ...(admitted("react-native") ? consumedNativeTokenScopes(ir, reactNativeTokenReads([nativeFiles.componentFile, nativeFiles.stylesFile])) : []),
-    ...(admitted("jetpack-compose") ? nativeTokenScopes(ir, nativeSlotArguments(generateJetpackComposeComponentSource(ir), ["layeredSlot"])) : []),
+    ...(admitted("jetpack-compose") ? consumedComposeTokenScopes(ir, composeTokenReads(generateJetpackComposeComponentSource(ir))) : []),
     ...(admitted("swiftui") ? nativeTokenScopes(ir, nativeSlotArguments(createSwiftUIEmitter().emitComponent(ir, { componentsRoot: "packages/ds-swiftui/Sources/DsSwiftUI/Components", contractsRoot: "packages/ds-contracts" }).map(file => file.contents).join("\n"), ["colorSlot", "pxSlot"]), true) : []),
   ].flatMap(scope => scope.values.map(value => value.name)));
   const behavior = new Set<string>();

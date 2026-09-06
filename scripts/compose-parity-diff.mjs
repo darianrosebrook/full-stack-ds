@@ -1,43 +1,14 @@
 #!/usr/bin/env node
-/**
- * Compose ↔ React Native token-usage parity gate (FEAT-COMPOSE-RN-PARITY-01,
- * extended by FEAT-COMPOSE-STATIC-CHROME-HYGIENE-01 and
- * FEAT-COMPOSE-TYPOGRAPHY-CONTENT-01).
- *
- * For every jetpack-compose ADMITTED component, proves against the generated
- * trees:
- *
- *   1. Scope parity: the set of `--fsds-*` custom properties emitted in the
- *      Compose `<Name>Tokens.kt` equals the set emitted in the RN
- *      `<Name>.tokens.ts` — identical scope vocabulary, per component,
- *      two-directional (a Compose-only or RN-only entry fails).
- *   2. Resolvability: every Compose scope entry carries a `ref` (semantic
- *      token the theme resolves) or a `literal`/`fallback` — no entry that
- *      the FsdsTheme chain (slot-name override -> semantic-ref -> literal ->
- *      fallback) cannot resolve.
- *   3. Usage parity (no dead lookups): every slot key the emitted Compose
- *      `<Name>.kt` looks up must exist in the component's token scopes
- *      (exact keys, or a declared key under a dynamic-concatenation prefix);
- *      and every chrome-role slot the RN `<Name>.styles.ts` consumes must be
- *      consumed by the Compose emission. The claimed chrome-role set is per
- *      emitter path: static-content claims box-model padding/min-height +
- *      base color tones + radius; button claims the size-suffixed slots;
- *      toggle claims track/thumb. Typography-bearing content roots also claim
- *      the typography role (text.size.*, text.typography.fontWeight.*) —
- *      exactly the slots RN's Text styles consume.
- *   4. Content-color propagation: a static-content component whose scopes
- *      carry a base-tone foreground slot must provide it via
- *      LocalFsdsContentColor.
- *   5. API shape: `modifier: Modifier = Modifier` is the first optional
- *      parameter of every generated composable (AOSP Compose API guideline).
- *
- * The gate is a local oracle like swift-parity-diff: read-only over the
- * generated trees, exits nonzero on divergence. Wired into CI and pre-push
- * under the generated-drift family so token-scope AND token-usage parity
- * cannot silently rot.
+/** Native token integrity over the generated trees. Each target emits its
+ * own consumed slots. Shared addresses must agree; every Compose lookup must
+ * have a definition in the addressed scope and every definition must be used.
+ * Supported chrome roles, content propagation and Compose API shape remain
+ * cross-target obligations. This static gate does not prove visual parity.
  */
 import { readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { composeTokenReads, composeTokenDefinitions } from "../packages/ds-codegen/dist/frameworks/native-token-consumption.js";
 
 const ROOT = join(import.meta.dirname, "..");
 const COMPOSE_ROOT = join(
@@ -52,46 +23,11 @@ const admitted = (compose?.components ?? []).sort();
 
 let failures = 0;
 
-/** All `--fsds-*` custom-property names in a generated source file. */
-function cssVarSet(source) {
-  return new Set([...source.matchAll(/"(--fsds-[a-z0-9-]+)"/g)].map((m) => m[1]));
-}
-
-/** All scope/slot keys declared in a `<Name>Tokens.kt` (map keys). */
-function tokensKeySet(tokensSource) {
-  return new Set(
-    [...tokensSource.matchAll(/^\s*"([^"]+)" to (?:mapOf|ComponentTokenDefinition)/gm)]
-      .map((m) => m[1]),
-  );
-}
-
-/** Slot keys the emitted Compose component looks up (`layeredSlot("…")` /
- *  `get("…")` with a string literal). Dynamic concatenation lookups
- *  (`layeredSlot("text.typography.fontWeight." + weight.name.lowercase())`)
- *  are captured as PREFIXES: any declared key starting with the literal
- *  prefix counts as consumed.
- *  Returns { exact: Set<string>, prefixes: Set<string> }. */
-function composeConsumedKeys(ktSource) {
-  const exact = new Set();
-  const prefixes = new Set();
-  for (const m of ktSource.matchAll(/(?:layeredSlot|get)\("([^"]*)"\)/g)) {
-    if (m[1] !== "") exact.add(m[1]);
-  }
-  for (const m of ktSource.matchAll(/(?:layeredSlot|get)\("([^"]*)"\s*\+/g)) {
-    if (m[1] !== "") prefixes.add(m[1]);
-  }
-  // Multi-line `layeredSlot( when (…) { … -> "slot.key" })` lookups (the
-  // weight-axis vocabulary): the when-arm string literals ARE the lookup keys.
-  for (const m of ktSource.matchAll(/->\s*"([^"]+)"\s*,?$/gm)) {
-    if (m[1] !== "") exact.add(m[1]);
-  }
-  return { exact, prefixes };
-}
-
-/** True when a declared key set covers a consumed key (exact or prefix). */
-function isConsumed(declared, consumed, key) {
-  if (consumed.exact.has(key)) return true;
-  return [...consumed.prefixes].some((p) => key.startsWith(p));
+/** Shared slot identity survives target-specific projection. RN definitions
+ * carry the same name/cssVar metadata even when native value units differ. */
+function rnTokenIdentities(source) {
+  return new Map([...source.matchAll(/name:\s*"([^"]+)",\s*cssVar:\s*"([^"]+)"/g)]
+    .map(match => [match[1], match[2]]));
 }
 
 /** Slot keys the RN `<Name>.styles.ts` consumes (`tokens.<scope>?.["…"]`). */
@@ -104,8 +40,8 @@ function rnConsumedKeys(stylesSource) {
 
 /** The claimed chrome-role set, per emitter path. Each path claims exactly
  *  the roles it realizes: static-content claims box-model padding/min-height +
- *  base color tones + radius; the projected-children (button) path realizes
- *  padding/min-height through the size-suffixed slots; the native-toggle path
+ *  base color tones + radius; the projected-children (button) path also claims
+ *  minimum width. Both use the canonical box-model slots; the native-toggle path
  *  claims none of the chrome roles (its realization is the track/thumb color
  *  surface). State variants (`.foreground.hover`, `.background.active`) and
  *  per-part tones (Stat's `.foreground.value`/`.label`) are never claimed. */
@@ -115,7 +51,7 @@ const CHROME_ROLE_STATIC = new RegExp(
   [BASE_BACKGROUND.source, BASE_FOREGROUND.source, "\\.(?:size|border)\\.radius(?:\\.|$)", "box-model\\.padding", "box-model\\.min-height(?:\\.|$)"].join("|"),
 );
 const CHROME_ROLE_BUTTON = new RegExp(
-  [BASE_BACKGROUND.source, BASE_FOREGROUND.source, "\\.(?:size|border)\\.radius(?:\\.|$)", "size\\.padding", "size\\.minHeight"].join("|"),
+  [CHROME_ROLE_STATIC.source, "box-model\\.min-width(?:\\.|$)"].join("|"),
 );
 const CHROME_ROLE_TOGGLE = /(?!)/;
 /** Font-size role: claimed by the prop-text leaf path (the corpus's
@@ -164,120 +100,78 @@ function firstDefaultParam(ktSource, name) {
   return firstWithDefault?.trim() ?? null;
 }
 
-for (const name of admitted) {
-  const composeTokens = join(COMPOSE_ROOT, name, `${name}Tokens.kt`);
-  const composeKt = join(COMPOSE_ROOT, name, `${name}.kt`);
-  const rnTokens = join(RN_ROOT, name, `${name}.tokens.ts`);
-  const rnStyles = join(RN_ROOT, name, `${name}.styles.ts`);
-  if (!existsSync(composeTokens) || !existsSync(composeKt)) {
-    console.error(`[compose-parity] MISSING compose emission: ${name}`);
-    failures += 1;
-    continue;
-  }
-  if (!existsSync(rnTokens)) {
-    console.error(`[compose-parity] MISSING RN reference: ${rnTokens}`);
-    failures += 1;
-    continue;
-  }
-  const c = readFileSync(composeTokens, "utf8");
-  const kt = readFileSync(composeKt, "utf8");
-  const r = readFileSync(rnTokens, "utf8");
-  const cSet = cssVarSet(c);
-  const rSet = cssVarSet(r);
-
-  const onlyCompose = [...cSet].filter((v) => !rSet.has(v));
-  const onlyRn = [...rSet].filter((v) => !cSet.has(v));
-  if (onlyCompose.length > 0 || onlyRn.length > 0) {
-    failures += 1;
-    console.error(
-      `[compose-parity] SCOPE DIVERGENCE ${name}: compose=${cSet.size} rn=${rSet.size}` +
-        (onlyCompose.length > 0 ? ` compose-only=${onlyCompose.join(",")}` : "") +
-        (onlyRn.length > 0 ? ` rn-only=${onlyRn.join(",")}` : ""),
-    );
-    continue;
-  }
-
-  // Resolvability: every ComponentTokenDefinition carries ref OR literal/fallback.
-  const defs = [...c.matchAll(/ComponentTokenDefinition\(([^)]*)\)/g)].map(
-    (m) => m[1],
-  );
-  const unresolvable = defs.filter(
-    (body) =>
-      !/ref\s*=/.test(body) && !/literal\s*=/.test(body) && !/fallback\s*=/.test(body),
-  );
-  if (unresolvable.length > 0) {
-    failures += 1;
-    console.error(
-      `[compose-parity] UNRESOLVABLE ${name}: ${unresolvable.length} scope entr(ies) carry neither ref nor literal/fallback`,
-    );
-    continue;
-  }
-
-  // Usage parity: no dead lookups, every consumed key exists, and every
-  // RN-consumed chrome/typography-role slot is consumed by the Compose
-  // emission (exact or via the dynamic-prefix lookups).
-  const declared = tokensKeySet(c);
-  const consumed = composeConsumedKeys(kt);
-  const deadExact = [...consumed.exact].filter((k) => !declared.has(k));
-  const deadPrefix = [...consumed.prefixes].filter(
-    (p) => ![...declared].some((k) => k.startsWith(p)),
-  );
-  if (deadExact.length > 0 || deadPrefix.length > 0) {
-    failures += 1;
-    console.error(
-      `[compose-parity] DEAD LOOKUP ${name}: exact keys not declared: ${deadExact.join(",")}${deadPrefix.length > 0 ? `; prefixes with no declared key: ${deadPrefix.join(",")}` : ""}`,
-    );
-    continue;
-  }
-  if (existsSync(rnStyles)) {
-    const path = emitterPath(kt);
-    const chromeRole = chromeRoleForPath(path);
-    const isTypographyBearing = [...declared].some((k) => k.includes("text.size."));
-    const rnConsumed = [...rnConsumedKeys(readFileSync(rnStyles, "utf8"))].filter(
-      (k) => chromeRole.test(k) || (isTypographyBearing && TYPO_ROLE.test(k)),
-    );
-    const missing = rnConsumed.filter((k) => !isConsumed(declared, consumed, k));
-    if (missing.length > 0) {
-      failures += 1;
-      console.error(
-        `[compose-parity] USAGE DIVERGENCE ${name} (${path}): RN consumes chrome/typography slots the Compose emission does not: ${missing.join(",")}`,
-      );
-      continue;
+export function inspectComposeTokens({ name, tokens, component, rnTokens, rnStyles }) {
+  const issues = [];
+  const definitions = composeTokenDefinitions(tokens);
+  const reads = composeTokenReads(component);
+  const declared = new Set(definitions.map(definition => definition.key));
+  const rnIdentities = rnTokenIdentities(rnTokens);
+  for (const definition of definitions) {
+    const address = `${definition.scope}/${definition.key}`;
+    if (definition.name !== definition.key || !definition.cssVar?.startsWith("--fsds-")) {
+      issues.push(`INVALID IDENTITY ${address}`);
+    }
+    const rnIdentity = rnIdentities.get(definition.key);
+    if (rnIdentity !== undefined && definition.cssVar !== rnIdentity) {
+      issues.push(`SHARED IDENTITY ${address}: Compose=${definition.cssVar} RN=${rnIdentity}`);
+    }
+    if (definition.ref === undefined && definition.literal === undefined && definition.fallback === undefined) {
+      issues.push(`UNRESOLVABLE ${address}: no ref, literal or fallback`);
+    }
+    if (!reads.some(read => read.name === definition.key &&
+        (read.scope === undefined || read.scope === definition.scope))) {
+      issues.push(`UNCONSUMED ${address}`);
     }
   }
-
-  // Content-color propagation: static-content components with a classified
-  // BASE-TONE foreground slot (the same grammar the emitter resolves) must
-  // provide it via LocalFsdsContentColor. Per-part tones (Stat's value/label)
-  // are not content tones and impose no obligation.
-  const isStaticContent = kt.includes("content: @Composable () -> Unit");
-  const hasBaseForegroundSlot = [...declared].some((k) => BASE_FOREGROUND.test(k));
-  if (isStaticContent && hasBaseForegroundSlot && !kt.includes("LocalFsdsContentColor")) {
-    failures += 1;
-    console.error(
-      `[compose-parity] CONTENT COLOR ${name}: static-content component carries a base foreground slot but never provides LocalFsdsContentColor`,
-    );
-    continue;
+  for (const read of reads) {
+    if (!definitions.some(definition => definition.key === read.name &&
+        (read.scope === undefined || read.scope === definition.scope))) {
+      issues.push(`DEAD LOOKUP ${read.scope ?? "layered"}/${read.name}`);
+    }
   }
-
-  // API shape: modifier is the first optional parameter.
-  const firstDefault = firstDefaultParam(kt, name);
-  if (firstDefault !== "modifier: Modifier = Modifier") {
-    failures += 1;
-    console.error(
-      `[compose-parity] MODIFIER ORDER ${name}: first defaulted parameter is '${firstDefault ?? "none"}' — must be 'modifier: Modifier = Modifier'`,
-    );
-    continue;
+  const path = emitterPath(component);
+  const chromeRole = chromeRoleForPath(path);
+  const isTypographyBearing = [...rnIdentities.keys()].some(key => key.includes("text.size."));
+  const rnConsumed = [...rnConsumedKeys(rnStyles)].filter(key =>
+    chromeRole.test(key) || (isTypographyBearing && TYPO_ROLE.test(key)));
+  for (const key of rnConsumed) {
+    if (!reads.some(read => read.name === key)) issues.push(`USAGE DIVERGENCE ${path}: ${key}`);
   }
-
-  console.log(`[compose-parity] OK ${name}: ${cSet.size} cssVars, scopes match, ${defs.length} definitions resolvable, ${consumed.exact.size + consumed.prefixes.size} slot lookups all declared, modifier first-optional`);
+  const isStaticContent = component.includes("content: @Composable () -> Unit");
+  if (isStaticContent && [...declared].some(key => BASE_FOREGROUND.test(key)) &&
+      !component.includes("LocalFsdsContentColor")) issues.push("CONTENT COLOR: missing LocalFsdsContentColor");
+  if (firstDefaultParam(component, name) !== "modifier: Modifier = Modifier") {
+    issues.push("MODIFIER ORDER: modifier must be first optional");
+  }
+  return issues;
 }
 
-console.log(
-  `\n[compose-parity] ${admitted.length} admitted component(s); RN corpus reference present for ${admitted.filter((n) => existsSync(join(RN_ROOT, n, `${n}.tokens.ts`))).length}.`,
-);
-if (failures > 0) {
-  console.error(`\n[compose-parity] FAIL — ${failures} divergence(s). Token scope/usage parity between Compose and RN is broken; fix the emitter or regenerate.`);
-  process.exit(1);
+export function auditComposeCorpus() {
+  if (!admitted.length) throw new Error("Compose component allowlist is empty or missing");
+  const results = [];
+  for (const name of admitted) {
+    const paths = {
+      tokens: join(COMPOSE_ROOT, name, `${name}Tokens.kt`),
+      component: join(COMPOSE_ROOT, name, `${name}.kt`),
+      rnTokens: join(RN_ROOT, name, `${name}.tokens.ts`),
+      rnStyles: join(RN_ROOT, name, `${name}.styles.ts`),
+    };
+    const missing = Object.values(paths).filter(path => !existsSync(path));
+    const issues = missing.length ? missing.map(path => `MISSING ${path}`) :
+      inspectComposeTokens({ name, ...Object.fromEntries(Object.entries(paths).map(([key, path]) =>
+        [key, readFileSync(path, "utf8")])) });
+    results.push({ name, issues });
+  }
+  return results;
 }
-console.log("[compose-parity] PASS — every admitted component's token scopes match RN, every emitted lookup resolves, chrome usage matches RN, and modifier is first-optional.");
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  for (const { name, issues } of auditComposeCorpus()) {
+    if (issues.length) {
+      failures += issues.length;
+      issues.forEach(issue => console.error(`[compose-parity] ${name}: ${issue}`));
+    } else console.log(`[compose-parity] OK ${name}: consumed definitions, shared identities, supported roles and API shape`);
+  }
+  console.log(`[compose-parity] ${admitted.length} allowlisted components; ${failures} failures.`);
+  process.exitCode = failures ? 1 : 0;
+}

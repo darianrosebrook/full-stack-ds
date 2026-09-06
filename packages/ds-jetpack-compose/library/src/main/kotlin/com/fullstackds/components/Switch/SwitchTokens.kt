@@ -8,5 +8,95 @@ import com.fullstackds.tokens.ComponentTokenScopes
 
 // @generated:start component
 val switchTokenScopes: ComponentTokenScopes = mapOf(
+    "root" to mapOf(
+        "box-model.padding-block-start" to ComponentTokenDefinition(
+            name = "box-model.padding-block-start",
+            cssVar = "--fsds-box-model-padding-block-start",
+            ref = "semantic.action.size.medium.padding-block",
+            fallback = "4px",
+        ),
+        "box-model.padding-block-end" to ComponentTokenDefinition(
+            name = "box-model.padding-block-end",
+            cssVar = "--fsds-box-model-padding-block-end",
+            ref = "semantic.action.size.medium.padding-block",
+            fallback = "4px",
+        ),
+        "box-model.padding-inline-start" to ComponentTokenDefinition(
+            name = "box-model.padding-inline-start",
+            cssVar = "--fsds-box-model-padding-inline-start",
+            ref = "semantic.action.size.medium.padding-inline",
+            fallback = "8px",
+        ),
+        "box-model.padding-inline-end" to ComponentTokenDefinition(
+            name = "box-model.padding-inline-end",
+            cssVar = "--fsds-box-model-padding-inline-end",
+            ref = "semantic.action.size.medium.padding-inline",
+            fallback = "8px",
+        ),
+        "box-model.min-width" to ComponentTokenDefinition(
+            name = "box-model.min-width",
+            cssVar = "--fsds-box-model-min-width",
+            ref = "semantic.action.size.medium.min-width",
+            fallback = "32px",
+        ),
+        "box-model.min-height" to ComponentTokenDefinition(
+            name = "box-model.min-height",
+            cssVar = "--fsds-box-model-min-height",
+            ref = "semantic.action.size.medium.min-height",
+            fallback = "32px",
+        ),
+        "switch.color.track.background.default" to ComponentTokenDefinition(
+            name = "switch.color.track.background.default",
+            cssVar = "--fsds-switch-color-track-background-default",
+            ref = "semantic.color.background.tertiary",
+            fallback = "#d0d0d0",
+        ),
+        "switch.color.track.border.default" to ComponentTokenDefinition(
+            name = "switch.color.track.border.default",
+            cssVar = "--fsds-switch-color-track-border-default",
+            ref = "semantic.color.border.subtle",
+            fallback = "#d0d0d0",
+        ),
+        "switch.color.thumb.background.default" to ComponentTokenDefinition(
+            name = "switch.color.thumb.background.default",
+            cssVar = "--fsds-switch-color-thumb-background-default",
+            ref = "semantic.color.background.primary",
+            fallback = "#ffffff",
+        ),
+        "switch.size.md.track.width" to ComponentTokenDefinition(
+            name = "switch.size.md.track.width",
+            cssVar = "--fsds-switch-size-md-track-width",
+            ref = "core.spacing.size.09",
+            fallback = "48px",
+        ),
+        "switch.size.md.track.height" to ComponentTokenDefinition(
+            name = "switch.size.md.track.height",
+            cssVar = "--fsds-switch-size-md-track-height",
+            ref = "core.spacing.size.07",
+            fallback = "24px",
+        ),
+    ),
+    "checked" to mapOf(
+        "switch.color.track.background.default" to ComponentTokenDefinition(
+            name = "switch.color.track.background.default",
+            cssVar = "--fsds-switch-color-track-background-default",
+            ref = "semantic.color.foreground.accent",
+            fallback = "#d92d2e",
+        ),
+        "switch.color.thumb.background.default" to ComponentTokenDefinition(
+            name = "switch.color.thumb.background.default",
+            cssVar = "--fsds-switch-color-thumb-background-default",
+            ref = "semantic.color.foreground.on.brand",
+            fallback = "#ffffff",
+        ),
+    ),
+    "disabled" to mapOf(
+        "switch.color.track.background.default" to ComponentTokenDefinition(
+            name = "switch.color.track.background.default",
+            cssVar = "--fsds-switch-color-track-background-default",
+            ref = "semantic.color.background.disabled",
+            fallback = "#d0d0d0",
+        ),
+    ),
 )
 // @generated:end

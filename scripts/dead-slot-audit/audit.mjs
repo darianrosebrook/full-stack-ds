@@ -9,7 +9,7 @@ import { mergeBoxModelDefaults } from '../../packages/ds-codegen/dist/box-model.
 import { analyzeCssTokenConsumption } from '../../packages/ds-codegen/dist/css-token-consumption.js';
 import { inspectComponentTokenConsumption, validateComponentTokenConsumption } from '../../packages/ds-codegen/dist/validation/component-token-consumption.js';
 
-import { nativeSlotArguments, nativeTokenScopes, nativeTokenDefinitionNames } from '../../packages/ds-codegen/dist/frameworks/native-token-consumption.js';
+import { nativeSlotArguments, nativeTokenScopes, nativeTokenDefinitionNames, composeTokenReads, consumedComposeTokenScopes, composeTokenDefinitions } from '../../packages/ds-codegen/dist/frameworks/native-token-consumption.js';
 import { reactNativeTokenReads, consumedNativeTokenScopes, reactNativeTokenDefinitionNames } from '../../packages/ds-codegen/dist/frameworks/react-native/token-consumption.js';
 import { loadTargetRegistryConfigV1 } from '../../packages/ds-codegen/dist/target-packs/config.js';
 
@@ -35,6 +35,16 @@ export function auditNativeDefinitions(scopes, emitted) {
   return [
     ...[...emitted].filter(name => !expected.has(name)).map(name => `Unconsumed emitted declaration: ${name}`),
     ...[...expected].filter(name => !emitted.has(name)).map(name => `Missing consumed definition: ${name}`),
+  ];
+}
+
+/** State identity matters for direct Compose lookups. */
+export function auditComposeDefinitions(scopes, emitted) {
+  const expected = new Set(scopes.flatMap(scope => scope.values.map(value => `${scope.scope}/${value.name}`)));
+  const actual = new Set(emitted.map(value => `${value.scope}/${value.key}`));
+  return [
+    ...[...actual].filter(key => !expected.has(key)).map(key => `Unconsumed emitted declaration: ${key}`),
+    ...[...expected].filter(key => !actual.has(key)).map(key => `Missing consumed definition: ${key}`),
   ];
 }
 
@@ -71,7 +81,7 @@ export function auditCorpus() {
       }
       if (target.id === 'jetpack-compose') {
         const base = `packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components/${entry.name}/${entry.name}`;
-        issues.push(...auditNativeDefinitions(nativeTokenScopes(ir, nativeSlotArguments(read(`${base}.kt`), ['layeredSlot'])), nativeTokenDefinitionNames(read(`${base}Tokens.kt`))).map(issue => `jetpack-compose: ${issue}`));
+        issues.push(...auditComposeDefinitions(consumedComposeTokenScopes(ir, composeTokenReads(read(`${base}.kt`))), composeTokenDefinitions(read(`${base}Tokens.kt`))).map(issue => `jetpack-compose: ${issue}`));
       }
     }
     return { component: entry.name, slots: slots.length,

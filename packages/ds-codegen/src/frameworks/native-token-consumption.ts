@@ -19,6 +19,63 @@ export function nativeSlotArguments(source: string, functions: readonly string[]
   return reads;
 }
 
+export interface ComposeTokenRead { name: string; scope?: string }
+
+/** Layered reads search variant/state/root scopes; direct reads address one
+ * scope. An unrelated map.get, declaration, comment or string is not a read. */
+export function composeTokenReads(source: string): ComposeTokenRead[] {
+  const reads: ComposeTokenRead[] = [...nativeSlotArguments(source, ["layeredSlot"])]
+    .map(name => ({ name }));
+  const tokens = nativeSourceTokens(source);
+  for (let i = 0; i < tokens.length - 3; i++) {
+    if (!/^[A-Za-z_]\w*TokenScopes$/.test(tokens[i]!) || tokens[i + 1] !== "[" ||
+        !tokens[i + 2]!.startsWith('"') || tokens[i + 3] !== "]") continue;
+    const dot = tokens[i + 4] === "?" ? i + 5 : i + 4;
+    if (tokens[dot] !== "." || tokens[dot + 1] !== "get" || tokens[dot + 2] !== "(" ||
+        !tokens[dot + 3]?.startsWith('"') || tokens[dot + 4] !== ")") continue;
+    reads.push({ scope: JSON.parse(tokens[i + 2]!) as string, name: JSON.parse(tokens[dot + 3]!) as string });
+  }
+  return reads;
+}
+
+/** Compose's resolver reads theme overrides/ref/literal/fallback from the
+ * selected definition. It does not recursively traverse component tables. */
+export function consumedComposeTokenScopes(ir: ComponentIR, reads: readonly ComposeTokenRead[]) {
+  return ir.tokenScopes.map(scope => ({ ...scope,
+    values: scope.values.filter(value => reads.some(read => value.name === read.name &&
+      (read.scope === undefined || read.scope === scope.scope))),
+  })).filter(scope => scope.values.length > 0);
+}
+
+export interface ComposeTokenDefinition {
+  scope: string; key: string; name?: string; cssVar?: string;
+  ref?: string; literal?: string; fallback?: string;
+}
+
+/** Parse the emitter-owned Kotlin data grammar independently of projection.
+ * Keep scope and dictionary key so a definition in the wrong state cannot
+ * satisfy a direct read. Comments and quoted examples cannot supply evidence. */
+export function composeTokenDefinitions(source: string): ComposeTokenDefinition[] {
+  const tokens = nativeSourceTokens(source);
+  const definitions: ComposeTokenDefinition[] = [];
+  let scope = "";
+  for (let i = 0; i < tokens.length - 3; i++) {
+    if (!tokens[i]!.startsWith('"') || tokens[i + 1] !== "to" || tokens[i + 3] !== "(") continue;
+    if (tokens[i + 2] === "mapOf") scope = JSON.parse(tokens[i]!) as string;
+    if (tokens[i + 2] !== "ComponentTokenDefinition") continue;
+    const definition: ComposeTokenDefinition = { scope, key: JSON.parse(tokens[i]!) as string };
+    for (let j = i + 4; j < tokens.length && tokens[j] !== ")"; j++) {
+      const field = tokens[j]!;
+      if (["name", "cssVar", "ref", "literal", "fallback"].includes(field) &&
+          tokens[j + 1] === "=" && tokens[j + 2]?.startsWith('"')) {
+        definition[field as "name" | "cssVar" | "ref" | "literal" | "fallback"] = JSON.parse(tokens[j + 2]!) as string;
+      }
+    }
+    definitions.push(definition);
+  }
+  return definitions;
+}
+
 /** Project the backend's actual lookups, retaining variant definitions of each
  * used name. A token definition or disconnected alias is never a root. */
 export function nativeTokenScopes(ir: ComponentIR, names: ReadonlySet<string>, suffixes = false) {

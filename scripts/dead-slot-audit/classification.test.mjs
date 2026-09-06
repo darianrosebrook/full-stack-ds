@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { auditWebArtifact, auditNativeDefinitions } from './audit.mjs';
+import { auditWebArtifact, auditNativeDefinitions, auditComposeDefinitions } from './audit.mjs';
 const slot = { slot: 'test.width', cssVar: '--fsds-test-width', web: true };
 assert.deepEqual(auditWebArtifact([slot], ['.test { width: var(--fsds-test-width, 8px); --fsds-test-width: 9px; }']), []);
 assert.deepEqual(auditWebArtifact([slot], ['.test { --fsds-test-width: 9px; }']), [
@@ -16,3 +16,7 @@ console.log('Component token artifact rejection checks passed.');
 
 assert.deepEqual(auditNativeDefinitions([{values:[{name:'a'}]}],new Set(['a'])),[]);
 assert.deepEqual(auditNativeDefinitions([{values:[{name:'a'}]}],new Set(['b'])),['Unconsumed emitted declaration: b','Missing consumed definition: a']);
+assert.deepEqual(auditComposeDefinitions([{scope:'checked', values:[{name:'color'}]}], [{scope:'root', key:'color'}]), [
+  'Unconsumed emitted declaration: root/color', 'Missing consumed definition: checked/color',
+]);
+assert.deepEqual(auditComposeDefinitions([{scope:'checked', values:[{name:'color'}]}], [{scope:'checked', key:'color'}]), []);

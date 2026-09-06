@@ -55,8 +55,10 @@ fun Button(
     val pressDurationMs = layeredSlot("button.motion.duration.fast")?.toFsdsMs() ?: 100
     val minHeight = layeredSlot("box-model.min-height")?.toFsdsDp() ?: 32.dp
     val minWidth = layeredSlot("box-model.min-width")?.toFsdsDp() ?: 32.dp
-    val paddingInline = layeredSlot("box-model.padding-inline-start")?.toFsdsDp() ?: 8.dp
-    val paddingBlock = layeredSlot("box-model.padding-block-start")?.toFsdsDp() ?: 4.dp
+    val paddingInlineStart = layeredSlot("box-model.padding-inline-start")?.toFsdsDp() ?: 8.dp
+    val paddingInlineEnd = layeredSlot("box-model.padding-inline-end")?.toFsdsDp() ?: 8.dp
+    val paddingBlockStart = layeredSlot("box-model.padding-block-start")?.toFsdsDp() ?: 4.dp
+    val paddingBlockEnd = layeredSlot("box-model.padding-block-end")?.toFsdsDp() ?: 4.dp
 
     val buttonStyle = FsdsButtonStyle(
         containerColor = containerColor,
@@ -72,7 +74,7 @@ fun Button(
         pressDurationMs = pressDurationMs,
         minHeight = minHeight,
         minWidth = minWidth,
-        padding = PaddingValues(horizontal = paddingInline, vertical = paddingBlock),
+        padding = PaddingValues(start = paddingInlineStart, top = paddingBlockStart, end = paddingInlineEnd, bottom = paddingBlockEnd),
     )
 
     FsdsButton(
