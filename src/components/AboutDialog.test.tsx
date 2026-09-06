@@ -12,7 +12,7 @@ describe("AboutDialog", () => {
     expect(about).toHaveAttribute("aria-selected", "true");
     expect(commands).toHaveAttribute("aria-selected", "false");
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "contract-governed design system",
+      "a falsifiable claim about compositional systems",
     );
 
     fireEvent.click(commands);

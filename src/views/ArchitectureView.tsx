@@ -26,7 +26,11 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
         claim about compositional systems. The {componentCount} components, one
         primitive, and five frameworks exist to test the claim — not as
         product surface, but as the falsification surface that would make any
-        wrongness in the contract visible.
+        wrongness in the contract visible. The same discipline is under attack
+        in other domains — design tokens, iconography, analytical relations,
+        the documentation site itself, and the evidence machinery — where
+        &ldquo;component&rdquo; stops being a useful concept. The full program
+        is documented in <code>docs/research-program.md</code>.
       </p>
 
       <section className="section">
@@ -63,6 +67,57 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
           leaking implementation detail into any of them, the contract is at
           the right level of abstraction. If it cannot, the wrongness shows up
           as friction in exactly one output.
+        </p>
+      </section>
+
+      <section className="section">
+        <Stack as="header" variant="horizontal" className="section-header stack-gap-06">
+          <h2 className="section-title">Same discipline, other domains</h2>
+          <span className="section-meta">components are one row of the table</span>
+        </Stack>
+        <p>
+          Components are the easiest demonstration because the failure is
+          visually obvious. The same shape — one authority, a normalized
+          substrate, governed composition, target-specific projections, and
+          observable drift — is under attack where &ldquo;component&rdquo;
+          stops being a useful concept:
+        </p>
+        <ul>
+          <li>
+            <strong>Design tokens.</strong> A DTCG graph resolves primitive
+            values into semantic aliases and theme/brand/density layers. The
+            finding that matters is the split between vocabulary and
+            obligation: an unused palette entry is latent vocabulary and stays
+            valid, while an unconsumed component override slot is a broken
+            interface.
+          </li>
+          <li>
+            <strong>Iconography.</strong> One symbolic contract projects to
+            SVG, React, Svelte, React Native, Android vectors, Swift, and
+            Kotlin — and its emission ledger is deliberately not icon-shaped:
+            the same content-addressed provenance core runs over component
+            generation unchanged.
+          </li>
+          <li>
+            <strong>Analytical relations.</strong> A chart type is a theorem,
+            not a primitive: a typed relational structure admits or refuses
+            projections, and the necessity census keeps every coordinate
+            honest by requiring a witness that deleting it collapses two
+            distinguishable states.
+          </li>
+          <li>
+            <strong>Documentation and evidence.</strong> This showcase derives
+            its content from the contracts instead of restating them, consumes
+            the generated system it documents, and attests its own artifacts
+            through the admission rail and ratcheted ledgers — explanation and
+            proof are projections, not second authorities.
+          </li>
+        </ul>
+        <p className="muted" style={{ marginTop: "var(--fsds-core-spacing-size-05)" }}>
+          Target count is pressure on the claim, not its scorecard: a
+          subtraction witness is a stronger result than another framework
+          compiling. The domain table is in{" "}
+          <code>docs/research-program.md</code>.
         </p>
       </section>
 
@@ -223,6 +278,15 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
             rel="noopener noreferrer"
           >
             <code>docs/normal-form.md</code>
+          </a>
+          . The domain table and the argument that normal form is not reuse
+          live in{" "}
+          <a
+            href="https://github.com/darianrosebrook/full-stack-ds/blob/main/docs/research-program.md"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <code>docs/research-program.md</code>
           </a>
           . This page is the site-facing summary.
         </p>

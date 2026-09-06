@@ -12,13 +12,17 @@ import {
   TabsTab,
 } from "@full-stack-ds/react";
 
-const ABOUT_MD = `## One contract, five frameworks
+const ABOUT_MD = `## The components are the demo; the claim is the project
 
-This showcase is the existence proof for an architectural claim: a single JSON
-contract per component, one polymorphic **Stack** primitive, and framework
-emitters that produce idiomatic source for React, Vue, Svelte, Angular, and
-Lit — plus React Native, SwiftUI, Jetpack Compose, and a Figma descriptor
-target.
+This showcase is the existence proof for a falsifiable architectural claim
+about contract-governed compositional systems: one polymorphic **Stack**
+primitive, a JSON contract per component, and framework emitters that produce
+idiomatic source for React, Vue, Svelte, Angular, and Lit — plus React Native,
+SwiftUI, Jetpack Compose, and a Figma descriptor target. The same discipline
+(one authority, governed composition, target-specific projections, observable
+drift) is applied to design tokens, iconography, analytical relations, and the
+documentation you are reading. The research program is written down in
+\`docs/research-program.md\`.
 
 The rail binds every generated artifact back to the contract that produced it:
 
@@ -64,7 +68,7 @@ export function AboutDialog({ open, onOpenChange }: { open: boolean; onOpenChang
           <ProfileFlag>
             <Avatar src={FIGURE_URI} name="Full-Stack DS" size="32" />
             <span>
-              <strong>Full-Stack DS</strong> — contract-governed design system
+              <strong>Full-Stack DS</strong> — a falsifiable claim about compositional systems
             </span>
           </ProfileFlag>
           <Image
