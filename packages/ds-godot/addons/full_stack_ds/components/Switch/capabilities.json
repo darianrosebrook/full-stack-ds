@@ -1,0 +1,18 @@
+{
+  "operation": "boolean",
+  "excluded": [
+    "defaultChecked",
+    "size",
+    "name",
+    "value"
+  ],
+  "theme": "unconditional foreground fallback only",
+  "otherStyling": "unsupported",
+  "excludedProps": [
+    "defaultChecked",
+    "size",
+    "name",
+    "value"
+  ],
+  "proof": "requires-runtime-witness"
+}

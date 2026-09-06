@@ -1,0 +1,24 @@
+{
+  "operation": "select",
+  "excluded": [
+    "defaultValue",
+    "orientation",
+    "appearance",
+    "activationMode",
+    "loop",
+    "unmountInactive",
+    "idBase"
+  ],
+  "theme": "unconditional foreground fallback only",
+  "otherStyling": "unsupported",
+  "excludedProps": [
+    "defaultValue",
+    "orientation",
+    "appearance",
+    "activationMode",
+    "loop",
+    "unmountInactive",
+    "idBase"
+  ],
+  "proof": "requires-runtime-witness"
+}

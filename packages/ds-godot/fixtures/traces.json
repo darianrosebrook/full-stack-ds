@@ -1,0 +1,11 @@
+{
+  "schema": "engine-behavior-traces.v1",
+  "boundary": "Semantic commands; not physical input or accessibility evidence.",
+  "cases": [
+    {"id":"switch-uncontrolled","component":"Switch","commands":[{"op":"activate"},{"op":"disable"},{"op":"activate"}],"expected":["true","true","true"]},
+    {"id":"switch-controlled","component":"Switch","controlled":true,"commands":[{"op":"activate"},{"op":"commit","value":"true"}],"expected":["false","true"]},
+    {"id":"accordion-collapse","component":"Accordion","commands":[{"op":"activate","value":"a"},{"op":"activate","value":"b"},{"op":"activate","value":"b"}],"expected":["a","b",""]},
+    {"id":"tabs-disabled","component":"Tabs","commands":[{"op":"activate","value":"b"},{"op":"activate","value":"locked"}],"expected":["b","b"]},
+    {"id":"popover-toggle","component":"Popover","commands":[{"op":"activate"},{"op":"activate"}],"expected":["true","false"]}
+  ]
+}
