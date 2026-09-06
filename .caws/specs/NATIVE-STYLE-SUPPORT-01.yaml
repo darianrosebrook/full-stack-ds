@@ -50,3 +50,12 @@ contracts:
   - name: 'native-style-support'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-style-support.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: Native root clipping tests plus generated RN style construction and macOS Card visible/hidden pixel witnesses
+    recorded_at: "2026-09-06T07:35:05.265Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/frameworks/native-style-support.test.ts; node scripts/design-contract-recon.mjs
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/native-style-support/report.json
+    commit_sha: "87cbef8eb83c760736eb524c0937e293fee1fca0"
