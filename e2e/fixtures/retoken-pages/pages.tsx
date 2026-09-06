@@ -50,7 +50,7 @@ function Spotify() {
         <Stack variant="horizontal" className="section-heading"><Text as="h2" weight="bold" className="section-title">Made for your morning</Text><Text className="muted small">Original studio mixes</Text></Stack>
         <div className="album-grid">{shown.slice(0,8).map(study=><Card className="album" key={study.title}>
           <CardMedia><Image size="full" src={artwork(study.index)} alt={`${study.title} cover`} aspectRatio="square" objectFit="cover" objectPosition="50% 35%"/></CardMedia>
-          <CardContent><Button className="quiet album-title" onClick={()=>{setSelected(study.index);setPlaying(true);}}>{study.title}</Button><Text className="muted small">{study.maker}</Text></CardContent>
+          <CardContent><Stack layout="block"><Button className="quiet album-title" onClick={()=>{setSelected(study.index);setPlaying(true);}}>{study.title}</Button></Stack><Text className="muted small">{study.maker}</Text></CardContent>
         </Card>)}</div>
         {shown.length===0&&<Text role="status">No mixes found</Text>}
       </section>

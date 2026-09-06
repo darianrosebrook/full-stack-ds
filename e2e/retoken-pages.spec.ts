@@ -20,6 +20,16 @@ for (const kind of ['spotify','pinterest']) {
       await writeFile(info.outputPath('media-facts.json'),JSON.stringify(media,null,2));
       await page.screenshot({path:info.outputPath(`${kind}-${width}.png`),fullPage:true});
       if(kind==='spotify') {
+        for(const thumbnail of await page.locator('.library img, .player img').all()) {
+          await expect(thumbnail).toHaveCSS('width','48px');
+          await expect(thumbnail).toHaveCSS('height','48px');
+        }
+        for(const cover of await page.locator('.album img').all()) {
+          const box=(await cover.boundingBox())!;
+          expect(box.width/box.height).toBeCloseTo(1,2);
+          await expect(cover).toHaveCSS('object-fit','cover');
+        }
+        expect((await page.locator('.player').boundingBox())!.height).toBeLessThan(170);
         await expect(page.locator('.album').first()).toHaveCSS('border-width','0px');
         await expect(page.locator('.album').first()).toHaveCSS('background-color','rgb(24, 24, 24)');
         await page.getByRole('button',{name:'Play',exact:true}).click();
@@ -32,6 +42,10 @@ for (const kind of ['spotify','pinterest']) {
         await page.getByRole('textbox',{name:'Search collection'}).fill('Blue hour');
         await expect(page.locator('.album')).toHaveCount(1);
       } else {
+        for(const [id,ratio] of [[0,2/3],[1,1],[3,4/3]]) {
+          const box=(await page.locator(`[data-testid="pin-${id}"] img`).boundingBox())!;
+          expect(box.width/box.height).toBeCloseTo(ratio,2);
+        }
         await expect(page.locator('.pin .card__media').first()).toHaveCSS('border-radius','16px');
         const save=page.getByRole('button',{name:'Save Slow mornings',exact:true});
         await save.focus();

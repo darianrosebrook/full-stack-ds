@@ -5,7 +5,7 @@ status: implemented
 title: Component design property bindings
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: 2fce1451
+verified_at_commit: 0f79972563d046ae6f219f62219d7ce9c3be5e13
 governs:
   - packages/ds-codegen/src/design-properties.ts
   - packages/ds-contracts/component.styles.schema.json
@@ -64,6 +64,14 @@ See [the box-model contract](./box-model-primitive.md) for default and shorthand
 
 ## Migration and editor
 
+Image's opt-in media controls were justified by the [page attempts](retoken-page-attempts.md):
+`sizing.aspect-ratio`, `media.fit`, and `media.position`. Their Web CSS chain is
+design override → prop-derived CSS variable → literal default (`auto`, `fill`,
+`50% 50%`). The ratio and position value categories describe these bounded
+decisions; they do not open every CSS property to tokenization. Image's preset
+mapping lives in its contract and normalizes through the shared finite-map IR.
+The override remains independently settable when the prop is absent or present.
+
 `node scripts/migrate-design-bindings.mjs --write` adds bindings without changing existing values or selectors. Run it after building codegen; without `--write` it reports any remaining mechanical adoption. Existing bindings keep their addresses. Conditional selector addresses are explicitly stored in the sidecar, so subsequent selector edits need not rename public slots.
 
 The mechanical pass exposes common visual properties, existing token-backed sizing, and spacing. Literal intrinsic sizing, layout algorithms, arbitrary transforms, animation triggers, images, and content remain component/composition decisions. Layout registry entries require explicit adoption. Component tokens follow the [consumption contract](component-token-consumption.md): unused declarations are rejected, with no compatibility aliases. Native-only slots remain outside the Web inspector's editable controls.
@@ -76,6 +84,7 @@ The inspector has a Design properties section grouped by source part/condition a
 - `packages/ds-codegen/src/frameworks/box-boundary.test.ts` checks emitted boundary/box markers throughout the corpus and protects the distinction between a component root and a disclosure item.
 - `e2e/design-bindings.spec.ts` checks shared shorthand/side precedence, nested isolation, independent media radius, absent semantic CSS, consumer precedence, inspector edits, and mounted framework controls.
 - `e2e/editor-binding-rail.spec.ts` checks the newly live shared gap control in the inspector.
+- `e2e/image-media.spec.ts` checks Image dimensions, every ratio preset, fit/focal position, scoped overrides and clearing across the web frameworks, plus React inline-style composition. `e2e/retoken-pages.spec.ts` exercises real page compositions and records rendered media geometry.
 - `e2e/fixtures/design-bindings-gallery.tsx` is a real generated React composition for visual and interaction review. Screenshots go to ignored Playwright output.
 
 These witnesses do not prove every conditional selector is reachable, arbitrary retokening is accessible, full cross-framework visual parity, native runtime overrides, or complete coverage of design-tool paint/effect features. Broader binding coverage and visual fidelity remain separate claims.
