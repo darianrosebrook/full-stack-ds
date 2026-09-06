@@ -41,3 +41,8 @@ contracts:
   - name: 'showcase-dogfooding'
     type: contract-test
     path: 'src/consumption/dogfooding-guard.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: pnpm exec vitest run src/consumption/dogfooding-guard.test.ts
+    recorded_at: "2026-09-06T05:05:55.901Z"
