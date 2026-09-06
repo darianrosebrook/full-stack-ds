@@ -5,7 +5,7 @@ mode: refactor
 lifecycle_state: active
 worktree: showcase-dogfooding
 created_at: '2026-09-06T04:53:49.987Z'
-updated_at: '2026-09-06T04:53:56.541Z'
+updated_at: '2026-09-06T04:54:59.060Z'
 created_by_session: '01a06ed3-9fec-7332-b38d-37990ff8be07'
 blast_radius:
   modules:
@@ -20,6 +20,7 @@ scope:
     - 'src/views/TokensView.tsx'
     - 'src/consumption'
     - 'src/styles/app.css'
+    - src/components/AboutDialog.test.tsx
   out: []
 invariants:
   - 'App chrome uses generated component families when their semantics match; justified native substrates remain explicit and reviewable.'
