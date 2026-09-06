@@ -59,3 +59,11 @@ evidence:
     exit_code: 0
     artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/pin-detail/upstream/text-final-browser.log
     commit_sha: b4b87a08
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Each Web framework clears true truncation to false and absent, restoring normal white-space and multiline height."
+    recorded_at: "2026-09-06T08:59:47.919Z"
+    command: FSDS_E2E_PORT=5202 pnpm exec playwright test e2e/text-truncation.spec.ts --workers=2
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/pin-detail/upstream/text-final-browser.log
+    commit_sha: b4b87a08
