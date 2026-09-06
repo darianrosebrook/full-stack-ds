@@ -2,9 +2,11 @@ id: NATIVE-STYLE-SUPPORT-01
 title: 'Realize native root clipping and reject unsupported SwiftUI composer radii'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Merged bounded native root clipping and explicit SwiftUI composer radius rejection, verified generated Card and Field paint, killed the silent-fallback mutant, and passed scoped and repository gates without changing the Web binding schema.'
 created_at: '2026-09-06T07:13:40.613Z'
-updated_at: '2026-09-06T07:24:11.146Z'
+updated_at: '2026-09-06T07:35:11.477Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
