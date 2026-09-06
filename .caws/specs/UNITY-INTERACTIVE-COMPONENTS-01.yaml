@@ -52,3 +52,8 @@ contracts:
   - name: 'unity-controls'
     type: behavior
     path: 'packages/ds-unity/Tests/Editor/InteractionTests.cs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "main@7e590872: pnpm run generate:unity emits the four allowlisted controls; git diff --exit-code -- packages/ds-unity/Runtime/Components passes. packages/ds-codegen/src/frameworks/unity/factory.test.ts passes all 10 routing and influence tests, including renamed controls and unsupported-shape rejection."
+    recorded_at: "2026-09-06T07:24:42.921Z"
