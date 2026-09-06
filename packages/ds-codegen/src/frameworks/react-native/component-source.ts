@@ -8,6 +8,7 @@ import type {
   ResolvedPropIR,
 } from "../../ir.js";
 import { collectCollapseIntents, composeBindingProjectionExpression, composeChannelUpdateExpression, composeValueMapExpression, isContentTransform } from "../../ir.js";
+import { nativeRootClipping } from "../../ir.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   rnAnchoredSurface,
@@ -2335,7 +2336,7 @@ function generateReactNativeStylesFile(ir: ComponentIR): string {
 
   const lines = [
     "// @generated:start imports",
-    `import { StyleSheet } from "react-native";`,
+    `import { ${[...styleByKey.values()].some(style => style.includes("Platform.select")) ? "Platform, " : ""}StyleSheet } from "react-native";`,
     ...(styleTypeImports.length > 0
       ? [`import type { ${styleTypeImports.join(", ")} } from "react-native";`]
       : []),
@@ -3052,6 +3053,15 @@ function styleObjectLiteral(entries: JoinedStyleEntry[]): string {
 
 function nativeStyleForKey(ir: ComponentIR, key: string): string {
   const entries: string[] = [];
+  if (key === "root") {
+    const ios = nativeRootClipping(ir, "ios");
+    const android = nativeRootClipping(ir, "android");
+    if (ios !== undefined || android !== undefined) {
+      entries.push(`overflow: ${ios === android
+        ? JSON.stringify(ios)
+        : `Platform.select({ ios: "${ios ?? "visible"}", android: "${android ?? "visible"}", default: "visible" })`}`);
+    }
+  }
   const scope = key.includes("_") ? key.slice(0, key.indexOf("_")) : key;
   if (key === "root" || key === "input" || key === "control") {
     // Under the checkbox lowering the interactive Pressable is a ROW holding

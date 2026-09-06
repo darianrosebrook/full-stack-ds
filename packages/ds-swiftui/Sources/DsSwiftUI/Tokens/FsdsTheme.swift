@@ -39,6 +39,15 @@ public enum FsdsTokenValue: Sendable, Equatable {
         }
     }
 
+    /// SwiftUI composer radius support: finite nonnegative absolute lengths.
+    /// Relative lengths need layout-dependent geometry and are not zero.
+    public func validatedRadius() throws -> CGFloat {
+        guard let value = px, value.isFinite, value >= 0 else {
+            throw FsdsRadiusError.unsupported(self)
+        }
+        return value
+    }
+
     /// Color for hex values; `.adaptive` returns a dynamic NSColor
     /// provider color that resolves per appearance (dark under darkAqua).
     public var color: Color? {
@@ -107,6 +116,26 @@ public enum FsdsTokenValue: Sendable, Equatable {
             )
         }
     }
+}
+
+public enum FsdsRadiusError: Error, CustomStringConvertible {
+    case unsupported(FsdsTokenValue)
+
+    public var description: String {
+        switch self {
+        case .unsupported(let value):
+            return "FSDS_SWIFTUI_RADIUS_UNSUPPORTED: \(value); expected a finite nonnegative number or px length"
+        }
+    }
+}
+
+/// Generated composers call this at the property consumer. An absent value
+/// stays absent; an explicitly unsupported override is a programmer error.
+/// Applications can preflight external values with validatedRadius().
+public func fsdsRequireRadius(_ value: FsdsTokenValue?, slot: String) -> CGFloat? {
+    guard let value else { return nil }
+    do { return try value.validatedRadius() }
+    catch { preconditionFailure("\(error) (slot: \(slot))") }
 }
 
 /// One slot definition inside a component scope — mirrors the RN

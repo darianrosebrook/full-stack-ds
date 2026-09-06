@@ -34,7 +34,7 @@ import type {
   NormalizedChannelIR,
   TokenFactIR,
 } from "../../../ir.js";
-import { collectCollapseIntents, isContentTransform } from "../../../ir.js";
+import { collectCollapseIntents, isContentTransform, nativeRootClipping } from "../../../ir.js";
 import { swiftLiteral } from "./icon-glyph.js";
 import nodeFs from "node:fs";
 import nodePath from "node:path";
@@ -3047,6 +3047,7 @@ function emitComposerComponent(
 ): string {
   const exportName = swiftExportName(ir.name);
   const chrome = resolveChrome(ir);
+  const clipping = nativeRootClipping(ir, "ios");
   const regions = regionNames;
   const axes = collectVariantAxes(ir);
   const layerInfo = emitLayerExpressions(axes);
@@ -3158,9 +3159,10 @@ function emitComposerComponent(
   );
   lines.push(`${INDENT}}`);
   lines.push("");
-  lines.push(`${INDENT}private func pxSlot(_ suffix: String) -> CGFloat? {`);
+  lines.push(`${INDENT}private func pxSlot(_ suffix: String, requireRadius: Bool = false) -> CGFloat? {`);
   lines.push(
-    `${INDENT}${INDENT}layered.first { $0.key.hasSuffix(suffix) }?.value?.px`,
+    `${INDENT}${INDENT}let value = layered.first { $0.key.hasSuffix(suffix) }?.value`,
+    `${INDENT}${INDENT}return requireRadius ? fsdsRequireRadius(value, slot: suffix) : value?.px`,
   );
   lines.push(`${INDENT}}`);
   lines.push("");
@@ -3178,7 +3180,7 @@ function emitComposerComponent(
     accessors.push(`${INDENT}private var borderWidth: CGFloat { pxSlot("${chrome.borderWidth}") ?? 0 }`);
   }
   if (chrome.radius) {
-    accessors.push(`${INDENT}private var radius: CGFloat { pxSlot("${chrome.radius}") ?? 0 }`);
+    accessors.push(`${INDENT}private var radius: CGFloat { pxSlot("${chrome.radius}", requireRadius: true) ?? 0 }`);
   }
   if (chrome.blockPadding) {
     accessors.push(`${INDENT}private var blockPadding: CGFloat { pxSlot("${chrome.blockPadding}") ?? 0 }`);
@@ -3228,10 +3230,12 @@ function emitComposerComponent(
     lines.push(`${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`);
   }
   if (chrome.background) {
-    lines.push(`${INDENT}${INDENT}${INDENT}.background(background)`);
+    lines.push(`${INDENT}${INDENT}${INDENT}.background(background, in: RoundedRectangle(cornerRadius: ${chrome.radius ? "radius" : "0"}, style: .continuous))`);
   }
-  if (chrome.radius) {
-    lines.push(`${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`);
+  if (clipping === "hidden") {
+    lines.push(chrome.radius
+      ? `${INDENT}${INDENT}${INDENT}.clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))`
+      : `${INDENT}${INDENT}${INDENT}.clipped()`);
   }
   if (chrome.borderColor && chrome.borderWidth) {
     const radiusExpr = chrome.radius ? "radius" : "0";

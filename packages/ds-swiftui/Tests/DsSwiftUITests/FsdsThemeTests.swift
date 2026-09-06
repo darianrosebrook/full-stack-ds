@@ -7,6 +7,31 @@ import Foundation
 import XCTest
 @testable import DsSwiftUI
 
+final class ComposerRadiusTests: XCTestCase {
+    func testSupportedAbsoluteValuesAndAbsence() throws {
+        XCTAssertNil(fsdsRequireRadius(nil, slot: "radius"))
+        for (input, expected): (FsdsTokenValue, CGFloat) in [
+            (.number(0), 0), (.string("0px"), 0), (.string("20px"), 20),
+            (.number(2.5), 2.5), (.string("8"), 8)
+        ] {
+            XCTAssertEqual(try input.validatedRadius(), expected)
+            XCTAssertEqual(fsdsRequireRadius(input, slot: "radius"), expected)
+        }
+    }
+
+    func testUnsupportedUnitsAndInvalidGeometryAreExplicitErrors() {
+        for input: FsdsTokenValue in [
+            .string("50%"), .string("2rem"), .string("calc(1px + 2px)"),
+            .string("-1px"), .number(-1), .number(.infinity), .number(.nan),
+            .adaptive(light: "#ffffff", dark: "#000000")
+        ] {
+            XCTAssertThrowsError(try input.validatedRadius()) { error in
+                XCTAssertTrue(String(describing: error).contains("FSDS_SWIFTUI_RADIUS_UNSUPPORTED"))
+            }
+        }
+    }
+}
+
 /// Flatten the double-optional produced by optional-Value dictionary reads.
 private func flat(_ value: FsdsTokenValue??) -> FsdsTokenValue? {
     value ?? nil
