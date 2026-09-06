@@ -1,0 +1,42 @@
+id: UNITY-CAPABILITY-PLAYER-01
+title: 'Unity capability inventory and standalone Player witness'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-06T08:17:30.003Z'
+updated_at: '2026-09-06T08:17:30.003Z'
+created_by_session: '01a07581-2e8c-7851-abc0-0126a0e13465'
+blast_radius:
+  modules:
+    - 'Unity capability accounting and standalone consumer verification'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/unity'
+    - 'packages/ds-unity'
+    - 'scripts/unity-player.mjs'
+    - 'docs/architecture/unity-target.md'
+    - 'docs/normal-form.md'
+  out: []
+invariants:
+  - 'Inventory must distinguish emitted support from omitted facts and runtime proof.'
+  - 'Player results must come from a fresh standalone process with matching run identity.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the contract corpus; when Unity inventory runs; then every component and declared prop has an explicit disposition with unsupported facts visible'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a generated Unity package; when a fresh consumer is built and launched; then standalone results prove asset loading and bounded control behavior or identify the exact blocking dependency'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the inventory and Player evidence; when scope is documented; then supported environment and prioritized remaining dependencies are explicit'
+non_functional: {}
+contracts:
+  - name: 'unity-capability'
+    type: behavior
+    path: 'packages/ds-codegen/src/frameworks/unity/capabilities.test.ts'
