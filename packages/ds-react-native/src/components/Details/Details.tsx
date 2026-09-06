@@ -33,6 +33,7 @@ export interface DetailsProps {
 export function Details({
   summary,
   open: controlledOpen,
+  disabled,
   variant = "default",
   defaultOpen = false,
   children,
@@ -56,6 +57,7 @@ export function Details({
     >
       <View
         style={styles.summary}
+        accessibilityState={{ disabled: String(disabled) === "true" }}
       >
         <View
           style={styles.summaryContent}

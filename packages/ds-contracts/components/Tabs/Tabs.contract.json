@@ -445,5 +445,16 @@
         "TabsContent"
       ]
     }
+  },
+  "interaction": {
+    "channel": "activeTab",
+    "content": "panel",
+    "presence": "hidden",
+    "triggers": [
+      {
+        "part": "tab",
+        "operation": "select"
+      }
+    ]
   }
 }

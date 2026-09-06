@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, ViewChild, ElementRef, signal, Injector, runInInjectionContext, untracked, OnInit, OnDestroy } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { StackComponent } from "../../primitives/index.js";
 import { useDialog } from "./useDialog.js";
 // @generated:end
@@ -30,12 +31,12 @@ let nextInstanceId = 0;
     <div [ngClass]="'dialog__backdrop'" aria-hidden="true" role="presentation" (click)="closeOnBackdropClick !== false && behavior.setOpenness(false)"></div>
   </ng-container>
   <ng-container *ngIf="behavior.openness()">
-    <div [ngClass]="'dialog__modal'" role="dialog" aria-modal="true" [attr.aria-label]="ariaLabel" [attr.aria-labelledby]="modalAriaLabelledby" [attr.aria-describedby]="modalAriaDescribedby">
+    <div [ngClass]="'dialog__modal'" #interactionPanel role="dialog" aria-modal="true" [attr.aria-label]="ariaLabel" [attr.aria-labelledby]="modalAriaLabelledby" [attr.aria-describedby]="modalAriaDescribedby">
       <div [ngClass]="'dialog__header'">
         <h2 [ngClass]="'dialog__title'" [attr.id]="instanceId + '-title'">
           <ng-content select="[slot=title]" />
         </h2>
-        <button [ngClass]="'dialog__closeButton'" type="button" aria-label="Close dialog" (click)="behavior.setOpenness(!behavior.openness())"></button>
+        <button [ngClass]="'dialog__closeButton'" type="button" aria-label="Close dialog" (click)="canActivateInteraction($event, false) && behavior.setOpenness(false)"></button>
       </div>
       <div [ngClass]="'dialog__body'" [attr.id]="instanceId + '-body'">
         <ng-content />
@@ -49,7 +50,9 @@ let nextInstanceId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogComponent implements OnInit, OnDestroy {
-  @Input() open?: boolean;
+  private readonly inputOpen = signal<boolean | undefined>(undefined);
+  @Input() get open(): boolean | undefined { return this.inputOpen(); }
+  set open(value: boolean | undefined) { this.inputOpen.set(value); }
   @Input() defaultOpen?: boolean;
   @Input() onOpenChange?: (open: boolean) => void;
   @Input() modal?: boolean = true;
@@ -65,24 +68,32 @@ export class DialogComponent implements OnInit, OnDestroy {
   @Input() class?: string;
 
   protected readonly instanceId = `fsds-dialog-${nextInstanceId++}`;
+  @ViewChild("interactionPanel") set interactionPanel(element: ElementRef<HTMLElement> | undefined) {
+    this.behavior.panelRef.nativeElement = element?.nativeElement ?? null;
+  }
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useDialog({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useDialog>;
+  protected get behavior(): ReturnType<typeof useDialog> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useDialog({
     open: () => this.open,
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
     closeOnEscape: this.closeOnEscape,
     closeOnBackdropClick: this.closeOnBackdropClick,
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
+  protected canActivateInteraction = canActivateInteraction;
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "dialog",
       (this.size ?? "md") ? `dialog--${(this.size ?? "md")}` : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   get modalAriaLabelledby(): string | undefined {
     return [!this.ariaLabel ? `${this.instanceId}-title` : null, this.ariaLabelledby].filter(Boolean).join(" ") || undefined;

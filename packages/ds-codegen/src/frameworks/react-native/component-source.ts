@@ -1786,6 +1786,10 @@ function emitNodeProps(
       );
       continue;
     }
+    if (name === "aria-disabled") {
+      accessibilityState.push(`disabled: ${rnBooleanishExpr(expr)}`);
+      continue;
+    }
     if (name === "aria-checked") {
       accessibilityState.push(`checked: ${rnBooleanishExpr(expr)}`);
       continue;
@@ -1859,7 +1863,7 @@ function emitNodeProps(
   for (const [eventName, binding] of Object.entries(node.events)) {
     const eventProp = eventPropFor(component, eventName);
     if (!eventProp) continue;
-    props.push(`${pad}${eventProp}={${eventHandlerExpr(component, eventName, binding, ir)}}`);
+    props.push(`${pad}${eventProp}={${eventHandlerExpr(component, eventName, binding, ir, node.activation)}}`);
   }
   const hasOnPressEvent = Object.keys(node.events).some(
     (eventName) => eventPropFor(component, eventName) === "onPress",
@@ -2092,7 +2096,13 @@ function eventHandlerExpr(
   eventName: string,
   binding: BindingExpression,
   ir: ComponentIR,
+  activation?: DomNodeIR["activation"],
 ): string {
+  if (activation && eventName === "click") {
+    const { channel, operation } = activation;
+    const next = operation === "toggle" ? `!${channel.name}` : String(operation === "open");
+    return `() => set${capitalize(channel.name)}Value(${next})`;
+  }
   if (binding.kind === "prop") {
     const propName = safePropName(ir, binding.prop);
     return `() => ${propName}?.()`;

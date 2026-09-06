@@ -556,6 +556,7 @@ function generateSvelteDisclosureStateRootSource(ir: ComponentIR): string {
   const hasDisabled = ir.styledProps.some((p) => p.name === "disabled");
 
   const importsBody = [
+    `import { toggleInteractionItem } from "../../primitives/interaction.js";`,
     `import { use${name}, provide${name}Context } from "./use${name}.svelte.js";`,
   ].join("\n");
 
@@ -641,21 +642,7 @@ function generateSvelteDisclosureStateRootSource(ir: ComponentIR): string {
   hookLines.push(``);
   hookLines.push(`function toggleItem(itemValue: string): void {`);
   hookLines.push(`  const v = behavior.${channelName};`);
-  hookLines.push(`  if (type === "multiple") {`);
-  hookLines.push(`    const current = Array.isArray(v) ? v : [];`);
-  hookLines.push(`    behavior.${setter}(`);
-  hookLines.push(`      current.includes(itemValue)`);
-  hookLines.push(`        ? current.filter((x) => x !== itemValue)`);
-  hookLines.push(`        : [...current, itemValue],`);
-  hookLines.push(`    );`);
-  hookLines.push(`  } else {`);
-  hookLines.push(`    const current = typeof v === "string" ? v : "";`);
-  if (hasCollapsible) {
-    hookLines.push(`    behavior.${setter}(current === itemValue && collapsible ? "" : itemValue);`);
-  } else {
-    hookLines.push(`    behavior.${setter}(itemValue);`);
-  }
-  hookLines.push(`  }`);
+  hookLines.push(`  behavior.${setter}(toggleInteractionItem(v, itemValue, type === "multiple", ${hasCollapsible ? "Boolean(collapsible)" : "false"}));`);
   hookLines.push(`}`);
   hookLines.push(``);
   hookLines.push(`function handleKeyDown(e: KeyboardEvent): void {`);
@@ -1410,6 +1397,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   const assocConsumerPart = ir.fieldAssociation?.consumerPart;
 
   const importLines: string[] = [];
+  if (ir.interaction && ir.dom && ir.interaction.triggers.some(t => t.operation !== "select" && t.operation !== "toggle-item")) importLines.push(`import { canActivateInteraction } from "../../primitives/interaction.js";`);
   if (hasHook) {
     importLines.push(`import { use${ir.name} } from "./use${ir.name}.svelte.js";`);
   }
@@ -1892,6 +1880,7 @@ function renderSvelteDomNode(
   }
 
   const attrs: string[] = [];
+  if (node.focusContainer) attrs.push(`bind:this={${ctx.hookVar}.panelRef.el}`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -1983,6 +1972,13 @@ function renderSvelteDomNode(
     (node.componentInstance?.events ?? []).map((e) => [e.name, e]),
   );
   for (const [eventName, expr] of Object.entries(node.events)) {
+    const activation = eventName === "click" ? node.activation : undefined;
+    const disclosure = activation?.channel;
+    if (disclosure) {
+      const next = activation!.operation === "toggle" ? `!${ctx.hookVar}.${disclosure.name}` : String(activation!.operation === "open");
+      attrs.push(`onclick={(e) => { if (canActivateInteraction(e, ${activation!.cancelNativeDefault})) ${ctx.hookVar}.set${capitalizeSvelte(disclosure.name)}(${next}); }}`);
+      continue;
+    }
     const refEvent = refEventByName.get(eventName);
     if (refEvent?.targetHandlerProp) {
       const handlerExpr = renderSvelteEventHandlerExpr(expr, ctx);

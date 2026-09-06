@@ -71,7 +71,7 @@ export function Select({
       style={[styles.root, style]}
       accessibilityLabel={accessibilityLabel ?? triggerLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
-      accessibilityState={{ expanded: String(open) === "true" }}
+      accessibilityState={{ expanded: String(open) === "true", disabled: String(disabled) === "true" }}
     >
       <Pressable
         style={styles.trigger}

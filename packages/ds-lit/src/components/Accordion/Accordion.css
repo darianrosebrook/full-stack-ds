@@ -95,6 +95,10 @@
   opacity: var(--fsds-accordion-design-condition-1a120a363d7a-appearance-opacity, var(--fsds-accordion-opacity-disabled, 0.5));
   pointer-events: none;
 }
+
+.accordion__content[hidden]:not([hidden="until-found"]) {
+  display: none !important;
+}
 /* @generated:end */
 
 /* @generated:start reduced-motion */

@@ -950,6 +950,12 @@
         "declarations": {
           "display": "none"
         }
+      },
+      {
+        "selector": ".tabs__panel[hidden]:not([hidden=\"until-found\"])",
+        "declarations": {
+          "display": "none !important"
+        }
       }
     ],
     "keyframes": []

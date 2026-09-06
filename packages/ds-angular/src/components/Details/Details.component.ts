@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { StackComponent } from "../../primitives/index.js";
 import { IconComponent } from "../Icon/Icon.component.js";
 import { useDetails } from "./useDetails.js";
@@ -28,7 +29,7 @@ let nextInstanceId = 0;
   imports: [NgClass, NgIf, IconComponent],
   host: { "data-fsds-component": "details" },
   template: `<details [ngClass]="classes()" [open]="behavior.open()" data-fsds-box="">
-  <summary [ngClass]="'details__summary'" [attr.aria-controls]="summaryAriaControls">
+  <summary [ngClass]="'details__summary'" (click)="canActivateInteraction($event, true) && behavior.setOpen(!behavior.open())" [attr.aria-disabled]="disabled" [attr.aria-controls]="summaryAriaControls">
     <span [ngClass]="'details__summaryContent'">
       <fsds-icon [ngClass]="'details__icon'" name="chevron-down" size="sm"></fsds-icon>
       <span [ngClass]="'details__summaryText'">
@@ -46,7 +47,9 @@ let nextInstanceId = 0;
 })
 export class DetailsComponent {
   @Input() summary!: string;
-  @Input() open?: boolean;
+  private readonly inputOpen = signal<boolean | undefined>(undefined);
+  @Input() get open(): boolean | undefined { return this.inputOpen(); }
+  set open(value: boolean | undefined) { this.inputOpen.set(value); }
   @Input() defaultOpen?: boolean;
   @Input() onOpenChange?: (open: boolean) => void;
   @Input() disabled?: boolean;
@@ -57,26 +60,31 @@ export class DetailsComponent {
   protected readonly instanceId = `fsds-details-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useDetails({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useDetails>;
+  protected get behavior(): ReturnType<typeof useDetails> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useDetails({
     open: () => this.open,
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
+  protected canActivateInteraction = canActivateInteraction;
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "details",
       (this.variant ?? "default") ? `details--${(this.variant ?? "default")}` : null,
       (this.icon ?? "left") ? `details--${(this.icon ?? "left")}` : null,
       this.behavior.open() ? "details--open" : null,
       this.disabled ? "details--disabled" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   get summaryAriaControls(): string | undefined {
-    return [this.open ? `${this.instanceId}-content` : null].filter(Boolean).join(" ") || undefined;
+    return [this.behavior.open() ? `${this.instanceId}-content` : null].filter(Boolean).join(" ") || undefined;
   }
 }
 

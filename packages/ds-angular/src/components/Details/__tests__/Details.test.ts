@@ -26,6 +26,16 @@ describe("Details — unit", () => {
     expect(classTokens(fixture.componentInstance)).toContain("details");
   });
 
+  it("toggles the open channel from the summary click", () => {
+    const fixture = createFixture();
+    const seen: boolean[] = [];
+    fixture.componentInstance.onOpenChange = (v: boolean) => seen.push(v);
+    fixture.detectChanges();
+    const host = fixture.nativeElement.querySelector(".details__summary") as HTMLElement;
+    host.click();
+    expect(seen).toEqual([true]);
+  });
+
   it("applies variant=default variant class", () => {
     const fixture = createFixture();
     fixture.componentInstance.variant = "default";

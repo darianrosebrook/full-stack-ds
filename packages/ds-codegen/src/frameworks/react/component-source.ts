@@ -152,7 +152,10 @@ export function generateReactComponentSource(
     !isCompound && !isDisclosure && /\buseMemo\(/.test(bodyHaystack);
 
   const importLines: string[] = [];
+  if (bodyHaystack.includes("canActivateInteraction(")) importLines.push(`import { canActivateInteraction } from "../../primitives/interaction.js";`);
+  if (isCompound) importLines.push(`import { InteractionHost, type InteractionHostProps } from "../../primitives/InteractionHost";`);
   if (isDisclosure) {
+    importLines.push(`import { toggleInteractionItem } from "../../primitives/interaction.js";`);
     // Repeated-disclosure container: arrow-key host (KeyboardEvent, useRef,
     // useCallback), generated id namespace (useId). No register effect, so no
     // useEffect. Context is provided via createCompoundContext (below).
@@ -948,7 +951,7 @@ function generateCompoundStateSubcomponents(ir: ComponentIR): string {
   // ---------------------------------------------------------------------------
   // Tab sub-component (interactive item)
   // ---------------------------------------------------------------------------
-  lines.push(`export interface ${tabName}Props {`);
+  lines.push(`export interface ${tabName}Props extends Omit<InteractionHostProps, "value"> {`);
   lines.push(`  value: string;`);
   lines.push(`  disabled?: boolean;`);
   lines.push(`  children?: ReactNode;`);
@@ -960,9 +963,12 @@ function generateCompoundStateSubcomponents(ir: ComponentIR): string {
   lines.push(`  value,`);
   lines.push(`  disabled,`);
   lines.push(`  children,`);
+  lines.push(`  asChild,`);
+
   lines.push(`  className,`);
   lines.push(`  "data-testid": testId,`);
-  lines.push(`}: ${tabName}Props) {`);
+  lines.push(`  ...hostProps
+}: ${tabName}Props) {`);
   lines.push(`  const ctx = use${name}Context();`);
   lines.push(`  const isActive = ctx.${channelName} === value;`);
   lines.push(`  const classNames = [`);
@@ -982,7 +988,7 @@ function generateCompoundStateSubcomponents(ir: ComponentIR): string {
   lines.push(`  }, [registerTab, unregisterTab]);`);
   lines.push(``);
   lines.push(`  return (`);
-  lines.push(`    <button`);
+  lines.push(`    <InteractionHost {...hostProps} asChild={asChild}`);
   lines.push(`      role="tab"`);
   lines.push(`      type="button"`);
   lines.push(`      className={classNames}`);
@@ -993,10 +999,10 @@ function generateCompoundStateSubcomponents(ir: ComponentIR): string {
   lines.push(`      aria-selected={isActive}`);
   lines.push(`      tabIndex={isActive ? 0 : -1}`);
   lines.push(`      disabled={disabled}`);
-  lines.push(`      onClick={() => ctx.${setterName}(value)}`);
+  lines.push(`      onActivate={() => ctx.${setterName}(value)}`);
   lines.push(`    >`);
   lines.push(`      {children}`);
-  lines.push(`    </button>`);
+  lines.push(`    </InteractionHost>`);
   lines.push(`  );`);
   lines.push(`}`);
   lines.push(``);
@@ -1130,7 +1136,7 @@ function generateDisclosureStateSubcomponents(ir: ComponentIR): string {
 
   // Trigger ------------------------------------------------------------------
   const triggerName = `${name}${capitalize(itemPart.name)}`;
-  lines.push(`export interface ${triggerName}Props {`);
+  lines.push(`export interface ${triggerName}Props extends Omit<InteractionHostProps, "value"> {`);
   lines.push(`  value: string;`);
   lines.push(`  children?: ReactNode;`);
   lines.push(`  className?: string;`);
@@ -1140,9 +1146,12 @@ function generateDisclosureStateSubcomponents(ir: ComponentIR): string {
   lines.push(`export function ${triggerName}({`);
   lines.push(`  value,`);
   lines.push(`  children,`);
+  lines.push(`  asChild,`);
+
   lines.push(`  className,`);
   lines.push(`  "data-testid": testId,`);
-  lines.push(`}: ${triggerName}Props) {`);
+  lines.push(`  ...hostProps
+}: ${triggerName}Props) {`);
   lines.push(`  const ctx = use${name}Context();`);
   lines.push(`  const isOpen = ctx.isItemOpen(value);`);
   lines.push(`  const classNames = [`);
@@ -1156,7 +1165,7 @@ function generateDisclosureStateSubcomponents(ir: ComponentIR): string {
     lines.push(`    <${headerTag} className="${prefix}__${headerPartName}">`);
   }
   const triggerIndent = headerPartName ? "      " : "    ";
-  lines.push(`${triggerIndent}<${triggerTag}`);
+  lines.push(`${triggerIndent}<InteractionHost as="${triggerTag}" {...hostProps} asChild={asChild}`);
   lines.push(`${triggerIndent}  type="button"`);
   lines.push(`${triggerIndent}  className={classNames}`);
   lines.push(`${triggerIndent}  data-disclosure-trigger=""`);
@@ -1166,10 +1175,11 @@ function generateDisclosureStateSubcomponents(ir: ComponentIR): string {
   lines.push(`${triggerIndent}  aria-expanded={isOpen}`);
   if (hasDisabled) lines.push(`${triggerIndent}  disabled={ctx.disabled}`);
   lines.push(`${triggerIndent}  data-testid={testId}`);
-  lines.push(`${triggerIndent}  onClick={() => ctx.toggleItem(value)}`);
+  lines.push(`${triggerIndent}  onActivate={() => ctx.toggleItem(value)}`);
   lines.push(`${triggerIndent}>`);
   lines.push(`${triggerIndent}  {children}`);
   if (chevronNode) {
+    lines.push(`${triggerIndent}  {!asChild && (`);
     lines.push(
       renderReactDomNode(
         chevronNode,
@@ -1177,8 +1187,9 @@ function generateDisclosureStateSubcomponents(ir: ComponentIR): string {
         triggerIndent.length + 2,
       ),
     );
+    lines.push(`${triggerIndent}  )}`);
   }
-  lines.push(`${triggerIndent}</${triggerTag}>`);
+  lines.push(`${triggerIndent}</InteractionHost>`);
   if (headerPartName) {
     lines.push(`    </${headerTag}>`);
   }
@@ -1338,20 +1349,7 @@ function generateDisclosureStateRootComponent(ir: ComponentIR): string {
   lines.push(``);
   lines.push(`  const toggleItem = useCallback(`);
   lines.push(`    (itemValue: string) => {`);
-  lines.push(`      if (type === "multiple") {`);
-  lines.push(`        const current = Array.isArray(${channelName}) ? ${channelName} : [];`);
-  lines.push(`        const next = current.includes(itemValue)`);
-  lines.push(`          ? current.filter((v) => v !== itemValue)`);
-  lines.push(`          : [...current, itemValue];`);
-  lines.push(`        ${setterName}(next);`);
-  lines.push(`      } else {`);
-  lines.push(`        const current = typeof ${channelName} === "string" ? ${channelName} : "";`);
-  const collapsibleGuard = hasCollapsible
-    ? `current === itemValue && collapsible ? "" : itemValue`
-    : `itemValue`;
-  lines.push(`        const next = ${collapsibleGuard};`);
-  lines.push(`        ${setterName}(next);`);
-  lines.push(`      }`);
+  lines.push(`      ${setterName}(toggleInteractionItem(${channelName}, itemValue, type === "multiple", ${hasCollapsible ? "Boolean(collapsible)" : "false"}));`);
   lines.push(`    },`);
   lines.push(`    [${channelName}, ${setterName}, type${hasCollapsible ? ", collapsible" : ""}],`);
   lines.push(`  );`);
@@ -1925,6 +1923,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
   // Build the hook call. The hook returns `{ <name>: <value>, set<Name>: ... }`
   // for each channel (per the per-framework hook-source.ts).
   const hookResultParts: string[] = [];
+  if (ir.interaction?.focusContainer) hookResultParts.push("panelRef");
   for (const ch of channels) {
     hookResultParts.push(ch.name);
     hookResultParts.push(`set${capitalize(ch.name)}`);
@@ -2583,6 +2582,13 @@ function renderReactDomNode(
   // for channel-routed events too. Legacy `bindings.onX` paths feed
   // through the attribute loop below until the retention drops.
   for (const [eventName, expr] of Object.entries(node.events)) {
+    const activation = eventName === "click" ? node.activation : undefined;
+    const disclosure = activation?.channel;
+    if (disclosure) {
+      const next = activation!.operation === "toggle" ? `!${disclosure.name}` : String(activation!.operation === "open");
+      attrs.push(`onClick={(e) => { if (canActivateInteraction(e, ${activation!.cancelNativeDefault})) set${capitalize(disclosure.name)}(${next}); }}`);
+      continue;
+    }
     const reactEventName =
       ctx.formControlPart === node.part &&
       ctx.formControlEvent === eventName &&
@@ -2673,6 +2679,8 @@ function renderReactDomNode(
     }
     attrs.push(`${jsxKey}={${valueExpr}}`);
   }
+
+  if (node.focusContainer) attrs.push(`ref={panelRef}`);
 
   // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: generated per-instance id on
   // relationship targets, and the lowered idref attributes on sources.

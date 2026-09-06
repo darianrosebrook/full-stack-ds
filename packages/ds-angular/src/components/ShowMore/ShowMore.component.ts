@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass } from "@angular/common";
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { StackComponent } from "../../primitives/index.js";
 import { useShowMore } from "./useShowMore.js";
 // @generated:end
@@ -27,14 +28,16 @@ import { useShowMore } from "./useShowMore.js";
   <div [ngClass]="'show-more__content'" [style.--fsds-show-more-content-max-lines]="(maxLines ?? 3)">
     <ng-content />
   </div>
-  <button [ngClass]="'show-more__trigger'" type="button" (click)="behavior.setExpanded(!behavior.expanded())" [attr.aria-expanded]="behavior.expanded()">
+  <button [ngClass]="'show-more__trigger'" type="button" (click)="canActivateInteraction($event, false) && behavior.setExpanded(!behavior.expanded())" [attr.aria-expanded]="behavior.expanded()">
     {{ (behavior.expanded() ? (showLessLabel ?? 'Show less') : (showMoreLabel ?? 'Show more')) }}
   </button>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowMoreComponent {
-  @Input() expanded?: boolean;
+  private readonly inputExpanded = signal<boolean | undefined>(undefined);
+  @Input() get expanded(): boolean | undefined { return this.inputExpanded(); }
+  set expanded(value: boolean | undefined) { this.inputExpanded.set(value); }
   @Input() defaultExpanded?: boolean;
   @Input() onExpandedChange?: (expanded: boolean) => void;
   @Input() maxLines?: number = 3;
@@ -43,20 +46,25 @@ export class ShowMoreComponent {
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useShowMore({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useShowMore>;
+  protected get behavior(): ReturnType<typeof useShowMore> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useShowMore({
     expanded: () => this.expanded,
     defaultExpanded: this.defaultExpanded,
     onExpandedChange: (v) => this.onExpandedChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
+  protected canActivateInteraction = canActivateInteraction;
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "show-more",
       this.behavior.expanded() ? "show-more--expanded" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 }
 
 @Component({

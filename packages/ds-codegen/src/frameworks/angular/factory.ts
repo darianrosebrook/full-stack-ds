@@ -1,4 +1,5 @@
 import { emitBoxModelBoundaryCss } from '../../box-model.js';
+import { INTERACTION_RUNTIME_SOURCE } from "../../interaction-runtime.js";
 /**
  * Angular FrameworkEmitter.
  *
@@ -125,6 +126,7 @@ export function createAngularEmitter(): FrameworkEmitter {
     emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
       return [
         { relativePath: "box-model.css", contents: emitBoxModelBoundaryCss() },
+        { relativePath: "interaction.ts", contents: INTERACTION_RUNTIME_SOURCE },
         {
           relativePath: `${ir.name}.component.ts`,
           contents: generateAngularStackPrimitiveSource(ir),

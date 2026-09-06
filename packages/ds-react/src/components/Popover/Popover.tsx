@@ -3,16 +3,11 @@ import {
   type ReactNode,
   type HTMLAttributes,
   type ButtonHTMLAttributes,
-  type ReactElement,
-  type Ref,
-  Children,
-  cloneElement,
   createContext,
-  isValidElement,
   useContext,
 } from "react";
 import { useAnchoredSurface, type SurfaceTriggerHandlers } from "../../primitives/surfaces/useAnchoredSurface";
-import { composeRefs, composeEventHandlers } from "../../primitives/surfaces/compose";
+import { bindInteractionHost } from "../../primitives/InteractionHost";
 import { createPortal } from "react-dom";
 import { usePortalTarget } from "../../primitives/hooks";
 import { useAnchoredPosition } from "../../primitives/surfaces/useAnchoredPosition";
@@ -193,67 +188,9 @@ interface AdoptChildArgs {
 }
 
 function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
-  // Validate exactly one valid React element child. React.Children.only
-  // throws when count !== 1 (handles 0 and >1 cases). isValidElement
-  // catches strings/numbers/fragments that slipped past Children.only.
-  const only = Children.only(child);
-  if (!isValidElement(only)) {
-    throw new Error(
-      "Popover.Trigger asChild requires its child to be a valid React element. " +
-        "Strings, numbers, and fragments are not adoptable as a host element.",
-    );
-  }
-  const element = only as ReactElement<Record<string, unknown>> & {
-    ref?: Ref<HTMLElement>;
-  };
-  const childProps = element.props ?? {};
-  const childRef = element.ref;
-
-  const handlers = ctx.getTriggerHandlers();
-  const mergedHandlers: Record<string, unknown> = {};
-  for (const key of [
-    "onPointerEnter",
-    "onPointerLeave",
-    "onFocus",
-    "onBlur",
-    "onClick",
-  ] as const) {
-    const surfaceHandler = handlers[key];
-    if (!surfaceHandler) continue;
-    const consumerHandler = childProps[key] as
-      | ((event: never) => void)
-      | undefined;
-    mergedHandlers[key] = composeEventHandlers(
-      consumerHandler as never,
-      surfaceHandler as never,
-    );
-  }
-
-  // ARIA precedence: consumer wins. The surface only supplies the
-  // anchor-relation attribute (e.g. aria-describedby); other aria-*
-  // belong to the consumer's element.
-  const mergedAria: Record<string, unknown> = { ...ariaProps };
-  for (const k of Object.keys(childProps)) {
-    if (k.startsWith("aria-") && childProps[k] !== undefined) {
-      mergedAria[k] = childProps[k];
-    }
-  }
-
-  // Composition order: start from rest (consumer-passed-to-Trigger),
-  // then child's own props (child wins), then merged aria/handlers,
-  // then the data marker, then the composed ref last.
-  const composedClassName = [rest.className, childProps.className as string | undefined]
-    .filter(Boolean)
-    .join(" ") || undefined;
-
-  return cloneElement(element, {
-    ...rest,
-    ...childProps,
-    ...mergedAria,
-    ...mergedHandlers,
-    className: composedClassName,
+  return bindInteractionHost(child, rest, ariaProps, ctx.getTriggerHandlers() as Record<string, unknown>, {
     "data-popover-trigger": "",
-    ref: composeRefs(childRef, ctx.registerAnchorRefOnly as Ref<HTMLElement>),
+    ref: ctx.registerAnchorRefOnly,
   });
 }
 

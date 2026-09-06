@@ -1,3 +1,4 @@
+import { requestInteractionChange } from "../interaction.js";
 import type { ReactiveControllerHost } from 'lit';
 
 export interface ControllableStateOptions<T> {
@@ -33,9 +34,10 @@ export class ControllableStateController<T> {
   }
 
   set(next: T) {
-    this._internal = next;
-    this.opts.onChange?.(next);
-    this.host.requestUpdate();
+    requestInteractionChange(this.opts.controlled?.(), next, value => {
+      this._internal = value;
+      this.host.requestUpdate();
+    }, this.opts.onChange);
   }
 
   hostConnected() {}

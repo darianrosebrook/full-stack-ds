@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { useSwitch } from "./useSwitch.js";
 import { FieldAssociationService } from "../../primitives/index.js";
@@ -33,7 +33,9 @@ export type SwitchSize = "sm" | "md" | "lg";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwitchComponent {
-  @Input() checked?: boolean;
+  private readonly inputChecked = signal<boolean | undefined>(undefined);
+  @Input() get checked(): boolean | undefined { return this.inputChecked(); }
+  set checked(value: boolean | undefined) { this.inputChecked.set(value); }
   @Input() defaultChecked?: boolean;
   @Input() onChange?: (checked: boolean) => void;
   @Input() size?: SwitchSize = "md";
@@ -44,22 +46,26 @@ export class SwitchComponent {
   protected fieldAssociation = inject(FieldAssociationService, { optional: true });
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useSwitch({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useSwitch>;
+  protected get behavior(): ReturnType<typeof useSwitch> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useSwitch({
     checked: () => this.checked,
     defaultChecked: this.defaultChecked,
     onChange: (v) => this.onChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "switch",
       (this.size ?? "md") ? `switch--${(this.size ?? "md")}` : null,
       this.behavior.checked() ? "switch--checked" : null,
       this.disabled ? "switch--disabled" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   protected handleCheckedChange(event: Event): void {
     this.behavior.setChecked((event.target as HTMLInputElement).checked);

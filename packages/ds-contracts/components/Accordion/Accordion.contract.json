@@ -364,5 +364,17 @@
         "AccordionContent"
       ]
     }
+  },
+  "interaction": {
+    "channel": "openness",
+    "content": "content",
+    "presence": "hidden",
+    "triggers": [
+      {
+        "part": "trigger",
+        "operation": "toggle-item"
+      }
+    ],
+    "disabledProp": "disabled"
   }
 }

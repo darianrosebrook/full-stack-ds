@@ -127,6 +127,10 @@
 .tabs--pills .tabs__indicator {
   display: none;
 }
+
+.tabs__panel[hidden]:not([hidden="until-found"]) {
+  display: none !important;
+}
 /* @generated:end */
 
 /* @generated:start reduced-motion */

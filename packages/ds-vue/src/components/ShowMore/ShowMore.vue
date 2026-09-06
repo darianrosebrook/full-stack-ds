@@ -2,6 +2,7 @@
 // @generated:start imports
 import { computed } from "vue";
 import { useShowMore } from "./useShowMore.js";
+import { canActivateInteraction } from "../../primitives/interaction.js";
 // @generated:end
 
 // @custom:start imports
@@ -65,7 +66,7 @@ const classNames = computed(() => [
     <div :class="'show-more__content'" :style="{ '--fsds-show-more-content-max-lines': props.maxLines }">
       <slot />
     </div>
-    <button :class="'show-more__trigger'" type="button" @click="() => behavior.setExpanded(!behavior.expanded.value)" :aria-expanded="behavior.expanded.value">
+    <button :class="'show-more__trigger'" type="button" @click="(e: MouseEvent) => { if (canActivateInteraction(e, false)) behavior.setExpanded(!behavior.expanded.value); }" :aria-expanded="behavior.expanded.value">
       {{ (behavior.expanded.value ? props.showLessLabel : props.showMoreLabel) }}
     </button>
   </div>

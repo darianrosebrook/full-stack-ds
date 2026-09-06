@@ -1,5 +1,6 @@
 <script lang="ts">
 // @generated:start imports
+import { toggleInteractionItem } from "../../primitives/interaction.js";
 import { useAccordion, provideAccordionContext } from "./useAccordion.svelte.js";
 // @generated:end
 
@@ -60,17 +61,7 @@ function isItemOpen(itemValue: string): boolean {
 
 function toggleItem(itemValue: string): void {
   const v = behavior.openness;
-  if (type === "multiple") {
-    const current = Array.isArray(v) ? v : [];
-    behavior.setOpenness(
-      current.includes(itemValue)
-        ? current.filter((x) => x !== itemValue)
-        : [...current, itemValue],
-    );
-  } else {
-    const current = typeof v === "string" ? v : "";
-    behavior.setOpenness(current === itemValue && collapsible ? "" : itemValue);
-  }
+  behavior.setOpenness(toggleInteractionItem(v, itemValue, type === "multiple", Boolean(collapsible)));
 }
 
 function handleKeyDown(e: KeyboardEvent): void {

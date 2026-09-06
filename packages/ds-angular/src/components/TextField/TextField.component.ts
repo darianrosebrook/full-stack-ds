@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useTextField } from "./useTextField.js";
@@ -41,7 +41,9 @@ let nextInstanceId = 0;
 })
 export class TextFieldComponent {
   @Input() type?: string;
-  @Input() value?: string;
+  private readonly inputValue = signal<string | undefined>(undefined);
+  @Input() get value(): string | undefined { return this.inputValue(); }
+  set value(value: string | undefined) { this.inputValue.set(value); }
   @Input() defaultValue?: string;
   @Input() onChange?: (value: string) => void;
   @Input() invalid?: boolean;
@@ -54,21 +56,25 @@ export class TextFieldComponent {
   protected readonly instanceId = `fsds-text-field-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useTextField({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useTextField>;
+  protected get behavior(): ReturnType<typeof useTextField> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useTextField({
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "text-field",
       this.invalid ? "text-field--invalid" : null,
       this.disabled ? "text-field--disabled" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   get fieldAriaDescribedby(): string | undefined {
     return [`${this.instanceId}-description`, this.invalid ? `${this.instanceId}-error` : null, this.ariaDescribedby].filter(Boolean).join(" ") || undefined;

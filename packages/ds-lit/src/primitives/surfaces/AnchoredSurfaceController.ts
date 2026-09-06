@@ -1,3 +1,4 @@
+import { bindInteractionEvents } from "../interaction.js";
 import type { ReactiveControllerHost } from "lit";
 import {
   SurfaceController,
@@ -101,24 +102,11 @@ export class AnchoredSurfaceController extends SurfaceController {
       });
     };
 
-    if (triggers.includes("hover")) {
-      anchor.addEventListener("pointerenter", open);
-      this.listenerCleanups.push(() =>
-        anchor.removeEventListener("pointerenter", open),
-      );
-    }
-    if (triggers.includes("focus")) {
-      anchor.addEventListener("focus", open);
-      this.listenerCleanups.push(() =>
-        anchor.removeEventListener("focus", open),
-      );
-    }
-    if (triggers.includes("click")) {
-      anchor.addEventListener("click", toggle);
-      this.listenerCleanups.push(() =>
-        anchor.removeEventListener("click", toggle),
-      );
-    }
+    this.listenerCleanups.push(bindInteractionEvents(anchor, {
+      pointerenter: triggers.includes("hover") ? open : undefined,
+      focus: triggers.includes("focus") ? open : undefined,
+      click: triggers.includes("click") ? toggle : undefined,
+    }));
   }
 
   private installDismissal(): void {

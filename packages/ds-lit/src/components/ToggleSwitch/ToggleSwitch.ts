@@ -141,11 +141,14 @@ export class ToggleSwitchElement extends LitElement {
   override ariaLabel: string | null = null;
   @property({ type: String }) ariaDescribedby?: string;
 
-  private behavior = new ToggleSwitchBehavior(this, {
+  private initializedBehavior?: ToggleSwitchBehavior;
+  private get behavior(): ToggleSwitchBehavior {
+    return this.initializedBehavior ??= new ToggleSwitchBehavior(this, {
     checked: () => this.checked,
     defaultChecked: this.defaultChecked,
     onChange: (v) => this.onChange?.(v),
   });
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();

@@ -96,7 +96,7 @@ export function Dialog({
             </View>
             <Pressable
               style={styles.closeButton}
-              onPress={() => setOpennessValue(!openness)}
+              onPress={() => setOpennessValue(false)}
               accessibilityRole="button"
             />
           </View>

@@ -229,12 +229,15 @@ export class CalendarElement extends LitElement {
   @property({ type: Boolean }) shouldCloseOnSelect?: boolean = true;
   @property({ attribute: false }) days?: Date[];
 
-  private behavior = new CalendarBehavior(this, {
+  private initializedBehavior?: CalendarBehavior;
+  private get behavior(): CalendarBehavior {
+    return this.initializedBehavior ??= new CalendarBehavior(this, {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
     shouldCloseOnSelect: this.shouldCloseOnSelect,
   });
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();

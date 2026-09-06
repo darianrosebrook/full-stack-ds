@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, ViewChild, ElementRef, signal, Injector, runInInjectionContext, untracked, OnInit, OnDestroy } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
+import { canActivateInteraction } from "../../primitives/interaction.js";
 import { StackComponent } from "../../primitives/index.js";
 import { useSheet } from "./useSheet.js";
 // @generated:end
@@ -30,7 +31,7 @@ let nextInstanceId = 0;
     <div [ngClass]="'sheet__overlay'" aria-hidden="true" role="presentation" (click)="behavior.setOpenness(false)"></div>
   </ng-container>
   <ng-container *ngIf="behavior.openness()">
-    <div [ngClass]="'sheet__content'" role="dialog" aria-modal="true" [attr.aria-label]="ariaLabel" [attr.data-side]="(side ?? 'right')" [attr.aria-labelledby]="contentAriaLabelledby" [attr.aria-describedby]="contentAriaDescribedby">
+    <div [ngClass]="'sheet__content'" #interactionPanel role="dialog" aria-modal="true" [attr.aria-label]="ariaLabel" [attr.data-side]="(side ?? 'right')" [attr.aria-labelledby]="contentAriaLabelledby" [attr.aria-describedby]="contentAriaDescribedby">
       <div [ngClass]="'sheet__header'">
         <h2 [ngClass]="'sheet__title'" [attr.id]="instanceId + '-title'">
           <ng-content select="[slot=title]" />
@@ -38,7 +39,7 @@ let nextInstanceId = 0;
         <p [ngClass]="'sheet__description'" [attr.id]="instanceId + '-description'">
           <ng-content select="[slot=description]" />
         </p>
-        <button [ngClass]="'sheet__close'" type="button" aria-label="Close sheet" (click)="behavior.setOpenness(!behavior.openness())"></button>
+        <button [ngClass]="'sheet__close'" type="button" aria-label="Close sheet" (click)="canActivateInteraction($event, false) && behavior.setOpenness(false)"></button>
       </div>
       <div [ngClass]="'sheet__body'">
         <ng-content />
@@ -52,7 +53,9 @@ let nextInstanceId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SheetComponent implements OnInit, OnDestroy {
-  @Input() open?: boolean;
+  private readonly inputOpen = signal<boolean | undefined>(undefined);
+  @Input() get open(): boolean | undefined { return this.inputOpen(); }
+  set open(value: boolean | undefined) { this.inputOpen.set(value); }
   @Input() defaultOpen?: boolean;
   @Input() onOpenChange?: (open: boolean) => void;
   @Input() side?: SheetSide = "right";
@@ -63,23 +66,31 @@ export class SheetComponent implements OnInit, OnDestroy {
   @Input() class?: string;
 
   protected readonly instanceId = `fsds-sheet-${nextInstanceId++}`;
+  @ViewChild("interactionPanel") set interactionPanel(element: ElementRef<HTMLElement> | undefined) {
+    this.behavior.panelRef.nativeElement = element?.nativeElement ?? null;
+  }
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useSheet({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useSheet>;
+  protected get behavior(): ReturnType<typeof useSheet> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useSheet({
     open: () => this.open,
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
+  protected canActivateInteraction = canActivateInteraction;
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "sheet",
       (this.side ?? "right") ? `sheet--${(this.side ?? "right")}` : null,
       this.behavior.openness() ? "sheet--open" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 
   get contentAriaLabelledby(): string | undefined {
     return [!this.ariaLabel ? `${this.instanceId}-title` : null, this.ariaLabelledby].filter(Boolean).join(" ") || undefined;

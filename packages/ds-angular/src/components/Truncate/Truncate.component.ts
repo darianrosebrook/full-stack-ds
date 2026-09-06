@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useTruncate } from "./useTruncate.js";
@@ -38,7 +38,9 @@ import { useTruncate } from "./useTruncate.js";
 export class TruncateComponent {
   @Input() lines?: number;
   @Input() expandable?: boolean;
-  @Input() expanded?: boolean;
+  private readonly inputExpanded = signal<boolean | undefined>(undefined);
+  @Input() get expanded(): boolean | undefined { return this.inputExpanded(); }
+  set expanded(value: boolean | undefined) { this.inputExpanded.set(value); }
   @Input() defaultExpanded?: boolean;
   @Input() onExpandedChange?: (expanded: boolean) => void;
   @Input() expandText?: string = "Show more";
@@ -46,20 +48,24 @@ export class TruncateComponent {
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);
-  protected behavior = useTruncate({
+  private injector = inject(Injector);
+  private initializedBehavior?: ReturnType<typeof useTruncate>;
+  protected get behavior(): ReturnType<typeof useTruncate> {
+    return this.initializedBehavior ??= untracked(() => runInInjectionContext(this.injector, () => useTruncate({
     expanded: () => this.expanded,
     defaultExpanded: this.defaultExpanded,
     onExpandedChange: (v) => this.onExpandedChange?.(v),
     destroyRef: this.destroyRef,
-  });
+  })));
+  }
 
-  classes = computed(() =>
-    [
+  classes(): string {
+    return [
       "truncate",
       this.behavior.expanded() ? "truncate--expanded" : null,
       this.class,
-    ].filter(Boolean).join(" "),
-  );
+    ].filter(Boolean).join(" ");
+  }
 }
 
 @Component({
