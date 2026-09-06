@@ -30,7 +30,9 @@ scope:
     - 'packages/ds-react-native/src/components'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Component semantics and reusable visual behavior remain contract-authored; showcase CSS only composes or themes those components.'
+  - 'Dark and light surfaces consume semantic tokens rather than fixed light-theme color literals.'
+  - 'Geometry regressions are pinned by rendered browser measurements, not selector-presence assertions.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
