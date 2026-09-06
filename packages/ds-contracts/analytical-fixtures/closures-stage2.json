@@ -1035,8 +1035,8 @@
   ],
   "authority": {
     "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
-    "erasureAuthorityDigest": "664d679217720bf59bc3a2914af6b4417f7d19e675657ab0db8a76e0517c796c",
-    "witnessAuthorityDigest": "2e0eadf93d0d6afec1cb91f8a143f65545e32112cbc6f358e51377f0550fa30c",
+    "erasureAuthorityDigest": "23541e2be5ffbb6161308f39ee8014edac428ed65315e3872adf7c3e89b8bfbf",
+    "witnessAuthorityDigest": "60174888bef962724ec04f6395b152c3e18c07c93948cbf7e4aad07ccbe73ff8",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   }

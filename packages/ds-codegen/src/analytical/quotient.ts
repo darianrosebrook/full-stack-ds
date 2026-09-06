@@ -20,7 +20,7 @@
  * It is external to the engine: it never judges anything.
  */
 import { loadDerivation, type Coordinate } from "./census.js";
-import { executeAll, executePlan, synthesizePlan, type ErasurePlan } from "./erasure-plan.js";
+import { executeAll, executePlan, synthesizePlan, type ErasurePlan, type ForgetOperation } from "./erasure-plan.js";
 import { isForgotten, isMarker, Q, type QuotientImage } from "./quotient-image.js";
 import { alphaRename } from "./alpha-rename.js";
 import type { Fixture } from "./structure.js";
@@ -80,6 +80,31 @@ export function eraseAll(fixture: Fixture | QuotientImage, coordinates: readonly
  * refused rather than sampled, because a sampled certificate is not one.
  */
 export const CONFLUENCE_BOUND = 7;
+
+/**
+ * Same-slot operation pairs that are KNOWN not to compose, with the structural
+ * reason. A refusal on one of these is a declared fact, not an anomaly; a
+ * refusal on any other pair is a finding.
+ *
+ * Measured over the footprint population after the absence-spelling learned to
+ * see classes: this is the only non-confluent same-slot family left (5 pairs,
+ * all arity × order on one reference list, all on synthesized specimens).
+ */
+export const DECLARED_NON_COMMUTING: readonly { kinds: readonly [ForgetOperation["kind"], ForgetOperation["kind"]]; reason: string }[] = [
+  {
+    kinds: ["forget-reference-arity", "forget-reference-order"],
+    reason:
+      "arity is forgotten by cutting the list to its declared floor, and any cut either reads the order (keep the first k) or destroys it (keep a canonical k); " +
+      "the two are individually erasable and not composable, so the composite is refused rather than normalized through one order",
+  },
+];
+
+/** The declared reason two plans on one slot do not commute, if the pair is declared. */
+export function declaredNonCommuting(p: ErasurePlan, q: ErasurePlan): string | undefined {
+  if (JSON.stringify(p.locator.steps) !== JSON.stringify(q.locator.steps)) return undefined;
+  const kinds = [p.operation.kind, q.operation.kind];
+  return DECLARED_NON_COMMUTING.find((d) => d.kinds.every((k) => kinds.includes(k)) && kinds.every((k) => d.kinds.includes(k)))?.reason;
+}
 
 /**
  * The distinct canonical images a plan set yields across every listing of it.
