@@ -53,3 +53,10 @@ evidence:
     command: pnpm exec vitest run --maxWorkers=2
     exit_code: 0
     commit_sha: d9134efc
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "governed:rail overall pass; all five non-root framework suites pass; integrated Playwright Details, interaction and design-bindings suite 32 passed; fixture repeat 2 passed; lint/typecheck/docs pass"
+    recorded_at: "2026-09-06T05:49:20.481Z"
+    command: "FSDS_E2E_BASE=http://127.0.0.1:5187 FSDS_E2E_PORT=5187 pnpm exec playwright test e2e/details-disclosure.spec.ts e2e/interaction-substrate.spec.ts e2e/design-bindings.spec.ts --workers=1"
+    exit_code: 0
+    commit_sha: d9134efc
