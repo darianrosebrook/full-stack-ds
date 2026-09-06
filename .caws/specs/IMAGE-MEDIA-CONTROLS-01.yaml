@@ -74,3 +74,11 @@ evidence:
     exit_code: 0
     artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/retoken-pages/image-media-focused.log
     commit_sha: dbafd5644ae330074fe07ea5d9a111071804ea69
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Image fixed sizes, all ratio presets, crop and responsive variants match computed facts in all five web targets."
+    recorded_at: "2026-09-06T08:17:41.443Z"
+    command: FSDS_E2E_PORT=5199 pnpm exec playwright test e2e/image-media.spec.ts e2e/retoken-pages.spec.ts e2e/design-bindings.spec.ts e2e/component-token-consumption.spec.ts --workers=2
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/retoken-pages/image-media-browser-reviewed.log
+    commit_sha: dbafd5644ae330074fe07ea5d9a111071804ea69
