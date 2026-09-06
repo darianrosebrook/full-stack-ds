@@ -49,3 +49,11 @@ contracts:
   - name: 'native-token-consumption'
     type: contract-test
     path: 'packages/ds-codegen/src/frameworks/native-token-consumption.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: tmp/native-token-consumption/validation.json; focused codegen tests 22 pass; generated Kotlin resolver tests 3 pass; Swift suite 44 executed with 4 existing skips and no failures
+    recorded_at: "2026-09-06T09:33:20.725Z"
+    command: "pnpm exec vitest run packages/ds-codegen/src/frameworks/native-token-consumption.test.ts packages/ds-codegen/src/frameworks/jetpack-compose/component-source.test.ts; ./packages/ds-jetpack-compose/gradlew -p packages/ds-jetpack-compose :library:test --no-daemon; swift test --package-path packages/ds-swiftui --scratch-path tmp/swift-build"
+    exit_code: 0
+    artifact_path: tmp/native-token-consumption/validation.json
