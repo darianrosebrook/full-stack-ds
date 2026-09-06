@@ -80,3 +80,11 @@ evidence:
     exit_code: 0
     artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/token-consumption/audit.json
     commit_sha: "8b60da3afb6394634cdb239d14670f5b301b73b6"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "validation/component-token-consumption.test.ts rejects orphan tokens, severed consumers, cycles and raw custom-property bypass; semantic non-use remains allowed; no known-dead ledger or reseed path"
+    recorded_at: "2026-09-06T06:27:13.678Z"
+    command: pnpm exec vitest run packages/ds-codegen/src/validation/component-token-consumption.test.ts
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/token-consumption/property-rejection-tests.log
+    commit_sha: bba5beae
