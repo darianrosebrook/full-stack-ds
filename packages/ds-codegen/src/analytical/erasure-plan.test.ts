@@ -13,10 +13,11 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { loadCensus, loadDerivation, loadLocators, loadPlans, type Coordinate } from "./census.js";
-import { derivedRunAfter, executeAll, executePlan, orderPlans, wouldChange, type ForgetOperation } from "./erasure-plan.js";
+import { derivedRunAfter, executeAll, executePlan, orderPlans, wouldChange, type ErasurePlan, type ForgetOperation } from "./erasure-plan.js";
 import { forgetBranchField, loadClosures } from "./closure.js";
+import { specimens } from "./erasure-audit.js";
 import { FIXTURES_DIR, loadOracle, resolveSide } from "./necessity.js";
-import { canonical, CONFLUENCE_BOUND, distinctListingImages, erase, planFor } from "./quotient.js";
+import { canonical, CONFLUENCE_BOUND, declaredNonCommuting, distinctListingImages, erase, planFor } from "./quotient.js";
 import { isMarker } from "./quotient-image.js";
 import { parseFixtures, type Fixture } from "./structure.js";
 
@@ -734,13 +735,53 @@ describe("composition — derived ordering and confluence over the bound registr
     for (const c of classes) expect(c).toEqual({ "@q": "member-class", members: ["interval", "nominal", "ordinal"] });
   });
 
-  it("a merge against an absence-spelling on one leaf, and arity against order on one list, are genuinely non-confluent", () => {
-    // Neither pair has an edge, and no law says which erasure comes first: the
-    // two listings are two different quotients, which is what admission refuses.
+  it("a merge against an absence-spelling on one leaf composes to ONE image: absence absorbs a class that contains the member", () => {
+    // Merged first, the slot holds {absent, censored}; the absence-spelling of
+    // `censored` sees a class containing it and deletes the slot. Spelled first,
+    // `censored` leaves and the merge finds nothing. Both listings: the
+    // declaration is gone — a ~ censored ~ absent under the joint quotient.
     const absence = ["observation.null:absent~censored", "observation.null:censored~<absent>"].map((id) => planFor(byId.get(id)!)!);
-    expect(distinctListingImages(fx("FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"), absence)).toHaveLength(2);
-    const list = ["relation.derivedBy.project.keep#arity", "relation.derivedBy.project.keep#order"].map((id) => planFor(byId.get(id)!)!);
-    expect(distinctListingImages(fx("FX_PROJECT_DROPS_NEST_LEVEL"), list)).toHaveLength(2);
+    const base = fx("FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS");
+    expect(absence.every((p) => wouldChange(base, p))).toBe(true);
+    const images = distinctListingImages(base, absence);
+    expect(images).toHaveLength(1);
+    expect(images[0]).not.toContain("censored");
+    expect(images[0]).not.toContain("member-class");
+  });
+
+  it("arity against order on one list is the DECLARED non-commuting pair: two images, refused, with its reason on record", () => {
+    const [arity, order] = ["relation.derivedBy.project.keep#arity", "relation.derivedBy.project.keep#order"].map((id) => planFor(byId.get(id)!)!);
+    expect(distinctListingImages(fx("FX_PROJECT_DROPS_NEST_LEVEL"), [arity, order])).toHaveLength(2);
+    expect(declaredNonCommuting(arity, order)).toMatch(/not composable/);
+    expect(declaredNonCommuting(order, arity)).toBe(declaredNonCommuting(arity, order));
+    // The declaration is about KINDS on ONE slot: the same kinds on different lists are
+    // not a declared pair, and other kinds on the same list are not either.
+    const otherOrder = planFor(byId.get("relation.derivedBy.nest.levels#order")!)!;
+    expect(declaredNonCommuting(arity, otherOrder)).toBeUndefined();
+    const sameListIncidence = planFor(byId.get("relation.derivedBy.project.keep#incidence")!)!;
+    expect(declaredNonCommuting(arity, sameListIncidence)).toBeUndefined();
+  });
+
+  it("over the whole footprint population, every non-confluent same-slot pair is a declared one", () => {
+    const pop = specimens().fixtures;
+    const all = [...plans.values()];
+    const stepsOf = (p: ErasurePlan) => JSON.stringify(p.locator.steps);
+    const undeclared: string[] = [];
+    const declared: string[] = [];
+    for (let i = 0; i < all.length; i++) {
+      for (let j = i + 1; j < all.length; j++) {
+        const p = all[i];
+        const q = all[j];
+        if (stepsOf(p) !== stepsOf(q)) continue;
+        const splits = pop.some((f) => wouldChange(f, p) && wouldChange(f, q) && distinctListingImages(f, [p, q]).length > 1);
+        if (!splits) continue;
+        (declaredNonCommuting(p, q) ? declared : undeclared).push(`${p.id} x ${q.id}`);
+      }
+    }
+    expect(undeclared).toEqual([]);
+    // Not vacuous: the declared family is exercised by the population.
+    expect(declared.length).toBeGreaterThan(0);
+    expect(declared.every((d) => d.includes("#arity") && d.includes("#order"))).toBe(true);
   });
 
   it("refuses to certify beyond the exhaustive bound rather than sampling", () => {

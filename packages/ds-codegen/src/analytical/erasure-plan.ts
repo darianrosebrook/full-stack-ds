@@ -212,7 +212,7 @@ function affects(s: Slot, op: ForgetOperation, floor = 1): boolean {
       // and the result depends on listing order.
       return mergesHere(v, op);
     case "spell-member-as-absent":
-      return v === op.member;
+      return spellsHere(v, op.member);
     case "delete-tagged-holder":
       return obj(v) && v.kind === op.member;
     case "forget-reference-arity":
@@ -243,6 +243,23 @@ function dedupe(xs: unknown[]): unknown[] {
 }
 
 /** Does this value, or any member of this list, fall in the merged class? */
+/**
+ * What an absence-spelling of `m` reaches: a slot reading `m`, or a slot holding
+ * a member class that CONTAINS `m`.
+ *
+ * The second clause is the confluence law for this operation. "Spell m as
+ * absent" deletes; a merge writes a class; and a deletion that only matched the
+ * bare member could not see a class, so merge(a,b) then absent(b) left {a,b}
+ * standing while absent(b) then merge(a,b) left nothing — two images from one
+ * plan set, refused as evidence by A10 (16 pairs over the footprint population).
+ * Under the JOINT quotient a ~ b and b ~ absent, so the whole class is absent:
+ * a class containing `m` is deleted exactly as `m` is. That is saturation
+ * expressed in the deletion codomain — nothing is created, no slot that was
+ * never declared appears, and a single erasure on a source fixture (which
+ * carries no classes) is byte-for-byte what it was.
+ */
+const spellsHere = (v: unknown, member: string): boolean => v === member || (isMemberClass(v) && v.members.includes(member));
+
 function mergesHere(v: unknown, op: { from: string; into: string }): boolean {
   const one = (x: unknown): boolean =>
     x === op.from || x === op.into || (isMemberClass(x) && x.members.some((m) => m === op.from || m === op.into));
@@ -322,7 +339,9 @@ export function executePlan(fixture: Fixture | QuotientImage, plan: ErasurePlan)
         // A representation that cannot say `m` explicitly must express it by
         // leaving the slot off. If nothing downstream tells the two apart, `m`
         // is a redundant spelling of the default rather than a degree of freedom.
-        if (v === op.member) remove(s);
+        // A class that contains `m` is spelled as absent too (see spellsHere):
+        // absence absorbs whatever `m` has already been identified with.
+        if (spellsHere(v, op.member)) remove(s);
         break;
       case "delete-tagged-holder":
         // Absence of a DISCRIMINATED declaration is absence of the whole
@@ -340,6 +359,17 @@ export function executePlan(fixture: Fixture | QuotientImage, plan: ErasurePlan)
         // Truncation still conflates the two ABOVE the floor: [a,b,c] and
         // [a,b,d] both become [a,b]. That is a limit of expressing three
         // independent facets by cutting one list, not something the floor fixes.
+        //
+        // And it composes with `forget-reference-order` in two ways: the cut
+        // keeps the FIRST `floor` elements, so sort-then-cut and cut-then-sort
+        // are different images. That is not a defect of the cut — any rule for
+        // which elements survive either reads the order (this one) or destroys
+        // it (an order-independent choice forgets which survivor came first,
+        // and only above the floor, so it cannot even be claimed as a law).
+        // Arity and order on one list are individually erasable and not
+        // composable under cutting; the pair is DECLARED non-commuting
+        // (`DECLARED_NON_COMMUTING` in quotient.ts) and refused as a composite,
+        // never normalized through one order.
         if (Array.isArray(v)) write(s, v.slice(0, floor));
         break;
       case "forget-reference-order":

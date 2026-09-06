@@ -48,7 +48,7 @@ import * as path from "node:path";
 import { authorityIdentities, type AuthorityIdentities } from "./authority.js";
 import { loadBranchSignatures, loadCensus, loadLocators, loadPlans, type BranchSignatures, type Coordinate } from "./census.js";
 import { ruleSurfaceDigest } from "./corpus-integrity.js";
-import { deletionFootprint, planAt, type ErasurePlan, type StructuralLocator } from "./erasure-plan.js";
+import { deletionFootprint, planAt, type ErasurePlan, type LocatorStep, type StructuralLocator } from "./erasure-plan.js";
 import { basesForSpec, type SubtractionDisposition } from "./subtraction.js";
 import {
   checkWitness,
@@ -232,6 +232,66 @@ export const forgetBranchField = (
     branch: n.branch,
     field: n.field,
   });
+
+/**
+ * The discriminated HOLDER of a `.kind` leaf, located from the leaf's own
+ * locator by dropping its final property step.
+ *
+ * Obligation 3 asks whether two stimuli are identical OUTSIDE the holder under
+ * investigation. That is a question about the proof instrument, not about the
+ * kernel, and it used to be answered by looking the holder path up in the
+ * census locators — which exist for a holder exactly when the census emits a
+ * `<holder>#present` coordinate for it. An object holder (`relation.derivedBy`,
+ * `field.additivity`) has one; a positional holder (an assertion element) has
+ * none, because an assertion is required where it stands and its presence is
+ * not a degree of freedom. So the instrument threw for every assertion-branch
+ * carrier, and the only way to make it run was to invent a presence coordinate
+ * the semantics do not have. Deriving the holder from the leaf removes that
+ * dependence: the holder of a discriminator is the object its `kind` selects
+ * from, whatever the census says about that object's presence. Where the
+ * census DOES locate the holder the two must agree, and a disagreement is a
+ * defect rather than a choice.
+ */
+export function holderLocatorOf(leaf: string, locators: Map<string, StructuralLocator> = loadLocators()): StructuralLocator {
+  const loc = locators.get(leaf);
+  if (!loc) throw new Error(`closure: no locator for discriminator leaf ${leaf}`);
+  const last = loc.steps[loc.steps.length - 1];
+  if (!last || last.kind !== "prop") throw new Error(`closure: ${leaf} does not end in a property step, so it selects no holder to forget`);
+  const holder = leaf.replace(/\.[^.]+$/, "");
+  const steps = loc.steps.slice(0, -1);
+  const census = locators.get(holder);
+  if (census && !sameLocatorSteps(census.steps, steps)) {
+    throw new Error(`closure: the census locates ${holder} at ${JSON.stringify(census.steps)} but ${leaf} selects from ${JSON.stringify(steps)}`);
+  }
+  return { path: holder, steps };
+}
+
+const sameLocatorSteps = (a: readonly LocatorStep[], b: readonly LocatorStep[]) =>
+  a.length === b.length && a.every((s, i) => JSON.stringify(s) === JSON.stringify(b[i]));
+
+/**
+ * Forget the discriminated holder of `leaf` — obligation 3's "identical outside
+ * the holder" instrument, as an executable plan. It is a proof abstraction and
+ * nothing else: no census coordinate names it, no registered plan carries it,
+ * and nothing it erases is a claim about the kernel.
+ *
+ * The operation follows the executor's own doctrine for required versus
+ * optional slots. An OPTIONAL holder (`relation.derivedBy`) is deleted, so a
+ * side that declares it and a side that omits it become identical — the
+ * holder's presence is a fact INSIDE the holder, and obligation 3 must not read
+ * it as a difference outside. A POSITIONAL holder (an assertion element) is
+ * required where it stands: deleting every element empties the array, the
+ * executor drops the emptied declaration, and the image no longer has an
+ * `assertions` at all — a shape the representation cannot express, which the
+ * canonical form rightly refuses. So a positional holder is HOLED to a marker
+ * instead, exactly as `forget-value` holes a required leaf: arity survives,
+ * nothing inside the element does.
+ */
+export const forgetHolderOf = (leaf: string, locators: Map<string, StructuralLocator> = loadLocators()): ErasurePlan => {
+  const locator = holderLocatorOf(leaf, locators);
+  const positional = locator.steps[locator.steps.length - 1]?.kind === "elements";
+  return { id: `forget(${locator.path})`, locator, operation: { kind: positional ? "forget-value" : "delete-holder" }, representationEffects: [] };
+};
 
 /**
  * Every coordinate a branch-field deletion at `path` makes unobservable.
@@ -512,8 +572,10 @@ export function checkClosure(
   // 3. CONTROLLED STIMULI: identical outside the discriminated holder, and
   //    their required outcomes differ under authority that is not the engine.
   //
-  //    "Identical outside the holder" is checked by FORGETTING the holder path
-  //    in both and comparing canonical forms.
+  //    "Identical outside the holder" is checked by FORGETTING the holder in
+  //    both and comparing canonical forms. The holder is located from the
+  //    carrier's leaf (see `holderLocatorOf`), never from a presence coordinate
+  //    the census may or may not emit for it.
   //
   //    This used to gather every census coordinate under `<holder>.` and erase
   //    those instead, which made a structural question depend on which
@@ -525,7 +587,7 @@ export function checkClosure(
   if (!stimuli) {
     obligations.push(unevaluable("3-controlled-stimuli", "no stimuli constructed"));
   } else {
-    const forgetHolder = [forgetPath(parsed.holder)];
+    const forgetHolder = [forgetHolderOf(parsed.leaf)];
     const outside = canonical(executeAll(a!.fixture, forgetHolder)) === canonical(executeAll(b!.fixture, forgetHolder));
     const differ = !sameOutcome(a!.outcome, b!.outcome);
     const vocabulary = groundedVocabulary(oracle);

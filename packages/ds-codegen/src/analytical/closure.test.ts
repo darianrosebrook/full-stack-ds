@@ -20,7 +20,7 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadBranchSignatures, loadCensus } from "./census.js";
+import { loadBranchSignatures, loadCensus, loadLocators, loadPlans } from "./census.js";
 import type { Oracle, Witness } from "./necessity.js";
 import type { Fixture } from "./structure.js";
 import {
@@ -35,7 +35,9 @@ import {
   compatibleControls,
   deriveNormalization,
   footprintOf,
+  forgetHolderOf,
   groundedVocabulary,
+  holderLocatorOf,
   loadClosures,
   loadStanding,
   parseCarrier,
@@ -44,7 +46,9 @@ import {
   type Standing,
   type StandingIndex,
 } from "./closure.js";
+import { executeAll } from "./erasure-plan.js";
 import { checkWitness, classifyWitness, loadCodomainAdjudications, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
+import { canonical } from "./quotient.js";
 
 const census = loadCensus();
 const oracle = loadOracle();
@@ -442,6 +446,91 @@ describe("obligation 3 — controlled stimuli", () => {
     const o = obligation(c, "3-");
     expect(o.held).toBe(false);
     expect(o.detail).toContain("both stimuli require");
+  });
+});
+
+describe("obligation 3 — the holder instrument is located from the discriminator leaf, not from a presence coordinate", () => {
+  const locators = loadLocators();
+  const ASSERTION = "assertion.kind:aggregate~ratio-comparison";
+
+  it("agrees with the census wherever the census locates the holder, over every discriminated union", () => {
+    const checked: string[] = [];
+    for (const leaf of signatures.keys()) {
+      const holder = leaf.replace(/\.[^.]+$/, "");
+      const fromCensus = locators.get(holder);
+      if (!fromCensus) continue;
+      expect(holderLocatorOf(leaf, locators).steps).toEqual(fromCensus.steps);
+      checked.push(holder);
+    }
+    // Not vacuous: both object holders whose closures carry stimuli are among the agreements.
+    expect(checked).toEqual(expect.arrayContaining(["relation.derivedBy", "field.additivity"]));
+  });
+
+  it("locates a positional holder the census emits no presence coordinate for", () => {
+    expect(locators.has("assertion")).toBe(false);
+    expect(holderLocatorOf("assertion.kind", locators)).toEqual({
+      path: "assertion",
+      steps: [{ kind: "prop", name: "assertions" }, { kind: "elements" }],
+    });
+  });
+
+  it("confers nothing: no assertion holder coordinate or registered plan exists because the instrument needed one", () => {
+    expect(census.some((c) => c.leaf === "assertion" || c.id === "assertion#present")).toBe(false);
+    expect(loadPlans().has("forget(assertion)")).toBe(false);
+    // The instrument's id is spelled like a plan id and is deliberately not a registry key.
+    expect(forgetHolderOf("assertion.kind", locators).id).toBe("forget(assertion)");
+  });
+
+  it("holes a positional holder and deletes an optional one, so the image stays expressible either way", () => {
+    // A required element is holed like a required leaf; an optional declaration is deleted like an optional one.
+    expect(forgetHolderOf("assertion.kind", locators).operation).toEqual({ kind: "forget-value" });
+    expect(forgetHolderOf("relation.derivedBy.kind", locators).operation).toEqual({ kind: "delete-holder" });
+    const before = oracle.fixtures.get("FX_TEMP_RATIO_COMPARISON")!;
+    const image = executeAll(before, [forgetHolderOf("assertion.kind", locators)]);
+    const after = (image as unknown as { assertions: unknown[] }).assertions;
+    // Arity survives; nothing inside the element does; and the canonical form accepts the image.
+    expect(after).toHaveLength(before.assertions.length);
+    expect(after.every((a) => typeof a === "object" && a !== null && !("kind" in (a as object)))).toBe(true);
+    expect(() => canonical(image)).not.toThrow();
+  });
+
+  it("refuses a leaf that selects no holder, and a census locator that disagrees with the derived one", () => {
+    const fake = new Map(locators);
+    fake.set("x.kind", { path: "x.kind", steps: [{ kind: "prop", name: "xs" }, { kind: "elements" }] });
+    expect(() => holderLocatorOf("x.kind", fake)).toThrow("selects no holder to forget");
+    fake.set("y.kind", { path: "y.kind", steps: [{ kind: "prop", name: "y" }, { kind: "prop", name: "kind" }] });
+    fake.set("y", { path: "y", steps: [{ kind: "prop", name: "elsewhere" }] });
+    expect(() => holderLocatorOf("y.kind", fake)).toThrow("the census locates y at");
+  });
+
+  it("evaluates every obligation for an assertion-branch carrier instead of throwing, and obligation 3 can hold", () => {
+    // The recorded illegal ratio reading of an interval field, against the same
+    // declaration asserting the field's mean, which an interval scale supports.
+    // The two differ inside the one assertion and nowhere else.
+    const c = closureOf({
+      carrier: ASSERTION,
+      a: { fixture: "FX_TEMP_RATIO_COMPARISON" },
+      b: {
+        base: "FX_TEMP_RATIO_COMPARISON",
+        patch: [{ set: "assertions.0", value: { kind: "aggregate", relation: "readings", field: "temp", op: "mean" } }],
+        outcome: { status: "admissible", codes: [], terms: [] },
+        cause: "CASE_TEMPERATURE_LENGTH_FROM_ZERO forbids reading an interval field as a ratio; the mean of the same field is interval-meaningful",
+      },
+    });
+    const r = check(c);
+    expect(r.obligations.map((o) => o.id.split("-")[0])).toEqual(["1", "2", "3", "4", "5", "6", "7", "8"]);
+    const o = r.obligations.find((x) => x.id.startsWith("3-"))!;
+    expect(o.unevaluable).toBeUndefined();
+    expect(o.held).toBe(true);
+    expect(o.detail).toContain("identical outside assertion");
+    expect(r.problems.filter((p) => p.includes("schema-invalid"))).toEqual([]);
+  });
+
+  it("still rejects assertion stimuli that differ outside the assertion", () => {
+    const c = closureOf({ carrier: ASSERTION, a: { fixture: "FX_TEMP_RATIO_COMPARISON" }, b: { fixture: "FX_SURVEY_MEAN_SATISFACTION" } });
+    const o = obligation(c, "3-");
+    expect(o.held).toBe(false);
+    expect(o.detail).toContain("differ somewhere other than assertion");
   });
 });
 

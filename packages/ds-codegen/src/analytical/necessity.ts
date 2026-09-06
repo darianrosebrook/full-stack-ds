@@ -25,7 +25,7 @@ import { type Bindings, type Holdout, loadCorpusInput } from "./corpus-integrity
 import { DERIVATION_DIAG } from "./codes.js";
 import { type BoundaryFinding, checkDerivations } from "./derivation.js";
 import { type ErasurePlan, resolveSlots, type StructuralLocator } from "./erasure-plan.js";
-import { canonical, collides, distinctListingImages, erase, eraseAll, planFor } from "./quotient.js";
+import { canonical, collides, declaredNonCommuting, distinctListingImages, erase, eraseAll, planFor } from "./quotient.js";
 import { loadQuotientValidator, markersIn } from "./quotient-image.js";
 import type { RelationalStructure } from "./relation-model.js";
 import { type Fixture, loadFixtureValidator, parseFixtures } from "./structure.js";
@@ -334,9 +334,13 @@ export function checkWitness(
     for (const [label, side] of [["a", a], ["b", b]] as const) {
       const images = distinctListingImages(side.fixture, plans);
       if (images.length > 1) {
+        // A declared pair is a known fact and says so; any other refusal is a finding.
+        const declared = plans.length === 2 ? declaredNonCommuting(plans[0], plans[1]) : undefined;
         failures.push({
           code: "ERASURE_NOT_CONFLUENT",
-          detail: `${label}: ${images.length} distinct images across the listings of ${w.coordinates.join(" + ")}; refused as evidence rather than normalized through one order`,
+          detail:
+            `${label}: ${images.length} distinct images across the listings of ${w.coordinates.join(" + ")}; refused as evidence rather than normalized through one order` +
+            (declared ? `; declared: ${declared}` : ""),
         });
       }
     }

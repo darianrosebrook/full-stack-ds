@@ -29,6 +29,7 @@
     "analytical:freeze": "tsx packages/ds-codegen/src/analytical/freeze.ts",
     "analytical:freeze:record": "tsx packages/ds-codegen/src/analytical/freeze.ts --record",
     "analytical:freeze:check": "tsx packages/ds-codegen/src/analytical/freeze.ts --check",
+    "analytical:final-quotient": "tsx packages/ds-codegen/src/analytical/final-quotient.ts --check",
     "generate": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js",
     "generate:all": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --target=all",
     "generate:react-native": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --target=react-native",
