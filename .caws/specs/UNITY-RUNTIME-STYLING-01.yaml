@@ -49,3 +49,8 @@ evidence:
     evidence_ref: StylingTests narrow Player viewport bounds wrapping reachable scrolling; tmp/unity-styling/screenshots/runtime-popover-320.png and runtime-popover-640.png
     recorded_at: "2026-09-06T07:55:53.650Z"
     commit_sha: d4cfca8b
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "17 Unity tests passed including original 14 interactions; tmp/unity-styling/results.xml; README runtime scaling guidance; repository-gates.log records rail root frameworks and doc checks passing"
+    recorded_at: "2026-09-06T07:55:55.538Z"
+    commit_sha: d4cfca8b
