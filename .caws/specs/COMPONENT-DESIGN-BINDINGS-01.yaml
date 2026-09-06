@@ -80,3 +80,7 @@ evidence:
     status: pass
     evidence_ref: "Source 75fc3357: e2e/design-bindings.spec.ts verifies missing semantic CSS, fallback restoration after clear, independent part overrides, and generated Button/Card controls across React/Vue/Svelte/Angular/Lit. audit:token-resolvability: zero unresolved references, including nested fallback reads."
     recorded_at: "2026-09-06T05:42:10.250Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "e2e/design-bindings.spec.ts: nested and adjacent box controls, shorthand/axis/side precedence, component-boundary host to physical-box propagation across five web frameworks. Component-family design variables deliberately inherit; generic box controls reset at each nested boundary."
+    recorded_at: "2026-09-06T05:42:13.420Z"
