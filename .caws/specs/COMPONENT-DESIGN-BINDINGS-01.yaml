@@ -84,3 +84,7 @@ evidence:
     status: pass
     evidence_ref: "e2e/design-bindings.spec.ts: nested and adjacent box controls, shorthand/axis/side precedence, component-boundary host to physical-box propagation across five web frameworks. Component-family design variables deliberately inherit; generic box controls reset at each nested boundary."
     recorded_at: "2026-09-06T05:42:13.420Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Merged e94247ee: governed:rail PASS; 3706 root tests and 2516 framework tests PASS; full runtime/binding/editor browser run 125 PASS, one existing skip, followed by 21 binding/editor checks and inspector visual check after integration. Manual representative default/retokened review. Evidence: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/design-bindings/evidence.json. New override API is Web DOM; native generated sources unchanged."
+    recorded_at: "2026-09-06T05:42:16.168Z"
