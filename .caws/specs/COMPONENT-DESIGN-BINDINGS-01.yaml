@@ -2,9 +2,11 @@ id: COMPONENT-DESIGN-BINDINGS-01
 title: 'Bind shared component design properties with fallback and override contracts'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Implemented common design bindings, scoped layered box controls and inspector integration; tests and representative visual checks pass, with legacy gaps and native proof limits retained.'
 created_at: '2026-09-06T04:33:27.240Z'
-updated_at: '2026-09-06T05:11:54.643Z'
+updated_at: '2026-09-06T05:42:24.786Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
