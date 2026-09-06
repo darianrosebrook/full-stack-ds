@@ -45,3 +45,11 @@ non_functional: {}
 contracts:
   - name: 'interaction-composition'
     type: behavior
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: interaction.test.ts renamed-contract and invalid-binding checks; e2e/design-bindings.spec.ts plus e2e/interaction-substrate.spec.ts preserve both capabilities; full root 273 files / 3746 tests pass
+    recorded_at: "2026-09-06T05:49:10.838Z"
+    command: pnpm exec vitest run --maxWorkers=2
+    exit_code: 0
+    commit_sha: d9134efc
