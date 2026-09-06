@@ -29,7 +29,7 @@ export const BUILTIN_TARGET_PACKS: Readonly<Record<BuiltinTargetId, TargetPackMa
     permissions: SAFE_BUILTIN_PERMISSIONS,
     admission: {
       commands: [{ check: "godot-runtime-export", command: ["node", "scripts/godot-pilot.mjs"], scope: { packageRoot: "packages/ds-godot/", extensions: [".gd", ".tscn", ".tres"], coverage: "covered_by_package_check" } }],
-      knownGaps: ["Pilot allowlist only; outside the TypeScript admission rail. Godot runtime/export checks are explicit local lanes, not CI.", "Only frozen semantic traces and foreground token fallbacks are covered. Other props, styling, accessibility and physical input remain outside admission."],
+      knownGaps: ["Pilot allowlist only; outside the TypeScript admission rail. Godot runtime/export checks are explicit local lanes, not CI.", "Only frozen semantic traces and loaded Theme foreground fallback values are covered. Other props, styling, accessibility and physical input remain outside admission."],
     },
   },
   unity: {
@@ -42,7 +42,7 @@ export const BUILTIN_TARGET_PACKS: Readonly<Record<BuiltinTargetId, TargetPackMa
     permissions: SAFE_BUILTIN_PERMISSIONS,
     admission: {
       commands: [{ check: "unity-editmode", command: ["node", "scripts/unity-tests.mjs"], scope: { packageRoot: "packages/ds-unity/", extensions: [".cs", ".uxml"], coverage: "covered_by_package_check" } }],
-      knownGaps: ["Pilot allowlist only; outside the TypeScript admission rail. Unity Editor tests are an explicit local lane, not CI.", "No screen-reader, player-build, controller-input, full styling/motion or visual parity claim. Token geometry uses declared fallback values."],
+      knownGaps: ["Pilot allowlist only; outside the TypeScript admission rail. Unity Editor tests are an explicit local lane, not CI.", "A separate explicit local lane witnesses a macOS Player on Unity 6000.5.3f1; other platforms and the declared minimum version remain unverified. No screen-reader, controller-input, full styling/motion or visual parity claim. Token geometry uses declared fallback values."],
     },
   },
   react: {

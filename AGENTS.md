@@ -4,7 +4,7 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## What this repo is
 
-This is **not** primarily a design system — it is a falsifiable architectural claim about contract-governed compositional systems, with a Web DOM design system as the existence proof. One polymorphic primitive (`Stack`) plus JSON contracts drive code generation for the **Web DOM** framework targets (<!-- web-framework-list -->React, Vue, Svelte, Angular, Lit), plus React Native, a Figma descriptor target, the native targets (SwiftUI, Jetpack Compose), and a bounded Unity UI Toolkit target. If the same contract can drive all of them idiomatically without leaking framework details, the contract is at the right level of abstraction.
+This is **not** primarily a design system — it is a falsifiable architectural claim about contract-governed compositional systems, with a Web DOM design system as the existence proof. One polymorphic primitive (`Stack`) plus JSON contracts drive code generation for the **Web DOM** framework targets (<!-- web-framework-list -->React, Vue, Svelte, Angular, Lit), plus React Native, a Figma descriptor target, the native targets (SwiftUI, Jetpack Compose), and bounded Unity UI Toolkit and Godot Control targets. If the same contract can drive all of them idiomatically without leaking framework details, the contract is at the right level of abstraction.
 
 The registered target set is authoritative in `fsds.targets.json` (<!-- registered-target-count -->11 builtin targets today); the **rail-admitted** subset is authoritative in `packages/ds-codegen/src/validation/admission-descriptor.ts` (<!-- rail-admitted-target-count -->6 — the <!-- web-framework-count -->5 web frameworks plus react-native). Never hand-count either from prose; both numbers here are gated by `pnpm run docs:check-claims`.
 
@@ -309,7 +309,11 @@ Built-in targets are admitted via `packages/ds-codegen/src/target-packs/builtin.
 
 ### Unity UI Toolkit pilot
 
-`packages/ds-unity` is a local UPM package, excluded from pnpm workspace discovery. `pnpm run generate:unity` emits the registry allowlist; `pnpm run test:unity` runs a separate real Unity EditMode lane requiring an activated Editor. Unity is outside the TypeScript admission rail. See [Unity target](docs/architecture/unity-target.md) for supported behavior and proof boundaries.
+`packages/ds-unity` is a local UPM package, excluded from pnpm workspace discovery. `pnpm run generate:unity` emits the registry allowlist; `pnpm run test:unity` runs a separate real Unity EditMode lane requiring an activated Editor. `node scripts/unity-player.mjs` builds and launches a fresh macOS Player consumer; this separate local witness does not establish other platforms or the declared minimum Editor version. Unity is outside the TypeScript admission rail. See [Unity target](docs/architecture/unity-target.md) for supported behavior and proof boundaries.
+
+### Godot comparative pilot
+
+`packages/ds-godot` emits the registry allowlist with `pnpm run generate -- --target=godot`. `node scripts/godot-pilot.mjs` checks editor serialization, runtime observations and a fresh macOS export. `node scripts/engine-comparison.mjs` compares frozen semantic traces in Unity Editor panels against Godot runtime/export; it does not run those shared traces in a Unity Player. These are explicit local lanes outside the TypeScript admission rail and CI. Theme resource-value checks do not prove rendered token consumption. See [Godot target](docs/architecture/godot-target.md) for supported behavior and proof boundaries.
 
 ## Non-claims to respect
 
