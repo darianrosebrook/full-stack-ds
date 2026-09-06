@@ -82,17 +82,28 @@ for (const framework of ['react','vue','svelte','angular','lit']) {
   });
 }
 
-test('inspector exposes a formerly fixed property and clearing it restores the rendered default', async ({page}) => {
+test('inspector exposes a formerly fixed property and clearing it restores the rendered default', async ({page}, info) => {
   await page.goto('/#/scratch/properties-panel');
   await expect(page.locator('.fsds-pp__title')).toHaveText('Button');
   const button = page.frameLocator('iframe').first().locator('.button').first();
   await expect(button).toBeVisible();
   const baseline = await button.evaluate(el => getComputedStyle(el).borderTopWidth);
   const input = page.getByLabel('button.design.root.border.width value', {exact:true});
+  await expect(input).toHaveAttribute('data-fsds-component', 'input');
   await input.fill('6px');
   await expect(button).toHaveCSS('border-top-width','6px');
+  const scope = page.getByRole('combobox', {name:'Part / condition', exact:true});
+  const rootScope = await scope.inputValue();
+  const alternate = await scope.locator('option').evaluateAll((options, current) =>
+    options.map(option => (option as HTMLOptionElement).value).find(value => value !== current)!, rootScope);
+  await scope.selectOption(alternate);
+  await expect(input).toHaveCount(0);
+  await scope.selectOption(rootScope);
+  await expect(input).toHaveValue('6px');
   await input.fill('');
   await expect(button).toHaveCSS('border-top-width',baseline);
+  await input.blur();
+  await page.getByRole('region', {name:'Design properties', exact:true}).screenshot({path:info.outputPath('design-properties-inspector.png'), animations:'disabled'});
 });
 
 for (const framework of ['react','vue','svelte','angular','lit']) {

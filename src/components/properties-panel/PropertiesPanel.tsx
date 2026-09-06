@@ -11,9 +11,8 @@
 //   Properties  — typed prop controls (toggle/number/text/select)
 //   Component tokens — swatch+value rows, each re-bindable via the token picker
 //
-// The chrome is intentionally custom (native controls restyled) rather than the
-// DS's own composite components: the inspector is editor chrome, not part of
-// the system being inspected — same separation Figma makes.
+// Generated controls are used where they support the editor's interactions.
+// Specialized controls and the shared native selector remain explicit debt.
 
 import { useState } from "react";
 import type { ComponentBundle, FoundationToken } from "../../types/data";
@@ -37,7 +36,7 @@ import { TokenPicker, type TokenPick } from "./TokenPicker";
 import { TokenValueControl } from "./TokenValueControl";
 import { BoxModelEditor } from "./BoxModelEditor";
 import { PropertySection } from "./PropertySection";
-import { Switch } from "@full-stack-ds/react";
+import { Input, Switch } from "@full-stack-ds/react";
 import "./properties-panel.css";
 
 export interface PropertiesPanelProps {
@@ -474,19 +473,21 @@ export function PropertiesPanel({
 
       {bindings.length > 0 && (
         <PropertySection title="Design properties">
-          <label className="fsds-pp__label" htmlFor="fsds-design-scope">Part / condition</label>
-          <select id="fsds-design-scope" className="fsds-pp__input" value={activeDesignScope} onChange={e => setDesignScope(e.target.value)}>
-            {designScopes.map(scope => <option key={scope} value={scope}>{scope}</option>)}
-          </select>
+          <span className="fsds-pp__label">Part / condition</span>
+          <PropControl
+            control={{ kind: "select", name: "designScope", label: "Part / condition", options: designScopes, isVariantAxis: false }}
+            value={activeDesignScope}
+            onChange={value => setDesignScope(String(value))}
+          />
           {designGroups.map(group => (
             <PropertySection key={group} title={group}>
               {activeBindings.filter(b => b.group === group).map(binding => (
                 <div key={binding.slot} className="fsds-pp__field" data-design-binding={binding.slot}>
                   <label className="fsds-pp__label" htmlFor={binding.slot}>{binding.cssProperty}</label>
-                  <input id={binding.slot} className="fsds-pp__input" aria-label={`${binding.slot} value`}
+                  <Input id={binding.slot} className="fsds-pp__input" aria-label={`${binding.slot} value`}
                     value={tokenValues[binding.slot] ?? ''} placeholder={binding.defaultValue}
                     title={`Default: ${binding.resolvesTo ?? binding.defaultValue}. Clear to restore the default.`}
-                    onChange={e => onTokenChange(binding.slot, e.target.value)} />
+                    onChange={value => onTokenChange(binding.slot, value)} />
                 </div>
               ))}
             </PropertySection>
