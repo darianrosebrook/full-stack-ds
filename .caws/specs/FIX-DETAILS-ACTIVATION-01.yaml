@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: details-activation
 created_at: '2026-09-06T04:07:47.038Z'
-updated_at: '2026-09-06T04:19:49.424Z'
+updated_at: '2026-09-06T05:00:32.459Z'
 created_by_session: '01a074e4-7308-7fc1-afa3-495ead6426ec'
 blast_radius:
   modules:
@@ -27,6 +27,26 @@ scope:
     - packages/ds-codegen/src/frameworks/react-native/component-source.ts
     - packages/ds-react-native/src/components/Select/Select.tsx
     - packages/ds-codegen/src/prop-surface-inventory.test.ts
+    - packages/ds-codegen/src/interaction.ts
+    - packages/ds-codegen/src/interaction.test.ts
+    - packages/ds-codegen/src/interaction-runtime.ts
+    - packages/ds-codegen/src/interaction-runtime.test.ts
+    - packages/ds-codegen/src/ir.ts
+    - packages/ds-codegen/src/contract.ts
+    - packages/ds-codegen/src/css.ts
+    - packages/ds-codegen/src/frameworks
+    - packages/ds-contracts/component.contract.schema.json
+    - packages/ds-contracts/components/Accordion
+    - packages/ds-contracts/components/Tabs
+    - packages/ds-contracts/components/ShowMore
+    - packages/ds-contracts/components/Dialog
+    - packages/ds-contracts/components/Sheet
+    - packages/ds-contracts/components/Popover
+    - packages/ds-contracts/components/Tooltip
+    - packages/ds-*/src/**
+    - e2e/interaction-substrate.spec.ts
+    - e2e/fixtures/interaction-substrate.tsx
+    - docs/architecture/interaction-substrate.md
   out: []
 invariants:
   - 'Disclosure state remains owned by the declared channel; no component-name emitter exceptions or homepage workaround.'
