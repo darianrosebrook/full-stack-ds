@@ -90,3 +90,11 @@ evidence:
     exit_code: 0
     artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/retoken-pages/validation-summary.json
     commit_sha: dbafd5644ae330074fe07ea5d9a111071804ea69
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Both saved pages passed geometry and interaction assertions at 1440px and 390px; all four after screenshots visually reviewed. Root 3794 and frameworks 2527 passed, two existing Lit skips; governed rail passed."
+    recorded_at: "2026-09-06T08:17:45.854Z"
+    command: FSDS_E2E_PORT=5199 pnpm exec playwright test e2e/image-media.spec.ts e2e/retoken-pages.spec.ts e2e/design-bindings.spec.ts e2e/component-token-consumption.spec.ts --workers=2
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/retoken-pages/validation-summary.json
+    commit_sha: dbafd5644ae330074fe07ea5d9a111071804ea69
