@@ -421,7 +421,19 @@
   },
   "loadingText": {
     "display": {
-      "literal": "inline-block",
+      "literal": "inline-flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "justify-content": {
+      "literal": "center",
       "platforms": [
         "web"
       ]

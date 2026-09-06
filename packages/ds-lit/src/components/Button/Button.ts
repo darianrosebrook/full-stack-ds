@@ -205,7 +205,9 @@ export class ButtonElement extends LitElement {
     }
 
     .button__loadingText {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     @keyframes spin {

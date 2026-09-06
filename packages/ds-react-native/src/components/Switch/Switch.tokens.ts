@@ -285,6 +285,138 @@ export const switchTokenScopes = {
       fallback: "#d0d0d0",
     },
   },
+  "variant_sm": {
+    "box-model.padding-block-start": {
+      name: "box-model.padding-block-start",
+      cssVar: "--fsds-box-model-padding-block-start",
+      ref: "semantic.action.size.small.padding-block",
+      fallback: 2,
+    },
+    "box-model.padding-block-end": {
+      name: "box-model.padding-block-end",
+      cssVar: "--fsds-box-model-padding-block-end",
+      ref: "semantic.action.size.small.padding-block",
+      fallback: 2,
+    },
+    "box-model.padding-inline-start": {
+      name: "box-model.padding-inline-start",
+      cssVar: "--fsds-box-model-padding-inline-start",
+      ref: "semantic.action.size.small.padding-inline",
+      fallback: 4,
+    },
+    "box-model.padding-inline-end": {
+      name: "box-model.padding-inline-end",
+      cssVar: "--fsds-box-model-padding-inline-end",
+      ref: "semantic.action.size.small.padding-inline",
+      fallback: 4,
+    },
+    "box-model.gap": {
+      name: "box-model.gap",
+      cssVar: "--fsds-box-model-gap",
+      ref: "semantic.action.size.small.gap",
+      fallback: 4,
+    },
+    "box-model.min-height": {
+      name: "box-model.min-height",
+      cssVar: "--fsds-box-model-min-height",
+      ref: "semantic.action.size.small.min-height",
+      fallback: 24,
+    },
+    "box-model.min-width": {
+      name: "box-model.min-width",
+      cssVar: "--fsds-box-model-min-width",
+      ref: "semantic.action.size.small.min-width",
+      fallback: 24,
+    },
+  },
+  "variant_md": {
+    "box-model.padding-block-start": {
+      name: "box-model.padding-block-start",
+      cssVar: "--fsds-box-model-padding-block-start",
+      ref: "semantic.action.size.medium.padding-block",
+      fallback: 4,
+    },
+    "box-model.padding-block-end": {
+      name: "box-model.padding-block-end",
+      cssVar: "--fsds-box-model-padding-block-end",
+      ref: "semantic.action.size.medium.padding-block",
+      fallback: 4,
+    },
+    "box-model.padding-inline-start": {
+      name: "box-model.padding-inline-start",
+      cssVar: "--fsds-box-model-padding-inline-start",
+      ref: "semantic.action.size.medium.padding-inline",
+      fallback: 8,
+    },
+    "box-model.padding-inline-end": {
+      name: "box-model.padding-inline-end",
+      cssVar: "--fsds-box-model-padding-inline-end",
+      ref: "semantic.action.size.medium.padding-inline",
+      fallback: 8,
+    },
+    "box-model.gap": {
+      name: "box-model.gap",
+      cssVar: "--fsds-box-model-gap",
+      ref: "semantic.action.size.medium.gap",
+      fallback: 8,
+    },
+    "box-model.min-height": {
+      name: "box-model.min-height",
+      cssVar: "--fsds-box-model-min-height",
+      ref: "semantic.action.size.medium.min-height",
+      fallback: 32,
+    },
+    "box-model.min-width": {
+      name: "box-model.min-width",
+      cssVar: "--fsds-box-model-min-width",
+      ref: "semantic.action.size.medium.min-width",
+      fallback: 32,
+    },
+  },
+  "variant_lg": {
+    "box-model.padding-block-start": {
+      name: "box-model.padding-block-start",
+      cssVar: "--fsds-box-model-padding-block-start",
+      ref: "semantic.action.size.large.padding-block",
+      fallback: 8,
+    },
+    "box-model.padding-block-end": {
+      name: "box-model.padding-block-end",
+      cssVar: "--fsds-box-model-padding-block-end",
+      ref: "semantic.action.size.large.padding-block",
+      fallback: 8,
+    },
+    "box-model.padding-inline-start": {
+      name: "box-model.padding-inline-start",
+      cssVar: "--fsds-box-model-padding-inline-start",
+      ref: "semantic.action.size.large.padding-inline",
+      fallback: 16,
+    },
+    "box-model.padding-inline-end": {
+      name: "box-model.padding-inline-end",
+      cssVar: "--fsds-box-model-padding-inline-end",
+      ref: "semantic.action.size.large.padding-inline",
+      fallback: 16,
+    },
+    "box-model.gap": {
+      name: "box-model.gap",
+      cssVar: "--fsds-box-model-gap",
+      ref: "semantic.action.size.large.gap",
+      fallback: 12,
+    },
+    "box-model.min-height": {
+      name: "box-model.min-height",
+      cssVar: "--fsds-box-model-min-height",
+      ref: "semantic.action.size.large.min-height",
+      fallback: 48,
+    },
+    "box-model.min-width": {
+      name: "box-model.min-width",
+      cssVar: "--fsds-box-model-min-width",
+      ref: "semantic.action.size.large.min-width",
+      fallback: 48,
+    },
+  },
 } satisfies ComponentTokenScopes;
 
 export function resolveSwitchTokens(theme?: FsdsTheme) {
