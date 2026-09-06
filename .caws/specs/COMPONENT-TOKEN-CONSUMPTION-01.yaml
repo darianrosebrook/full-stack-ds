@@ -3,7 +3,6 @@ title: 'Retire unused component tokens and enforce consumed-only emission'
 risk_tier: 2
 mode: refactor
 lifecycle_state: active
-worktree: token-consumption
 created_at: '2026-09-06T05:48:28.365Z'
 updated_at: '2026-09-06T06:18:51.966Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
