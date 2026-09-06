@@ -11,6 +11,7 @@
  * later executable adapter slice admits them.
  */
 import fs from "node:fs";
+import { createGodotEmitter } from "./frameworks/godot/factory.js";
 import { createUnityEmitter } from "./frameworks/unity/factory.js";
 import path from "node:path";
 import type { BuiltinTargetId, FrameworkEmitter, TargetId } from "./emitter.js";
@@ -334,6 +335,16 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       componentsRoot: path.join(opts.workspaceRoot, "packages/ds-unity/Runtime/Components"),
       barrelFile: "Components.generated.cs",
       admittedComponents: declaredComponents("unity"),
+    });
+  }
+
+  if (configuredTargets.has("godot") && workspaceExists(path.join(opts.workspaceRoot, "packages/ds-godot"))) {
+    registerBuiltinTarget(bindings, declarations, {
+      id: "godot",
+      emitter: createGodotEmitter(),
+      componentsRoot: path.join(opts.workspaceRoot, "packages/ds-godot/addons/full_stack_ds/components"),
+      barrelFile: "catalog.gd",
+      admittedComponents: declaredComponents("godot"),
     });
   }
 

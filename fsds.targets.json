@@ -144,6 +144,18 @@
         "Popover",
         "Tabs"
       ]
+    },
+    {
+      "id": "godot",
+      "source": {
+        "kind": "builtin"
+      },
+      "components": [
+        "Switch",
+        "Accordion",
+        "Popover",
+        "Tabs"
+      ]
     }
   ]
 }

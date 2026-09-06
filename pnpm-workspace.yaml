@@ -2,3 +2,4 @@ packages:
   - "packages/*"
   - "examples/*/*"
   - "!packages/ds-unity"
+  - "!packages/ds-godot"
