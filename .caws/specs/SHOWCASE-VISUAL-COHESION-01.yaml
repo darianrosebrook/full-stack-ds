@@ -65,3 +65,13 @@ contracts:
   - name: 'component-style-realization'
     type: contract-test
     path: 'packages/ds-contracts/components/Button/Button.styles.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: Playwright measured every header icon center at a 0px x/y offset from its control center.
+    recorded_at: "2026-09-06T04:24:05.215Z"
+    test_nodeid: "Showcase visual cohesion > icon-only Button content is centered on the same axis as a bare icon link"
+    command: FSDS_E2E_PORT=5181 pnpm exec playwright test e2e/showcase-visual-cohesion.spec.ts --project=chromium
+    exit_code: 0
+    artifact_path: e2e/showcase-visual-cohesion.spec.ts
+    commit_sha: "79d65055"
