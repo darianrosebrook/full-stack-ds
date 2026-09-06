@@ -1,0 +1,54 @@
+id: IMAGE-MEDIA-CONTROLS-01
+title: 'Realize Image media props and scoped design overrides from contracts'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-06T07:59:07.471Z'
+updated_at: '2026-09-06T07:59:07.471Z'
+created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
+blast_radius:
+  modules:
+    - 'Image media contract, shared binding normalization and Web DOM outputs'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/component.contract.schema.json'
+    - 'packages/ds-contracts/components/Image'
+    - 'packages/ds-codegen/src/contract.ts'
+    - 'packages/ds-codegen/src/ir.ts'
+    - 'packages/ds-codegen/src/design-properties.ts'
+    - 'packages/ds-codegen/src/frameworks/css-var-bindings.test.ts'
+    - 'packages/ds-react/src/components/Image'
+    - 'packages/ds-vue/src/components/Image'
+    - 'packages/ds-svelte/src/components/Image'
+    - 'packages/ds-angular/src/components/Image'
+    - 'packages/ds-lit/src/components/Image'
+    - 'packages/ds-figma'
+    - 'e2e/image-media.spec.ts'
+  out: []
+invariants:
+  - 'Finite prop mappings are normalized and validated once in IR; emitters do not branch on Image identity.'
+  - 'Unset design controls retain prop and literal fallbacks; width and height hints survive defaults, with consumer box overrides taking precedence.'
+acceptance:
+  - id: A1
+    given: 'finite CSS-variable value maps'
+    when: 'contracts normalize'
+    then: 'exhaustive maps lower through existing emitters and invalid maps or sources are rejected'
+  - id: A2
+    given: 'Image width height ratio fit and position props'
+    when: 'each Web DOM target renders'
+    then: 'dimensions and crop facts match the contract and responsive size variants still work'
+  - id: A3
+    given: 'scoped Image design and box controls'
+    when: 'overrides are set and cleared'
+    then: 'consumers win without lost prop bindings and original fallback behavior returns'
+  - id: A4
+    given: 'the saved Spotify and Pinterest attempts'
+    when: 'the upstream repair is regenerated'
+    then: 'media geometry assertions pass and desktop and narrow renders are visually reviewed'
+non_functional: {}
+contracts:
+  - name: 'image-media'
+    type: behavior
+    path: 'e2e/image-media.spec.ts'
