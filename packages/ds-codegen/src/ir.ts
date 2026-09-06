@@ -1334,7 +1334,7 @@ function buildRootClipping(contract: ComponentContract): RootClippingIR {
 
 /** Static root clipping support boundary for native consumers. */
 export function nativeRootClipping(ir: ComponentIR, platform: "ios" | "android"): "visible" | "hidden" | undefined {
-  const fact = ir.rootClipping?.[platform];
+  const fact = ir.rootClipping[platform];
   if (fact?.mode === "unsupported") {
     throw new Error(`[NATIVE_ROOT_CLIPPING_UNSUPPORTED] ${ir.name} (${platform}) root ${fact.declaration}; supported: literal overflow visible or hidden`);
   }

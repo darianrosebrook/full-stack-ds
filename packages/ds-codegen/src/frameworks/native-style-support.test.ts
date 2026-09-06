@@ -40,6 +40,13 @@ describe("native root clipping support", () => {
     expect(generateSwiftUIComponentSource(defaultIR)).not.toContain(".clipShape(");
   });
 
+  it("requires the normalized fact even when the contract declares no clipping", () => {
+    const ir = buildComponentIR(fixture());
+    delete (ir as Partial<typeof ir>).rootClipping;
+    expect(() => generateReactNativeComponentSource(ir)).toThrow();
+    expect(() => generateSwiftUIComponentSource(ir)).toThrow();
+  });
+
   it("honors a single native platform without inferring it from Web CSS", () => {
     const ios = buildComponentIR(fixture("hidden", ["ios"]));
     const android = buildComponentIR(fixture("hidden", ["android"]));
