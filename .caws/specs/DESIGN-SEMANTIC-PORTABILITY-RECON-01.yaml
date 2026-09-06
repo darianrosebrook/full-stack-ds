@@ -2,9 +2,11 @@ id: DESIGN-SEMANTIC-PORTABILITY-RECON-01
 title: 'Measure design binding authority and cross-target semantic preservation'
 risk_tier: 2
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Completed reproducible design portability recon; retained the Web binding API and localized existing native clipping and radius-unit losses with bounded evidence, without production changes.'
 created_at: '2026-09-06T06:49:14.668Z'
-updated_at: '2026-09-06T06:49:24.811Z'
+updated_at: '2026-09-06T07:00:26.206Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
