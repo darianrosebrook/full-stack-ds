@@ -61,3 +61,7 @@ evidence:
     status: pass
     evidence_ref: "main@7e590872: node scripts/unity-tests.mjs; Unity 6000.5.3f1 EditMode: 14 passed, 0 failed, 0 skipped. tmp/unity-pilot/results.xml and editor.log record real panel state, controlled requests, accordion modes, tabs navigation and popover dismissal; oracle source packages/ds-unity/Tests/Editor/InteractionTests.cs."
     recorded_at: "2026-09-06T07:24:43.430Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "main@7e590872: real Unity embedded-UPM import compiles Runtime and Editor assemblies plus imported runtime sample; UxmlImportsRealGeneratedControlsAndCompoundItems passes. Regeneration leaves emitted C# unchanged. Documentation verification and limitations recorded in docs/architecture/unity-target.md."
+    recorded_at: "2026-09-06T07:24:43.902Z"
