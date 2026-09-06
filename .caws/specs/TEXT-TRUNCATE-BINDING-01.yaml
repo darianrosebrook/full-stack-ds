@@ -50,3 +50,12 @@ contracts:
   - name: 'Text-truncation'
     type: contract-test
     path: 'e2e/text-truncation.spec.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Five Web browser witnesses verify projected children, constrained width, single-line ellipsis and clipping; source hashes and final generation/root/framework logs preserved alongside the browser log."
+    recorded_at: "2026-09-06T08:59:46.877Z"
+    command: FSDS_E2E_PORT=5202 pnpm exec playwright test e2e/text-truncation.spec.ts --workers=2
+    exit_code: 0
+    artifact_path: /Users/darianrosebrook/.codex/visualizations/2026/09/06/01a074e8-6c81-7f93-8d64-5c64eca9cfa6/pin-detail/upstream/text-final-browser.log
+    commit_sha: b4b87a08
