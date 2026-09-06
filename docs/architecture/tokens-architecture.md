@@ -5,7 +5,7 @@ status: implemented
 title: Design Token Architecture
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: 652a157f
+verified_at_commit: 2fce1451
 governs:
   - packages/ds-tokens/src/**/*.tokens.json
   - src/components/properties-panel/**

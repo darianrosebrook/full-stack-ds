@@ -1,5 +1,17 @@
 ---
+doc_id: ARCH-COMPONENT-TOKEN-CONSUMPTION-001
+authority: architecture
 status: implemented
+title: Component token consumption
+owner: "@darianrosebrook"
+updated: 2026-09-06
+verified_at_commit: 2fce1451
+governs:
+  - packages/ds-codegen/src/css-token-consumption.ts
+  - packages/ds-codegen/src/validation/component-token-consumption.ts
+  - packages/ds-codegen/src/frameworks/native-token-consumption.ts
+  - packages/ds-codegen/src/frameworks/react-native/token-consumption.ts
+  - scripts/dead-slot-audit/**
 ---
 
 # Component token consumption
