@@ -46,3 +46,9 @@ contracts:
   - name: 'engine-traces'
     type: behavior
     path: 'packages/ds-godot/fixtures/traces.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Frozen traces committed at 84046e07; node scripts/engine-comparison.mjs run 5af9bd21-83b8-4e79-ad7c-6fa825ccc9a2 matches all five state sequences; tmp/godot-comparative/comparison.json binds traces and source hashes. Unity Editor panel versus Godot runtime/export, not physical input."
+    recorded_at: "2026-09-06T08:46:18.483Z"
+    commit_sha: "62f37334"
