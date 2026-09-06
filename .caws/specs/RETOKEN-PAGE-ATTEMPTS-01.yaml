@@ -35,3 +35,11 @@ acceptance:
     then: 'pre-fix browser facts identify an upstream defect with a reproducible witness'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: docs/architecture/design/retoken-page-attempts.md maps fixed official references and available source controls to gaps
+    recorded_at: "2026-09-06T08:02:32.267Z"
+    command: "git show 224d2a21:docs/architecture/design/retoken-page-attempts.md"
+    exit_code: 0
+    commit_sha: "224d2a21"
