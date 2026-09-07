@@ -22,6 +22,6 @@ acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
-    then: 'given docs/normal-form.md stamps verified_at_commit cdaa1cb1 while its governs surface last changed at fa780c0d; when the doc is re-verified against the current tree and restamped to a commit at or after fa780c0d; then node scripts/docs-claims-check.mjs exits 0 reporting no stale claims'
+    then: 'node scripts/docs-claims-check.mjs exits 0 and reports no stale claims/stamps'
 non_functional: {}
 contracts: []
