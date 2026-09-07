@@ -5034,6 +5034,54 @@ export function attachKeyboardActions(
 }
 
 /**
+ * Group the IR's keyboard actions by hosting part
+ * (FEAT-A11Y-COMPOSITE-KEYBOARD-01). The attachment pass on `DomNodeIR`
+ * already scopes actions to nodes; this parallel map lets a framework walker
+ * answer "which handler does this part's node bind" without a linear scan.
+ */
+export function groupKeyboardActionsByPart(
+  actions: KeyboardActionIR[],
+): Map<string, KeyboardActionIR[]> | undefined {
+  if (actions.length === 0) return undefined;
+  const byPart = new Map<string, KeyboardActionIR[]>();
+  for (const action of actions) {
+    const existing = byPart.get(action.part);
+    if (existing) existing.push(action);
+    else byPart.set(action.part, [action]);
+  }
+  return byPart;
+}
+
+/**
+ * The activation member operand of a composite control (the item value its
+ * click binding mutates), for lowering the keyboard select op against the
+ * identical value. Collection-selection composite controls are validated
+ * upstream to carry a `toggleMembership` channel update whose first operand
+ * is the member; anything else has no keyboard-selectable member.
+ */
+export function compositeActivationMember(
+  control: ComponentIR["compositeControl"],
+): BindingExpression | undefined {
+  if (!control) return undefined;
+  if (control.update.kind !== "channelUpdate") return undefined;
+  if (control.update.op !== "toggleMembership") return undefined;
+  return control.update.operands[0];
+}
+
+/**
+ * Hosting parts with realized keyboard actions, in declaration order — each
+ * framework hook supplies one `handle<Part>Keydown` handler per part and the
+ * root template binds the same idents.
+ */
+export function keyboardHandlerParts(ir: ComponentIR): string[] {
+  const parts: string[] = [];
+  for (const action of ir.keyboardActions) {
+    if (!parts.includes(action.part)) parts.push(action.part);
+  }
+  return parts;
+}
+
+/**
  * Tags on which keyboard events fire without a tabIndex and which are
  * programmatically focusable by default (FEAT-A11Y-COMPOSITE-KEYBOARD-01).
  * Keyboard hosts and roving items with any other tag receive

@@ -36,6 +36,9 @@ import {
   isMarkdownTransform,
   contentBindingOrTransformSource,
   keyboardModeGateProps,
+  groupKeyboardActionsByPart,
+  compositeActivationMember,
+  keyboardHandlerParts,
   NATIVE_FOCUSABLE_TAGS,
   type NativeTableAttr,
 } from "../../ir.js";
@@ -2401,54 +2404,6 @@ interface ReactRenderContext {
  * tree (validated upstream); every element tag, part class, and data
  * attribute comes from the IR fact — never a component name.
  */
-/**
- * Group the IR's keyboard actions by hosting part
- * (FEAT-A11Y-COMPOSITE-KEYBOARD-01). The attachment pass on `DomNodeIR`
- * already scopes actions to nodes; this parallel map lets the walker answer
- * "which handler does this part's node bind" without a linear scan.
- */
-function groupKeyboardActionsByPart(
-  actions: KeyboardActionIR[],
-): Map<string, KeyboardActionIR[]> | undefined {
-  if (actions.length === 0) return undefined;
-  const byPart = new Map<string, KeyboardActionIR[]>();
-  for (const action of actions) {
-    const existing = byPart.get(action.part);
-    if (existing) existing.push(action);
-    else byPart.set(action.part, [action]);
-  }
-  return byPart;
-}
-
-/**
- * The activation member operand of a composite control (the item value its
- * click binding mutates), for lowering the keyboard select op against the
- * identical value. Collection-selection composite controls are validated
- * upstream to carry a `toggleMembership` channel update whose first operand
- * is the member; anything else has no keyboard-selectable member.
- */
-function compositeActivationMember(
-  control: ComponentIR["compositeControl"],
-): BindingExpression | undefined {
-  if (!control) return undefined;
-  if (control.update.kind !== "channelUpdate") return undefined;
-  if (control.update.op !== "toggleMembership") return undefined;
-  return control.update.operands[0];
-}
-
-/**
- * Hosting parts with realized keyboard actions, in declaration order — the
- * hook return supplies one `handle<Part>Keydown` handler per part and the
- * root component destructures the same idents.
- */
-function keyboardHandlerParts(ir: ComponentIR): string[] {
-  const parts: string[] = [];
-  for (const action of ir.keyboardActions) {
-    if (!parts.includes(action.part)) parts.push(action.part);
-  }
-  return parts;
-}
-
 function generateReactMarkdownHelpers(ir: ComponentIR): string {
   const transform = collectContentTransforms(ir.dom).find(isMarkdownTransform);
   if (!transform) return "";

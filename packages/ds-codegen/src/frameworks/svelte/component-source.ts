@@ -25,6 +25,7 @@ import type {
   DomNodeIR,
   IdRefIR,
   IterationIR,
+  KeyboardActionIR,
   NormalizedChannelIR,
   PropTypeIR,
 } from "../../ir.js";
@@ -41,6 +42,10 @@ import {
   isHighlightTransform,
   isMarkdownTransform,
   contentBindingOrTransformSource,
+  groupKeyboardActionsByPart,
+  compositeActivationMember,
+  keyboardModeGateProps,
+  NATIVE_FOCUSABLE_TAGS,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -1490,6 +1495,12 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       const accessor = jsAccessorFor(trigger.enabledByProp);
       hookLines.push(`  ${trigger.enabledByProp}: () => ${accessor},`);
     }
+    // FEAT-A11Y-COMPOSITE-KEYBOARD-01: forward mode gates the keyboard
+    // select behavior reads. Getter-shaped like every prop the hook takes.
+    for (const gate of keyboardModeGateProps(ir)) {
+      const accessor = jsAccessorFor(gate);
+      hookLines.push(`  ${gate}: () => ${accessor},`);
+    }
     hookLines.push(`});`);
   }
   // Ephemeral-surface auto-dismiss (WCAG 2.2.1). House style: the behavior
@@ -1668,6 +1679,9 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     rootRole: ir.root.rootRole,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
+    keyboardActionsByPart: groupKeyboardActionsByPart(ir.keyboardActions),
+    compositeItemPart: ir.compositeControl?.part.name,
+    compositeMemberExpr: compositeActivationMember(ir.compositeControl),
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `${hookVar}.set${capitalizeSvelte(booleanChannel.name)}`,
@@ -1798,6 +1812,13 @@ interface SvelteRenderContext {
    * `iterationLocal`-kind bindings.
    */
   enclosingIteration?: IterationIR;
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: realized keyboard actions keyed by the
+  // hosting part, the composite item part, and the member expression the
+  // item's click binding mutates — the walker lowers `onkeydown` bindings
+  // and roving tabindex facts from these, exactly as the React walker does.
+  keyboardActionsByPart?: Map<string, KeyboardActionIR[]>;
+  compositeItemPart?: string;
+  compositeMemberExpr?: BindingExpression;
 }
 
 /**
@@ -1880,7 +1901,10 @@ function renderSvelteDomNode(
   }
 
   const attrs: string[] = [];
-  if (node.focusContainer) attrs.push(`bind:this={${ctx.hookVar}.panelRef.el}`);
+  // focusContainer (trap/portal panels) and keyboardPanel (a keyboard `open`
+  // realization's panel, FEAT-A11Y-COMPOSITE-KEYBOARD-01) both bind the
+  // hook's panelRef so script-side focus can enter the revealed surface.
+  if (node.focusContainer || node.keyboardPanel) attrs.push(`bind:this={${ctx.hookVar}.panelRef.el}`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -1990,6 +2014,36 @@ function renderSvelteDomNode(
     const rendered = renderSvelteEvent(eventName, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);
+  }
+
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: bind the realized keyboard actions onto
+  // the declared `when` part's node. The handler ident is part-derived and
+  // the co-located runes hook emits its implementation from the same IR
+  // facts. The composite item part's handler receives the item value exactly
+  // as the item's click activation passes it, so pointer and keyboard
+  // commits stay semantically identical.
+  const isCompositeItem = ctx.compositeItemPart !== undefined && node.part === ctx.compositeItemPart;
+  if (node.keyboardActions && node.keyboardActions.length > 0 && node.part) {
+    const handlerIdent = `${ctx.hookVar}.handle${capitalizeSvelte(node.part)}Keydown`;
+    if (isCompositeItem && ctx.compositeMemberExpr) {
+      const memberExpr = renderSvelteBindingValue(ctx.compositeMemberExpr, ctx);
+      if (memberExpr !== null) {
+        attrs.push(`onkeydown={(e) => ${handlerIdent}(e, ${memberExpr})}`);
+      }
+    } else {
+      attrs.push(`onkeydown={${handlerIdent}}`);
+    }
+    // A keyboard host that is not natively focusable must become
+    // programmatically focusable so the delegated keys can fire and Svelte's
+    // a11y compiler checks hold; -1 keeps it out of tab order.
+    if (!NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+      attrs.push('tabindex="-1"');
+    }
+  } else if (isCompositeItem && !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+    // Composite roving item without its own keydown: still a roving focus
+    // target — focusable for the roving focus path but out of tab order
+    // (APG roving tabindex with DOM focus tracking).
+    attrs.push('tabindex="-1"');
   }
 
   for (const [key, expr] of Object.entries(node.bindings)) {

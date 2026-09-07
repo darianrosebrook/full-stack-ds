@@ -47,6 +47,7 @@ const behavior = useSelect({
   open: () => open,
   defaultOpen: () => defaultOpen,
   onOpenChange: () => onOpenChange,
+  multiple: () => multiple,
 });
 // @generated:end
 
@@ -73,11 +74,11 @@ const instanceId = $props.id();
 </script>
 
 <div class={classes} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-label={triggerLabel} aria-expanded={behavior.open} aria-disabled={disabled} data-fsds-component="select" data-fsds-box="">
-  <button class={'select__trigger'} type="button" onclick={() => behavior.setOpen(!behavior.open)} disabled={disabled} aria-label={triggerLabel} aria-expanded={behavior.open} aria-controls={`${instanceId}-options`}>
+  <button class={'select__trigger'} type="button" onclick={() => behavior.setOpen(!behavior.open)} onkeydown={behavior.handleTriggerKeydown} disabled={disabled} aria-label={triggerLabel} aria-expanded={behavior.open} aria-controls={`${instanceId}-options`}>
     <span class={'select__text'}></span>
   </button>
   {#if behavior.open}
-  <div class={'select__content'} role="listbox" id="fsds-select-listbox">
+  <div class={'select__content'} bind:this={behavior.panelRef.el} role="listbox" id="fsds-select-listbox" onkeydown={behavior.handleContentKeydown} tabindex="-1">
     {#if searchable}
     <div class={'select__search'}>
       <input type="text" />
@@ -85,7 +86,7 @@ const instanceId = $props.id();
     {/if}
     <div class={'select__options'} id={`${instanceId}-options`}>
       {#each (options ?? []) as item, index (index)}
-      <div class={'select__option'} role="option" onclick={() => behavior.setSelection(multiple ? ((Array.isArray(behavior.selection) ? behavior.selection : behavior.selection == null ? [] : [behavior.selection]).includes(item.value) ? (Array.isArray(behavior.selection) ? behavior.selection : behavior.selection == null ? [] : [behavior.selection]).filter((v) => v !== item.value) : [...(Array.isArray(behavior.selection) ? behavior.selection : behavior.selection == null ? [] : [behavior.selection]), item.value]) : item.value)} aria-selected={(Array.isArray(behavior.selection) ? behavior.selection.includes(item.value) : item.value === behavior.selection)} data-value={item.value}>
+      <div class={'select__option'} role="option" onclick={() => behavior.setSelection(multiple ? ((Array.isArray(behavior.selection) ? behavior.selection : behavior.selection == null ? [] : [behavior.selection]).includes(item.value) ? (Array.isArray(behavior.selection) ? behavior.selection : behavior.selection == null ? [] : [behavior.selection]).filter((v) => v !== item.value) : [...(Array.isArray(behavior.selection) ? behavior.selection : behavior.selection == null ? [] : [behavior.selection]), item.value]) : item.value)} onkeydown={(e) => behavior.handleOptionKeydown(e, item.value)} tabindex="-1" aria-selected={(Array.isArray(behavior.selection) ? behavior.selection.includes(item.value) : item.value === behavior.selection)} data-value={item.value}>
         <span>{item.label}</span>
       </div>
       {/each}
