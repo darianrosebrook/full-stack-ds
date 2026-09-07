@@ -20,7 +20,9 @@ invariants:
   - 'The freshness ledger (doc-freshness-baseline.json) is reserved for genuine known-stale debt and is not used to admit this doc.'
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
+    given: >-
+      docs/normal-form.md stamps verified_at_commit cdaa1cb1 while its governs globs
+      last changed at fa780c0d
     when: 'The acceptance statement is evaluated.'
     then: 'node scripts/docs-claims-check.mjs exits 0 and reports no stale claims/stamps'
 non_functional: {}
