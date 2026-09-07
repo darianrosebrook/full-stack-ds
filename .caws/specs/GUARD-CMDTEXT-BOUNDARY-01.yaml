@@ -54,3 +54,10 @@ evidence:
     command: .caws/hooks/tests/test_worktree_guard_cmdtext.sh
     exit_code: 0
     commit_sha: d308f3c5
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "test_worktree_guard_cmdtext.sh -> PASS at d308f3c5; all four BYPASS-BLOCK cases (interpreter heredoc, second interpreter heredoc, an interpreter invoked with a sink-shaped argument as decoy, and a sink piped into an interpreter) still read BLOCK. Falsification: the same suite run against the patched guard paired with sterling's unfixed lib/heredoc.sh reports 18 passed / 1 failed, naming the piped-sink case as a bypass -- which is how the pipe disqualifier was found"
+    recorded_at: "2026-09-07T05:50:10.002Z"
+    command: .caws/hooks/tests/test_worktree_guard_cmdtext.sh
+    exit_code: 0
+    commit_sha: d308f3c5
