@@ -91,3 +91,7 @@ evidence:
     status: pass
     evidence_ref: "per-framework Tabs roving suites green (arrow/Home/End focus+activation asserted in all five) + new tablist-focusability tests (react 30, vue 29, svelte 29, angular 47, lit 29); svelte-check 0 errors, tablist warning gone (1 remaining PortalHarness warning is an explicit booked follow-up, see docs/internal/successor-work.md)"
     recorded_at: "2026-09-07T06:05:19.240Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "in worktree a11y-select-tabs-keyboard at commit 0e19bb3d: lint 0 warnings, typecheck:all exit 0, pnpm test 3837/3837, test:frameworks exit 0 (vue 703, lit 525+2 skipped, svelte 659, angular 493, react-native green), governed:rail overall=pass, audit:a11y-realization PASS"
+    recorded_at: "2026-09-07T06:05:19.838Z"
