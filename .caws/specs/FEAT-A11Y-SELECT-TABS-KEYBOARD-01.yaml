@@ -87,3 +87,7 @@ evidence:
     status: pass
     evidence_ref: "per-framework Select keyboard suites green (react 27, vue 703 total, svelte 659, angular 493, lit 525); 25 Select ledger entries deleted in commit 3e0a78c6; pnpm run audit:a11y-realization PASS (401 realized, 136 ledgered, 0 stale)"
     recorded_at: "2026-09-07T06:05:18.571Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "per-framework Tabs roving suites green (arrow/Home/End focus+activation asserted in all five) + new tablist-focusability tests (react 30, vue 29, svelte 29, angular 47, lit 29); svelte-check 0 errors, tablist warning gone (1 remaining PortalHarness warning is an explicit booked follow-up, see docs/internal/successor-work.md)"
+    recorded_at: "2026-09-07T06:05:19.240Z"
