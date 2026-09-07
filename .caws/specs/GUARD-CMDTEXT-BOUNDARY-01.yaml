@@ -3,7 +3,6 @@ title: 'Adjudicate guard verb matchers on command text, not carried payload text
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: guard-cmdtext
 created_at: '2026-09-07T05:34:52.016Z'
 updated_at: '2026-09-07T05:35:14.558Z'
 created_by_session: 'f46106db-10cf-4869-b035-5bb63e5a1fc2'
