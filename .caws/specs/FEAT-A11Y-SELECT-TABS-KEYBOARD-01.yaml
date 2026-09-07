@@ -83,3 +83,7 @@ evidence:
     status: pass
     evidence_ref: "commit bdfd7b61; pnpm --filter @full-stack-ds/figma-plugin run typecheck exits 0; figma lane present in root typecheck:all chain and .github/workflows/ci.yml"
     recorded_at: "2026-09-07T06:05:18.027Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "per-framework Select keyboard suites green (react 27, vue 703 total, svelte 659, angular 493, lit 525); 25 Select ledger entries deleted in commit 3e0a78c6; pnpm run audit:a11y-realization PASS (401 realized, 136 ledgered, 0 stale)"
+    recorded_at: "2026-09-07T06:05:18.571Z"
