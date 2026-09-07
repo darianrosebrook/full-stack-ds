@@ -96,13 +96,54 @@ caws_reprieve_state_dir() {
 # _danger_safe_session, so writer/reader share one transform.
 caws_reprieve_file() {
   local session_id="${1:-}"
-  local safe_session
+  printf '%s/guard-reprieve-%s.json\n' \
+    "$(caws_reprieve_state_dir)" "$(caws_reprieve_safe_session "$session_id")"
+}
+
+# The writer/reader transform, factored out so both candidate paths share it.
+caws_reprieve_safe_session() {
+  local session_id="${1:-}"
   if command -v sanitize_session >/dev/null 2>&1; then
-    safe_session="$(sanitize_session "$session_id")"
+    sanitize_session "$session_id"
   else
-    safe_session="$(printf '%s' "$session_id" | tr -c 'A-Za-z0-9._-' '_')"
+    printf '%s' "$session_id" | tr -c 'A-Za-z0-9._-' '_'
   fi
+}
+
+# GUARD-REPRIEVE-PATH-SPLIT-01: every path a reprieve record may legitimately
+# live at, most-local first.
+#
+# `caws reprieve grant` moved its record to a MACHINE-GLOBAL location
+# (~/.caws/state/sessions/<id>/guard-reprieve-<id>.json) and says so on grant
+# ("machine dispatchers consult this record across projects"), but this reader
+# only ever looked in the repo-local state dir. The result was silent and total:
+# the CLI reported a successful grant, wrote a well-formed record, and every
+# guard the grant named kept blocking, because nothing read the file. That is
+# the worst failure shape a guard can have — it reports success while doing
+# nothing — and it is the same class the naive-expiry note below guards against.
+#
+# Emitting BOTH keeps older records working (a repo-local file still wins, so
+# nothing that works today regresses) while making a fresh grant effective
+# without a manual copy. This widens only WHERE a record is found; the caller
+# runs the identical expiry / handler-match / session validation on whichever
+# candidate it reads, so it cannot widen WHAT is accepted.
+caws_reprieve_file_candidates() {
+  local session_id="${1:-}"
+  local safe_session
+  safe_session="$(caws_reprieve_safe_session "$session_id")"
+
+  # 1. Repo-local state dir — the historical location, and the one an operator
+  #    can place a record into by hand for a single project.
   printf '%s/guard-reprieve-%s.json\n' "$(caws_reprieve_state_dir)" "$safe_session"
+
+  # 2. Machine-global session state — where the current CLI writes. Same trust
+  #    domain (the user's own home, written 0600 by the CLI); this reader never
+  #    writes or mutates either file.
+  local home_state="${CAWS_HOME_STATE_DIR:-${HOME:-}/.caws/state}"
+  if [[ -n "${HOME:-}" || -n "${CAWS_HOME_STATE_DIR:-}" ]]; then
+    printf '%s/sessions/%s/guard-reprieve-%s.json\n' \
+      "$home_state" "$safe_session" "$safe_session"
+  fi
 }
 
 # caws_is_handler_reprieved <handler-basename> [<session-id>]
@@ -142,9 +183,23 @@ caws_is_handler_reprieved() {
     return 1
   fi
 
-  local reprieve_file
-  reprieve_file="$(caws_reprieve_file "$session_id")"
-  if [[ ! -f "$reprieve_file" ]]; then
+  # GUARD-REPRIEVE-PATH-SPLIT-01: take the first candidate that EXISTS, then
+  # validate exactly as before. Deliberately first-existing rather than
+  # first-valid: a present-but-expired repo-local record must not be silently
+  # upgraded by a machine-global one, because that would make a stale local
+  # file invisible instead of decisive, and an operator who placed it there
+  # would have no way to see which record actually governed.
+  local reprieve_file=""
+  local _candidate
+  while IFS= read -r _candidate; do
+    [[ -z "$_candidate" ]] && continue
+    if [[ -f "$_candidate" ]]; then
+      reprieve_file="$_candidate"
+      break
+    fi
+  done < <(caws_reprieve_file_candidates "$session_id")
+
+  if [[ -z "$reprieve_file" ]]; then
     return 1
   fi
 
