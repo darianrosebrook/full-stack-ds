@@ -682,7 +682,14 @@ function emitOpenKeydownHandler(
   lines.push(`        ${focusTargetExpr}`);
   lines.push(`      });`);
   lines.push(`    },`);
-  lines.push(`    [${setter}],`);
+  // exhaustive-deps: the callback reads members off the anchor bundle (setOpen
+  // and panelRef), so the dependency is the bundle root itself — listing a
+  // single member leaves the other member access uncovered.
+  const depIdents = new Set<string>();
+  for (const ident of [setter, panelRefIdent]) {
+    depIdents.add(ident.startsWith("anchorToggle.") ? "anchorToggle" : ident);
+  }
+  lines.push(`    [${[...depIdents].join(", ")}],`);
   lines.push(`  );`);
   lines.push(``);
 }

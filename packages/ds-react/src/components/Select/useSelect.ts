@@ -67,7 +67,7 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
         (anchorToggle.panelRef.current.querySelector<HTMLElement>("input") ?? anchorToggle.panelRef.current.querySelector<HTMLElement>("[role=\"option\"]"))?.focus();
       });
     },
-    [anchorToggle.setOpen],
+    [anchorToggle],
   );
 
   const handleContentKeydown = useCallback(
