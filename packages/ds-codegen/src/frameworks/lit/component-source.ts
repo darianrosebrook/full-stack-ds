@@ -31,6 +31,7 @@ import type {
   DomNodeIR,
   IdRefIR,
   IterationIR,
+  KeyboardActionIR,
   NormalizedChannelIR,
   PropTypeIR,
 } from "../../ir.js";
@@ -44,6 +45,10 @@ import {
   isHighlightTransform,
   isMarkdownTransform,
   contentBindingOrTransformSource,
+  NATIVE_FOCUSABLE_TAGS,
+  compositeActivationMember,
+  groupKeyboardActionsByPart,
+  keyboardModeGateProps,
 } from "../../ir.js";
 import type { ContractTypeDef } from "../../contract.js";
 import {
@@ -827,9 +832,9 @@ function generateCompoundStateRootClass(ir: ComponentIR): string {
   }
   lines.push(`  private initializedBehavior?: ${ir.name}Behavior;`);
   lines.push(`  private get behavior(): ${ir.name}Behavior {`);
-  if (ir.interaction?.focusContainer) lines.push(`    const host = this;`);
+  if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    const host = this;`);
   lines.push(`    return this.initializedBehavior ??= new ${ir.name}Behavior(this, {`);
-  if (ir.interaction?.focusContainer) lines.push(`    get containerEl() { return host.interactionPanel; },`);
+  if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    get containerEl() { return host.interactionPanel; },`);
   lines.push(`    value: () => this.value,`);
   lines.push(`    defaultValue: this.defaultValue,`);
   lines.push(`    onValueChange: (v) => this.onValueChange?.(v),`);
@@ -1210,9 +1215,9 @@ function generateDisclosureRootClass(ir: ComponentIR): string {
   }
   lines.push(`  private initializedBehavior?: ${ir.name}Behavior;`);
   lines.push(`  private get behavior(): ${ir.name}Behavior {`);
-  if (ir.interaction?.focusContainer) lines.push(`    const host = this;`);
+  if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    const host = this;`);
   lines.push(`    return this.initializedBehavior ??= new ${ir.name}Behavior(this, {`);
-  if (ir.interaction?.focusContainer) lines.push(`    get containerEl() { return host.interactionPanel; },`);
+  if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    get containerEl() { return host.interactionPanel; },`);
   lines.push(`    value: () => this.value,`);
   lines.push(`    defaultValue: this.defaultValue,`);
   lines.push(`    onValueChange: (v) => this.onValueChange?.(v),`);
@@ -1633,7 +1638,7 @@ function generateDomTreeImports(ir: ComponentIR): string {
     litImports.push("type PropertyValues");
   }
   const lines: string[] = [`import { ${litImports.join(", ")} } from 'lit';`];
-  if (ir.interaction?.focusContainer) lines.push(`import { ref } from 'lit/directives/ref.js';`);
+  if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`import { ref } from 'lit/directives/ref.js';`);
   if (ir.interaction && ir.dom && ir.interaction.triggers.some(t => t.operation !== "select" && t.operation !== "toggle-item")) lines.push(`import { canActivateInteraction } from "../../primitives/interaction.js";`);
   // Always include `property`; add `state` when the dom tree has a children
   // guard so the private _hasChildren reactive field can be declared.
@@ -1779,6 +1784,11 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     hasOverlayClick,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents: iconGlyphIdents.size > 0 ? iconGlyphIdents : undefined,
+    // FEAT-A11Y-COMPOSITE-KEYBOARD-01: keyboard-action facts for the walker's
+    // `@keydown` lowering and roving-item tabindex rules.
+    keyboardActionsByPart: groupKeyboardActionsByPart(ir.keyboardActions),
+    compositeItemPart: ir.compositeControl?.part.name,
+    compositeMemberExpr: compositeActivationMember(ir.compositeControl),
   };
   // Inject the contract's effective ARIA role onto the root node if the
   // contract didn't already pin one in `attrs.role`. Without this, components
@@ -1852,14 +1862,14 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     lines.push(`  }`);
   }
 
-  if (ir.interaction?.focusContainer) lines.push(`  private interactionPanel?: HTMLElement;`);
+  if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`  private interactionPanel?: HTMLElement;`);
   if (hasBehavior) {
     lines.push(``);
     lines.push(`  private initializedBehavior?: ${ir.name}Behavior;`);
     lines.push(`  private get behavior(): ${ir.name}Behavior {`);
-    if (ir.interaction?.focusContainer) lines.push(`    const host = this;`);
+    if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    const host = this;`);
     lines.push(`    return this.initializedBehavior ??= new ${ir.name}Behavior(this, {`);
-    if (ir.interaction?.focusContainer) lines.push(`    get containerEl() { return host.interactionPanel; },`);
+    if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    get containerEl() { return host.interactionPanel; },`);
     for (const ch of channels) {
       lines.push(`    ${ch.valueProp}: () => this.${ch.valueProp},`);
       if (ch.defaultValueProp) {
@@ -1875,6 +1885,11 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
       lines.push(
         `    ${trigger.enabledByProp}: this.${trigger.enabledByProp},`,
       );
+    }
+    // FEAT-A11Y-COMPOSITE-KEYBOARD-01: getter-shaped mode gates so the
+    // keyboard select handler reads the live gate on every keydown.
+    for (const gate of keyboardModeGateProps(ir)) {
+      lines.push(`    ${gate}: () => this.${gate},`);
     }
     lines.push(`  });`);
     lines.push(`  }`);
@@ -2400,6 +2415,16 @@ interface LitRenderContext {
    * `collectIconGlyphNodes`; empty when the tree has no glyph nodes.
    */
   iconGlyphIdents?: Map<DomNodeIR, { glyphIdent: string; pxIdent: string | undefined }>;
+  /**
+   * FEAT-A11Y-COMPOSITE-KEYBOARD-01: contract-declared keyboard actions,
+   * grouped by hosting part. The walker emits one `@keydown` binding per
+   * part onto the part's host node.
+   */
+  keyboardActionsByPart?: Map<string, KeyboardActionIR[]>;
+  /** The part name owning the composite item set, when one exists. */
+  compositeItemPart?: string;
+  /** Activation member operand of the composite control (`item.value`). */
+  compositeMemberExpr?: BindingExpression;
 }
 
 /**
@@ -2470,6 +2495,19 @@ function litIdRefListExpr(
   return `[${parts.join(", ")}].filter(Boolean).join(' ') || undefined`;
 }
 
+/**
+ * FEAT-A11Y-COMPOSITE-KEYBOARD-01: whether any node in the emitted tree
+ * carries the `keyboardPanel` fact — the open action's post-open focus
+ * target. Select has no focus container but still needs the interaction
+ * panel ref + `containerEl` wiring, so the element-side gating conditions
+ * consult this alongside `ir.interaction?.focusContainer`.
+ */
+function domHasKeyboardPanel(ir: ComponentIR): boolean {
+  const walk = (node: DomNodeIR): boolean =>
+    node.keyboardPanel === true || node.children.some(walk);
+  return ir.dom ? walk(ir.dom) : false;
+}
+
 function renderLitDomNode(
   node: DomNodeIR,
   ctx: LitRenderContext,
@@ -2508,7 +2546,7 @@ function renderLitDomNode(
   }
 
   const attrs: string[] = [];
-  if (node.focusContainer) attrs.push(`\${ref(element => { this.interactionPanel = element instanceof HTMLElement ? element : undefined; })}`);
+  if (node.focusContainer || node.keyboardPanel) attrs.push(`\${ref(element => { this.interactionPanel = element instanceof HTMLElement ? element : undefined; })}`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -2577,6 +2615,36 @@ function renderLitDomNode(
     const rendered = renderLitEvent(eventName, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);
+  }
+
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: bind the realized keyboard actions onto
+  // the declared `when` part's node. The handler ident is part-derived and
+  // the co-located behavior emits its implementation from the same IR facts.
+  // The composite item part's handler receives the item value exactly as the
+  // item's click activation passes it, so pointer and keyboard commits stay
+  // semantically identical.
+  const isCompositeItem = ctx.compositeItemPart !== undefined && node.part === ctx.compositeItemPart;
+  if (node.keyboardActions && node.keyboardActions.length > 0 && node.part) {
+    const handlerIdent = `this.behavior.handle${capitalizeLit(node.part)}Keydown`;
+    if (isCompositeItem && ctx.compositeMemberExpr) {
+      const memberExpr = renderLitBindingValue(ctx.compositeMemberExpr, ctx);
+      if (memberExpr !== null) {
+        attrs.push(`@keydown=\${(e: KeyboardEvent) => ${handlerIdent}(e, ${memberExpr})}`);
+      }
+    } else {
+      attrs.push(`@keydown=\${(e: KeyboardEvent) => ${handlerIdent}(e)}`);
+    }
+    // A keyboard host that is not natively focusable must become
+    // programmatically focusable so the delegated keys can fire and the
+    // a11y lint holds; -1 keeps it out of tab order.
+    if (!NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+      attrs.push(`tabindex="-1"`);
+    }
+  } else if (isCompositeItem && !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+    // Composite roving item without its own keydown: still a roving focus
+    // target — focusable for the roving focus path but out of tab order
+    // (APG roving tabindex with DOM focus tracking).
+    attrs.push(`tabindex="-1"`);
   }
 
   // componentRef: the IR classified each binding (prop vs host attr); the

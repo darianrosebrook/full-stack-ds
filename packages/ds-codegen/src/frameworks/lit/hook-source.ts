@@ -13,8 +13,18 @@
  * `unregisterTab(value)` — the equivalent of React's useState-based
  * registeredTabs in useTabs.
  */
-import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
-import { renderSections, type Section } from "../../preserve.js";
+import type {
+  ComponentIR,
+  DomNodeIR,
+  KeyboardActionIR,
+  NormalizedChannelIR,
+} from "../../ir.js";
+import {
+  keyboardHandlerParts,
+  keyboardModeGateProps,
+  resolveInitialFocusSelector,
+  resolveRovingItemSelector,
+} from "../../ir.js";import { renderSections, type Section } from "../../preserve.js";
 import {
   isCompoundStateContainer,
   isDisclosureContainer,
@@ -169,12 +179,188 @@ function generateOptionsInterface(
     if (targetProp) lines.push(`  ${targetProp}?: Element | string;`);
   }
 
-  if (bindings.useFocusTrap) {
+  if (bindings.useFocusTrap || needsKeyboardPanelBinding(ir)) {
     lines.push(`  containerEl?: HTMLElement;`);
+  }
+
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: getter-shaped mode gates so the select
+  // handler reads the live gate on every keydown.
+  for (const gate of keyboardModeGateProps(ir)) {
+    lines.push(`  /** Mode gate the keyboard select behavior reads. */`);
+    lines.push(`  ${gate}?: () => boolean | undefined;`);
   }
 
   lines.push(`}`);
   return lines.join("\n");
+}
+
+/**
+ * FEAT-A11Y-COMPOSITE-KEYBOARD-01: whether a keyboard `open` action needs the
+ * interaction panel element routed through the options — true when any DOM
+ * node carries the `keyboardPanel` fact (Select anchors its open path on the
+ * anchor toggle but still lands focus in the rendered panel).
+ */
+function needsKeyboardPanelBinding(ir: ComponentIR): boolean {
+  const walk = (node: DomNodeIR): boolean =>
+    node.keyboardPanel === true || node.children.some(walk);
+  return ir.dom ? walk(ir.dom) : false;
+}
+
+/**
+ * FEAT-A11Y-COMPOSITE-KEYBOARD-01: lower the IR's keyboard actions into one
+ * class method per hosting part on the behavior class. Dispatch mirrors the
+ * React/Vue/Svelte/Angular hook emitters: select op → the composite
+ * activation; roving-* ops → focus movement over the item selector;
+ * otherwise the open op → reveal + post-open focus through the options'
+ * `containerEl`. Every realization fails loud on a missing IR precondition
+ * rather than emitting a handler that silently no-ops.
+ */
+function emitLitKeyboardHandlerMethods(
+  lines: string[],
+  ir: ComponentIR,
+  bindings: PrimitiveBindings,
+): void {
+  if (ir.keyboardActions.length === 0) return;
+  const itemSelector = resolveRovingItemSelector(ir);
+  const initialSelector = resolveInitialFocusSelector(ir);
+
+  // Hosting parts in first-declaration order; the template's handler
+  // bindings use the same order.
+  const parts = keyboardHandlerParts(ir);
+
+  const openChannel = bindings.useControllableState.find(
+    (c) => c.isDisclosureChannel,
+  );
+
+  for (const part of parts) {
+    const ident = `handle${capitalize(part)}Keydown`;
+    const actions = ir.keyboardActions.filter((a) => a.part === part);
+    const isItemPart = ir.compositeControl?.part.name === part;
+    const param = isItemPart
+      ? `event: KeyboardEvent, value: string`
+      : `event: KeyboardEvent`;
+    lines.push(``);
+    lines.push(`  ${ident}(${param}): void {`);
+    if (actions.some((a) => a.op === "select")) {
+      const control = ir.compositeControl;
+      if (
+        !control ||
+        control.update.kind !== "channelUpdate" ||
+        control.update.op !== "toggleMembership"
+      ) {
+        throw new Error(
+          `Component "${ir.name}": keyboard "select" behavior on part "${part}" requires a toggleMembership composite control update.`,
+        );
+      }
+      const channel = bindings.useControllableState.find(
+        (c) => c.name === control.channel.name,
+      );
+      if (!channel) {
+        throw new Error(
+          `Component "${ir.name}": keyboard "select" behavior targets channel "${control.channel.name}", which the behavior class does not manage.`,
+        );
+      }
+      const modeGates = keyboardModeGateProps(ir);
+      const gate = modeGates.length > 0 ? `this.opts.${modeGates[0]}?.()` : undefined;
+      const setter = `this.set${capitalize(channel.name)}`;
+      const keys = actions
+        .filter((a) => a.op === "select")
+        .map((a) => a.key);
+      const keyGuard = keys
+        .map((k) => `event.key === ${JSON.stringify(k)}`)
+        .join(" || ");
+      lines.push(`    if (!(${keyGuard})) return;`);
+      lines.push(`    event.preventDefault();`);
+      // A typed `string[]` local keeps the narrowing explicit across the
+      // getter read (a fresh property read per mention would not narrow).
+      lines.push(`    const currentValue = this.${channel.name};`);
+      lines.push(
+        `    const current: string[] = Array.isArray(currentValue) ? [...currentValue] : currentValue == null ? [] : [currentValue];`,
+      );
+      lines.push(
+        gate
+          ? `    ${setter}(${gate} ? (current.includes(value) ? current.filter((member) => member !== value) : [...current, value]) : value);`
+          : `    ${setter}(current.includes(value) ? current.filter((member) => member !== value) : [...current, value]);`,
+      );
+    } else if (actions.every((a) => a.op.startsWith("roving-"))) {
+      if (!itemSelector) {
+        throw new Error(
+          `Component "${ir.name}": keyboard roving behavior on part "${part}" requires a composite item part to derive the roving item selector.`,
+        );
+      }
+      const wrap = ir.behavior.focus?.wrap === true;
+      const indexExpr = (op: KeyboardActionIR["op"]): string => {
+        switch (op) {
+          case "roving-next":
+            return wrap
+              ? "currentIndex === -1 || currentIndex >= items.length - 1 ? 0 : currentIndex + 1"
+              : "currentIndex === -1 ? 0 : Math.min(currentIndex + 1, items.length - 1)";
+          case "roving-prev":
+            return wrap
+              ? "currentIndex <= 0 ? items.length - 1 : currentIndex - 1"
+              : "currentIndex === -1 ? 0 : Math.max(currentIndex - 1, 0)";
+          case "roving-first":
+            return "0";
+          case "roving-last":
+            return "items.length - 1";
+          default:
+            throw new Error(
+              `Component "${ir.name}": non-roving op "${op}" in the roving handler for part "${part}".`,
+            );
+        }
+      };
+      // The DOM KeyboardEvent types currentTarget as `EventTarget | null`;
+      // the template binds this handler only on the declared host part, so
+      // the element view is asserted here once, at the query site.
+      lines.push(`    const items = Array.from(`);
+      lines.push(`      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(${JSON.stringify(itemSelector)}),`);
+      lines.push(`    );`);
+      // Lit renders into a shadow root, where document.activeElement stops
+      // at the host boundary — resolve the focused item through the root
+      // that owns this panel.
+      lines.push(`    const root = (event.currentTarget as HTMLElement).getRootNode();`);
+      lines.push(`    const active = root instanceof ShadowRoot ? root.activeElement : document.activeElement;`);
+      lines.push(`    const currentIndex = items.findIndex((item) => item === active);`);
+      actions.forEach((action, i) => {
+        const keyword = i === 0 ? "if" : "else if";
+        lines.push(`    ${keyword} (event.key === ${JSON.stringify(action.key)}) {`);
+        lines.push(`      event.preventDefault();`);
+        lines.push(`      items[${indexExpr(action.op)}]?.focus();`);
+        lines.push(`    }`);
+      });
+    } else {
+      if (!openChannel || openChannel.valueType !== "boolean") {
+        throw new Error(
+          `Component "${ir.name}": keyboard "open" behavior on part "${part}" requires a boolean disclosure channel.`,
+        );
+      }
+      if (!needsKeyboardPanelBinding(ir) && !bindings.useFocusTrap) {
+        throw new Error(
+          `Component "${ir.name}": keyboard "open" behavior on part "${part}" requires the interaction panel element (keyboardPanel node or focus container) to receive focus.`,
+        );
+      }
+      const keys = actions.map((a) => a.key);
+      const keyGuard = keys
+        .map((k) => `event.key === ${JSON.stringify(k)}`)
+        .join(" || ");
+      const focusTargetExpr = initialSelector
+        ? itemSelector
+          ? `(panel.querySelector<HTMLElement>(${JSON.stringify(initialSelector)}) ?? panel.querySelector<HTMLElement>(${JSON.stringify(itemSelector)}))?.focus();`
+          : `panel.querySelector<HTMLElement>(${JSON.stringify(initialSelector)})?.focus();`
+        : itemSelector
+          ? `panel.querySelector<HTMLElement>(${JSON.stringify(itemSelector)})?.focus();`
+          : `panel.focus();`;
+      lines.push(`    if (!(${keyGuard})) return;`);
+      lines.push(`    event.preventDefault();`);
+      lines.push(`    this.set${capitalize(openChannel.name)}(true);`);
+      lines.push(`    requestAnimationFrame(() => {`);
+      lines.push(`      const panel = this.opts.containerEl;`);
+      lines.push(`      if (!panel) return;`);
+      lines.push(`      ${focusTargetExpr}`);
+      lines.push(`    });`);
+    }
+    lines.push(`  }`);
+  }
 }
 
 function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
@@ -376,6 +562,11 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
     lines.push(`    this._host.requestUpdate();`);
     lines.push(`  }`);
   }
+
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: the handler methods close over every
+  // controller field above, so they emit last, just before the class body
+  // closes.
+  emitLitKeyboardHandlerMethods(lines, ir, bindings);
 
   lines.push(`}`);
   return lines.join("\n");
