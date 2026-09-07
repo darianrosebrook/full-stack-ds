@@ -99,7 +99,10 @@ describe("usage sidecar render projection", () => {
       for (const frame of frames) {
         const hasText = Boolean(frame.textContent?.trim());
         const hasStructuralWitness = Boolean(frame.querySelector(
-          "svg path, img[src], input, textarea, select, button, progress, [role='separator'], [role='progressbar'], [role='status'], [aria-busy='true'], [aria-hidden='true']",
+          // `progress` and `hr` carry implicit progressbar/separator roles, so
+          // role-elided components witness by element; attribute selectors
+          // cover explicit roles on non-native hosts.
+          "svg path, img[src], input, textarea, select, button, progress, hr, [role='separator'], [role='progressbar'], [role='status'], [aria-busy='true'], [aria-hidden='true']",
         ));
         expect(
           hasText || hasStructuralWitness,

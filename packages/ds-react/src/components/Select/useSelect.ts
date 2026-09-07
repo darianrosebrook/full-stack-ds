@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type RefObject, useRef } from "react";
+import { type KeyboardEvent as ReactKeyboardEvent, type RefObject, useCallback, useRef } from "react";
 import { useAnchorToggle, useControllableState } from "../../primitives/hooks";
 // @generated:end
 
@@ -21,6 +21,8 @@ export interface UseSelectOptions {
   defaultOpen?: boolean;
   /** Called when "open" changes. */
   onOpenChange?: (value: boolean) => void;
+  /** Mode gate the keyboard select behavior reads. */
+  multiple?: boolean;
 }
 
 export interface UseSelectResult {
@@ -30,6 +32,9 @@ export interface UseSelectResult {
   setOpen: (next: boolean) => void;
   panelRef: RefObject<HTMLDivElement | null>;
   anchorRef: RefObject<HTMLElement | null>;
+  handleTriggerKeydown: (event: ReactKeyboardEvent<HTMLElement>) => void;
+  handleContentKeydown: (event: ReactKeyboardEvent<HTMLElement>) => void;
+  handleOptionKeydown: (event: ReactKeyboardEvent<HTMLElement>, value: string) => void;
 }
 // @generated:end
 
@@ -52,6 +57,55 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
     onOpenChange: options.onOpenChange,
   });
 
+  const handleTriggerKeydown = useCallback(
+    (event: ReactKeyboardEvent<HTMLElement>) => {
+      if (!(event.key === "ArrowDown")) return;
+      event.preventDefault();
+      anchorToggle.setOpen(true);
+      requestAnimationFrame(() => {
+        if (!anchorToggle.panelRef.current) return;
+        (anchorToggle.panelRef.current.querySelector<HTMLElement>("input") ?? anchorToggle.panelRef.current.querySelector<HTMLElement>("[role=\"option\"]"))?.focus();
+      });
+    },
+    [anchorToggle.setOpen],
+  );
+
+  const handleContentKeydown = useCallback(
+    (event: ReactKeyboardEvent<HTMLElement>) => {
+      const items = Array.from(
+        event.currentTarget.querySelectorAll<HTMLElement>("[role=\"option\"]"),
+      );
+      const currentIndex = items.findIndex((item) => item === document.activeElement);
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        items[currentIndex <= 0 ? items.length - 1 : currentIndex - 1]?.focus();
+      }
+      else if (event.key === "ArrowDown") {
+        event.preventDefault();
+        items[currentIndex === -1 || currentIndex >= items.length - 1 ? 0 : currentIndex + 1]?.focus();
+      }
+      else if (event.key === "Home") {
+        event.preventDefault();
+        items[0]?.focus();
+      }
+      else if (event.key === "End") {
+        event.preventDefault();
+        items[items.length - 1]?.focus();
+      }
+    },
+    [],
+  );
+
+  const handleOptionKeydown = useCallback(
+    (event: ReactKeyboardEvent<HTMLElement>, value: string) => {
+      if (!(event.key === "Enter")) return;
+      event.preventDefault();
+      const current = Array.isArray(selection) ? selection : selection == null ? [] : [selection];
+      setSelection(options.multiple ? (current.includes(value) ? current.filter((member) => member !== value) : [...current, value]) : value);
+    },
+    [selection, setSelection, options.multiple],
+  );
+
   return {
     selection,
     setSelection,
@@ -59,6 +113,9 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
     setOpen: anchorToggle.setOpen,
     anchorRef: anchorToggle.anchorRef,
     panelRef: anchorToggle.panelRef as RefObject<HTMLDivElement | null>,
+    handleTriggerKeydown,
+    handleContentKeydown,
+    handleOptionKeydown,
   };
 }
 // @generated:end

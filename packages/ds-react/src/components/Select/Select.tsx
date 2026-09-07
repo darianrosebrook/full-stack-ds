@@ -121,13 +121,14 @@ export function Select({
   empty,
   ...rest
 }: SelectProps) {
-  const { selection, setSelection, open, setOpen } = useSelect({
+  const { panelRef, selection, setSelection, open, setOpen, handleTriggerKeydown, handleContentKeydown, handleOptionKeydown } = useSelect({
     value: controlledValue,
     defaultValue,
     onChange,
     open: controlledOpen,
     defaultOpen,
     onOpenChange,
+    multiple,
   });
 
   const classNames = [
@@ -145,11 +146,11 @@ export function Select({
 
   return (
   <Stack layout="native" className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-label={triggerLabel} aria-expanded={open} aria-disabled={disabled} data-testid={testId} data-fsds-component="select" data-fsds-box="" {...rest}>
-    <button className="select__trigger" type="button" onClick={() => setOpen(!open)} disabled={disabled} aria-label={triggerLabel} aria-expanded={open} aria-controls={`${instanceId}-options`}>
+    <button className="select__trigger" type="button" onClick={() => setOpen(!open)} onKeyDown={handleTriggerKeydown} disabled={disabled} aria-label={triggerLabel} aria-expanded={open} aria-controls={`${instanceId}-options`}>
       <span className="select__text" />
     </button>
     {open ? (
-      <div className="select__content" role="listbox" id="fsds-select-listbox">
+      <div className="select__content" role="listbox" id="fsds-select-listbox" onKeyDown={handleContentKeydown} tabIndex={-1} ref={panelRef}>
         {searchable ? (
           <div className="select__search">
             <input type="text" />
@@ -157,7 +158,7 @@ export function Select({
         ) : null}
         <div className="select__options" id={`${instanceId}-options`}>
           {(options ?? []).map((item, index) => (
-            <div className="select__option" role="option" onClick={() => setSelection(multiple ? ((Array.isArray(selection) ? selection : selection == null ? [] : [selection]).includes(item.value) ? (Array.isArray(selection) ? selection : selection == null ? [] : [selection]).filter((v) => v !== item.value) : [...(Array.isArray(selection) ? selection : selection == null ? [] : [selection]), item.value]) : item.value)} aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} key={index}>
+            <div className="select__option" role="option" onClick={() => setSelection(multiple ? ((Array.isArray(selection) ? selection : selection == null ? [] : [selection]).includes(item.value) ? (Array.isArray(selection) ? selection : selection == null ? [] : [selection]).filter((v) => v !== item.value) : [...(Array.isArray(selection) ? selection : selection == null ? [] : [selection]), item.value]) : item.value)} onKeyDown={(event) => handleOptionKeydown(event, item.value)} tabIndex={-1} aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} key={index}>
               <span>
                 {item.label}
               </span>

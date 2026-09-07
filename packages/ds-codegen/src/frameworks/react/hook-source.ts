@@ -21,10 +21,14 @@
  */
 import {
   type ComponentIR,
+  type KeyboardActionIR,
   type NormalizedChannelIR,
   type PartIR,
   type ResolvedPropIR,
+  keyboardModeGateProps,
   pickPrimaryDisclosureChannel,
+  resolveInitialFocusSelector,
+  resolveRovingItemSelector,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
@@ -357,6 +361,14 @@ function generateOptionsInterface(
     lines.push(`  ${t.enabledByProp}?: boolean;`);
   }
 
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: the keyboard select handler evaluates
+  // the composite control's mode gate, so the component forwards the gate
+  // props into the hook.
+  for (const gateProp of keyboardModeGateProps(ir)) {
+    lines.push(`  /** Mode gate the keyboard select behavior reads. */`);
+    lines.push(`  ${gateProp}?: boolean;`);
+  }
+
   if (bindings.useFocusTrap) {
     const initial = ir.behavior.focus?.initialFocus;
     const returnTo = ir.behavior.focus?.returnFocus;
@@ -418,6 +430,25 @@ function generateResultInterface(
     lines.push(`  renderInPortal: (node: ReactNode) => ReactNode;`);
   }
 
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: one keydown handler per hosting part.
+  // The composite item part's handler also receives the item value.
+  const itemPart = ir.compositeControl?.part.name;
+  const handlerParts: string[] = [];
+  for (const action of ir.keyboardActions) {
+    if (!handlerParts.includes(action.part)) handlerParts.push(action.part);
+  }
+  for (const part of handlerParts) {
+    if (part === itemPart) {
+      lines.push(
+        `  handle${capitalize(part)}Keydown: (event: ReactKeyboardEvent<HTMLElement>, value: string) => void;`,
+      );
+    } else {
+      lines.push(
+        `  handle${capitalize(part)}Keydown: (event: ReactKeyboardEvent<HTMLElement>) => void;`,
+      );
+    }
+  }
+
   if (bindings.isCompoundStateContainer) {
     lines.push(`  /** DOM-order list of registered tab values. */`);
     lines.push(`  registeredTabs: string[];`);
@@ -431,7 +462,7 @@ function generateResultInterface(
   return lines.join("\n");
 }
 
-function generateImports(bindings: PrimitiveBindings): string {
+function generateImports(ir: ComponentIR, bindings: PrimitiveBindings): string {
   const reactNamed: string[] = [];
   const reactTypes: string[] = [];
   if (bindings.useFocusTrap || bindings.usePortal || bindings.useAnchorToggle) {
@@ -443,6 +474,13 @@ function generateImports(bindings: PrimitiveBindings): string {
     reactNamed.push("useCallback");
     reactNamed.push("useId");
     reactNamed.push("useState");
+  }
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: keydown handlers need useCallback and a
+  // DOM-keyboard-event type alias (aliased so it cannot collide with the DOM
+  // lib's global KeyboardEvent in consumer code).
+  if (ir.keyboardActions.length > 0) {
+    reactNamed.push("useCallback");
+    reactTypes.push("type KeyboardEvent as ReactKeyboardEvent");
   }
 
   const primitives: string[] = [];
@@ -514,6 +552,244 @@ function pickOpenChannel(
   // Delegates to the IR's structural priority order so each emitter does
   // not maintain its own `c.name === "open"` / `"expanded"` predicate.
   return pickPrimaryDisclosureChannel(channels);
+}
+
+/**
+ * FEAT-A11Y-COMPOSITE-KEYBOARD-01 — React lowering of the realized keyboard
+ * actions. One `useCallback` handler per hosting part, emitted from the same
+ * IR facts the template binds (`node.keyboardActions`):
+ *
+ *   - `open`        → open the boolean disclosure channel, then move focus
+ *                     into the panel (initialFocus part's first focusable
+ *                     element, falling back to the roving item set).
+ *   - `roving-*`    → query the item set by the composite part's role and
+ *                     move DOM focus per the op, honoring `focus.wrap`.
+ *   - `select`      → commit the composite control's `toggleMembership`
+ *                     update against the item value the template passes,
+ *                     mirroring the item's click binding exactly.
+ *
+ * Handlers are returned from the hook and bound by the component template.
+ */
+function emitKeyboardHandlers(
+  lines: string[],
+  ir: ComponentIR,
+  bindings: PrimitiveBindings,
+  openChannel: NormalizedChannelIR | undefined,
+  anchorOwnsChannel: boolean,
+): void {
+  const itemSelector = resolveRovingItemSelector(ir);
+  const initialSelector = resolveInitialFocusSelector(ir);
+
+  // Hosting parts in first-declaration order; the return object and the
+  // component's destructure use the same order.
+  const parts: string[] = [];
+  for (const action of ir.keyboardActions) {
+    if (!parts.includes(action.part)) parts.push(action.part);
+  }
+
+  for (const part of parts) {
+    const actions = ir.keyboardActions.filter((a) => a.part === part);
+    const ident = `handle${capitalize(part)}Keydown`;
+    const keyGuard = (keys: string[]): string =>
+      keys.map((k) => `event.key === ${JSON.stringify(k)}`).join(" || ");
+
+    if (actions.some((a) => a.op === "select")) {
+      emitSelectKeydownHandler(lines, ir, bindings, part, ident, keyGuard);
+      continue;
+    }
+
+    if (actions.every((a) => a.op.startsWith("roving-"))) {
+      if (!itemSelector) {
+        throw new Error(
+          `Component "${ir.name}": roving keyboard actions on part "${part}" require a role on the composite item part.`,
+        );
+      }
+      emitRovingKeydownHandler(
+        lines,
+        ir,
+        part,
+        ident,
+        itemSelector,
+        keyGuard,
+      );
+      continue;
+    }
+
+    emitOpenKeydownHandler(
+      lines,
+      ir,
+      bindings,
+      part,
+      ident,
+      openChannel,
+      anchorOwnsChannel,
+      itemSelector,
+      initialSelector,
+      keyGuard,
+    );
+  }
+}
+
+/** Lower the `open` op: reveal the panel and move focus into it. */
+function emitOpenKeydownHandler(
+  lines: string[],
+  ir: ComponentIR,
+  bindings: PrimitiveBindings,
+  part: string,
+  ident: string,
+  openChannel: NormalizedChannelIR | undefined,
+  anchorOwnsChannel: boolean,
+  itemSelector: string | undefined,
+  initialSelector: string | undefined,
+  keyGuard: (keys: string[]) => string,
+): void {
+  const actions = ir.keyboardActions.filter((a) => a.part === part);
+  if (!openChannel || openChannel.valueType !== "boolean") {
+    throw new Error(
+      `Component "${ir.name}": keyboard "open" behavior on part "${part}" requires a boolean disclosure channel.`,
+    );
+  }
+  const setter = anchorOwnsChannel
+    ? "anchorToggle.setOpen"
+    : `set${capitalize(openChannel.name)}`;
+  const panelRefIdent = bindings.useAnchorToggle
+    ? "anchorToggle.panelRef"
+    : bindings.useFocusTrap || bindings.usePortal
+      ? "panelRef"
+      : undefined;
+  if (!panelRefIdent) {
+    throw new Error(
+      `Component "${ir.name}": keyboard "open" behavior on part "${part}" requires a panel ref (anchor-toggle or focus-trap binding) to receive focus.`,
+    );
+  }
+  const keys = actions.map((a) => a.key);
+  const focusTargetExpr = initialSelector
+    ? itemSelector
+      ? `(${panelRefIdent}.current.querySelector<HTMLElement>(${JSON.stringify(initialSelector)}) ?? ${panelRefIdent}.current.querySelector<HTMLElement>(${JSON.stringify(itemSelector)}))?.focus();`
+      : `${panelRefIdent}.current.querySelector<HTMLElement>(${JSON.stringify(initialSelector)})?.focus();`
+    : itemSelector
+      ? `${panelRefIdent}.current.querySelector<HTMLElement>(${JSON.stringify(itemSelector)})?.focus();`
+      : `${panelRefIdent}.current.focus();`;
+  lines.push(`  const ${ident} = useCallback(`);
+  lines.push(`    (event: ReactKeyboardEvent<HTMLElement>) => {`);
+  lines.push(`      if (!(${keyGuard(keys)})) return;`);
+  lines.push(`      event.preventDefault();`);
+  lines.push(`      ${setter}(true);`);
+  lines.push(`      requestAnimationFrame(() => {`);
+  lines.push(`        if (!${panelRefIdent}.current) return;`);
+  lines.push(`        ${focusTargetExpr}`);
+  lines.push(`      });`);
+  lines.push(`    },`);
+  lines.push(`    [${setter}],`);
+  lines.push(`  );`);
+  lines.push(``);
+}
+
+/** Lower the roving-* ops: move DOM focus within the queried item set. */
+function emitRovingKeydownHandler(
+  lines: string[],
+  ir: ComponentIR,
+  part: string,
+  ident: string,
+  itemSelector: string,
+  keyGuard: (keys: string[]) => string,
+): void {
+  const wrap = ir.behavior.focus?.wrap === true;
+  const indexExpr = (op: KeyboardActionIR["op"]): string => {
+    switch (op) {
+      case "roving-next":
+        return wrap
+          ? "currentIndex === -1 || currentIndex >= items.length - 1 ? 0 : currentIndex + 1"
+          : "currentIndex === -1 ? 0 : Math.min(currentIndex + 1, items.length - 1)";
+      case "roving-prev":
+        return wrap
+          ? "currentIndex <= 0 ? items.length - 1 : currentIndex - 1"
+          : "currentIndex === -1 ? 0 : Math.max(currentIndex - 1, 0)";
+      case "roving-first":
+        return "0";
+      case "roving-last":
+        return "items.length - 1";
+      default:
+        throw new Error(
+          `Component "${ir.name}": non-roving op "${op}" in the roving handler for part "${part}".`,
+        );
+    }
+  };
+  lines.push(`  const ${ident} = useCallback(`);
+  lines.push(`    (event: ReactKeyboardEvent<HTMLElement>) => {`);
+  lines.push(`      const items = Array.from(`);
+  lines.push(`        event.currentTarget.querySelectorAll<HTMLElement>(${JSON.stringify(itemSelector)}),`);
+  lines.push(`      );`);
+  lines.push(`      const currentIndex = items.findIndex((item) => item === document.activeElement);`);
+  const actions = ir.keyboardActions.filter((a) => a.part === part);
+  actions.forEach((action, i) => {
+    const keyword = i === 0 ? "if" : "else if";
+    lines.push(`      ${keyword} (${keyGuard([action.key])}) {`);
+    lines.push(`        event.preventDefault();`);
+    lines.push(`        items[${indexExpr(action.op)}]?.focus();`);
+    lines.push(`      }`);
+  });
+  lines.push(`    },`);
+  lines.push(`    [],`);
+  lines.push(`  );`);
+  lines.push(``);
+}
+
+/**
+ * Lower the `select` op: commit the composite control's toggleMembership
+ * update against the item value the template passes — the exact expression
+ * shape the item's click binding emits, keyed off the same mode gate.
+ */
+function emitSelectKeydownHandler(
+  lines: string[],
+  ir: ComponentIR,
+  bindings: PrimitiveBindings,
+  part: string,
+  ident: string,
+  keyGuard: (keys: string[]) => string,
+): void {
+  const control = ir.compositeControl;
+  if (
+    !control ||
+    control.update.kind !== "channelUpdate" ||
+    control.update.op !== "toggleMembership"
+  ) {
+    throw new Error(
+      `Component "${ir.name}": keyboard "select" behavior on part "${part}" requires a toggleMembership composite control update.`,
+    );
+  }
+  const channel = bindings.useControllableState.find(
+    (c) => c.name === control.channel.name,
+  );
+  if (!channel) {
+    throw new Error(
+      `Component "${ir.name}": keyboard "select" behavior targets channel "${control.channel.name}", which the hook does not manage.`,
+    );
+  }
+  const setter = `set${capitalize(channel.name)}`;
+  const current = `Array.isArray(${channel.name}) ? ${channel.name} : ${channel.name} == null ? [] : [${channel.name}]`;
+  const modeGates = keyboardModeGateProps(ir);
+  const gate = modeGates.length > 0 ? `options.${modeGates[0]}` : undefined;
+  const keys = ir.keyboardActions
+    .filter((a) => a.part === part && a.op === "select")
+    .map((a) => a.key);
+  const deps = gate
+    ? [channel.name, setter, gate].join(", ")
+    : [channel.name, setter].join(", ");
+  lines.push(`  const ${ident} = useCallback(`);
+  lines.push(`    (event: ReactKeyboardEvent<HTMLElement>, value: string) => {`);
+  lines.push(`      if (!(${keyGuard(keys)})) return;`);
+  lines.push(`      event.preventDefault();`);
+  lines.push(`      const current = ${current};`);
+  lines.push(
+    gate
+      ? `      ${setter}(${gate} ? (current.includes(value) ? current.filter((member) => member !== value) : [...current, value]) : value);`
+      : `      ${setter}(current.includes(value) ? current.filter((member) => member !== value) : [...current, value]);`,
+  );
+  lines.push(`    },`);
+  lines.push(`    [${deps}],`);
+  lines.push(`  );`);
+  lines.push(``);
 }
 
 function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
@@ -680,6 +956,18 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     lines.push(``);
   }
 
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: one keydown handler per hosting part,
+  // lowered from ir.keyboardActions and returned for template binding.
+  const keyboardHandlerParts: string[] = [];
+  if (ir.keyboardActions.length > 0) {
+    for (const action of ir.keyboardActions) {
+      if (!keyboardHandlerParts.includes(action.part)) {
+        keyboardHandlerParts.push(action.part);
+      }
+    }
+    emitKeyboardHandlers(lines, ir, bindings, openChannel, anchorOwnsChannel);
+  }
+
   // Build return object
   lines.push(`  return {`);
   for (const ch of bindings.useControllableState) {
@@ -697,6 +985,9 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     lines.push(`    panelRef: anchorToggle.panelRef as RefObject<HTMLDivElement | null>,`);
   } else if (bindings.useFocusTrap || bindings.usePortal) {
     lines.push(`    panelRef,`);
+  }
+  for (const part of keyboardHandlerParts) {
+    lines.push(`    handle${capitalize(part)}Keydown,`);
   }
   if (bindings.usePortal) {
     lines.push(`    renderInPortal: portal.render,`);
@@ -744,7 +1035,7 @@ export function generateReactHookSource(ir: ComponentIR): string | null {
   const bindings = resolveBindings(ir);
   if (!bindings) return null;
 
-  const importsBody = generateImports(bindings);
+  const importsBody = generateImports(ir, bindings);
   const inlineTypesBody = generateInlineTypes(ir, bindings);
   const optionsBody = generateOptionsInterface(ir, bindings);
   const resultBody = generateResultInterface(ir, bindings);
