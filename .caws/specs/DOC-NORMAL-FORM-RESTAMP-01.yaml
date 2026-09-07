@@ -23,7 +23,9 @@ acceptance:
     given: >-
       docs/normal-form.md stamps verified_at_commit cdaa1cb1 while its governs globs
       last changed at fa780c0d
-    when: 'The acceptance statement is evaluated.'
+    when: >-
+      the governed-surface delta is re-verified against the doc's prose and the
+      stamp is advanced to a commit at or after fa780c0d
     then: 'node scripts/docs-claims-check.mjs exits 0 and reports no stale claims/stamps'
 non_functional: {}
 contracts: []
