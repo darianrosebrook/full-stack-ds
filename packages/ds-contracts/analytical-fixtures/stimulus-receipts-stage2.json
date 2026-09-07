@@ -1,5 +1,5 @@
 {
-  "$comment": "Occurrence-bound prediction receipts for closure stimuli. A receipt names the ONE holder occurrence its cause explains; the checker measures that every differing path lies under it. Freeze order is load-bearing: `digest` covers the authored fields and is computed before the engine is asked, so a prediction edited toward an engine result fails clause 0 rather than passing silently.",
+  "$comment": "Occurrence-bound prediction receipts for closure stimuli. A receipt names the ONE holder occurrence its cause explains; the checker measures that every differing path lies under it. Freeze order is load-bearing: `digest` covers the authored fields and is computed before the engine is asked, so a prediction edited toward an engine result fails clause 0 rather than passing silently. Engine observations are appended in a LATER commit than the one that introduces a prediction.",
   "spec": "REL-VIEW-ALGEBRA-01",
   "receipts": [
     {
@@ -66,6 +66,355 @@
         "provenance": "retrofit",
         "authoredAt": "2026-09-06",
         "digest": "422b1d75c2dc5b2a0df081c7c4367b8c3146919f0c9fc26f12ed7c84c3fa3c2c"
+      }
+    },
+    {
+      "prediction": {
+        "carrier": "relation.derivedBy.kind:bin~project",
+        "base": "FX_PROJECT_DROPS_NEST_LEVEL",
+        "targetOccurrence": "structure.relations.flat.derivedBy",
+        "source": {
+          "member": "project",
+          "authority": "the projection at this occurrence drops the nest level that carried membership",
+          "law": {
+            "case": "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_DERIVATION_DISCARDS_MEMBERSHIP"
+            }
+          }
+        },
+        "target": {
+          "member": "bin",
+          "authority": "binning revenue without declaring which side of each boundary is closed leaves a value on a boundary in two bins or none",
+          "law": {
+            "case": "CASE_WHICH_BIN_GETS_TEN",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_BIN_CLOSURE_UNDECLARED"
+            }
+          },
+          "preconditions": [
+            {
+              "path": "structure.relations.hierarchy.fields.revenue",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.flat.fields.revenue",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.flat.grain",
+              "holds": "present"
+            }
+          ]
+        },
+        "patch": [
+          {
+            "set": "structure.relations.flat.derivedBy",
+            "value": {
+              "kind": "bin",
+              "from": "hierarchy",
+              "field": "revenue"
+            }
+          }
+        ],
+        "expected": {
+          "status": "illegal",
+          "codes": [
+            "REL_BIN_CLOSURE_UNDECLARED"
+          ],
+          "terms": []
+        },
+        "provenance": "authored-before-engine",
+        "authoredAt": "2026-09-06",
+        "digest": "a6b16fc8bff123ffc0b707ea7461f64425a1bbf75f473f4993867fd28beda00c"
+      }
+    },
+    {
+      "prediction": {
+        "carrier": "relation.derivedBy.kind:normalize~project",
+        "base": "FX_PROJECT_DROPS_NEST_LEVEL",
+        "targetOccurrence": "structure.relations.flat.derivedBy",
+        "source": {
+          "member": "project",
+          "authority": "the projection at this occurrence drops the nest level that carried membership",
+          "law": {
+            "case": "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_DERIVATION_DISCARDS_MEMBERSHIP"
+            }
+          }
+        },
+        "target": {
+          "member": "normalize",
+          "authority": "the near-neighbour reading of REL_ADDITIVITY_NORMALIZE_NONADDITIVE: normalizing an ADDITIVE measure has a whole to normalize against, so the share has a referent and the derivation is admissible",
+          "preconditions": [
+            {
+              "path": "structure.relations.hierarchy.fields.revenue",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.flat.fields.revenue",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.hierarchy.fields.revenue.additivity",
+              "holds": "absent"
+            }
+          ]
+        },
+        "patch": [
+          {
+            "set": "structure.relations.flat.derivedBy",
+            "value": {
+              "kind": "normalize",
+              "from": "hierarchy",
+              "field": "revenue"
+            }
+          }
+        ],
+        "expected": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "provenance": "authored-before-engine",
+        "authoredAt": "2026-09-06",
+        "digest": "27a279f116499d66f6660be0e02d698a30c9de89379e33e24643006825bee8c6"
+      }
+    },
+    {
+      "prediction": {
+        "carrier": "relation.derivedBy.kind:bin~graph",
+        "base": "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+        "targetOccurrence": "structure.relations.routed.derivedBy",
+        "source": {
+          "member": "graph",
+          "authority": "the flow read at this occurrence declares conservation and the edge values leak at the middle node",
+          "law": {
+            "case": "CASE_LEAKING_FLOW",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_FLOW_NOT_CONSERVED"
+            }
+          }
+        },
+        "target": {
+          "member": "bin",
+          "authority": "binning amount without declaring which side of each boundary is closed leaves a value on a boundary in two bins or none",
+          "law": {
+            "case": "CASE_WHICH_BIN_GETS_TEN",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_BIN_CLOSURE_UNDECLARED"
+            }
+          },
+          "preconditions": [
+            {
+              "path": "structure.relations.edges.fields.amount",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.routed.fields.amount",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.routed.grain",
+              "holds": "present"
+            }
+          ]
+        },
+        "patch": [
+          {
+            "set": "structure.relations.routed.derivedBy",
+            "value": {
+              "kind": "bin",
+              "from": "edges",
+              "field": "amount"
+            }
+          }
+        ],
+        "expected": {
+          "status": "illegal",
+          "codes": [
+            "REL_BIN_CLOSURE_UNDECLARED"
+          ],
+          "terms": []
+        },
+        "provenance": "authored-before-engine",
+        "authoredAt": "2026-09-06",
+        "digest": "67ada98bfdd3e409ec8359151ea2c70bd122372bc6e342cc6f8bbc22a2144fe2"
+      }
+    },
+    {
+      "prediction": {
+        "carrier": "relation.derivedBy.kind:normalize~graph",
+        "base": "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+        "targetOccurrence": "structure.relations.routed.derivedBy",
+        "source": {
+          "member": "graph",
+          "authority": "the flow read at this occurrence declares conservation and the edge values leak at the middle node",
+          "law": {
+            "case": "CASE_LEAKING_FLOW",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_FLOW_NOT_CONSERVED"
+            }
+          }
+        },
+        "target": {
+          "member": "normalize",
+          "authority": "the near-neighbour reading of REL_ADDITIVITY_NORMALIZE_NONADDITIVE: amount is additive, so the whole it is normalized against exists",
+          "preconditions": [
+            {
+              "path": "structure.relations.edges.fields.amount",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.routed.fields.amount",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.edges.fields.amount.additivity",
+              "holds": "absent"
+            }
+          ]
+        },
+        "patch": [
+          {
+            "set": "structure.relations.routed.derivedBy",
+            "value": {
+              "kind": "normalize",
+              "from": "edges",
+              "field": "amount"
+            }
+          }
+        ],
+        "expected": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "provenance": "authored-before-engine",
+        "authoredAt": "2026-09-06",
+        "digest": "24f5777a3b2207e08a2c539655c99df1b459d57e0a6259bad60a39441523ecf6"
+      }
+    },
+    {
+      "prediction": {
+        "carrier": "relation.derivedBy.kind:aggregate-to-grain~graph",
+        "base": "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+        "targetOccurrence": "structure.relations.routed.derivedBy",
+        "source": {
+          "member": "graph",
+          "authority": "the flow read at this occurrence declares conservation and the edge values leak at the middle node",
+          "law": {
+            "case": "CASE_LEAKING_FLOW",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_FLOW_NOT_CONSERVED"
+            }
+          }
+        },
+        "target": {
+          "member": "aggregate-to-grain",
+          "authority": "the near-neighbour reading of REL_GRAIN_SUBTOTAL_MISMATCH: with no nested input there is no declared hierarchy to be off, the target grain is drawn from the input and no field is invented",
+          "preconditions": [
+            {
+              "path": "structure.relations.edges.derivedBy",
+              "holds": "absent"
+            },
+            {
+              "path": "structure.relations.edges.fields.src",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.edges.fields.dst",
+              "holds": "present"
+            }
+          ]
+        },
+        "patch": [
+          {
+            "set": "structure.relations.routed.derivedBy",
+            "value": {
+              "kind": "aggregate-to-grain",
+              "from": "edges",
+              "toGrain": [
+                "src",
+                "dst"
+              ]
+            }
+          }
+        ],
+        "expected": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "provenance": "authored-before-engine",
+        "authoredAt": "2026-09-06",
+        "digest": "141b8b0f89d8965a9a8bcdaf5d2ab3effb63e8477feb3cdfcd1d00aec380082f"
+      }
+    },
+    {
+      "prediction": {
+        "carrier": "relation.derivedBy.kind:project~graph",
+        "base": "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+        "targetOccurrence": "structure.relations.routed.derivedBy",
+        "source": {
+          "member": "graph",
+          "authority": "the flow read at this occurrence declares conservation and the edge values leak at the middle node",
+          "law": {
+            "case": "CASE_LEAKING_FLOW",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_FLOW_NOT_CONSERVED"
+            }
+          }
+        },
+        "target": {
+          "member": "project",
+          "authority": "the near-neighbour reading of REL_DERIVATION_DISCARDS_MEMBERSHIP: the input declares no nest, so no membership is dropped, and every kept field keeps its declaration",
+          "preconditions": [
+            {
+              "path": "structure.relations.edges.derivedBy",
+              "holds": "absent"
+            },
+            {
+              "path": "structure.relations.routed.fields.src",
+              "holds": "present"
+            },
+            {
+              "path": "structure.relations.routed.fields.amount",
+              "holds": "present"
+            }
+          ]
+        },
+        "patch": [
+          {
+            "set": "structure.relations.routed.derivedBy",
+            "value": {
+              "kind": "project",
+              "from": "edges",
+              "keep": [
+                "src",
+                "dst",
+                "amount"
+              ]
+            }
+          }
+        ],
+        "expected": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "provenance": "authored-before-engine",
+        "authoredAt": "2026-09-06",
+        "digest": "445597b52b9440fa8587579fd9fbec803a2217bc33dcd0df95e61ef77ffb375a"
       }
     }
   ]
