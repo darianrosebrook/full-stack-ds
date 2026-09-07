@@ -58,10 +58,25 @@ describe("the recorded receipts hold", () => {
     expect(summarizeReceipts(result)).toContain("stimulus receipts (REL-VIEW-ALGEBRA-01): OK");
   });
 
-  it("the live ledger promotes nothing: its one receipt is a retrofit and no engine has been recorded against it", () => {
+  it("the retrofit in the live ledger is never promotable, however well the engine agrees with it", () => {
+    // The ledger's first receipt records the occurrence binding of the stimulus
+    // pair that predates this discipline. Its outcome and locus agree — which is
+    // worth knowing and is not evidence, because the prediction did not precede
+    // the engine. Every carrier the ledger DOES promote came the other way.
+    const result = checkReceipts();
+    const retrofit = result.checks[0]!;
     expect(loadReceipts().receipts[0]!.prediction.provenance).toBe("retrofit");
-    expect(loadReceipts().receipts[0]!.engine).toBeUndefined();
-    expect(checkReceipts().promotable).toEqual([]);
+    expect(retrofit.agreement?.agrees).toBe(true);
+    expect(retrofit.locus?.every((l) => l.agrees)).toBe(true);
+    expect(result.promotable).not.toContain(retrofit.carrier);
+
+    const byCarrier = new Map(loadReceipts().receipts.map((r) => [r.prediction.carrier, r]));
+    for (const carrier of result.promotable) {
+      expect(byCarrier.get(carrier)!.prediction.provenance).toBe("authored-before-engine");
+      const check = result.checks.find((c) => c.carrier === carrier)!;
+      expect(check.agreement?.agrees).toBe(true);
+      expect(check.locus?.every((l) => l.agrees)).toBe(true);
+    }
   });
 
   it("promotion needs all three: held, authored before the engine, and agreeing — provenance alone decides between two otherwise identical ledgers", () => {
