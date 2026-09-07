@@ -79,3 +79,7 @@ evidence:
     status: pass
     evidence_ref: "commit b1cb54f4 (role elision from declared tag; per-framework Image/Details/Divider tests) + pnpm run governed:rail exit 0 in worktree a11y-select-tabs-keyboard"
     recorded_at: "2026-09-07T06:05:05.134Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "commit bdfd7b61; pnpm --filter @full-stack-ds/figma-plugin run typecheck exits 0; figma lane present in root typecheck:all chain and .github/workflows/ci.yml"
+    recorded_at: "2026-09-07T06:05:18.027Z"
