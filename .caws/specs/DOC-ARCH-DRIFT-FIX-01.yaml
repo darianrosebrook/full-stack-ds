@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "pnpm run docs:check-claims: 69 marked claims match derived values incl. new token-shard-count=160"
     recorded_at: "2026-09-07T00:44:10.876Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "governed:rail clean (no generated drift), pnpm test 280 files/3814 tests, test:frameworks 85 files/173 tests, lint clean"
+    recorded_at: "2026-09-07T00:44:11.526Z"
