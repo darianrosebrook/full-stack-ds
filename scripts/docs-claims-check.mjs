@@ -81,6 +81,7 @@ const RAIL_FRAMEWORKS_DIR = join(
 );
 const TARGET_REGISTRY = join(REPO_ROOT, "fsds.targets.json");
 const ICONS_DIR = join(REPO_ROOT, "packages", "ds-iconography", "icons");
+const TOKEN_SHARDS_DIR = join(REPO_ROOT, "packages", "ds-tokens", "src");
 const SNAPSHOT_DOC = join(REPO_ROOT, "docs", "current-implementation-snapshot.md");
 const COVERAGE_FLOORS_FILE = join(REPO_ROOT, "coverage-floors.json");
 const SHOWCASE_SRC_DIR = join(REPO_ROOT, "src");
@@ -96,6 +97,7 @@ const CLAIMS = {
   "rail-admitted-target-count": { derive: deriveRailAdmittedTargetCount },
   "registered-target-count": { derive: deriveRegisteredTargetCount },
   "icon-count": { derive: deriveIconCount },
+  "token-shard-count": { derive: deriveTokenShardCount },
   "web-framework-list": { derive: deriveWebFrameworkList, format: "list" },
   "web-framework-count": { derive: deriveWebFrameworkCount },
   "snapshot-updated": { derive: deriveSnapshotUpdated, format: "date" },
@@ -355,6 +357,29 @@ function deriveIconCount() {
   for (const name of readdirSync(ICONS_DIR)) {
     if (statSync(join(ICONS_DIR, name)).isDirectory()) count += 1;
   }
+  return count;
+}
+
+/**
+ * Token shard count — every authored DTCG shard under the token source
+ * root. Mirrors the tokens package's `--validate-only` walk
+ * (`src/**\/*.tokens.json` in `packages/ds-tokens/build/build.ts`), so the
+ * marker tracks the same population the validator enforces.
+ */
+function deriveTokenShardCount() {
+  if (!existsSync(TOKEN_SHARDS_DIR)) {
+    console.error(`docs-claims-check: token shards dir not found at ${TOKEN_SHARDS_DIR}`);
+    process.exit(2);
+  }
+  let count = 0;
+  const walk = (dir) => {
+    for (const name of readdirSync(dir)) {
+      const full = join(dir, name);
+      if (statSync(full).isDirectory()) walk(full);
+      else if (name.endsWith(".tokens.json")) count += 1;
+    }
+  };
+  walk(TOKEN_SHARDS_DIR);
   return count;
 }
 
