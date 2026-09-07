@@ -4,7 +4,7 @@ authority: architecture
 status: active
 title: Presence Surfaces — the architectural family for tooltips, popovers, dialogs, menus, selects, toasts, coachmarks, and sheets
 owner: "@darianrosebrook"
-updated: 2026-06-11
+updated: 2026-09-06
 governs:
   - packages/ds-contracts/components/Tooltip/Tooltip.contract.json
   - packages/ds-contracts/components/Popover/Popover.contract.json
@@ -64,21 +64,24 @@ The classification governs controller selection, ARIA wiring, and dismissal poli
 
 ## Substrate vs surface
 
-The substrate is the runtime machinery: controllers, contexts, registration, lifecycle, positioning. The surface is the consumer's component import. Two surfaces may share a substrate (Dialog + ModalDialog both use `DialogSurfaceController`); one surface may compose multiple substrates (Combobox = Select × Listbox).
+The substrate is the runtime machinery: controllers, contexts, registration, lifecycle, positioning. The surface is the consumer's component import. Two surfaces may share a substrate (Dialog + ModalDialog both compose the same dialog substrate); one surface may compose multiple substrates (Combobox = Select × Listbox).
 
 **Substrate is governed by this document. Surface naming is governed by ergonomics and compatibility.**
 
 ## Controller hierarchy
 
 ```
-SurfaceController                  abstract; lifecycle, modality, focus, dismissal
-  ├── AnchoredSurfaceController    Tooltip, Popover, Menu, Select — adds trigger/content geometry
-  ├── DialogSurfaceController      Dialog, ModalDialog — centered overlay; trap; outside inert
-  ├── ToastSurfaceController       Toast — viewport-edge; timing-based auto-dismiss
-  └── CoachmarkSurfaceController   Coachmark — guided sequence; anchored or overlay
+SurfaceController                  abstract; lifecycle, modality, focus, dismissal — implemented
+  └── AnchoredSurfaceController    Tooltip, Popover — adds trigger/content geometry — implemented
+Dialog / Toast / Coachmark         family controllers below the anchored branch are target
+                                   taxonomy, not shipped code: Dialog composes the dialog
+                                   substrate from hooks (useControllableState + useDismissal +
+                                   useFocusTrap + usePortal + useScrollLock); Toast and
+                                   Coachmark follow the same hook-composition pattern pending
+                                   dedicated controller families.
 ```
 
-Naming convention: **`SurfaceController` at the abstract layer; subclasses suffixed with the surface family.** The name `FloatingController` is explicitly rejected — geometry does not name the family.
+Naming convention: **`SurfaceController` at the abstract layer; subclasses suffixed with the surface family.** The name `FloatingController` is explicitly rejected — geometry does not name the family. Only the anchored subclass is realized today; the dialog/toast/coachmark families currently compose hook substrates rather than shipping dedicated controllers.
 
 ## Canonical consumer API
 
@@ -108,7 +111,7 @@ Each framework's `asChild` mechanism differs:
 | Framework | Mechanism |
 |---|---|
 | React | `cloneElement(child, { ref: mergedRef, ...handlerProps })` |
-| Vue | Slot with `useTemplateRef` for ref forwarding |
+| Vue | Slot-prop `triggerProps` bag with `registerAnchor` / `registerAnchorRefOnly` refs |
 | Svelte 5 | Element snippet + action-based registration |
 | Angular | *(planned)* Content projection with `@ContentChild` + a structural directive — **not implemented**; `@ContentChild` appears nowhere in the Angular emitter. Trigger registration today is a plain `@Directive` class in `frameworks/angular/surface-emit.ts`. |
 | Lit | `<slot @slotchange>` with first-assigned-element adoption |
@@ -254,50 +257,33 @@ The existing top-level `focus` block on the same contract carries `trap: true`, 
 
 ## `SurfaceIR` (implemented)
 
-Analogous to `BehaviorIR`. **This shipped** — `SurfaceIR` is an exported interface at `packages/ds-codegen/src/ir.ts:1328`, constructed by `buildSurfaceIR()` and hung off `ComponentIR.surface` during `buildComponentIR`. The shape below is the real one; two fields (`selectorAnchor`, `openTriggers`) were added after the original sketch:
+Analogous to `BehaviorIR`. **This shipped** — `SurfaceIR` is an exported interface at `packages/ds-codegen/src/ir.ts`, constructed by `buildSurfaceIR()` and hung off `ComponentIR.surface` during `buildComponentIR`. The shape below is the real one — re-quote it from the source rather than trusting this page. Two fields (`selectorAnchor`, `openTriggers`) were added after the original sketch:
 
 ```ts
 export interface SurfaceIR {
-  kind: "tooltip" | "popover" | "dialog" | "menu" | "select" | "toast" | "coachmark" | "sheet";
-  presence: "ephemeral" | "persistent";
-  modality: "blocking" | "non-blocking";
-  anchor?: { partName: string; relation: SurfaceAnchorRelation };
+  kind: ContractSurfaceKind;
+  presence: ContractSurfacePresence;
+  modality: ContractSurfaceModality;
+  /** Axis-derived attachment target used to select shared surface machinery. */
+  attachment: SurfaceAttachment; // "part" | "selector" | "viewport" | "flow"
+  anchor?: SurfaceAnchorIR; // { part: PartIR; relation: ContractSurfaceAnchorRelation }
   /** Selector-sourced anchor — mutually exclusive with `anchor`
    * (validated fail-loud in buildSurfaceIR). */
   selectorAnchor?: SurfaceSelectorAnchorIR;
-  content?: { partName: string; interactive: boolean };
-  positioning?: {
-    strategy: "anchored" | "centered" | "viewport-edge" | "inline";
-    placementProp?: string;
-    collision?: "none" | "flip" | "shift" | "flip-shift";
-  };
-  dismissal: SurfaceDismissalMode[];
+  content?: SurfaceContentIR; // { part: PartIR; interactive: boolean }
+  positioning?: SurfacePositioningIR; // strategy, placementProp, collision
+  /** Semantic dismissal mode list — composes with BehaviorIR's
+   * normalizedDismissalTriggers. */
+  dismissal: ContractSurfaceDismissalMode[];
   /** Anchor-element interactions that open the surface. Always an array.
    * Anchored surfaces and tooltips must declare at least one trigger;
    * non-anchored surfaces may omit. Validated fail-loud in buildSurfaceIR. */
   openTriggers: ContractSurfaceOpenTrigger[];
-  timing?: {
-    openDelayProp?: string;
-    closeDelayProp?: string;
-    autoDismissProp?: string;
-  };
+  timing?: SurfaceTimingIR;
 }
-
-export type SurfaceAnchorRelation =
-  | "describedby"
-  | "controls-expanded"
-  | "labelledby"
-  | "activedescendant"
-  | "none";
-
-export type SurfaceDismissalMode =
-  | "escape"
-  | "outside-click"
-  | "blur"
-  | "pointer-leave"
-  | "close-button"
-  | "timeout";
 ```
+
+The value sets and remaining member types live beside the interface — `SurfaceAnchorIR`, `SurfaceContentIR`, `SurfacePositioningIR`, `SurfaceTimingIR`, and `SurfaceSelectorAnchorIR` in `packages/ds-codegen/src/ir.ts`; `ContractSurfaceKind`, `ContractSurfacePresence`, `ContractSurfaceModality`, `ContractSurfaceAnchorRelation`, `ContractSurfaceDismissalMode`, and `ContractSurfaceOpenTrigger` in `packages/ds-codegen/src/contract.ts`; `SurfaceAttachment` in `packages/ds-codegen/src/semantics.ts`.
 
 The IR builder copies `contract.surface` into `SurfaceIR`, resolves
 `anchor.part` and `content.part` strings to `PartIR`, and derives the attachment

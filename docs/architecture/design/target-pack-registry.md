@@ -4,7 +4,7 @@ authority: architecture
 status: active
 title: Governed Target-Pack Registry
 owner: "@darianrosebrook"
-updated: 2026-06-11
+updated: 2026-09-06
 governs:
   - fsds.targets.json
   - packages/ds-codegen/src/emitter.ts
@@ -30,7 +30,7 @@ A target pack must not become a second contract interpreter. It should consume g
 
 This slice introduces `TargetPackManifestV1` under `packages/ds-codegen/src/target-packs/manifest.ts` and binds every current built-in target to a manifest in `packages/ds-codegen/src/target-packs/builtin.ts`.
 
-`registry.ts` attaches a `targetPack` manifest to each executable `TargetBinding` and validates the manifest before registering the target. It also records declared target-pack metadata separately from executable availability. The root `fsds.targets.json` file declares admitted built-in targets and local target-pack declarations. If the file is missing, codegen falls back to the same built-in target set for compatibility.
+`registry.ts` attaches a `targetPack` manifest to each executable `TargetBinding` and validates the manifest before registering the target. It also records declared target-pack metadata separately from executable availability. The root `fsds.targets.json` file declares admitted built-in targets and local target-pack declarations. If the file is missing, codegen falls back to a frozen historical builtin subset — `react`, `vue`, `svelte`, `lit`, `angular`, `figma`, `jetpack-compose` — which excludes `react-native`, `swiftui`, `unity`, and `godot` even though all are registered builtins today. Do not infer current target selection from this missing-config fallback; the committed `fsds.targets.json` is authoritative.
 
 `emitter.ts` separates `BuiltinTargetId` from `TargetId`: built-ins remain a closed compatibility declaration, while `TargetId` is registry-admitted string identity. `parseTargetArg` validates target-id syntax and then checks the requested id against the registry's executable targets.
 
@@ -99,7 +99,7 @@ pnpm --filter @full-stack-ds/codegen typecheck
 
 ## Non-claims
 
-This slice does not yet load target packs from npm packages, run local target-pack emitters, migrate the emission manifest from emitter-source-set provenance to target-pack package provenance, move admission plans entirely out of core rail code, split `ComponentIR` into semantic IR plus target-family IR, or prove any non-web target beyond the existing Figma descriptor target.
+This slice does not yet load target packs from npm packages, run local target-pack emitters, migrate the emission manifest from emitter-source-set provenance to target-pack package provenance, move admission plans entirely out of core rail code, split `ComponentIR` into semantic IR plus target-family IR, or prove any non-web target through the target-pack mechanism (react-native is admitted via the classic rail path, and swiftui, jetpack-compose, unity, and godot are registered builtins — none of those is a target-pack admission claim).
 
 ## Next admissible slices
 
