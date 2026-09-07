@@ -2,9 +2,11 @@ id: GUARD-CMDTEXT-BOUNDARY-01
 title: 'Adjudicate guard verb matchers on command text, not carried payload text'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'worktree-guard adjudicates command text not carried payload; 19-case suite pins both directions plus four no-bypass cases.'
 created_at: '2026-09-07T05:34:52.016Z'
-updated_at: '2026-09-07T05:35:14.558Z'
+updated_at: '2026-09-07T05:52:32.664Z'
 created_by_session: 'f46106db-10cf-4869-b035-5bb63e5a1fc2'
 blast_radius:
   modules:
