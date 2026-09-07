@@ -16,7 +16,8 @@ scope:
     - 'docs/normal-form.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'docs/normal-form.md prose is restamped only after the governed-surface delta since the prior stamp is read and shown to invalidate no claim in the doc; the stamp is never bumped to silence the gate.'
+  - 'The freshness ledger (doc-freshness-baseline.json) is reserved for genuine known-stale debt and is not used to admit this doc.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
