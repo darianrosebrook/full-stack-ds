@@ -47,3 +47,10 @@ evidence:
     command: .caws/hooks/tests/test_worktree_guard_cmdtext.sh
     exit_code: 0
     commit_sha: d308f3c5
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "test_worktree_guard_cmdtext.sh -> PASS at d308f3c5; the seven real-invocation cases (stash, hard reset, amend, restore, clean, force-push, and one chained after a benign command) all still read BLOCK. Falsification: the same suite run against the pre-fix guard from HEAD reports 15 passed / 4 failed, so it can fail for the right reason"
+    recorded_at: "2026-09-07T05:49:46.605Z"
+    command: .caws/hooks/tests/test_worktree_guard_cmdtext.sh
+    exit_code: 0
+    commit_sha: d308f3c5
