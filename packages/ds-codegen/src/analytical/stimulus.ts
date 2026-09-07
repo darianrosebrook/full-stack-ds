@@ -22,7 +22,9 @@
  *   3. EVERY path that differs between the two stimuli lies under that one
  *      occurrence — measured with `changedPaths`, not asserted in prose;
  *   4. the rewritten stimulus is schema-valid;
- *   5. both cited authorities are vocabulary the frozen oracle grounds;
+ *   5. each side cites its authority in the form its outcome can carry — a
+ *      finding-bearing side names the case AND the finding structurally, an
+ *      admissible side cites the near-neighbour it rests on;
  *   6. the target law's preconditions hold on the UNCHANGED surrounding
  *      fixture, and name paths outside the occurrence. A precondition that can
  *      only be met by editing something outside the holder makes that base
@@ -30,12 +32,22 @@
  *      because the honest response is to pick another base, not to widen the
  *      patch.
  *
+ * ADMISSION ENDS THERE, and the engine is not consulted for any of it. What the
+ * outcome should be comes from the corpus; asking the implementation whether a
+ * prediction may be admitted would put the thing under test upstream of its own
+ * oracle. Once the engine has been run and its observation appended, two
+ * agreements are computed in the same later phase: the OUTCOME agreement, and
+ * the LOCUS agreement — whether the engine attributes each side's cited finding
+ * to the relation the occurrence names. A right code at the wrong subject is
+ * therefore "the engine disagrees with the authored causal attribution", not
+ * "the prediction was inadmissible", and both kinds of disagreement block
+ * promotion without ever editing the prediction.
+ *
  * The receipt is FROZEN before the engine runs: `digest` covers every authored
  * field, and the engine's observation is appended beside it, never merged into
- * it. `checkReceipt` recomputes both the digest and the agreement, so a
- * prediction edited to match an engine result is a digest failure rather than a
- * silent success. Disagreement is recorded and blocks promotion; it is never
- * resolved by rewriting the prediction.
+ * it. `checkReceipt` recomputes the digest and both agreements, so a prediction
+ * edited to match an engine result is a digest failure rather than a silent
+ * success.
  *
  * What a passing receipt does NOT establish: that the cited law is the right
  * law, or that the predicted outcome is correct. It establishes that the author
@@ -46,6 +58,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { groundedVocabulary, holderLocatorOf, parseCarrier } from "./closure.js";
 import { sha256 } from "./corpus-integrity.js";
+import { judge } from "./engines.js";
 import {
   applyPatch,
   changedPaths,
@@ -86,6 +99,21 @@ export type Precondition =
   | { path: string; holds: "absent" }
   | { path: string; holds: "equals"; value: unknown };
 
+/**
+ * The law a side rests on, structured so the checker never has to read an
+ * essay to know which engine occurrence it is asking about.
+ *
+ * The prose `authority` stays — it carries the reasoning, which no schema
+ * captures — but it stops being what identifies the finding.
+ */
+export type LawRef = {
+  /** The corpus case whose adjudication supplies this side's outcome. */
+  case: string;
+} & ({ finding: { kind: "diagnostic"; code: string } } | { finding: { kind: "obligation"; term: string } });
+
+/** The finding's identifier, whichever kind it is. */
+export const findingId = (law: LawRef): string => (law.finding.kind === "diagnostic" ? law.finding.code : law.finding.term);
+
 export interface StimulusPrediction {
   /** The closure carrier this stimulus is built for. */
   carrier: string;
@@ -98,9 +126,9 @@ export interface StimulusPrediction {
    */
   targetOccurrence: string;
   /** The carrier member the occurrence spells before the rewrite, and why a is illegal. */
-  source: { member: string; authority: string };
+  source: { member: string; authority: string; law?: LawRef };
   /** The carrier member it spells after, why b is required to differ, and what the law needs. */
-  target: { member: string; authority: string; preconditions: Precondition[] };
+  target: { member: string; authority: string; law?: LawRef; preconditions: Precondition[] };
   /** The rewrite. Every op must land under `targetOccurrence`. */
   patch: PatchOp[];
   /** The outcome the target law requires, derived by hand from that law. */
@@ -189,6 +217,63 @@ export function readPath(root: unknown, p: string): { found: boolean; value: unk
 export const under = (p: string, occurrence: string): boolean =>
   p === occurrence || p.startsWith(`${occurrence}.`) || p.startsWith(`${occurrence}[`);
 
+/**
+ * The relation an occurrence belongs to: the segment after `structure.relations.`.
+ *
+ * A finding's `subject` is a relation name, a field-qualified name like
+ * `shares.avg_score`, or a peer-set key — so the comparison is made at the
+ * relation segment, which is the only part an occurrence can determine.
+ */
+export const relationOf = (occurrence: string): string => rooted(occurrence).replace(/^\.structure\.relations\./, "").split(".")[0]!;
+
+export interface LocusAgreement {
+  side: "source" | "target";
+  /** The finding this side's law turns on. */
+  finding: string;
+  /** Relation segments of every subject the engine attributed that finding to. */
+  observed: string[];
+  agrees: boolean;
+  detail: string;
+}
+
+/**
+ * Does the engine attribute this side's cited finding to the occurrence's relation?
+ *
+ * EXISTENCE, not exclusivity. Requiring the engine to emit nothing else would
+ * make this a global purity test that a valid controlled pair fails whenever the
+ * unchanged surroundings carry an unrelated finding — and containment has
+ * already established that the intervention was local.
+ *
+ * This runs AFTER admission, on purpose. A right code at the wrong subject means
+ * the implementation attributes the reproduced finding to a different occurrence
+ * than the prediction claimed; that is the engine disagreeing with an authored
+ * causal attribution, not the prediction being inadmissible. The corpus keeps
+ * sole authority over what the status and codes should be.
+ */
+export function attributesTo(fixture: Fixture, law: LawRef, relation: string, side: "source" | "target" = "source"): LocusAgreement {
+  const f = fixture as unknown as { structure: never; assertions?: never; evidence?: never };
+  const id = findingId(law);
+  let observed: string[] = [];
+  try {
+    const j = judge(f.structure, (f.assertions ?? []) as never, f.evidence);
+    observed = [
+      ...j.diagnostics.filter((d) => d.code === id),
+      ...j.obligations.filter((o) => o.term === id),
+      ...j.derivations.filter((d) => (d.code ?? d.term) === id),
+    ].map((o) => o.subject.split(".")[0]!);
+  } catch (e) {
+    return { side, finding: id, observed: [], agrees: false, detail: `the engine threw on this side: ${(e as Error).message}` };
+  }
+  const agrees = observed.includes(relation);
+  return {
+    side,
+    finding: id,
+    observed: [...new Set(observed)],
+    agrees,
+    detail: agrees ? `${id} attributed to ${relation}` : `${id} attributed to ${observed.length > 0 ? [...new Set(observed)].join(", ") : "no subject"}, not ${relation}`,
+  };
+}
+
 export type ReceiptVerdict = "held" | "failed" | "ineligible";
 
 export interface ReceiptCheck {
@@ -200,6 +285,8 @@ export interface ReceiptCheck {
   clauses: { id: string; held: boolean; detail: string }[];
   /** Present once the engine has been asked. Recomputed here, never read from the file. */
   agreement?: { agrees: boolean; expected: Outcome; observed: Outcome };
+  /** Locus agreement per finding-bearing side, computed in the same phase. */
+  locus?: LocusAgreement[];
   problems: string[];
 }
 
@@ -282,11 +369,28 @@ export function checkReceipt(receipt: StimulusReceipt, oracle: Oracle = loadOrac
   const errors = oracle.validate(patched);
   clauses.push(clause("4-rewrite-is-schema-valid", errors.length === 0, errors.length === 0 ? "valid" : errors.join("; ")));
 
-  // 5. Both authorities are vocabulary the frozen oracle grounds.
+  // 5. Each side names its authority in the form its outcome can carry. A side
+  //    whose outcome is finding-bearing must name the case AND the finding
+  //    structurally, so the locus comparison below has something exact to ask
+  //    the engine about; regexing the prose for a code was how the same
+  //    sentence could stand for whichever finding happened to appear. A side
+  //    that is merely admissible has no finding to point at, so its citation is
+  //    the near-neighbour it rests on, and prose grounding is all there is.
   const vocabulary = groundedVocabulary(oracle);
   const cites = (s: string) => [...vocabulary].some((v) => s.includes(v));
-  const grounded = cites(p.source.authority) && cites(p.target.authority);
-  clauses.push(clause("5-authorities-are-grounded", grounded, grounded ? "both sides cite oracle-grounded vocabulary" : `ungrounded: ${[!cites(p.source.authority) ? "source" : "", !cites(p.target.authority) ? "target" : ""].filter(Boolean).join(", ")}`));
+  const sourceStatus = oracle.outcomeOf(p.base)?.outcome.status;
+  const bearing = { source: sourceStatus !== undefined && sourceStatus !== "admissible", target: p.expected.status !== "admissible" };
+  const sides = [
+    { name: "source" as const, side: p.source as { authority: string; law?: LawRef }, bearing: bearing.source },
+    { name: "target" as const, side: p.target as { authority: string; law?: LawRef }, bearing: bearing.target },
+  ];
+  const missingLaw = sides.filter((s) => s.bearing && s.side.law === undefined).map((s) => s.name);
+  clauses.push(clause("5a-finding-bearing-sides-name-their-law", missingLaw.length === 0, missingLaw.length === 0 ? `${sides.filter((s) => s.bearing).length} finding-bearing side(s), each with a structured law ref` : `no law ref on finding-bearing side(s): ${missingLaw.join(", ")}`));
+
+  const ungrounded = sides
+    .filter((s) => (s.side.law ? !(vocabulary.has(s.side.law.case) && vocabulary.has(findingId(s.side.law))) : !cites(s.side.authority)))
+    .map((s) => s.name);
+  clauses.push(clause("5b-authorities-are-grounded", ungrounded.length === 0, ungrounded.length === 0 ? "every side cites vocabulary the frozen oracle grounds" : `ungrounded: ${ungrounded.join(", ")}`));
 
   // 6. The target law's preconditions hold on the UNCHANGED surrounding
   //    fixture. A precondition inside the occurrence is not a precondition of
@@ -318,18 +422,26 @@ export function checkReceipt(receipt: StimulusReceipt, oracle: Oracle = loadOrac
   // the condition under which the base must be replaced rather than widened.
   if (unmet.length > 0) return fail("ineligible");
 
-  const agreement = receipt.engine
-    ? {
-        agrees: sameOutcome(outcomeFrom(p.expected.status, p.expected.codes, p.expected.terms), outcomeFrom(receipt.engine.observed.status, receipt.engine.observed.codes, receipt.engine.observed.terms)),
-        expected: p.expected,
-        observed: receipt.engine.observed,
-      }
-    : undefined;
-  if (agreement && !agreement.agrees) {
+  if (!receipt.engine) return { carrier: p.carrier, base: p.base, targetOccurrence: p.targetOccurrence, verdict: "held", clauses, problems };
+
+  const agreement = {
+    agrees: sameOutcome(outcomeFrom(p.expected.status, p.expected.codes, p.expected.terms), outcomeFrom(receipt.engine.observed.status, receipt.engine.observed.codes, receipt.engine.observed.terms)),
+    expected: p.expected,
+    observed: receipt.engine.observed,
+  };
+  if (!agreement.agrees) {
     problems.push(`${p.carrier}: the engine observed ${JSON.stringify(agreement.observed)} where the frozen prediction requires ${JSON.stringify(agreement.expected)}; recorded as disagreement`);
   }
 
-  return { carrier: p.carrier, base: p.base, targetOccurrence: p.targetOccurrence, verdict: "held", clauses, agreement, problems };
+  const relation = relationOf(p.targetOccurrence);
+  const locus = sides
+    .filter((s) => s.side.law !== undefined)
+    .map(({ name, side }) => attributesTo(name === "source" ? base : patched, side.law!, relation, name));
+  for (const l of locus.filter((l) => !l.agrees)) {
+    problems.push(`${p.carrier}: the engine reproduces ${l.finding} on the ${l.side} side but attributes it to ${l.observed.length > 0 ? l.observed.join(", ") : "nothing"}, not to ${relation}; recorded as locus disagreement`);
+  }
+
+  return { carrier: p.carrier, base: p.base, targetOccurrence: p.targetOccurrence, verdict: "held", clauses, agreement, locus, problems };
 }
 
 export interface ReceiptGateResult {
@@ -342,14 +454,20 @@ export interface ReceiptGateResult {
 
 /**
  * Only a receipt that held, was authored before the engine ran, and agrees with
- * it can carry a promotion. A retrofit receipt binds the occurrence of a
- * stimulus that already existed; that is worth measuring and is not evidence of
- * independence.
+ * it on BOTH outcome and locus can carry a promotion. A retrofit receipt binds
+ * the occurrence of a stimulus that already existed; that is worth measuring and
+ * is not evidence of independence.
  */
 export function checkReceipts(file = RECEIPTS_FILE, oracle: Oracle = loadOracle()): ReceiptGateResult {
   const checks = loadReceipts(file).receipts.map((r) => ({ receipt: r, check: checkReceipt(r, oracle) }));
   const promotable = checks
-    .filter(({ receipt, check }) => check.verdict === "held" && receipt.prediction.provenance === "authored-before-engine" && check.agreement?.agrees === true)
+    .filter(
+      ({ receipt, check }) =>
+        check.verdict === "held" &&
+        receipt.prediction.provenance === "authored-before-engine" &&
+        check.agreement?.agrees === true &&
+        (check.locus ?? []).every((l) => l.agrees),
+    )
     .map(({ check }) => check.carrier);
   const problems = checks.flatMap(({ check }) => check.problems);
   return { ok: checks.every(({ check }) => check.verdict !== "failed"), checks: checks.map(({ check }) => check), promotable, problems };
@@ -360,12 +478,18 @@ export function summarizeReceipts(result: ReceiptGateResult): string {
   const lines = [
     `stimulus receipts (REL-VIEW-ALGEBRA-01): ${result.ok ? "OK" : "FAILED"}`,
     `  ${result.checks.length} receipt(s): ${by("held")} held, ${by("ineligible")} ineligible base, ${by("failed")} failed`,
-    `  promotable carriers (held + authored before the engine + agreeing): ${result.promotable.length}${result.promotable.length > 0 ? ` — ${result.promotable.join(", ")}` : ""}`,
+    `  promotable carriers (held + authored before the engine + outcome and locus agreeing): ${result.promotable.length}${result.promotable.length > 0 ? ` — ${result.promotable.join(", ")}` : ""}`,
   ];
+  const withEngine = result.checks.filter((c) => c.agreement !== undefined);
+  if (withEngine.length > 0) {
+    const loci = withEngine.flatMap((c) => c.locus ?? []);
+    lines.push(`  engine run on ${withEngine.length}: ${withEngine.filter((c) => c.agreement!.agrees).length} outcome-agreeing; ${loci.filter((l) => l.agrees).length} of ${loci.length} locus check(s) agreeing`);
+  }
   for (const c of result.checks.filter((c) => c.verdict !== "held")) {
     lines.push(`  ${c.verdict}: ${c.carrier} on ${c.base} at ${c.targetOccurrence}`);
     for (const cl of c.clauses.filter((cl) => !cl.held)) lines.push(`      ${cl.id}: ${cl.detail}`);
   }
+  for (const c of result.checks) for (const l of (c.locus ?? []).filter((l) => !l.agrees)) lines.push(`  locus disagreement: ${c.carrier} ${l.side} side — ${l.detail}`);
   for (const p of result.problems) lines.push(`  ! ${p}`);
   return lines.join("\n");
 }

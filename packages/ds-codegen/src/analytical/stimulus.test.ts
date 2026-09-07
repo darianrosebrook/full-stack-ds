@@ -22,6 +22,7 @@ import * as path from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadOracle } from "./necessity.js";
 import {
+  attributesTo,
   checkReceipt,
   checkReceipts,
   loadReceipts,
@@ -213,12 +214,125 @@ describe("the target law must apply to the surroundings as they stand", () => {
 });
 
 describe("citation and engine agreement", () => {
-  it("an authority citing no oracle-grounded identifier is refused, so a plausible sentence cannot stand in for a law", () => {
-    const prose = refrozen((p) => ({ ...p, target: { ...p.target, authority: "this seems like it would obviously be illegal" } }));
-    const check = checkReceipt(prose, oracle);
+  it("a law naming a case the oracle does not ground is refused, and the prose is no longer what identifies the finding", () => {
+    const invented = refrozen((p) => ({
+      ...p,
+      target: { ...p.target, law: { case: "CASE_THAT_DOES_NOT_EXIST", finding: { kind: "diagnostic", code: "REL_GRAIN_SUBTOTAL_MISMATCH" } } },
+    }));
+    const check = checkReceipt(invented, oracle);
     expect(check.verdict).toBe("failed");
-    expect(clauseOf(check, "5-authorities-are-grounded")?.held).toBe(false);
-    expect(clauseOf(check, "5-authorities-are-grounded")?.detail).toContain("target");
+    expect(clauseOf(check, "5b-authorities-are-grounded")?.held).toBe(false);
+    expect(clauseOf(check, "5b-authorities-are-grounded")?.detail).toContain("target");
+
+    // The same receipt with an unhelpful prose authority still passes: prose is
+    // documentation now, and the structured ref is what the checker reads.
+    const vagueProse = refrozen((p) => ({ ...p, target: { ...p.target, authority: "seems obviously wrong" } }));
+    expect(checkReceipt(vagueProse, oracle).verdict).toBe("held");
+  });
+
+  it("a finding-bearing side with no structured law is refused, so an illegal side cannot rest on prose alone", () => {
+    const unstructured = refrozen((p) => ({ ...p, target: { ...p.target, law: undefined } }));
+    const check = checkReceipt(unstructured, oracle);
+    expect(check.verdict).toBe("failed");
+    expect(clauseOf(check, "5a-finding-bearing-sides-name-their-law")?.held).toBe(false);
+    expect(clauseOf(check, "5a-finding-bearing-sides-name-their-law")?.detail).toContain("target");
+  });
+
+  it("locus agreement holds when the engine attributes each side's cited finding to the occurrence's relation", () => {
+    const run = refrozen((p) => p, { ranAt: "2026-09-06", observed: live().prediction.expected });
+    const check = checkReceipt(run, oracle);
+    expect(check.agreement?.agrees).toBe(true);
+    expect(check.locus?.map((l) => [l.side, l.finding, l.agrees])).toEqual([
+      ["source", "REL_DERIVATION_DISCARDS_MEMBERSHIP", true],
+      ["target", "REL_GRAIN_SUBTOTAL_MISMATCH", true],
+    ]);
+    expect(check.locus?.every((l) => l.observed.includes("flat"))).toBe(true);
+    expect(check.problems).toEqual([]);
+  });
+
+  it("the engine may reproduce the right code and still attribute it to the wrong occurrence: admission holds, locus disagrees, promotion dies", () => {
+    // `REL_PEER_GRAIN_DIVERGENCE` is a finding ABOUT a pair of derivations, so
+    // the engine attributes it to the peer set (`events`) and not to either
+    // aggregate. A receipt that names `by_day` as the occurrence its cause
+    // explains is well-formed — the occurrence is real, spells the source
+    // member, and the rewrite is contained — and is still wrong about why.
+    const prediction: Omit<StimulusPrediction, "digest"> = {
+      carrier: "relation.derivedBy.kind:aggregate-to-grain~bin",
+      base: "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS",
+      targetOccurrence: "structure.relations.by_day.derivedBy",
+      source: {
+        member: "aggregate-to-grain",
+        authority: "the aggregate at this occurrence totals to a grain its peer does not share",
+        law: { case: "CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN", finding: { kind: "diagnostic", code: "REL_PEER_GRAIN_DIVERGENCE" } },
+      },
+      target: {
+        member: "bin",
+        authority: "a bin with no declared closure leaves the boundary reading undetermined",
+        law: { case: "CASE_WHICH_BIN_GETS_TEN", finding: { kind: "diagnostic", code: "REL_BIN_CLOSURE_UNDECLARED" } },
+        preconditions: [{ path: "structure.relations.events.fields.revenue", holds: "present" }],
+      },
+      patch: [{ set: "structure.relations.by_day.derivedBy", value: { kind: "bin", from: "events", field: "revenue" } }],
+      expected: { status: "illegal", codes: ["REL_BIN_CLOSURE_UNDECLARED"], terms: [] },
+      provenance: "authored-before-engine",
+      authoredAt: "2026-09-06",
+    };
+    const receipt: StimulusReceipt = {
+      prediction: { ...prediction, digest: predictionDigest(prediction as StimulusPrediction) },
+      engine: { ranAt: "2026-09-06", observed: prediction.expected },
+    };
+    const check = checkReceipt(receipt, oracle);
+
+    expect(check.verdict).toBe("held");
+    expect(check.clauses.filter((c) => !c.held)).toEqual([]);
+    const source = check.locus?.find((l) => l.side === "source");
+    expect(source?.agrees).toBe(false);
+    expect(source?.observed).toContain("events");
+    expect(source?.observed).not.toContain("by_day");
+    expect(check.problems.join(" ")).toContain("locus disagreement");
+
+    const file = path.join(os.tmpdir(), `receipts-${Math.random().toString(36).slice(2)}.json`);
+    fs.writeFileSync(file, JSON.stringify({ receipts: [receipt] }));
+    expect(checkReceipts(file, oracle).promotable).toEqual([]);
+  });
+
+  it("locus asks EXISTENCE, not exclusivity: an unrelated second occurrence of the same finding does not refute the attribution", () => {
+    // Exclusivity would be stronger than the proposition. The claim is that the
+    // engine attributes the cited finding to this occurrence — not that the
+    // surrounding fixture is otherwise finding-free, which containment already
+    // makes irrelevant and which a valid controlled pair can easily violate.
+    const base = structuredClone(oracle.fixtures.get("FX_READINGS_BINNED_NO_CLOSURE")!) as unknown as {
+      structure: { relations: Record<string, unknown> };
+    };
+    base.structure.relations.also_bucketed = {
+      grain: ["reading_id"],
+      fields: { reading_id: { transformation: "nominal", key: true }, celsius: { transformation: "ratio" } },
+      derivedBy: { kind: "bin", from: "readings", field: "celsius" },
+    };
+    const law = { case: "CASE_WHICH_BIN_GETS_TEN", finding: { kind: "diagnostic", code: "REL_BIN_CLOSURE_UNDECLARED" } } as const;
+
+    const at = attributesTo(base as never, law, "bucketed");
+    expect(at.observed.sort()).toEqual(["also_bucketed", "bucketed"]);
+    expect(at.agrees).toBe(true);
+    // And it is still an attribution, not a wildcard: a relation the engine
+    // never names is refused even though the code is emitted twice.
+    expect(attributesTo(base as never, law, "readings").agrees).toBe(false);
+  });
+
+  it("an admissible side has no locus to check: the checker does not manufacture a positive finding to compare against", () => {
+    const legalTarget = refrozen(
+      (p) => ({
+        ...p,
+        // A neighbour is sourced as `neighbour:<CODE>`, so the code it
+        // neutralizes is what the oracle grounds — the fixture id is not.
+        target: { ...p.target, law: undefined, authority: "the legal near-neighbour for REL_GRAIN_SUBTOTAL_MISMATCH subtotals at a declared prefix" },
+        expected: { status: "admissible", codes: [], terms: [] },
+      }),
+      { ranAt: "2026-09-06", observed: { status: "admissible", codes: [], terms: [] } },
+    );
+    const check = checkReceipt(legalTarget, oracle);
+    expect(clauseOf(check, "5a-finding-bearing-sides-name-their-law")?.held).toBe(true);
+    expect(clauseOf(check, "5b-authorities-are-grounded")?.held).toBe(true);
+    expect(check.locus?.map((l) => l.side)).toEqual(["source"]);
   });
 
   it("engine disagreement is recorded as disagreement and never resolved toward the engine", () => {

@@ -9,11 +9,25 @@
         "targetOccurrence": "structure.relations.flat.derivedBy",
         "source": {
           "member": "project",
-          "authority": "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP / REL_DERIVATION_DISCARDS_MEMBERSHIP: the projection at this occurrence drops the nest level that carried membership"
+          "authority": "the projection at this occurrence drops the nest level that carried membership",
+          "law": {
+            "case": "CASE_FLATTENING_DISCARDS_NEST_MEMBERSHIP",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_DERIVATION_DISCARDS_MEMBERSHIP"
+            }
+          }
         },
         "target": {
           "member": "aggregate-to-grain",
-          "authority": "CASE_NESTED_SUBTOTALS_OFF_GRAIN / REL_GRAIN_SUBTOTAL_MISMATCH: a nest over levels [country, state] declares exactly its prefixes as grains, so a subtotal to [sale_id] is not one of them",
+          "authority": "a nest over levels [country, state] declares exactly its prefixes as grains, so a subtotal to [sale_id] is not one of them",
+          "law": {
+            "case": "CASE_NESTED_SUBTOTALS_OFF_GRAIN",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_GRAIN_SUBTOTAL_MISMATCH"
+            }
+          },
           "preconditions": [
             {
               "path": "structure.relations.hierarchy.derivedBy.kind",
@@ -51,7 +65,7 @@
         },
         "provenance": "retrofit",
         "authoredAt": "2026-09-06",
-        "digest": "7040f72e8e173ed38935971ab3cd5e71919be849d6d366c02a891fdb58737182"
+        "digest": "422b1d75c2dc5b2a0df081c7c4367b8c3146919f0c9fc26f12ed7c84c3fa3c2c"
       }
     }
   ]
