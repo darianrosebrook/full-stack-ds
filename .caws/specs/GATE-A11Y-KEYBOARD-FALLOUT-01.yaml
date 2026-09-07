@@ -2,9 +2,11 @@ id: GATE-A11Y-KEYBOARD-FALLOUT-01
 title: 'Clear the docs-claims and custom-region gate failures left by the Select/Tabs keyboard merge'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Restamped both docs against the read keyboard delta and ledgered the two authored Select keyboard test regions; both gates exit 0.'
 created_at: '2026-09-07T06:42:36.403Z'
-updated_at: '2026-09-07T06:42:43.809Z'
+updated_at: '2026-09-07T06:46:03.623Z'
 created_by_session: 'f46106db-10cf-4869-b035-5bb63e5a1fc2'
 blast_radius:
   modules:
