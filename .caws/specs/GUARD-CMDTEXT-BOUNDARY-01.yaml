@@ -39,3 +39,11 @@ contracts:
   - name: 'worktree-guard-cmdtext'
     type: contract-test
     path: '.caws/hooks/tests/test_worktree_guard_cmdtext.sh'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "test_worktree_guard_cmdtext.sh -> PASS (19 cases) at d308f3c5; the five payload-only cases (commit-message prose, echo label, grep argument, cat heredoc body, tee heredoc body) all read ALLOW, where the pre-fix guard read BLOCK for four of them"
+    recorded_at: "2026-09-07T05:49:32.790Z"
+    command: .caws/hooks/tests/test_worktree_guard_cmdtext.sh
+    exit_code: 0
+    commit_sha: d308f3c5
