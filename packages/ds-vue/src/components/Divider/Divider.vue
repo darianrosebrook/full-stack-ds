@@ -46,5 +46,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <hr :class="classNames" role="separator" :data-testid="props['data-testid']" data-fsds-component="divider" data-fsds-box="" />
+  <hr :class="classNames" :data-testid="props['data-testid']" data-fsds-component="divider" data-fsds-box="" />
 </template>

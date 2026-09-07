@@ -15,6 +15,9 @@ export interface SelectBehaviorOptions {
   open?: () => boolean | undefined;
   defaultOpen?: boolean;
   onOpenChange?: (value: boolean) => void;
+  containerEl?: HTMLElement;
+  /** Mode gate the keyboard select behavior reads. */
+  multiple?: () => boolean | undefined;
 }
 // @generated:end
 
@@ -48,6 +51,50 @@ export class SelectBehavior {
 
   get selection(): string | string[] { return this.selectionState.value; }
   setSelection(value: string | string[]) { this.selectionState.set(value); }
+
+  handleTriggerKeydown(event: KeyboardEvent): void {
+    if (!(event.key === "ArrowDown")) return;
+    event.preventDefault();
+    this.setOpen(true);
+    requestAnimationFrame(() => {
+      const panel = this.opts.containerEl;
+      if (!panel) return;
+      (panel.querySelector<HTMLElement>("input") ?? panel.querySelector<HTMLElement>("[role=\"option\"]"))?.focus();
+    });
+  }
+
+  handleContentKeydown(event: KeyboardEvent): void {
+    const items = Array.from(
+      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>("[role=\"option\"]"),
+    );
+    const root = (event.currentTarget as HTMLElement).getRootNode();
+    const active = root instanceof ShadowRoot ? root.activeElement : document.activeElement;
+    const currentIndex = items.findIndex((item) => item === active);
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      items[currentIndex <= 0 ? items.length - 1 : currentIndex - 1]?.focus();
+    }
+    else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      items[currentIndex === -1 || currentIndex >= items.length - 1 ? 0 : currentIndex + 1]?.focus();
+    }
+    else if (event.key === "Home") {
+      event.preventDefault();
+      items[0]?.focus();
+    }
+    else if (event.key === "End") {
+      event.preventDefault();
+      items[items.length - 1]?.focus();
+    }
+  }
+
+  handleOptionKeydown(event: KeyboardEvent, value: string): void {
+    if (!(event.key === "Enter")) return;
+    event.preventDefault();
+    const currentValue = this.selection;
+    const current: string[] = Array.isArray(currentValue) ? [...currentValue] : currentValue == null ? [] : [currentValue];
+    this.setSelection(this.opts.multiple?.() ? (current.includes(value) ? current.filter((member) => member !== value) : [...current, value]) : value);
+  }
 }
 // @generated:end
 

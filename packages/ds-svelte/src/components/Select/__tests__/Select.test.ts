@@ -83,6 +83,8 @@ describe("Select — accessibility", () => {
 import SelectContent from "../SelectContent.svelte";
 import SelectOption from "../SelectOption.svelte";
 import SelectTrigger from "../SelectTrigger.svelte";
+import { cleanup, fireEvent, waitFor } from "@testing-library/svelte";
+import { beforeEach } from "vitest";
 
 describe("Select — compound parts", () => {
   it("mounts SelectContent with tag and base class", () => {
@@ -116,5 +118,87 @@ describe("Select — compound parts", () => {
   });
 });
 
+describe("Select — keyboard realization (FEAT-A11Y-COMPOSITE-KEYBOARD-01)", () => {
+  // This package runs without vitest globals, so @testing-library/svelte's
+  // automatic afterEach cleanup never registers; these role queries would
+  // otherwise match leaked mounts from every earlier test.
+  beforeEach(cleanup);
+
+  const renderOpen = (props: Record<string, unknown> = {}) =>
+    render(Select as unknown as Component<Record<string, unknown>>, {
+      props: { "defaultOpen": true, ...props },
+    });
+
+  it("ArrowDown on the closed trigger opens the panel and moves focus into the listbox", async () => {
+    const { getByRole } = renderOpen({ defaultOpen: false });
+    const trigger = getByRole("button", { name: "Select an option" });
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    const listbox = await waitFor(() => {
+      const listbox = getByRole("listbox");
+      expect(listbox).toBeTruthy();
+      return listbox;
+    });
+    // Non-searchable Select: the search-input initial focus falls back to
+    // the first option — focus must land inside the panel either way.
+    await waitFor(() => expect(listbox.contains(document.activeElement)).toBe(true));
+  });
+
+  it("roving hosts are programmatically focusable but out of tab order", () => {
+    const { getByRole, getAllByRole } = renderOpen();
+    expect(getByRole("listbox").getAttribute("tabindex")).toBe("-1");
+    for (const option of getAllByRole("option")) {
+      expect(option.getAttribute("tabindex")).toBe("-1");
+    }
+  });
+
+  it("ArrowDown/ArrowUp on the listbox rove DOM focus through the options", async () => {
+    const { getByRole, getAllByRole } = renderOpen();
+    const options = getAllByRole("option");
+    const listbox = getByRole("listbox");
+    options[0]!.focus();
+    fireEvent.keyDown(listbox, { key: "ArrowDown" });
+    await waitFor(() => expect(document.activeElement).toBe(options[1]));
+    fireEvent.keyDown(listbox, { key: "ArrowDown" });
+    await waitFor(() => expect(document.activeElement).toBe(options[2]));
+    fireEvent.keyDown(listbox, { key: "ArrowUp" });
+    await waitFor(() => expect(document.activeElement).toBe(options[1]));
+  });
+
+  it("ArrowUp from the first option wraps to the last; Home/End jump to the extremes", async () => {
+    const { getByRole, getAllByRole } = renderOpen();
+    const options = getAllByRole("option");
+    const listbox = getByRole("listbox");
+    options[0]!.focus();
+    fireEvent.keyDown(listbox, { key: "ArrowUp" });
+    await waitFor(() => expect(document.activeElement).toBe(options[2]));
+    fireEvent.keyDown(listbox, { key: "Home" });
+    await waitFor(() => expect(document.activeElement).toBe(options[0]));
+    fireEvent.keyDown(listbox, { key: "End" });
+    await waitFor(() => expect(document.activeElement).toBe(options[2]));
+  });
+
+  it("Enter on an option commits that option's value and does not close (click parity)", () => {
+    const onChange = vi.fn();
+    const onOpenChange = vi.fn();
+    const { getAllByRole } = renderOpen({ value: "alpha", onChange, onOpenChange });
+    fireEvent.keyDown(getAllByRole("option")[1]!, { key: "Enter" }); // Beta
+    expect(onChange).toHaveBeenCalledWith("beta");
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("Enter adds an absent option's value in multiple mode (controlled)", () => {
+    const onChange = vi.fn();
+    const { getAllByRole } = renderOpen({ multiple: true, value: ["alpha"], onChange });
+    fireEvent.keyDown(getAllByRole("option")[2]!, { key: "Enter" }); // Gamma absent → add
+    expect(onChange).toHaveBeenCalledWith(["alpha", "gamma"]);
+  });
+
+  it("Enter removes a present option's value in multiple mode (controlled)", () => {
+    const onChange = vi.fn();
+    const { getAllByRole } = renderOpen({ multiple: true, value: ["alpha", "gamma"], onChange });
+    fireEvent.keyDown(getAllByRole("option")[0]!, { key: "Enter" }); // Alpha present → remove
+    expect(onChange).toHaveBeenCalledWith(["gamma"]);
+  });
+});
 
 // @custom:end

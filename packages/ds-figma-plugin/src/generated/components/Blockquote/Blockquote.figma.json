@@ -4,7 +4,7 @@
   "component": {
     "name": "Blockquote",
     "cssPrefix": "blockquote",
-    "rootElement": "div",
+    "rootElement": "blockquote",
     "effectiveRole": null
   },
   "anatomy": [
@@ -405,7 +405,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "blockquote",
     "labeling": [],
     "keyboard": []
   },

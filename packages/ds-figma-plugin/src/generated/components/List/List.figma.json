@@ -4,7 +4,7 @@
   "component": {
     "name": "List",
     "cssPrefix": "list",
-    "rootElement": "div",
+    "rootElement": "ul",
     "effectiveRole": null
   },
   "anatomy": [
@@ -305,7 +305,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "ul",
     "labeling": [
       "aria-label",
       "aria-labelledby"

@@ -122,41 +122,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Select",
-      "family": "react",
-      "class": "keyboard",
-      "key": "ArrowDown",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "react",
-      "class": "keyboard",
-      "key": "ArrowUp",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "react",
-      "class": "keyboard",
-      "key": "Home",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "react",
-      "class": "keyboard",
-      "key": "End",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "react",
-      "class": "focus",
-      "key": "roving",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
       "component": "Shuttle",
       "family": "react",
       "class": "keyboard",
@@ -358,41 +323,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Select",
-      "family": "vue",
-      "class": "keyboard",
-      "key": "ArrowDown",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "vue",
-      "class": "keyboard",
-      "key": "ArrowUp",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "vue",
-      "class": "keyboard",
-      "key": "Home",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "vue",
-      "class": "keyboard",
-      "key": "End",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "vue",
-      "class": "focus",
-      "key": "roving",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
       "component": "Shuttle",
       "family": "vue",
       "class": "keyboard",
@@ -591,41 +521,6 @@
       "family": "svelte",
       "class": "keyboard",
       "key": "ArrowRight",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "svelte",
-      "class": "keyboard",
-      "key": "ArrowDown",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "svelte",
-      "class": "keyboard",
-      "key": "ArrowUp",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "svelte",
-      "class": "keyboard",
-      "key": "Home",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "svelte",
-      "class": "keyboard",
-      "key": "End",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "svelte",
-      "class": "focus",
-      "key": "roving",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
@@ -840,41 +735,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "Select",
-      "family": "lit",
-      "class": "keyboard",
-      "key": "ArrowDown",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "lit",
-      "class": "keyboard",
-      "key": "ArrowUp",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "lit",
-      "class": "keyboard",
-      "key": "Home",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "lit",
-      "class": "keyboard",
-      "key": "End",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "lit",
-      "class": "focus",
-      "key": "roving",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
       "component": "Shuttle",
       "family": "lit",
       "class": "keyboard",
@@ -1073,41 +933,6 @@
       "family": "angular",
       "class": "keyboard",
       "key": "ArrowRight",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "angular",
-      "class": "keyboard",
-      "key": "ArrowDown",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "angular",
-      "class": "keyboard",
-      "key": "ArrowUp",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "angular",
-      "class": "keyboard",
-      "key": "Home",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "angular",
-      "class": "keyboard",
-      "key": "End",
-      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "Select",
-      "family": "angular",
-      "class": "focus",
-      "key": "roving",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {

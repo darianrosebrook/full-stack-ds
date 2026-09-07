@@ -83,6 +83,7 @@ describe("Select — accessibility", () => {
 import SelectContent from "../SelectContent.vue";
 import SelectOption from "../SelectOption.vue";
 import SelectTrigger from "../SelectTrigger.vue";
+import { afterEach } from "vitest";
 
 // VUE-FIRST-RENDER-CONTROLLABLE-DEFAULT-01.
 // The generated tests above all pass `open: true` (controlled), which
@@ -224,4 +225,94 @@ describe("Select — compound parts", () => {
     expect(wrapper.text()).toContain("Select part");
   });
 });
+
+describe("Select — keyboard realization (FEAT-A11Y-COMPOSITE-KEYBOARD-01)", () => {
+  // The roving handlers move real DOM focus, which jsdom only honors inside
+  // the attached document tree — VTU's default mount leaves the wrapper
+  // detached, so every mount here attaches and unmounts explicitly.
+  let mounted: ReturnType<typeof mount> | null = null;
+  afterEach(() => {
+    mounted?.unmount();
+    mounted = null;
+  });
+  const mountOpen = (props: Record<string, unknown> = {}) => {
+    mounted = mount(Select as Component, {
+      attachTo: document.body,
+      props: { defaultOpen: true, ...props },
+    });
+    return mounted;
+  };
+
+  it("ArrowDown on the closed trigger opens the panel and moves focus into the listbox", async () => {
+    mounted = mount(Select as Component, {
+      attachTo: document.body,
+      props: { defaultOpen: false },
+    });
+    const wrapper = mounted;
+    await wrapper.find("button").trigger("keydown", { key: "ArrowDown" });
+    await vi.waitFor(() => {
+      const listbox = wrapper.find('[role="listbox"]');
+      expect(listbox.exists()).toBe(true);
+      // Non-searchable Select: the search-input initial focus falls back to
+      // the first option — focus must land inside the panel either way.
+      expect(listbox.element.contains(document.activeElement)).toBe(true);
+    });
+  });
+
+  it("roving hosts are programmatically focusable but out of tab order", () => {
+    const wrapper = mountOpen();
+    expect(wrapper.find('[role="listbox"]').attributes("tabindex")).toBe("-1");
+    for (const option of wrapper.findAll('[role="option"]')) {
+      expect(option.attributes("tabindex")).toBe("-1");
+    }
+  });
+
+  it("ArrowDown/ArrowUp on the listbox rove DOM focus through the options", async () => {
+    const wrapper = mountOpen();
+    const options = wrapper.findAll('[role="option"]');
+    (options[0]!.element as HTMLElement).focus();
+    await wrapper.find('[role="listbox"]').trigger("keydown", { key: "ArrowDown" });
+    expect(document.activeElement).toBe(options[1]!.element);
+    await wrapper.find('[role="listbox"]').trigger("keydown", { key: "ArrowDown" });
+    expect(document.activeElement).toBe(options[2]!.element);
+    await wrapper.find('[role="listbox"]').trigger("keydown", { key: "ArrowUp" });
+    expect(document.activeElement).toBe(options[1]!.element);
+  });
+
+  it("ArrowUp from the first option wraps to the last; Home/End jump to the extremes", async () => {
+    const wrapper = mountOpen();
+    const options = wrapper.findAll('[role="option"]');
+    (options[0]!.element as HTMLElement).focus();
+    await wrapper.find('[role="listbox"]').trigger("keydown", { key: "ArrowUp" });
+    expect(document.activeElement).toBe(options[2]!.element);
+    await wrapper.find('[role="listbox"]').trigger("keydown", { key: "Home" });
+    expect(document.activeElement).toBe(options[0]!.element);
+    await wrapper.find('[role="listbox"]').trigger("keydown", { key: "End" });
+    expect(document.activeElement).toBe(options[2]!.element);
+  });
+
+  it("Enter on an option commits that option's value and does not close (click parity)", async () => {
+    const onChange = vi.fn();
+    const onOpenChange = vi.fn();
+    const wrapper = mountOpen({ value: "alpha", onChange, onOpenChange });
+    await wrapper.findAll('[role="option"]')[1]!.trigger("keydown", { key: "Enter" }); // Beta
+    expect(onChange).toHaveBeenCalledWith("beta");
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("Enter adds an absent option's value in multiple mode (controlled)", async () => {
+    const onChange = vi.fn();
+    const wrapper = mountOpen({ multiple: true, value: ["alpha"], onChange });
+    await wrapper.findAll('[role="option"]')[2]!.trigger("keydown", { key: "Enter" }); // Gamma absent → add
+    expect(onChange).toHaveBeenCalledWith(["alpha", "gamma"]);
+  });
+
+  it("Enter removes a present option's value in multiple mode (controlled)", async () => {
+    const onChange = vi.fn();
+    const wrapper = mountOpen({ multiple: true, value: ["alpha", "gamma"], onChange });
+    await wrapper.findAll('[role="option"]')[0]!.trigger("keydown", { key: "Enter" }); // Alpha present → remove
+    expect(onChange).toHaveBeenCalledWith(["gamma"]);
+  });
+});
+
 // @custom:end

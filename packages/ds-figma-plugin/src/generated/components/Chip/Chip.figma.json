@@ -4,7 +4,7 @@
   "component": {
     "name": "Chip",
     "cssPrefix": "chip",
-    "rootElement": "button",
+    "rootElement": "span",
     "effectiveRole": null
   },
   "anatomy": [
@@ -501,9 +501,7 @@
     ]
   },
   "root": {
-    "element": "button",
-    "explicitRole": "button",
-    "implicitRole": "button",
+    "element": "span",
     "labeling": [
       "aria-label",
       "title"

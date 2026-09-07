@@ -316,7 +316,6 @@
     }
   ],
   "a11y": {
-    "role": "region",
     "apgPattern": "accordion",
     "labeling": [],
     "keyboard": [

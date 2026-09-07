@@ -365,6 +365,16 @@ describe("Tabs — behavioral", () => {
     container.remove();
   });
 
+  it("tablist is programmatically focusable, out of tab order", async () => {
+    const { container, listEl } = await renderTabs();
+    // The tablist hosts the delegated roving keydown (connectedCallback
+    // addEventListener); its interactive role demands programmatic
+    // focusability while -1 keeps it out of tab order.
+    const inner = listEl.shadowRoot?.querySelector("[role='tablist']");
+    expect(inner?.getAttribute("tabindex")).toBe("-1");
+    container.remove();
+  });
+
   it("keyboard ArrowRight moves focus to next tab (automatic mode — also activates)", async () => {
     const { container, tabsEl, tabA, tabB } = await renderTabs({ value: "a", activationMode: "automatic" });
     // Focus the list to receive keydown.

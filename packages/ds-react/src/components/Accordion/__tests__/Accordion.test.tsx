@@ -54,7 +54,7 @@ describe("Accordion — unit", () => {
 
 describe("Accordion — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { baseElement } = render(<><Accordion aria-label="Test Accordion"><span>content</span></Accordion></>);
+    const { baseElement } = render(<><Accordion><span>content</span></Accordion></>);
     const component = baseElement.querySelector('[data-fsds-component="accordion"]');
     expect(component).not.toBeNull();
     const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };

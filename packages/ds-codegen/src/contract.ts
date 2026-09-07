@@ -564,6 +564,24 @@ export interface ContractMotion {
   reducedMotionStrategy?: string;
 }
 
+/**
+ * Closed realization vocabulary for structured `a11y.keyboard` entries
+ * (FEAT-A11Y-COMPOSITE-KEYBOARD-01). An entry carrying `behavior` is lowered
+ * by the Semantic IR into an emitted keydown realization on the `when` part's
+ * node; the op sequences derive only from declared facts (channels,
+ * compositeControl, focus strategy/orientation/wrap, dismissal, returnFocus).
+ * Entries without `behavior` are declaration-only — realized by native host
+ * semantics (e.g. `button` Enter/Space) or a behavior primitive (e.g.
+ * dismissal Escape) — and the a11y-realization audit classifies them as such.
+ */
+export type KeyboardBehavior =
+  | "open"
+  | "select"
+  | "roving-next"
+  | "roving-prev"
+  | "roving-first"
+  | "roving-last";
+
 export interface ContractFocus {
   description?: string;
   /** `trap` for modal-class containers, `roving` for menus/lists, `auto` defers to the platform. */
@@ -924,7 +942,23 @@ export interface ComponentContract {
   a11y?: {
     role?: string;
     labeling?: string[];
-    keyboard?: Array<string | { key: string; action: string; when?: string; mode?: string }>;
+    keyboard?: Array<
+      | string
+      | {
+          key: string;
+          action: string;
+          when?: string;
+          mode?: string;
+          /**
+           * Closed realization vocabulary (FEAT-A11Y-COMPOSITE-KEYBOARD-01).
+           * When present, the Semantic IR lowers this entry into an emitted
+           * keydown realization on the `when` part's node in every web
+           * framework; when absent, the entry is declaration-only (realized
+           * by native semantics or a primitive, e.g. dismissal Escape).
+           */
+          behavior?: KeyboardBehavior;
+        }
+    >;
     screenReader?: string[];
     /**
      * Typed unresolved ARIA-obligation acknowledgements. The contract-side

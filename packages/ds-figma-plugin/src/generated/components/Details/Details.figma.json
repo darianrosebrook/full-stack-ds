@@ -4,8 +4,8 @@
   "component": {
     "name": "Details",
     "cssPrefix": "details",
-    "rootElement": "div",
-    "effectiveRole": "group"
+    "rootElement": "details",
+    "effectiveRole": null
   },
   "anatomy": [
     {
@@ -635,10 +635,9 @@
     ]
   },
   "root": {
-    "element": "div",
+    "element": "details",
     "explicitRole": "group",
-    "effectiveRole": "group",
-    "rootRole": "group",
+    "implicitRole": "group",
     "labeling": [
       "aria-label"
     ],

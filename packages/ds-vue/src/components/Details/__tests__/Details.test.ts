@@ -32,11 +32,6 @@ describe("Details — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
-  it("has the correct ARIA role", () => {
-    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
-    expect(wrapper.attributes("role")).toBe("group");
-  });
-
   it("applies variant=default variant class", () => {
     const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true, "variant": "default" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("details--default");

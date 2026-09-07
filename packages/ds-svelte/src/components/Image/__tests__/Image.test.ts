@@ -32,11 +32,6 @@ describe("Image — unit", () => {
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
-  it("has the correct ARIA role", () => {
-    const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder" } });
-    expect(container.firstElementChild?.getAttribute("role")).toBe("img");
-  });
-
   it("applies size=xs variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "alt": "placeholder", "size": "xs" } });
     expect(container.firstElementChild?.className).toContain("image--size-xs");

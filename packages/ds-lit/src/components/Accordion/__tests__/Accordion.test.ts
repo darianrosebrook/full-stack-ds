@@ -40,7 +40,7 @@ describe("Accordion — unit", () => {
 
 describe("Accordion — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { element } = await renderElement("fsds-accordion", { "aria-label": "Test Accordion" }, [{"html":"<span>content</span>"}]);
+    const { element } = await renderElement("fsds-accordion", {}, [{"html":"<span>content</span>"}]);
     const results = await axe(element, componentAxeOptions);
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });

@@ -4,7 +4,7 @@
   "component": {
     "name": "Status",
     "cssPrefix": "status",
-    "rootElement": "div",
+    "rootElement": "span",
     "effectiveRole": null
   },
   "anatomy": [
@@ -254,7 +254,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "span",
     "labeling": [
       "aria-label"
     ],

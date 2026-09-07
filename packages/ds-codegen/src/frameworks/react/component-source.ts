@@ -18,6 +18,7 @@ import type {
   IdRefConditionIR,
   IdRefIR,
   IterationIR,
+  KeyboardActionIR,
   NormalizedChannelIR,
   PartIR,
   PropTypeIR,
@@ -34,6 +35,11 @@ import {
   isHighlightTransform,
   isMarkdownTransform,
   contentBindingOrTransformSource,
+  keyboardModeGateProps,
+  groupKeyboardActionsByPart,
+  compositeActivationMember,
+  keyboardHandlerParts,
+  NATIVE_FOCUSABLE_TAGS,
   type NativeTableAttr,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
@@ -932,6 +938,9 @@ function generateCompoundStateSubcomponents(ir: ComponentIR): string {
   lines.push(`    <div`);
   lines.push(`      ref={listRef}`);
   lines.push(`      role="tablist"`);
+  // The tablist is an interactive role hosting the delegated roving keydown;
+  // it must be programmatically focusable (APG) but stays out of tab order.
+  lines.push(`      tabIndex={-1}`);
   lines.push(`      className={classNames}`);
   lines.push(`      data-testid={testId}`);
   lines.push(`      onKeyDown={handleKeyDown}`);
@@ -1924,9 +1933,21 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
   // for each channel (per the per-framework hook-source.ts).
   const hookResultParts: string[] = [];
   if (ir.interaction?.focusContainer) hookResultParts.push("panelRef");
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: an `open` realization marks a panel
+  // node (`keyboardPanel`) for the panelRef binding, so the hook's panel
+  // ref must reach component scope. attachKeyboardActions guarantees the
+  // mark exists whenever an open action does.
+  if (ir.keyboardActions.some((action) => action.op === "open")) {
+    hookResultParts.push("panelRef");
+  }
   for (const ch of channels) {
     hookResultParts.push(ch.name);
     hookResultParts.push(`set${capitalize(ch.name)}`);
+  }
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: the hook emits one keydown handler per
+  // hosting part; the template binds them on the declared nodes.
+  for (const part of keyboardHandlerParts(ir)) {
+    hookResultParts.push(`handle${capitalize(part)}Keydown`);
   }
 
   // FIX-PORTAL-CONSUMPTION-01: full-overlay surfaces (Dialog centered,
@@ -1953,6 +1974,14 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
       hookOptionsLines.push(`    ${ch.defaultValueProp}`);
     }
     hookOptionsLines.push(`    ${ch.changeHandlerProp}`);
+  }
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: forward the keyboard select mode gates
+  // so the hook's keydown handler evaluates the same gate as the item click.
+  for (const gateProp of keyboardModeGateProps(ir)) {
+    const safe = ir.styledProps.find((p) => p.name === gateProp)?.safeName ?? gateProp;
+    hookOptionsLines.push(
+      gateProp === safe ? `    ${safe}` : `    ${gateProp}: ${safe}`,
+    );
   }
   // Forward dismissal-trigger enabledBy props (closeOnEscape, etc.) to the
   // generated hook so its useDismissal call sees the user's settings.
@@ -2185,8 +2214,10 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     formControlEvent: ir.formControl?.event,
     formControlCommit: ir.formControl?.commit,
     rootSelectorAnchored: selectorAnchor !== null,
+    keyboardActionsByPart: groupKeyboardActionsByPart(ir.keyboardActions),
+    compositeItemPart: ir.compositeControl?.part.name,
+    compositeMemberExpr: compositeActivationMember(ir.compositeControl),
   };
-
   for (const { node, refName } of propertyBindingNodes) {
     const assignments = Object.entries(node.propertyBindings)
       .map(([key, expr]) => {
@@ -2346,6 +2377,23 @@ interface ReactRenderContext {
    * branching on identifier coincidence.
    */
   enclosingIteration?: IterationIR;
+  /**
+   * Keyboard realizations keyed by hosting part
+   * (FEAT-A11Y-COMPOSITE-KEYBOARD-01). Nodes whose `part` owns actions bind
+   * `onKeyDown` to the part-derived handler ident the co-located hook emits;
+   * the composite item part additionally receives `tabIndex={-1}` (roving
+   * focus target, out of tab order).
+   */
+  keyboardActionsByPart?: Map<string, KeyboardActionIR[]>;
+  /** Composite item part name; its nodes are roving focus targets. */
+  compositeItemPart?: string;
+  /**
+   * Value expression of the composite item's activation member (the operand
+   * the item's click binding uses, e.g. Select's `iter:item.value`), rendered
+   * through the same binding lowering so the keydown handler receives the
+   * identical value the click handler would.
+   */
+  compositeMemberExpr?: BindingExpression;
 }
 
 /**
@@ -2602,6 +2650,40 @@ function renderReactDomNode(
     attrs.push(`${jsxEventProp}={${valueExpr}}`);
   }
 
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: bind the realized keyboard actions onto
+  // the declared `when` part's node. The handler ident is part-derived and
+  // the co-located hook emits its implementation from the same IR facts. The
+  // composite item part's handler receives the item value exactly as the
+  // item's click activation passes it, so pointer and keyboard commits stay
+  // semantically identical.
+  const isCompositeItem = ctx.compositeItemPart !== undefined && node.part === ctx.compositeItemPart;
+  if (node.keyboardActions && node.keyboardActions.length > 0 && node.part) {
+    const handlerIdent = `handle${capitalize(node.part)}Keydown`;
+    if (isCompositeItem && ctx.compositeMemberExpr) {
+      const memberExpr = renderReactBinding(
+        "compositeItemValue",
+        ctx.compositeMemberExpr,
+        ctx,
+      );
+      if (memberExpr !== null) {
+        attrs.push(`onKeyDown={(event) => ${handlerIdent}(event, ${memberExpr})}`);
+      }
+    } else {
+      attrs.push(`onKeyDown={${handlerIdent}}`);
+    }
+    // A keyboard host that is not natively focusable must become
+    // programmatically focusable so the delegated keys can fire and svelte's
+    // a11y compiler checks hold; -1 keeps it out of tab order.
+    if (!NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+      attrs.push("tabIndex={-1}");
+    }
+  } else if (isCompositeItem && !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+    // Composite roving item without its own keydown: still a roving focus
+    // target — focusable for the roving focus path but out of tab order
+    // (APG roving tabindex with DOM focus tracking).
+    attrs.push("tabIndex={-1}");
+  }
+
   for (const [key, expr] of Object.entries(node.bindings)) {
     // Dual-pathway retention dedup: when parseDomNode mirrored a legacy
     // `bindings.onX` entry into `events.<x>`, the canonical `events` loop
@@ -2680,7 +2762,7 @@ function renderReactDomNode(
     attrs.push(`${jsxKey}={${valueExpr}}`);
   }
 
-  if (node.focusContainer) attrs.push(`ref={panelRef}`);
+  if (node.focusContainer || node.keyboardPanel) attrs.push(`ref={panelRef}`);
 
   // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: generated per-instance id on
   // relationship targets, and the lowered idref attributes on sources.

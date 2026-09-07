@@ -819,6 +819,35 @@ export interface CompositeControlIR {
 }
 
 /**
+ * Closed keyboard-realization vocabulary (FEAT-A11Y-COMPOSITE-KEYBOARD-01) —
+ * mirrors `ContractKeyboardBehavior` from contract.ts.
+ */
+export type KeyboardActionOp =
+  | "open"
+  | "select"
+  | "roving-next"
+  | "roving-prev"
+  | "roving-first"
+  | "roving-last";
+
+/**
+ * One realized keyboard interaction (FEAT-A11Y-COMPOSITE-KEYBOARD-01),
+ * derived from a structured `a11y.keyboard` entry that declares `behavior`.
+ * Framework emitters bind a keydown realization on the `when` part's rendered
+ * node and lower the op sequence from declared facts only. Entries without
+ * `behavior` produce no fact — they are realized by native host semantics or
+ * a behavior primitive.
+ */
+export interface KeyboardActionIR {
+  /** Anatomy part whose rendered node hosts the keydown binding. */
+  part: string;
+  /** Declared key (e.g. `"ArrowDown"`). */
+  key: string;
+  /** Realization op. */
+  op: KeyboardActionOp;
+}
+
+/**
  * A node in the rendered DOM tree, derived from `contract.anatomy.dom`.
  * Optional — components without a `dom` block on their contract continue to
  * emit single-root output. When present, framework component-source emitters
@@ -839,6 +868,19 @@ export interface DomNodeIR {
   activation?: ActivationIR;
   /** Bind the rendered content host to the focus-scope behavior. */
   focusContainer?: boolean;
+  /**
+   * Keyboard realizations hosted on this node (FEAT-A11Y-COMPOSITE-KEYBOARD-01)
+   * — attached post-build to the node whose `part` matches each action's
+   * declared `when` scope. Emitters bind a keydown on this element and lower
+   * each op from IR facts.
+   */
+  keyboardActions?: KeyboardActionIR[];
+  /**
+   * FEAT-A11Y-COMPOSITE-KEYBOARD-01: this node is the panel surface of a
+   * keyboard `open` realization — the template binds the hook's `panelRef`
+   * here so the post-open focus can query inside the revealed panel.
+   */
+  keyboardPanel?: boolean;
   /** HTML tag, or `"slot"`/`"children"` placeholder. */
   tag: string;
   /**
@@ -1715,6 +1757,14 @@ export interface ComponentIR {
   compositeControl: CompositeControlIR | undefined;
 
   /**
+   * Realized keyboard interactions (FEAT-A11Y-COMPOSITE-KEYBOARD-01) —
+   * structured `a11y.keyboard` entries carrying the closed `behavior`
+   * vocabulary, fact-validated at IR build. Empty for contracts whose
+   * keyboard declarations are all realized natively or by primitives.
+   */
+  keyboardActions: KeyboardActionIR[];
+
+  /**
    * Target-neutral text-overflow intent — present only when
    * `contract.textOverflow` is set. Additive: existing DOM cssVariableBindings
    * line-clamp realization (ShowMore/Truncate `--fsds-*-content-max-lines`)
@@ -1938,6 +1988,17 @@ export function buildComponentIR(
     behavior.normalizedChannels,
     dom,
   );
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: lower realized keyboard interactions
+  // after compositeControl (validation needs it) and attach onto the DOM
+  // nodes whose parts host the keydown bindings.
+  const keyboardActions = buildKeyboardActions(
+    contract,
+    parts,
+    behavior.normalizedChannels,
+    compositeControl,
+    behavior.focus,
+  );
+  attachKeyboardActions(dom, keyboardActions, contract.name);
   const interaction = buildInteractionIR(contract, parts, behavior.normalizedChannels, dom);
   if (interaction?.presence === "hidden") {
     cssBlocks.push({
@@ -2073,6 +2134,7 @@ export function buildComponentIR(
     interaction,
     formControl,
     compositeControl,
+    keyboardActions,
     textOverflow,
     dom,
     fieldAssociation,
@@ -4810,6 +4872,348 @@ export function buildCompositeControlIR(
     event,
     update,
   };
+}
+
+/**
+ * Lower structured `a11y.keyboard` entries carrying the closed `behavior`
+ * vocabulary into fact-validated KeyboardActionIR records
+ * (FEAT-A11Y-COMPOSITE-KEYBOARD-01). Validation is authoritative here: a
+ * contract declaring a behavior it lacks the facts to realize fails IR build
+ * once, loud, for every target — emitters consume the facts without
+ * re-validating. Entries without `behavior` are declaration-only and produce
+ * no fact (native semantics / behavior primitives realize them; the
+ * a11y-realization audit classifies those forms).
+ */
+export function buildKeyboardActions(
+  contract: ComponentContract,
+  parts: PartIR[],
+  channels: NormalizedChannelIR[],
+  compositeControl: CompositeControlIR | undefined,
+  focus: ContractFocus | undefined,
+): KeyboardActionIR[] {
+  const entries = contract.a11y?.keyboard ?? [];
+  const declaredParts = new Set(parts.map((part) => part.name));
+  const actions: KeyboardActionIR[] = [];
+  const seenPartKey = new Set<string>();
+  for (const entry of entries) {
+    if (typeof entry === "string" || entry.behavior === undefined) continue;
+    const when = entry.when;
+    if (!when) {
+      throw new Error(
+        `Contract "${contract.name}": a11y.keyboard entry for key "${entry.key}" declares behavior "${entry.behavior}" but no "when" part; the realization must know which part hosts the keydown.`,
+      );
+    }
+    if (!declaredParts.has(when)) {
+      throw new Error(
+        `Contract "${contract.name}": a11y.keyboard entry with behavior "${entry.behavior}" scopes "when: ${when}", which is not declared in anatomy.parts.`,
+      );
+    }
+    const partKey = `${when}\u0000${entry.key}`;
+    if (seenPartKey.has(partKey)) {
+      throw new Error(
+        `Contract "${contract.name}": duplicate a11y.keyboard entries for part "${when}" + key "${entry.key}"; one key must resolve to exactly one behavior.`,
+      );
+    }
+    seenPartKey.add(partKey);
+    switch (entry.behavior) {
+      case "open": {
+        const booleanChannels = channels.filter(
+          (candidate) => candidate.valueType === "boolean",
+        );
+        if (booleanChannels.length !== 1) {
+          throw new Error(
+            `Contract "${contract.name}": keyboard behavior "open" requires exactly one boolean channel to set; found ${booleanChannels.length}.`,
+          );
+        }
+        break;
+      }
+      case "select": {
+        if (!compositeControl) {
+          throw new Error(
+            `Contract "${contract.name}": keyboard behavior "select" requires compositeControl (the item activation it must mirror).`,
+          );
+        }
+        if (compositeControl.part.name !== when) {
+          throw new Error(
+            `Contract "${contract.name}": keyboard behavior "select" scopes "when: ${when}" but compositeControl declares item part "${compositeControl.part.name}".`,
+          );
+        }
+        if (compositeControl.commit !== "activation") {
+          throw new Error(
+            `Contract "${contract.name}": keyboard behavior "select" requires compositeControl.commit "activation" (got "${compositeControl.commit}").`,
+          );
+        }
+        break;
+      }
+      case "roving-next":
+      case "roving-prev":
+      case "roving-first":
+      case "roving-last": {
+        // The roved-over item set is declared by compositeControl (collection
+        // controls) or by an anatomy part carrying `focusable: "roving"`
+        // (compound containers like Tabs, whose registration order — not a
+        // collection channel — defines the item sequence).
+        const hasRovingItemSet =
+          compositeControl !== undefined ||
+          parts.some((candidate) => candidate.details?.focusable === "roving");
+        if (!hasRovingItemSet) {
+          throw new Error(
+            `Contract "${contract.name}": keyboard behavior "${entry.behavior}" requires a declared roving item set — compositeControl, or an anatomy part with focusable "roving".`,
+          );
+        }
+        if (focus?.strategy !== "roving") {
+          throw new Error(
+            `Contract "${contract.name}": keyboard behavior "${entry.behavior}" requires focus.strategy "roving" (got "${focus?.strategy ?? "unset"}").`,
+          );
+        }
+        break;
+      }
+      default: {
+        throw new Error(
+          `Contract "${contract.name}": unknown keyboard behavior "${entry.behavior}" on key "${entry.key}".`,
+        );
+      }
+    }
+    actions.push({ part: when, key: entry.key, op: entry.behavior });
+  }
+  return actions;
+}
+
+/**
+ * Attach built keyboard actions onto the DOM node whose `part` matches each
+ * action's declared `when` scope (FEAT-A11Y-COMPOSITE-KEYBOARD-01). Runs
+ * after buildDomTree/buildCompositeControlIR so emitters can lower directly
+ * from `node.keyboardActions` without re-resolving part ownership.
+ */
+export function attachKeyboardActions(
+  dom: DomNodeIR | undefined,
+  actions: KeyboardActionIR[],
+  contractName: string,
+): void {
+  if (!dom || actions.length === 0) return;
+  const byPart = new Map<string, KeyboardActionIR[]>();
+  for (const action of actions) {
+    const existing = byPart.get(action.part);
+    if (existing) existing.push(action);
+    else byPart.set(action.part, [action]);
+  }
+  const visitedParts = new Set<string>();
+  const visit = (node: DomNodeIR): void => {
+    if (node.part !== undefined) visitedParts.add(node.part);
+    const owned = byPart.get(node.part ?? "");
+    if (owned) node.keyboardActions = owned;
+    for (const child of node.children) visit(child);
+  };
+  visit(dom);
+  for (const action of actions) {
+    if (!visitedParts.has(action.part)) {
+      throw new Error(
+        `Contract "${contractName}": keyboard behavior "${action.op}" scopes "when: ${action.part}", which has no node in anatomy.dom to host the keydown.`,
+      );
+    }
+  }
+  // An `open` action needs the panel element after the reveal (post-open
+  // focus lands inside it), so the panel node must carry the hook's
+  // `panelRef`. The roving host part — the item-set container — is the panel
+  // for this behavior; without it the post-open focus target is unnameable
+  // and the realization would silently no-op.
+  if (actions.some((action) => action.op === "open")) {
+    const rovingParts = new Set(
+      actions.filter((a) => a.op.startsWith("roving-")).map((a) => a.part),
+    );
+    let marked = false;
+    const markPanel = (node: DomNodeIR): void => {
+      if (marked) return;
+      if (node.part !== undefined && rovingParts.has(node.part)) {
+        node.keyboardPanel = true;
+        marked = true;
+        return;
+      }
+      for (const child of node.children) markPanel(child);
+    };
+    markPanel(dom);
+    if (!marked) {
+      throw new Error(
+        `Contract "${contractName}": keyboard "open" behavior requires a roving item part in anatomy.dom to anchor the panel ref — the post-open focus target lives inside it.`,
+      );
+    }
+  }
+}
+
+/**
+ * Group the IR's keyboard actions by hosting part
+ * (FEAT-A11Y-COMPOSITE-KEYBOARD-01). The attachment pass on `DomNodeIR`
+ * already scopes actions to nodes; this parallel map lets a framework walker
+ * answer "which handler does this part's node bind" without a linear scan.
+ */
+export function groupKeyboardActionsByPart(
+  actions: KeyboardActionIR[],
+): Map<string, KeyboardActionIR[]> | undefined {
+  if (actions.length === 0) return undefined;
+  const byPart = new Map<string, KeyboardActionIR[]>();
+  for (const action of actions) {
+    const existing = byPart.get(action.part);
+    if (existing) existing.push(action);
+    else byPart.set(action.part, [action]);
+  }
+  return byPart;
+}
+
+/**
+ * The activation member operand of a composite control (the item value its
+ * click binding mutates), for lowering the keyboard select op against the
+ * identical value. Collection-selection composite controls are validated
+ * upstream to carry a `toggleMembership` channel update whose first operand
+ * is the member; anything else has no keyboard-selectable member.
+ */
+export function compositeActivationMember(
+  control: ComponentIR["compositeControl"],
+): BindingExpression | undefined {
+  if (!control) return undefined;
+  if (control.update.kind !== "channelUpdate") return undefined;
+  if (control.update.op !== "toggleMembership") return undefined;
+  return control.update.operands[0];
+}
+
+/**
+ * Hosting parts with realized keyboard actions, in declaration order — each
+ * framework hook supplies one `handle<Part>Keydown` handler per part and the
+ * root template binds the same idents.
+ */
+export function keyboardHandlerParts(ir: ComponentIR): string[] {
+  const parts: string[] = [];
+  for (const action of ir.keyboardActions) {
+    if (!parts.includes(action.part)) parts.push(action.part);
+  }
+  return parts;
+}
+
+/**
+ * Tags on which keyboard events fire without a tabIndex and which are
+ * programmatically focusable by default (FEAT-A11Y-COMPOSITE-KEYBOARD-01).
+ * Keyboard hosts and roving items with any other tag receive
+ * `tabindex="-1"` so delegated keys can reach them and they are focusable
+ * without entering tab order. Shared by every web-framework emitter so the
+ * focusability rule cannot drift between targets.
+ */
+export const NATIVE_FOCUSABLE_TAGS: ReadonlySet<string> = new Set([
+  "a",
+  "button",
+  "input",
+  "select",
+  "textarea",
+  "summary",
+]);
+
+/** Depth-first lookup of an anatomy.dom node by its declared `part`. */
+export function findDomNodeByPart(
+  dom: DomNodeIR | undefined,
+  part: string,
+): DomNodeIR | undefined {
+  if (!dom) return undefined;
+  if (dom.part === part) return dom;
+  for (const child of dom.children) {
+    const hit = findDomNodeByPart(child, part);
+    if (hit) return hit;
+  }
+  return undefined;
+}
+
+/**
+ * Props the keyboard `select` behavior reads as its toggle/set mode gate
+ * (FEAT-A11Y-COMPOSITE-KEYBOARD-01) — the `modeGate` operand of the
+ * composite control's `toggleMembership` update. The component forwards
+ * these into the behavior hook so the keyboard handler evaluates the same
+ * gate the item's click binding does.
+ */
+export function keyboardModeGateProps(ir: ComponentIR): string[] {
+  const props: string[] = [];
+  const control = ir.compositeControl;
+  if (!control) return props;
+  if (control.update.kind !== "channelUpdate") return props;
+  if (control.update.op !== "toggleMembership") return props;
+  const gate = control.update.operands[1];
+  if (gate?.kind === "prop" && !props.includes(gate.prop)) {
+    props.push(gate.prop);
+  }
+  return props;
+}
+
+function roleSelectorOf(node: DomNodeIR): string | undefined {
+  const role = node.attrs.role;
+  return role ? `[role="${role}"]` : undefined;
+}
+
+/**
+ * The anatomy part naming the roved-over item set
+ * (FEAT-A11Y-COMPOSITE-KEYBOARD-01): the `compositeControl` item part when the
+ * contract declares one, otherwise the part whose anatomy details carry
+ * `focusable: "roving"` (compound containers like Tabs, whose items are
+ * registered rather than collected). `undefined` when neither source exists —
+ * a contract may rove over nothing else.
+ */
+export function resolveRovingItemPartName(
+  ir: ComponentIR,
+): string | undefined {
+  const compositePart = ir.compositeControl?.part.name;
+  if (compositePart) return compositePart;
+  return ir.parts.find((part) => part.details?.focusable === "roving")?.name;
+}
+
+/**
+ * CSS selector resolving the composite roving item nodes inside their
+ * container (FEAT-A11Y-COMPOSITE-KEYBOARD-01) — the roving item part's role,
+ * which a roving item set must declare so keyboard handlers can query the
+ * item set. `undefined` when the contract declares no roving item set.
+ */
+export function resolveRovingItemSelector(ir: ComponentIR): string | undefined {
+  const itemPart = resolveRovingItemPartName(ir);
+  if (!itemPart) return undefined;
+  const node = findDomNodeByPart(ir.dom, itemPart);
+  if (!node) {
+    throw new Error(
+      `Contract "${ir.name}": roving item part "${itemPart}" has no node in anatomy.dom.`,
+    );
+  }
+  const selector = roleSelectorOf(node);
+  if (!selector) {
+    throw new Error(
+      `Contract "${ir.name}": roving item part "${itemPart}" must declare an explicit role so roving focus can resolve the item set.`,
+    );
+  }
+  return selector;
+}
+
+/**
+ * CSS selector resolving the element the roving focus lands on when the
+ * keyboard-open action fires (FEAT-A11Y-COMPOSITE-KEYBOARD-01). The
+ * `focus.initialFocus` value names a part; the resolved selector targets the
+ * first natively focusable element in that part's subtree (e.g. Select's
+ * search input), falling back to the part's own role. `prop:`-shaped
+ * initialFocus is a ref concern owned by the focus-trap path and yields
+ * `undefined` here.
+ */
+export function resolveInitialFocusSelector(
+  ir: ComponentIR,
+): string | undefined {
+  const initial = ir.behavior.focus?.initialFocus;
+  if (!initial || initial.startsWith("prop:")) return undefined;
+  const partName = initial.startsWith("part:") ? initial.slice(5) : initial;
+  const node = findDomNodeByPart(ir.dom, partName);
+  if (!node) {
+    throw new Error(
+      `Contract "${ir.name}": focus.initialFocus names part "${partName}", which has no node in anatomy.dom.`,
+    );
+  }
+  const firstFocusable = (current: DomNodeIR): string | undefined => {
+    if (NATIVE_FOCUSABLE_TAGS.has(current.tag)) return current.tag;
+    for (const child of current.children) {
+      const hit = firstFocusable(child);
+      if (hit) return hit;
+    }
+    return undefined;
+  };
+  return firstFocusable(node) ?? roleSelectorOf(node);
 }
 
 /**

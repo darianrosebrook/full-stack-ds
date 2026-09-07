@@ -4,7 +4,7 @@
   "component": {
     "name": "CodeSnippet",
     "cssPrefix": "code-snippet",
-    "rootElement": "div",
+    "rootElement": "code",
     "effectiveRole": null
   },
   "anatomy": [
@@ -307,7 +307,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "code",
     "labeling": [],
     "keyboard": [],
     "polymorphicTagProp": {

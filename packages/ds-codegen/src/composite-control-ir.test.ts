@@ -63,7 +63,11 @@ describe("CompositeControlIR", () => {
     const dom = contract.anatomy && !Array.isArray(contract.anatomy)
       ? contract.anatomy.dom
       : undefined;
-    const option = findPartOrNull(buildComponentIR({ ...contract, compositeControl: undefined }).dom!, "option");
+    // Probe built from the INTACT contract: Select's roving keyboard
+    // behaviors legitimately require compositeControl, so stripping it here
+    // would fail in fixture preparation instead of exercising the
+    // duplicate-authority assertion below.
+    const option = findPartOrNull(buildComponentIR(contract).dom!, "option");
     if (!dom || !option) throw new Error("fixture requires option DOM");
 
     const rawOption = (() => {

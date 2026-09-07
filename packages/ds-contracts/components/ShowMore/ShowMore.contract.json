@@ -167,7 +167,6 @@
     "flipIcon": false
   },
   "a11y": {
-    "role": "button",
     "apgPattern": "button",
     "labeling": [
       "aria-expanded"

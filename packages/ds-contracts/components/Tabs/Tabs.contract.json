@@ -320,7 +320,7 @@
   "focus": {
     "strategy": "roving",
     "orientation": "horizontal",
-    "initialFocus": "activeTab",
+    "initialFocus": "tab",
     "wrap": true,
     "description": "Arrow keys move focus between tabs; focus follows the active indicator. Tab panels are reached with Tab key."
   },

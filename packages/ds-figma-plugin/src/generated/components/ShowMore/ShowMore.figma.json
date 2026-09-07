@@ -4,7 +4,7 @@
   "component": {
     "name": "ShowMore",
     "cssPrefix": "show-more",
-    "rootElement": "button",
+    "rootElement": "div",
     "effectiveRole": null
   },
   "anatomy": [
@@ -276,9 +276,7 @@
     ]
   },
   "root": {
-    "element": "button",
-    "explicitRole": "button",
-    "implicitRole": "button",
+    "element": "div",
     "labeling": [
       "aria-expanded"
     ],

@@ -4,7 +4,7 @@
   "component": {
     "name": "ToggleSwitch",
     "cssPrefix": "toggle-switch",
-    "rootElement": "div",
+    "rootElement": "button",
     "effectiveRole": "switch"
   },
   "anatomy": [
@@ -412,8 +412,9 @@
     ]
   },
   "root": {
-    "element": "div",
+    "element": "button",
     "explicitRole": "switch",
+    "implicitRole": "button",
     "effectiveRole": "switch",
     "rootRole": "switch",
     "labeling": [

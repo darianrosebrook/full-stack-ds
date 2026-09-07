@@ -9,15 +9,41 @@ import {
   type ComponentAudit,
 } from "./live-audit.js";
 import { FSDS_NS, type LiveNode } from "./live-materialize.js";
-import type { FigmaStatePlan } from "./planner.js";
+import {
+  type FigmaStatePlan,
+  type Residual,
+  type SuppressionRelation,
+} from "./planner.js";
+
+/**
+ * Shared plan-metadata fixtures. The materializer writes these structures
+ * into shared plugin data (live-materialize.ts) and the projector reads them
+ * back, so the plan side and the live side must stay the same objects —
+ * define them once and serialize from the same source.
+ */
+const planSuppressions: SuppressionRelation[] = [
+  {
+    sourceDimension: "disabled",
+    sourceValues: ["true"],
+    suppressesCategories: ["interaction"],
+    suppressedDimensions: ["color"],
+  },
+];
+const planResiduals: Residual[] = [
+  {
+    dimension: "color",
+    code: "effect-missing",
+    reason: "no effect fact for color's active values",
+  },
+];
 
 function makeNode(overrides: Partial<Record<string, unknown>> = {}): LiveNode {
   const sharedData: Record<string, string> = {
     "state.dim.size.lowering": "variant-axis",
     "state.dim.disabled.lowering": "boolean-property",
     "state.dim.color.lowering": "channel-bound",
-    "state.suppressions": JSON.stringify([{ category: "availability" }]),
-    "state.residuals": JSON.stringify([{ kind: "effect-missing" }]),
+    "state.suppressions": JSON.stringify(planSuppressions),
+    "state.residuals": JSON.stringify(planResiduals),
     ...(overrides.sharedData ?? {}),
   };
   return {
@@ -37,13 +63,33 @@ function makeNode(overrides: Partial<Record<string, unknown>> = {}): LiveNode {
 const plan: FigmaStatePlan = {
   component: "Button",
   dimensions: [
-    { name: "size", lowering: { kind: "variant-axis" } },
-    { name: "disabled", lowering: { kind: "boolean-property" } },
-    { name: "color", lowering: { kind: "channel-bound" } },
-  ] as FigmaStatePlan["dimensions"],
-  suppressions: [{ category: "availability" }],
-  residuals: [{ kind: "effect-missing" }],
-} as FigmaStatePlan;
+    {
+      name: "size",
+      category: "presentation",
+      cardinality: 3,
+      activeValues: ["sm", "md", "lg"],
+      initial: "md",
+      lowering: { kind: "variant-axis", activeValues: ["sm", "md", "lg"] },
+    },
+    {
+      name: "disabled",
+      category: "availability",
+      cardinality: 2,
+      activeValues: ["true"],
+      initial: "false",
+      lowering: { kind: "boolean-property", activeValue: "true" },
+    },
+    {
+      name: "color",
+      category: "presentation",
+      cardinality: 2,
+      activeValues: ["accent", "neutral"],
+      lowering: { kind: "channel-bound", channel: "data-color", values: ["accent", "neutral"] },
+    },
+  ],
+  suppressions: planSuppressions,
+  residuals: planResiduals,
+};
 
 describe("projectComponentAudit", () => {
   it("projects variant and boolean properties with id suffixes stripped", () => {
@@ -65,8 +111,8 @@ describe("projectComponentAudit", () => {
 
   it("parses suppressions and residuals; absent keys project null", () => {
     const withData = projectComponentAudit(makeNode(), "Button");
-    expect(withData.suppressions).toEqual([{ category: "availability" }]);
-    expect(withData.residuals).toEqual([{ kind: "effect-missing" }]);
+    expect(withData.suppressions).toEqual(planSuppressions);
+    expect(withData.residuals).toEqual(planResiduals);
 
     const bare = projectComponentAudit(
       makeNode({ sharedData: { "state.suppressions": "", "state.residuals": "" } }),
@@ -110,7 +156,18 @@ describe("projectLiveAudit and auditDigest", () => {
     expect(digest).toBe(auditDigest(a));
     const b: ComponentAudit[] = [
       projectComponentAudit(
-        makeNode({ sharedData: { "state.suppressions": JSON.stringify([{ category: "validation" }]) } }),
+        makeNode({
+          sharedData: {
+            "state.suppressions": JSON.stringify([
+              {
+                sourceDimension: "disabled",
+                sourceValues: ["true"],
+                suppressesCategories: ["validation"],
+                suppressedDimensions: ["color"],
+              },
+            ]),
+          },
+        }),
         "Button",
       ),
     ];

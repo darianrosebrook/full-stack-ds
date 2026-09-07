@@ -154,4 +154,113 @@ async function renderElement(tagName: string, props: Record<string, unknown> = {
 
 // @custom:start tests
 
+describe("Select — keyboard realization (FEAT-A11Y-COMPOSITE-KEYBOARD-01)", () => {
+  const pressKey = (element: Element, key: string): void => {
+    element.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
+  };
+  // jsdom fires requestAnimationFrame on a ~16ms timer; the open handler
+  // lands focus inside it, so the focus assertions wait past that window.
+  const settle = (): Promise<void> => new Promise((r) => setTimeout(r, 50));
+
+  interface SelectTestElement extends LitTestElement {
+    onChange?: (value: string | string[]) => void;
+  }
+
+  /** Focus inside a shadow root: document.activeElement stops at the host. */
+  const innerActive = (host: HTMLElement): Element | null =>
+    host.shadowRoot?.activeElement ?? null;
+
+  const openElement = async (
+    setup?: (el: SelectTestElement) => void,
+  ): Promise<HTMLElement> => {
+    const { element } = await renderElement("fsds-select", { open: true });
+    const el = element as SelectTestElement;
+    setup?.(el);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    return element;
+  };
+
+  it("ArrowDown on the closed trigger opens the panel and moves focus into the listbox", async () => {
+    const { element } = await renderElement("fsds-select");
+    const trigger = element.shadowRoot?.querySelector(".select__trigger") as HTMLElement;
+    pressKey(trigger, "ArrowDown");
+    await settle();
+    const listbox = element.shadowRoot?.querySelector('[role="listbox"]') as HTMLElement;
+    expect(listbox).toBeTruthy();
+    // Non-searchable Select: the search-input initial focus falls back to
+    // the first option — focus must land inside the panel either way.
+    expect(listbox.contains(innerActive(element))).toBe(true);
+  });
+
+  it("roving hosts are programmatically focusable but out of tab order", async () => {
+    const element = await openElement();
+    const listbox = element.shadowRoot?.querySelector('[role="listbox"]') as HTMLElement;
+    expect(listbox.getAttribute("tabindex")).toBe("-1");
+    for (const option of element.shadowRoot?.querySelectorAll('[role="option"]') ?? []) {
+      expect((option as HTMLElement).getAttribute("tabindex")).toBe("-1");
+    }
+  });
+
+  it("ArrowDown/ArrowUp on the listbox rove DOM focus through the options", async () => {
+    const element = await openElement();
+    const listbox = element.shadowRoot?.querySelector('[role="listbox"]') as HTMLElement;
+    const options = [...(element.shadowRoot?.querySelectorAll('[role="option"]') ?? [])] as HTMLElement[];
+    options[0].focus();
+    pressKey(listbox, "ArrowDown");
+    expect(innerActive(element)).toBe(options[1]);
+    pressKey(listbox, "ArrowDown");
+    expect(innerActive(element)).toBe(options[2]);
+    pressKey(listbox, "ArrowUp");
+    expect(innerActive(element)).toBe(options[1]);
+  });
+
+  it("ArrowUp from the first option wraps to the last; Home/End jump to the extremes", async () => {
+    const element = await openElement();
+    const listbox = element.shadowRoot?.querySelector('[role="listbox"]') as HTMLElement;
+    const options = [...(element.shadowRoot?.querySelectorAll('[role="option"]') ?? [])] as HTMLElement[];
+    options[0].focus();
+    pressKey(listbox, "ArrowUp");
+    expect(innerActive(element)).toBe(options[2]);
+    pressKey(listbox, "Home");
+    expect(innerActive(element)).toBe(options[0]);
+    pressKey(listbox, "End");
+    expect(innerActive(element)).toBe(options[2]);
+  });
+
+  it("Enter on an option commits that option's value and does not close (click parity)", async () => {
+    const changes: unknown[] = [];
+    const element = await openElement((el) => {
+      el.onChange = (v) => changes.push(v);
+    });
+    const option = element.shadowRoot?.querySelectorAll('[role="option"]')[1] as HTMLElement;
+    pressKey(option, "Enter"); // Beta
+    expect(changes).toEqual(["beta"]);
+  });
+
+  it("Enter adds an absent option's value in multiple mode (controlled)", async () => {
+    const changes: unknown[] = [];
+    const element = await openElement((el) => {
+      (el as unknown as Record<string, unknown>)["multiple"] = true;
+      (el as unknown as Record<string, unknown>)["value"] = ["alpha"];
+      el.onChange = (v) => changes.push(v);
+    });
+    const option = element.shadowRoot?.querySelectorAll('[role="option"]')[2] as HTMLElement;
+    pressKey(option, "Enter"); // Gamma absent → add
+    expect(changes).toEqual([["alpha", "gamma"]]);
+  });
+
+  it("Enter removes a present option's value in multiple mode (controlled)", async () => {
+    const changes: unknown[] = [];
+    const element = await openElement((el) => {
+      (el as unknown as Record<string, unknown>)["multiple"] = true;
+      (el as unknown as Record<string, unknown>)["value"] = ["alpha", "gamma"];
+      el.onChange = (v) => changes.push(v);
+    });
+    const option = element.shadowRoot?.querySelectorAll('[role="option"]')[0] as HTMLElement;
+    pressKey(option, "Enter"); // Alpha present → remove
+    expect(changes).toEqual([["gamma"]]);
+  });
+});
+
 // @custom:end

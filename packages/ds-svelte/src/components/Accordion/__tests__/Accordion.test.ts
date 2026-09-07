@@ -45,7 +45,7 @@ describe("Accordion — unit", () => {
 
 describe("Accordion — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Accordion as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Accordion", "children": createRawSnippet(() => ({ render: () => "<span>content</span>" })) } });
+    const { container } = render(Accordion as unknown as Component<Record<string, unknown>>, { props: { "children": createRawSnippet(() => ({ render: () => "<span>content</span>" })) } });
     const results = await axe(container, componentAxeOptions);
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });

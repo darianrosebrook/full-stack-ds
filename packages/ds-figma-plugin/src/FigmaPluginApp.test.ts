@@ -135,7 +135,7 @@ describe("FigmaPluginApp — outbound messages", () => {
   it("posts a resize message on mount", async () => {
     render(FigmaPluginApp);
     await Promise.resolve();
-    const calls = postMessage.mock.calls.map((c) => c[1] === "*" ? c[0] : c[0]);
+    const calls = postMessage.mock.calls.map((c) => c[0]);
     expect(
       calls.some(
         (msg) =>

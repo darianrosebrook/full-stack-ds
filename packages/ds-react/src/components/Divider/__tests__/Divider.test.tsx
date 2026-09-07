@@ -36,11 +36,6 @@ describe("Divider — unit", () => {
     expect(screen.getByTestId("divider")).toHaveClass("divider", "custom");
   });
 
-  it("has the correct ARIA role", () => {
-    render(<Divider data-testid="divider" />);
-    expect(screen.getByTestId("divider")).toHaveAttribute("role", "separator");
-  });
-
   it("applies orientation=horizontal variant class", () => {
     render(<Divider data-testid="divider" orientation="horizontal" />);
     expect(screen.getByTestId("divider")).toHaveClass("divider--horizontal");

@@ -4,7 +4,7 @@
   "component": {
     "name": "Accordion",
     "cssPrefix": "accordion",
-    "rootElement": "section",
+    "rootElement": "div",
     "effectiveRole": null
   },
   "anatomy": [
@@ -681,9 +681,7 @@
     ]
   },
   "root": {
-    "element": "section",
-    "explicitRole": "region",
-    "implicitRole": "region",
+    "element": "div",
     "labeling": [],
     "keyboard": [
       {

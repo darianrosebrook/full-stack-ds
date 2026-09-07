@@ -4,7 +4,7 @@
   "component": {
     "name": "Text",
     "cssPrefix": "text",
-    "rootElement": "div",
+    "rootElement": "p",
     "effectiveRole": null
   },
   "anatomy": [
@@ -860,7 +860,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "p",
     "labeling": [],
     "keyboard": [],
     "polymorphicTagProp": {

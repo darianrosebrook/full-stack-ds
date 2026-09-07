@@ -4,7 +4,7 @@
   "component": {
     "name": "Icon",
     "cssPrefix": "icon",
-    "rootElement": "div",
+    "rootElement": "span",
     "effectiveRole": "img"
   },
   "anatomy": [
@@ -233,7 +233,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "span",
     "explicitRole": "img",
     "effectiveRole": "img",
     "rootRole": "img",

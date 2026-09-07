@@ -2594,6 +2594,18 @@
             "mode": {
               "type": "string",
               "description": "State condition required for this binding (e.g. \"openness=expanded\")."
+            },
+            "behavior": {
+              "type": "string",
+              "enum": [
+                "open",
+                "select",
+                "roving-next",
+                "roving-prev",
+                "roving-first",
+                "roving-last"
+              ],
+              "description": "Closed realization vocabulary (FEAT-A11Y-COMPOSITE-KEYBOARD-01). When present, the Semantic IR lowers the entry into an emitted keydown realization on the `when` part's node in every web framework; the op sequence derives only from declared facts. `open` requires exactly one boolean channel (set true, then move focus into the surface per `focus.initialFocus`, or to the first item when already open). `select` requires `compositeControl.part === when` (activate the item through the composite channel exactly as its pointer activation does, then, when the contract declares dismissal and `focus.returnFocus`, close and refocus the return part). `roving-*` requires `focus.strategy === \"roving\"` and a declared roving item set — a `compositeControl` item part or an anatomy part carrying `focusable: \"roving\"` (move DOM focus among the item parts, honoring `focus.orientation` and `focus.wrap`). Absent `behavior`, the entry is declaration-only: realized by native host semantics (button Enter/Space) or a behavior primitive (dismissal Escape), which the a11y-realization audit classifies."
             }
           }
         },

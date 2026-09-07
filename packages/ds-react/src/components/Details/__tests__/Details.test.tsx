@@ -36,11 +36,6 @@ describe("Details — unit", () => {
     expect(screen.getByTestId("details")).toHaveClass("details", "custom");
   });
 
-  it("has the correct ARIA role", () => {
-    render(<Details data-testid="details" summary={"placeholder"}><span>content</span></Details>);
-    expect(screen.getByTestId("details")).toHaveAttribute("role", "group");
-  });
-
   it("applies variant=default variant class", () => {
     render(<Details data-testid="details" summary={"placeholder"} variant="default" open={true}><span>content</span></Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--default");

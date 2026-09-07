@@ -102,7 +102,9 @@ describe("Select — accessibility", () => {
 // `channel:selection.onChange(iter:item.value)` must invoke onChange with the
 // clicked option's value — proving the call-with-argument setter form lowers
 // to a live per-item write (not the pre-fix self-assignment no-op).
-import { fireEvent } from "@testing-library/react";
+// fireEvent is imported by the keyboard-realization block below; a second
+// import is a tsc duplicate-identifier error (esbuild merges duplicates, so
+// vitest alone never caught it).
 
 describe("Select — trigger naming", () => {
   it("has a useful default name and honors the consumer override", () => {
@@ -243,6 +245,102 @@ describe("Select — multiple-mode toggle (channelUpdate toggleMembership)", () 
     );
     fireEvent.click(screen.getAllByRole("option")[1]); // Beta
     expect(onChange).toHaveBeenLastCalledWith("beta");
+  });
+});
+// FEAT-A11Y-COMPOSITE-KEYBOARD-01: the realized keyboard actions — dispatch
+// each contract-declared key and assert the DOM response (AC A3, React
+// target). Trigger ArrowDown opens with focus landing in the listbox; the
+// listbox host roves DOM focus over the options with wrap; option Enter
+// commits exactly what the option's click commits.
+import { fireEvent, waitFor } from "@testing-library/react";
+
+describe("Select — keyboard realization (FEAT-A11Y-COMPOSITE-KEYBOARD-01)", () => {
+  const OPTIONS = [
+    { value: "alpha", label: "Alpha" },
+    { value: "beta", label: "Beta" },
+    { value: "gamma", label: "Gamma" },
+  ];
+
+  const renderOpen = (props: Record<string, unknown> = {}) =>
+    render(
+      <Select
+        aria-label="Fruit"
+        open={true}
+        options={OPTIONS}
+        {...props}
+      />,
+    );
+
+  it("ArrowDown on the closed trigger opens the panel and moves focus into the listbox", async () => {
+    const onOpenChange = vi.fn();
+    render(<Select aria-label="Fruit" onOpenChange={onOpenChange} options={OPTIONS} />);
+    const trigger = screen.getByRole("button", { name: "Select an option" });
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    expect(onOpenChange).toHaveBeenCalledWith(true);
+    await waitFor(() => {
+      const listbox = screen.getByRole("listbox");
+      expect(listbox.contains(document.activeElement)).toBe(true);
+    });
+  });
+
+  it("roving hosts are programmatically focusable but out of tab order", () => {
+    renderOpen();
+    expect(screen.getByRole("listbox")).toHaveAttribute("tabindex", "-1");
+    for (const option of screen.getAllByRole("option")) {
+      expect(option).toHaveAttribute("tabindex", "-1");
+    }
+  });
+
+  it("ArrowDown/ArrowUp on the listbox rove DOM focus through the options", () => {
+    renderOpen();
+    const [alpha, beta, gamma] = screen.getAllByRole("option");
+    alpha.focus();
+    const listbox = screen.getByRole("listbox");
+    fireEvent.keyDown(listbox, { key: "ArrowDown" });
+    expect(document.activeElement).toBe(beta);
+    fireEvent.keyDown(listbox, { key: "ArrowDown" });
+    expect(document.activeElement).toBe(gamma);
+    fireEvent.keyDown(listbox, { key: "ArrowUp" });
+    expect(document.activeElement).toBe(beta);
+  });
+
+  it("ArrowUp from the first option wraps to the last; Home/End jump to the extremes", () => {
+    renderOpen();
+    const options = screen.getAllByRole("option");
+    options[0].focus();
+    const listbox = screen.getByRole("listbox");
+    fireEvent.keyDown(listbox, { key: "ArrowUp" });
+    expect(document.activeElement).toBe(options[options.length - 1]);
+    fireEvent.keyDown(listbox, { key: "Home" });
+    expect(document.activeElement).toBe(options[0]);
+    fireEvent.keyDown(listbox, { key: "End" });
+    expect(document.activeElement).toBe(options[options.length - 1]);
+  });
+
+  it("Enter on an option commits that option's value and does not close (click parity)", () => {
+    const onChange = vi.fn();
+    const onOpenChange = vi.fn();
+    renderOpen({ value: "", onChange, onOpenChange });
+    const options = screen.getAllByRole("option");
+    fireEvent.keyDown(options[2], { key: "Enter" }); // Gamma
+    expect(onChange).toHaveBeenLastCalledWith("gamma");
+    // The contract declares Enter = select only; closing is the dismissal
+    // trigger's authority, so keyboard mirrors the click wire exactly.
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("Enter adds an absent option's value in multiple mode (controlled)", () => {
+    const onChange = vi.fn();
+    renderOpen({ multiple: true, value: ["alpha"], onChange });
+    fireEvent.keyDown(screen.getAllByRole("option")[2], { key: "Enter" }); // Gamma absent → add
+    expect(onChange).toHaveBeenLastCalledWith(["alpha", "gamma"]);
+  });
+
+  it("Enter removes a present option's value in multiple mode (controlled)", () => {
+    const onChange = vi.fn();
+    renderOpen({ multiple: true, value: ["alpha", "gamma"], onChange });
+    fireEvent.keyDown(screen.getAllByRole("option")[0], { key: "Enter" }); // Alpha present → remove
+    expect(onChange).toHaveBeenLastCalledWith(["gamma"]);
   });
 });
 // @custom:end
