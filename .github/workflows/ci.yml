@@ -163,6 +163,9 @@ jobs:
       - name: Typecheck (Vue)
         run: pnpm run typecheck:vue
 
+      - name: Typecheck (Figma plugin)
+        run: pnpm run typecheck:figma
+
       - name: Test (root)
         run: pnpm test
 
