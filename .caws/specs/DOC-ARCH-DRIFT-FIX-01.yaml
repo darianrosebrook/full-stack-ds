@@ -53,3 +53,8 @@ contracts:
     type: schema
   - name: 'docs-claims-derivation'
     type: behavior
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge on main: all 18 audited findings edited in 8 docs; grep confirms zero residual references (byte-compare script, generate-palette-ramps, StyleProfileIR, useTemplateRef, DialogSurfaceController, ten-language)"
+    recorded_at: "2026-09-07T00:44:10.207Z"
