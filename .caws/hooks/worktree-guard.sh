@@ -47,10 +47,39 @@ fi
 # shellcheck source=lib/emit.sh
 # Use caws_source_lib so a vendor override is preferred over the shared default.
 caws_source_lib emit.sh 2>/dev/null || true
+caws_source_lib heredoc.sh 2>/dev/null || true
 parse_hook_input
 
 TOOL_NAME="$HOOK_TOOL_NAME"
 COMMAND="$HOOK_COMMAND"
+
+# GUARD-CMDTEXT-BOUNDARY-01: the verb matchers below scan the literal command
+# string, so QUOTED text that merely NAMES a refused verb was adjudicated as if
+# it were that verb. Observed live in this repo while authoring this very fix:
+# a `caws specs create` whose acceptance-criterion prose described the refused
+# verbs was itself refused as those verbs, and a probe list naming them inside a
+# grep argument was refused likewise. Each mutated nothing and each ran no git.
+#
+# Collapse intra-quote whitespace to a sentinel so quoted prose cannot present
+# as `git<space>verb`. This deliberately does NOT delete quoted content: a
+# quoted PATH survives as a single token, so the path-oriented matchers further
+# down keep working. Only the git/caws VERB matchers read this variable.
+#
+# Heredoc BODIES are blanked first (lib/heredoc.sh) — a body written to a file
+# is a payload, not a command, but it arrives in the same string. That blanking
+# is a SAFELIST (cat/tee only): a heredoc fed to an interpreter IS code and
+# keeps its body fully visible, so the residue is a false positive, never a
+# hole. If lib/heredoc.sh is absent the helper is undefined and the raw command
+# passes through unblanked — quote collapsing still applies, so the guard stays
+# at least as strict as it is today.
+if declare -F caws_blank_heredoc_bodies >/dev/null 2>&1; then
+  COMMAND_CMDTEXT="$(caws_blank_heredoc_bodies "$COMMAND")"
+else
+  COMMAND_CMDTEXT="$COMMAND"
+fi
+COMMAND_CMDTEXT="$(printf '%s' "$COMMAND_CMDTEXT" \
+  | sed -E -e ':a' -e 's/("[^"]*)[[:space:]]([^"]*")/\1__CAWS_SP__\2/' -e 'ta' \
+  | sed -E -e ':b' -e "s/('[^']*)[[:space:]]([^']*')/\1__CAWS_SP__\2/" -e 'tb')"
 
 if [[ "$TOOL_NAME" != "Bash" ]] || [[ -z "$COMMAND" ]]; then
   exit 0
@@ -60,7 +89,7 @@ fi
 PROJECT_DIR="$(resolve_canonical_dir "${CAWS_PROJECT_DIR:-.}")"
 
 # Block sparse checkout (runs before "only check git commands" early-exit)
-if echo "$COMMAND" | grep -qE 'caws\s+(worktree\s+create|parallel\s+setup).*--scope'; then
+if echo "$COMMAND_CMDTEXT" | grep -qE 'caws\s+(worktree\s+create|parallel\s+setup).*--scope'; then
   echo "BLOCKED: --scope (sparse checkout) is not allowed." >&2
   echo "Sparse checkout breaks cross-module imports in most projects." >&2
   echo "Use full worktrees without --scope. Scope enforcement comes from" >&2
@@ -68,7 +97,7 @@ if echo "$COMMAND" | grep -qE 'caws\s+(worktree\s+create|parallel\s+setup).*--sc
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE '(^|;|&&|\|)\s*git\s+sparse-checkout'; then
+if echo "$COMMAND_CMDTEXT" | grep -qE '(^|;|&&|\|)\s*git\s+sparse-checkout'; then
   # WORKTREE-SPEC-CANONICAL-ACCESS-GUARD-001 A3: blanket refusal stays.
   echo "BLOCKED: agent-issued git sparse-checkout is refused in CAWS projects." >&2
   echo "" >&2
@@ -127,20 +156,20 @@ if is_canonical_checkout "$CANONICAL_GUARD_CHECK_CWD"; then
           } catch(e) { console.log(''); }
         " 2>/dev/null || echo "")
         if [[ -n "$FIRST_ACTIVE_WT" ]]; then
-          if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+checkout\s+[^[:space:]-]'; then
+          if echo "$COMMAND_CMDTEXT" | grep -qE '(^|[[:space:];&|])git\s+checkout\s+[^[:space:]-]'; then
             canonical_guard_emit_block "git checkout (branch switch)" "$FIRST_ACTIVE_WT"
             exit 2
           fi
-          if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+switch\s+[^[:space:]-]'; then
+          if echo "$COMMAND_CMDTEXT" | grep -qE '(^|[[:space:];&|])git\s+switch\s+[^[:space:]-]'; then
             canonical_guard_emit_block "git switch (branch switch)" "$FIRST_ACTIVE_WT"
             exit 2
           fi
-          if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+branch\s+(-f|--force)'; then
+          if echo "$COMMAND_CMDTEXT" | grep -qE '(^|[[:space:];&|])git\s+branch\s+(-f|--force)'; then
             canonical_guard_emit_block "git branch -f (force branch update)" "$FIRST_ACTIVE_WT"
             exit 2
           fi
-          if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+reset\b' \
-             && ! echo "$COMMAND" | grep -qE 'git\s+reset\s+--hard'; then
+          if echo "$COMMAND_CMDTEXT" | grep -qE '(^|[[:space:];&|])git\s+reset\b' \
+             && ! echo "$COMMAND_CMDTEXT" | grep -qE 'git\s+reset\s+--hard'; then
             canonical_guard_emit_block "git reset (HEAD mutation)" "$FIRST_ACTIVE_WT"
             exit 2
           fi
@@ -181,7 +210,7 @@ if [[ -d "$WORKTREE_BASE" ]]; then
 fi
 
 # Only check git commands from here on
-if ! echo "$COMMAND" | grep -qE '(^|\s|&&|\|)git\s'; then
+if ! echo "$COMMAND_CMDTEXT" | grep -qE '(^|\s|&&|\|)git\s'; then
   exit 0
 fi
 
@@ -230,28 +259,28 @@ fi
 
 # --- Block dangerous git operations when worktrees are active ---
 
-if echo "$COMMAND" | grep -qE 'git\s+commit\s+.*--amend'; then
+if echo "$COMMAND_CMDTEXT" | grep -qE 'git\s+commit\s+.*--amend'; then
   echo "BLOCKED: git commit --amend is not allowed while worktrees are active." >&2
   echo "Amending commits risks rewriting another agent's work." >&2
   echo "Create a new commit instead." >&2
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE 'git\s+stash' && ! echo "$COMMAND" | grep -qE 'git\s+stash\s+list'; then
+if echo "$COMMAND_CMDTEXT" | grep -qE 'git\s+stash' && ! echo "$COMMAND_CMDTEXT" | grep -qE 'git\s+stash\s+list'; then
   echo "BLOCKED: git stash is not allowed while worktrees are active." >&2
   echo "Stash is shared across all worktrees and can capture or destroy another agent's work." >&2
   echo "Commit your changes to your branch instead." >&2
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE 'git\s+reset\s+--hard'; then
+if echo "$COMMAND_CMDTEXT" | grep -qE 'git\s+reset\s+--hard'; then
   echo "BLOCKED: git reset --hard is not allowed while worktrees are active." >&2
   echo "This could discard work that other agents depend on." >&2
   exit 2
 fi
 
 # WORKTREE-ISOLATION-HARDENING-001 (Fix 5): the git restore synonym gap.
-if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+restore\b'; then
+if echo "$COMMAND_CMDTEXT" | grep -qE '(^|[[:space:];&|])git\s+restore\b'; then
   echo "BLOCKED: git restore (working-tree/path restore) is not allowed while worktrees are active." >&2
   echo "git restore DISCARDS uncommitted changes by path — the same work-loss hazard as git reset --hard." >&2
   echo "This is a path/working-tree restore, NOT a branch switch." >&2
@@ -260,21 +289,21 @@ if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+restore\b'; then
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+checkout\s+--\s'; then
+if echo "$COMMAND_CMDTEXT" | grep -qE '(^|[[:space:];&|])git\s+checkout\s+--\s'; then
   echo "BLOCKED: git checkout -- <path> (working-tree discard) is not allowed while worktrees are active." >&2
   echo "This discards uncommitted changes to the named path(s) — a work-loss hazard while parallel work exists." >&2
   echo "Commit first, or operate from the owning worktree's session." >&2
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+clean\b'; then
+if echo "$COMMAND_CMDTEXT" | grep -qE '(^|[[:space:];&|])git\s+clean\b'; then
   echo "BLOCKED: git clean (untracked-file deletion) is not allowed while worktrees are active." >&2
   echo "git clean can delete another agent's untracked files across the shared tree." >&2
   echo "Remove specific files you own explicitly instead." >&2
   exit 2
 fi
 
-if echo "$COMMAND" | grep -qE 'git\s+push\s+.*(--force|-f\s)'; then
+if echo "$COMMAND_CMDTEXT" | grep -qE 'git\s+push\s+.*(--force|-f\s)'; then
   echo "BLOCKED: Force push is not allowed while worktrees are active." >&2
   echo "This could rewrite history that other agents have based work on." >&2
   exit 2
@@ -301,19 +330,19 @@ if [[ -z "$BASE_BRANCH" ]] && [[ -f "$PROJECT_DIR/.caws/worktrees.json" ]] && co
 fi
 
 if [[ -n "$BASE_BRANCH" ]] && [[ "$CURRENT_BRANCH" == "$BASE_BRANCH" ]]; then
-  if echo "$COMMAND" | grep -qE 'git\s+push'; then
+  if echo "$COMMAND_CMDTEXT" | grep -qE 'git\s+push'; then
     echo "BLOCKED: Pushing from the base branch ($BASE_BRANCH) while worktrees are active." >&2
     echo "You should be working in a worktree, not on the base branch." >&2
     echo "Use: cd .caws/worktrees/<name>/" >&2
     exit 2
   fi
 
-  if echo "$COMMAND" | grep -qE 'git\s+merge\b'; then
+  if echo "$COMMAND_CMDTEXT" | grep -qE 'git\s+merge\b'; then
     emit_additional_context "Merging into base branch ($BASE_BRANCH) while worktrees are active. The commit-msg hook will enforce the merge(worktree): message format. Make sure the worktree for this branch has been destroyed first."
     exit 0
   fi
 
-  if echo "$COMMAND" | grep -qE 'git\s+commit\b' && ! echo "$COMMAND" | grep -qE '--amend'; then
+  if echo "$COMMAND_CMDTEXT" | grep -qE 'git\s+commit\b' && ! echo "$COMMAND_CMDTEXT" | grep -qE '--amend'; then
     emit_additional_context "NOTE: committing to the base branch ($BASE_BRANCH) while worktrees are active. Worktrees are preferred for isolated feature work, but logical checkpoint commits from the current checkout are allowed by CAWS governance. Avoid --amend and force-push while worktrees are active."
     exit 0
   fi
