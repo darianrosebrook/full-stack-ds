@@ -1,0 +1,39 @@
+id: GUARD-REPRIEVE-PATH-SPLIT-01
+title: 'Hook pack reads the reprieve record from the machine-global location the caws CLI writes'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-07T06:21:07.924Z'
+updated_at: '2026-09-07T06:21:07.924Z'
+created_by_session: 'f46106db-10cf-4869-b035-5bb63e5a1fc2'
+blast_radius:
+  modules:
+    - 'caws hook pack'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - '.caws/hooks/lib/reprieve.sh'
+    - '.caws/hooks/tests'
+  out: []
+invariants:
+  - 'Broadening WHERE a reprieve is read from must not broaden WHAT is accepted: every candidate path runs the same expiry, handler-match and session-id validation, and an unresolved session id is still refused.'
+  - 'Both candidate locations live under the user''s own trust domain (repo state dir, or ~/.caws/state); no new writer is introduced and no record is ever mutated on read.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the caws CLI wrote a valid unexpired reprieve to the machine-global session state dir and nothing to the repo-local state dir; when a guard consults the reprieve reader; then the named handler is reported reprieved'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a reprieve record present only in the repo-local state dir; when the reader consults it; then it is still honoured, so the migration does not regress existing records'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an EXPIRED record in either location, or a record naming a different handler; when the reader consults it; then the handler is reported NOT reprieved'
+non_functional: {}
+contracts:
+  - name: 'reprieve-path-resolution'
+    type: contract-test
+    path: '.caws/hooks/tests/test_reprieve_path_resolution.sh'
