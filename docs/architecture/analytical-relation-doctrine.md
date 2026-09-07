@@ -4,7 +4,7 @@ authority: architecture
 status: active
 title: Typed Analytical Relations and Combinatorial Projection
 owner: "@darianrosebrook"
-updated: 2026-09-02
+updated: 2026-09-06
 governs:
   # Exist after stage 0 / 0.5 (the corpus contract and its integrity checker):
   - packages/ds-contracts/analytical-pack/**
@@ -423,7 +423,7 @@ The semantic core can be called complete at the first bar without waiting for th
 
 ## What this does not claim
 
-- It does not claim the engine, the relation schema, the projection space, or any realization is built. The corpus contract and its integrity checker exist; everything else under `governs:` is proposed.
+- It does not claim the projection space, the enumerator, or any realization is built. The corpus contract and its integrity checker exist, and the L0–L2 kernel — relation model, engines, schema emission, and the necessity census — is built and tested; everything beyond the kernel under `governs:` remains proposed.
 - It does not claim the field algebra is complete, and it does not claim every term in the appendix has earned its place. It claims the *layering* is right, expects the fields to grow, and requires each to carry a necessity witness before stage 1 keeps it.
 - It does not claim that a case's prose is exhausted by its declared terms. The mechanical claim is narrower: every declared vocabulary reference resolves, the vocabulary equals this document's appendix, and no form name appears outside the colloquial field. Semantic completeness is what the structured relation representation of stage 1 provides; prose cannot.
 - It does not tell anyone what "revenue," "temperature," "country," or "customer" *is* in the world. It can say a value has ratio semantics, a currency unit, temporal extent, aggregation rules, provenance, and uncertainty. That is analytical meaning, not denotation. Concept identity, causal structure, and source ontology are deliberately out of scope so that, if a later layer needs them, it is possible to tell which layer did the work.

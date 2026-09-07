@@ -4,12 +4,12 @@ authority: architecture
 status: active
 title: Contract-to-Figma Plugin Scaffold
 owner: "@darianrosebrook"
-updated: 2026-06-11
+updated: 2026-09-06
 governs:
   - packages/ds-codegen/src/frameworks/figma/**
   - packages/ds-codegen/src/validation/frameworks/figma.ts
   - packages/ds-figma-plugin/**
-  - agent-skills/figma-library-setup/**
+  - packages/ds-figma-plugin/agent-skills/figma-library-setup/**
 ---
 
 # Contract-to-Figma Plugin Scaffold
@@ -23,7 +23,7 @@ The Figma lane treats Figma as another realization target of the component contr
 - Figma transfer format: `packages/ds-codegen/src/frameworks/figma/descriptor.ts` defines `FigmaComponentDescriptorV1` and the V1 assertion function.
 - Figma descriptor emission: `packages/ds-codegen/src/frameworks/figma/factory.ts` emits `*.figma.json` descriptors from governed `ComponentIR`.
 - Runtime materialization: `packages/ds-figma-plugin/src/plugin.ts` consumes the generated descriptor registry.
-- Agent workflow guidance: `agent-skills/figma-library-setup/**` instructs agents how to use available Figma MCP tools; it does not add MCP capabilities.
+- Agent workflow guidance: `packages/ds-figma-plugin/agent-skills/figma-library-setup/**` instructs agents how to use available Figma MCP tools; it does not add MCP capabilities.
 
 ## Scope of this document — read this first
 
@@ -44,9 +44,9 @@ The Figma lane treats Figma as another realization target of the component contr
 A verification pass over the eight closed specs found that **shipped** and **proven** come apart
 sharply here. Both halves matter:
 
-**Durably evidenced.** `packages/ds-figma-plugin/src` carries five test files — `planner.test.ts`,
+**Durably evidenced.** `packages/ds-figma-plugin/src` carries its core test suite — `planner.test.ts`,
 `materialize-state.test.ts`, `live-materialize.test.ts`, `live-style.test.ts`, `plugin.test.ts` —
-totalling **59 tests, all passing** (`pnpm exec vitest run packages/ds-figma-plugin/src`). These
+alongside four newer test files, all run by `pnpm exec vitest run packages/ds-figma-plugin/src`. These
 exercise the descriptor → plan → materialize boundary, the state surface, style projection, and the
 plugin's UI/codegen wiring against a mocked Figma API. This is real, re-runnable proof of the
 plan-and-materialize logic.

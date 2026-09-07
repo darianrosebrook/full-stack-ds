@@ -21,7 +21,7 @@ governs:
 
 This document is the architectural record for the design-token graph. It exists for the same reason `codegen-authority.md` exists: a contributor a year from now should be able to read one doc and know **where token authority lives, what guarantees are real, and which decisions are load-bearing.** Without that, the workstream's decisions decay into folklore that gets re-litigated every time someone adds a token.
 
-The workstream that produced this surface (`TOKENS-WORKSTREAM-STEP-02` through `STEP-06C`, commits `7c0e4f1` → `c02cfc0`) replaced a single hand-authored 2,948-line `designTokens.css` with a DTCG-1.0-validated graph that composes 161 shards into a cascade-layered output. This doc is the entry point.
+The workstream that produced this surface (`TOKENS-WORKSTREAM-STEP-02` through `STEP-06C`, commits `7c0e4f1` → `c02cfc0`) replaced a single hand-authored 2,948-line `designTokens.css` with a DTCG-1.0-validated graph that composes <!-- token-shard-count -->160 shards into a cascade-layered output. This doc is the entry point.
 
 ## What this proves
 
@@ -229,7 +229,7 @@ The graph may add, alias, or rename tokens freely. Contracts may reference any p
 
 The invariant is enforced by:
 
-- `pnpm -F @full-stack-ds/tokens validate` → DTCG strict W3C schema validation on every shard (161/161 must pass)
+- `pnpm -F @full-stack-ds/tokens validate` → DTCG strict W3C schema validation on every shard (all <!-- token-shard-count -->160 must pass)
 - `pnpm -F @full-stack-ds/tokens build` → composer normalizes; emitter flattens composites; emission is regenerable
 - `pnpm run generate:check` → `validateContractTokens` per contract, fail-loud per missing path
 
@@ -265,7 +265,7 @@ Every emitted CSS custom property has the prefix `--fsds-`. The default is set i
 
 **Why:** consumer applications may run alongside other design systems (a portfolio site, a host shell, a sibling app). `--color-primary` is too generic; `--fsds-semantic-color-foreground-primary` cannot collide.
 
-**Consequence:** contracts always reference the unprefixed dot-path (`semantic.color.foreground.primary`); the prefix is appended at emission. Don't put `--fsds-` in `resolvesTo`. If you ever need to change the prefix, edit one line in `tokenPathToCSSVar` — every emitter call site picks it up.
+**Consequence:** contracts always reference the unprefixed dot-path (`semantic.color.foreground.primary`); the prefix is appended at emission. Don't put `--fsds-` in `resolvesTo`. The prefix defaults in two places that must change together: `tokenSlug` in `packages/ds-codegen/src/token-path.ts` (the emit side) and the `prefix` default of `tokenPathToCSSVar` in `packages/ds-tokens/build/core/index.ts` (the declare side). Editing only one recreates the declare/emit mismatch the split exists to prevent.
 
 ### Decision 3: Cascade layer order — `core, semantic, components, theme, brand, density`
 
@@ -349,10 +349,10 @@ Before this workstream, `packages/ds-contracts/tokens/designTokens.css` (2,948 l
 
 - Deleted `packages/ds-contracts/tokens/designTokens.css` (replaced by `packages/ds-tokens/generated/tokens.css`)
 - Deleted `packages/ds-contracts/tokens/globals.scss` (no consumers)
-- Kept `packages/ds-contracts/tokens/vars.css` (scroll-driven animation primitives + Next.js font CSS-var bridges — NOT design tokens; the vite plugin concatenates it onto the token surface for runtime consumption)
+- Kept `packages/ds-contracts/tokens/vars.css` at cutover (scroll-driven animation primitives + Next.js font CSS-var bridges — NOT design tokens). The file and its directory were removed later; `vite-plugin-fsds-data.ts` still attempts a safe read of the path and tolerates its absence.
 - Repointed `vite-plugin-fsds-data.ts` from the old path to the new one
 
-Byte-compare diagnostic at `packages/ds-tokens/build/_oneshot/byte-compare-tokens.ts` reports coverage:
+The cutover's byte-compare diagnostic (script since removed; formerly `packages/ds-tokens/build/_oneshot/byte-compare-tokens.ts`) reported:
 
 - **Section A** (contract refs satisfied by OLD surface): **100%** (123 / 123). Baseline integrity confirmed before cutover.
 - **Section B** (OLD vars present in NEW surface): **81.70%** (144 / 787 missing). Most gaps are name-drift in tokens no contract or component consumed; some are intentional drops (legacy variants, unused scale points).
@@ -360,7 +360,7 @@ Byte-compare diagnostic at `packages/ds-tokens/build/_oneshot/byte-compare-token
 
 Section C 100% is the load-bearing claim. Section B's 81.70% is informational — vars that nothing consumed went away, which is the expected outcome of a clean cutover. If Section C were ever less than 100%, the cutover would be unsafe.
 
-The byte-compare script remains in the tree for re-running if the graph or contracts change substantially. It will be retired when the doctrinal record (this doc + the validator) is judged sufficient.
+The byte-compare script no longer exists — it was removed with the orphaned `_oneshot/` scaffolding. The Section A/B/C percentages are historical cutover provenance, not re-runnable diagnostics; the doctrinal record (this doc + the validator) is the retained authority.
 
 ## Classified inventory of layered overrides
 
@@ -392,17 +392,12 @@ Every hue in `src/color/core/palette.tokens.json` (`brand.primary`, `neutral`, `
 `200`, `300`, `400`, `500`, `600`, `700`, `800`, `900`. Stops are stored as DTCG sRGB
 component arrays (0–1).
 
-Ramps are generated, not hand-authored, by
-`build/generators/generate-palette-ramps.ts` using
-[`@adobe/leonardo-contrast-colors`](https://github.com/adobe/leonardo):
+Ramps are frozen, hand-maintained DTCG values in `src/color/core/palette.tokens.json`. The values were originally derived with [`@adobe/leonardo-contrast-colors`](https://github.com/adobe/leonardo) by `build/generators/generate-palette-ramps.ts`, which no longer exists; changing a ramp means editing the authored values directly. The derivation is recorded here for provenance:
 
-- **Reference hues.** The hue's own anchor stops are passed to Leonardo as `colorKeys`, so
-  the regenerated ramp interpolates through the existing brand colors and preserves their
-  character. The generator is idempotent — it always re-derives from a fixed set of anchor
-  stops, so reruns converge.
-- **Interpolation space is `OKLCH`** — perceptually even steps that preserve chroma (colors
+- **Reference hues.** The hue's own anchor stops were passed to Leonardo as `colorKeys`, so the derived ramp interpolated through the existing brand colors and preserved their character. The derivation was idempotent by construction: it re-derived from a fixed set of anchor stops.
+- **Interpolation space was `OKLCH`** — perceptually even steps that preserve chroma (colors
   stay rich, not muddy, across the ramp).
-- **Stops are contrast-targeted.** Each stop is the color that hits a fixed WCAG contrast
+- **Stops are contrast-targeted.** Each stop was chosen as the color that hits a fixed WCAG contrast
   ratio against the lightest UI surface (`#fafafa` = `color.mode.light`). The ten ratios are
   logarithmically distributed:
   `[1.15, 1.47, 1.9, 2.49, 3.36, 4.61, 6.48, 9, 12.45, 16.1]` — five below 4.5 (50–400) and
@@ -414,10 +409,9 @@ Ramps are generated, not hand-authored, by
   the distribution. A consequence: hues that are intrinsically light (e.g. yellow) are forced
   dark enough at `500` to carry white text, instead of failing as a pale fill.
 
-Regenerate after changing the anchor colors or the ratio set:
+After changing anchor colors or the ratio set, edit the ramp values in `palette.tokens.json` directly, then rebuild and re-run the contrast gate:
 
 ```bash
-pnpm -F @full-stack-ds/tokens exec tsx build/generators/generate-palette-ramps.ts
 pnpm -F @full-stack-ds/tokens build         # recompose + re-emit tokens.css
 pnpm run tokens:check-contrast              # curated AA/AAA pair gate
 ```

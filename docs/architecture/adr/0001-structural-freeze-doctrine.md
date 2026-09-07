@@ -4,7 +4,7 @@ authority: adr
 status: active
 title: "ADR 0001: structural freeze doctrine — freeze what must remain deliberate, measure what is expected to grow, freeze nothing before a release candidate"
 owner: "@darianrosebrook"
-updated: 2026-09-03
+updated: 2026-09-06
 supersedes: null
 # Declared governance role: this ADR governs the ADMISSIBILITY of freeze-shaped
 # gates — whether a given ledger/ratchet/frozen expectation may be wired as
@@ -251,7 +251,7 @@ kind is a deliberate, visible design decision at the authority-owning
 boundary. Review tests 1, 2, 4, 5 all pass by construction.
 
 **Good structural freeze with a mandated discharge — the golden stream
-fixtures.** The ten-language golden fixtures freeze cross-framework
+fixtures.** The four-language golden fixtures freeze cross-framework
 token-stream identity: five packages shipping a byte-identical tokenizer must
 produce these exact streams. Legitimate growth (grammar improvement) changes
 streams; the sanctioned discharge is regenerate-audit-freeze in the same
