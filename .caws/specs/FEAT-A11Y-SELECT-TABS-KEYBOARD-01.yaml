@@ -3,7 +3,6 @@ title: 'Realize Select/Tabs composite keyboard across five web frameworks; burn 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: a11y-select-tabs-keyboard
 created_at: '2026-09-07T01:51:23.912Z'
 updated_at: '2026-09-07T06:06:06.292Z'
 created_by_session: 'session-8beff575-dae2-4e96-8d0c-cfd8aac06388'
