@@ -46,3 +46,10 @@ evidence:
     command: .caws/hooks/tests/test_reprieve_path_resolution.sh
     exit_code: 0
     commit_sha: "0a2f58d5"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "test_reprieve_path_resolution.sh case 2 places a valid record ONLY in the repo-local state dir and it is still honoured; that case also passes against the pre-fix reader, which is the point -- the migration adds a location without removing one"
+    recorded_at: "2026-09-07T06:23:55.246Z"
+    command: .caws/hooks/tests/test_reprieve_path_resolution.sh
+    exit_code: 0
+    commit_sha: "0a2f58d5"
