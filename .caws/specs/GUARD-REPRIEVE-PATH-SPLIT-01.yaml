@@ -53,3 +53,10 @@ evidence:
     command: .caws/hooks/tests/test_reprieve_path_resolution.sh
     exit_code: 0
     commit_sha: "0a2f58d5"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "six negative cases refuse: expired in either location, handler not named, wrong session, unresolved session, malformed record, and a present-but-expired repo-local record not upgraded by a valid machine-global one. Mutation check: a reader mutated to admit unconditionally is killed by 8 of the 10 cases (2 passed / 8 failed), so the negatives are load-bearing rather than decorative"
+    recorded_at: "2026-09-07T06:23:55.731Z"
+    command: .caws/hooks/tests/test_reprieve_path_resolution.sh
+    exit_code: 0
+    commit_sha: "0a2f58d5"
