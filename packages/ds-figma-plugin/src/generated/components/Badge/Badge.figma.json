@@ -4,7 +4,7 @@
   "component": {
     "name": "Badge",
     "cssPrefix": "badge",
-    "rootElement": "div",
+    "rootElement": "span",
     "effectiveRole": null
   },
   "anatomy": [
@@ -358,7 +358,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "span",
     "labeling": [],
     "keyboard": []
   },

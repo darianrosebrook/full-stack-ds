@@ -4,7 +4,7 @@
   "component": {
     "name": "Links",
     "cssPrefix": "links",
-    "rootElement": "div",
+    "rootElement": "a",
     "effectiveRole": null
   },
   "anatomy": [
@@ -373,7 +373,8 @@
     ]
   },
   "root": {
-    "element": "div",
+    "element": "a",
+    "implicitRole": "link",
     "labeling": [],
     "keyboard": []
   },

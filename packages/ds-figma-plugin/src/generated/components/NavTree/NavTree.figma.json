@@ -4,7 +4,7 @@
   "component": {
     "name": "NavTree",
     "cssPrefix": "nav-tree",
-    "rootElement": "div",
+    "rootElement": "li",
     "effectiveRole": "listitem"
   },
   "anatomy": [
@@ -679,7 +679,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "li",
     "explicitRole": "listitem",
     "effectiveRole": "listitem",
     "rootRole": "listitem",

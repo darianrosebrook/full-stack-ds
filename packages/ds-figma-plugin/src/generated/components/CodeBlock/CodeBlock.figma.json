@@ -4,7 +4,7 @@
   "component": {
     "name": "CodeBlock",
     "cssPrefix": "code-block",
-    "rootElement": "div",
+    "rootElement": "pre",
     "effectiveRole": null
   },
   "anatomy": [
@@ -416,7 +416,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "pre",
     "labeling": [],
     "keyboard": []
   },

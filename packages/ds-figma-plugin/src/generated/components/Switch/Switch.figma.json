@@ -4,7 +4,7 @@
   "component": {
     "name": "Switch",
     "cssPrefix": "switch",
-    "rootElement": "div",
+    "rootElement": "label",
     "effectiveRole": null
   },
   "anatomy": [
@@ -624,7 +624,7 @@
     ]
   },
   "root": {
-    "element": "div",
+    "element": "label",
     "labeling": [
       "aria-label",
       "aria-labelledby",

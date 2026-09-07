@@ -36,11 +36,6 @@ describe("Image — unit", () => {
     expect(screen.getByTestId("image")).toHaveClass("image", "custom");
   });
 
-  it("has the correct ARIA role", () => {
-    render(<Image data-testid="image" alt={"placeholder"} />);
-    expect(screen.getByTestId("image")).toHaveAttribute("role", "img");
-  });
-
   it("applies size=xs variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} size="xs" />);
     expect(screen.getByTestId("image")).toHaveClass("image--size-xs");

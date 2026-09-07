@@ -32,11 +32,6 @@ describe("Details — unit", () => {
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
-  it("has the correct ARIA role", () => {
-    const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true } });
-    expect(container.firstElementChild?.getAttribute("role")).toBe("group");
-  });
-
   it("applies variant=default variant class", () => {
     const { container } = render(Details as unknown as Component<Record<string, unknown>>, { props: { "summary": "placeholder", "open": true, "variant": "default" } });
     expect(container.firstElementChild?.className).toContain("details--default");

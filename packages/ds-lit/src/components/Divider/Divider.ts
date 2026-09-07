@@ -131,7 +131,7 @@ export class DividerElement extends LitElement {
   }
 
   override render() {
-    return html`<hr class="${this.computeClasses()}" role="separator" data-fsds-box="" />`;
+    return html`<hr class="${this.computeClasses()}" data-fsds-box="" />`;
   }
 }
 

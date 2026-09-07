@@ -45,7 +45,7 @@ describe("Accordion — unit", () => {
 
 describe("Accordion — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Accordion as Component, { props: {}, attrs: { "data-testid": "accordion", "aria-label": "Test Accordion" }, slots: { "default": "<span>content</span>" } });
+    const wrapper = mount(Accordion as Component, { props: {}, attrs: { "data-testid": "accordion" }, slots: { "default": "<span>content</span>" } });
     const results = await axe(wrapper.element, componentAxeOptions);
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });

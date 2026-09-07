@@ -91,6 +91,9 @@ export const IMPLICIT_ROLES_BY_ELEMENT: Record<string, string> = {
   main: "main",
   header: "banner",
   footer: "contentinfo",
+  img: "img",
+  details: "group",
+  hr: "separator",
 };
 
 const COMPOUND_PARTS = new Set([
@@ -110,6 +113,14 @@ const COMPOUND_PARTS = new Set([
 ]);
 
 export function getRootElement(contract: ComponentContract): string {
+  // The contract's declared root tag is authoritative: the elision check
+  // compares the declared role against the ARIA role the *rendered* element
+  // implies, so the element must be the one the contract says it renders —
+  // not a role-table back-derivation that collapses img/details/hr to div.
+  const declaredRootTag = !Array.isArray(contract.anatomy)
+    ? contract.anatomy?.details?.root?.tag
+    : undefined;
+  if (declaredRootTag) return declaredRootTag;
   const role = contract.a11y?.role;
   if (!role) return "div";
   return ROLE_TO_ELEMENT[role] || "div";

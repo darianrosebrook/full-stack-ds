@@ -4,7 +4,7 @@
   "component": {
     "name": "Shuttle",
     "cssPrefix": "shuttle",
-    "rootElement": "div",
+    "rootElement": "ul",
     "effectiveRole": "listbox"
   },
   "anatomy": [
@@ -211,7 +211,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "ul",
     "explicitRole": "listbox",
     "effectiveRole": "listbox",
     "labeling": [

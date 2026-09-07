@@ -292,7 +292,6 @@
     "flipIcon": true
   },
   "a11y": {
-    "role": "button",
     "labeling": [
       "aria-label",
       "title"

@@ -91,7 +91,7 @@ export function Details({
   const instanceId = useId();
 
   return (
-  <Stack layout="native" as="details" className={`${classNames}`} open={open} role="group" data-testid={testId} data-fsds-component="details" data-fsds-box="" {...rest}>
+  <Stack layout="native" as="details" className={`${classNames}`} open={open} data-testid={testId} data-fsds-component="details" data-fsds-box="" {...rest}>
     <summary className="details__summary" onClick={(e) => { if (canActivateInteraction(e, true)) setOpen(!open); }} aria-disabled={disabled} aria-controls={open ? `${instanceId}-content` : undefined}>
       <span className="details__summaryContent">
         <Icon className="details__icon" name="chevron-down" size="sm" />

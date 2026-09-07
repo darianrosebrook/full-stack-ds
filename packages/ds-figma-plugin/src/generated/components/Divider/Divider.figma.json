@@ -4,8 +4,8 @@
   "component": {
     "name": "Divider",
     "cssPrefix": "divider",
-    "rootElement": "div",
-    "effectiveRole": "separator"
+    "rootElement": "hr",
+    "effectiveRole": null
   },
   "anatomy": [
     {
@@ -149,10 +149,9 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "hr",
     "explicitRole": "separator",
-    "effectiveRole": "separator",
-    "rootRole": "separator",
+    "implicitRole": "separator",
     "labeling": [
       "aria-orientation"
     ],

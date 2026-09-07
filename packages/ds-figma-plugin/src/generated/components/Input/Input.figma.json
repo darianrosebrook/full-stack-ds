@@ -4,7 +4,7 @@
   "component": {
     "name": "Input",
     "cssPrefix": "input",
-    "rootElement": "div",
+    "rootElement": "input",
     "effectiveRole": "textbox"
   },
   "anatomy": [
@@ -620,7 +620,7 @@
     ]
   },
   "root": {
-    "element": "div",
+    "element": "input",
     "explicitRole": "textbox",
     "effectiveRole": "textbox",
     "rootRole": "textbox",

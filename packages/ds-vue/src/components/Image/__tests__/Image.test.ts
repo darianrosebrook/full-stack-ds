@@ -32,11 +32,6 @@ describe("Image — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
-  it("has the correct ARIA role", () => {
-    const wrapper = mount(Image as Component, { props: { "alt": "placeholder" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
-    expect(wrapper.attributes("role")).toBe("img");
-  });
-
   it("applies size=xs variant class", () => {
     const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "size": "xs" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--size-xs");

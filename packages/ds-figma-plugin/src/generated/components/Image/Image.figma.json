@@ -4,8 +4,8 @@
   "component": {
     "name": "Image",
     "cssPrefix": "image",
-    "rootElement": "div",
-    "effectiveRole": "img"
+    "rootElement": "img",
+    "effectiveRole": null
   },
   "anatomy": [
     {
@@ -540,10 +540,9 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "img",
     "explicitRole": "img",
-    "effectiveRole": "img",
-    "rootRole": "img",
+    "implicitRole": "img",
     "labeling": [
       "aria-label",
       "alt"

@@ -4,7 +4,7 @@
   "component": {
     "name": "Label",
     "cssPrefix": "label",
-    "rootElement": "div",
+    "rootElement": "label",
     "effectiveRole": null
   },
   "anatomy": [
@@ -91,7 +91,7 @@
     "booleanModifiers": []
   },
   "root": {
-    "element": "div",
+    "element": "label",
     "labeling": [],
     "keyboard": []
   },
