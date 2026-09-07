@@ -36,3 +36,11 @@ contracts:
   - name: 'gate-clearance'
     type: contract-test
     path: 'scripts/custom-region-audit/audit.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "docs:check-claims exit 0 at 5a288c9d -- 'OK: 69 marked claim(s) match derived values; 11 verified stamp(s) fresh or ledgered (4 ledgered stale)'; freshness selftest 9 passed / 0 failed. normal-form.md restamped after reading a 1999-insertion governed delta and adding a buildKeyboardActions paragraph to the section it bears on; box-model-primitive.md restamped after confirming the ir.ts delta contains zero box-model/StyleProfile/morphology/geometry lines and that box-model.ts, css.ts and cli.ts are untouched"
+    recorded_at: "2026-09-07T06:45:36.334Z"
+    command: "pnpm run docs:check-claims"
+    exit_code: 0
+    commit_sha: "5a288c9d"
