@@ -185,6 +185,17 @@ desc("Tabs — behavioral", () => {
     exp(tabB.getAttribute("tabindex")).toBe("-1");
   });
 
+  test("tablist is programmatically focusable, out of tab order", async () => {
+    const { container } = renderTabs({ defaultValue: "a" });
+    await tick();
+
+    // The tablist hosts the delegated roving keydown; its interactive role
+    // demands programmatic focusability (svelte a11y_interactive_supports_focus)
+    // while -1 keeps it out of the tab order.
+    const list = container.querySelector<HTMLElement>('[role="tablist"]')!;
+    exp(list.getAttribute("tabindex")).toBe("-1");
+  });
+
   test("roving tabindex updates when active tab changes", async () => {
     const { container } = renderTabs({ defaultValue: "a" });
     await tick();

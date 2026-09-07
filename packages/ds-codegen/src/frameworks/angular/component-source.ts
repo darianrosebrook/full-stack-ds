@@ -830,6 +830,7 @@ export function generateAngularCompoundStateParts(
     `  template: \`<div`,
     `  #listEl`,
     `  role="tablist"`,
+    `  tabindex="-1"`,
     `  [ngClass]="classes()"`,
     `  [attr.aria-orientation]="ctx.orientation()"`,
     `  (keydown)="handleKeyDown($event)"`,

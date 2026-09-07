@@ -280,6 +280,12 @@ describe("Tabs — compound integration", () => {
     expect(getTab(host, "b").getAttribute("tabindex")).toBe("0");
   });
 
+  it("tablist is programmatically focusable, out of tab order", () => {
+    // The tablist hosts the delegated roving keydown; its interactive role
+    // demands programmatic focusability while -1 keeps it out of tab order.
+    expect(getList(host).getAttribute("tabindex")).toBe("-1");
+  });
+
   it("onValueChange fires with the clicked tab value", () => {
     const spy = jest.fn();
     fixture.componentInstance.externalOnValueChange = spy as (v: string) => void;

@@ -989,7 +989,10 @@ function generateTabsListClass(ir: ComponentIR): string {
   lines.push(`  override render() {`);
   lines.push(`    let orientation = "horizontal";`);
   lines.push(`    try { orientation = this._ctx.value.orientation; } catch { /* no context yet */ }`);
-  lines.push(`    return html\`<div class="${cssClass}" role="tablist" aria-orientation="\${orientation}"><slot></slot>${ornamentMarkup}</div>\`;`);
+  // The tablist is an interactive role hosting the delegated roving keydown
+  // (connectedCallback addEventListener); it must be programmatically
+  // focusable (APG) but stays out of tab order.
+  lines.push(`    return html\`<div class="${cssClass}" role="tablist" tabindex="-1" aria-orientation="\${orientation}"><slot></slot>${ornamentMarkup}</div>\`;`);
   lines.push(`  }`);
   lines.push(`}`);
   lines.push(``);

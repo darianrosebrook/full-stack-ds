@@ -938,6 +938,9 @@ function generateCompoundStateSubcomponents(ir: ComponentIR): string {
   lines.push(`    <div`);
   lines.push(`      ref={listRef}`);
   lines.push(`      role="tablist"`);
+  // The tablist is an interactive role hosting the delegated roving keydown;
+  // it must be programmatically focusable (APG) but stays out of tab order.
+  lines.push(`      tabIndex={-1}`);
   lines.push(`      className={classNames}`);
   lines.push(`      data-testid={testId}`);
   lines.push(`      onKeyDown={handleKeyDown}`);

@@ -477,9 +477,11 @@ function generateImports(ir: ComponentIR, bindings: PrimitiveBindings): string {
   }
   // FEAT-A11Y-COMPOSITE-KEYBOARD-01: keydown handlers need useCallback and a
   // DOM-keyboard-event type alias (aliased so it cannot collide with the DOM
-  // lib's global KeyboardEvent in consumer code).
+  // lib's global KeyboardEvent in consumer code). useCallback may already be
+  // present from the compound-container branch above — named imports must
+  // dedupe or the emitted import line is a compile error.
   if (ir.keyboardActions.length > 0) {
-    reactNamed.push("useCallback");
+    if (!reactNamed.includes("useCallback")) reactNamed.push("useCallback");
     reactTypes.push("type KeyboardEvent as ReactKeyboardEvent");
   }
 

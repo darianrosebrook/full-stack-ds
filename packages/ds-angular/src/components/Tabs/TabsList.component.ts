@@ -16,6 +16,7 @@ import { useTabsContext } from "./useTabs.js";
   template: `<div
   #listEl
   role="tablist"
+  tabindex="-1"
   [ngClass]="classes()"
   [attr.aria-orientation]="ctx.orientation()"
   (keydown)="handleKeyDown($event)"

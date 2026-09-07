@@ -88,6 +88,7 @@ function handleKeyDown(e: KeyboardEvent): void {
 <div
   bind:this={listRef}
   role="tablist"
+  tabindex="-1"
   class={classes}
   data-testid={dataTestid}
   aria-orientation={ctx.orientation}

@@ -1071,6 +1071,10 @@ export function generateSvelteCompoundStateParts(
     `<div`,
     `  bind:this={listRef}`,
     `  role="tablist"`,
+    // The tablist is an interactive role hosting the delegated roving keydown;
+    // it must be programmatically focusable (APG; svelte's
+    // a11y_interactive_supports_focus) but stays out of tab order.
+    `  tabindex="-1"`,
     `  class={classes}`,
     `  data-testid={dataTestid}`,
     `  aria-orientation={ctx.orientation}`,

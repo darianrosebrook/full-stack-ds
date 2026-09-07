@@ -130,6 +130,7 @@ export function TabsList({
     <div
       ref={listRef}
       role="tablist"
+      tabIndex={-1}
       className={classNames}
       data-testid={testId}
       onKeyDown={handleKeyDown}

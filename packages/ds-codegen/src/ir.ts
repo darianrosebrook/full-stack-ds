@@ -4949,9 +4949,16 @@ export function buildKeyboardActions(
       case "roving-prev":
       case "roving-first":
       case "roving-last": {
-        if (!compositeControl) {
+        // The roved-over item set is declared by compositeControl (collection
+        // controls) or by an anatomy part carrying `focusable: "roving"`
+        // (compound containers like Tabs, whose registration order — not a
+        // collection channel — defines the item sequence).
+        const hasRovingItemSet =
+          compositeControl !== undefined ||
+          parts.some((candidate) => candidate.details?.focusable === "roving");
+        if (!hasRovingItemSet) {
           throw new Error(
-            `Contract "${contract.name}": keyboard behavior "${entry.behavior}" requires compositeControl (the item set it roves over).`,
+            `Contract "${contract.name}": keyboard behavior "${entry.behavior}" requires a declared roving item set — compositeControl, or an anatomy part with focusable "roving".`,
           );
         }
         if (focus?.strategy !== "roving") {
@@ -5138,24 +5145,40 @@ function roleSelectorOf(node: DomNodeIR): string | undefined {
 }
 
 /**
+ * The anatomy part naming the roved-over item set
+ * (FEAT-A11Y-COMPOSITE-KEYBOARD-01): the `compositeControl` item part when the
+ * contract declares one, otherwise the part whose anatomy details carry
+ * `focusable: "roving"` (compound containers like Tabs, whose items are
+ * registered rather than collected). `undefined` when neither source exists —
+ * a contract may rove over nothing else.
+ */
+export function resolveRovingItemPartName(
+  ir: ComponentIR,
+): string | undefined {
+  const compositePart = ir.compositeControl?.part.name;
+  if (compositePart) return compositePart;
+  return ir.parts.find((part) => part.details?.focusable === "roving")?.name;
+}
+
+/**
  * CSS selector resolving the composite roving item nodes inside their
- * container (FEAT-A11Y-COMPOSITE-KEYBOARD-01) — the composite part's role,
- * which a roving composite control must declare so keyboard handlers can
- * query the item set. `undefined` when the contract has no composite control.
+ * container (FEAT-A11Y-COMPOSITE-KEYBOARD-01) — the roving item part's role,
+ * which a roving item set must declare so keyboard handlers can query the
+ * item set. `undefined` when the contract declares no roving item set.
  */
 export function resolveRovingItemSelector(ir: ComponentIR): string | undefined {
-  const itemPart = ir.compositeControl?.part.name;
+  const itemPart = resolveRovingItemPartName(ir);
   if (!itemPart) return undefined;
   const node = findDomNodeByPart(ir.dom, itemPart);
   if (!node) {
     throw new Error(
-      `Contract "${ir.name}": compositeControl part "${itemPart}" has no node in anatomy.dom.`,
+      `Contract "${ir.name}": roving item part "${itemPart}" has no node in anatomy.dom.`,
     );
   }
   const selector = roleSelectorOf(node);
   if (!selector) {
     throw new Error(
-      `Contract "${ir.name}": compositeControl part "${itemPart}" must declare an explicit role so roving focus can resolve the item set.`,
+      `Contract "${ir.name}": roving item part "${itemPart}" must declare an explicit role so roving focus can resolve the item set.`,
     );
   }
   return selector;

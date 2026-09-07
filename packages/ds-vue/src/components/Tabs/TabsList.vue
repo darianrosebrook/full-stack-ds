@@ -91,6 +91,7 @@ function handleKeyDown(e: KeyboardEvent): void {
   <div
     ref="listRef"
     role="tablist"
+    tabindex="-1"
     :class="classNames"
     :data-testid="props['data-testid']"
     :aria-orientation="ctx.orientation"

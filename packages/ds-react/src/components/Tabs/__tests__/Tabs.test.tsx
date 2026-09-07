@@ -175,6 +175,13 @@ describe("Tabs — behavioral", () => {
     expect(screen.getByTestId("tab-b")).toHaveAttribute("tabindex", "-1");
   });
 
+  it("tablist is programmatically focusable, out of tab order", () => {
+    renderTabs({ defaultValue: "a" });
+    // The tablist hosts the delegated roving keydown; its interactive role
+    // demands programmatic focusability while -1 keeps it out of tab order.
+    expect(screen.getByRole("tablist")).toHaveAttribute("tabindex", "-1");
+  });
+
   it("roving tabindex updates when active tab changes", async () => {
     const user = userEvent.setup();
     renderTabs({ defaultValue: "a" });

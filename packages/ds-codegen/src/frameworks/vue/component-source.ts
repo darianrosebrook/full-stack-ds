@@ -1247,6 +1247,9 @@ export function generateVueCompoundStateParts(
     `  <div`,
     `    ref="listRef"`,
     `    role="tablist"`,
+    // The tablist is an interactive role hosting the delegated roving keydown;
+    // it must be programmatically focusable (APG) but stays out of tab order.
+    `    tabindex="-1"`,
     `    :class="classNames"`,
     `    :data-testid="props['data-testid']"`,
     `    :aria-orientation="ctx.orientation"`,

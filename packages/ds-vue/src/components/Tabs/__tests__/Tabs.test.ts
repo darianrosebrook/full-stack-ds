@@ -211,6 +211,17 @@ describe("Tabs — behavioral", () => {
     wrapper.unmount();
   });
 
+  it("tablist is programmatically focusable, out of tab order", async () => {
+    const wrapper = mountTabs({ defaultValue: "a" });
+    await wrapper.vm.$nextTick();
+
+    // The tablist hosts the delegated roving keydown; its interactive role
+    // demands programmatic focusability while -1 keeps it out of tab order.
+    expect(wrapper.find('[role="tablist"]').attributes("tabindex")).toBe("-1");
+
+    wrapper.unmount();
+  });
+
   it("roving tabindex updates when active tab changes", async () => {
     const wrapper = mountTabs({ defaultValue: "a" });
     await wrapper.vm.$nextTick();
