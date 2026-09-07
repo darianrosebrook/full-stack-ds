@@ -74,3 +74,8 @@ contracts:
     type: behavior
   - name: 'implicit-role-elision'
     type: contract-test
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "commit b1cb54f4 (role elision from declared tag; per-framework Image/Details/Divider tests) + pnpm run governed:rail exit 0 in worktree a11y-select-tabs-keyboard"
+    recorded_at: "2026-09-07T06:05:05.134Z"
