@@ -2,9 +2,11 @@ id: GUARD-REPRIEVE-PATH-SPLIT-01
 title: 'Hook pack reads the reprieve record from the machine-global location the caws CLI writes'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Reprieve reader now consults the machine-global session dir the CLI writes as well as the repo-local one; 10-case suite, 6 negative.'
 created_at: '2026-09-07T06:21:07.924Z'
-updated_at: '2026-09-07T06:21:16.110Z'
+updated_at: '2026-09-07T06:24:31.996Z'
 created_by_session: 'f46106db-10cf-4869-b035-5bb63e5a1fc2'
 blast_radius:
   modules:
