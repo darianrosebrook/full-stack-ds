@@ -38,3 +38,11 @@ contracts:
   - name: 'reprieve-path-resolution'
     type: contract-test
     path: '.caws/hooks/tests/test_reprieve_path_resolution.sh'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "test_reprieve_path_resolution.sh -> PASS (10 cases) at 0a2f58d5; case 1 places a valid record ONLY in the synthetic machine-global session dir and the reader reports the handler reprieved. Falsification: the identical suite against the pre-fix reader from HEAD fails exactly one case, that one (9 passed / 1 failed)"
+    recorded_at: "2026-09-07T06:23:45.218Z"
+    command: .caws/hooks/tests/test_reprieve_path_resolution.sh
+    exit_code: 0
+    commit_sha: "0a2f58d5"
