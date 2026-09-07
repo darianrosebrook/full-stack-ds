@@ -1,0 +1,26 @@
+id: DOC-NORMAL-FORM-RESTAMP-01
+title: 'Restamp docs/normal-form.md verified_at_commit after the StyleProfile schema-description change'
+risk_tier: 3
+mode: doc
+lifecycle_state: draft
+created_at: '2026-09-07T05:15:42.074Z'
+updated_at: '2026-09-07T05:15:42.074Z'
+created_by_session: 'f46106db-10cf-4869-b035-5bb63e5a1fc2'
+blast_radius:
+  modules:
+    - 'docs'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/normal-form.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given docs/normal-form.md stamps verified_at_commit cdaa1cb1 while its governs surface last changed at fa780c0d; when the doc is re-verified against the current tree and restamped to a commit at or after fa780c0d; then node scripts/docs-claims-check.mjs exits 0 reporting no stale claims'
+non_functional: {}
+contracts: []
