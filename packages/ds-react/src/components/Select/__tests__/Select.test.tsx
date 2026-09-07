@@ -102,7 +102,9 @@ describe("Select — accessibility", () => {
 // `channel:selection.onChange(iter:item.value)` must invoke onChange with the
 // clicked option's value — proving the call-with-argument setter form lowers
 // to a live per-item write (not the pre-fix self-assignment no-op).
-import { fireEvent } from "@testing-library/react";
+// fireEvent is imported by the keyboard-realization block below; a second
+// import is a tsc duplicate-identifier error (esbuild merges duplicates, so
+// vitest alone never caught it).
 
 describe("Select — trigger naming", () => {
   it("has a useful default name and honors the consumer override", () => {
