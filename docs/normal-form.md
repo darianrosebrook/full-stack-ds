@@ -5,7 +5,7 @@ status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: 8f3e4fbc
+verified_at_commit: ab30f3e8
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -169,6 +169,8 @@ These are not hypothetical. They are the symptoms that show up across the broade
 **`buildFormControlIR`** separates semantic intent from framework event idiom. A control contract names its rendered interactive part, value channel/model, and commit semantic (`input`, `change`, or `activation`). The builder validates that the part exists, is interactive, renders exactly once, and that the channel type agrees with the value model. It then injects one normalized event binding on that part. React, Vue, Svelte, Angular, and Lit spell the listener differently—including React's idiomatic `onChange` for the same per-input text commit that the other Web targets spell as `input`—but none decides whether a text field is per-keystroke or blur-timed. The same target part also receives ambient Field association, so a compound checkbox labels its native input rather than its wrapper. Native form serialization remains a separate `form` fact: ToggleSwitch is a boolean control without falsely claiming that its button realization contributes to `FormData`.
 
 `buildInteractionIR` in `interaction.ts` applies the same discipline to trigger/content relationships. Contracts name the channel, triggering parts, operation and presence policy. It validates those references, synthesizes plain activation bindings, and binds trapped content to a focus handle. The shared web runtime owns controlled-state commits, cancellation and repeated-item transitions; framework adapters own reactive inputs and host attachment. Renamed-contract tests and browser witnesses cover this migration, including the matrix disclosure and real inactive-panel visibility. They do not establish complete focus-policy or accessibility parity; see [Interaction substrate](architecture/interaction-substrate.md).
+
+`buildKeyboardActions` in `ir.ts` shows what the discipline buys when a realization has to reach every target at once. A structured `a11y.keyboard` entry may declare a `behavior` drawn from a closed vocabulary — `open`, `select`, and the four `roving-*` moves — and the IR lowers it into a keydown realization bound to the `when` part's rendered node. The op sequence is derived from declared facts only: the boolean channel for `open`, the `compositeControl` part for `select`, and `focus.strategy`, `focus.orientation` and `focus.wrap` for the roving moves. All five web emitters consume that op sequence; none of them knows which component it came from. The vocabulary being closed is the load-bearing part — an open one would let a contract smuggle a per-component instruction through as data. An entry that omits `behavior` produces no IR fact at all and stays declaration-only, realized by native host semantics or a behavior primitive, which keeps the declaration honest about what it does and does not attach.
 
 These builders make the distinction between declared intent and an attached, observable realization explicit.
 

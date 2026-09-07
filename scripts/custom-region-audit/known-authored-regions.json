@@ -23,6 +23,13 @@
       "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
     },
     {
+      "file": "packages/ds-angular/src/components/Select/__tests__/Select.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "FEAT-A11Y-SELECT-TABS-KEYBOARD-01",
+      "note": "Keyboard-realization coverage for the contract's declared `behavior` ops. The obligations ARE contract-derived and the a11y-realization rail already asserts each one is realized; what is authored here is the environment-specific proof that the realization behaves — TestBed mounting, and a wait past jsdom's ~16ms requestAnimationFrame timer because the open handler lands focus inside it. Codegen cannot derive a host's async focus timing from a contract, so this is the escape hatch's intended use. If the realization ever becomes assertable from the contract alone, this region empties and the entry surfaces as stale."
+    },
+    {
       "file": "packages/ds-angular/src/components/Skeleton/__tests__/Skeleton.test.ts",
       "label": "tests",
       "kind": "test",
@@ -49,6 +56,13 @@
       "kind": "test",
       "spec": "RAIL-CUSTOM-REGION-GATE-01",
       "note": "Codegen emits a baseline suite and opens the `tests` region for the hostile-path coverage no contract implies. This is the escape hatch's intended use, not a method violation — ledgered so the set cannot grow silently, and so a region that later migrates into a contract-derived assertion surfaces as stale."
+    },
+    {
+      "file": "packages/ds-lit/src/components/Select/__tests__/Select.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "FEAT-A11Y-SELECT-TABS-KEYBOARD-01",
+      "note": "Keyboard-realization coverage for the contract's declared `behavior` ops, the Lit counterpart of the Angular Select entry. Authored for two host facts codegen cannot derive from a contract: focus inside a shadow root stops at the host, so the assertions read `shadowRoot.activeElement` rather than `document.activeElement`, and the open handler lands focus inside jsdom's ~16ms requestAnimationFrame window. The obligations themselves stay contract-derived and rail-asserted; if the realization becomes assertable from the contract alone, this region empties and the entry surfaces as stale."
     },
     {
       "file": "packages/ds-lit/src/components/Skeleton/__tests__/Skeleton.test.ts",
