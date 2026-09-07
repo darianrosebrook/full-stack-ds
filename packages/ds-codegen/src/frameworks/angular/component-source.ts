@@ -34,6 +34,7 @@ import type {
   DomNodeIR,
   IdRefIR,
   IterationIR,
+  KeyboardActionIR,
   NormalizedChannelIR,
   PropTypeIR,
   ResolvedPropIR,
@@ -41,15 +42,19 @@ import type {
 import { componentNeedsInstanceId } from "../../id-relationships.js";
 import {
   TABLE_COMPOSITION_TAGS,
+  NATIVE_FOCUSABLE_TAGS,
   canonicalTsType,
   channelUpdateMethodName,
+  compositeActivationMember,
   composeBindingProjectionExpression,
   composeChannelUpdateExpression,
   composeValueMapExpression,
   collectContentTransforms,
+  groupKeyboardActionsByPart,
   isHighlightTransform,
   isMarkdownTransform,
   contentBindingOrTransformSource,
+  keyboardModeGateProps,
 } from "../../ir.js";
 import {
   emitNonReactTypeAliases,
@@ -1418,7 +1423,7 @@ function generateDomTreeImports(ir: ComponentIR): string {
   ) {
     coreNames.push("effect");
   }
-  if (ir.interaction?.focusContainer) coreNames.push("ViewChild", "ElementRef");
+  if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) coreNames.push("ViewChild", "ElementRef");
   if (channelInputs(ir).size > 0) coreNames.push("signal", "Injector", "runInInjectionContext", "untracked");
   // When any dom node uses `if: "children"`, the component needs AfterContentInit
   // and ElementRef to detect content projection at runtime.
@@ -1726,6 +1731,9 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     fieldAssociationConsumerPart: assocConsumerPart,
     idRefGetters,
     rootSelectorAnchored: selectorAnchor !== null,
+    keyboardActionsByPart: groupKeyboardActionsByPart(ir.keyboardActions),
+    compositeItemPart: ir.compositeControl?.part.name,
+    compositeMemberExpr: compositeActivationMember(ir.compositeControl),
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `set${capitalizeAngular(booleanChannel.name)}`,
@@ -1884,7 +1892,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     declaredProps.add(dim);
   }
 
-  if (ir.interaction?.focusContainer) {
+  if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) {
     lines.push(`  @ViewChild("interactionPanel") set interactionPanel(element: ElementRef<HTMLElement> | undefined) {`);
     lines.push(`    this.behavior.panelRef.nativeElement = element?.nativeElement ?? null;`);
     lines.push(`  }`);
@@ -1916,6 +1924,12 @@ function generateDomTreeComponent(ir: ComponentIR): string {
       lines.push(
         `    ${trigger.enabledByProp}: this.${trigger.enabledByProp},`,
       );
+    }
+    // FEAT-A11Y-COMPOSITE-KEYBOARD-01: forward the mode gates the keyboard
+    // select behavior reads, getter-shaped so the hook sees live @Input
+    // values on every keydown.
+    for (const gate of keyboardModeGateProps(ir)) {
+      lines.push(`    ${gate}: () => this.${gate},`);
     }
     lines.push(`    destroyRef: this.destroyRef,`);
     lines.push(`  });`);
@@ -2499,6 +2513,29 @@ interface AngularRenderContext {
    * then attribute name. Simple single-ref attributes inline instead.
    */
   idRefGetters?: Map<DomNodeIR, Map<string, string>>;
+  /**
+   * FEAT-A11Y-COMPOSITE-KEYBOARD-01: realized keyboard actions keyed by the
+   * declared `when` part. The walker lowers one `(keydown)` binding per
+   * hosting part; the co-located hook emits the implementation from the
+   * same IR facts.
+   */
+  keyboardActionsByPart?: Map<string, KeyboardActionIR[]>;
+  /** The composite control's item part, when the IR declares one. */
+  compositeItemPart?: string;
+  /** Binding expression the item's click activation passes as the value. */
+  compositeMemberExpr?: BindingExpression;
+}
+
+/**
+ * FEAT-A11Y-COMPOSITE-KEYBOARD-01: whether any DOM node carries the
+ * `keyboardPanel` fact — those nodes need the `interactionPanel` ViewChild
+ * wiring even when the IR declares no focusContainer (the anchor-toggle open
+ * path).
+ */
+function domHasKeyboardPanel(ir: ComponentIR): boolean {
+  const walk = (node: DomNodeIR): boolean =>
+    node.keyboardPanel === true || node.children.some(walk);
+  return ir.dom ? walk(ir.dom) : false;
 }
 
 function renderAngularDomNode(
@@ -2535,7 +2572,9 @@ function renderAngularDomNode(
   }
 
   const attrs: string[] = [];
-  if (node.focusContainer) attrs.push(`#interactionPanel`);
+  // focusContainer (trap/portal panels) and keyboardPanel (a keyboard `open`
+  // action's post-open focus target) both receive the interaction panel ref.
+  if (node.focusContainer || node.keyboardPanel) attrs.push(`#interactionPanel`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -2566,6 +2605,37 @@ function renderAngularDomNode(
     const rendered = renderAngularEvent(eventName, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);
+  }
+
+  // FEAT-A11Y-COMPOSITE-KEYBOARD-01: bind the realized keyboard actions onto
+  // the declared `when` part's node. The handler ident is part-derived and
+  // the co-located hook emits its implementation from the same IR facts.
+  // Angular event bindings pass the event explicitly as `$event`. The
+  // composite item part's handler receives the item value exactly as the
+  // item's click activation passes it, so pointer and keyboard commits stay
+  // semantically identical.
+  const isCompositeItem = ctx.compositeItemPart !== undefined && node.part === ctx.compositeItemPart;
+  if (node.keyboardActions && node.keyboardActions.length > 0 && node.part) {
+    const handlerIdent = `behavior.handle${capitalizeAngular(node.part)}Keydown`;
+    if (isCompositeItem && ctx.compositeMemberExpr) {
+      const memberExpr = renderAngularBindingValue(ctx.compositeMemberExpr, ctx);
+      if (memberExpr !== null) {
+        attrs.push(`(keydown)="${handlerIdent}($event, ${memberExpr})"`);
+      }
+    } else {
+      attrs.push(`(keydown)="${handlerIdent}($event)"`);
+    }
+    // A keyboard host that is not natively focusable must become
+    // programmatically focusable so the delegated keys can fire and the
+    // vue a11y lint holds; -1 keeps it out of tab order.
+    if (!NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+      attrs.push(`tabindex="-1"`);
+    }
+  } else if (isCompositeItem && !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+    // Composite roving item without its own keydown: still a roving focus
+    // target — focusable for the roving focus path but out of tab order
+    // (APG roving tabindex with DOM focus tracking).
+    attrs.push(`tabindex="-1"`);
   }
 
   // componentRef: look up each binding's IR classification (prop vs host attr)

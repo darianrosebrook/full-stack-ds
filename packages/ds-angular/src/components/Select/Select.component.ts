@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, ViewChild, ElementRef, signal, Injector, runInInjectionContext, untracked } from "@angular/core";
 import { NgClass, NgIf, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useSelect } from "./useSelect.js";
@@ -27,11 +27,11 @@ let nextInstanceId = 0;
   imports: [NgClass, NgIf, NgFor],
   host: { "data-fsds-component": "select" },
   template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled" data-fsds-box="">
-  <button [ngClass]="'select__trigger'" type="button" (click)="behavior.setOpen(!behavior.open())" [disabled]="disabled" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-controls]="instanceId + '-options'">
+  <button [ngClass]="'select__trigger'" type="button" (click)="behavior.setOpen(!behavior.open())" (keydown)="behavior.handleTriggerKeydown($event)" [disabled]="disabled" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-controls]="instanceId + '-options'">
     <span [ngClass]="'select__text'"></span>
   </button>
   <ng-container *ngIf="behavior.open()">
-    <div [ngClass]="'select__content'" role="listbox" id="fsds-select-listbox">
+    <div [ngClass]="'select__content'" #interactionPanel role="listbox" id="fsds-select-listbox" (keydown)="behavior.handleContentKeydown($event)" tabindex="-1">
       <ng-container *ngIf="searchable">
         <div [ngClass]="'select__search'">
           <input type="text" />
@@ -39,7 +39,7 @@ let nextInstanceId = 0;
       </ng-container>
       <div [ngClass]="'select__options'" [attr.id]="instanceId + '-options'">
         <ng-container *ngFor="let item of ((options ?? [{'value':'alpha','label':'Alpha'},{'value':'beta','label':'Beta'},{'value':'gamma','label':'Gamma'}])); let index = index">
-          <div [ngClass]="'select__option'" role="option" (click)="applyToggleMembershipSelection(item.value, multiple)" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value">
+          <div [ngClass]="'select__option'" role="option" (click)="applyToggleMembershipSelection(item.value, multiple)" (keydown)="behavior.handleOptionKeydown($event, item.value)" tabindex="-1" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value">
             <span>
               {{ item.label }}
             </span>
@@ -77,6 +77,9 @@ export class SelectComponent {
 
   protected readonly instanceId = `fsds-select-${nextInstanceId++}`;
   @Input() position?: string;
+  @ViewChild("interactionPanel") set interactionPanel(element: ElementRef<HTMLElement> | undefined) {
+    this.behavior.panelRef.nativeElement = element?.nativeElement ?? null;
+  }
 
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
@@ -89,6 +92,7 @@ export class SelectComponent {
     open: () => this.open,
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
+    multiple: () => this.multiple,
     destroyRef: this.destroyRef,
   })));
   }
