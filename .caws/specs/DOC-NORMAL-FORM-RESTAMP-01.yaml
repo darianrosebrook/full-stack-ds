@@ -30,3 +30,11 @@ acceptance:
     then: 'node scripts/docs-claims-check.mjs exits 0 and reports no stale claims/stamps'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run docs:check-claims exit 0 in worktree normal-form-restamp @ d62abea9 — 'OK — 69 marked claim(s) match derived values; 11 verified stamp(s) fresh or ledgered (4 ledgered stale)'; freshness selftest 9 passed, 0 failed"
+    recorded_at: "2026-09-07T05:18:38.097Z"
+    command: "pnpm run docs:check-claims"
+    exit_code: 0
+    commit_sha: d62abea9
