@@ -1,0 +1,20 @@
+EXPECT	LABEL	COMMAND
+BLOCK	real: bare stash verb	git stash
+BLOCK	real: hard reset	git reset --hard HEAD~1
+BLOCK	real: amend	git commit --amend -m "x"
+BLOCK	real: restore	git restore src/app.tsx
+BLOCK	real: clean	git clean -fd
+BLOCK	real: force push	git push --force origin main
+BLOCK	real: chained after benign	git status && git reset --hard HEAD
+ALLOW	payload: commit msg names stash	git commit -m "docs: explain why git stash is refused"
+ALLOW	payload: echo label names hard reset	echo "next step: git reset --hard is blocked"
+ALLOW	payload: grep pattern names amend	grep -rn "git commit --amend" docs/
+ALLOW	payload: cat heredoc names hard reset	cat > tmp/note.md <<EOF\nNever run git reset --hard here.\nEOF
+ALLOW	payload: tee heredoc names force push	tee tmp/n.md <<EOF\nDo not git push --force.\nEOF
+BYPASS-BLOCK	bypass: bash heredoc runs hard reset	bash <<'EOF'\ngit reset --hard HEAD~1\nEOF
+BYPASS-BLOCK	bypass: sh heredoc runs stash	sh <<EOF\ngit stash\nEOF
+BYPASS-BLOCK	bypass: bash -c cat decoy heredoc	bash -c "cat tmp/x" <<EOF\ngit reset --hard HEAD~1\nEOF
+BYPASS-BLOCK	bypass: piped-to-bash heredoc	cat <<EOF | bash\ngit clean -fd\nEOF
+ALLOW	benign: git status	git status --short
+ALLOW	benign: git log	git log --oneline -3
+ALLOW	benign: quoted path with spaces	git add "docs/my notes/file.md"
