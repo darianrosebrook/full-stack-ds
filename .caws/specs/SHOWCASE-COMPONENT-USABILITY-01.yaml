@@ -72,3 +72,7 @@ evidence:
     status: pass
     evidence_ref: "e2e/showcase-usability.spec.ts: panel buttons, palette actions and Command-Backslash collapse/restore with focus recovery PASS. Evidence: tmp/showcase-usability/e2e-final.log."
     recorded_at: "2026-09-10T23:16:01.749Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "e2e/showcase-usability.spec.ts: brand-first layer order, references reveal hidden destinations, token URL reload and selected-brand permalink PASS. Evidence: tmp/showcase-usability/e2e-final.log."
+    recorded_at: "2026-09-10T23:16:02.767Z"
