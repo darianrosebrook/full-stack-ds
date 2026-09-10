@@ -40,15 +40,23 @@ let nextInstanceId = 0;
     </p>
   </div>
   <div [ngClass]="'walkthrough__controls'">
-    <button [ngClass]="'walkthrough__skip'" type="button" aria-label="Skip tour"></button>
-    <button [ngClass]="'walkthrough__prev'" type="button" aria-label="Previous step"></button>
+    <button [ngClass]="'walkthrough__skip'" type="button" (click)="onSkip && onSkip()" aria-label="Skip tour">
+      {{ 'Skip' }}
+    </button>
+    <button [ngClass]="'walkthrough__prev'" type="button" (click)="onPrevious && onPrevious()" aria-label="Previous step" [disabled]="(previousDisabled ?? false)">
+      {{ 'Previous' }}
+    </button>
     <div [ngClass]="'walkthrough__dots'">
       <ng-container *ngFor="let item of ((steps ?? [{'anchor':'#step-1','title':'Welcome to the tour'},{'anchor':'#step-2','title':'Browse your dashboard'},{'anchor':'#step-3','title':'Configure preferences'}])); let index = index">
-        <button [ngClass]="'walkthrough__dot'" type="button" [attr.aria-label]="item.title" [attr.data-step-index]="index"></button>
+        <button [ngClass]="'walkthrough__dot'" type="button" (click)="behavior.setStep(index)" [attr.aria-label]="item.title" [attr.data-step-index]="index"></button>
       </ng-container>
     </div>
-    <span [ngClass]="'walkthrough__counter'"></span>
-    <button [ngClass]="'walkthrough__next'" type="button" aria-label="Next step"></button>
+    <span [ngClass]="'walkthrough__counter'">
+      {{ progressLabel }}
+    </span>
+    <button [ngClass]="'walkthrough__next'" type="button" (click)="onNext && onNext()" [attr.aria-label]="(nextLabel ?? 'Next')">
+      {{ (nextLabel ?? 'Next') }}
+    </button>
   </div>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,6 +75,11 @@ export class WalkthroughComponent implements OnInit, OnDestroy {
   @Input() autoStart?: boolean = false;
   @Input() closeOnOutsideClick?: boolean = false;
   @Input() placement?: WalkthroughPlacement = "auto";
+  @Input() onPrevious?: () => void;
+  @Input() onNext?: () => void;
+  @Input() previousDisabled?: boolean = false;
+  @Input() nextLabel?: string = "Next";
+  @Input() progressLabel?: string;
   @Input() class?: string;
 
   protected readonly instanceId = `fsds-walkthrough-${nextInstanceId++}`;

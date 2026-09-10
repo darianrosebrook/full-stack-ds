@@ -10,7 +10,6 @@ import { StackElement as _Stack } from '../../primitives/index.js';
 // @custom:end
 
 // @generated:start types
-export type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" | "category" | "complexity";
 export type CardDensity = "default" | "inset";
 // @generated:end
 
@@ -81,39 +80,11 @@ export class CardElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
-      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    }
-
-    .card--completed {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
-    }
-
-    .card--in-progress {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
-    }
-
-    .card--planned {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
-    }
-
-    .card--deprecated {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
-    }
-
-    .card--category {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
-    }
-
-    .card--complexity {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
@@ -176,36 +147,6 @@ export class CardElement extends LitElement {
       transform: translateY(0);
     }
 
-    .card--completed {
-      border-inline-start-width: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--in-progress {
-      border-inline-start-width: var(--fsds-card-design-condition-35277c40062a-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-35277c40062a-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--planned {
-      border-inline-start-width: var(--fsds-card-design-condition-0ece19181290-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0ece19181290-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--deprecated {
-      border-inline-start-width: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--category {
-      border-inline-start-width: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--complexity {
-      border-inline-start-width: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
     .card--inset {
       padding: var(--fsds-card-design-condition-6f2ce0f02c89-spacing-padding, var(--fsds-card-size-padding-inset, 8px));
     }
@@ -259,12 +200,7 @@ export class CardElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-design-badge-background-fill, var(--fsds-card-color-badge-accent-background, #d92d2e));
-      color: var(--fsds-card-design-badge-foreground-color, var(--fsds-card-color-badge-accent-foreground, #ffffff));
-      padding: var(--fsds-card-design-badge-spacing-padding, 2px 8px);
-      border-radius: var(--fsds-card-design-badge-shape-radius, 9999px);
-      font-size: var(--fsds-card-design-badge-typography-size, 0.75em);
-      line-height: var(--fsds-card-design-badge-typography-line-height, 1.4);
+      align-self: flex-start;
     }
 
     .card__link {
@@ -291,14 +227,11 @@ export class CardElement extends LitElement {
   @property({ type: Boolean })
   interactive?: boolean;
   @property({ type: String })
-  status?: CardStatus;
-  @property({ type: String })
   density?: CardDensity = "default";
 
   override render() {
     const classes = {
       'card': true,
-      [`card--${this.status}`]: !!this.status,
       [`card--${(this.density ?? "default")}`]: !!(this.density ?? "default"),
       'card--interactive': !!this.interactive,
     };
@@ -370,39 +303,11 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
-      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    }
-
-    .card--completed {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
-    }
-
-    .card--in-progress {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
-    }
-
-    .card--planned {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
-    }
-
-    .card--deprecated {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
-    }
-
-    .card--category {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
-    }
-
-    .card--complexity {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
@@ -465,36 +370,6 @@ export class CardHeaderElement extends LitElement {
       transform: translateY(0);
     }
 
-    .card--completed {
-      border-inline-start-width: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--in-progress {
-      border-inline-start-width: var(--fsds-card-design-condition-35277c40062a-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-35277c40062a-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--planned {
-      border-inline-start-width: var(--fsds-card-design-condition-0ece19181290-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0ece19181290-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--deprecated {
-      border-inline-start-width: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--category {
-      border-inline-start-width: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--complexity {
-      border-inline-start-width: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
     .card--inset {
       padding: var(--fsds-card-design-condition-6f2ce0f02c89-spacing-padding, var(--fsds-card-size-padding-inset, 8px));
     }
@@ -548,12 +423,7 @@ export class CardHeaderElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-design-badge-background-fill, var(--fsds-card-color-badge-accent-background, #d92d2e));
-      color: var(--fsds-card-design-badge-foreground-color, var(--fsds-card-color-badge-accent-foreground, #ffffff));
-      padding: var(--fsds-card-design-badge-spacing-padding, 2px 8px);
-      border-radius: var(--fsds-card-design-badge-shape-radius, 9999px);
-      font-size: var(--fsds-card-design-badge-typography-size, 0.75em);
-      line-height: var(--fsds-card-design-badge-typography-line-height, 1.4);
+      align-self: flex-start;
     }
 
     .card__link {
@@ -640,39 +510,11 @@ export class CardMediaElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
-      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    }
-
-    .card--completed {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
-    }
-
-    .card--in-progress {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
-    }
-
-    .card--planned {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
-    }
-
-    .card--deprecated {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
-    }
-
-    .card--category {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
-    }
-
-    .card--complexity {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
@@ -735,36 +577,6 @@ export class CardMediaElement extends LitElement {
       transform: translateY(0);
     }
 
-    .card--completed {
-      border-inline-start-width: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--in-progress {
-      border-inline-start-width: var(--fsds-card-design-condition-35277c40062a-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-35277c40062a-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--planned {
-      border-inline-start-width: var(--fsds-card-design-condition-0ece19181290-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0ece19181290-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--deprecated {
-      border-inline-start-width: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--category {
-      border-inline-start-width: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--complexity {
-      border-inline-start-width: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
     .card--inset {
       padding: var(--fsds-card-design-condition-6f2ce0f02c89-spacing-padding, var(--fsds-card-size-padding-inset, 8px));
     }
@@ -818,12 +630,7 @@ export class CardMediaElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-design-badge-background-fill, var(--fsds-card-color-badge-accent-background, #d92d2e));
-      color: var(--fsds-card-design-badge-foreground-color, var(--fsds-card-color-badge-accent-foreground, #ffffff));
-      padding: var(--fsds-card-design-badge-spacing-padding, 2px 8px);
-      border-radius: var(--fsds-card-design-badge-shape-radius, 9999px);
-      font-size: var(--fsds-card-design-badge-typography-size, 0.75em);
-      line-height: var(--fsds-card-design-badge-typography-line-height, 1.4);
+      align-self: flex-start;
     }
 
     .card__link {
@@ -910,39 +717,11 @@ export class CardContentElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
-      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    }
-
-    .card--completed {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
-    }
-
-    .card--in-progress {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
-    }
-
-    .card--planned {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
-    }
-
-    .card--deprecated {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
-    }
-
-    .card--category {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
-    }
-
-    .card--complexity {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
@@ -1005,36 +784,6 @@ export class CardContentElement extends LitElement {
       transform: translateY(0);
     }
 
-    .card--completed {
-      border-inline-start-width: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--in-progress {
-      border-inline-start-width: var(--fsds-card-design-condition-35277c40062a-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-35277c40062a-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--planned {
-      border-inline-start-width: var(--fsds-card-design-condition-0ece19181290-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0ece19181290-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--deprecated {
-      border-inline-start-width: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--category {
-      border-inline-start-width: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--complexity {
-      border-inline-start-width: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
     .card--inset {
       padding: var(--fsds-card-design-condition-6f2ce0f02c89-spacing-padding, var(--fsds-card-size-padding-inset, 8px));
     }
@@ -1088,12 +837,7 @@ export class CardContentElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-design-badge-background-fill, var(--fsds-card-color-badge-accent-background, #d92d2e));
-      color: var(--fsds-card-design-badge-foreground-color, var(--fsds-card-color-badge-accent-foreground, #ffffff));
-      padding: var(--fsds-card-design-badge-spacing-padding, 2px 8px);
-      border-radius: var(--fsds-card-design-badge-shape-radius, 9999px);
-      font-size: var(--fsds-card-design-badge-typography-size, 0.75em);
-      line-height: var(--fsds-card-design-badge-typography-line-height, 1.4);
+      align-self: flex-start;
     }
 
     .card__link {
@@ -1180,39 +924,11 @@ export class CardFooterElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
-      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    }
-
-    .card--completed {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
-    }
-
-    .card--in-progress {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
-    }
-
-    .card--planned {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
-    }
-
-    .card--deprecated {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
-    }
-
-    .card--category {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
-    }
-
-    .card--complexity {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
@@ -1275,36 +991,6 @@ export class CardFooterElement extends LitElement {
       transform: translateY(0);
     }
 
-    .card--completed {
-      border-inline-start-width: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--in-progress {
-      border-inline-start-width: var(--fsds-card-design-condition-35277c40062a-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-35277c40062a-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--planned {
-      border-inline-start-width: var(--fsds-card-design-condition-0ece19181290-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0ece19181290-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--deprecated {
-      border-inline-start-width: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--category {
-      border-inline-start-width: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--complexity {
-      border-inline-start-width: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
     .card--inset {
       padding: var(--fsds-card-design-condition-6f2ce0f02c89-spacing-padding, var(--fsds-card-size-padding-inset, 8px));
     }
@@ -1358,12 +1044,7 @@ export class CardFooterElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-design-badge-background-fill, var(--fsds-card-color-badge-accent-background, #d92d2e));
-      color: var(--fsds-card-design-badge-foreground-color, var(--fsds-card-color-badge-accent-foreground, #ffffff));
-      padding: var(--fsds-card-design-badge-spacing-padding, 2px 8px);
-      border-radius: var(--fsds-card-design-badge-shape-radius, 9999px);
-      font-size: var(--fsds-card-design-badge-typography-size, 0.75em);
-      line-height: var(--fsds-card-design-badge-typography-line-height, 1.4);
+      align-self: flex-start;
     }
 
     .card__link {
@@ -1450,39 +1131,11 @@ export class CardActionsElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
-      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    }
-
-    .card--completed {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
-    }
-
-    .card--in-progress {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
-    }
-
-    .card--planned {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
-    }
-
-    .card--deprecated {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
-    }
-
-    .card--category {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
-    }
-
-    .card--complexity {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
@@ -1545,36 +1198,6 @@ export class CardActionsElement extends LitElement {
       transform: translateY(0);
     }
 
-    .card--completed {
-      border-inline-start-width: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--in-progress {
-      border-inline-start-width: var(--fsds-card-design-condition-35277c40062a-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-35277c40062a-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--planned {
-      border-inline-start-width: var(--fsds-card-design-condition-0ece19181290-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0ece19181290-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--deprecated {
-      border-inline-start-width: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--category {
-      border-inline-start-width: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--complexity {
-      border-inline-start-width: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
     .card--inset {
       padding: var(--fsds-card-design-condition-6f2ce0f02c89-spacing-padding, var(--fsds-card-size-padding-inset, 8px));
     }
@@ -1628,12 +1251,7 @@ export class CardActionsElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-design-badge-background-fill, var(--fsds-card-color-badge-accent-background, #d92d2e));
-      color: var(--fsds-card-design-badge-foreground-color, var(--fsds-card-color-badge-accent-foreground, #ffffff));
-      padding: var(--fsds-card-design-badge-spacing-padding, 2px 8px);
-      border-radius: var(--fsds-card-design-badge-shape-radius, 9999px);
-      font-size: var(--fsds-card-design-badge-typography-size, 0.75em);
-      line-height: var(--fsds-card-design-badge-typography-line-height, 1.4);
+      align-self: flex-start;
     }
 
     .card__link {
@@ -1720,39 +1338,11 @@ export class CardBadgeElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
-      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    }
-
-    .card--completed {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
-    }
-
-    .card--in-progress {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
-    }
-
-    .card--planned {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
-    }
-
-    .card--deprecated {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
-    }
-
-    .card--category {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
-    }
-
-    .card--complexity {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
@@ -1815,36 +1405,6 @@ export class CardBadgeElement extends LitElement {
       transform: translateY(0);
     }
 
-    .card--completed {
-      border-inline-start-width: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--in-progress {
-      border-inline-start-width: var(--fsds-card-design-condition-35277c40062a-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-35277c40062a-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--planned {
-      border-inline-start-width: var(--fsds-card-design-condition-0ece19181290-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0ece19181290-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--deprecated {
-      border-inline-start-width: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--category {
-      border-inline-start-width: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--complexity {
-      border-inline-start-width: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
     .card--inset {
       padding: var(--fsds-card-design-condition-6f2ce0f02c89-spacing-padding, var(--fsds-card-size-padding-inset, 8px));
     }
@@ -1898,12 +1458,7 @@ export class CardBadgeElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-design-badge-background-fill, var(--fsds-card-color-badge-accent-background, #d92d2e));
-      color: var(--fsds-card-design-badge-foreground-color, var(--fsds-card-color-badge-accent-foreground, #ffffff));
-      padding: var(--fsds-card-design-badge-spacing-padding, 2px 8px);
-      border-radius: var(--fsds-card-design-badge-shape-radius, 9999px);
-      font-size: var(--fsds-card-design-badge-typography-size, 0.75em);
-      line-height: var(--fsds-card-design-badge-typography-line-height, 1.4);
+      align-self: flex-start;
     }
 
     .card__link {
@@ -1990,39 +1545,11 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
-      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    }
-
-    .card--completed {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
-    }
-
-    .card--in-progress {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
-    }
-
-    .card--planned {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
-    }
-
-    .card--deprecated {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
-    }
-
-    .card--category {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
-    }
-
-    .card--complexity {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
@@ -2085,36 +1612,6 @@ export class CardDescriptionElement extends LitElement {
       transform: translateY(0);
     }
 
-    .card--completed {
-      border-inline-start-width: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--in-progress {
-      border-inline-start-width: var(--fsds-card-design-condition-35277c40062a-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-35277c40062a-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--planned {
-      border-inline-start-width: var(--fsds-card-design-condition-0ece19181290-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0ece19181290-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--deprecated {
-      border-inline-start-width: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--category {
-      border-inline-start-width: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--complexity {
-      border-inline-start-width: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
     .card--inset {
       padding: var(--fsds-card-design-condition-6f2ce0f02c89-spacing-padding, var(--fsds-card-size-padding-inset, 8px));
     }
@@ -2168,12 +1665,7 @@ export class CardDescriptionElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-design-badge-background-fill, var(--fsds-card-color-badge-accent-background, #d92d2e));
-      color: var(--fsds-card-design-badge-foreground-color, var(--fsds-card-color-badge-accent-foreground, #ffffff));
-      padding: var(--fsds-card-design-badge-spacing-padding, 2px 8px);
-      border-radius: var(--fsds-card-design-badge-shape-radius, 9999px);
-      font-size: var(--fsds-card-design-badge-typography-size, 0.75em);
-      line-height: var(--fsds-card-design-badge-typography-line-height, 1.4);
+      align-self: flex-start;
     }
 
     .card__link {
@@ -2260,39 +1752,11 @@ export class CardLinkElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
-      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    }
-
-    .card--completed {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
-    }
-
-    .card--in-progress {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
-    }
-
-    .card--planned {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
-    }
-
-    .card--deprecated {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
-    }
-
-    .card--category {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
-    }
-
-    .card--complexity {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
@@ -2355,36 +1819,6 @@ export class CardLinkElement extends LitElement {
       transform: translateY(0);
     }
 
-    .card--completed {
-      border-inline-start-width: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--in-progress {
-      border-inline-start-width: var(--fsds-card-design-condition-35277c40062a-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-35277c40062a-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--planned {
-      border-inline-start-width: var(--fsds-card-design-condition-0ece19181290-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0ece19181290-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--deprecated {
-      border-inline-start-width: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--category {
-      border-inline-start-width: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--complexity {
-      border-inline-start-width: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
     .card--inset {
       padding: var(--fsds-card-design-condition-6f2ce0f02c89-spacing-padding, var(--fsds-card-size-padding-inset, 8px));
     }
@@ -2438,12 +1872,7 @@ export class CardLinkElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-design-badge-background-fill, var(--fsds-card-color-badge-accent-background, #d92d2e));
-      color: var(--fsds-card-design-badge-foreground-color, var(--fsds-card-color-badge-accent-foreground, #ffffff));
-      padding: var(--fsds-card-design-badge-spacing-padding, 2px 8px);
-      border-radius: var(--fsds-card-design-badge-shape-radius, 9999px);
-      font-size: var(--fsds-card-design-badge-typography-size, 0.75em);
-      line-height: var(--fsds-card-design-badge-typography-line-height, 1.4);
+      align-self: flex-start;
     }
 
     .card__link {
@@ -2530,39 +1959,11 @@ export class CardNoteElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-line-height-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-line-height-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d92d2e);
-      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-light, #b8b8b8);
-      --fsds-card-size-status-accent-width: var(--fsds-core-spacing-size-02, 2px);
       --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a);
       --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a);
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    }
-
-    .card--completed {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-success, #3a6614);
-    }
-
-    .card--in-progress {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-info, #034fd6);
-    }
-
-    .card--planned {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-subtle, #d0d0d0);
-    }
-
-    .card--deprecated {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-danger, #b31b1b);
-    }
-
-    .card--category {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-accent, #d92d2e);
-    }
-
-    .card--complexity {
-      --fsds-card-color-status-accent-default: var(--fsds-semantic-color-border-warning, #8b4b00);
     }
 
     .card__description {
@@ -2625,36 +2026,6 @@ export class CardNoteElement extends LitElement {
       transform: translateY(0);
     }
 
-    .card--completed {
-      border-inline-start-width: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0d72af7a8245-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--in-progress {
-      border-inline-start-width: var(--fsds-card-design-condition-35277c40062a-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-35277c40062a-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--planned {
-      border-inline-start-width: var(--fsds-card-design-condition-0ece19181290-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-0ece19181290-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--deprecated {
-      border-inline-start-width: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-ddee479df9ee-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--category {
-      border-inline-start-width: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
-    .card--complexity {
-      border-inline-start-width: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-width, var(--fsds-card-size-status-accent-width, 2px));
-      border-inline-start-color: var(--fsds-card-design-condition-a5c1a383a389-border-inline-start-color, var(--fsds-card-color-status-accent-default, #b8b8b8));
-    }
-
     .card--inset {
       padding: var(--fsds-card-design-condition-6f2ce0f02c89-spacing-padding, var(--fsds-card-size-padding-inset, 8px));
     }
@@ -2708,12 +2079,7 @@ export class CardNoteElement extends LitElement {
     .card__badge {
       display: inline-flex;
       align-items: center;
-      background-color: var(--fsds-card-design-badge-background-fill, var(--fsds-card-color-badge-accent-background, #d92d2e));
-      color: var(--fsds-card-design-badge-foreground-color, var(--fsds-card-color-badge-accent-foreground, #ffffff));
-      padding: var(--fsds-card-design-badge-spacing-padding, 2px 8px);
-      border-radius: var(--fsds-card-design-badge-shape-radius, 9999px);
-      font-size: var(--fsds-card-design-badge-typography-size, 0.75em);
-      line-height: var(--fsds-card-design-badge-typography-line-height, 1.4);
+      align-self: flex-start;
     }
 
     .card__link {

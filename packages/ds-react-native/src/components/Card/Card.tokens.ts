@@ -70,18 +70,6 @@ export const cardTokenScopes = {
       ref: "semantic.shape.radius.medium",
       fallback: 8,
     },
-    "card.color.statusAccent.default": {
-      name: "card.color.statusAccent.default",
-      cssVar: "--fsds-card-color-status-accent-default",
-      ref: "semantic.color.border.light",
-      fallback: "#b8b8b8",
-    },
-    "card.size.statusAccent.width": {
-      name: "card.size.statusAccent.width",
-      cssVar: "--fsds-card-size-status-accent-width",
-      ref: "core.spacing.size.02",
-      fallback: 2,
-    },
   },
 } satisfies ComponentTokenScopes;
 

@@ -9,7 +9,6 @@ import { Stack } from "../../primitives/index.js";
 // @custom:end
 
 // @generated:start types
-export type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" | "category" | "complexity";
 export type CardDensity = "default" | "inset";
 // @generated:end
 
@@ -20,7 +19,6 @@ export type CardDensity = "default" | "inset";
 // @generated:start props
 interface Props {
   interactive?: boolean;
-  status?: CardStatus;
   density?: CardDensity;
   class?: string;
   "data-testid"?: string;
@@ -37,7 +35,6 @@ const props = withDefaults(defineProps<Props>(), {
 // @generated:start classes
 const classNames = computed(() => [
   "card",
-  props.status ? `card--${props.status}` : null,
   props.density ? `card--${props.density}` : null,
   props.interactive ? "card--interactive" : null,
   props.class,

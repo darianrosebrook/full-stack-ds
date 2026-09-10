@@ -31,12 +31,17 @@ interface Props {
   autoStart?: boolean;
   closeOnOutsideClick?: boolean;
   placement?: WalkthroughPlacement;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  previousDisabled?: boolean;
+  nextLabel?: string;
+  progressLabel?: string;
   class?: string;
   description?: import('svelte').Snippet;
   title?: import('svelte').Snippet;
 }
 
-let { steps = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}], index, defaultIndex = 0, onStepChange, onComplete, onSkip, label = "Feature tour", storageKey, autoStart = false, closeOnOutsideClick = false, placement = "auto", class: className, description, title }: Props = $props();
+let { steps = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}], index, defaultIndex = 0, onStepChange, onComplete, onSkip, label = "Feature tour", storageKey, autoStart = false, closeOnOutsideClick = false, placement = "auto", onPrevious, onNext, previousDisabled = false, nextLabel = "Next", progressLabel, class: className, description, title }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -93,14 +98,14 @@ const instanceId = $props.id();
     </p>
   </div>
   <div class={'walkthrough__controls'}>
-    <button class={'walkthrough__skip'} type="button" aria-label="Skip tour"></button>
-    <button class={'walkthrough__prev'} type="button" aria-label="Previous step"></button>
+    <button class={'walkthrough__skip'} type="button" onclick={onSkip} aria-label="Skip tour">Skip</button>
+    <button class={'walkthrough__prev'} type="button" onclick={onPrevious} aria-label="Previous step" disabled={previousDisabled}>Previous</button>
     <div class={'walkthrough__dots'}>
       {#each (steps ?? []) as item, index (index)}
-      <button class={'walkthrough__dot'} type="button" aria-label={item.title} data-step-index={index}></button>
+      <button class={'walkthrough__dot'} type="button" onclick={() => behavior.setStep(index)} aria-label={item.title} data-step-index={index}></button>
       {/each}
     </div>
-    <span class={'walkthrough__counter'}></span>
-    <button class={'walkthrough__next'} type="button" aria-label="Next step"></button>
+    <span class={'walkthrough__counter'}>{progressLabel}</span>
+    <button class={'walkthrough__next'} type="button" onclick={onNext} aria-label={nextLabel}>{nextLabel}</button>
   </div>
 </div>

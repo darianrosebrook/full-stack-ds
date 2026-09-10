@@ -55,7 +55,7 @@
         "role": "group"
       },
       "badge": {
-        "description": "Compact status, category, or count marker associated with the card.",
+        "description": "Unpainted metadata region for a composed Badge or Status component.",
         "subcomponent": true,
         "role": "context"
       },
@@ -83,17 +83,17 @@
       "members": [
         {
           "name": "interactive",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Enable hover affordances (shadow lift, translate)"
         },
         {
-          "name": "status",
-          "propType": { "kind": "ref", "to": "CardStatus" },
-          "description": "Visual status variant of the card"
-        },
-        {
           "name": "density",
-          "propType": { "kind": "ref", "to": "CardDensity" },
+          "propType": {
+            "kind": "ref",
+            "to": "CardDensity"
+          },
           "description": "Padding and border treatment. Use 'inset' for compact tiles inside a list or grid where the surrounding container provides primary structure.",
           "default": "default"
         }
@@ -101,17 +101,6 @@
     }
   },
   "types": {
-    "CardStatus": {
-      "kind": "union",
-      "values": [
-        "completed",
-        "in-progress",
-        "planned",
-        "deprecated",
-        "category",
-        "complexity"
-      ]
-    },
     "CardDensity": {
       "kind": "union",
       "values": [
@@ -121,14 +110,6 @@
     }
   },
   "variants": {
-    "status": [
-      "completed",
-      "in-progress",
-      "planned",
-      "deprecated",
-      "category",
-      "complexity"
-    ],
     "density": [
       "default",
       "inset"
@@ -220,7 +201,7 @@
     "category": "display",
     "usageHints": [
       "Use Card.Link to make the entire card clickable",
-      "Keep Card.Actions to 1–2 actions; move secondary actions to an overflow menu",
+      "Keep Card.Actions to 1\u20132 actions; move secondary actions to an overflow menu",
       "Card.Media expects a fixed-aspect image or media slot"
     ],
     "children": {

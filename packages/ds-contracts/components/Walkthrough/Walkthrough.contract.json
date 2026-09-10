@@ -1,7 +1,7 @@
 {
   "$schema": "../../component.contract.schema.json",
   "name": "Walkthrough",
-  "description": "Step-by-step guided tour overlay anchored to page elements. Manages step progression and keyboard navigation.",
+  "description": "Guided tour surface anchored to page elements. Consumers control visibility, step content and previous/next boundaries; step dots emit the selected index.",
   "layer": "composer",
   "category": "structure",
   "anatomy": {
@@ -112,13 +112,13 @@
             "role": "group"
           },
           "children": [
-        {
-          "tag": "h3",
-          "part": "title",
-          "bindings": {
-            "aria-label": "prop:label"
-          },
-          "children": [
+            {
+              "tag": "h3",
+              "part": "title",
+              "bindings": {
+                "aria-label": "prop:label"
+              },
+              "children": [
                 {
                   "tag": "slot",
                   "name": "title"
@@ -144,22 +144,31 @@
             {
               "tag": "button",
               "part": "skip",
-          "attrs": {
-            "type": "button"
-          },
-          "bindings": {
-            "aria-label": "literal:Skip tour"
-              }
+              "attrs": {
+                "type": "button"
+              },
+              "bindings": {
+                "aria-label": "literal:Skip tour"
+              },
+              "events": {
+                "click": "prop:onSkip"
+              },
+              "content": "literal:Skip"
             },
             {
               "tag": "button",
               "part": "prev",
-          "attrs": {
-            "type": "button"
-          },
-          "bindings": {
-            "aria-label": "literal:Previous step"
-              }
+              "attrs": {
+                "type": "button"
+              },
+              "bindings": {
+                "aria-label": "literal:Previous step",
+                "disabled": "prop:previousDisabled"
+              },
+              "events": {
+                "click": "prop:onPrevious"
+              },
+              "content": "literal:Previous"
             },
             {
               "tag": "div",
@@ -179,13 +188,18 @@
                   "bindings": {
                     "aria-label": "iter:item.title",
                     "data-step-index": "iter:index"
+                  },
+                  "events": {
+                    "click": "channel:step.onChange(iter:index)"
                   }
                 }
               ]
             },
             {
               "tag": "span",
-              "part": "counter"
+              "part": "counter",
+              "bindings": {},
+              "content": "prop:progressLabel"
             },
             {
               "tag": "button",
@@ -194,8 +208,12 @@
                 "type": "button"
               },
               "bindings": {
-                "aria-label": "literal:Next step"
-              }
+                "aria-label": "prop:nextLabel"
+              },
+              "events": {
+                "click": "prop:onNext"
+              },
+              "content": "prop:nextLabel"
             }
           ]
         }
@@ -208,12 +226,27 @@
       "members": [
         {
           "name": "steps",
-          "propType": { "kind": "array", "items": { "kind": "ref", "to": "WalkthroughStepSpec" } },
+          "propType": {
+            "kind": "array",
+            "items": {
+              "kind": "ref",
+              "to": "WalkthroughStepSpec"
+            }
+          },
           "description": "Array of step definitions, each specifying an anchor target and content.",
           "default": [
-            { "anchor": "#step-1", "title": "Welcome to the tour" },
-            { "anchor": "#step-2", "title": "Browse your dashboard" },
-            { "anchor": "#step-3", "title": "Configure preferences" }
+            {
+              "anchor": "#step-1",
+              "title": "Welcome to the tour"
+            },
+            {
+              "anchor": "#step-2",
+              "title": "Browse your dashboard"
+            },
+            {
+              "anchor": "#step-3",
+              "title": "Configure preferences"
+            }
           ]
         },
         {
@@ -270,6 +303,33 @@
           "type": "WalkthroughPlacement",
           "description": "Preferred placement of the walkthrough panel relative to its anchor.",
           "default": "auto"
+        },
+        {
+          "name": "onPrevious",
+          "type": "() => void",
+          "description": "Requests the previous step. The consumer controls step boundaries and updates index."
+        },
+        {
+          "name": "onNext",
+          "type": "() => void",
+          "description": "Requests the next step or completion. The consumer updates index or closes the tour."
+        },
+        {
+          "name": "previousDisabled",
+          "type": "boolean",
+          "default": false,
+          "description": "Disables previous-step navigation at a consumer-defined boundary."
+        },
+        {
+          "name": "nextLabel",
+          "type": "string",
+          "default": "Next",
+          "description": "Visible label for the next-step action, such as Finish on the final step."
+        },
+        {
+          "name": "progressLabel",
+          "type": "string",
+          "description": "Visible progress text supplied by the consumer, such as 1 of 3."
         }
       ]
     }
@@ -341,7 +401,7 @@
     "transitions": [
       {
         "name": "open",
-        "trigger": "openness=hidden→visible",
+        "trigger": "openness=hidden\u2192visible",
         "phase": "enter",
         "properties": [
           "opacity",
@@ -352,7 +412,7 @@
       },
       {
         "name": "close",
-        "trigger": "openness=visible→hidden",
+        "trigger": "openness=visible\u2192hidden",
         "phase": "exit",
         "properties": [
           "opacity"
@@ -499,11 +559,11 @@
   "a2ui": {
     "category": "overlay",
     "usageHints": [
-      "Define each step as a WalkthroughStep with an anchor ref and content",
-      "WalkthroughAnchor wraps the element each step points to",
-      "Use WalkthroughControls and WalkthroughProgress for navigation UI",
-      "Keyboard: ArrowRight/ArrowLeft navigate steps; Escape closes the tour",
-      "The walkthrough is non-blocking — it does not trap focus to the panel"
+      "Supply real anchor selectors for each step",
+      "Control index and update title and description slots for the active step",
+      "Handle onPrevious, onNext and onSkip to manage step boundaries and visibility",
+      "Use previousDisabled, nextLabel and progressLabel to describe progression",
+      "The walkthrough is non-blocking and does not trap focus"
     ],
     "children": {
       "allowed": true,

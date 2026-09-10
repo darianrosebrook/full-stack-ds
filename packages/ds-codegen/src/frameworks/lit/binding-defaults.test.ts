@@ -281,3 +281,13 @@ describe("FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: no-default props stay bare 
     expect(src).not.toMatch(/this\.decorative \?\? /);
   });
 });
+
+it('uses a declared boolean default once at an attribute binding', () => {
+  const contract = structuredClone(CONDITIONAL_CONTRACT);
+  if (!contract.anatomy || Array.isArray(contract.anatomy)) throw new Error('DOM fixture required');
+  contract.anatomy.dom!.tag = 'button';
+  contract.anatomy.dom!.bindings = { disabled: 'prop:decorative' };
+  const source = generateLitComponentSource(buildComponentIR(contract));
+  expect(source).toContain('?disabled=${(this.decorative ?? true)}');
+  expect(source).not.toContain('(this.decorative ?? true) ?? false');
+});

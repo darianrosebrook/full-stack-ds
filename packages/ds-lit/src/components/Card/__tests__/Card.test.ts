@@ -24,36 +24,6 @@ describe("Card — unit", () => {
     expect(classTokens(stack)).toContain("card");
   });
 
-  it("applies status=completed variant class", async () => {
-    const { stack } = await renderElement("fsds-card", { "status": "completed" });
-    expect(classTokens(stack)).toContain("card--completed");
-  });
-
-  it("applies status=in-progress variant class", async () => {
-    const { stack } = await renderElement("fsds-card", { "status": "in-progress" });
-    expect(classTokens(stack)).toContain("card--in-progress");
-  });
-
-  it("applies status=planned variant class", async () => {
-    const { stack } = await renderElement("fsds-card", { "status": "planned" });
-    expect(classTokens(stack)).toContain("card--planned");
-  });
-
-  it("applies status=deprecated variant class", async () => {
-    const { stack } = await renderElement("fsds-card", { "status": "deprecated" });
-    expect(classTokens(stack)).toContain("card--deprecated");
-  });
-
-  it("applies status=category variant class", async () => {
-    const { stack } = await renderElement("fsds-card", { "status": "category" });
-    expect(classTokens(stack)).toContain("card--category");
-  });
-
-  it("applies status=complexity variant class", async () => {
-    const { stack } = await renderElement("fsds-card", { "status": "complexity" });
-    expect(classTokens(stack)).toContain("card--complexity");
-  });
-
   it("applies density=default variant class", async () => {
     const { stack } = await renderElement("fsds-card", { "density": "default" });
     expect(classTokens(stack)).toContain("card--default");

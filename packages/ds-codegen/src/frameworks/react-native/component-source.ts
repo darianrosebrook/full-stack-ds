@@ -53,6 +53,7 @@ interface RuntimeUsage {
   props: Set<string>;
   channels: Set<string>;
   channelSetters: Set<string>;
+  channelValues: Set<string>;
 }
 
 /**
@@ -691,6 +692,7 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
     props: new Set(["style", "testID", "accessibilityLabel", "accessibilityLabelledBy"]),
     channels: new Set(),
     channelSetters: new Set(),
+    channelValues: new Set(),
   };
   if (rootPressableAcceptsOnPress(ir)) usage.props.add("onPress");
 
@@ -698,6 +700,7 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
     const channel = ir.behavior.normalizedChannels[0];
     if (channel) {
       usage.channels.add(channel.name);
+      usage.channelValues.add(channel.name);
       usage.channelSetters.add(channel.name);
     }
     addPropIfPresent(ir, usage, "disabled");
@@ -709,6 +712,7 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
     const channel = ir.behavior.normalizedChannels[0];
     if (channel) {
       usage.channels.add(channel.name);
+      usage.channelValues.add(channel.name);
       usage.channelSetters.add(channel.name);
     }
     addPropIfPresent(ir, usage, "disabled");
@@ -720,6 +724,7 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
   const anchored = rnAnchoredSurface(ir);
   if (anchored) {
     usage.channels.add(anchored.openChannel.name);
+    usage.channelValues.add(anchored.openChannel.name);
     usage.channelSetters.add(anchored.openChannel.name);
     usage.props.add("children");
     usage.props.add("content");
@@ -735,6 +740,13 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
   }
 
   collectNodeRuntimeUsage(ir.dom, ir, usage);
+  // Selected styling/accessibility synthesized from an attribute-state block
+  // reads the channel even when the authored event only invokes its setter.
+  const selection = selectionLowering(ir);
+  if (selection) {
+    usage.channels.add(selection.channel.name);
+    usage.channelValues.add(selection.channel.name);
+  }
   if (!ir.dom) usage.props.add("children");
   if (ir.dom) {
     const partSizeAxes = emSizedPartAxes(ir);
@@ -754,6 +766,7 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
     const lowering = rnSurfaceLowering(ir);
     if (lowering?.openChannel) {
       usage.channels.add(lowering.openChannel.name);
+      usage.channelValues.add(lowering.openChannel.name);
       usage.channelSetters.add(lowering.openChannel.name);
       const autoDismiss = rnAutoDismiss(ir);
       if (autoDismiss) addPropIfPresent(ir, usage, autoDismiss.durationProp);
@@ -853,6 +866,7 @@ function collectBindingRuntimeUsage(
   }
   if (binding.kind === "channel") {
     usage.channels.add(binding.channel);
+    usage.channelValues.add(binding.channel);
     if (channelPurpose === "setter" || binding.field === "onChange") {
       usage.channelSetters.add(binding.channel);
     }
@@ -885,6 +899,7 @@ function collectBindingRuntimeUsage(
     // FEAT-CHANNEL-UPDATE-OPERATIONS-01: the operation composes and sets the
     // channel value; mark it as a value + setter usage, then walk operands.
     usage.channels.add(binding.channel);
+    usage.channelValues.add(binding.channel);
     usage.channelSetters.add(binding.channel);
     for (const operand of binding.operands) {
       collectBindingRuntimeUsage(operand, ir, usage, channelPurpose);
@@ -907,6 +922,7 @@ function collectGuardRuntimeUsage(
   const channel = channelForIfProp(ir, ifProp);
   if (channel) {
     usage.channels.add(channel.name);
+    usage.channelValues.add(channel.name);
     return;
   }
   usage.props.add(safePropName(ir, ifProp));
@@ -942,7 +958,7 @@ function emitComponent(ir: ComponentIR): string {
   for (const channel of ir.behavior.normalizedChannels.filter((candidate) =>
     usage.channels.has(candidate.name),
   )) {
-    lines.push(...emitChannelState(ir, channel, usage.channelSetters.has(channel.name)));
+    lines.push(...emitChannelState(ir, channel, usage.channelSetters.has(channel.name), usage.channelValues.has(channel.name)));
   }
   const autoDismiss = rnAutoDismiss(ir);
   if (autoDismiss) {
@@ -1141,6 +1157,7 @@ function emitChannelState(
   ir: ComponentIR,
   channel: NormalizedChannelIR,
   needsSetter: boolean,
+  needsValue: boolean,
 ): string[] {
   const cap = capitalize(channel.name);
   const controlled = `controlled${cap}`;
@@ -1155,9 +1172,9 @@ function emitChannelState(
     : defaultForChannel(channel);
   const lines: string[] = [];
   lines.push(
-    `${INDENT}const [${internal}${needsSetter ? `, ${setInternal}` : ""}] = useState<${type}>((${initial}) as ${type});`,
+    `${INDENT}const [${needsValue ? internal : ""}${needsSetter ? `, ${setInternal}` : ""}] = useState<${type}>((${initial}) as ${type});`,
   );
-  lines.push(`${INDENT}const ${value} = ${controlled} ?? ${internal};`);
+  if (needsValue) lines.push(`${INDENT}const ${value} = ${controlled} ?? ${internal};`);
   if (needsSetter) {
     lines.push(`${INDENT}const ${setter} = useCallback((next: ${type}) => {`);
     lines.push(`${INDENT}${INDENT}if (${controlled} === undefined) ${setInternal}(next);`);

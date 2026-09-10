@@ -79,26 +79,6 @@
     "fallback": "1.5",
     "layer": "semantic"
   },
-  "card.color.badge.accent.background": {
-    "resolvesTo": "semantic.color.background.accent",
-    "fallback": "#d92d2e",
-    "layer": "semantic"
-  },
-  "card.color.badge.accent.foreground": {
-    "resolvesTo": "semantic.color.foreground.on.brand",
-    "fallback": "#ffffff",
-    "layer": "semantic"
-  },
-  "card.color.statusAccent.default": {
-    "resolvesTo": "semantic.color.border.light",
-    "fallback": "#b8b8b8",
-    "layer": "semantic"
-  },
-  "card.size.statusAccent.width": {
-    "resolvesTo": "core.spacing.size.02",
-    "fallback": "2px",
-    "layer": "core"
-  },
   "card.elevation.resting": {
     "resolvesTo": "semantic.elevation.surface.raised",
     "fallback": "0px 1px 2px #0000000f, 0px 1px 3px #0000001a",

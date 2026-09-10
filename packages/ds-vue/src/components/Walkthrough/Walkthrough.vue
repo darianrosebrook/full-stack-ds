@@ -31,6 +31,11 @@ interface Props {
   autoStart?: boolean;
   closeOnOutsideClick?: boolean;
   placement?: WalkthroughPlacement;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  previousDisabled?: boolean;
+  nextLabel?: string;
+  progressLabel?: string;
   class?: string;
   "data-testid"?: string;
 }
@@ -44,6 +49,8 @@ const props = withDefaults(defineProps<Props>(), {
   autoStart: false,
   closeOnOutsideClick: false,
   placement: "auto",
+  previousDisabled: false,
+  nextLabel: "Next",
 });
 // @generated:end
 
@@ -107,13 +114,21 @@ const instanceId = useId();
         </p>
       </div>
       <div :class="'walkthrough__controls'">
-        <button :class="'walkthrough__skip'" type="button" aria-label="Skip tour"></button>
-        <button :class="'walkthrough__prev'" type="button" aria-label="Previous step"></button>
+        <button :class="'walkthrough__skip'" type="button" @click="props.onSkip?.()" aria-label="Skip tour">
+          Skip
+        </button>
+        <button :class="'walkthrough__prev'" type="button" @click="props.onPrevious?.()" aria-label="Previous step" :disabled="props.previousDisabled">
+          Previous
+        </button>
         <div :class="'walkthrough__dots'">
-          <button v-for="(item, index) in (props.steps ?? [])" :key="index" :class="'walkthrough__dot'" type="button" :aria-label="item.title" :data-step-index="index"></button>
+          <button v-for="(item, index) in (props.steps ?? [])" :key="index" :class="'walkthrough__dot'" type="button" @click="() => behavior.setStep(index)" :aria-label="item.title" :data-step-index="index"></button>
         </div>
-        <span :class="'walkthrough__counter'"></span>
-        <button :class="'walkthrough__next'" type="button" aria-label="Next step"></button>
+        <span :class="'walkthrough__counter'">
+          {{ props.progressLabel }}
+        </span>
+        <button :class="'walkthrough__next'" type="button" @click="props.onNext?.()" :aria-label="props.nextLabel">
+          {{ props.nextLabel }}
+        </button>
       </div>
     </div>
   </Teleport>

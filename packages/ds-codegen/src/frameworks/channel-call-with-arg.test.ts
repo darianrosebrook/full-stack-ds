@@ -161,3 +161,16 @@ describe("FEAT-BINDING-CALL-WITH-ARG-01: React Native lowering", () => {
     expect(src).not.toContain("setSelectionValue(selection)");
   });
 });
+
+it('RN emits callback-only channel state without an unconsumed value local', () => {
+  const contract = structuredClone(FIXTURE);
+  if (!contract.anatomy || Array.isArray(contract.anatomy)) throw new Error("fixture requires a DOM anatomy");
+  contract.anatomy.dom!.children![0].bindings = {};
+  contract.anatomy.dom!.children![0].attrs = {};
+  const source = generateReactNativeComponentSource(buildComponentIR(contract)).componentFile;
+  expect(source).toContain('onPress={() => setSelectionValue(item.value)}');
+  expect(source).toContain('const [, setUncontrolledSelection] = useState');
+  expect(source).not.toContain('const selection =');
+  const withRead = generateReactNativeComponentSource(ir).componentFile;
+  expect(withRead).toContain('const selection = controlledSelection ?? uncontrolledSelection;');
+});

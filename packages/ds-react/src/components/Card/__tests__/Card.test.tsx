@@ -41,36 +41,6 @@ describe("Card — unit", () => {
     expect(screen.getByTestId("card")).toHaveAttribute("role", "group");
   });
 
-  it("applies status=completed variant class", () => {
-    render(<Card data-testid="card" status="completed">content</Card>);
-    expect(screen.getByTestId("card")).toHaveClass("card--completed");
-  });
-
-  it("applies status=in-progress variant class", () => {
-    render(<Card data-testid="card" status="in-progress">content</Card>);
-    expect(screen.getByTestId("card")).toHaveClass("card--in-progress");
-  });
-
-  it("applies status=planned variant class", () => {
-    render(<Card data-testid="card" status="planned">content</Card>);
-    expect(screen.getByTestId("card")).toHaveClass("card--planned");
-  });
-
-  it("applies status=deprecated variant class", () => {
-    render(<Card data-testid="card" status="deprecated">content</Card>);
-    expect(screen.getByTestId("card")).toHaveClass("card--deprecated");
-  });
-
-  it("applies status=category variant class", () => {
-    render(<Card data-testid="card" status="category">content</Card>);
-    expect(screen.getByTestId("card")).toHaveClass("card--category");
-  });
-
-  it("applies status=complexity variant class", () => {
-    render(<Card data-testid="card" status="complexity">content</Card>);
-    expect(screen.getByTestId("card")).toHaveClass("card--complexity");
-  });
-
   it("applies density=default variant class", () => {
     render(<Card data-testid="card" density="default">content</Card>);
     expect(screen.getByTestId("card")).toHaveClass("card--default");

@@ -196,6 +196,51 @@
       "description": "Preferred placement of the walkthrough panel relative to its anchor.",
       "defaultExpr": "\"auto\"",
       "nodeKind": null
+    },
+    {
+      "name": "onPrevious",
+      "safeName": "onPrevious",
+      "type": "() => void",
+      "required": false,
+      "description": "Requests the previous step. The consumer controls step boundaries and updates index.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onNext",
+      "safeName": "onNext",
+      "type": "() => void",
+      "required": false,
+      "description": "Requests the next step or completion. The consumer updates index or closes the tour.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "previousDisabled",
+      "safeName": "previousDisabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables previous-step navigation at a consumer-defined boundary.",
+      "defaultExpr": "false",
+      "nodeKind": null
+    },
+    {
+      "name": "nextLabel",
+      "safeName": "nextLabel",
+      "type": "string",
+      "required": false,
+      "description": "Visible label for the next-step action, such as Finish on the final step.",
+      "defaultExpr": "\"Next\"",
+      "nodeKind": null
+    },
+    {
+      "name": "progressLabel",
+      "safeName": "progressLabel",
+      "type": "string",
+      "required": false,
+      "description": "Visible progress text supplied by the consumer, such as 1 of 3.",
+      "defaultExpr": null,
+      "nodeKind": null
     }
   ],
   "designBindings": [
@@ -320,6 +365,51 @@
       "part": "root",
       "defaultValue": "4px",
       "resolvesTo": "walkthrough.dots.gap",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "sizing.width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.root.sizing.width",
+      "cssVar": "--fsds-walkthrough-design-root-sizing-width",
+      "cssProperty": "width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "360px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "sizing.max-width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.root.sizing.max-width",
+      "cssVar": "--fsds-walkthrough-design-root-sizing-max-width",
+      "cssProperty": "max-width",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "calc(100vw - 32px)",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".walkthrough"
+    },
+    {
+      "property": "sizing.max-height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "walkthrough.design.root.sizing.max-height",
+      "cssVar": "--fsds-walkthrough-design-root-sizing-max-height",
+      "cssProperty": "max-height",
+      "selectorKey": "root",
+      "part": "root",
+      "defaultValue": "calc(100dvh - 32px)",
       "editableTargets": [
         "web"
       ],
@@ -926,12 +1016,12 @@
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
           "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
           "gap": "var(--fsds-walkthrough-dots-gap, 4px)",
-          "width": "var(--fsds-box-model-width)",
+          "width": "360px",
           "min-width": "var(--fsds-box-model-min-width)",
-          "max-width": "var(--fsds-box-model-max-width)",
+          "max-width": "calc(100vw - 32px)",
           "height": "var(--fsds-box-model-height)",
           "min-height": "var(--fsds-box-model-min-height)",
-          "max-height": "var(--fsds-box-model-max-height)",
+          "max-height": "calc(100dvh - 32px)",
           "position": "relative",
           "display": "flex",
           "flex-direction": "column",
@@ -941,7 +1031,9 @@
           "border-width": "1px",
           "border-radius": "var(--fsds-walkthrough-surface-radius, 16px)",
           "box-shadow": "var(--fsds-walkthrough-surface-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a)",
-          "padding": "var(--fsds-walkthrough-surface-padding, 32px)"
+          "padding": "var(--fsds-walkthrough-surface-padding, 32px)",
+          "overflow-y": "auto",
+          "box-sizing": "border-box"
         }
       },
       {
@@ -981,7 +1073,8 @@
           "border-top-color": "var(--fsds-walkthrough-surface-border, #d0d0d0)",
           "border-top-style": "solid",
           "border-top-width": "1px",
-          "padding-top": "var(--fsds-walkthrough-controls-margin-top, 16px)"
+          "padding-top": "var(--fsds-walkthrough-controls-margin-top, 16px)",
+          "flex-wrap": "wrap"
         }
       },
       {

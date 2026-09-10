@@ -21,7 +21,7 @@ export type WalkthroughStepSpec = { anchor: string; title: string; description?:
 // @custom:end
 
 // @generated:start props
-export interface WalkthroughProps extends Omit<HTMLAttributes<HTMLDivElement>, "autoStart" | "children" | "className" | "closeOnOutsideClick" | "data-testid" | "defaultIndex" | "index" | "label" | "onComplete" | "onSkip" | "onStepChange" | "placement" | "steps" | "storageKey"> {
+export interface WalkthroughProps extends Omit<HTMLAttributes<HTMLDivElement>, "autoStart" | "children" | "className" | "closeOnOutsideClick" | "data-testid" | "defaultIndex" | "index" | "label" | "nextLabel" | "onComplete" | "onNext" | "onPrevious" | "onSkip" | "onStepChange" | "placement" | "previousDisabled" | "progressLabel" | "steps" | "storageKey"> {
   steps?: WalkthroughStepSpec[];
   index?: number;
   defaultIndex?: number;
@@ -33,6 +33,11 @@ export interface WalkthroughProps extends Omit<HTMLAttributes<HTMLDivElement>, "
   autoStart?: boolean;
   closeOnOutsideClick?: boolean;
   placement?: WalkthroughPlacement;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  previousDisabled?: boolean;
+  nextLabel?: string;
+  progressLabel?: string;
   className?: string;
   "data-testid"?: string;
   slots?: {
@@ -116,6 +121,11 @@ export function Walkthrough({
   storageKey,
   autoStart = false,
   closeOnOutsideClick = false,
+  onPrevious,
+  onNext,
+  previousDisabled = false,
+  nextLabel = "Next",
+  progressLabel,
   slots,
   ...rest
 }: WalkthroughProps) {
@@ -162,13 +172,21 @@ export function Walkthrough({
         </p>
       </div>
       <div className="walkthrough__controls">
-        <button className="walkthrough__skip" type="button" aria-label={"Skip tour"} />
-        <button className="walkthrough__prev" type="button" aria-label={"Previous step"} />
+        <button className="walkthrough__skip" type="button" onClick={onSkip} aria-label={"Skip tour"}>
+          {"Skip"}
+        </button>
+        <button className="walkthrough__prev" type="button" onClick={onPrevious} aria-label={"Previous step"} disabled={previousDisabled}>
+          {"Previous"}
+        </button>
         <div className="walkthrough__dots">
-          {(steps ?? []).map((item, index) => <button className="walkthrough__dot" type="button" aria-label={item.title} data-step-index={index} key={index} />)}
+          {(steps ?? []).map((item, index) => <button className="walkthrough__dot" type="button" onClick={() => setStep(index)} aria-label={item.title} data-step-index={index} key={index} />)}
         </div>
-        <span className="walkthrough__counter" />
-        <button className="walkthrough__next" type="button" aria-label={"Next step"} />
+        <span className="walkthrough__counter">
+          {progressLabel}
+        </span>
+        <button className="walkthrough__next" type="button" onClick={onNext} aria-label={nextLabel}>
+          {nextLabel}
+        </button>
       </div>
     </Stack>
     )

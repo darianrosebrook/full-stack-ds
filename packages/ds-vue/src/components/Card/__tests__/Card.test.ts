@@ -37,36 +37,6 @@ describe("Card — unit", () => {
     expect(wrapper.attributes("role")).toBe("group");
   });
 
-  it("applies status=completed variant class", () => {
-    const wrapper = mount(Card as Component, { props: { "status": "completed" }, attrs: { "data-testid": "card" }, slots: { "default": "content" } });
-    expect(wrapper.classes()).toContain("card--completed");
-  });
-
-  it("applies status=in-progress variant class", () => {
-    const wrapper = mount(Card as Component, { props: { "status": "in-progress" }, attrs: { "data-testid": "card" }, slots: { "default": "content" } });
-    expect(wrapper.classes()).toContain("card--in-progress");
-  });
-
-  it("applies status=planned variant class", () => {
-    const wrapper = mount(Card as Component, { props: { "status": "planned" }, attrs: { "data-testid": "card" }, slots: { "default": "content" } });
-    expect(wrapper.classes()).toContain("card--planned");
-  });
-
-  it("applies status=deprecated variant class", () => {
-    const wrapper = mount(Card as Component, { props: { "status": "deprecated" }, attrs: { "data-testid": "card" }, slots: { "default": "content" } });
-    expect(wrapper.classes()).toContain("card--deprecated");
-  });
-
-  it("applies status=category variant class", () => {
-    const wrapper = mount(Card as Component, { props: { "status": "category" }, attrs: { "data-testid": "card" }, slots: { "default": "content" } });
-    expect(wrapper.classes()).toContain("card--category");
-  });
-
-  it("applies status=complexity variant class", () => {
-    const wrapper = mount(Card as Component, { props: { "status": "complexity" }, attrs: { "data-testid": "card" }, slots: { "default": "content" } });
-    expect(wrapper.classes()).toContain("card--complexity");
-  });
-
   it("applies density=default variant class", () => {
     const wrapper = mount(Card as Component, { props: { "density": "default" }, attrs: { "data-testid": "card" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("card--default");

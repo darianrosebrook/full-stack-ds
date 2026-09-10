@@ -103,12 +103,12 @@ export class WalkthroughElement extends LitElement {
       padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
       padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
       gap: var(--fsds-walkthrough-design-root-spacing-gap, var(--fsds-walkthrough-dots-gap, 4px));
-      width: var(--fsds-box-model-width, auto);
+      width: var(--fsds-walkthrough-design-root-sizing-width, 360px);
       min-width: var(--fsds-box-model-min-width, 0);
-      max-width: var(--fsds-box-model-max-width, none);
+      max-width: var(--fsds-walkthrough-design-root-sizing-max-width, calc(100vw - 32px));
       height: var(--fsds-box-model-height, auto);
       min-height: var(--fsds-box-model-min-height, 0);
-      max-height: var(--fsds-box-model-max-height, none);
+      max-height: var(--fsds-walkthrough-design-root-sizing-max-height, calc(100dvh - 32px));
       position: relative;
       display: flex;
       flex-direction: column;
@@ -119,6 +119,8 @@ export class WalkthroughElement extends LitElement {
       border-radius: var(--fsds-walkthrough-design-root-shape-radius, var(--fsds-walkthrough-surface-radius, 16px));
       box-shadow: var(--fsds-walkthrough-design-root-elevation-shadow, var(--fsds-walkthrough-surface-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a));
       padding: var(--fsds-walkthrough-design-root-spacing-padding, var(--fsds-walkthrough-surface-padding, 32px));
+      overflow-y: auto;
+      box-sizing: border-box;
     }
 
     .walkthrough__content {
@@ -151,6 +153,7 @@ export class WalkthroughElement extends LitElement {
       border-top-style: var(--fsds-walkthrough-design-controls-border-top-style, solid);
       border-top-width: var(--fsds-walkthrough-design-controls-border-top-width, 1px);
       padding-top: var(--fsds-walkthrough-controls-margin-top, 16px);
+      flex-wrap: wrap;
     }
 
     .walkthrough__skip {
@@ -217,6 +220,11 @@ export class WalkthroughElement extends LitElement {
   @property({ type: Boolean }) autoStart?: boolean = false;
   @property({ type: Boolean }) closeOnOutsideClick?: boolean = false;
   @property({ type: String }) placement?: WalkthroughPlacement = "auto";
+  @property({ attribute: false }) onPrevious?: () => void;
+  @property({ attribute: false }) onNext?: () => void;
+  @property({ type: Boolean }) previousDisabled?: boolean = false;
+  @property({ type: String }) nextLabel?: string = "Next";
+  @property({ type: String }) progressLabel?: string;
 
   private initializedBehavior?: WalkthroughBehavior;
   private get behavior(): WalkthroughBehavior {
@@ -313,15 +321,15 @@ export class WalkthroughElement extends LitElement {
     </p>
   </div>
   <div class=${'walkthrough__controls'}>
-    <button class=${'walkthrough__skip'} type="button" aria-label="Skip tour"></button>
-    <button class=${'walkthrough__prev'} type="button" aria-label="Previous step"></button>
+    <button class=${'walkthrough__skip'} type="button" @click=${this.onSkip} aria-label="Skip tour">Skip</button>
+    <button class=${'walkthrough__prev'} type="button" @click=${this.onPrevious} aria-label="Previous step" ?disabled=${(this.previousDisabled ?? false)}>Previous</button>
     <div class=${'walkthrough__dots'}>
       ${((this.steps ?? [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}])).map((item, index) => html`
-      <button class=${'walkthrough__dot'} type="button" aria-label=${item.title} data-step-index=${index}></button>
+      <button class=${'walkthrough__dot'} type="button" @click=${() => this.behavior.setStep(index)} aria-label=${item.title} data-step-index=${index}></button>
       `)}
     </div>
-    <span class=${'walkthrough__counter'}></span>
-    <button class=${'walkthrough__next'} type="button" aria-label="Next step"></button>
+    <span class=${'walkthrough__counter'}>${this.progressLabel}</span>
+    <button class=${'walkthrough__next'} type="button" @click=${this.onNext} aria-label=${ifDefined((this.nextLabel ?? "Next"))}>${(this.nextLabel ?? "Next")}</button>
   </div>
 </div>`;
   }
@@ -413,12 +421,12 @@ export class WalkthroughContentElement extends LitElement {
       padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
       padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
       gap: var(--fsds-walkthrough-design-root-spacing-gap, var(--fsds-walkthrough-dots-gap, 4px));
-      width: var(--fsds-box-model-width, auto);
+      width: var(--fsds-walkthrough-design-root-sizing-width, 360px);
       min-width: var(--fsds-box-model-min-width, 0);
-      max-width: var(--fsds-box-model-max-width, none);
+      max-width: var(--fsds-walkthrough-design-root-sizing-max-width, calc(100vw - 32px));
       height: var(--fsds-box-model-height, auto);
       min-height: var(--fsds-box-model-min-height, 0);
-      max-height: var(--fsds-box-model-max-height, none);
+      max-height: var(--fsds-walkthrough-design-root-sizing-max-height, calc(100dvh - 32px));
       position: relative;
       display: flex;
       flex-direction: column;
@@ -429,6 +437,8 @@ export class WalkthroughContentElement extends LitElement {
       border-radius: var(--fsds-walkthrough-design-root-shape-radius, var(--fsds-walkthrough-surface-radius, 16px));
       box-shadow: var(--fsds-walkthrough-design-root-elevation-shadow, var(--fsds-walkthrough-surface-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a));
       padding: var(--fsds-walkthrough-design-root-spacing-padding, var(--fsds-walkthrough-surface-padding, 32px));
+      overflow-y: auto;
+      box-sizing: border-box;
     }
 
     .walkthrough__content {
@@ -461,6 +471,7 @@ export class WalkthroughContentElement extends LitElement {
       border-top-style: var(--fsds-walkthrough-design-controls-border-top-style, solid);
       border-top-width: var(--fsds-walkthrough-design-controls-border-top-width, 1px);
       padding-top: var(--fsds-walkthrough-controls-margin-top, 16px);
+      flex-wrap: wrap;
     }
 
     .walkthrough__skip {
@@ -606,12 +617,12 @@ export class WalkthroughTitleElement extends LitElement {
       padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
       padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
       gap: var(--fsds-walkthrough-design-root-spacing-gap, var(--fsds-walkthrough-dots-gap, 4px));
-      width: var(--fsds-box-model-width, auto);
+      width: var(--fsds-walkthrough-design-root-sizing-width, 360px);
       min-width: var(--fsds-box-model-min-width, 0);
-      max-width: var(--fsds-box-model-max-width, none);
+      max-width: var(--fsds-walkthrough-design-root-sizing-max-width, calc(100vw - 32px));
       height: var(--fsds-box-model-height, auto);
       min-height: var(--fsds-box-model-min-height, 0);
-      max-height: var(--fsds-box-model-max-height, none);
+      max-height: var(--fsds-walkthrough-design-root-sizing-max-height, calc(100dvh - 32px));
       position: relative;
       display: flex;
       flex-direction: column;
@@ -622,6 +633,8 @@ export class WalkthroughTitleElement extends LitElement {
       border-radius: var(--fsds-walkthrough-design-root-shape-radius, var(--fsds-walkthrough-surface-radius, 16px));
       box-shadow: var(--fsds-walkthrough-design-root-elevation-shadow, var(--fsds-walkthrough-surface-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a));
       padding: var(--fsds-walkthrough-design-root-spacing-padding, var(--fsds-walkthrough-surface-padding, 32px));
+      overflow-y: auto;
+      box-sizing: border-box;
     }
 
     .walkthrough__content {
@@ -654,6 +667,7 @@ export class WalkthroughTitleElement extends LitElement {
       border-top-style: var(--fsds-walkthrough-design-controls-border-top-style, solid);
       border-top-width: var(--fsds-walkthrough-design-controls-border-top-width, 1px);
       padding-top: var(--fsds-walkthrough-controls-margin-top, 16px);
+      flex-wrap: wrap;
     }
 
     .walkthrough__skip {
@@ -799,12 +813,12 @@ export class WalkthroughDescriptionElement extends LitElement {
       padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
       padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
       gap: var(--fsds-walkthrough-design-root-spacing-gap, var(--fsds-walkthrough-dots-gap, 4px));
-      width: var(--fsds-box-model-width, auto);
+      width: var(--fsds-walkthrough-design-root-sizing-width, 360px);
       min-width: var(--fsds-box-model-min-width, 0);
-      max-width: var(--fsds-box-model-max-width, none);
+      max-width: var(--fsds-walkthrough-design-root-sizing-max-width, calc(100vw - 32px));
       height: var(--fsds-box-model-height, auto);
       min-height: var(--fsds-box-model-min-height, 0);
-      max-height: var(--fsds-box-model-max-height, none);
+      max-height: var(--fsds-walkthrough-design-root-sizing-max-height, calc(100dvh - 32px));
       position: relative;
       display: flex;
       flex-direction: column;
@@ -815,6 +829,8 @@ export class WalkthroughDescriptionElement extends LitElement {
       border-radius: var(--fsds-walkthrough-design-root-shape-radius, var(--fsds-walkthrough-surface-radius, 16px));
       box-shadow: var(--fsds-walkthrough-design-root-elevation-shadow, var(--fsds-walkthrough-surface-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a));
       padding: var(--fsds-walkthrough-design-root-spacing-padding, var(--fsds-walkthrough-surface-padding, 32px));
+      overflow-y: auto;
+      box-sizing: border-box;
     }
 
     .walkthrough__content {
@@ -847,6 +863,7 @@ export class WalkthroughDescriptionElement extends LitElement {
       border-top-style: var(--fsds-walkthrough-design-controls-border-top-style, solid);
       border-top-width: var(--fsds-walkthrough-design-controls-border-top-width, 1px);
       padding-top: var(--fsds-walkthrough-controls-margin-top, 16px);
+      flex-wrap: wrap;
     }
 
     .walkthrough__skip {
