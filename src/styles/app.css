@@ -2208,9 +2208,13 @@ button {
   gap: var(--fsds-core-spacing-size-05); padding: var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-05);
   width: 100%; min-width: 0; box-sizing: border-box;
   border: 0; border-radius: var(--fsds-core-shape-radius-02);
-  background: transparent; color: inherit; font: inherit; text-align: start; text-decoration: none; cursor: pointer;
+  background: transparent; color: inherit; font: inherit; text-align: start; text-decoration: none; cursor: pointer; white-space: normal;
 }
-.command-palette__entry > span { min-width: 0; overflow-wrap: anywhere; }
+.command-palette__entry span { min-width: 0; overflow-wrap: anywhere; }
+.command-palette__entry > .button__loadingText {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: inherit; flex: 1;
+}
 .command-palette__entry .muted { font-size: var(--fsds-core-typography-ramp-1); text-align: end; }
 .command-palette__entry:hover, .command-palette__entry:focus-visible { background: var(--fsds-semantic-color-background-hover); }
 .app-header > .brand { margin-right: auto; min-width: 0; }

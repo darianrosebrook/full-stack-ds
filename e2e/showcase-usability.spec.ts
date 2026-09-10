@@ -20,6 +20,14 @@ for (const viewport of [{ width: 1153, height: 943 }, { width: 390, height: 700 
     expect(facts.bottom).toBeLessThanOrEqual(viewport.height);
     expect(facts.widthOverflow).toBeLessThanOrEqual(1);
     expect(facts.scrolls).toBe(true);
+    const action = dialog.getByRole('button', { name: 'Hide navigation Left panel' });
+    const gap = await action.evaluate(el => {
+      const label = el.querySelector('.button__loadingText > span')!.getBoundingClientRect();
+      const hint = el.querySelector('.muted')!.getBoundingClientRect();
+      return hint.left - label.right;
+    });
+    expect(gap).toBeGreaterThanOrEqual(8);
+    await page.screenshot({ path: info.outputPath(`palette-actions-${viewport.width}.png`) });
     await page.getByLabel('Filter destinations').fill('Component complexity');
     await expect(dialog.getByRole('link', { name: 'Component complexity layers' })).toBeVisible();
     await page.screenshot({ path: info.outputPath(`palette-${viewport.width}.png`) });
