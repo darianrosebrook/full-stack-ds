@@ -76,3 +76,7 @@ evidence:
     status: pass
     evidence_ref: "e2e/showcase-usability.spec.ts: brand-first layer order, references reveal hidden destinations, token URL reload and selected-brand permalink PASS. Evidence: tmp/showcase-usability/e2e-final.log."
     recorded_at: "2026-09-10T23:16:02.767Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "e2e/showcase-portal-containment.spec.ts plus showcase-usability.spec.ts: launcher/dismiss/reopen, scoped portal and complete Walkthrough progression PASS. Evidence: tmp/showcase-usability/e2e-final.log, walkthrough-mobile.png; full pre-push PASS at 7de26338."
+    recorded_at: "2026-09-10T23:16:03.819Z"
