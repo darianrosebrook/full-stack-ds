@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "e2e/showcase-usability.spec.ts: Card neutral borders and single painted badge surface PASS; audit:dead-slots and governed:rail PASS. Evidence: tmp/showcase-usability/card.png and prepush-complete.log."
     recorded_at: "2026-09-10T23:16:00.750Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "e2e/showcase-usability.spec.ts: panel buttons, palette actions and Command-Backslash collapse/restore with focus recovery PASS. Evidence: tmp/showcase-usability/e2e-final.log."
+    recorded_at: "2026-09-10T23:16:01.749Z"
