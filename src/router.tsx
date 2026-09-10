@@ -84,7 +84,7 @@ function parseHash(hash: string): Route {
   const raw = hash.startsWith("#") ? hash.slice(1) : hash;
   const cleaned = raw.startsWith("/") ? raw.slice(1) : raw;
   if (!cleaned) return { kind: "home" };
-  const parts = cleaned.split("/").filter(Boolean);
+  const parts = cleaned.split("?", 1)[0].split("/").filter(Boolean);
   if (parts[0] === "component" && parts[1]) {
     const tab = (parts[2] ?? "design") as ComponentTab;
     return {

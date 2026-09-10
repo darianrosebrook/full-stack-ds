@@ -33,6 +33,8 @@ import type {
 } from "../types/data";
 
 export interface UsageRenderOptions {
+  /** Consumer controller values and callbacks, applied to this root only. */
+  rootProps?: Record<string, unknown>;
   /** Bundled contract/IR authority for authored composition paths. */
   resolveComposition?: (rootRef: string) => UsageCompositionIR | undefined;
 }
@@ -91,8 +93,9 @@ export function renderUsageTree(
     resolved.part,
     resolved.Component,
     body,
-    options,
+    { ...options, rootProps: undefined },
     key,
+    options.rootProps,
   );
 }
 
@@ -104,6 +107,7 @@ function renderResolved(
   body: UsageNodeBody,
   options: UsageRenderOptions,
   key?: string | number,
+  rootProps?: Record<string, unknown>,
 ): ReactNode {
   const props: Record<string, unknown> = {};
   const surface = options.resolveComposition?.(rootRef);
@@ -178,7 +182,7 @@ function renderResolved(
   } else if (slotChildren.length > 0) {
     props.children = slotChildren;
   }
-  return createElement(Component, { ...props, key });
+  return createElement(Component, { ...props, ...rootProps, key });
 }
 
 function materializeProp(

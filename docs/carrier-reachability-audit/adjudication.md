@@ -150,6 +150,11 @@ generated output.
 
 ## Card's historical badge-slot deletion, re-audited
 
+This section records the audit revision. `SHOWCASE-COMPONENT-USABILITY-01`
+subsequently removed Card's status axis and all of its accent-border tokens.
+The badge region now supplies layout only; a composed Badge or Status owns its
+paint. The historical deletion verdict below is unchanged.
+
 `docs/current-implementation-snapshot.md` records that Card badge slots deleted
 in the 114→98 unbound-interface burn were removed under the ground later
 withdrawn, and had not been re-adjudicated.
@@ -161,7 +166,7 @@ emits**)"*. That is exactly the withdrawn inference.
 The ten slots were `card.color.badge.{success,warning,info,error,neutral}.{background,foreground}`.
 
 **Verdict: the deletion stands, on a different and contract-sourced ground.**
-Card declares no `success`/`warning`/`info`/`error`/`neutral` vocabulary
+At the audit revision, Card declared no `success`/`warning`/`info`/`error`/`neutral` vocabulary
 anywhere — not in `variants` (`status`: completed, in-progress, planned,
 deprecated, category, complexity; `density`: default, inset), not in `types`,
 not in a prop. No consumer could select those slots whether or not `badge` is
@@ -169,13 +174,13 @@ rendered. That is classifier rule 5b's ground — a slot keyed to a value no
 declared axis admits — which the slice-0 investigation found survives, and it
 is strictly stronger than the ground actually cited.
 
-The live mechanism confirms the reading: Card's declared status values route
+The mechanism at the audit revision confirmed the reading: Card's declared status values route
 through a single `card.color.statusAccent.default` slot that the `--completed`
 / `--in-progress` / `--complexity` blocks re-point. The deleted set was a
 parallel palette for a vocabulary Card never declared.
 
-The surviving `card.color.badge.accent.{background,foreground}` pair is
-consumed by the `badge` style block and is unaffected. Whether `badge` renders
+At that revision, the surviving `card.color.badge.accent.{background,foreground}` pair is
+consumed by the `badge` style block and was unaffected by that audit. Whether `badge` renders
 at all is the separate topology question above; the original burn conflated the
 two, and they are now split.
 

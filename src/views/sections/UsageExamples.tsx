@@ -4,10 +4,10 @@ import type {
   UsagePropValue,
   UsageTreeNode,
 } from "../../types/data";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useId, useState } from "react";
 import { renderUsageTree } from "../../lib/render-usage";
 import { bundle } from "../../types/bundle";
-import { PortalTargetProvider, Stack } from "@full-stack-ds/react";
+import { Button, PortalTargetProvider, Stack } from "@full-stack-ds/react";
 import {
   materialTokenRows,
   tokenOverridesToStyle,
@@ -135,6 +135,7 @@ export function UsageExamples({
         componentName={component.name}
         propOverrides={propOverrides}
         tokenStyle={tokenStyle}
+        contract={component.contract}
         portalKind={portalPreviewKind(component.contract)}
       />
       {rest.length > 0 && (
@@ -146,6 +147,7 @@ export function UsageExamples({
               componentName={component.name}
               propOverrides={propOverrides}
               tokenStyle={tokenStyle}
+              contract={component.contract}
               portalKind={portalPreviewKind(component.contract)}
             />
           ))}
@@ -163,6 +165,7 @@ interface ExampleFrameProps {
   /** Scoped custom-property overrides spread onto the preview frame. */
   tokenStyle?: Record<string, string>;
   portalKind: PortalPreviewKind | null;
+  contract: ComponentContract;
 }
 
 function ExampleFrame({
@@ -172,6 +175,7 @@ function ExampleFrame({
   propOverrides,
   tokenStyle,
   portalKind,
+  contract,
 }: ExampleFrameProps) {
   const renderedTree = applyRootUsagePropOverrides(
     example.tree,
@@ -179,6 +183,9 @@ function ExampleFrame({
     propOverrides,
   );
 
+  const launched = contract.surface?.kind === "coachmark" || (portalKind === "overlay" &&
+    Object.values(contract.channels ?? {}).some((value) => value && typeof value === "object" && "valueType" in value && value.valueType === "boolean"));
+  const containment = launched ? null : portalKind;
   return (
     <div
       className="panel"
@@ -199,8 +206,8 @@ function ExampleFrame({
         data-usage-preview={`${componentName}:${example.name}`}
         className={[
           "preview-frame stack-gap-00",
-          portalKind && "preview-frame--portal",
-          portalKind && PORTAL_PREVIEW_CLASS[portalKind],
+          containment && "preview-frame--portal",
+          containment && PORTAL_PREVIEW_CLASS[containment],
         ].filter(Boolean).join(" ")}
         style={{
           padding: emphasize ? "var(--fsds-core-spacing-size-08)" : "var(--fsds-core-spacing-size-06)",
@@ -209,10 +216,8 @@ function ExampleFrame({
           ...tokenStyle,
         }}
       >
-        <PreviewContent portalKind={portalKind}>
-          {renderUsageTree(renderedTree, {
-            resolveComposition: (ref) => compositionsByRef.get(ref),
-          })}
+        <PreviewContent portalKind={portalKind} viewport={launched}>
+          <ExampleController tree={renderedTree} contract={contract} portalKind={portalKind} />
         </PreviewContent>
       </Stack>
     </div>
@@ -221,9 +226,11 @@ function ExampleFrame({
 
 function PreviewContent({
   portalKind,
+  viewport,
   children,
 }: {
   portalKind: PortalPreviewKind | null;
+  viewport?: boolean;
   children: ReactNode;
 }) {
   const [portalTarget, setPortalTarget] = useState<HTMLDivElement | null>(null);
@@ -233,7 +240,7 @@ function PreviewContent({
     <>
       <div
         ref={setPortalTarget}
-        className="preview-frame__portal"
+        className={`preview-frame__portal${viewport ? " preview-frame__portal--viewport" : ""}`}
         data-fsds-preview-portal={portalKind}
       />
       {portalTarget && (
@@ -242,5 +249,62 @@ function PreviewContent({
         </PortalTargetProvider>
       )}
     </>
+  );
+}
+
+/** The showcase supplies the consumer lifecycle around programmatic surfaces. */
+function ExampleController({ tree, contract, portalKind }: {
+  tree: UsageTreeNode; contract: ComponentContract; portalKind: PortalPreviewKind | null;
+}) {
+  const [open, setOpen] = useState(false);
+  const [step, setStep] = useState(0);
+  const id = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const body = tree[`fsds.${contract.name}`];
+  const channel = Object.values(contract.channels ?? {}).find((value) =>
+    value && typeof value === "object" && "valueType" in value && value.valueType === "boolean",
+  ) as { value: string; onChange: string } | undefined;
+  const isTour = contract.surface?.kind === "coachmark";
+  const hasLauncher = !!body && (isTour || (portalKind === "overlay" && !!channel));
+  const close = () => { setOpen(false); document.getElementById(`${id}-launcher`)?.focus(); };
+  const render = (rootProps?: Record<string, unknown>) => renderUsageTree(tree, {
+    resolveComposition: (ref) => compositionsByRef.get(ref), rootProps,
+  });
+  if (!hasLauncher) return render();
+
+  // A tour sample supplies application anchors and owns sequence boundaries.
+  // These are consumer facts, not per-component knowledge in an emitter.
+  const steps = isTour && Array.isArray(body.props?.steps)
+    ? (body.props.steps as Array<{ title: string; description?: string }>).map((item, index) => ({
+        ...item, anchor: `#${id}-step-${index}`,
+      })) : [];
+  const advance = () => step + 1 >= steps.length ? close() : setStep(step + 1);
+  const previous = () => setStep(Math.max(0, step - 1));
+  return (
+    <div className="usage-launcher" onKeyDown={(event) => {
+      if (!open) return;
+      if (event.key === "Escape") { event.stopPropagation(); close(); }
+      if (isTour && event.key === "ArrowRight") { event.preventDefault(); advance(); }
+      if (isTour && event.key === "ArrowLeft") { event.preventDefault(); previous(); }
+    }}>
+      <Button id={`${id}-launcher`} variant="secondary" onClick={() => { setStep(0); setOpen(true); }}>
+        {isTour ? "Start walkthrough" : `Open ${contract.name.toLowerCase()}`}
+      </Button>
+      {isTour && <div className="usage-tour-anchors">
+        {steps.map((item, index) => <Button variant="ghost" id={`${id}-step-${index}`} key={item.anchor}
+          onClick={() => { if (open) setStep(index); }}
+          className="usage-tour-anchor" aria-current={open && step === index ? "step" : undefined}>
+          {item.title}
+        </Button>)}
+      </div>}
+      {open && <div>
+        {render(isTour ? {
+          steps, index: step, onStepChange: setStep, onPrevious: previous, onNext: advance,
+          onSkip: close, previousDisabled: step === 0,
+          nextLabel: step + 1 === steps.length ? "Finish" : "Next",
+          progressLabel: `${step + 1} of ${steps.length}`,
+          slots: { title: steps[step]?.title, description: steps[step]?.description },
+        } : { [channel!.value]: true, [channel!.onChange]: (value: boolean) => { if (!value) close(); } })}
+      </div>}
+    </div>
   );
 }

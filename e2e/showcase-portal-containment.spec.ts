@@ -47,7 +47,7 @@ test.describe("showcase portal containment", () => {
   });
 
   for (const component of OPEN_OVERLAY_EXAMPLES) {
-    test(`${component} stays inside a viewport-scale example canvas`, async ({
+    test(`${component} launches into the viewport while retaining its scoped portal`, async ({
       page,
     }) => {
       await page.goto(`/#/component/${component}/design`, {
@@ -56,6 +56,9 @@ test.describe("showcase portal containment", () => {
 
       const block = component.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
       const root = page.locator(`.${block}`).first();
+      await expect(root).toHaveCount(0);
+      const launcher = page.getByRole("button", { name: `Open ${component.toLowerCase()}`, exact: true }).first();
+      await launcher.click();
       await expect(root).toBeVisible();
 
       const facts = await root.evaluate((element) => {
@@ -69,12 +72,9 @@ test.describe("showcase portal containment", () => {
           bodyOverflow: document.body.style.overflow,
           portalKind: portal?.dataset.fsdsPreviewPortal,
           frameHeight: frameRect?.height ?? 0,
-          rootInsideFrame:
-            frameRect !== undefined &&
-            rootRect.left >= frameRect.left &&
-            rootRect.right <= frameRect.right &&
-            rootRect.top >= frameRect.top &&
-            rootRect.bottom <= frameRect.bottom,
+          rootInsideViewport:
+            rootRect.left >= 0 && rootRect.right <= window.innerWidth &&
+            rootRect.top >= 0 && rootRect.bottom <= window.innerHeight,
         };
       });
 
@@ -84,9 +84,14 @@ test.describe("showcase portal containment", () => {
         bodyOverflow: "",
         portalKind: "overlay",
         frameHeight: expect.any(Number),
-        rootInsideFrame: true,
+        rootInsideViewport: true,
       });
-      expect(facts.frameHeight).toBeGreaterThanOrEqual(420);
+      expect(facts.frameHeight).toBeGreaterThan(0);
+      await page.keyboard.press("Escape");
+      await expect(root).toHaveCount(0);
+      await expect(launcher).toBeFocused();
+      await launcher.click();
+      await expect(root).toBeVisible();
       await expect(page.getByRole("banner")).toBeVisible();
       await expect(page.getByRole("main")).toBeVisible();
     });

@@ -12,6 +12,8 @@ export interface ShowcasePrefs {
   defaultFramework: string;
   /** Whether the trace panel is shown on component routes. */
   tracePanelVisible: boolean;
+  /** Whether the component navigation sidebar is shown. */
+  sidebarVisible: boolean;
   /** Default for the Developer tab's interactive-preview checkbox. */
   interactivePreview: boolean;
   /** Nav groups surfaced in the sidebar/palette (fed by the Shuttle in Settings). */
@@ -25,6 +27,7 @@ export const NAV_GROUPS = ["overview", "architecture", "tokens", "standards", "f
 export const DEFAULT_PREFS: ShowcasePrefs = {
   defaultFramework: "react",
   tracePanelVisible: true,
+  sidebarVisible: true,
   interactivePreview: true,
   visibleNavGroups: [...NAV_GROUPS],
 };

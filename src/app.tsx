@@ -2,8 +2,8 @@ import { bundle } from "./types/bundle";
 import { SettingsView } from "./views/SettingsView";
 import { ActivityView } from "./views/ActivityView";
 import { CommandPalette, useCommandPaletteHotkey } from "./components/CommandPalette";
-import { usePrefs } from "./prefs";
-import { useMemo, useState } from "react";
+import { setPrefs, usePrefs } from "./prefs";
+import { useEffect, useMemo, useState } from "react";
 import { Header } from "./layout/Header";
 import { Sidebar } from "./layout/Sidebar";
 import { TracePanel } from "./layout/TracePanel";
@@ -81,14 +81,45 @@ export function App() {
   }, [route]);
 
   const prefs = usePrefs();
-  const showTrace = route.kind === "component" && prefs.tracePanelVisible;
+  const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 900px)").matches);
+  const [mobileInspectorOpen, setMobileInspectorOpen] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 900px)");
+    const update = () => setCompact(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  const showTrace = route.kind === "component" && (compact ? mobileInspectorOpen : prefs.tracePanelVisible);
   const [paletteOpen, setPaletteOpen] = useState(false);
   useCommandPaletteHotkey(() => setPaletteOpen(true));
 
+  const toggleSidebar = () => setPrefs({ sidebarVisible: !prefs.sidebarVisible });
+  const toggleInspector = () => compact ? setMobileInspectorOpen(!mobileInspectorOpen) : setPrefs({ tracePanelVisible: !prefs.tracePanelVisible });
+  const togglePanels = () => {
+    const visible = !(prefs.sidebarVisible || showTrace);
+    if (!visible && document.activeElement?.closest(".app-sidebar, .app-trace")) {
+      document.getElementById("showcase-toggle-navigation")?.focus();
+    }
+    setPrefs({ sidebarVisible: visible, tracePanelVisible: visible });
+    setMobileInspectorOpen(visible);
+  };
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "\\" && !event.altKey && !event.shiftKey && !event.repeat) {
+        event.preventDefault();
+        togglePanels();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
   return (
-    <div className={`app-shell${showTrace ? "" : " app-shell--no-trace"}`}>
-      <Header onOpenPalette={() => setPaletteOpen(true)} />
-      <Sidebar bundle={bundle} route={route} />
+    <div className={`app-shell${showTrace ? "" : " app-shell--no-trace"}${prefs.sidebarVisible ? "" : " app-shell--no-sidebar"}`}>
+      <Header onOpenPalette={() => setPaletteOpen(true)}
+        sidebarVisible={prefs.sidebarVisible} onToggleSidebar={toggleSidebar}
+        inspectorVisible={showTrace} onToggleInspector={route.kind === "component" ? toggleInspector : undefined} />
+      {prefs.sidebarVisible && <Sidebar bundle={bundle} route={route} />}
 
       <main className="app-main">
         {route.kind === "home" && <Home bundle={bundle} />}
@@ -148,7 +179,7 @@ export function App() {
       </main>
 
       {showTrace && (
-        <aside className="app-trace">
+        <aside id="showcase-inspector" className="app-trace" aria-label="Component inspector">
           <TracePanel
             component={activeComponent}
             selection={trace}
@@ -162,7 +193,11 @@ export function App() {
           />
         </aside>
       )}
-          <CommandPalette bundle={bundle} open={paletteOpen} onOpenChange={setPaletteOpen} />
+          <CommandPalette bundle={bundle} open={paletteOpen} onOpenChange={setPaletteOpen} actions={[
+        { id: "sidebar", label: prefs.sidebarVisible ? "Hide navigation" : "Show navigation", hint: "Left panel", run: toggleSidebar },
+        ...(route.kind === "component" ? [{ id: "inspector", label: showTrace ? "Hide inspector" : "Show inspector", hint: "Right panel", run: toggleInspector }] : []),
+        { id: "panels", label: prefs.sidebarVisible || showTrace ? "Hide panels" : "Show panels", hint: "⌘ / Ctrl + \\", run: togglePanels },
+      ]} />
     </div>
   );
 }

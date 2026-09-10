@@ -56,7 +56,15 @@ function collectBrandsFromRules(rules: CSSRuleList, out: Set<string>) {
   }
 }
 
-export function Header({ onOpenPalette }: { onOpenPalette?: () => void } = {}) {
+interface HeaderProps {
+  onOpenPalette?: () => void;
+  sidebarVisible?: boolean;
+  inspectorVisible?: boolean;
+  onToggleSidebar?: () => void;
+  onToggleInspector?: () => void;
+}
+
+export function Header({ onOpenPalette, sidebarVisible, inspectorVisible, onToggleSidebar, onToggleInspector }: HeaderProps = {}) {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") return "light";
     const stored = localStorage.getItem("fsds-theme");
@@ -99,13 +107,23 @@ export function Header({ onOpenPalette }: { onOpenPalette?: () => void } = {}) {
   const [tourStep, setTourStep] = useState(-1);
   const tour = [
     { anchor: ".brand", title: "The brand", description: "One contract drives every component on this site." },
-    { anchor: ".app-sidebar", title: "The corpus", description: "Every component, grouped by contract layer." },
+    { anchor: "#showcase-toggle-navigation", title: "The corpus", description: "Open navigation to explore every component, grouped by contract layer." },
     { anchor: ".app-main", title: "The evidence", description: "Design, developer, and token views per component." },
     { anchor: ".header-actions", title: "You are here", description: "Palette (Cmd+K), tour, about, and appearance." },
   ];
 
   return (
-    <header className="app-header">
+    <header className="app-header" onKeyDown={(event) => {
+      if (tourStep < 0) return;
+      if (event.key === "Escape") setTourStep(-1);
+      if (event.key === "ArrowRight") setTourStep(tourStep + 1 < tour.length ? tourStep + 1 : -1);
+      if (event.key === "ArrowLeft") setTourStep(Math.max(0, tourStep - 1));
+    }}>
+      {onToggleSidebar && <Button id="showcase-toggle-navigation" variant="ghost" size="small" className="icon-btn"
+        ariaLabel={sidebarVisible ? "Hide navigation" : "Show navigation"}
+        aria-expanded={sidebarVisible} aria-controls={sidebarVisible ? "showcase-navigation" : undefined} onClick={onToggleSidebar}>
+        <PanelIcon side="left" />
+      </Button>}
       <Stack as="a" variant="horizontal" className="brand stack-gap-05" href="#/">
         <span className="brand-mark">fs</span>
         <span>Full-Stack DS</span>
@@ -241,12 +259,22 @@ export function Header({ onOpenPalette }: { onOpenPalette?: () => void } = {}) {
             )}
           </Popover.Content>
         </Popover>
+        {onToggleInspector && <Button id="showcase-toggle-inspector" variant="ghost" size="small" className="icon-btn"
+          ariaLabel={inspectorVisible ? "Hide inspector" : "Show inspector"}
+          aria-expanded={inspectorVisible} aria-controls={inspectorVisible ? "showcase-inspector" : undefined} onClick={onToggleInspector}>
+          <PanelIcon side="right" />
+        </Button>}
       </Stack>
 
       <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
-      <Walkthrough
+      {tourStep >= 0 && <Walkthrough
         index={tourStep}
         onStepChange={setTourStep}
+        onPrevious={() => setTourStep(Math.max(0, tourStep - 1))}
+        onNext={() => setTourStep(tourStep + 1 < tour.length ? tourStep + 1 : -1)}
+        previousDisabled={tourStep === 0}
+        nextLabel={tourStep + 1 === tour.length ? "Finish" : "Next"}
+        progressLabel={`${tourStep + 1} of ${tour.length}`}
         onComplete={() => setTourStep(-1)}
         onSkip={() => setTourStep(-1)}
         label="Showcase tour"
@@ -256,7 +284,7 @@ export function Header({ onOpenPalette }: { onOpenPalette?: () => void } = {}) {
           title: tour[tourStep]?.title,
           description: tour[tourStep]?.description,
         }}
-      />
+      />}
     </header>
   );
 }
@@ -301,4 +329,11 @@ function SunMoonIcon() {
       />
     </svg>
   );
+}
+
+function PanelIcon({ side }: { side: "left" | "right" }) {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+    <rect x="3" y="4" width="18" height="16" rx="2" />
+    <path d={side === "left" ? "M9 4v16" : "M15 4v16"} />
+  </svg>;
 }
