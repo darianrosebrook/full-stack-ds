@@ -277,7 +277,6 @@ public enum FsdsSemanticDefaults {
         "core.dimension.actionMinHeight": .string("36px"),
         "core.dimension.actionMinHeightLarge": .string("48px"),
         "core.dimension.actionMinHeightSmall": .string("28px"),
-        "core.spacing.size.02": .string("2px"),
         "core.spacing.size.03": .string("4px"),
         "core.spacing.size.04": .string("8px"),
         "core.spacing.size.05": .string("12px"),

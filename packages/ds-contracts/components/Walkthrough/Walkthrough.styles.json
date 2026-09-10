@@ -85,6 +85,48 @@
         "property": "spacing.gap",
         "slot": "walkthrough.design.root.spacing.gap"
       }
+    },
+    "width": {
+      "literal": "360px",
+      "platforms": [
+        "web"
+      ],
+      "design": {
+        "property": "sizing.width",
+        "slot": "walkthrough.design.root.sizing.width"
+      }
+    },
+    "max-width": {
+      "literal": "calc(100vw - 32px)",
+      "platforms": [
+        "web"
+      ],
+      "design": {
+        "property": "sizing.max-width",
+        "slot": "walkthrough.design.root.sizing.max-width"
+      }
+    },
+    "max-height": {
+      "literal": "calc(100dvh - 32px)",
+      "platforms": [
+        "web"
+      ],
+      "design": {
+        "property": "sizing.max-height",
+        "slot": "walkthrough.design.root.sizing.max-height"
+      }
+    },
+    "overflow-y": {
+      "literal": "auto",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-sizing": {
+      "literal": "border-box",
+      "platforms": [
+        "web"
+      ]
     }
   },
   "content": {
@@ -237,6 +279,12 @@
     "padding-top": {
       "resolvesTo": "walkthrough.controls.marginTop",
       "fallback": "16px"
+    },
+    "flex-wrap": {
+      "literal": "wrap",
+      "platforms": [
+        "web"
+      ]
     }
   },
   "skip": {

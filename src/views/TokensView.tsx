@@ -1,5 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
-import type { MouseEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Chip, Input, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@full-stack-ds/react";
 import type { Bundle, FoundationToken } from "../types/data";
 
@@ -8,7 +7,7 @@ interface TokensViewProps {
 }
 
 type LayerKey = FoundationToken["layer"];
-const LAYER_ORDER: LayerKey[] = ["core", "semantic", "brand"];
+const LAYER_ORDER: LayerKey[] = ["brand", "semantic", "core"];
 const LAYER_LABEL: Record<LayerKey, string> = {
   core: "Core",
   semantic: "Semantic",
@@ -53,13 +52,18 @@ function findAnchorForRef(
   return null;
 }
 
+function tokenHref(anchor: string, brandId: string): string {
+  return `#/tokens?row=${encodeURIComponent(anchor)}${brandId === "default" ? "" : `&brand=${encodeURIComponent(brandId)}`}`;
+}
+
 interface RefLinkProps {
+  brandId: string;
   value: string;
   index: { core: Set<string>; semantic: Set<string>; brand: Set<string> };
   onJump: (anchor: string) => void;
 }
 
-function RefLink({ value, index, onJump }: RefLinkProps) {
+function RefLink({ value, index, onJump, brandId }: RefLinkProps) {
   const target = refTarget(value);
   const href = findAnchorForRef(target, index);
   if (!href) {
@@ -72,7 +76,7 @@ function RefLink({ value, index, onJump }: RefLinkProps) {
   return (
     <a
       className="token-ref"
-      href={`#${href}`}
+      href={tokenHref(href, brandId)}
       onClick={(e) => {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
         e.preventDefault();
@@ -85,16 +89,17 @@ function RefLink({ value, index, onJump }: RefLinkProps) {
 }
 
 interface ValueCellProps {
+  brandId: string;
   token: FoundationToken;
   index: { core: Set<string>; semantic: Set<string>; brand: Set<string> };
   onJump: (anchor: string) => void;
 }
 
-function ValueCell({ token, index, onJump }: ValueCellProps) {
+function ValueCell({ token, index, onJump, brandId }: ValueCellProps) {
   const v = token.value;
   if (v == null) return <span className="muted">—</span>;
   if (isReference(v)) {
-    return <RefLink value={v} index={index} onJump={onJump} />;
+    return <RefLink value={v} index={index} onJump={onJump} brandId={brandId} />;
   }
   if (token.valueByMode && (token.valueByMode.light || token.valueByMode.dark)) {
     const { light, dark } = token.valueByMode;
@@ -132,7 +137,10 @@ export function TokensView({ bundle }: TokensViewProps) {
   });
 
   const brands = useMemo(() => bundle.brandTokens ?? [], [bundle.brandTokens]);
-  const [brandId, setBrandId] = useState<string>(() => brands[0]?.id ?? "default");
+  const [brandId, setBrandId] = useState<string>(() => {
+    const requested = new URLSearchParams(window.location.hash.split("?")[1] ?? "").get("brand");
+    return brands.find(brand => brand.id === requested)?.id ?? brands[0]?.id ?? "default";
+  });
   const activeBrand = useMemo(
     () => brands.find((b) => b.id === brandId) ?? brands[0],
     [brands, brandId],
@@ -176,49 +184,57 @@ export function TokensView({ bundle }: TokensViewProps) {
   }, [rows, layers, filter]);
 
   // Group by layer so the table is broken into labelled sections, matching
-  // how the user picked the page shape (Core / Semantic / Brand bands).
+  // the reference chain from Brand through Semantic to Core.
   const grouped = useMemo(() => {
     const groups: Record<LayerKey, FoundationToken[]> = { core: [], semantic: [], brand: [] };
     for (const t of filtered) groups[t.layer].push(t);
     return groups;
   }, [filtered]);
 
-  // Jump handler used by every in-page anchor (row name + {ref} links).
-  // We can't fall through to the browser's native hash navigation because the
-  // showcase uses a hash router (`#/tokens`); any non-routing hash like
-  // `#token-…` would be parsed as "home" and unmount the table. Instead, scroll
-  // the target into view, flash it, and update the URL via history.replaceState
-  // (which does NOT fire hashchange, so the router stays put).
+  const [pendingAnchor, setPendingAnchor] = useState<string | null>(() =>
+    new URLSearchParams(window.location.hash.split("?")[1] ?? "").get("row"),
+  );
+  const flashTimer = useRef<number | undefined>(undefined);
+  const flashTarget = useRef<HTMLElement | null>(null);
   const jumpToRow = useCallback((anchor: string) => {
-    const el = document.getElementById(anchor);
+    setFilter("");
+    setLayers({ brand: true, semantic: true, core: true });
+    setPendingAnchor(anchor);
+    window.history.replaceState(null, "", tokenHref(anchor, brandId));
+  }, [brandId]);
+
+  useEffect(() => {
+    if (!pendingAnchor) return;
+    const el = document.getElementById(pendingAnchor);
     if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
-    el.classList.remove("token-row--flash");
-    // Force a reflow so the animation restarts even when re-clicking the
-    // same target. Reading offsetWidth is the idiomatic reflow trigger.
-    void el.offsetWidth;
+    el.scrollIntoView({ block: "center" });
+    flashTarget.current?.classList.remove("token-row--flash");
+    flashTarget.current = el;
     el.classList.add("token-row--flash");
-    window.setTimeout(() => el.classList.remove("token-row--flash"), 1500);
-    // Preserve `#/tokens` and append the row id as a query so deep links
-    // survive a reload without confusing the router. Using replaceState
-    // (not pushState) keeps the back button useful.
-    try {
-      const next = `#/tokens?row=${encodeURIComponent(anchor)}`;
-      window.history.replaceState(null, "", next);
-    } catch {
-      // Some browsers throw on rapid history mutations; the visual jump
-      // already happened, so swallowing the error is fine.
-    }
+    setPendingAnchor(null);
+    window.clearTimeout(flashTimer.current);
+    flashTimer.current = window.setTimeout(() => el.classList.remove("token-row--flash"), 1500);
+  }, [pendingAnchor, grouped]);
+  useEffect(() => () => {
+    window.clearTimeout(flashTimer.current);
+    flashTarget.current?.classList.remove("token-row--flash");
   }, []);
 
-  const onNameClick = useCallback(
-    (anchor: string) => (e: MouseEvent<HTMLAnchorElement>) => {
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-      e.preventDefault();
-      jumpToRow(anchor);
-    },
-    [jumpToRow],
-  );
+  useEffect(() => {
+    const onHashChange = () => {
+      const params = new URLSearchParams(window.location.hash.split("?")[1] ?? "");
+      const requestedBrand = params.get("brand");
+      const anchor = params.get("row");
+      if (anchor) {
+        setBrandId(brands.find(brand => brand.id === requestedBrand)?.id ?? brands[0]?.id ?? "default");
+        setFilter("");
+        setLayers({ brand: true, semantic: true, core: true });
+        setPendingAnchor(anchor);
+      }
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, [brands]);
 
   const counts = {
     core: rows.filter((r) => r.layer === "core").length,
@@ -327,16 +343,14 @@ export function TokensView({ bundle }: TokensViewProps) {
                   return (
                     <TableRow key={`${layer}.${t.path}`} id={anchor}>
                       <TableCell className="tokens-name-cell">
-                        <a
-                          className="tokens-name-anchor"
-                          href={`#${anchor}`}
-                          onClick={onNameClick(anchor)}
-                        >
-                          {t.path}
-                        </a>
+                        <span>{t.path}</span>{" "}
+                        <a className="tokens-name-anchor"
+                          aria-label={`Permalink to ${t.path}`}
+                          title="Permalink to this token"
+                          href={tokenHref(anchor, brandId)}>#</a>
                       </TableCell>
                       <TableCell>
-                        <ValueCell token={t} index={refIndex} onJump={jumpToRow} />
+                        <ValueCell token={t} index={refIndex} onJump={jumpToRow} brandId={brandId} />
                       </TableCell>
                       <TableCell className="muted">{t.type ?? "—"}</TableCell>
                       <TableCell className="muted tokens-desc-cell">{t.description ?? ""}</TableCell>

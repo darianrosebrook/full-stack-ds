@@ -336,6 +336,36 @@
       "selector": ".dialog__modal"
     },
     {
+      "property": "sizing.max-height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.modal.sizing.max-height",
+      "cssVar": "--fsds-dialog-design-modal-sizing-max-height",
+      "cssProperty": "max-height",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "90dvh",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
+      "property": "sizing.min-width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.modal.sizing.min-width",
+      "cssVar": "--fsds-dialog-design-modal-sizing-min-width",
+      "cssProperty": "min-width",
+      "selectorKey": "modal",
+      "part": "modal",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__modal"
+    },
+    {
       "property": "border.bottom.color",
       "group": "border",
       "valueType": "color",
@@ -444,6 +474,36 @@
         "web"
       ],
       "selector": ".dialog__title"
+    },
+    {
+      "property": "sizing.min-width",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.body.sizing.min-width",
+      "cssVar": "--fsds-dialog-design-body-sizing-min-width",
+      "cssProperty": "min-width",
+      "selectorKey": "body",
+      "part": "body",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__body"
+    },
+    {
+      "property": "sizing.min-height",
+      "group": "sizing",
+      "valueType": "dimension",
+      "slot": "dialog.design.body.sizing.min-height",
+      "cssVar": "--fsds-dialog-design-body-sizing-min-height",
+      "cssProperty": "min-height",
+      "selectorKey": "body",
+      "part": "body",
+      "defaultValue": "0",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".dialog__body"
     },
     {
       "property": "spacing.gap",
@@ -896,10 +956,11 @@
           "box-shadow": "var(--fsds-dialog-elevation-default, 0px 12px 16px #0000000f, 0px 25px 50px #00000026)",
           "width": "var(--fsds-dialog-size-md-width, 500px)",
           "max-width": "var(--fsds-dialog-size-md-max-width, 90vw)",
-          "max-height": "90vh",
+          "max-height": "90dvh",
           "pointer-events": "auto",
           "box-sizing": "border-box",
-          "overflow": "hidden"
+          "overflow": "hidden",
+          "min-width": "0"
         }
       },
       {
@@ -913,7 +974,8 @@
           "padding-left": "var(--fsds-dialog-spacing-body-padding-right, 24px)",
           "border-bottom-color": "var(--fsds-dialog-color-border-default, #d0d0d0)",
           "border-bottom-style": "solid",
-          "border-bottom-width": "1px"
+          "border-bottom-width": "1px",
+          "flex-shrink": "0"
         }
       },
       {
@@ -935,7 +997,10 @@
           "padding-bottom": "var(--fsds-dialog-spacing-header-padding-top, 16px)",
           "padding-left": "var(--fsds-dialog-spacing-body-padding-right, 24px)",
           "overflow-y": "auto",
-          "--fsds-dialog-color-foreground-default": "var(--fsds-semantic-color-foreground-secondary, #474647)"
+          "--fsds-dialog-color-foreground-default": "var(--fsds-semantic-color-foreground-secondary, #474647)",
+          "min-width": "0",
+          "min-height": "0",
+          "overflow-wrap": "anywhere"
         }
       },
       {
@@ -951,7 +1016,8 @@
           "padding-left": "var(--fsds-dialog-spacing-body-padding-right, 24px)",
           "border-top-color": "var(--fsds-dialog-color-border-default, #d0d0d0)",
           "border-top-style": "solid",
-          "border-top-width": "1px"
+          "border-top-width": "1px",
+          "flex-shrink": "0"
         }
       },
       {

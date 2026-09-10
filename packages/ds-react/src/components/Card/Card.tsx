@@ -9,8 +9,6 @@ import "./Card.css";
 // @custom:end
 
 // @generated:start types
-export type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" | "category" | "complexity";
-
 export type CardDensity = "default" | "inset";
 // @generated:end
 
@@ -21,7 +19,6 @@ export type CardDensity = "default" | "inset";
 // @generated:start props
 export interface CardProps {
   interactive?: boolean;
-  status?: CardStatus;
   density?: CardDensity;
   className?: string;
   "data-testid"?: string;
@@ -204,7 +201,6 @@ export function CardNote({
 
 // @generated:start component
 export function Card({
-  status,
   density = "default",
   interactive,
   className,
@@ -214,7 +210,6 @@ export function Card({
 }: CardProps) {
   const classNames = [
     "card",
-    status && `card--${status}`,
     density && `card--${density}`,
     interactive && "card--interactive",
     className,

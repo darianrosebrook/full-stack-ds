@@ -63,7 +63,6 @@ const RAW_CONTROL_DEBT: Record<string, DebtEntry> = {
 const APP_SURROGATE_DEBT: Record<string, Record<string, number>> = {
   panel: {
     "components/CodeViewer.tsx": 1,
-    "components/CommandPalette.tsx": 1,
     "layout/Header.tsx": 1,
     "views/ComponentComplexityView.tsx": 1,
     "views/ComponentTokensView.tsx": 1,

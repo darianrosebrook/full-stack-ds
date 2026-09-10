@@ -3,14 +3,6 @@ import SwiftUI
 // @generated:end
 
 // @generated:start types
-public enum CardStatus: String, CaseIterable {
-    case completed
-    case inProgress = "in-progress"
-    case planned
-    case deprecated
-    case category
-    case complexity
-}
 public enum CardDensity: String, CaseIterable {
     case `default`
     case inset
@@ -29,26 +21,6 @@ enum CardTokens {
             "card.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-border-default", name: "card.color.border.default", ref: "semantic.color.border.light", fallback: .adaptive(light: "#b8b8b8", dark: "#474647")),
             "card.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-foreground-primary", name: "card.color.foreground.primary", ref: "semantic.color.foreground.primary", fallback: .adaptive(light: "#141414", dark: "#fafafa")),
             "card.size.radius.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-size-radius-default", name: "card.size.radius.default", ref: "semantic.shape.radius.medium", fallback: .string("8px")),
-            "card.color.statusAccent.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-status-accent-default", name: "card.color.statusAccent.default", ref: "semantic.color.border.light", fallback: .adaptive(light: "#b8b8b8", dark: "#474647")),
-            "card.size.statusAccent.width": FsdsComponentTokenDefinition(cssVar: "--fsds-card-size-status-accent-width", name: "card.size.statusAccent.width", ref: "core.spacing.size.02", fallback: .string("2px")),
-        ],
-        "variant_completed": [
-            "card.color.statusAccent.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-status-accent-default", name: "card.color.statusAccent.default", ref: "semantic.color.border.success", fallback: .adaptive(light: "#3a6614", dark: "#497f21")),
-        ],
-        "variant_in_progress": [
-            "card.color.statusAccent.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-status-accent-default", name: "card.color.statusAccent.default", ref: "semantic.color.border.info", fallback: .adaptive(light: "#034fd6", dark: "#0566fe")),
-        ],
-        "variant_planned": [
-            "card.color.statusAccent.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-status-accent-default", name: "card.color.statusAccent.default", ref: "semantic.color.border.subtle", fallback: .adaptive(light: "#d0d0d0", dark: "#474647")),
-        ],
-        "variant_deprecated": [
-            "card.color.statusAccent.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-status-accent-default", name: "card.color.statusAccent.default", ref: "semantic.color.border.danger", fallback: .adaptive(light: "#b31b1b", dark: "#d92d2e")),
-        ],
-        "variant_category": [
-            "card.color.statusAccent.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-status-accent-default", name: "card.color.statusAccent.default", ref: "semantic.color.border.accent", fallback: .adaptive(light: "#d92d2e", dark: "#e55b5a")),
-        ],
-        "variant_complexity": [
-            "card.color.statusAccent.default": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-status-accent-default", name: "card.color.statusAccent.default", ref: "semantic.color.border.warning", fallback: .adaptive(light: "#8b4b00", dark: "#ae5d00")),
         ],
         "part_description": [
             "card.color.foreground.primary": FsdsComponentTokenDefinition(cssVar: "--fsds-card-color-foreground-primary", name: "card.color.foreground.primary", ref: "semantic.color.foreground.secondary", fallback: .adaptive(light: "#474647", dark: "#a0a0a1")),
@@ -67,7 +39,6 @@ public struct Card<Header: View, Media: View, Content: View, Footer: View, Actio
     private var fsdsScopes: FsdsComponentTokenScopes {
         CardTokens.scopes
     }
-    private let status: CardStatus?
     private let density: CardDensity
     private let header: Header
     private let media: Media
@@ -81,7 +52,6 @@ public struct Card<Header: View, Media: View, Content: View, Footer: View, Actio
     @Environment(\.fsdsTheme) private var fsdsTheme
 
     public init(
-        status: CardStatus? = nil,
         density: CardDensity = .`default`,
         @ViewBuilder header: () -> Header = { EmptyView() },
         @ViewBuilder media: () -> Media = { EmptyView() },
@@ -93,7 +63,6 @@ public struct Card<Header: View, Media: View, Content: View, Footer: View, Actio
         @ViewBuilder link: () -> Link = { EmptyView() },
         @ViewBuilder note: () -> Note = { EmptyView() }
     ) {
-        self.status = status
         self.density = density
         self.header = header()
         self.media = media()
@@ -110,7 +79,7 @@ public struct Card<Header: View, Media: View, Content: View, Footer: View, Actio
         resolveFsdsLayeredTokens(
             fsdsScopes,
             fsdsTheme,
-            layers: ["root", status.map { "variant_\($0.rawValue)" }, "variant_\(density.rawValue)"].compactMap { $0 }
+            layers: ["root", "variant_\(density.rawValue)"]
         )
     }
 
@@ -130,8 +99,6 @@ public struct Card<Header: View, Media: View, Content: View, Footer: View, Actio
     private var blockPadding: CGFloat { pxSlot("padding-block-start") ?? 0 }
     private var inlinePadding: CGFloat { pxSlot("padding-inline-start") ?? 0 }
     private var gap: CGFloat { pxSlot("box-model.gap") ?? 0 }
-    private var statusAccent: Color { colorSlot("color.statusAccent.default") ?? .clear }
-    private var statusAccentWidth: CGFloat { pxSlot("size.statusAccent.width") ?? 0 }
 
     @ViewBuilder
     private var regions: some View {
@@ -149,10 +116,7 @@ public struct Card<Header: View, Media: View, Content: View, Footer: View, Actio
     }
 
     public var body: some View {
-        HStack(spacing: 0) {
-            Rectangle().fill(statusAccent).frame(width: statusAccentWidth)
-            regions
-        }
+        regions
             .padding(.vertical, blockPadding)
             .padding(.horizontal, inlinePadding)
             .background(background, in: RoundedRectangle(cornerRadius: radius, style: .continuous))

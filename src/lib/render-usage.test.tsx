@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { bundle } from "../types/bundle";
 import { UsageExamples } from "../views/sections/UsageExamples";
@@ -48,6 +48,7 @@ describe("usage sidecar render projection", () => {
   it("renders Command item content inside its isolated portal canvas", async () => {
     render(<UsageExamples component={component("Command")} />);
 
+    fireEvent.click(screen.getByRole("button", { name: "Open command" }));
     const item = await screen.findByText("Go to Dashboard");
     expect(item.closest("[data-fsds-preview-portal]")).toBeTruthy();
     expect(screen.getByText("View your project overview")).toBeTruthy();
@@ -111,18 +112,53 @@ describe("usage sidecar render projection", () => {
       }
 
       const slug = name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-      await waitFor(() => {
-        const roots = document.body.querySelectorAll(`.${slug}`);
-        expect(roots.length).toBeGreaterThanOrEqual(entry.usage.length);
-        for (const root of roots) {
-          expect(
-            root.closest("[data-usage-preview]"),
-            `${name} escaped its example preview boundary`,
-          ).toBeTruthy();
+      const launchers = container.querySelectorAll<HTMLButtonElement>(".usage-launcher > button");
+      if (launchers.length) {
+        expect(document.body.querySelectorAll(`.${slug}`)).toHaveLength(0);
+        expect(launchers).toHaveLength(entry.usage.length);
+        for (const launcher of launchers) {
+          launcher.focus();
+          fireEvent.click(launcher);
+          await waitFor(() => expect(document.body.querySelectorAll(`.${slug}`)).toHaveLength(1));
+          const root = document.body.querySelector(`.${slug}`)!;
+          expect(root.closest("[data-usage-preview]")).toBeTruthy();
+          fireEvent.keyDown(root, { key: "Escape" });
+          expect(document.body.querySelectorAll(`.${slug}`)).toHaveLength(0);
+          expect(document.activeElement).toBe(launcher);
         }
-      });
+      } else {
+        await waitFor(() => {
+          const roots = document.body.querySelectorAll(`.${slug}`);
+          expect(roots.length).toBeGreaterThanOrEqual(entry.usage.length);
+          for (const root of roots) expect(root.closest("[data-usage-preview]")).toBeTruthy();
+        });
+      }
     },
   );
+
+  it("runs the tour through previous, next, dot, finish and reopen actions", () => {
+    render(<UsageExamples component={component("Walkthrough")} />);
+    const launch = screen.getByRole("button", { name: "Start walkthrough" });
+    fireEvent.click(launch);
+    const tour = screen.getByRole("status", { name: "Dashboard onboarding tour" });
+    const controls = within(tour);
+    expect(controls.getByText("1 of 3")).toBeTruthy();
+    expect(controls.getByRole("button", { name: "Previous step" })).toHaveProperty("disabled", true);
+    fireEvent.click(controls.getByRole("button", { name: "Next", exact: true }));
+    expect(controls.getByText("2 of 3")).toBeTruthy();
+    fireEvent.click(controls.getByRole("button", { name: "Previous step" }));
+    expect(controls.getByText("1 of 3")).toBeTruthy();
+    fireEvent.click(controls.getByRole("button", { name: "Make it yours" }));
+    expect(controls.getByText("3 of 3")).toBeTruthy();
+    expect(controls.getByRole("button", { name: "Finish", exact: true }).textContent).toBe("Finish");
+    fireEvent.click(controls.getByRole("button", { name: "Finish", exact: true }));
+    expect(screen.queryByRole("status")).toBeNull();
+    fireEvent.click(launch);
+    expect(screen.getByText("1 of 3")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Skip tour" }));
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(document.activeElement).toBe(launch);
+  });
 
   it("realizes contract-declared glyph and indicator components", async () => {
     const accordion = render(<UsageExamples component={component("Accordion")} />);
@@ -134,6 +170,7 @@ describe("usage sidecar render projection", () => {
     details.unmount();
 
     render(<UsageExamples component={component("Command")} />);
+    fireEvent.click(screen.getByRole("button", { name: "Open command" }));
     expect(await screen.findByText("Go to Dashboard")).toBeTruthy();
     expect(document.body.querySelector('[data-fsds-icon="search"]')).toBeTruthy();
 

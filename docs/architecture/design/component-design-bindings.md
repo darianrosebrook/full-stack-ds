@@ -4,8 +4,8 @@ authority: architecture
 status: implemented
 title: Component design property bindings
 owner: "@darianrosebrook"
-updated: 2026-09-06
-verified_at_commit: b4b87a0890eef1b1e3083cc2be2ba0df7aa822f1
+updated: 2026-09-10
+verified_at_commit: d617cca20424fb4602f05c30f6e620f1d6ea74c9
 governs:
   - packages/ds-codegen/src/design-properties.ts
   - packages/ds-contracts/component.styles.schema.json
@@ -109,3 +109,15 @@ tags. Its emitter now declares that body once as a template fragment and places
 it inside the active host, following [Angular's projection guidance](https://angular.dev/guide/components/content-projection).
 The browser check switches between paragraph, inline, and heading hosts before
 checking truncation; this guards against silently losing the supplied child.
+
+## Bounded overlay sizing
+
+The [showcase usability follow-up](showcase-usability.md) adds explicit Dialog
+minimum dimensions and a maximum-height override with a dynamic viewport
+fallback. The body can shrink and scroll while the header and footer retain
+their space. Walkthrough similarly bounds its surface to the viewport. These
+use the existing sizing vocabulary; no new property bag or emitter-specific
+component rule is introduced. `e2e/showcase-usability.spec.ts` checks a scoped
+Dialog width/height override, body scrolling, and restoration after clearing.
+Card status borders and duplicate badge paint were removed at the contract
+source, including their retired design addresses.

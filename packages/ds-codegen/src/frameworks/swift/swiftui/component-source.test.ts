@@ -236,11 +236,11 @@ describe("generateSwiftUIComponentSource — compound-part composer (Card)", () 
     expect(source).toContain("VStack(spacing: gap) {");
   });
 
-  it("realizes chrome presence-driven with the status accent bar", () => {
+  it("realizes neutral chrome without a status accent bar", () => {
     const source = emitCard();
     expect(source).toContain("enum CardTokens {");
     expect(source).toContain('.adaptive(light: "#ffffff", dark:');
-    expect(source).toContain(
+    expect(source).not.toContain(
       "Rectangle().fill(statusAccent).frame(width: statusAccentWidth)",
     );
     expect(source).toContain(".background(background, in: RoundedRectangle(cornerRadius: radius, style: .continuous))");
@@ -250,10 +250,7 @@ describe("generateSwiftUIComponentSource — compound-part composer (Card)", () 
 
   it("keeps authored-default axes defaulted and no-default axes optional", () => {
     const source = emitCard();
-    // status has no authored contract default → optional, layered via map.
-    expect(source).toContain("status: CardStatus? = nil,");
-    expect(source).toContain('status.map { "variant_\\($0.rawValue)" }');
-    expect(source).toContain(".compactMap { $0 }");
+    expect(source).not.toContain("CardStatus");
     // density defaults to the `default` member — a Swift keyword, escaped.
     expect(source).toContain("case `default`");
     expect(source).toContain("density: CardDensity = .`default`,");

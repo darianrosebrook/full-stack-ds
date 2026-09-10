@@ -9,12 +9,12 @@
   padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
   padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
   gap: var(--fsds-walkthrough-design-root-spacing-gap, var(--fsds-walkthrough-dots-gap, 4px));
-  width: var(--fsds-box-model-width, auto);
+  width: var(--fsds-walkthrough-design-root-sizing-width, 360px);
   min-width: var(--fsds-box-model-min-width, 0);
-  max-width: var(--fsds-box-model-max-width, none);
+  max-width: var(--fsds-walkthrough-design-root-sizing-max-width, calc(100vw - 32px));
   height: var(--fsds-box-model-height, auto);
   min-height: var(--fsds-box-model-min-height, 0);
-  max-height: var(--fsds-box-model-max-height, none);
+  max-height: var(--fsds-walkthrough-design-root-sizing-max-height, calc(100dvh - 32px));
   position: relative;
   display: flex;
   flex-direction: column;
@@ -25,6 +25,8 @@
   border-radius: var(--fsds-walkthrough-design-root-shape-radius, var(--fsds-walkthrough-surface-radius, 16px));
   box-shadow: var(--fsds-walkthrough-design-root-elevation-shadow, var(--fsds-walkthrough-surface-shadow, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a));
   padding: var(--fsds-walkthrough-design-root-spacing-padding, var(--fsds-walkthrough-surface-padding, 32px));
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .walkthrough__content {
@@ -57,6 +59,7 @@
   border-top-style: var(--fsds-walkthrough-design-controls-border-top-style, solid);
   border-top-width: var(--fsds-walkthrough-design-controls-border-top-width, 1px);
   padding-top: var(--fsds-walkthrough-controls-margin-top, 16px);
+  flex-wrap: wrap;
 }
 
 .walkthrough__skip {

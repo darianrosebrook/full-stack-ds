@@ -37,36 +37,6 @@ describe("Card — unit", () => {
     expect(container.firstElementChild?.getAttribute("role")).toBe("group");
   });
 
-  it("applies status=completed variant class", () => {
-    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "status": "completed" } });
-    expect(container.firstElementChild?.className).toContain("card--completed");
-  });
-
-  it("applies status=in-progress variant class", () => {
-    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "status": "in-progress" } });
-    expect(container.firstElementChild?.className).toContain("card--in-progress");
-  });
-
-  it("applies status=planned variant class", () => {
-    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "status": "planned" } });
-    expect(container.firstElementChild?.className).toContain("card--planned");
-  });
-
-  it("applies status=deprecated variant class", () => {
-    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "status": "deprecated" } });
-    expect(container.firstElementChild?.className).toContain("card--deprecated");
-  });
-
-  it("applies status=category variant class", () => {
-    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "status": "category" } });
-    expect(container.firstElementChild?.className).toContain("card--category");
-  });
-
-  it("applies status=complexity variant class", () => {
-    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "status": "complexity" } });
-    expect(container.firstElementChild?.className).toContain("card--complexity");
-  });
-
   it("applies density=default variant class", () => {
     const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "density": "default" } });
     expect(container.firstElementChild?.className).toContain("card--default");

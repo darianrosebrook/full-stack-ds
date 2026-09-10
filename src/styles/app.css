@@ -119,6 +119,15 @@ button {
     "sidebar main";
 }
 
+.app-shell--no-sidebar {
+  grid-template-columns: minmax(0, 1fr) var(--fsds-app-trace-w);
+  grid-template-areas: "header header" "main trace";
+}
+.app-shell--no-sidebar.app-shell--no-trace {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "header" "main";
+}
+
 .app-header {
   grid-area: header;
   display: flex;
@@ -194,7 +203,8 @@ button {
 
 @media (max-width: 900px) {
   .app-shell,
-  .app-shell--no-trace {
+  .app-shell--no-trace,
+  .app-shell.app-shell--no-sidebar {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: var(--fsds-app-header-h) auto minmax(0, 1fr);
     grid-template-areas:
@@ -219,8 +229,15 @@ button {
     overflow: auto;
   }
 
+  .app-shell.app-shell--no-sidebar {
+    grid-template-rows: var(--fsds-app-header-h) minmax(0, 1fr);
+    grid-template-areas: "header" "main";
+  }
   .app-trace {
-    display: none;
+    position: fixed;
+    inset: var(--fsds-app-header-h) 0 0 auto;
+    width: min(var(--fsds-app-trace-w), 100%);
+    z-index: 15;
   }
 }
 
@@ -2182,3 +2199,34 @@ button {
     max-height: none;
   }
 }
+
+/* Palette rows size from the dialog's available body width. */
+.command-palette { width: 100%; min-width: 0; }
+.command-palette__results { max-height: 50dvh; overflow: auto; min-width: 0; }
+.command-palette__entry {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--fsds-core-spacing-size-05); padding: var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-05);
+  width: 100%; min-width: 0; box-sizing: border-box;
+  border: 0; border-radius: var(--fsds-core-shape-radius-02);
+  background: transparent; color: inherit; font: inherit; text-align: start; text-decoration: none; cursor: pointer; white-space: normal;
+}
+.command-palette__entry span { min-width: 0; overflow-wrap: anywhere; }
+.command-palette__entry > .button__loadingText {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: inherit; flex: 1;
+}
+.command-palette__entry .muted { font-size: var(--fsds-core-typography-ramp-1); text-align: end; }
+.command-palette__entry:hover, .command-palette__entry:focus-visible { background: var(--fsds-semantic-color-background-hover); }
+.app-header > .brand { margin-right: auto; min-width: 0; }
+@media (max-width: 600px) {
+  .brand > span:not(.brand-mark) { display: none; }
+  .header-actions { gap: var(--fsds-core-spacing-size-02); }
+}
+
+.usage-launcher { width: 100%; min-width: 0; }
+.usage-tour-anchors { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.usage-tour-anchor { padding: 8px 12px; border: 1px solid var(--fsds-semantic-color-border-subtle); border-radius: 8px; background: transparent; color: inherit; font: inherit; }
+.usage-tour-anchor[aria-current="step"] { outline: 2px solid var(--fsds-semantic-focus-ring-color); }
+
+/* Launched examples retain scoped tokens while using real viewport geometry. */
+.preview-frame__portal--viewport { position: static; overflow: visible; transform: none; }

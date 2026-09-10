@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Dialog, Input, Stack } from "@full-stack-ds/react";
+import { Button, Dialog, Input, Stack } from "@full-stack-ds/react";
 import type { Bundle } from "../types/data";
 import { buildHref } from "../router";
 
@@ -7,6 +7,14 @@ interface CommandPaletteProps {
   bundle: Bundle;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  actions?: PaletteAction[];
+}
+
+export interface PaletteAction {
+  id: string;
+  label: string;
+  hint: string;
+  run: () => void;
 }
 
 interface PaletteEntry {
@@ -28,14 +36,8 @@ const STATIC_ENTRIES: PaletteEntry[] = [
   { id: "activity", label: "Activity", hint: "repo feed", href: "#/activity" },
 ];
 
-/**
- * Cmd+K navigation palette over every view and component, built on the DS
- * Dialog (modal, Escape-dismissing) with the DS Input as the filter field.
- * The DS Command component is blocked for this job: its emitted root drops
- * the contract children slot and renders only internal scaffold, so consumer
- * entries cannot compose (see chrome-coverage BLOCKED_FAMILIES).
- */
-export function CommandPalette({ bundle, open, onOpenChange }: CommandPaletteProps) {
+/** Cmd+K navigation and layout actions, contained by the DS Dialog. */
+export function CommandPalette({ bundle, open, onOpenChange, actions = [] }: CommandPaletteProps) {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -65,6 +67,8 @@ export function CommandPalette({ bundle, open, onOpenChange }: CommandPalettePro
     onOpenChange(false);
   };
 
+  const filteredActions = actions.filter((e) => !needle || `${e.label} ${e.hint}`.toLowerCase().includes(needle));
+
   if (!open) return null;
 
   return (
@@ -75,7 +79,7 @@ export function CommandPalette({ bundle, open, onOpenChange }: CommandPalettePro
       slots={{ title: "Command palette" }}
       aria-label="Command palette"
     >
-      <Stack className="stack-gap-05" style={{ minWidth: "min(560px, 80vw)" }}>
+      <Stack className="command-palette stack-gap-05">
         <Input
           type="search"
           name="command-palette-filter"
@@ -84,9 +88,15 @@ export function CommandPalette({ bundle, open, onOpenChange }: CommandPalettePro
           value={search}
           onChange={setSearch}
         />
-        <nav aria-label="Destinations" style={{ maxHeight: "50vh", overflowY: "auto" }}>
+        <nav aria-label="Destinations" className="command-palette__results">
           <Stack className="stack-gap-02">
-            {filtered.length === 0 && (
+            {filteredActions.map((entry) => (
+              <Button key={entry.id} variant="ghost" className="command-palette__entry"
+                onClick={() => { entry.run(); onOpenChange(false); }}>
+                <span>{entry.label}</span><span className="muted">{entry.hint}</span>
+              </Button>
+            ))}
+            {filtered.length === 0 && filteredActions.length === 0 && (
               <p className="muted" style={{ margin: 0, fontSize: "var(--fsds-core-typography-ramp-2)" }}>
                 Nothing matches “{search}”.
               </p>
@@ -95,19 +105,14 @@ export function CommandPalette({ bundle, open, onOpenChange }: CommandPalettePro
               <a
                 key={entry.id}
                 href={entry.href}
-                className="panel panel--inset"
-                style={{ textDecoration: "none" }}
+                className="command-palette__entry"
                 onClick={(e) => {
                   e.preventDefault();
                   navigate(entry.href);
                 }}
               >
-                <Stack variant="horizontal" className="stack-gap-05" style={{ justifyContent: "space-between" }}>
-                  <span>{entry.label}</span>
-                  <span className="muted" style={{ fontSize: "var(--fsds-core-typography-ramp-1)" }}>
-                    {entry.hint}
-                  </span>
-                </Stack>
+                <span>{entry.label}</span>
+                <span className="muted">{entry.hint}</span>
               </a>
             ))}
           </Stack>

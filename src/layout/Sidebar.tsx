@@ -35,7 +35,7 @@ export function Sidebar({ bundle, route }: SidebarProps) {
   const activePrimitive = route.kind === "primitive" ? route.name : null;
 
   return (
-    <aside className="app-sidebar">
+    <aside id="showcase-navigation" className="app-sidebar" aria-label="Component navigation">
       <div className="sidebar-search">
         <Input
           type="search"

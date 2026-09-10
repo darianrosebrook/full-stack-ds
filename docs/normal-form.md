@@ -4,8 +4,8 @@ authority: architecture
 status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
-updated: 2026-09-06
-verified_at_commit: ab30f3e8
+updated: 2026-09-10
+verified_at_commit: d617cca20424fb4602f05c30f6e620f1d6ea74c9
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -53,6 +53,8 @@ The image-feed attempt found a declared Text truncation control with no realizat
 The native clipping follow-up preserves a root clipping fact with platform applicability in the IR, then lowers it separately from rounded background paint. SwiftUI region composers explicitly reject unsupported radius units at consumption. The [native follow-up](architecture/design/design-contract-recon.md#native-follow-up) records the macOS pixel and generated-consumer witnesses and their limits; it does not extend the Web override API to native targets.
 
 Native token consumption also requires target-specific evidence. Compose's direct state lookups must retain definitions in the addressed scope, while theme references do not justify unused component-table copies. The native parity gate checks lookup coverage and shared addresses instead of requiring identical dictionaries across backends. Generated Kotlin resolver tests pin toggle fallbacks and override precedence; the projected-content control path consumes all four logical padding edges. See [component token consumption](architecture/design/component-token-consumption.md). These are binding and resolver facts, not native visual parity.
+
+The [showcase usability follow-up](architecture/design/showcase-usability.md) separates component facts from consumer orchestration: Card no longer encodes task status as border chrome; Dialog carries bounded sizing; Walkthrough declares callback and index bindings while its example owns launch, sequence boundaries, and dismissal. Those bindings exposed generic Lit default-expression and React Native channel-read emission defects, repaired in the corresponding backends. Browser checks establish the showcase interactions; they do not establish built-in tour persistence or native anchored-tour behavior.
 
 ## The discipline this is an instance of
 

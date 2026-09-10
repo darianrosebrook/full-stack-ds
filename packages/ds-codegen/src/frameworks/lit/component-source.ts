@@ -3152,7 +3152,7 @@ function renderLitBinding(
         // `boolean` and lit-analyzer accepts it. Runtime semantics
         // are unchanged: undefined and false both produce attribute
         // absence in Lit's boolean-attribute binding.
-        return `?${attr}=\${${rawAcc} ?? false}`;
+        return `?${attr}=\${${hasDefault ? rawAcc : `${rawAcc} ?? false`}}`;
       }
       // componentRef: the IR classified this binding. kind:"prop" → the target
       // is a custom element with a `@property`-decorated field of this name;

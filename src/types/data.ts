@@ -214,6 +214,7 @@ export interface ComponentContract {
     defaultTarget?: string;
   };
   surface?: {
+    kind?: string;
     positioning?: {
       strategy?: "anchored" | "centered" | "viewport-edge" | string;
     };

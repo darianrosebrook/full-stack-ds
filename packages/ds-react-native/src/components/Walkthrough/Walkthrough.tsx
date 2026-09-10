@@ -1,7 +1,7 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, Text as RNText, View } from "react-native";
-import { type ReactNode, useMemo } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createWalkthroughStyles } from "./Walkthrough.styles";
 // @generated:end
@@ -24,6 +24,11 @@ export interface WalkthroughProps {
   autoStart?: boolean;
   closeOnOutsideClick?: boolean;
   placement?: WalkthroughPlacement;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  previousDisabled?: boolean;
+  nextLabel?: string;
+  progressLabel?: string;
   slots?: {
     title?: ReactNode;
     description?: ReactNode;
@@ -39,7 +44,16 @@ export interface WalkthroughProps {
 // @generated:start component
 export function Walkthrough({
   steps = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}],
+  index: controlledStep,
+  onSkip,
   label = "Feature tour",
+  onPrevious,
+  onNext,
+  previousDisabled = false,
+  nextLabel = "Next",
+  progressLabel,
+  defaultIndex = 0,
+  onStepChange,
   slots,
   style,
   testID,
@@ -48,6 +62,12 @@ export function Walkthrough({
 }: WalkthroughProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createWalkthroughStyles(fsdsTheme), [fsdsTheme]);
+  const [, setUncontrolledStep] = useState<number>((defaultIndex ?? 0) as number);
+  const setStepValue = useCallback((next: number) => {
+    if (controlledStep === undefined) setUncontrolledStep(next);
+    onStepChange?.(next);
+  }, [controlledStep, onStepChange]);
+
   return (
     <View
       testID={testID}
@@ -77,13 +97,21 @@ export function Walkthrough({
         <Pressable
           style={styles.skip}
           accessibilityLabel={"Skip tour"}
+          onPress={() => onSkip?.()}
           accessibilityRole="button"
-        />
+        >
+          <RNText>{"Skip"}</RNText>
+        </Pressable>
         <Pressable
           style={styles.prev}
           accessibilityLabel={"Previous step"}
+          disabled={previousDisabled}
+          onPress={() => onPrevious?.()}
           accessibilityRole="button"
-        />
+          accessibilityState={{ disabled: previousDisabled }}
+        >
+          <RNText>{"Previous"}</RNText>
+        </Pressable>
         <View
           style={styles.dots}
         >
@@ -92,18 +120,24 @@ export function Walkthrough({
                 key={index}
                 style={styles.dot}
                 accessibilityLabel={item.title}
+                onPress={() => setStepValue(index)}
                 accessibilityRole="button"
               />
             ))}
         </View>
         <View
           style={styles.counter}
-        />
+        >
+          <RNText>{progressLabel}</RNText>
+        </View>
         <Pressable
           style={styles.next}
-          accessibilityLabel={"Next step"}
+          accessibilityLabel={nextLabel}
+          onPress={() => onNext?.()}
           accessibilityRole="button"
-        />
+        >
+          <RNText>{nextLabel}</RNText>
+        </Pressable>
       </View>
     </View>
   );

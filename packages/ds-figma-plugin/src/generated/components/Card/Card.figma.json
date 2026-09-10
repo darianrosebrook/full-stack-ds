@@ -100,15 +100,6 @@
       "nodeKind": null
     },
     {
-      "name": "status",
-      "safeName": "status",
-      "type": "CardStatus",
-      "required": false,
-      "description": "Visual status variant of the card",
-      "defaultExpr": null,
-      "nodeKind": null
-    },
-    {
       "name": "density",
       "safeName": "density",
       "type": "CardDensity",
@@ -419,198 +410,6 @@
       "selector": ".card:focus-visible"
     },
     {
-      "property": "border.inline-start.width",
-      "group": "border",
-      "valueType": "dimension",
-      "slot": "card.design.condition-0d72af7a8245.border.inline-start.width",
-      "cssVar": "--fsds-card-design-condition-0d72af7a8245-border-inline-start-width",
-      "cssProperty": "border-inline-start-width",
-      "selectorKey": "--completed",
-      "part": null,
-      "defaultValue": "2px",
-      "resolvesTo": "card.size.statusAccent.width",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--completed"
-    },
-    {
-      "property": "border.inline-start.color",
-      "group": "border",
-      "valueType": "color",
-      "slot": "card.design.condition-0d72af7a8245.border.inline-start.color",
-      "cssVar": "--fsds-card-design-condition-0d72af7a8245-border-inline-start-color",
-      "cssProperty": "border-inline-start-color",
-      "selectorKey": "--completed",
-      "part": null,
-      "defaultValue": "#b8b8b8",
-      "resolvesTo": "card.color.statusAccent.default",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--completed"
-    },
-    {
-      "property": "border.inline-start.width",
-      "group": "border",
-      "valueType": "dimension",
-      "slot": "card.design.condition-35277c40062a.border.inline-start.width",
-      "cssVar": "--fsds-card-design-condition-35277c40062a-border-inline-start-width",
-      "cssProperty": "border-inline-start-width",
-      "selectorKey": "--in-progress",
-      "part": null,
-      "defaultValue": "2px",
-      "resolvesTo": "card.size.statusAccent.width",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--in-progress"
-    },
-    {
-      "property": "border.inline-start.color",
-      "group": "border",
-      "valueType": "color",
-      "slot": "card.design.condition-35277c40062a.border.inline-start.color",
-      "cssVar": "--fsds-card-design-condition-35277c40062a-border-inline-start-color",
-      "cssProperty": "border-inline-start-color",
-      "selectorKey": "--in-progress",
-      "part": null,
-      "defaultValue": "#b8b8b8",
-      "resolvesTo": "card.color.statusAccent.default",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--in-progress"
-    },
-    {
-      "property": "border.inline-start.width",
-      "group": "border",
-      "valueType": "dimension",
-      "slot": "card.design.condition-0ece19181290.border.inline-start.width",
-      "cssVar": "--fsds-card-design-condition-0ece19181290-border-inline-start-width",
-      "cssProperty": "border-inline-start-width",
-      "selectorKey": "--planned",
-      "part": null,
-      "defaultValue": "2px",
-      "resolvesTo": "card.size.statusAccent.width",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--planned"
-    },
-    {
-      "property": "border.inline-start.color",
-      "group": "border",
-      "valueType": "color",
-      "slot": "card.design.condition-0ece19181290.border.inline-start.color",
-      "cssVar": "--fsds-card-design-condition-0ece19181290-border-inline-start-color",
-      "cssProperty": "border-inline-start-color",
-      "selectorKey": "--planned",
-      "part": null,
-      "defaultValue": "#b8b8b8",
-      "resolvesTo": "card.color.statusAccent.default",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--planned"
-    },
-    {
-      "property": "border.inline-start.width",
-      "group": "border",
-      "valueType": "dimension",
-      "slot": "card.design.condition-ddee479df9ee.border.inline-start.width",
-      "cssVar": "--fsds-card-design-condition-ddee479df9ee-border-inline-start-width",
-      "cssProperty": "border-inline-start-width",
-      "selectorKey": "--deprecated",
-      "part": null,
-      "defaultValue": "2px",
-      "resolvesTo": "card.size.statusAccent.width",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--deprecated"
-    },
-    {
-      "property": "border.inline-start.color",
-      "group": "border",
-      "valueType": "color",
-      "slot": "card.design.condition-ddee479df9ee.border.inline-start.color",
-      "cssVar": "--fsds-card-design-condition-ddee479df9ee-border-inline-start-color",
-      "cssProperty": "border-inline-start-color",
-      "selectorKey": "--deprecated",
-      "part": null,
-      "defaultValue": "#b8b8b8",
-      "resolvesTo": "card.color.statusAccent.default",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--deprecated"
-    },
-    {
-      "property": "border.inline-start.width",
-      "group": "border",
-      "valueType": "dimension",
-      "slot": "card.design.condition-b5aef02c39e1.border.inline-start.width",
-      "cssVar": "--fsds-card-design-condition-b5aef02c39e1-border-inline-start-width",
-      "cssProperty": "border-inline-start-width",
-      "selectorKey": "--category",
-      "part": null,
-      "defaultValue": "2px",
-      "resolvesTo": "card.size.statusAccent.width",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--category"
-    },
-    {
-      "property": "border.inline-start.color",
-      "group": "border",
-      "valueType": "color",
-      "slot": "card.design.condition-b5aef02c39e1.border.inline-start.color",
-      "cssVar": "--fsds-card-design-condition-b5aef02c39e1-border-inline-start-color",
-      "cssProperty": "border-inline-start-color",
-      "selectorKey": "--category",
-      "part": null,
-      "defaultValue": "#b8b8b8",
-      "resolvesTo": "card.color.statusAccent.default",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--category"
-    },
-    {
-      "property": "border.inline-start.width",
-      "group": "border",
-      "valueType": "dimension",
-      "slot": "card.design.condition-a5c1a383a389.border.inline-start.width",
-      "cssVar": "--fsds-card-design-condition-a5c1a383a389-border-inline-start-width",
-      "cssProperty": "border-inline-start-width",
-      "selectorKey": "--complexity",
-      "part": null,
-      "defaultValue": "2px",
-      "resolvesTo": "card.size.statusAccent.width",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--complexity"
-    },
-    {
-      "property": "border.inline-start.color",
-      "group": "border",
-      "valueType": "color",
-      "slot": "card.design.condition-a5c1a383a389.border.inline-start.color",
-      "cssVar": "--fsds-card-design-condition-a5c1a383a389-border-inline-start-color",
-      "cssProperty": "border-inline-start-color",
-      "selectorKey": "--complexity",
-      "part": null,
-      "defaultValue": "#b8b8b8",
-      "resolvesTo": "card.color.statusAccent.default",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card--complexity"
-    },
-    {
       "property": "spacing.padding",
       "group": "spacing",
       "valueType": "dimension",
@@ -801,98 +600,6 @@
       "selector": ".card__actions"
     },
     {
-      "property": "background.fill",
-      "group": "background",
-      "valueType": "color",
-      "slot": "card.design.badge.background.fill",
-      "cssVar": "--fsds-card-design-badge-background-fill",
-      "cssProperty": "background-color",
-      "selectorKey": "badge",
-      "part": "badge",
-      "defaultValue": "#d92d2e",
-      "resolvesTo": "card.color.badge.accent.background",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card__badge"
-    },
-    {
-      "property": "foreground.color",
-      "group": "foreground",
-      "valueType": "color",
-      "slot": "card.design.badge.foreground.color",
-      "cssVar": "--fsds-card-design-badge-foreground-color",
-      "cssProperty": "color",
-      "selectorKey": "badge",
-      "part": "badge",
-      "defaultValue": "#ffffff",
-      "resolvesTo": "card.color.badge.accent.foreground",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card__badge"
-    },
-    {
-      "property": "spacing.padding",
-      "group": "spacing",
-      "valueType": "dimension",
-      "slot": "card.design.badge.spacing.padding",
-      "cssVar": "--fsds-card-design-badge-spacing-padding",
-      "cssProperty": "padding",
-      "selectorKey": "badge",
-      "part": "badge",
-      "defaultValue": "2px 8px",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card__badge"
-    },
-    {
-      "property": "shape.radius",
-      "group": "shape",
-      "valueType": "dimension",
-      "slot": "card.design.badge.shape.radius",
-      "cssVar": "--fsds-card-design-badge-shape-radius",
-      "cssProperty": "border-radius",
-      "selectorKey": "badge",
-      "part": "badge",
-      "defaultValue": "9999px",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card__badge"
-    },
-    {
-      "property": "typography.size",
-      "group": "typography",
-      "valueType": "dimension",
-      "slot": "card.design.badge.typography.size",
-      "cssVar": "--fsds-card-design-badge-typography-size",
-      "cssProperty": "font-size",
-      "selectorKey": "badge",
-      "part": "badge",
-      "defaultValue": "0.75em",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card__badge"
-    },
-    {
-      "property": "typography.line-height",
-      "group": "typography",
-      "valueType": "dimension",
-      "slot": "card.design.badge.typography.line-height",
-      "cssVar": "--fsds-card-design-badge-typography-line-height",
-      "cssProperty": "line-height",
-      "selectorKey": "badge",
-      "part": "badge",
-      "defaultValue": "1.4",
-      "editableTargets": [
-        "web"
-      ],
-      "selector": ".card__badge"
-    },
-    {
       "property": "typography.size",
       "group": "typography",
       "valueType": "dimension",
@@ -925,14 +632,6 @@
     }
   ],
   "variants": {
-    "status": [
-      "completed",
-      "in-progress",
-      "planned",
-      "deprecated",
-      "category",
-      "complexity"
-    ],
     "density": [
       "default",
       "inset"
@@ -979,10 +678,6 @@
   "classRecipe": {
     "base": "card",
     "valueModifiers": [
-      {
-        "propName": "status",
-        "safeName": "status"
-      },
       {
         "propName": "density",
         "safeName": "density",
@@ -1036,10 +731,6 @@
           "--fsds-card-size-gap-default": "var(--fsds-core-spacing-size-03, 4px)",
           "--fsds-card-typography-line-height-heading": "var(--fsds-semantic-typography-line-height-heading, 1)",
           "--fsds-card-typography-line-height-normal": "var(--fsds-semantic-typography-line-height-normal, 1.5)",
-          "--fsds-card-color-badge-accent-background": "var(--fsds-semantic-color-background-accent, #d92d2e)",
-          "--fsds-card-color-badge-accent-foreground": "var(--fsds-semantic-color-foreground-on-brand, #ffffff)",
-          "--fsds-card-color-status-accent-default": "var(--fsds-semantic-color-border-light, #b8b8b8)",
-          "--fsds-card-size-status-accent-width": "var(--fsds-core-spacing-size-02, 2px)",
           "--fsds-card-elevation-resting": "var(--fsds-semantic-elevation-surface-raised, 0px 1px 2px #0000000f, 0px 1px 3px #0000001a)",
           "--fsds-card-elevation-raised": "var(--fsds-semantic-elevation-surface-floating, 0px 2px 4px #0000000f, 0px 4px 8px #0000001a)",
           "--fsds-card-color-focus-ring": "var(--fsds-semantic-focus-ring-color, #0566fe)",
@@ -1095,54 +786,6 @@
           "outline-color": "var(--fsds-card-color-focus-ring, #0566fe)",
           "outline-offset": "var(--fsds-card-focus-ring-offset, 2px)",
           "outline-style": "solid"
-        }
-      },
-      {
-        "selector": ".card--completed",
-        "declarations": {
-          "--fsds-card-color-status-accent-default": "var(--fsds-semantic-color-border-success, #3a6614)",
-          "border-inline-start-width": "var(--fsds-card-size-status-accent-width, 2px)",
-          "border-inline-start-color": "var(--fsds-card-color-status-accent-default, #b8b8b8)"
-        }
-      },
-      {
-        "selector": ".card--in-progress",
-        "declarations": {
-          "--fsds-card-color-status-accent-default": "var(--fsds-semantic-color-border-info, #034fd6)",
-          "border-inline-start-width": "var(--fsds-card-size-status-accent-width, 2px)",
-          "border-inline-start-color": "var(--fsds-card-color-status-accent-default, #b8b8b8)"
-        }
-      },
-      {
-        "selector": ".card--planned",
-        "declarations": {
-          "--fsds-card-color-status-accent-default": "var(--fsds-semantic-color-border-subtle, #d0d0d0)",
-          "border-inline-start-width": "var(--fsds-card-size-status-accent-width, 2px)",
-          "border-inline-start-color": "var(--fsds-card-color-status-accent-default, #b8b8b8)"
-        }
-      },
-      {
-        "selector": ".card--deprecated",
-        "declarations": {
-          "--fsds-card-color-status-accent-default": "var(--fsds-semantic-color-border-danger, #b31b1b)",
-          "border-inline-start-width": "var(--fsds-card-size-status-accent-width, 2px)",
-          "border-inline-start-color": "var(--fsds-card-color-status-accent-default, #b8b8b8)"
-        }
-      },
-      {
-        "selector": ".card--category",
-        "declarations": {
-          "--fsds-card-color-status-accent-default": "var(--fsds-semantic-color-border-accent, #d92d2e)",
-          "border-inline-start-width": "var(--fsds-card-size-status-accent-width, 2px)",
-          "border-inline-start-color": "var(--fsds-card-color-status-accent-default, #b8b8b8)"
-        }
-      },
-      {
-        "selector": ".card--complexity",
-        "declarations": {
-          "--fsds-card-color-status-accent-default": "var(--fsds-semantic-color-border-warning, #8b4b00)",
-          "border-inline-start-width": "var(--fsds-card-size-status-accent-width, 2px)",
-          "border-inline-start-color": "var(--fsds-card-color-status-accent-default, #b8b8b8)"
         }
       },
       {
@@ -1215,12 +858,7 @@
         "declarations": {
           "display": "inline-flex",
           "align-items": "center",
-          "background-color": "var(--fsds-card-color-badge-accent-background, #d92d2e)",
-          "color": "var(--fsds-card-color-badge-accent-foreground, #ffffff)",
-          "padding": "2px 8px",
-          "border-radius": "9999px",
-          "font-size": "0.75em",
-          "line-height": "1.4"
+          "align-self": "flex-start"
         }
       },
       {

@@ -7,14 +7,12 @@ import { createCardStyles } from "./Card.styles";
 // @generated:end
 
 // @generated:start types
-export type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" | "category" | "complexity";
 export type CardDensity = "default" | "inset";
 // @generated:end
 
 // @generated:start props
 export interface CardProps {
   interactive?: boolean;
-  status?: CardStatus;
   density?: CardDensity;
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;

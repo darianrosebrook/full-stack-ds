@@ -169,10 +169,14 @@
       }
     },
     "max-height": {
-      "literal": "90vh",
+      "literal": "90dvh",
       "platforms": [
         "web"
-      ]
+      ],
+      "design": {
+        "property": "sizing.max-height",
+        "slot": "dialog.design.modal.sizing.max-height"
+      }
     },
     "pointer-events": {
       "literal": "auto",
@@ -191,6 +195,16 @@
       "platforms": [
         "web"
       ]
+    },
+    "min-width": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ],
+      "design": {
+        "property": "sizing.min-width",
+        "slot": "dialog.design.modal.sizing.min-width"
+      }
     }
   },
   "header": {
@@ -251,6 +265,12 @@
         "property": "border.bottom.width",
         "slot": "dialog.design.header.border.bottom.width"
       }
+    },
+    "flex-shrink": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
     }
   },
   "title": {
@@ -325,6 +345,32 @@
     "dialog.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.secondary",
       "fallback": "#474647"
+    },
+    "min-width": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ],
+      "design": {
+        "property": "sizing.min-width",
+        "slot": "dialog.design.body.sizing.min-width"
+      }
+    },
+    "min-height": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ],
+      "design": {
+        "property": "sizing.min-height",
+        "slot": "dialog.design.body.sizing.min-height"
+      }
+    },
+    "overflow-wrap": {
+      "literal": "anywhere",
+      "platforms": [
+        "web"
+      ]
     }
   },
   "footer": {
@@ -399,6 +445,12 @@
         "property": "border.top.width",
         "slot": "dialog.design.footer.border.top.width"
       }
+    },
+    "flex-shrink": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
     }
   },
   "closeButton": {
