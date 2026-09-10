@@ -59,3 +59,8 @@ non_functional: {}
 contracts:
   - name: 'showcase-usability'
     type: behavior
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "e2e/showcase-usability.spec.ts: palette fits 1153/390/320px, action spacing and scoped Dialog sizing; 14-test Chromium run PASS. Evidence: tmp/showcase-usability/e2e-final.log and palette-actions-320.png."
+    recorded_at: "2026-09-10T23:15:59.713Z"
