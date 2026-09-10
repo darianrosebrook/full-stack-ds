@@ -27,6 +27,7 @@ const SRC = resolve(HERE, "..");
  * component renders — never for app-authored markup, which must be scanned.
  */
 export const DS_INTERNALS = [
+  "button__loadingText", // Button label: palette action label/hint layout (browser spacing witness)
   "dialog__closeButton", // Dialog close button
   "select__text", // Select trigger text
   "switch__input", // Switch native input
