@@ -22,12 +22,7 @@ export type CodeBlockLanguage = "bash" | "css" | "html" | "javascript" | "json" 
   standalone: true,
   imports: [NgClass, NgIf, NgFor],
   host: { "data-fsds-component": "code-block" },
-  template: `<pre [ngClass]="classes()" [attr.data-language]="language" data-fsds-box="">
-  <code [ngClass]="'code-block__code'" spellcheck="false" [attr.data-language]="language">
-    <ng-container *ngIf="(highlight ?? true)"><span *ngFor="let token of highlightTokens" [ngClass]="'code-block__token'" [attr.data-token]="token.kind">{{ token.text }}</span></ng-container>
-    <ng-container *ngIf="!((highlight ?? true))">{{ code }}</ng-container>
-  </code>
-</pre>`,
+  template: `<pre [ngClass]="classes()" [attr.data-language]="language" data-fsds-box=""><code [ngClass]="'code-block__code'" spellcheck="false" [attr.data-language]="language"><ng-container *ngIf="(highlight ?? true)"><span *ngFor="let token of highlightTokens" [ngClass]="'code-block__token'" [attr.data-token]="token.kind">{{ token.text }}</span></ng-container><ng-container *ngIf="!((highlight ?? true))">{{ code }}</ng-container></code></pre>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CodeBlockComponent {

@@ -2368,6 +2368,8 @@ function generateLitDomTreePropertyDecl(
 }
 
 interface LitRenderContext {
+  /** Ancestor pre elements preserve template formatting as literal text. */
+  preformatted?: boolean;
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
   styledByName: Map<string, { type: string; defaultExpr?: string }>;
@@ -2516,6 +2518,12 @@ function renderLitDomNode(
   ctx: LitRenderContext,
   indent: number,
 ): string {
+  // HTML preformatted context must carry only authored content. Suppress
+  // generator whitespace while leaving interpolated source values untouched.
+  const compact = ctx.preformatted || node.tag === "pre";
+  if (compact) indent = 0;
+  const childIndent = compact ? 0 : indent + 2;
+  const separator = compact ? "" : "\n";
   const pad = " ".repeat(indent);
 
   if (node.tag === "slot" || node.tag === "children") {
@@ -2583,7 +2591,7 @@ function renderLitDomNode(
       `width=\${${sizeExpr}}`,
       `height=\${${sizeExpr}}`,
     ];
-    const pathChildPad = " ".repeat(indent + 2);
+    const pathChildPad = " ".repeat(childIndent);
     const pathAttrExprs = ICON_GLYPH_PATH_ATTRS.map(
       ({ recordKey, svgAttr }) => `${svgAttr}=\${ifDefined(glyphPath.${recordKey})}`,
     ).join(" ");
@@ -2596,8 +2604,8 @@ function renderLitDomNode(
       `${pad}<${node.tag}${formatLitAttrs(svgAttrs)}>`,
       `${pathChildPad}${pathsExpr}`,
       `${pad}</${node.tag}>`,
-    ].join("\n");
-    return `${pad}\${${glyphIdent} ? svg\`\n${svgBody}\n${pad}\` : nothing}`;
+    ].join(separator);
+    return `${pad}\${${glyphIdent} ? svg\`${separator}${svgBody}${separator}${pad}\` : nothing}`;
   }
 
   // IR-DOM-BINDING-CAPABILITY-01: event bindings lower to Lit's
@@ -2795,9 +2803,9 @@ function renderLitDomNode(
     attrs.push(`@click=\${(e: Event) => e.stopPropagation()}`);
   }
 
-  const childCtx: LitRenderContext = { ...ctx, isRoot: false };
+  const childCtx: LitRenderContext = { ...ctx, isRoot: false, preformatted: compact };
   const renderedChildren = node.children.map((c) =>
-    renderLitDomNode(c, childCtx, indent + 2),
+    renderLitDomNode(c, childCtx, childIndent),
   );
 
   // IR-DOM-BINDING-CAPABILITY-01: content binding lowers to a `${...}`
@@ -2894,7 +2902,7 @@ function renderLitDomNode(
       `${pad}<${tagName}${formatLitAttrs(attrs)}>`,
       ...renderedChildren,
       `${pad}</${tagName}>`,
-    ].join("\n");
+    ].join(separator);
   };
 
   let body: string;
@@ -2920,7 +2928,7 @@ function renderLitDomNode(
       // state property that gets flipped true/false via a `slotchange` listener
       // on the inner <slot>. The class body generator injects this property and
       // the handler when it detects any `if: "children"` node in the tree.
-      withIfGuard = `\${this._hasChildren ? html\`\n${body}\n${pad}\` : nothing}`;
+      withIfGuard = `\${this._hasChildren ? html\`${separator}${body}${separator}${pad}\` : nothing}`;
     } else {
       // IR-DOM-ITERATE-CAPABILITY-01: iteration aliases match before
       // channel lookup. A guard `if: "item"` resolves to the bare
@@ -2934,7 +2942,7 @@ function renderLitDomNode(
           ? `this.behavior.${matchingChannel.name}`
           : `this.${node.ifProp}`;
       const condition = node.ifNegated ? `!${expr}` : expr;
-      withIfGuard = `${pad}\${${condition} ? html\`\n${body}\n${pad}\` : nothing}`;
+      withIfGuard = `${pad}\${${condition} ? html\`${separator}${body}${separator}${pad}\` : nothing}`;
     }
   }
 
@@ -2984,8 +2992,8 @@ function renderLitDomNode(
       ctx.styledByName.get(source.prop)?.defaultExpr !== undefined;
     const arrowSource =
       kind === "array"
-        ? `(${sourceHasAccessorDefault ? sourceExpr : `${sourceExpr} ?? []`}).map((${params}) => html\`\n${withIfGuard}\n${pad}\`)`
-        : `Array.from({ length: ${sourceHasAccessorDefault ? sourceExpr : `${sourceExpr} ?? 0`} }, (${params}) => html\`\n${withIfGuard}\n${pad}\`)`;
+        ? `(${sourceHasAccessorDefault ? sourceExpr : `${sourceExpr} ?? []`}).map((${params}) => html\`${separator}${withIfGuard}${separator}${pad}\`)`
+        : `Array.from({ length: ${sourceHasAccessorDefault ? sourceExpr : `${sourceExpr} ?? 0`} }, (${params}) => html\`${separator}${withIfGuard}${separator}${pad}\`)`;
     return `${pad}\${${arrowSource}}`;
   }
   return withIfGuard;

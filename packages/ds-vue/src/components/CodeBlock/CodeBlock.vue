@@ -45,9 +45,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <pre :class="classNames" :data-language="props.language" :data-testid="props['data-testid']" data-fsds-component="code-block" data-fsds-box="">
-    <code :class="'code-block__code'" spellcheck="false" :data-language="props.language">
-      <template v-if="props.highlight"><span v-for="(token, tokenIndex) in tokenizeCode(props.code, props.language)" :key="tokenIndex" class="code-block__token" :data-token="token.kind">{{ token.text }}</span></template><template v-else>{{ props.code }}</template>
-    </code>
-  </pre>
+<pre :class="classNames" :data-language="props.language" :data-testid="props['data-testid']" data-fsds-component="code-block" data-fsds-box=""><code :class="'code-block__code'" spellcheck="false" :data-language="props.language"><template v-if="props.highlight"><span v-for="(token, tokenIndex) in tokenizeCode(props.code, props.language)" :key="tokenIndex" class="code-block__token" :data-token="token.kind">{{ token.text }}</span></template><template v-else>{{ props.code }}</template></code></pre>
 </template>

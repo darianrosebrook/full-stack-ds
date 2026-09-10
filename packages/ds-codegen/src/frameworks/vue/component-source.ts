@@ -1958,6 +1958,8 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
 }
 
 interface VueRenderContext {
+  /** Ancestor pre elements preserve template formatting as literal text. */
+  preformatted?: boolean;
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
   isRoot: boolean;
@@ -2097,6 +2099,12 @@ function renderVueDomNode(
   ctx: VueRenderContext,
   indent: number,
 ): string {
+  // HTML preformatted context must carry only authored content. Suppress
+  // generator whitespace while leaving interpolated source values untouched.
+  const compact = ctx.preformatted || node.tag === "pre";
+  if (compact) indent = 0;
+  const childIndent = compact ? 0 : indent + 2;
+  const separator = compact ? "" : "\n";
   const pad = " ".repeat(indent);
 
   if (node.tag === "slot" || node.tag === "children") {
@@ -2348,7 +2356,7 @@ function renderVueDomNode(
       : `${glyphIdent}.size`;
     attrs.push(`:width="${sizeExpr}"`);
     attrs.push(`:height="${sizeExpr}"`);
-    const childPad = " ".repeat(indent + 2);
+    const childPad = " ".repeat(childIndent);
     const pathAttrs = ICON_GLYPH_PATH_ATTRS.map(
       ({ recordKey, svgAttr }) => `:${svgAttr}="glyphPath.${recordKey}"`,
     ).join(" ");
@@ -2493,13 +2501,13 @@ function renderVueDomNode(
     attrs.unshift(`v-for="${vForExpr}"`);
   }
 
-  const childCtx: VueRenderContext = { ...ctx, isRoot: false };
+  const childCtx: VueRenderContext = { ...ctx, isRoot: false, preformatted: compact };
   const renderedChildren = node.children.map((c) =>
-    renderVueDomNode(c, childCtx, indent + 2),
+    renderVueDomNode(c, childCtx, childIndent),
   );
 
   const textChildLines = textChildren.map(
-    (tc) => `${" ".repeat(indent + 2)}${tc}`,
+    (tc) => `${" ".repeat(childIndent)}${tc}`,
   );
   const allChildren = [
     ...textChildLines,
@@ -2530,7 +2538,7 @@ function renderVueDomNode(
       `${pad}<${tag}${formatVueAttrs(attrs)}>`,
       ...allChildren,
       `${pad}</${tag}>`,
-    ].join("\n");
+    ].join(separator);
   }
 
   // IR-DOM-ITERATE-CAPABILITY-01: when iteration AND if-guard coexist,
@@ -2541,9 +2549,9 @@ function renderVueDomNode(
   if (iter && ifGuard) {
     return [
       `${pad}<template v-for="${vForExpr}" :key="${iter.indexVar}">`,
-      body.replace(/^/gm, "  "),
+      (compact ? body : body.replace(/^/gm, "  ")),
       `${pad}</template>`,
-    ].join("\n");
+    ].join(separator);
   }
   return body;
 }

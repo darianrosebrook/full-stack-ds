@@ -5,7 +5,7 @@ status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
 updated: 2026-09-10
-verified_at_commit: d617cca20424fb4602f05c30f6e620f1d6ea74c9
+verified_at_commit: 7a699b3551c5de33336fc2b1a3c18e7a4f862c97
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -55,6 +55,8 @@ The native clipping follow-up preserves a root clipping fact with platform appli
 Native token consumption also requires target-specific evidence. Compose's direct state lookups must retain definitions in the addressed scope, while theme references do not justify unused component-table copies. The native parity gate checks lookup coverage and shared addresses instead of requiring identical dictionaries across backends. Generated Kotlin resolver tests pin toggle fallbacks and override precedence; the projected-content control path consumes all four logical padding edges. See [component token consumption](architecture/design/component-token-consumption.md). These are binding and resolver facts, not native visual parity.
 
 The [showcase usability follow-up](architecture/design/showcase-usability.md) separates component facts from consumer orchestration: Card no longer encodes task status as border chrome; Dialog carries bounded sizing; Walkthrough declares callback and index bindings while its example owns launch, sequence boundaries, and dismissal. Those bindings exposed generic Lit default-expression and React Native channel-read emission defects, repaired in the corresponding backends. Browser checks establish the showcase interactions; they do not establish built-in tour persistence or native anchored-tour behavior.
+
+The [preformatted-content repair](architecture/design/preformatted-content.md) follows another browser counterexample: template indentation became visible text inside CodeBlock. The contract already declared a `pre` host. Vue, Angular, Svelte, and Lit now carry that HTML context through template emission, suppressing generator whitespace without trimming authored values. Exact-text browser checks cover the Web targets with highlighting enabled and disabled; this is a template-realization repair, not a new token or component-specific emitter exception.
 
 ## The discipline this is an instance of
 

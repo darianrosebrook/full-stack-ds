@@ -2447,6 +2447,8 @@ function generateDomTreeClassesComputed(ir: ComponentIR): string[] {
 }
 
 interface AngularRenderContext {
+  /** Ancestor pre elements preserve template formatting as literal text. */
+  preformatted?: boolean;
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
   /** Prop-name → resolved styled-prop lookup, mirroring the lit emitter's `styledByName`. Populated at root construction and carried into nested contexts via the `{ ...ctx }` spread. */
@@ -2544,6 +2546,12 @@ function renderAngularDomNode(
   ctx: AngularRenderContext,
   indent: number,
 ): string {
+  // HTML preformatted context must carry only authored content. Suppress
+  // generator whitespace while leaving interpolated source values untouched.
+  const compact = ctx.preformatted || node.tag === "pre";
+  if (compact) indent = 0;
+  const childIndent = compact ? 0 : indent + 2;
+  const separator = compact ? "" : "\n";
   const pad = " ".repeat(indent);
 
   if (node.tag === "slot" || node.tag === "children") {
@@ -2783,9 +2791,9 @@ function renderAngularDomNode(
     ifWrap = node.ifProp; // handled below
   }
 
-  const childCtx: AngularRenderContext = { ...ctx, isRoot: false };
+  const childCtx: AngularRenderContext = { ...ctx, isRoot: false, preformatted: compact };
   const renderedChildren = node.children.map((c) =>
-    renderAngularDomNode(c, childCtx, indent + 2),
+    renderAngularDomNode(c, childCtx, childIndent),
   );
 
   // IR-DOM-BINDING-CAPABILITY-01: content binding lowers to Angular's
@@ -2802,7 +2810,7 @@ function renderAngularDomNode(
   if (node.content) {
     if (isHighlightTransform(node.content)) {
       const transform = node.content;
-      const sp = " ".repeat(indent + 2);
+      const sp = " ".repeat(childIndent);
       const tokenGetter = ctx.contentTransformGetters?.get(node);
       if (!tokenGetter) {
         throw new Error(
@@ -2839,7 +2847,7 @@ function renderAngularDomNode(
       // getter's structural parse through the companion block renderer; a
       // declared gate falls back to the plain interpolation.
       const transform = node.content;
-      const sp = " ".repeat(indent + 2);
+      const sp = " ".repeat(childIndent);
       const blocks =
         `<fsds-markdown-block *ngFor="let block of markdownBlocks" [block]="block"></fsds-markdown-block>`;
       if (transform.gate !== undefined) {
@@ -2867,7 +2875,7 @@ function renderAngularDomNode(
         ctx,
       );
       if (contentExpr !== null) {
-        contentLines.push(`${" ".repeat(indent + 2)}{{ ${contentExpr} }}`);
+        contentLines.push(`${" ".repeat(childIndent)}{{ ${contentExpr} }}`);
       }
     }
   }
@@ -2891,13 +2899,13 @@ function renderAngularDomNode(
       : `glyph.size`;
     attrs.push(`[attr.width]="${sizeExpr}"`);
     attrs.push(`[attr.height]="${sizeExpr}"`);
-    const childPad = " ".repeat(indent + 2);
+    const childPad = " ".repeat(childIndent);
     const pathAttrs = ICON_GLYPH_PATH_ATTRS.map(
       ({ recordKey, svgAttr }) => `[attr.${svgAttr}]="glyphPath.${recordKey}"`,
     ).join(" ");
     iconGlyphChildLines.push(
       `${childPad}<ng-container *ngFor="let glyphPath of glyph.paths">`,
-      `${childPad}  <path ${pathAttrs} />`,
+      `${compact ? "" : `${childPad}  `}<path ${pathAttrs} />`,
       `${childPad}</ng-container>`,
     );
   }
@@ -2931,7 +2939,7 @@ function renderAngularDomNode(
       `${pad}<${tagName}${formatAngularAttrs(branchAttrs)}>`,
       ...childLines,
       `${pad}</${tagName}>`,
-    ].join("\n");
+    ].join(separator);
   };
 
   let body: string;
@@ -2954,7 +2962,7 @@ function renderAngularDomNode(
         renderElementBody(tagName, [`*ngSwitchCase="'${tagName}'"`], branchContent).replace(/^/gm, "  "),
       ),
       `${pad}</ng-container>`,
-    ].join("\n");
+    ].join(separator);
   } else {
     body = renderElementBody(tag);
   }
@@ -2970,9 +2978,9 @@ function renderAngularDomNode(
       // that reads the host element's text/child nodes to determine presence.
       withIfGuard = [
         `${pad}<ng-container *ngIf="hasContent">`,
-        body.replace(/^/gm, "  "),
+        (compact ? body : body.replace(/^/gm, "  ")),
         `${pad}</ng-container>`,
-      ].join("\n");
+      ].join(separator);
     } else {
       const matchingChannel = [...ctx.channelByName.values()].find(
         (c) => c.valueProp === ifWrap || c.name === ifWrap,
@@ -2983,9 +2991,9 @@ function renderAngularDomNode(
       const condition = node.ifNegated ? `!${expr}` : expr;
       withIfGuard = [
         `${pad}<ng-container *ngIf="${condition}">`,
-        body.replace(/^/gm, "  "),
+        (compact ? body : body.replace(/^/gm, "  ")),
         `${pad}</ng-container>`,
-      ].join("\n");
+      ].join(separator);
     }
   }
 
@@ -2997,9 +3005,9 @@ function renderAngularDomNode(
   if (iconGlyphEntry) {
     withIfGuard = [
       `${pad}<ng-container *ngIf="${iconGlyphEntry.glyphGetter} as glyph">`,
-      withIfGuard.replace(/^/gm, "  "),
+      (compact ? withIfGuard : withIfGuard.replace(/^/gm, "  ")),
       `${pad}</ng-container>`,
-    ].join("\n");
+    ].join(separator);
   }
 
   // IR-DOM-ITERATE-CAPABILITY-01: apply the *ngFor wrap as the outermost
@@ -3068,9 +3076,9 @@ function renderAngularDomNode(
         : `let _ of arrayFromCount(${sourceExpr}); let ${indexVar} = index`;
     return [
       `${pad}<ng-container *ngFor="${ngForExpr}">`,
-      withIfGuard.replace(/^/gm, "  "),
+      (compact ? withIfGuard : withIfGuard.replace(/^/gm, "  ")),
       `${pad}</ng-container>`,
-    ].join("\n");
+    ].join(separator);
   }
   return withIfGuard;
 }
