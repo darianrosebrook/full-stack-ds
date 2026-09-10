@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "e2e/showcase-usability.spec.ts: palette fits 1153/390/320px, action spacing and scoped Dialog sizing; 14-test Chromium run PASS. Evidence: tmp/showcase-usability/e2e-final.log and palette-actions-320.png."
     recorded_at: "2026-09-10T23:15:59.713Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "e2e/showcase-usability.spec.ts: Card neutral borders and single painted badge surface PASS; audit:dead-slots and governed:rail PASS. Evidence: tmp/showcase-usability/card.png and prepush-complete.log."
+    recorded_at: "2026-09-10T23:16:00.750Z"
