@@ -147,13 +147,13 @@ test('launched Dialog consumes scoped sizing overrides and restores its defaults
 
 test('brand token permalinks preserve the selected brand', async ({ page }) => {
   await page.goto('/#/tokens');
-  await page.getByRole('radio', { name: 'Forest', exact: true }).click();
+  await page.getByRole('radio', { name: 'forest', exact: true }).click();
   const link = page.locator('[id^="token-brand-"] .tokens-name-anchor').first();
   const href = await link.getAttribute('href');
   expect(href).toContain('&brand=forest');
   await link.click();
   await page.reload();
-  await expect(page.getByRole('radio', { name: 'Forest', exact: true })).toBeChecked();
+  await expect(page.getByRole('radio', { name: 'forest', exact: true })).toBeChecked();
   const anchor = new URLSearchParams(href!.split('?')[1]).get('row');
   await expect(page.locator(`[id="${anchor}"]`)).toBeInViewport();
 });
