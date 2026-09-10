@@ -178,9 +178,7 @@ export class CodeBlockElement extends LitElement {
   }
 
   override render() {
-    return html`<pre class="${this.computeClasses()}" data-language=${ifDefined(this.language)} data-fsds-box="">
-  <code class=${'code-block__code'} spellcheck="false" data-language=${ifDefined(this.language)}>${(this.highlight ?? true) ? tokenizeCode(this.code, this.language).map((token, tokenIndex) => html`<span class=${'code-block__token'} data-token=${token.kind}>${token.text}</span>`) : this.code}</code>
-</pre>`;
+    return html`<pre class="${this.computeClasses()}" data-language=${ifDefined(this.language)} data-fsds-box=""><code class=${'code-block__code'} spellcheck="false" data-language=${ifDefined(this.language)}>${(this.highlight ?? true) ? tokenizeCode(this.code, this.language).map((token, tokenIndex) => html`<span class=${'code-block__token'} data-token=${token.kind}>${token.text}</span>`) : this.code}</code></pre>`;
   }
 }
 

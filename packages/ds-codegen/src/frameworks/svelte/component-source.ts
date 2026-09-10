@@ -1762,6 +1762,8 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
 }
 
 interface SvelteRenderContext {
+  /** Ancestor pre elements preserve template formatting as literal text. */
+  preformatted?: boolean;
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
   hookVar: string;
@@ -1875,6 +1877,12 @@ function renderSvelteDomNode(
   ctx: SvelteRenderContext,
   indent: number,
 ): string {
+  // HTML preformatted context must carry only authored content. Suppress
+  // generator whitespace while leaving interpolated source values untouched.
+  const compact = ctx.preformatted || node.tag === "pre";
+  if (compact) indent = 0;
+  const childIndent = compact ? 0 : indent + 2;
+  const separator = compact ? "" : "\n";
   const pad = " ".repeat(indent);
 
   if (node.tag === "slot" || node.tag === "children") {
@@ -2185,12 +2193,13 @@ function renderSvelteDomNode(
   const childCtx: SvelteRenderContext = {
     ...ctx,
     isRoot: false,
+    preformatted: compact,
     rootUsePortal: false,
     rootSelectorAnchored: false,
     rootRole: undefined,
   };
   const renderedChildren = node.children.map((c) =>
-    renderSvelteDomNode(c, childCtx, indent + 2),
+    renderSvelteDomNode(c, childCtx, childIndent),
   );
 
   // componentRef: render the referenced component by its PascalCase name.
@@ -2220,13 +2229,13 @@ function renderSvelteDomNode(
       : `${glyphIdent}.size`;
     attrs.push(`width={${sizeExpr}}`);
     attrs.push(`height={${sizeExpr}}`);
-    const childPad = " ".repeat(indent + 2);
+    const childPad = " ".repeat(childIndent);
     const pathAttrs = ICON_GLYPH_PATH_ATTRS.map(
       ({ recordKey, svgAttr }) => `${svgAttr}={glyphPath.${recordKey}}`,
     ).join(" ");
     iconGlyphEachLines = [
       `${childPad}{#each ${glyphIdent}.paths as glyphPath, glyphIndex (glyphIndex)}`,
-      `${childPad}  <path ${pathAttrs} />`,
+      `${compact ? "" : `${childPad}  `}<path ${pathAttrs} />`,
       `${childPad}{/each}`,
     ];
   }
@@ -2240,7 +2249,7 @@ function renderSvelteDomNode(
       `${pad}<${tag}${formatSvelteAttrs(attrs)}>`,
       ...iconGlyphEachLines,
       `${pad}</${tag}>`,
-    ].join("\n");
+    ].join(separator);
   } else if (renderedChildren.length === 0 && isVoidEl) {
     body = `${pad}<${tag}${formatSvelteAttrs(attrs)} />`;
   } else if (renderedChildren.length === 0 && textContentExpr !== null) {
@@ -2256,21 +2265,19 @@ function renderSvelteDomNode(
       `${pad}<${tag}${formatSvelteAttrs(attrs)}>${textContentExpr}`,
       ...renderedChildren,
       `${pad}</${tag}>`,
-    ].join("\n");
+    ].join(separator);
   } else {
     body = [
       `${pad}<${tag}${formatSvelteAttrs(attrs)}>`,
       ...renderedChildren,
       `${pad}</${tag}>`,
-    ].join("\n");
+    ].join(separator);
   }
 
   // iconGlyph null-guard: an unknown icon name resolves to undefined and the
   // svg (whose attrs dereference the glyph record) must not render at all.
   if (iconGlyphEntry) {
-    body = [`${pad}{#if ${iconGlyphEntry.glyphIdent}}`, body, `${pad}{/if}`].join(
-      "\n",
-    );
+    body = [`${pad}{#if ${iconGlyphEntry.glyphIdent}}`, body, `${pad}{/if}`].join(separator);
   }
 
   let withIfGuard = body;
@@ -2290,7 +2297,7 @@ function renderSvelteDomNode(
         : jsAccessorFor(node.ifProp);
     }
     const condition = node.ifNegated ? `!${expr}` : expr;
-    withIfGuard = [`${pad}{#if ${condition}}`, body, `${pad}{/if}`].join("\n");
+    withIfGuard = [`${pad}{#if ${condition}}`, body, `${pad}{/if}`].join(separator);
   }
 
   // IR-DOM-ITERATE-CAPABILITY-01: apply the {#each} wrap as the
@@ -2324,7 +2331,7 @@ function renderSvelteDomNode(
       kind === "array"
         ? `{#each (${sourceExpr} ?? []) as ${itemVar}, ${indexVar} (${indexVar})}`
         : `{#each Array(${sourceExpr}) as _, ${indexVar} (${indexVar})}`;
-    return [`${pad}${head}`, withIfGuard, `${pad}{/each}`].join("\n");
+    return [`${pad}${head}`, withIfGuard, `${pad}{/each}`].join(separator);
   }
   return withIfGuard;
 }
