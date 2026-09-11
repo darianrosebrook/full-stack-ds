@@ -3192,21 +3192,14 @@ function renderLitBinding(
     case "literal":
       return `${attr}="${expr.value.replace(/"/g, "&quot;")}"`;
     case "iterationLocal": {
-      // Iteration locals are loop-scope locals introduced by the
-      // surrounding `.map((item, index) => html\`\`)` / `Array.from`
-      // callback — never undefined, no `ifDefined` wrap needed.
-      // Paths on `iter:item.field` are projected directly; the field's
-      // value may itself be undefined (no compile-time guarantee), but
-      // emitting `item.field` matches the contract author's intent and
-      // lets the underlying type-checker flag mismatches.
+      // The item exists, but a projected record field may be absent.
+      // Omit absent attributes while preserving explicit false values;
+      // property bindings still carry their native value unchanged.
       const name = litIterationLocalName(expr.local, ctx);
       if (!name) return null;
       const acc = appendPath(name, expr.path);
-      if (attr.startsWith("aria-")) {
-        return `${attr}=\${${acc}}`;
-      }
-      if (isAttributeOnlyBinding(attr)) {
-        return `${attr}=\${${acc}}`;
+      if (isAttributeOnlyBinding(attr) || attr === "title") {
+        return `${attr}=\${ifDefined(${acc})}`;
       }
       return `.${attr}=\${${acc}}`;
     }

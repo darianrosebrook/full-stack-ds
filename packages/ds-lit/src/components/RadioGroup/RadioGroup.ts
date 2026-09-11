@@ -166,8 +166,8 @@ export class RadioGroupElement extends LitElement {
   override render() {
     return html`<fieldset class="${this.computeClasses()}" role="radiogroup" aria-label=${ifDefined(this.ariaLabel ?? undefined)} data-fsds-box="">
   ${((this.options ?? [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"}])).map((item, index) => html`
-  <label class=${'radio-group__item'} data-checked=${(item.value === this.behavior.selection)} data-disabled=${item.disabled} .title=${item.description}>
-    <input class=${'radio-group__option'} type="radio" @change=${() => this.behavior.setSelection(item.value)} name=${ifDefined(this.name)} .value=${item.value} .checked=${(item.value === this.behavior.selection)} .disabled=${item.disabled} aria-label=${item.label} aria-checked=${((item.value === this.behavior.selection)) ? 'true' : 'false'} />
+  <label class=${'radio-group__item'} data-checked=${(item.value === this.behavior.selection)} data-disabled=${ifDefined(item.disabled)} title=${ifDefined(item.description)}>
+    <input class=${'radio-group__option'} type="radio" @change=${() => this.behavior.setSelection(item.value)} name=${ifDefined(this.name)} .value=${item.value} .checked=${(item.value === this.behavior.selection)} .disabled=${item.disabled} aria-label=${ifDefined(item.label)} aria-checked=${((item.value === this.behavior.selection)) ? 'true' : 'false'} />
     <span class=${'radio-group__label'}>${item.label}</span>
   </label>
   `)}
