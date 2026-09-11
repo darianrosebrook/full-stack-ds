@@ -83,3 +83,10 @@ contracts:
   - name: 'component-semantics'
     type: schema
     path: 'packages/ds-contracts/component.contract.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "e2e/showcase-controls.spec.ts: native number/color semantics across five web targets; integrated inspector color update. Logs: showcase-controls-browser-5.log, showcase-controls-color-final.log, showcase-controls-lit-browser-final.log."
+    recorded_at: "2026-09-11T18:25:07.719Z"
+    artifact_path: tmp/showcase-controls/showcase-controls-color-final.log
+    commit_sha: cb06ec65c7ce67c09368886725282d0745cecb36
