@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "src/components/showcase-compositions.test.tsx verifies selected array trace revelation, manual collapse, independent actions, token search and binding; e2e/editor-binding-rail.spec.ts verifies actual 8px to 24px to default preview gap; e2e/showcase-adoption.spec.ts verifies keyboard and responsive editor behavior; all pass in tmp/showcase-adoption/browser-ready.log and prepush.log"
     recorded_at: "2026-09-11T03:04:22.533Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Full PREPUSH_FULL=1 hook passes with two workers; root, Vue, Lit, Svelte, Angular and React Native suites pass (two existing Lit skips). Seventeen Chromium cases pass on a ready local server; desktop/narrow screenshots and traces reviewed. Cold preview startup remains a separate recorded limitation. See tmp/showcase-adoption/verification.md, prepush.log, frameworks.log and browser-ready/"
+    recorded_at: "2026-09-11T03:04:24.691Z"
