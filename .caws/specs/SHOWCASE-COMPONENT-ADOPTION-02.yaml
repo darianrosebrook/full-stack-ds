@@ -48,3 +48,7 @@ evidence:
     status: pass
     evidence_ref: "src/consumption/dogfooding-guard.test.ts passes in the 3842-test root run; exact JSX census 25 to 8 and panel/pill sites 14 to 0, with four upstream capability gaps recorded in docs/architecture/design/showcase-component-adoption.md; tmp/showcase-adoption/verification.md"
     recorded_at: "2026-09-11T03:04:17.950Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Merged a2fdd3d2: generated Card, Badge, Accordion, Details, Button and Input adoption; source and CSS consumption guards pass; browser-ready.log shows 17 passing cases including Card appearance isolation; tmp/showcase-adoption/verification.md"
+    recorded_at: "2026-09-11T03:04:20.237Z"
