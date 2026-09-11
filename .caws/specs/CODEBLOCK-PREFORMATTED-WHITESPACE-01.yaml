@@ -48,3 +48,7 @@ evidence:
     status: pass
     evidence_ref: "e2e/codeblock-whitespace.spec.ts: Chromium exact single-line text and geometry pass for all five Web frameworks; tmp/codeblock-whitespace/browser.log and single-line screenshots."
     recorded_at: "2026-09-11T00:00:41.991Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "e2e/codeblock-whitespace.spec.ts: tabs, blank lines, leading and trailing whitespace, markup-like text and empty content remain exact with highlighting on and off across five Web frameworks; tmp/codeblock-whitespace/browser.log."
+    recorded_at: "2026-09-11T00:00:42.733Z"
