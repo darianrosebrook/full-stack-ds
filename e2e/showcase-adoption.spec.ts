@@ -20,7 +20,7 @@ for (const width of [1153, 390]) {
         ? page.locator("section").filter({ has: page.getByRole("heading", { name: "Component source", exact: true }) }).locator(".source-viewer__code")
         : page.locator('.showcase-card[data-fsds-component="card"]').first();
       await subject.scrollIntoViewIfNeeded();
-      await page.screenshot({ path: info.outputPath(`${name}-${width}.png`) });
+      await page.screenshot({ animations: "disabled", path: info.outputPath(`${name}-${width}.png`) });
     }
   });
 }
@@ -48,7 +48,7 @@ test("inspector disclosure keeps hidden controls out of keyboard navigation", as
   expect(hiddenFocused).toBe(false);
   await trigger.click();
   await expect(content).toBeVisible();
-  await page.screenshot({ path: info.outputPath("inspector.png") });
+  await page.screenshot({ animations: "disabled", path: info.outputPath("inspector.png") });
 });
 
 test("JSON disclosures use generated Details with native keyboard activation", async ({ page }, info) => {
@@ -65,7 +65,7 @@ test("JSON disclosures use generated Details with native keyboard activation", a
   await expect(anatomy).not.toHaveAttribute("open");
   await expect(page.locator('.json-tree [data-path="anatomy.parts"]')).toHaveCount(0);
   await anatomy.locator(":scope > summary").click();
-  await page.screenshot({ path: info.outputPath("json-disclosures.png") });
+  await page.screenshot({ animations: "disabled", path: info.outputPath("json-disclosures.png") });
 });
 
 test("generated token editor controls remain usable in their popover", async ({ page }, info) => {
@@ -79,7 +79,8 @@ test("generated token editor controls remain usable in their popover", async ({ 
   await expect(input).toHaveAttribute("data-fsds-component", "input");
   await input.fill("23px");
   await expect(page.locator(".fsds-pp__overrides-count")).toHaveText("1 override");
-  await page.screenshot({ path: info.outputPath("token-editor.png") });
+  await expect(page.locator(".fsds-tvc__popover")).toHaveCSS("opacity", "1");
+  await page.screenshot({ animations: "disabled", path: info.outputPath("token-editor.png") });
   await page.setViewportSize({ width: 390, height: 943 });
   // The responsive shell hides the inspector. Reopen it through its control.
   await page.getByRole("button", { name: "Show inspector", exact: true }).click();
@@ -90,7 +91,7 @@ test("generated token editor controls remain usable in their popover", async ({ 
     const rect = el.getBoundingClientRect();
     return rect.left >= 0 && rect.right <= innerWidth && el.scrollWidth <= el.clientWidth + 1;
   })).toBe(true);
-  await page.screenshot({ path: info.outputPath("token-editor-390.png") });
+  await page.screenshot({ animations: "disabled", path: info.outputPath("token-editor-390.png") });
   await page.keyboard.press("Escape");
   await expect(input).toBeHidden();
   await expect(trigger).toHaveText(/23/);
