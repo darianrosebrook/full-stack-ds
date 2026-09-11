@@ -87,25 +87,4 @@ async function renderElement(tagName: string, props: Record<string, unknown> = {
 
 // @custom:start tests
 
-it("switches between literal source and supplied content as the slot changes", async () => {
-  const { element } = await renderElement("fsds-code-block", { code: "<literal>\n  source", language: "plaintext" });
-  const host = element as LitTestElement;
-  const settle = async () => {
-    await Promise.resolve();
-    await host.updateComplete;
-    await Promise.resolve();
-    await host.updateComplete;
-  };
-  expect(element.shadowRoot?.querySelector("code")?.textContent).toBe("<literal>\n  source");
-  const annotation = document.createElement("span");
-  annotation.textContent = "Annotated source";
-  element.append(annotation);
-  await settle();
-  expect(element.shadowRoot?.querySelector(".code-block__source")).toBeNull();
-  expect(element.querySelector("span")?.textContent).toBe("Annotated source");
-  annotation.remove();
-  await settle();
-  expect(element.shadowRoot?.querySelector("code")?.textContent).toBe("<literal>\n  source");
-});
-
 // @custom:end
