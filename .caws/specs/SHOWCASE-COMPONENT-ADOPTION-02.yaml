@@ -43,3 +43,8 @@ contracts:
   - name: 'showcase-adoption'
     type: contract-test
     path: 'src/consumption/dogfooding-guard.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "src/consumption/dogfooding-guard.test.ts passes in the 3842-test root run; exact JSX census 25 to 8 and panel/pill sites 14 to 0, with four upstream capability gaps recorded in docs/architecture/design/showcase-component-adoption.md; tmp/showcase-adoption/verification.md"
+    recorded_at: "2026-09-11T03:04:17.950Z"
