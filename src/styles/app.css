@@ -515,16 +515,8 @@ button {
   border-bottom-color: var(--fsds-semantic-color-background-accent);
 }
 
-/* Card */
-/*
- * App-local "panel" surface — a thin bordered box (no padding/flex/hover).
- * Deliberately NOT named `.card`: the DS Card component owns `.card`
- * (Card.css), which is a heavier padded+flex+hover surface. Sharing the class
- * name caused a global cascade collision (whichever stylesheet loaded last
- * won per-property). The showcase needs both surfaces, so they get distinct
- * names. A lighter DS "Surface/Panel" primitive would let this consume the DS
- * directly — see SHOWCASE-CONSUMPTION-01 follow-ups.
- */
+/* Showcase surfaces compose the generated Card. App-specific appearance uses
+   its public design properties; the Card contract owns the rendering. */
 .showcase-card {
   --fsds-box-model-padding: 0;
   --fsds-box-model-min-width: 0;
@@ -845,13 +837,7 @@ button {
   background: var(--fsds-semantic-color-background-danger-subtle);
 }
 
-/* Pills — inline label badges for showcase metadata (variant keys, "required"
-   markers). Namespaced as `.pill` (not `.chip`) because DS Chip renders its
-   root with class `chip` + `chip--<variant>`: a bare `.chip` app rule would
-   cascade onto every DS Chip on the page. `.pill` (not `.tag`) because a
-   scoped `.anatomy-tree .tag` rule already exists — a bare `.tag` would bleed
-   pill chrome onto the anatomy tree. Joins .card→.panel and .tabs→.view-tabs
-   as a renamed selector that no longer collides with a DS or app class. */
+/* Generated Badge labels use monospace for variant keys and values. */
 .variant-value {
   font-family: var(--fsds-core-typography-font-family-mono);
 }
