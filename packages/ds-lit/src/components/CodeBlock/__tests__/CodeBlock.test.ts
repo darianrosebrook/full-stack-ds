@@ -30,7 +30,7 @@ describe("CodeBlock — unit", () => {
 
 describe("CodeBlock — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { element } = await renderElement("fsds-code-block", { "code": "placeholder", "language": "bash" });
+    const { element } = await renderElement("fsds-code-block", { "code": "placeholder", "language": "bash" }, [{"html":"<span>content</span>"}]);
     const results = await axe(element, componentAxeOptions);
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });

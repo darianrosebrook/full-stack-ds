@@ -42,7 +42,7 @@ export function useSelect(options: UseSelectOptions): UseSelectResult {
   const { value: selection, set: setSelection } = createControllableState<string | string[]>({
     controlled: options.value,
     defaultValue: options.defaultValue ?? undefined as never,
-    onChange: options.onChange,
+    onChange: (value) => { options.onChange?.(value); if (!options.multiple?.()) { anchorToggle.setOpen(false); requestAnimationFrame(() => { anchorToggle.anchorRef.nativeElement?.focus(); }); } },
   });
 
   const anchorToggle = createAnchorToggle({
@@ -58,13 +58,13 @@ export function useSelect(options: UseSelectOptions): UseSelectResult {
     anchorToggle.setOpen(true);
     requestAnimationFrame(() => {
       if (!anchorToggle.panelRef.nativeElement) return;
-      (anchorToggle.panelRef.nativeElement.querySelector<HTMLElement>("input") ?? anchorToggle.panelRef.nativeElement.querySelector<HTMLElement>("[role=\"option\"]"))?.focus();
+      (anchorToggle.panelRef.nativeElement.querySelector<HTMLElement>("input") ?? anchorToggle.panelRef.nativeElement.querySelector<HTMLElement>("[role=\"option\"]:not(:disabled)"))?.focus();
     });
   }
 
   function handleContentKeydown(event: KeyboardEvent): void {
     const items = Array.from(
-      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>("[role=\"option\"]"),
+      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>("[role=\"option\"]:not(:disabled)"),
     );
     const currentIndex = items.findIndex((item) => item === document.activeElement);
     if (event.key === "ArrowUp") {
@@ -86,7 +86,7 @@ export function useSelect(options: UseSelectOptions): UseSelectResult {
   }
 
   function handleOptionKeydown(event: KeyboardEvent, value: string): void {
-    if (!(event.key === "Enter")) return;
+    if (!(event.key === "Enter" || event.key === "Space")) return;
     event.preventDefault();
     const currentValue = selection();
     const current: string[] = Array.isArray(currentValue) ? [...currentValue] : currentValue == null ? [] : [currentValue];

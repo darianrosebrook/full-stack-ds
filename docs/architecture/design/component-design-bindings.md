@@ -5,7 +5,7 @@ status: implemented
 title: Component design property bindings
 owner: "@darianrosebrook"
 updated: 2026-09-10
-verified_at_commit: 3ed2648d
+verified_at_commit: 90ad2f233b8441bd7d9f9c452348c29e0bce0e64
 governs:
   - packages/ds-codegen/src/design-properties.ts
   - packages/ds-contracts/component.styles.schema.json
@@ -82,7 +82,7 @@ The override remains independently settable when the prop is absent or present.
 
 The mechanical pass exposes common visual properties, existing token-backed sizing, and spacing. Literal intrinsic sizing, layout algorithms, arbitrary transforms, animation triggers, images, and content remain component/composition decisions. Layout registry entries require explicit adoption. Component tokens follow the [consumption contract](component-token-consumption.md): unused declarations are rejected, with no compatibility aliases. Native-only slots remain outside the Web inspector's editable controls.
 
-The inspector has a Design properties section grouped by source part/condition and property family. It edits the dedicated slot through the generated Input without repointing the shared semantic default. Empty input clears the override. Part selection reuses the inspector's existing native selector, preserving keyboard behavior; moving between parts retains each override. The existing box editor now targets the selected component's boundary, and its read proof includes the imported shared box controls.
+The inspector has a Design properties section grouped by source part/condition and property family. It edits the dedicated slot through the generated Input without repointing the shared semantic default. Empty input clears the override. Part selection uses the generated Select with selected-label projection and keyboard navigation; moving between parts retains each override. The existing box editor now targets the selected component's boundary, and its read proof includes the imported shared box controls.
 
 ## Evidence and limits
 

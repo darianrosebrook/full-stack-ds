@@ -1369,6 +1369,15 @@ function treeUsesCountIteration(node: DomNodeIR): boolean {
  *  expression on this DomNodeIR subtree.
  *  Removable when: Angular emitter has a generic mechanism for
  *  template-safe lowering of any global call. */
+function treeUsesSelectionLabel(node: DomNodeIR): boolean {
+  const check = (value: unknown): boolean => {
+    if (!value || typeof value !== "object") return false;
+    const expr = value as Record<string, unknown>;
+    return (expr.kind === "projection" && expr.op === "selectionLabel") || Object.values(expr).some(check);
+  };
+  return check(node);
+}
+
 function treeUsesMemberOfPredicate(node: DomNodeIR): boolean {
   const checkExpr = (expr: BindingExpression): boolean => {
     if (expr.kind === "predicate") {
@@ -1733,7 +1742,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     idRefGetters,
     rootSelectorAnchored: selectorAnchor !== null,
     keyboardActionsByPart: groupKeyboardActionsByPart(ir.keyboardActions),
-    compositeItemPart: ir.compositeControl?.part.name,
+    compositeItemPart: ir.behavior.focus?.strategy === "roving" ? ir.compositeControl?.part.name : undefined,
     compositeMemberExpr: compositeActivationMember(ir.compositeControl),
     ...(overlayClickTrigger && booleanChannel
       ? {
@@ -1893,6 +1902,11 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     declaredProps.add(dim);
   }
 
+  if (domHasKeyboardPanel(ir)) {
+    lines.push(`  @ViewChild("interactionAnchor") set interactionAnchor(element: ElementRef<HTMLElement> | undefined) {`);
+    lines.push(`    this.behavior.anchorRef.nativeElement = element?.nativeElement ?? null;`);
+    lines.push(`  }`);
+  }
   if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) {
     lines.push(`  @ViewChild("interactionPanel") set interactionPanel(element: ElementRef<HTMLElement> | undefined) {`);
     lines.push(`    this.behavior.panelRef.nativeElement = element?.nativeElement ?? null;`);
@@ -2054,6 +2068,12 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     lines.push(
       `    return Array.isArray(selection) ? selection.includes(candidate) : candidate === selection;`,
     );
+    lines.push(`  }`);
+  }
+
+  if (treeUsesSelectionLabel(ir.dom)) {
+    lines.push(`  protected selectionLabel(options: readonly { value: string; label: string }[] | undefined, selection: string | string[] | undefined, fallback: string): string {`);
+    lines.push(`    return ${composeBindingProjectionExpression("selectionLabel", "options", "selection", "fallback")};`);
     lines.push(`  }`);
   }
 
@@ -2584,6 +2604,7 @@ function renderAngularDomNode(
   // focusContainer (trap/portal panels) and keyboardPanel (a keyboard `open`
   // action's post-open focus target) both receive the interaction panel ref.
   if (node.focusContainer || node.keyboardPanel) attrs.push(`#interactionPanel`);
+  if (node.keyboardAnchor) attrs.push(`#interactionAnchor`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -2637,10 +2658,10 @@ function renderAngularDomNode(
     // A keyboard host that is not natively focusable must become
     // programmatically focusable so the delegated keys can fire and the
     // vue a11y lint holds; -1 keeps it out of tab order.
-    if (!NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+    if (isCompositeItem || !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
       attrs.push(`tabindex="-1"`);
     }
-  } else if (isCompositeItem && !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+  } else if (isCompositeItem) {
     // Composite roving item without its own keydown: still a roving focus
     // target — focusable for the roving focus path but out of tab order
     // (APG roving tabindex with DOM focus tracking).
@@ -3471,7 +3492,9 @@ function renderAngularBindingValue(
       const source = renderAngularBindingValue(expr.source, ctx);
       return source === null
         ? null
-        : composeBindingProjectionExpression(expr.op, source);
+        : expr.op === "selectionLabel"
+          ? `selectionLabel(${source}, ${renderAngularBindingValue(expr.selection, ctx)}, ${renderAngularBindingValue(expr.fallback, ctx)})`
+          : composeBindingProjectionExpression(expr.op, source);
     }
     case "valueMap": {
       const source = renderAngularBindingValue(expr.source, ctx);

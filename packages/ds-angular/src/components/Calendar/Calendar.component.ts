@@ -36,7 +36,7 @@ export type CalendarMode = "single" | "range";
       <tr>
         <ng-container *ngFor="let item of (days ?? []); let index = index">
           <td [ngClass]="'calendar__cell'" role="gridcell" [attr.data-calendar-index]="index">
-            <button [ngClass]="'calendar__day'" (click)="behavior.setValue(item)">
+            <button [ngClass]="'calendar__day'" (click)="behavior.setValue(item)" tabindex="-1">
               {{ item.getDate() }}
             </button>
           </td>

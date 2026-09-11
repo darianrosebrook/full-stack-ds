@@ -261,7 +261,7 @@ export class CalendarElement extends LitElement {
       <tr>
         ${(this.days ?? []).map((item, index) => html`
         <td class=${'calendar__cell'} role="gridcell" data-calendar-index=${index}>
-          <button class=${'calendar__day'} @click=${() => this.behavior.setValue(item)}>${item.getDate()}</button>
+          <button class=${'calendar__day'} @click=${() => this.behavior.setValue(item)} tabindex="-1">${item.getDate()}</button>
         </td>
         `)}
       </tr>

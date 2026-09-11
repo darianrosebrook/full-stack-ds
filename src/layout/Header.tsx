@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Icon, Popover, Stack, Switch, Walkthrough } from "@full-stack-ds/react";
+import { Button, Icon, Popover, RadioGroup, Stack, Switch, Walkthrough } from "@full-stack-ds/react";
 import { AboutDialog } from "../components/AboutDialog";
 
 const BRAND_LABEL_OVERRIDES: Record<string, string> = {
@@ -210,38 +210,14 @@ export function Header({ onOpenPalette, sidebarVisible, inspectorVisible, onTogg
             >
               Brand
             </div>
-            <Stack
-              className="header-brand-options stack-gap-04"
-              role="radiogroup"
-              aria-label="Brand theme"
-            >
-              {brands.map((id) => {
-                const active = brand === id;
-                return (
-                  <Stack
-                    as="label"
-                    key={id}
-                    variant="horizontal"
-                    className={`header-brand-option${active ? " header-brand-option--active" : ""} stack-gap-04`}
-                  >
-                    <input
-                      className="header-brand-option__input"
-                      type="radio"
-                      name="fsds-brand"
-                      value={id}
-                      checked={active}
-                      onChange={() => setBrand(id)}
-                    />
-                    <span>{humanizeBrand(id)}</span>
-                    {active && (
-                      <span aria-hidden style={{ fontSize: "var(--fsds-core-typography-ramp-2)" }}>
-                        ✓
-                      </span>
-                    )}
-                  </Stack>
-                );
-              })}
-            </Stack>
+            <RadioGroup
+              className="header-brand-options"
+              name="showcase-appearance-brand"
+              ariaLabel="Brand theme"
+              options={brands.map((id) => ({ value: id, label: humanizeBrand(id) }))}
+              value={brand}
+              onChange={setBrand}
+            />
 
             {brands.length <= 1 && (
               <p

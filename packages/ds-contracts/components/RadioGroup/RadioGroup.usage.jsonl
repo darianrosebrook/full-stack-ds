@@ -1,0 +1,1 @@
+{"name": "brand-choice", "description": "Native single choice with a disabled option and an initial selection.", "tree": {"fsds.RadioGroup": {"props": {"name": "example-brand", "ariaLabel": "Theme", "defaultValue": "light", "options": [{"value": "light", "label": "Light"}, {"value": "dark", "label": "Dark"}, {"value": "unavailable", "label": "Unavailable", "disabled": true}]}}}}

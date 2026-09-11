@@ -5,7 +5,7 @@
     "name": "Input",
     "cssPrefix": "input",
     "rootElement": "input",
-    "effectiveRole": "textbox"
+    "effectiveRole": null
   },
   "anatomy": [
     {
@@ -621,9 +621,6 @@
   },
   "root": {
     "element": "input",
-    "explicitRole": "textbox",
-    "effectiveRole": "textbox",
-    "rootRole": "textbox",
     "labeling": [
       "aria-label",
       "aria-labelledby",

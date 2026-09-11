@@ -157,7 +157,7 @@ describe("Select — keyboard realization (FEAT-A11Y-COMPOSITE-KEYBOARD-01)", ()
     expect(document.activeElement).toBe(options[2]);
   });
 
-  it("Enter on an option commits that option's value and does not close (click parity)", async () => {
+  it("Enter on an option commits that option's value", async () => {
     const changes: unknown[] = [];
     const fixture = mountOpen((c) => {
       c.value = "alpha";

@@ -451,6 +451,30 @@
       "platforms": [
         "web"
       ]
+    },
+    "border": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "width": {
+      "literal": "100%",
+      "platforms": [
+        "web"
+      ]
+    },
+    "text-align": {
+      "literal": "start",
+      "platforms": [
+        "web"
+      ]
+    },
+    "font": {
+      "literal": "inherit",
+      "platforms": [
+        "web"
+      ]
     }
   },
   "emptyState": {

@@ -38,8 +38,8 @@
  *                            focus trap: Tab/Shift+Tab; dismissal/anchor
  *                            toggle: Escape), or
  *                  EXPLICIT  (a keydown handler in the emitted source).
- *                  Arrow/Home/End/PageUp/PageDown composite navigation is
- *                  NEVER native — it requires PRIMITIVE or EXPLICIT.
+ *                  Named native radio inputs supply arrow navigation.
+ *                  Other composite navigation requires PRIMITIVE or EXPLICIT.
  *
  *   FOCUS        — `focus.strategy: "trap"` demands the focus-trap primitive;
  *                  `focus.strategy: "roving"` demands explicit key handling
@@ -175,6 +175,7 @@ const DISMISS_RE =
 const NATIVE_KEYS = new Set(["Enter", "Space", "Tab"]);
 /** Native text-entry keys an <input> provides (per-character entry, caret). */
 const NATIVE_TEXT_KEYS = new Set(["0-9", "Backspace"]);
+const NATIVE_RADIO_KEYS = new Set(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space", "Tab"]);
 const NATIVE_INTERACTIVE_TAGS = new Set([
   "button",
   "input",
@@ -278,7 +279,8 @@ export function deriveObligations(contracts) {
       const keySpec =
         typeof entry === "string" ? entry : (entry.key ?? entry.keys ?? "");
       if (!keySpec) continue;
-      obligations.push({ component: name, class: "keyboard", key: keySpec });
+      const nativeRadio = nativeRadioCarrier(contract, name);
+      obligations.push({ component: name, class: "keyboard", key: keySpec, ...(nativeRadio ? { nativeRadio } : {}) });
     }
     const strategy = contract.focus?.strategy;
     if (strategy === "trap" || strategy === "roving") {
@@ -303,6 +305,37 @@ function findPartNode(node, part) {
     if (found) return found;
   }
   return undefined;
+}
+
+/** A repeated native radio carrier with a required shared group-name prop. */
+function nativeRadioCarrier(contract, name) {
+  const control = contract.compositeControl;
+  if (control?.interactionModel !== "collection-selection" || control.commit !== "change" ||
+      contract.channels?.[control.channel]?.valueType !== "string") return undefined;
+  const find = (node, repeated = false) => {
+    if (!node) return undefined;
+    repeated ||= node.iterate?.kind === "array";
+    if (node.part === control.part && repeated && node.tag === "input" && node.attrs?.type === "radio") return node;
+    return (node.children ?? []).map(child => find(child, repeated)).find(Boolean);
+  };
+  const node = find(contract.anatomy?.dom);
+  const nameProp = /^prop:([A-Za-z_]\w*)$/.exec(node?.bindings?.name ?? "")?.[1];
+  const props = contract.props?.designed?.members ?? [];
+  if (!nameProp || !props.some(prop => prop.name === nameProp && prop.required === true)) return undefined;
+  return { part: control.part, cssPrefix: contract.cssPrefix ?? toKebab(name), nameProp };
+}
+
+/** Match the declared carrier and group-name binding on the same emitted input. */
+function emitsNativeRadio(source, carrier) {
+  if (!carrier) return false;
+  const marker = new RegExp(`${escapeRegExp(carrier.cssPrefix)}__${escapeRegExp(carrier.part)}(?=[^A-Za-z0-9_-]|$)`);
+  const prop = escapeRegExp(carrier.nameProp);
+  const nameBinding = new RegExp(
+    `\\s(?:name|:name|\\[name\\]|\\[attr\\.name\\])=(?:` +
+    `\\{${prop}\\}|["'](?:props\\.)?${prop}["']|\\$\\{(?:ifDefined\\(this\\.${prop}\\)|this\\.${prop})\\})`,
+  );
+  return openingTags(source).some(tag => /^<input\b/.test(tag) &&
+    /\stype=["']radio["']/.test(tag) && marker.test(tag) && nameBinding.test(tag));
 }
 
 function isConsumerSlotPart(node) {
@@ -737,6 +770,9 @@ export function classify(obligation, kind, srcBundle, contractTags) {
   if (obligation.class === "keyboard") {
     if (EXPLICIT_KEY_RE.test(ownSrc)) return { verdict: "realized", via: "explicit" };
     const keys = atomicKeys(obligation.key);
+    if (keys.every(key => NATIVE_RADIO_KEYS.has(key)) && emitsNativeRadio(ownSrc, obligation.nativeRadio)) {
+      return { verdict: "realized", via: "native radio carrier" };
+    }
     const trapKeys = keys.every((k) => k === "Tab");
     const dismissKeys = keys.every((k) => k === "Escape");
     if (trapKeys && TRAP_RE.test(ownSrc)) return { verdict: "realized", via: "primitive" };

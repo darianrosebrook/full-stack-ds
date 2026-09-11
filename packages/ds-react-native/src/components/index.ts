@@ -64,6 +64,8 @@ export { ProfileFlag } from "./ProfileFlag/ProfileFlag";
 export type { ProfileFlagProps } from "./ProfileFlag/ProfileFlag";
 export { Progress } from "./Progress/Progress";
 export type { ProgressProps } from "./Progress/Progress";
+export { RadioGroup } from "./RadioGroup/RadioGroup";
+export type { RadioGroupProps } from "./RadioGroup/RadioGroup";
 export { Select } from "./Select/Select";
 export type { SelectProps } from "./Select/Select";
 export { Sheet } from "./Sheet/Sheet";

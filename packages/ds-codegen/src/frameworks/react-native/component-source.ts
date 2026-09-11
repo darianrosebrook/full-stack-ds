@@ -879,6 +879,10 @@ function collectBindingRuntimeUsage(
   }
   if (binding.kind === "projection") {
     collectBindingRuntimeUsage(binding.source, ir, usage, channelPurpose);
+    if (binding.op === "selectionLabel") {
+      collectBindingRuntimeUsage(binding.selection, ir, usage, channelPurpose);
+      collectBindingRuntimeUsage(binding.fallback, ir, usage, channelPurpose);
+    }
     return;
   }
   if (binding.kind === "conditional") {
@@ -1573,6 +1577,30 @@ function emitNode(
   if (node.componentInstance) return emitComponentRefNode(node, node.componentInstance, ir, depth);
   if (node.iteration) return emitIteration(node, ir, depth);
 
+
+  // Native has no label activation forwarding or radio widget. Collapse a
+  // label's nested radio into one accessible, visible press target.
+  const radio = node.tag === "label"
+    ? node.children.find(child => child.tag === "input" && child.attrs.type === "radio")
+    : undefined;
+  if (radio?.bindings.checked) {
+    const target: DomNodeIR = {
+      ...node, tag: "button", attrs: { ...node.attrs, role: "radio" },
+      bindings: { ...node.bindings, ...radio.bindings },
+      events: { ...node.events, ...radio.events },
+      children: node.children.filter(child => child !== radio),
+    };
+    const pad = INDENT.repeat(depth);
+    const attrs = emitNodeProps(target, ir, "Pressable", depth + 1, keyExpr)
+      .filter(line => !line.trimStart().startsWith("style="));
+    attrs.push(`${pad}${INDENT}style={[styles.${styleKeyForPart(node.part)}${selectionStyleAppendix(node, ir)}, { flexDirection: "row", alignItems: "center", minHeight: 44 }]}`);
+    const checked = bindingExpr(radio.bindings.checked, ir);
+    const rendered = [`${pad}<Pressable`, ...attrs, `${pad}>`,
+      `${pad}${INDENT}<RNText accessible={false}>{${checked} ? "◉ " : "○ "}</RNText>`,
+      ...emitNodeChildren(target, ir, depth + 1), `${pad}</Pressable>`].join("\n");
+    return applyIfGuard(rendered, node, ir, pad);
+  }
+
   const component =
     node.part !== undefined && node.part === surfaceOverlayPartName(ir)
       ? "Pressable"
@@ -1809,10 +1837,12 @@ function emitNodeProps(
       continue;
     }
     if (name === "aria-disabled") {
+      if (node.bindings.disabled) continue;
       accessibilityState.push(`disabled: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-checked") {
+      if (node.bindings.checked) continue;
       accessibilityState.push(`checked: ${rnBooleanishExpr(expr)}`);
       continue;
     }
@@ -2053,6 +2083,7 @@ function roleFromNode(node: DomNodeIR): string | undefined {
   if (node.tag === "button") return "button";
   if (node.tag === "img") return "image";
   if (node.tag === "input" && node.attrs.type === "checkbox") return "checkbox";
+  if (node.tag === "input" && node.attrs.type === "radio") return "radio";
   return undefined;
 }
 
@@ -2067,6 +2098,7 @@ function rnAccessibilityRole(
   if (role === "button" && hasPressedState) return "togglebutton";
   if (role === "button") return "button";
   if (role === "checkbox") return "checkbox";
+  if (role === "radio" || role === "radiogroup") return role;
   if (role === "progressbar") return "progressbar";
   if (role === "img") return "image";
   if (role === "link") return "link";
@@ -2202,6 +2234,7 @@ function bindingExpr(binding: BindingExpression, ir: ComponentIR): string {
     return composeBindingProjectionExpression(
       binding.op,
       bindingExpr(binding.source, ir),
+      ...(binding.op === "selectionLabel" ? [bindingExpr(binding.selection, ir), bindingExpr(binding.fallback, ir)] : []),
     );
   }
   if (binding.kind === "conditional") {

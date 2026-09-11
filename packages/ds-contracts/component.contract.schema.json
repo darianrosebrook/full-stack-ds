@@ -1773,6 +1773,7 @@
           "type": "string",
           "enum": [
             "input",
+            "change",
             "activation"
           ],
           "description": "When the repeated item commits its channel update."

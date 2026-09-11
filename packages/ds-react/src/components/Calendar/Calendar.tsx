@@ -103,7 +103,7 @@ export function Calendar({
         <tr>
           {(days ?? []).map((item, index) => (
             <td className="calendar__cell" role="gridcell" data-calendar-index={index} key={index}>
-              <button className="calendar__day" onClick={() => setValue(item)}>
+              <button className="calendar__day" onClick={() => setValue(item)} tabIndex={-1}>
                 {item.getDate()}
               </button>
             </td>

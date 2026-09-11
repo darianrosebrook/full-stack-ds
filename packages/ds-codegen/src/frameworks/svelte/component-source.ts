@@ -1684,7 +1684,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
     keyboardActionsByPart: groupKeyboardActionsByPart(ir.keyboardActions),
-    compositeItemPart: ir.compositeControl?.part.name,
+    compositeItemPart: ir.behavior.focus?.strategy === "roving" ? ir.compositeControl?.part.name : undefined,
     compositeMemberExpr: compositeActivationMember(ir.compositeControl),
     ...(overlayClickTrigger && booleanChannel
       ? {
@@ -1917,6 +1917,7 @@ function renderSvelteDomNode(
   // realization's panel, FEAT-A11Y-COMPOSITE-KEYBOARD-01) both bind the
   // hook's panelRef so script-side focus can enter the revealed surface.
   if (node.focusContainer || node.keyboardPanel) attrs.push(`bind:this={${ctx.hookVar}.panelRef.el}`);
+  if (node.keyboardAnchor) attrs.push(`bind:this={${ctx.hookVar}.anchorRef.el}`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -2048,10 +2049,10 @@ function renderSvelteDomNode(
     // A keyboard host that is not natively focusable must become
     // programmatically focusable so the delegated keys can fire and Svelte's
     // a11y compiler checks hold; -1 keeps it out of tab order.
-    if (!NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+    if (isCompositeItem || !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
       attrs.push('tabindex="-1"');
     }
-  } else if (isCompositeItem && !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+  } else if (isCompositeItem) {
     // Composite roving item without its own keydown: still a roving focus
     // target — focusable for the roving focus path but out of tab order
     // (APG roving tabindex with DOM focus tracking).
@@ -2535,7 +2536,9 @@ function renderSvelteBindingValue(
       const source = renderSvelteBindingValue(expr.source, ctx);
       return source === null
         ? null
-        : composeBindingProjectionExpression(expr.op, source);
+        : expr.op === "selectionLabel"
+          ? composeBindingProjectionExpression(expr.op, source, renderSvelteBindingValue(expr.selection, ctx) ?? "undefined", renderSvelteBindingValue(expr.fallback, ctx) ?? "undefined")
+          : composeBindingProjectionExpression(expr.op, source);
     }
     case "valueMap": {
       const source = renderSvelteBindingValue(expr.source, ctx);

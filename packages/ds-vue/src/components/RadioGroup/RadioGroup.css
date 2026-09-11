@@ -1,0 +1,70 @@
+@import "../../primitives/box-model.css";
+@import "./RadioGroup.tokens.css";
+@layer components.defaults {
+
+/* @generated:start styles */
+.radio-group {
+  padding-block-start: var(--fsds-box-model-padding-block-start, 0);
+  padding-block-end: var(--fsds-box-model-padding-block-end, 0);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start, 0);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end, 0);
+  gap: var(--fsds-box-model-gap, var(--fsds-core-spacing-size-04, 8px));
+  width: var(--fsds-box-model-width, auto);
+  min-width: 0;
+  max-width: var(--fsds-box-model-max-width, none);
+  height: var(--fsds-box-model-height, auto);
+  min-height: var(--fsds-box-model-min-height, 0);
+  max-height: var(--fsds-box-model-max-height, none);
+  display: flex;
+  flex-direction: column;
+  border: 0;
+}
+
+.radio-group__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fsds-radio-group-design-item-spacing-gap, 8px);
+  padding: var(--fsds-radio-group-design-item-spacing-padding, 6px 10px);
+  border-radius: var(--fsds-radio-group-design-item-shape-radius, 999px);
+  background-color: var(--fsds-radio-group-design-item-background-fill, var(--fsds-semantic-color-background-secondary, #f7f7f7));
+  color: var(--fsds-radio-group-design-item-foreground-color, var(--fsds-semantic-color-foreground-primary, #141414));
+  cursor: pointer;
+}
+
+.radio-group__option {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.radio-group__label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.radio-group--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.radio-group__item[data-checked="true"] {
+  background-color: var(--fsds-radio-group-design-selected-background-fill, var(--fsds-semantic-color-background-accent, #d92d2e));
+  color: var(--fsds-radio-group-design-selected-foreground-color, var(--fsds-semantic-color-foreground-on-color, #ffffff));
+}
+
+.radio-group__item[data-disabled="true"] {
+  opacity: var(--fsds-radio-group-design-disabled-appearance-opacity, 0.5);
+  cursor: not-allowed;
+}
+
+.radio-group__item:focus-within {
+  outline-color: var(--fsds-radio-group-design-focus-focus-color, var(--fsds-semantic-focus-ring-color, #0566fe));
+  outline-width: var(--fsds-radio-group-design-focus-focus-width, var(--fsds-semantic-focus-ring-width, 2px));
+  outline-style: var(--fsds-radio-group-design-focus-focus-style, var(--fsds-semantic-focus-ring-style, solid));
+  outline-offset: var(--fsds-radio-group-design-focus-focus-offset, var(--fsds-semantic-focus-ring-offset, 2px));
+}
+/* @generated:end */
+
+}
+/* @custom:start overrides */
+
+/* @custom:end */

@@ -26,24 +26,26 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgIf, NgFor],
   host: { "data-fsds-component": "select" },
-  template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled" data-fsds-box="">
-  <button [ngClass]="'select__trigger'" type="button" (click)="behavior.setOpen(!behavior.open())" (keydown)="behavior.handleTriggerKeydown($event)" [disabled]="disabled" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-controls]="instanceId + '-options'">
-    <span [ngClass]="'select__text'"></span>
+  template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled" [attr.aria-controls]="rootAriaControls" data-fsds-box="">
+  <button [ngClass]="'select__trigger'" #interactionAnchor type="button" (click)="behavior.setOpen(!behavior.open())" (keydown)="behavior.handleTriggerKeydown($event)" [disabled]="disabled" [attr.aria-label]="(triggerLabel ?? 'Select an option')" [attr.aria-expanded]="behavior.open()" [attr.aria-controls]="triggerAriaControls">
+    <span [ngClass]="'select__text'">
+      {{ selectionLabel((options ?? [{'value':'alpha','label':'Alpha'},{'value':'beta','label':'Beta'},{'value':'gamma','label':'Gamma'}]), behavior.selection(), (placeholder ?? 'Select an option')) }}
+    </span>
   </button>
   <ng-container *ngIf="behavior.open()">
-    <div [ngClass]="'select__content'" #interactionPanel role="listbox" id="fsds-select-listbox" (keydown)="behavior.handleContentKeydown($event)" tabindex="-1">
+    <div [ngClass]="'select__content'" #interactionPanel role="listbox" (keydown)="behavior.handleContentKeydown($event)" tabindex="-1" [attr.id]="instanceId + '-content'">
       <ng-container *ngIf="searchable">
         <div [ngClass]="'select__search'">
           <input type="text" />
         </div>
       </ng-container>
-      <div [ngClass]="'select__options'" [attr.id]="instanceId + '-options'">
+      <div [ngClass]="'select__options'">
         <ng-container *ngFor="let item of ((options ?? [{'value':'alpha','label':'Alpha'},{'value':'beta','label':'Beta'},{'value':'gamma','label':'Gamma'}])); let index = index">
-          <div [ngClass]="'select__option'" role="option" (click)="applyToggleMembershipSelection(item.value, multiple)" (keydown)="behavior.handleOptionKeydown($event, item.value)" tabindex="-1" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value">
+          <button [ngClass]="'select__option'" role="option" type="button" (click)="applyToggleMembershipSelection(item.value, multiple)" (keydown)="behavior.handleOptionKeydown($event, item.value)" tabindex="-1" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value" [disabled]="item.disabled" [attr.aria-disabled]="item.disabled">
             <span>
               {{ item.label }}
             </span>
-          </div>
+          </button>
         </ng-container>
       </div>
       <ng-container *ngIf="empty">
@@ -73,10 +75,14 @@ export class SelectComponent {
   @Input() filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   @Input() searchable?: boolean;
   @Input() empty?: boolean;
+  @Input() placeholder?: string = "Select an option";
   @Input() class?: string;
 
   protected readonly instanceId = `fsds-select-${nextInstanceId++}`;
   @Input() position?: string;
+  @ViewChild("interactionAnchor") set interactionAnchor(element: ElementRef<HTMLElement> | undefined) {
+    this.behavior.anchorRef.nativeElement = element?.nativeElement ?? null;
+  }
   @ViewChild("interactionPanel") set interactionPanel(element: ElementRef<HTMLElement> | undefined) {
     this.behavior.panelRef.nativeElement = element?.nativeElement ?? null;
   }
@@ -108,11 +114,22 @@ export class SelectComponent {
     ].filter(Boolean).join(" ");
   }
 
+  get rootAriaControls(): string | undefined {
+    return [this.behavior.open() ? `${this.instanceId}-content` : null].filter(Boolean).join(" ") || undefined;
+  }
+
+  get triggerAriaControls(): string | undefined {
+    return [this.behavior.open() ? `${this.instanceId}-content` : null].filter(Boolean).join(" ") || undefined;
+  }
+
   // BindingExpressionV2 predicate:memberOf helper. Adapts to the runtime
   // shape of `selection`: scalar equality when not an array, set
   // membership otherwise. Used for channels typed `T | T[]`.
   protected memberOf(candidate: unknown, selection: unknown): boolean {
     return Array.isArray(selection) ? selection.includes(candidate) : candidate === selection;
+  }
+  protected selectionLabel(options: readonly { value: string; label: string }[] | undefined, selection: string | string[] | undefined, fallback: string): string {
+    return ((options || []).filter(option => (Array.isArray(selection) ? selection : [selection]).includes(option.value)).map(option => option.label).join(', ') || fallback);
   }
 
   // Replace (single mode) or toggle `member`'s array membership (multi mode).

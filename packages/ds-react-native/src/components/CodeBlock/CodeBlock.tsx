@@ -27,6 +27,7 @@ export interface CodeBlockProps {
 // @generated:start component
 export function CodeBlock({
   code,
+  children,
   style,
   testID,
   accessibilityLabel,
@@ -44,7 +45,14 @@ export function CodeBlock({
       <View
         style={styles.code}
       >
-        <RNText>{code}</RNText>
+        {typeof children === "string" ? <RNText>{children}</RNText> : children}
+        {!(children) ? (
+        <View
+          style={styles.source}
+        >
+          <RNText>{code}</RNText>
+        </View>
+        ) : null}
       </View>
     </View>
   );

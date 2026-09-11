@@ -226,6 +226,15 @@ function isVoidRootElement(component: ComponentBundle): boolean {
 export function childLabel(component: ComponentBundle): string {
   if (NO_CHILD_LABEL.has(component.name)) return "";
   if (isVoidRootElement(component)) return "";
+  // A fallback renderer is the default example; optional projected content
+  // must not replace it with a synthetic component-name label.
+  const anatomy = component.contract.anatomy;
+  const hasFallback = (node: unknown): boolean => {
+    if (!node || typeof node !== "object") return false;
+    const value = node as { if?: string; content?: unknown; children?: unknown[] };
+    return (value.if === "!children" && value.content !== undefined) || (value.children ?? []).some(hasFallback);
+  };
+  if (anatomy && !Array.isArray(anatomy) && hasFallback(anatomy.dom)) return "";
   return component.name;
 }
 

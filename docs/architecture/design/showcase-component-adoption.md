@@ -1,71 +1,89 @@
 # Showcase component adoption
 
-`SHOWCASE-COMPONENT-ADOPTION-02` inventories and replaces showcase-owned UI that
-already has a suitable generated component. This is a source-site census for
-this slice, not a count of runtime instances or distinct component types.
+The original production JSX census found 25 raw control/source sites. Both
+adoption slices together replace all 25. The AST guard now requires zero:
+there is no compatibility allowance for the eight sites left by the first
+slice. The separate panel/pill census also ends at zero from its historical
+baseline of 14.
 
-## Inventory and replacements
-
-The starting guard recorded 24 raw control sites. Inspecting CodeViewer added
-its untracked `pre`, bringing the comparable baseline to 25. After adoption,
-8 remain. The TypeScript AST guard ignores documentation snippets and asserts
-the exact remaining sites, including inverse checks when an allowance becomes
-obsolete. The separate panel/pill census started at 14 and ends at zero.
-
-| Source | Before | After | Realization |
+| Source | Original raw sites | Remaining | Shared realization |
 |---|---:|---:|---|
-| JsonTreeViewer raw disclosure elements | 4 | 0 | Controlled Details; selected trace paths open ancestors, including arrays |
-| PropertySection raw toggle | 1 | 0 | Accordion composition; hidden controls leave keyboard navigation |
-| TokenPicker controls | 3 | 0 | Input and Button; existing typed filtering and binding callbacks |
-| TokenValueControl controls | 6 | 1 | Button and Input; native color well retained |
-| PropertiesPanel controls | 7 | 3 | Button and Input; native select, number and color retained |
-| Header brand input | 1 | 1 | Native radio retained |
-| TokensView brand button | 1 | 1 | Existing single-choice control retained |
-| CodeViewer source and trace controls | 2 | 2 | Specialized annotated source retained |
-| App panel class sites | 13 | 0 | Twelve Card compositions; the existing Popover.Content no longer borrows panel CSS |
+| JsonTreeViewer disclosures | 4 | 0 | Controlled Details |
+| PropertySection toggle | 1 | 0 | Accordion |
+| TokenPicker controls | 3 | 0 | Input and Button |
+| TokenValueControl controls | 6 | 0 | Input and Button, including native color |
+| PropertiesPanel controls | 7 | 0 | Input, Button and Select |
+| Header brand input | 1 | 0 | RadioGroup |
+| TokensView brand button | 1 | 0 | RadioGroup |
+| CodeViewer source and trace controls | 2 | 0 | CodeBlock and Button |
+| App panel class sites | 13 | 0 | Card and existing Popover.Content |
 | App pill class site | 1 | 0 | Badge |
 
-Panel and pill CSS is retired. Scoped appearance choices use generated design
-and box-model properties. App layout, data processing, trace navigation and
-native HTML structure are not automatically component duplication.
+App layout, data processing, trace navigation and document structure remain
+application responsibilities. Retired panel/pill/source skins have no
+compatibility selectors. Appearance overrides use consumed design and
+box-model slots.
 
-CodeViewer still owns annotated source rendering. Its CSS now uses
-`source-viewer__code`, removing the bare `.code-block` rules that also styled
-generated CodeBlock examples. This is collision removal, not a claim that the
-annotated viewer has been replaced. Both raw source elements remain explicit
-in the guard; no compatibility selector is kept.
+## Upstream capabilities established by the remaining sites
 
-## Findings and remaining capabilities
+**Input preserves native semantics.** Its contract no longer forces
+`role=textbox` on number and color inputs. The Web DOM binding order realizes
+the input type before its value so browsers do not sanitize color values
+under the wrong native input type. Inspector number conversion still treats
+an empty field as an unset override.
 
-| Severity | Source | Expected | Observed / next repair |
-|---|---|---|---|
-| Warning | CodeBlock contract; CodeViewer | Shared source rendering with numbered lines and annotated ranges | CodeBlock supplies literal source and syntax tokens, but no line/range rendering contract. Add that capability upstream, keeping trace navigation in the showcase. |
-| Warning | Select contract/generated selected-value part | Selected option label visible in the closed control | `.select__text` is empty in the generated React output. The attempted inspector replacement was rejected; selected-label resolution needs a contract/IR realization. |
-| Warning | Input contract | Type-appropriate native accessibility semantics | The contract supplies `role=textbox` for every type. Native number/color controls remain until type-dependent roles are modeled or implicit roles preserved upstream. |
-| Warning | Header and TokensView brand controls | Shared single-choice selection and keyboard behavior | No generated RadioGroup family is available. Existing brand controls remain; wrapping them in Button would not supply that contract. |
-| Resolved | PropertySection | Closed regions hide interactive descendants | The old CSS animation left controls discoverable. Accordion supplies the hidden region behavior; the editor test now opens the section before editing. |
-| Resolved | Showcase Card / usage preview | App appearance does not change the subject being demonstrated | Inheritable Card overrides leaked into nested Card examples. The usage-preview boundary resets this app-owned appearance scope while allowing inline inspector overrides to win. |
+**Select displays its selected labels.** The closed
+`project:selectionLabel(options, selection, fallback)` binding projects labels
+from the option records in option order, handles scalar or multiple selection,
+and uses a placeholder when nothing matches. The IR carries that value
+projection; each JavaScript emitter supplies target syntax. It is not a
+component-name dispatch. Native option buttons preserve disabled semantics. Lit omits absent option
+attributes, preserves explicit false, and clears stale values when option
+records change.
+Selection dismissal consumes the declared policy, closes single selections
+and restores trigger focus; multiple selections remain open. Relationships
+supply instance-specific IDs, and keyboard navigation skips disabled options.
 
-The existing generated primitives cover a substantial portion of the remaining
-showcase UI. Annotated code, selected-option text, type-dependent input
-semantics and single-choice groups are concrete upstream work; their absence
-is not evidence that every custom showcase composition needs a new primitive.
+**RadioGroup owns single-choice controls.** Its options and selection channel
+drive native radio inputs on the web. A required group name gives the browser
+the grouping and form-submission identity; consumers must supply different
+names for independent groups. Labels, disabled choices and horizontal/vertical
+layout are declared in the contract. React Native lowers each labeled radio
+to one accessible press target with a visible selection indicator. This
+component is emitted by the admitted JavaScript targets and SwiftUI. The
+SwiftUI realization derives a native radio-style Picker from the same
+selection and label bindings; native form-name transport is not implied.
+
+**CodeBlock owns the source surface.** A consumer content region can replace
+the automatic literal-source renderer. CodeViewer supplies numbered lines and
+Button annotations through that region while retaining the canonical code
+string for copying. Trace lookup, selection and navigation stay in the
+showcase. Absent content retains literal whitespace and escaping. The Lit
+realization tracks slot presence and honors the negated children guard.
+SwiftUI and Compose retain their literal-source initializer/parameter path
+alongside optional consumer content; React Native gives the fallback its own
+part so it does not apply the root padding twice.
 
 ## Evidence boundary
 
-- `src/consumption/dogfooding-guard.test.ts`: exact AST inventory and retired
-  class checks; no raw-site allowance can grow or remain stale silently.
-- `src/consumption/consumption-guard.test.ts`: source-viewer CSS cannot reclaim
-  the generated CodeBlock selector.
-- `src/components/showcase-compositions.test.tsx`: independent section actions,
-  hidden controls, array trace revelation, manual collapse, literal stepping,
-  invalid stepping, token filtering and binding through real components.
-- `e2e/showcase-adoption.spec.ts`: desktop/narrow migrated surfaces, Card preview
-  isolation, keyboard disclosure, and generated JSON Details.
-- `e2e/editor-binding-rail.spec.ts`: edit/clear still changes actual preview CSS.
-- `e2e/showcase-usability.spec.ts`: prior palette, shell, Card and overlay behavior.
+- `src/consumption/dogfooding-guard.test.ts`: production AST inventory requires
+  zero raw control/source sites and zero retired surrogate classes.
+- `src/components/shared-controls.test.tsx`: controlled selection authority,
+  native form serialization, typed input values, source fallback and copying.
+- `packages/ds-codegen/src/selection-label.test.ts`: malformed bindings,
+  label projection values and independently renamed contract emission.
+- `packages/ds-codegen/src/frameworks/consumer-content.test.ts`: renamed
+  source fallback in native emitter outputs.
+- `e2e/showcase-controls.spec.ts`: number/color semantics, radio keyboard
+  navigation and disabled choices, Select labels/dismissal/focus across all
+  five web frameworks; integrated brands, inspector selection and trace hits.
+- `e2e/codeblock-whitespace.spec.ts`: literal whitespace and single-line
+  geometry across the five web frameworks.
+- `e2e/showcase-adoption.spec.ts`, `e2e/editor-binding-rail.spec.ts` and
+  `e2e/showcase-usability.spec.ts`: desktop/narrow surfaces, preview isolation,
+  editor changes, disclosure, palette, shell and overlay regressions.
 
-These browser cases use Chromium. They do not establish all-browser visual
-parity, complete accessibility conformance or replacement of the remaining
-native/specialized controls. Screenshots and local gate logs remain ignored
-runtime evidence rather than committed artifacts.
+Browser checks use Chromium. SwiftUI emission parity, compilation and
+component body evaluation were checked, including the new native radio
+realization. These do not establish native keyboard or accessibility
+interaction parity. Compose source checks establish emitted structure. Screenshots and local gate logs stay in ignored runtime evidence.

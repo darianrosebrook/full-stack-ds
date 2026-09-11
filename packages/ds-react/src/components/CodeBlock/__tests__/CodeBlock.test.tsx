@@ -22,24 +22,24 @@ const componentAxeOptions = {
 
 describe("CodeBlock — unit", () => {
   it("renders with default props", () => {
-    render(<CodeBlock data-testid="code-block" code={"placeholder"} language={"bash"} />);
+    render(<CodeBlock data-testid="code-block" code={"placeholder"} language={"bash"}><span>content</span></CodeBlock>);
     expect(screen.getByTestId("code-block")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<CodeBlock data-testid="code-block" code={"placeholder"} language={"bash"} />);
+    render(<CodeBlock data-testid="code-block" code={"placeholder"} language={"bash"}><span>content</span></CodeBlock>);
     expect(screen.getByTestId("code-block")).toHaveClass("code-block");
   });
 
   it("merges custom className", () => {
-    render(<CodeBlock data-testid="code-block" code={"placeholder"} language={"bash"} className="custom" />);
+    render(<CodeBlock data-testid="code-block" code={"placeholder"} language={"bash"} className="custom"><span>content</span></CodeBlock>);
     expect(screen.getByTestId("code-block")).toHaveClass("code-block", "custom");
   });
 });
 
 describe("CodeBlock — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { baseElement } = render(<><CodeBlock code={"placeholder"} language={"bash"} /></>);
+    const { baseElement } = render(<><CodeBlock code={"placeholder"} language={"bash"}><span>content</span></CodeBlock></>);
     const component = baseElement.querySelector('[data-fsds-component="code-block"]');
     expect(component).not.toBeNull();
     const results = await axe(component!, componentAxeOptions) as unknown as { violations: Array<{ id: string }> };

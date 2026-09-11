@@ -12,11 +12,11 @@ generated output and must not be hand-edited.
 From the repository root:
 
 ```bash
-pnpm run generate -- --target=all   # emits the allowlisted set (<!-- target-component-count:swiftui -->51 of the <!-- component-count -->51 corpus contracts)
+pnpm run generate -- --target=all   # emits the allowlisted set (<!-- target-component-count:swiftui -->52 of the <!-- component-count -->52 corpus contracts)
 ```
 
 `swiftui` is registered in `fsds.targets.json` with a **declared-admission
-allowlist** (the <!-- target-component-count:swiftui -->51 allowlisted components): `--target=all` and
+allowlist** (the <!-- target-component-count:swiftui -->52 allowlisted components): `--target=all` and
 `pnpm run governed:rail` emit exactly that set and skip the rest by
 declaration. Explicit single-component requests bypass the allowlist and
 surface the emitter's own fail-loud errors. The target remains outside the
@@ -118,8 +118,12 @@ a `LIMITATION:` artifact by the harness):
 
 `node scripts/swift-parity-diff.mjs` generates every corpus contract
 through both the react and swiftui emitters and exits nonzero if any
-component emits for react but not swiftui. Current run: react 51 /
-swift 51 / divergent 0. This is emission-level API-surface parity —
+component emits for react but not swiftui. The admitted SwiftUI allowlist
+covers <!-- target-component-count:swiftui -->52 of the <!-- component-count -->52
+corpus contracts. RadioGroup lowers to a native radio-style Picker with
+controlled or uncontrolled selection. Its generated source compiles and its
+body evaluates in the component smoke suite; this does not establish native
+keyboard or accessibility interaction parity. The script checks emission —
 not visual or behavioral parity. (Token-value parity at the paint
 level is sample-proven by `TokenPaintTests` — see runtime proof above.)
 

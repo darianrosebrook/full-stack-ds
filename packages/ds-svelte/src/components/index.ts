@@ -76,6 +76,7 @@ export { default as PostcardFooter } from "./Postcard/PostcardFooter.svelte";
 export { default as PostcardHeader } from "./Postcard/PostcardHeader.svelte";
 export { default as ProfileFlag } from "./ProfileFlag/ProfileFlag.svelte";
 export { default as Progress } from "./Progress/Progress.svelte";
+export { default as RadioGroup } from "./RadioGroup/RadioGroup.svelte";
 export { default as Select } from "./Select/Select.svelte";
 export { default as SelectContent } from "./Select/SelectContent.svelte";
 export { default as SelectOption } from "./Select/SelectOption.svelte";

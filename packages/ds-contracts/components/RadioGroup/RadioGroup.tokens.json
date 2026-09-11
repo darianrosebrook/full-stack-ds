@@ -1,0 +1,7 @@
+{
+  "box-model.gap": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  }
+}

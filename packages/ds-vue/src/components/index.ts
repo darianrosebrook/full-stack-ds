@@ -109,6 +109,8 @@ import "./ProfileFlag/ProfileFlag.css";
 export { default as ProfileFlag } from "./ProfileFlag/ProfileFlag.vue";
 import "./Progress/Progress.css";
 export { default as Progress } from "./Progress/Progress.vue";
+import "./RadioGroup/RadioGroup.css";
+export { default as RadioGroup } from "./RadioGroup/RadioGroup.vue";
 import "./Select/Select.css";
 export { default as Select } from "./Select/Select.vue";
 export { default as SelectContent } from "./Select/SelectContent.vue";

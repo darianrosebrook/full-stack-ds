@@ -41,7 +41,7 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
   const { value: selection, set: setSelection } = useControllableState<string | string[]>({
     controlled: options.value,
     defaultValue: options.defaultValue ?? undefined as never,
-    onChange: options.onChange,
+    onChange: (value) => { options.onChange?.(value); if (!options.multiple?.()) { anchorToggle.setOpen(false); requestAnimationFrame(() => { anchorToggle.anchorRef.value?.focus(); }); } },
   });
 
   const anchorToggle = useAnchorToggle({
@@ -56,13 +56,13 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
     anchorToggle.setOpen(true);
     requestAnimationFrame(() => {
       if (!anchorToggle.panelRef.value) return;
-      (anchorToggle.panelRef.value.querySelector<HTMLElement>("input") ?? anchorToggle.panelRef.value.querySelector<HTMLElement>("[role=\"option\"]"))?.focus();
+      (anchorToggle.panelRef.value.querySelector<HTMLElement>("input") ?? anchorToggle.panelRef.value.querySelector<HTMLElement>("[role=\"option\"]:not(:disabled)"))?.focus();
     });
   }
 
   function handleContentKeydown(event: KeyboardEvent): void {
     const items = Array.from(
-      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>("[role=\"option\"]"),
+      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>("[role=\"option\"]:not(:disabled)"),
     );
     const currentIndex = items.findIndex((item) => item === document.activeElement);
     if (event.key === "ArrowUp") {
@@ -84,7 +84,7 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
   }
 
   function handleOptionKeydown(event: KeyboardEvent, value: string): void {
-    if (!(event.key === "Enter")) return;
+    if (!(event.key === "Enter" || event.key === "Space")) return;
     event.preventDefault();
     const current = Array.isArray(selection.value) ? selection.value : selection.value == null ? [] : [selection.value];
     setSelection(options.multiple?.() ? (current.includes(value) ? current.filter((member) => member !== value) : [...current, value]) : value);

@@ -21,9 +21,10 @@ interface Props {
   language: CodeBlockLanguage;
   highlight?: boolean;
   class?: string;
+  children?: import('svelte').Snippet;
 }
 
-let { code, language, highlight = true, class: className }: Props = $props();
+let { code, language, highlight = true, class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes
@@ -40,4 +41,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<pre class={classes} data-language={language} data-fsds-component="code-block" data-fsds-box=""><code class={'code-block__code'} spellcheck="false" data-language={language}>{#if highlight}{#each tokenizeCode(code, language) as token, tokenIndex}<span class="code-block__token" data-token={token.kind}>{token.text}</span>{/each}{:else}{code}{/if}</code></pre>
+<pre class={classes} data-language={language} data-fsds-component="code-block" data-fsds-box=""><code class={'code-block__code'} spellcheck="false" data-language={language}>{@render children?.()}{#if !children}<span class={'code-block__source'}>{#if highlight}{#each tokenizeCode(code, language) as token, tokenIndex}<span class="code-block__token" data-token={token.kind}>{token.text}</span>{/each}{:else}{code}{/if}</span>{/if}</code></pre>

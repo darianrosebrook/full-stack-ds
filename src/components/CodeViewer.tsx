@@ -1,5 +1,5 @@
 import { useMemo, useRef, useEffect, useState } from "react";
-import { Card, Button, Stack, Toast, Tooltip  } from "@full-stack-ds/react";
+import { Card, Button, CodeBlock, Stack, Toast, Tooltip  } from "@full-stack-ds/react";
 import type { TraceHit } from "../trace/types";
 
 interface CodeViewerProps {
@@ -33,7 +33,7 @@ function segmentLine(line: string, lineHits: { hit: TraceHit; index: number; col
 }
 
 export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitIndex }: CodeViewerProps) {
-  const containerRef = useRef<HTMLPreElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
 
   const copyCode = async () => {
@@ -88,12 +88,13 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
       >
         {filename ?? "Source"}
       </Toast>
-      <pre className="source-viewer__code" ref={containerRef} style={{ borderRadius: 0, border: "none" }}>
-        <code>
+      <div ref={containerRef}>
+        <CodeBlock className="source-viewer__code" code={code} language="plaintext">
           {lines.map(({ lineNumber, segments }) => (
-            <Stack key={lineNumber} variant="horizontal" className="stack-gap-00">
+            <Stack as="span" key={lineNumber} variant="horizontal" className="source-viewer__line stack-gap-00">
               <span
                 className="subtle"
+                aria-hidden="true"
                 style={{
                   display: "inline-block",
                   width: 36,
@@ -109,26 +110,17 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
               <span style={{ flex: 1, minWidth: 0 }}>
                 {segments.map((seg, idx) =>
                   seg.hit ? (
-                    <Tooltip key={idx} placement="top">
+                    <Tooltip key={idx} placement="top" className="source-viewer__trace">
                       <Tooltip.Trigger asChild>
-                        <button
-                          type="button"
+                        <Button
+                          variant="ghost"
+                          className="source-viewer__annotation"
                           data-hit-index={seg.hitIndex}
+                          data-selected={selectedHitIndex === seg.hitIndex}
                           onClick={() => onHitClick?.(seg.hit!)}
-                          style={{
-                            background:
-                              selectedHitIndex === seg.hitIndex ? "var(--fsds-semantic-color-background-accent)" : "var(--fsds-semantic-color-background-accent-subtle)",
-                            color: selectedHitIndex === seg.hitIndex ? "var(--fsds-semantic-color-foreground-on-color)" : "var(--fsds-semantic-color-foreground-accent)",
-                            border: "none",
-                            borderRadius: "var(--fsds-core-shape-radius-02)",
-                            padding: "0 2px",
-                            font: "inherit",
-                            cursor: "pointer",
-                            margin: "0 -1px",
-                          }}
                         >
                           {seg.text}
-                        </button>
+                        </Button>
                       </Tooltip.Trigger>
                       <Tooltip.Content>
                         <strong>{seg.hit.kind}</strong> → {seg.hit.contractPath}
@@ -142,8 +134,8 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
               </span>
             </Stack>
           ))}
-        </code>
-      </pre>
+        </CodeBlock>
+      </div>
     </Card>
   );
 }

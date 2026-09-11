@@ -1,3 +1,4 @@
+import { selectionChangeHandler } from "../selection-dismissal.js";
 /**
  * Lit behavior class emitter — the framework-equivalent of
  * `frameworks/vue/hook-source.ts`. Produces a `${Name}Behavior.ts` file
@@ -181,6 +182,7 @@ function generateOptionsInterface(
 
   if (bindings.useFocusTrap || needsKeyboardPanelBinding(ir)) {
     lines.push(`  containerEl?: HTMLElement;`);
+    if (needsKeyboardPanelBinding(ir)) lines.push(`  anchorEl?: HTMLElement;`);
   }
 
   // FEAT-A11Y-COMPOSITE-KEYBOARD-01: getter-shaped mode gates so the select
@@ -434,7 +436,9 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
     // opts.<valueProp> is itself a getter; pass it directly.
     lines.push(`      controlled: opts.${ch.valueProp},`);
     lines.push(`      defaultValue: ${defaultExpr},`);
-    lines.push(`      onChange: opts.${ch.changeHandlerProp},`);
+    const focus = "this.opts.anchorEl?.focus()";
+    const selectionHandler = bindings.useAnchorToggle ? selectionChangeHandler(ir, ch.name, `opts.${ch.changeHandlerProp}?.`, name => `opts.${name}?.()`, "this.anchorToggle.setOpen(false)", focus, name => `opts.${name}`) : undefined;
+    lines.push(`      onChange: ${selectionHandler ?? `opts.${ch.changeHandlerProp}`},`);
     lines.push(`    });`);
   }
 

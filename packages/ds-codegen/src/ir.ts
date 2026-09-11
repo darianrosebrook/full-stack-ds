@@ -337,6 +337,14 @@ export type BindingExpression =
       source: BindingExpression;
     }
   | {
+      /** Labels of selected values in option order; unknown values use fallback. */
+      kind: "projection";
+      op: "selectionLabel";
+      source: BindingExpression;
+      selection: BindingExpression;
+      fallback: BindingExpression;
+    }
+  | {
       /** Contract-authored literal projection, generic across components. */
       kind: "valueMap";
       source: BindingExpression;
@@ -423,8 +431,15 @@ export function composeValueMapExpression(
 export function composeBindingProjectionExpression(
   op: Extract<BindingExpression, { kind: "projection" }>['op'],
   sourceExpression: string,
+  selectionExpression?: string,
+  fallbackExpression?: string,
 ): string {
   switch (op) {
+    case "selectionLabel":
+      if (selectionExpression === undefined || fallbackExpression === undefined) {
+        throw new Error("selectionLabel requires selection and fallback operands");
+      }
+      return `((${sourceExpression} || []).filter(option => (Array.isArray(${selectionExpression}) ? ${selectionExpression} : [${selectionExpression}]).includes(option.value)).map(option => option.label).join(', ') || ${fallbackExpression})`;
     case "dateDayOfMonth":
       return `${sourceExpression}.getDate()`;
   }
@@ -813,8 +828,8 @@ export interface CompositeControlIR {
   part: PartIR;
   channel: NormalizedChannelIR;
   interactionModel: "collection-selection" | "segmented-text";
-  commit: "input" | "activation";
-  event: "input" | "click";
+  commit: "input" | "change" | "activation";
+  event: "input" | "change" | "click";
   update: Extract<BindingExpression, { kind: "channelCall" | "channelUpdate" }>;
 }
 
@@ -881,6 +896,8 @@ export interface DomNodeIR {
    * here so the post-open focus can query inside the revealed panel.
    */
   keyboardPanel?: boolean;
+  /** Invoking host for a keyboard-open action; carries the return-focus ref. */
+  keyboardAnchor?: boolean;
   /** HTML tag, or `"slot"`/`"children"` placeholder. */
   tag: string;
   /**
@@ -2882,6 +2899,11 @@ function validateBindingAgainstScope(
   channelValueTypes: Map<string, string> = new Map(),
 ): void {
   if (binding.kind === "projection") {
+    if (binding.op === "selectionLabel") {
+      for (const operand of [binding.selection, binding.fallback]) {
+        validateBindingAgainstScope(operand, `${siteLabel} selection label operand`, knownChannels, knownProps, enclosingIteration, componentName);
+      }
+    }
     validateBindingAgainstScope(
       binding.source,
       `${siteLabel} projection source`,
@@ -3501,7 +3523,11 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
   // explicitly to the canonical field.
   const bindings: Record<string, BindingExpression> = {};
   if (node.bindings) {
-    for (const [attr, expr] of Object.entries(node.bindings)) {
+    // Native input type changes sanitize the current value. Preserve the
+    // authored value by realizing type first, regardless of JSON key order.
+    const entries = Object.entries(node.bindings);
+    if (node.tag === "input") entries.sort(([a], [b]) => Number(b === "type") - Number(a === "type"));
+    for (const [attr, expr] of entries) {
       if (/^on[A-Z]/.test(attr)) {
         const suggestedEvent = attr.slice(2).toLowerCase();
         throw new Error(
@@ -4000,6 +4026,16 @@ export function parseBindingExpression(expr: string): BindingExpression {
     if (parsed) return parsed;
   }
 
+  if (expr.startsWith("project:selectionLabel")) {
+    const match = expr.match(/^project:selectionLabel\(([^,]+),\s*([^,]+),\s*([^,]+)\)$/);
+    if (!match) throw new Error("selectionLabel requires options, selection and fallback operands");
+    const [source, selection, fallback] = match.slice(1).map(value => parseBindingExpression(value.trim()));
+    if (source.kind !== "prop" || selection.kind !== "channel" || selection.field !== "value" || (fallback.kind !== "prop" && fallback.kind !== "literal")) {
+      throw new Error("selectionLabel requires a prop collection, a channel value and a prop or literal fallback");
+    }
+    return { kind: "projection", op: "selectionLabel", source, selection, fallback };
+  }
+
   const projectionMatch = expr.match(
     /^project:(dateDayOfMonth)\((.*)\)$/,
   );
@@ -4427,6 +4463,7 @@ export function promoteIterationLocals(
 ): BindingExpression {
   if (binding.kind === "projection") {
     const source = promoteIterationLocals(binding.source, iteration);
+    if (binding.op === "selectionLabel") return { ...binding, source, selection: promoteIterationLocals(binding.selection, iteration), fallback: promoteIterationLocals(binding.fallback, iteration) };
     if (source === binding.source) return binding;
     return { ...binding, source };
   }
@@ -4806,9 +4843,9 @@ export function buildCompositeControlIR(
       `Contract "${contract.name}": compositeControl interactionModel "segmented-text" requires commit "input".`,
     );
   }
-  if (control.interactionModel === "collection-selection" && control.commit !== "activation") {
+  if (control.interactionModel === "collection-selection" && control.commit === "input") {
     throw new Error(
-      `Contract "${contract.name}": compositeControl interactionModel "collection-selection" requires commit "activation".`,
+      `Contract "${contract.name}": compositeControl interactionModel "collection-selection" requires commit "activation" or "change".`,
     );
   }
   if (!dom) {
@@ -4856,7 +4893,7 @@ export function buildCompositeControlIR(
     );
   }
 
-  const event = control.commit === "input" ? "input" : "click";
+  const event = control.commit === "activation" ? "click" : control.commit;
   if (Object.keys(target.node.events).length > 0) {
     throw new Error(
       `Contract "${contract.name}": compositeControl owns the ${control.channel} commit; remove authored anatomy.dom events from part "${control.part}".`,
@@ -5001,7 +5038,7 @@ export function attachKeyboardActions(
   const visit = (node: DomNodeIR): void => {
     if (node.part !== undefined) visitedParts.add(node.part);
     const owned = byPart.get(node.part ?? "");
-    if (owned) node.keyboardActions = owned;
+    if (owned) { node.keyboardActions = owned; node.keyboardAnchor = owned.some(a => a.op === "open") || undefined; }
     for (const child of node.children) visit(child);
   };
   visit(dom);
@@ -5181,7 +5218,7 @@ export function resolveRovingItemSelector(ir: ComponentIR): string | undefined {
       `Contract "${ir.name}": roving item part "${itemPart}" must declare an explicit role so roving focus can resolve the item set.`,
     );
   }
-  return selector;
+  return node.bindings.disabled ? `${selector}:not(:disabled)` : selector;
 }
 
 /**
@@ -5449,8 +5486,7 @@ function buildParts(contract: ComponentContract): PartIR[] {
       semanticElement,
       isCompound:
         isExplicitSubcomponent ||
-        isCompoundPart(name) ||
-        isTableCompositionPart,
+        (details?.subcomponent !== false && (isCompoundPart(name) || isTableCompositionPart)),
       isExplicitSubcomponent: isExplicitSubcomponent || undefined,
       isRootOnly: ROOT_ONLY_PARTS.has(name),
       layoutVariant:

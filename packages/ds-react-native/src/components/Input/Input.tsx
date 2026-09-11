@@ -59,9 +59,9 @@ export function Input({
     <TextInput
       testID={testID}
       style={[styles.root, disabled ? styles.root_state_disabled : undefined, style]}
+      secureTextEntry={type === "password"}
       value={String(value ?? "")}
       editable={!(disabled)}
-      secureTextEntry={type === "password"}
       placeholder={placeholder}
       accessibilityLabel={accessibilityLabel ?? ariaLabel}
       accessibilityLabelledBy={accessibilityLabelledBy ?? ariaLabelledby}

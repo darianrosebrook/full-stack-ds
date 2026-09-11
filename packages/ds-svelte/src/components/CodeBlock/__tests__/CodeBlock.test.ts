@@ -1,6 +1,6 @@
 // @generated:start imports
 import { describe, expect, it } from "vitest";
-import type { Component } from "svelte";
+import { createRawSnippet, type Component } from "svelte";
 import { render } from "@testing-library/svelte";
 import { axe } from "vitest-axe";
 import CodeBlock from "../CodeBlock.svelte";
@@ -35,7 +35,7 @@ describe("CodeBlock — unit", () => {
 
 describe("CodeBlock — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(CodeBlock as unknown as Component<Record<string, unknown>>, { props: { "code": "placeholder", "language": "bash" } });
+    const { container } = render(CodeBlock as unknown as Component<Record<string, unknown>>, { props: { "code": "placeholder", "language": "bash", "children": createRawSnippet(() => ({ render: () => "<span>content</span>" })) } });
     const results = await axe(container, componentAxeOptions);
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });

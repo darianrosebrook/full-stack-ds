@@ -38,6 +38,7 @@ import { collectCollapseIntents, isContentTransform, nativeRootClipping } from "
 import { swiftLiteral } from "./icon-glyph.js";
 import nodeFs from "node:fs";
 import nodePath from "node:path";
+import { emitNativeRadioGroup } from "./radio-group.js";
 
 const INDENT = "    ";
 
@@ -75,6 +76,8 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
 }
 
 function emitSwiftUIComponentSource(ir: ComponentIR): string {
+  const radioGroup = emitNativeRadioGroup(ir, swiftExportName(ir.name));
+  if (radioGroup) return [emitImports(), emitTypes(ir), radioGroup].join("\n\n") + "\n";
   const collapseIntents = collectCollapseIntents(ir);
   const isNativeToggle = collapseIntents.has("native-toggle-affordance");
 
@@ -2505,6 +2508,17 @@ function emitStaticContentComponent(ir: ComponentIR): string {
   const exportName = swiftExportName(ir.name);
   const chrome = resolveChrome(ir);
   const axes = collectVariantAxes(ir);
+  // An absent consumer region may expose a contract-declared literal source.
+  const fallbackSources: string[] = [];
+  const collectFallback = (node: DomNodeIR): void => {
+    const source = contentOrTransformSource(node.content);
+    if (node.ifProp === "children" && node.ifNegated && source?.kind === "prop") {
+      fallbackSources.push(source.prop);
+    }
+    node.children?.forEach(collectFallback);
+  };
+  collectFallback(ir.dom!);
+  if (fallbackSources.length > 1) throw new Error("Static consumer content supports one literal fallback source");
   const layerInfo = emitLayerExpressions(axes);
   const layerArray = ['"root"', ...layerInfo.expressions];
   const layersExpr = layerInfo.needsCompactMap
@@ -2584,6 +2598,7 @@ function emitStaticContentComponent(ir: ComponentIR): string {
   lines.push("");
   lines.push(`${INDENT}public var body: some View {`);
   lines.push(`${INDENT}${INDENT}content`);
+  if (ir.dom!.tag === "pre") lines.push(`${INDENT}${INDENT}${INDENT}.font(.system(.body, design: .monospaced))`);
   if (ir.tokenScopes.length > 0) {
     if (chrome.blockPadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.vertical, blockPadding)`);
     if (chrome.inlinePadding) lines.push(`${INDENT}${INDENT}${INDENT}.padding(.horizontal, inlinePadding)`);
@@ -2593,6 +2608,16 @@ function emitStaticContentComponent(ir: ComponentIR): string {
   }
   lines.push(`${INDENT}}`);
   lines.push(`}`);
+  if (fallbackSources.length === 1) {
+    const source = escapeSwiftKeyword(fallbackSources[0]!);
+    lines.push("", `extension ${exportName} where Content == SwiftUI.Text {`);
+    lines.push(`${INDENT}public init(`);
+    for (const param of params.slice(0, -1)) lines.push(`${INDENT}${INDENT}${param}`);
+    lines.push(`${INDENT}${INDENT}${source}: String = ""`, `${INDENT}) {`);
+    const argumentsList = axes.map(axis => `${axis.prop}: ${escapeSwiftKeyword(axis.prop)}`).join(", ");
+    lines.push(`${INDENT}${INDENT}self.init(${argumentsList}) { SwiftUI.Text(verbatim: ${source}) }`);
+    lines.push(`${INDENT}}`, "}");
+  }
   lines.push("// @generated:end");
   return lines.join("\n");
 }

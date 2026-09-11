@@ -31,6 +31,7 @@ export { PopoverComponent } from "./Popover/Popover.component.js";
 export { PostcardComponent, PostcardContentComponent, PostcardFooterComponent, PostcardHeaderComponent } from "./Postcard/Postcard.component.js";
 export { ProfileFlagComponent } from "./ProfileFlag/ProfileFlag.component.js";
 export { ProgressComponent } from "./Progress/Progress.component.js";
+export { RadioGroupComponent } from "./RadioGroup/RadioGroup.component.js";
 export { SelectComponent, SelectContentComponent, SelectOptionComponent, SelectTriggerComponent } from "./Select/Select.component.js";
 export { SheetComponent, SheetBodyComponent, SheetContentComponent, SheetDescriptionComponent, SheetFooterComponent, SheetHeaderComponent, SheetTitleComponent } from "./Sheet/Sheet.component.js";
 export { ShowMoreComponent, ShowMoreContentComponent, ShowMoreTriggerComponent } from "./ShowMore/ShowMore.component.js";

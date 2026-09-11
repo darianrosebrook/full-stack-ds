@@ -80,7 +80,7 @@ const classNames = computed(() => [
       <tbody>
         <tr>
           <td v-for="(item, index) in (props.days ?? [])" :key="index" :class="'calendar__cell'" role="gridcell" :data-calendar-index="index">
-            <button :class="'calendar__day'" @click="() => behavior.setValue(item)">
+            <button :class="'calendar__day'" @click="() => behavior.setValue(item)" tabindex="-1">
               {{ item.getDate() }}
             </button>
           </td>

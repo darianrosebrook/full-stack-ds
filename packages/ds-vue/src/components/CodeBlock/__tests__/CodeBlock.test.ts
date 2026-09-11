@@ -35,7 +35,7 @@ describe("CodeBlock — unit", () => {
 
 describe("CodeBlock — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(CodeBlock as Component, { props: { "code": "placeholder", "language": "bash" }, attrs: { "data-testid": "code-block" }, slots: { "default": "content" } });
+    const wrapper = mount(CodeBlock as Component, { props: { "code": "placeholder", "language": "bash" }, attrs: { "data-testid": "code-block" }, slots: { "default": "<span>content</span>" } });
     const results = await axe(wrapper.element, componentAxeOptions);
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });

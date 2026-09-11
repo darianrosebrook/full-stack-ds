@@ -329,7 +329,52 @@ check(
   classify(kbEnterSpace, "web-dom", "<button type=\"button\">", new Set()).verdict,
   "realized",
 );
-// Arrow keys are NEVER native: a native tag must not satisfy composite navigation.
+// A native button does not supply arrow navigation.
+const choiceContract = {
+  compositeControl: { part: "choice", channel: "selected", interactionModel: "collection-selection", commit: "change" },
+  channels: { selected: { valueType: "string" } },
+  props: { designed: { members: [{ name: "group", required: true }] } },
+  anatomy: { dom: { tag: "fieldset", children: [{
+    tag: "label", iterate: { kind: "array" }, children: [{
+      tag: "input", part: "choice", attrs: { type: "radio" }, bindings: { name: "prop:group" },
+    }],
+  }] } },
+  a11y: { keyboard: [{ key: "ArrowLeft|ArrowRight|ArrowUp|ArrowDown" }] },
+};
+const choiceObligation = contract => deriveObligations([{ name: "ChoiceSet", contract }])[0];
+const radioObligation = choiceObligation(choiceContract);
+for (const [family, binding] of [
+  ["react", "name={group}"],
+  ["vue", ':name="props.group"'],
+  ["svelte", "name={group}"],
+  ["lit", "name=${ifDefined(this.group)}"],
+  ["angular", '[name]="group"'],
+]) {
+  check(`${family}: native radio carrier owns arrow keys`,
+    classify(radioObligation, "web-dom", `<input class="choice-set__choice" type="radio" ${binding}>`, new Set()).via,
+    "native radio carrier");
+}
+for (const [reason, source] of [
+  ["role without native input", '<div class="choice-set__choice" role="radio" name={group}>'],
+  ["wrong native type", '<input class="choice-set__choice" type="checkbox" name={group}>'],
+  ["missing group name", '<input class="choice-set__choice" type="radio">'],
+  ["per-item group name", '<input class="choice-set__choice" type="radio" name={item.group}>'],
+  ["another carrier", '<input class="unrelated__choice" type="radio" name={group}>'],
+  ["sibling name", '<input class="choice-set__choice" type="radio"><div name={group}>'],
+]) {
+  check(`${reason} cannot satisfy native radio arrows`,
+    classify(radioObligation, "web-dom", source, new Set(["input"])).verdict,
+    "unrealized");
+}
+for (const [reason, mutate] of [
+  ["optional group", contract => { contract.props.designed.members[0].required = false; }],
+  ["unrepeated input", contract => { delete contract.anatomy.dom.children[0].iterate; }],
+  ["per-item group", contract => { contract.anatomy.dom.children[0].children[0].bindings.name = "iter:item.group"; }],
+]) {
+  const contract = structuredClone(choiceContract);
+  mutate(contract);
+  check(`${reason} does not derive a native radio carrier`, choiceObligation(contract).nativeRadio, undefined);
+}
 check(
   "ArrowDown NOT satisfied by native button",
   classify({ component: "X", class: "keyboard", key: "ArrowDown" }, "web-dom", "<button>", new Set(["button"]))
