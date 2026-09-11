@@ -37,7 +37,9 @@ an empty field as an unset override.
 from the option records in option order, handles scalar or multiple selection,
 and uses a placeholder when nothing matches. The IR carries that value
 projection; each JavaScript emitter supplies target syntax. It is not a
-component-name dispatch. Native option buttons preserve disabled semantics.
+component-name dispatch. Native option buttons preserve disabled semantics. Lit omits absent option
+attributes, preserves explicit false, and clears stale values when option
+records change.
 Selection dismissal consumes the declared policy, closes single selections
 and restores trigger focus; multiple selections remain open. Relationships
 supply instance-specific IDs, and keyboard navigation skips disabled options.
