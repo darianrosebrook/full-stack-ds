@@ -70,7 +70,7 @@ const classes = $derived(
       <tr>
         {#each (days ?? []) as item, index (index)}
         <td class={'calendar__cell'} role="gridcell" data-calendar-index={index}>
-          <button class={'calendar__day'} onclick={() => behavior.setValue(item)}>{item.getDate()}</button>
+          <button class={'calendar__day'} onclick={() => behavior.setValue(item)} tabindex="-1">{item.getDate()}</button>
         </td>
         {/each}
       </tr>

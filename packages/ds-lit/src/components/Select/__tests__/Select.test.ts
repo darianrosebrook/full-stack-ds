@@ -228,7 +228,7 @@ describe("Select — keyboard realization (FEAT-A11Y-COMPOSITE-KEYBOARD-01)", ()
     expect(innerActive(element)).toBe(options[2]);
   });
 
-  it("Enter on an option commits that option's value and does not close (click parity)", async () => {
+  it("Enter on an option commits that option's value", async () => {
     const changes: unknown[] = [];
     const element = await openElement((el) => {
       el.onChange = (v) => changes.push(v);

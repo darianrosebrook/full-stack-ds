@@ -829,7 +829,7 @@ export interface ContractCompositeControl {
   part: string;
   channel: string;
   interactionModel: 'collection-selection' | 'segmented-text';
-  commit: 'input' | 'activation';
+  commit: 'input' | 'change' | 'activation';
   /** Closed BindingExpression grammar; arbitrary executable code is rejected. */
   update: string;
 }

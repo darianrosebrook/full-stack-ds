@@ -4,6 +4,9 @@ package com.fullstackds.components.codeblock
 // @generated:start imports
 import androidx.compose.foundation.background
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.layout.Box
+import androidx.compose.runtime.CompositionLocalProvider
+import com.fullstackds.tokens.LocalFsdsContentColor
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +28,7 @@ import com.fullstackds.tokens.toFsdsSp
 fun CodeBlock(
     code: String,
     modifier: Modifier = Modifier,
+    content: (@Composable () -> Unit)? = null,
 ) {
     val fsdsTheme = LocalFsdsTheme.current
     fun layeredSlot(slotName: String): String? {
@@ -54,10 +58,16 @@ fun CodeBlock(
         fontSize = fsdsFontSize ?: TextUnit.Unspecified,
         color = contentColor ?: Color.Unspecified,
     )
+    if (content != null) {
+        CompositionLocalProvider(LocalFsdsContentColor provides (contentColor ?: Color.Unspecified)) {
+            Box(modifier.then(chromeModifier)) { content() }
+        }
+    } else {
     BasicText(
         text = code,
         modifier = modifier.then(chromeModifier),
         style = fsdsTextStyle,
     )
+    }
 }
 // @generated:end

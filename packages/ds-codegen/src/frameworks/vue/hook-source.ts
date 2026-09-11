@@ -1,3 +1,4 @@
+import { selectionChangeHandler } from "../selection-dismissal.js";
 /**
  * Vue 3 composable emitter — the framework-equivalent of
  * `frameworks/react/hook-source.ts`. Produces a `useX.ts` file that
@@ -517,7 +518,8 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     // controllable-state primitive (it expects `() => T | undefined`).
     lines.push(`    controlled: options.${ch.valueProp},`);
     lines.push(`    defaultValue: ${defaultExpr},`);
-    lines.push(`    onChange: options.${ch.changeHandlerProp},`);
+    const selectionHandler = bindings.useAnchorToggle ? selectionChangeHandler(ir, ch.name, `options.${ch.changeHandlerProp}?.`, name => `options.${name}?.()`, "anchorToggle.setOpen(false)", "anchorToggle.anchorRef.value?.focus()", name => `options.${name}`) : undefined;
+    lines.push(`    onChange: ${selectionHandler ?? `options.${ch.changeHandlerProp}`},`);
     lines.push(`  });`);
     lines.push(``);
   }

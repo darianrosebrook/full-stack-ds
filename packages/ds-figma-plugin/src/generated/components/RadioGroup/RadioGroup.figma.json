@@ -1,0 +1,472 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "RadioGroup",
+    "cssPrefix": "radio-group",
+    "rootElement": "fieldset",
+    "effectiveRole": "radiogroup"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "fieldset",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "item",
+      "semanticElement": "li",
+      "nativeTag": "label",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "option",
+      "semanticElement": "li",
+      "nativeTag": "input",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "label",
+      "semanticElement": "label",
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "options",
+      "safeName": "options",
+      "type": "RadioGroupOption[]",
+      "required": true,
+      "description": "Choices with stable unique values and optional disabled state.",
+      "defaultExpr": "[{\"value\":\"alpha\",\"label\":\"Alpha\"},{\"value\":\"beta\",\"label\":\"Beta\"}]",
+      "nodeKind": null
+    },
+    {
+      "name": "name",
+      "safeName": "name",
+      "type": "string",
+      "required": true,
+      "description": "Native form group name. Use a distinct name for independent groups in the same form.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "value",
+      "safeName": "value",
+      "type": "string",
+      "required": false,
+      "description": "Controlled selected value.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultValue",
+      "safeName": "defaultValue",
+      "type": "string",
+      "required": false,
+      "description": "Initial uncontrolled selected value.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onChange",
+      "safeName": "onChange",
+      "type": "(value: string) => void",
+      "required": false,
+      "description": "Called with the newly selected option value.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible name of the group.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "orientation",
+      "safeName": "orientation",
+      "type": "RadioGroupOrientation",
+      "required": false,
+      "description": "Visual arrangement of the choices; native arrows navigate either arrangement.",
+      "defaultExpr": "\"vertical\"",
+      "nodeKind": null
+    }
+  ],
+  "designBindings": [
+    {
+      "property": "spacing.gap",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "radio-group.design.item.spacing.gap",
+      "cssVar": "--fsds-radio-group-design-item-spacing-gap",
+      "cssProperty": "gap",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "8px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item"
+    },
+    {
+      "property": "spacing.padding",
+      "group": "spacing",
+      "valueType": "dimension",
+      "slot": "radio-group.design.item.spacing.padding",
+      "cssVar": "--fsds-radio-group-design-item-spacing-padding",
+      "cssProperty": "padding",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "6px 10px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item"
+    },
+    {
+      "property": "shape.radius",
+      "group": "shape",
+      "valueType": "dimension",
+      "slot": "radio-group.design.item.shape.radius",
+      "cssVar": "--fsds-radio-group-design-item-shape-radius",
+      "cssProperty": "border-radius",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "999px",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "radio-group.design.item.background.fill",
+      "cssVar": "--fsds-radio-group-design-item-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "#f7f7f7",
+      "resolvesTo": "semantic.color.background.secondary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "radio-group.design.item.foreground.color",
+      "cssVar": "--fsds-radio-group-design-item-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": "item",
+      "part": "item",
+      "defaultValue": "#141414",
+      "resolvesTo": "semantic.color.foreground.primary",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item"
+    },
+    {
+      "property": "background.fill",
+      "group": "background",
+      "valueType": "color",
+      "slot": "radio-group.design.selected.background.fill",
+      "cssVar": "--fsds-radio-group-design-selected-background-fill",
+      "cssProperty": "background-color",
+      "selectorKey": ".radio-group__item[data-checked=\"true\"]",
+      "part": null,
+      "defaultValue": "#d92d2e",
+      "resolvesTo": "semantic.color.background.accent",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item[data-checked=\"true\"]"
+    },
+    {
+      "property": "foreground.color",
+      "group": "foreground",
+      "valueType": "color",
+      "slot": "radio-group.design.selected.foreground.color",
+      "cssVar": "--fsds-radio-group-design-selected-foreground-color",
+      "cssProperty": "color",
+      "selectorKey": ".radio-group__item[data-checked=\"true\"]",
+      "part": null,
+      "defaultValue": "#ffffff",
+      "resolvesTo": "semantic.color.foreground.onColor",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item[data-checked=\"true\"]"
+    },
+    {
+      "property": "appearance.opacity",
+      "group": "appearance",
+      "valueType": "number",
+      "slot": "radio-group.design.disabled.appearance.opacity",
+      "cssVar": "--fsds-radio-group-design-disabled-appearance-opacity",
+      "cssProperty": "opacity",
+      "selectorKey": ".radio-group__item[data-disabled=\"true\"]",
+      "part": null,
+      "defaultValue": "0.5",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item[data-disabled=\"true\"]"
+    },
+    {
+      "property": "focus.color",
+      "group": "focus",
+      "valueType": "color",
+      "slot": "radio-group.design.focus.focus.color",
+      "cssVar": "--fsds-radio-group-design-focus-focus-color",
+      "cssProperty": "outline-color",
+      "selectorKey": ".radio-group__item:focus-within",
+      "part": null,
+      "defaultValue": "#0566fe",
+      "resolvesTo": "semantic.focus.ring.color",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item:focus-within"
+    },
+    {
+      "property": "focus.width",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "radio-group.design.focus.focus.width",
+      "cssVar": "--fsds-radio-group-design-focus-focus-width",
+      "cssProperty": "outline-width",
+      "selectorKey": ".radio-group__item:focus-within",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "semantic.focus.ring.width",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item:focus-within"
+    },
+    {
+      "property": "focus.style",
+      "group": "focus",
+      "valueType": "enum",
+      "slot": "radio-group.design.focus.focus.style",
+      "cssVar": "--fsds-radio-group-design-focus-focus-style",
+      "cssProperty": "outline-style",
+      "selectorKey": ".radio-group__item:focus-within",
+      "part": null,
+      "defaultValue": "solid",
+      "resolvesTo": "semantic.focus.ring.style",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item:focus-within"
+    },
+    {
+      "property": "focus.offset",
+      "group": "focus",
+      "valueType": "dimension",
+      "slot": "radio-group.design.focus.focus.offset",
+      "cssVar": "--fsds-radio-group-design-focus-focus-offset",
+      "cssProperty": "outline-offset",
+      "selectorKey": ".radio-group__item:focus-within",
+      "part": null,
+      "defaultValue": "2px",
+      "resolvesTo": "semantic.focus.ring.offset",
+      "editableTargets": [
+        "web"
+      ],
+      "selector": ".radio-group__item:focus-within"
+    }
+  ],
+  "variants": {
+    "orientation": [
+      "vertical",
+      "horizontal"
+    ]
+  },
+  "states": {
+    "flat": [],
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
+  },
+  "classRecipe": {
+    "base": "radio-group",
+    "valueModifiers": [
+      {
+        "propName": "orientation",
+        "safeName": "orientation",
+        "defaultExpr": "\"vertical\""
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "fieldset",
+    "explicitRole": "radiogroup",
+    "effectiveRole": "radiogroup",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": [
+      {
+        "key": "ArrowLeft|ArrowRight|ArrowUp|ArrowDown",
+        "action": "Native radio navigation moves focus and selection, skipping disabled choices."
+      },
+      {
+        "key": "Space",
+        "action": "Select the focused radio."
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".radio-group",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "0",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "flex",
+          "flex-direction": "column",
+          "border": "0"
+        }
+      },
+      {
+        "selector": ".radio-group__item",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "gap": "8px",
+          "padding": "6px 10px",
+          "border-radius": "999px",
+          "background-color": "var(--fsds-semantic-color-background-secondary, #f7f7f7)",
+          "color": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "cursor": "pointer"
+        }
+      },
+      {
+        "selector": ".radio-group__option",
+        "declarations": {
+          "margin": "0",
+          "flex-shrink": "0"
+        }
+      },
+      {
+        "selector": ".radio-group__label",
+        "declarations": {
+          "min-width": "0",
+          "overflow-wrap": "anywhere"
+        }
+      },
+      {
+        "selector": ".radio-group--horizontal",
+        "declarations": {
+          "flex-direction": "row",
+          "flex-wrap": "wrap"
+        }
+      },
+      {
+        "selector": ".radio-group__item[data-checked=\"true\"]",
+        "declarations": {
+          "background-color": "var(--fsds-semantic-color-background-accent, #d92d2e)",
+          "color": "var(--fsds-semantic-color-foreground-on-color, #ffffff)"
+        }
+      },
+      {
+        "selector": ".radio-group__item[data-disabled=\"true\"]",
+        "declarations": {
+          "opacity": "0.5",
+          "cursor": "not-allowed"
+        }
+      },
+      {
+        "selector": ".radio-group__item:focus-within",
+        "declarations": {
+          "outline-color": "var(--fsds-semantic-focus-ring-color, #0566fe)",
+          "outline-width": "var(--fsds-semantic-focus-ring-width, 2px)",
+          "outline-style": "var(--fsds-semantic-focus-ring-style, solid)",
+          "outline-offset": "var(--fsds-semantic-focus-ring-offset, 2px)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "selection",
+        "valueProp": "value",
+        "defaultValueProp": "defaultValue",
+        "changeHandlerProp": "onChange",
+        "valueType": "string",
+        "description": "The single selected option value.",
+        "callbackKind": "value",
+        "isDisclosureChannel": false,
+        "disclosurePriority": 9007199254740991
+      }
+    ],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "none",
+      "description": "Native radio group behavior: Tab enters the checked choice, arrows move and select enabled choices, Space selects the focused choice."
+    },
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "RadioGroup / Documentation",
+    "componentSetName": "RadioGroup",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

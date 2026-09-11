@@ -93,6 +93,10 @@
   border-radius: var(--fsds-select-design-option-shape-radius, var(--fsds-select-size-radius-default, 6px));
   color: var(--fsds-select-design-option-foreground-color, var(--fsds-select-color-foreground-default, #141414));
   cursor: pointer;
+  border: 0;
+  width: 100%;
+  text-align: start;
+  font: inherit;
 }
 
 .select__emptyState {

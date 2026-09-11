@@ -177,13 +177,13 @@ describe("Select — keyboard realization (FEAT-A11Y-COMPOSITE-KEYBOARD-01)", ()
     await waitFor(() => expect(document.activeElement).toBe(options[2]));
   });
 
-  it("Enter on an option commits that option's value and does not close (click parity)", () => {
+  it("Enter on an option commits that option's value", () => {
     const onChange = vi.fn();
     const onOpenChange = vi.fn();
     const { getAllByRole } = renderOpen({ value: "alpha", onChange, onOpenChange });
     fireEvent.keyDown(getAllByRole("option")[1]!, { key: "Enter" }); // Beta
     expect(onChange).toHaveBeenCalledWith("beta");
-    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it("Enter adds an absent option's value in multiple mode (controlled)", () => {

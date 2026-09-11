@@ -33,6 +33,7 @@ interface Props {
   filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   searchable?: boolean;
   empty?: boolean;
+  placeholder?: string;
   position?: string;
   class?: string;
   "data-testid"?: string;
@@ -51,6 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: "md",
   searchable: undefined,
   empty: undefined,
+  placeholder: "Select an option",
 });
 // @generated:end
 
@@ -64,6 +66,7 @@ const behavior = useSelect({
   onOpenChange: props.onOpenChange,
   multiple: () => props.multiple,
 });
+function bindInteractionAnchor(element: unknown): void { behavior.anchorRef.value = element instanceof HTMLElement ? element : null; }
 function bindInteractionPanel(element: unknown): void { behavior.panelRef.value = element instanceof HTMLElement ? element : null; }
 // @generated:end
 
@@ -88,20 +91,22 @@ const instanceId = useId();
 </script>
 
 <template>
-  <div :class="classNames" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" :aria-label="props.triggerLabel" :aria-expanded="behavior.open.value" :aria-disabled="props.disabled" :data-testid="props['data-testid']" data-fsds-component="select" data-fsds-box="">
-    <button :class="'select__trigger'" type="button" @click="() => behavior.setOpen(!behavior.open.value)" @keydown="behavior.handleTriggerKeydown" :disabled="props.disabled" :aria-label="props.triggerLabel" :aria-expanded="behavior.open.value" :aria-controls="`${instanceId}-options`">
-      <span :class="'select__text'"></span>
+  <div :class="classNames" role="combobox" aria-haspopup="listbox" :aria-label="props.triggerLabel" :aria-expanded="behavior.open.value" :aria-disabled="props.disabled" :aria-controls="props.open ? `${instanceId}-content` : undefined" :data-testid="props['data-testid']" data-fsds-component="select" data-fsds-box="">
+    <button :class="'select__trigger'" :ref="bindInteractionAnchor" type="button" @click="() => behavior.setOpen(!behavior.open.value)" @keydown="behavior.handleTriggerKeydown" :disabled="props.disabled" :aria-label="props.triggerLabel" :aria-expanded="behavior.open.value" :aria-controls="props.open ? `${instanceId}-content` : undefined">
+      <span :class="'select__text'">
+        {{ ((props.options || []).filter(option => (Array.isArray(behavior.selection.value) ? behavior.selection.value : [behavior.selection.value]).includes(option.value)).map(option => option.label).join(', ') || props.placeholder) }}
+      </span>
     </button>
-    <div v-if="behavior.open.value" :class="'select__content'" :ref="bindInteractionPanel" role="listbox" id="fsds-select-listbox" @keydown="behavior.handleContentKeydown" tabindex="-1">
+    <div v-if="behavior.open.value" :class="'select__content'" :ref="bindInteractionPanel" role="listbox" @keydown="behavior.handleContentKeydown" tabindex="-1" :id="`${instanceId}-content`">
       <div v-if="props.searchable" :class="'select__search'">
         <input type="text" />
       </div>
-      <div :class="'select__options'" :id="`${instanceId}-options`">
-        <div v-for="(item, index) in (props.options ?? [])" :key="index" :class="'select__option'" role="option" @click="() => behavior.setSelection(props.multiple ? ((Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]).includes(item.value) ? (Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]).filter((v) => v !== item.value) : [...(Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]), item.value]) : item.value)" @keydown="(e) => behavior.handleOptionKeydown(e, item.value)" tabindex="-1" :aria-selected="(Array.isArray(behavior.selection.value) ? behavior.selection.value.includes(item.value) : item.value === behavior.selection.value)" :data-value="item.value">
+      <div :class="'select__options'">
+        <button v-for="(item, index) in (props.options ?? [])" :key="index" :class="'select__option'" role="option" type="button" @click="() => behavior.setSelection(props.multiple ? ((Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]).includes(item.value) ? (Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]).filter((v) => v !== item.value) : [...(Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]), item.value]) : item.value)" @keydown="(e) => behavior.handleOptionKeydown(e, item.value)" tabindex="-1" :aria-selected="(Array.isArray(behavior.selection.value) ? behavior.selection.value.includes(item.value) : item.value === behavior.selection.value)" :data-value="item.value" :disabled="item.disabled" :aria-disabled="item.disabled">
           <span>
             {{ item.label }}
           </span>
-        </div>
+        </button>
       </div>
       <div v-if="props.empty" :class="'select__emptyState'"></div>
     </div>

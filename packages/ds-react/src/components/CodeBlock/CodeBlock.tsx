@@ -26,6 +26,7 @@ export interface CodeBlockProps {
   highlight?: boolean;
   className?: string;
   "data-testid"?: string;
+  children?: ReactNode;
 }
 // @generated:end
 
@@ -37,6 +38,7 @@ export interface CodeBlockProps {
 export function CodeBlock({
   className,
   "data-testid": testId,
+  children,
   code,
   language,
   highlight = true,
@@ -52,7 +54,12 @@ export function CodeBlock({
   return (
   <Stack layout="native" as="pre" className={`${classNames}`} data-language={language} data-testid={testId} data-fsds-component="code-block" data-fsds-box="" {...rest}>
     <code className="code-block__code" spellCheck="false" data-language={language}>
-      {highlight ? (tokenizeCode(code, language).map((token, tokenIndex) => (<span key={tokenIndex} className="code-block__token" data-token={token.kind}>{token.text}</span>))) : (code)}
+      {children}
+      {!children ? (
+        <span className="code-block__source">
+          {highlight ? (tokenizeCode(code, language).map((token, tokenIndex) => (<span key={tokenIndex} className="code-block__token" data-token={token.kind}>{token.text}</span>))) : (code)}
+        </span>
+      ) : null}
     </code>
   </Stack>
   );

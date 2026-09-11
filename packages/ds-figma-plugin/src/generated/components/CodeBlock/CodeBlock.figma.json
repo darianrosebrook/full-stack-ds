@@ -25,6 +25,14 @@
       "layoutVariant": null
     },
     {
+      "name": "source",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
       "name": "token",
       "semanticElement": null,
       "nativeTag": "span",

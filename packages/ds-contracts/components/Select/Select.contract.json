@@ -70,7 +70,7 @@
         "role": "group"
       },
       "option": {
-        "tag": "div",
+        "tag": "button",
         "description": "Selectable option row bound to an option value.",
         "role": "item",
         "multiple": true,
@@ -79,7 +79,8 @@
         "aria": {
           "role": "option",
           "attributes": [
-            "aria-selected"
+            "aria-selected",
+            "aria-disabled"
           ]
         }
       },
@@ -94,8 +95,7 @@
       "part": "root",
       "attrs": {
         "role": "combobox",
-        "aria-haspopup": "listbox",
-        "aria-controls": "fsds-select-listbox"
+        "aria-haspopup": "listbox"
       },
       "bindings": {
         "aria-label": "prop:triggerLabel",
@@ -120,7 +120,8 @@
           "children": [
             {
               "tag": "span",
-              "part": "text"
+              "part": "text",
+              "content": "project:selectionLabel(prop:options, channel:selection.value, prop:placeholder)"
             }
           ]
         },
@@ -129,8 +130,7 @@
           "part": "content",
           "if": "open",
           "attrs": {
-            "role": "listbox",
-            "id": "fsds-select-listbox"
+            "role": "listbox"
           },
           "children": [
             {
@@ -151,7 +151,7 @@
               "part": "options",
               "children": [
                 {
-                  "tag": "div",
+                  "tag": "button",
                   "part": "option",
                   "iterate": {
                     "source": "prop:options",
@@ -159,14 +159,20 @@
                     "itemType": "SelectOption"
                   },
                   "attrs": {
-                    "role": "option"
+                    "role": "option",
+                    "type": "button"
                   },
                   "bindings": {
                     "aria-selected": "predicate:memberOf(iter:item.value, channel:selection.value)",
-                    "data-value": "iter:item.value"
+                    "data-value": "iter:item.value",
+                    "disabled": "iter:item.disabled",
+                    "aria-disabled": "iter:item.disabled"
                   },
                   "children": [
-                    { "tag": "span", "content": "iter:item.label" }
+                    {
+                      "tag": "span",
+                      "content": "iter:item.label"
+                    }
                   ]
                 }
               ]
@@ -193,23 +199,64 @@
       "members": [
         {
           "name": "options",
-          "propType": { "kind": "array", "items": { "kind": "ref", "to": "SelectOption" } },
+          "propType": {
+            "kind": "array",
+            "items": {
+              "kind": "ref",
+              "to": "SelectOption"
+            }
+          },
           "description": "Available options.",
           "required": true,
           "default": [
-            { "value": "alpha", "label": "Alpha" },
-            { "value": "beta", "label": "Beta" },
-            { "value": "gamma", "label": "Gamma" }
+            {
+              "value": "alpha",
+              "label": "Alpha"
+            },
+            {
+              "value": "beta",
+              "label": "Beta"
+            },
+            {
+              "value": "gamma",
+              "label": "Gamma"
+            }
           ]
         },
         {
           "name": "value",
-          "propType": { "kind": "union", "of": [{ "kind": "string" }, { "kind": "array", "items": { "kind": "string" } }] },
+          "propType": {
+            "kind": "union",
+            "of": [
+              {
+                "kind": "string"
+              },
+              {
+                "kind": "array",
+                "items": {
+                  "kind": "string"
+                }
+              }
+            ]
+          },
           "description": "Controlled selected value(s)."
         },
         {
           "name": "defaultValue",
-          "propType": { "kind": "union", "of": [{ "kind": "string" }, { "kind": "array", "items": { "kind": "string" } }] },
+          "propType": {
+            "kind": "union",
+            "of": [
+              {
+                "kind": "string"
+              },
+              {
+                "kind": "array",
+                "items": {
+                  "kind": "string"
+                }
+              }
+            ]
+          },
           "description": "Default selected value(s) for uncontrolled usage.",
           "default": "beta"
         },
@@ -217,19 +264,43 @@
           "name": "onChange",
           "propType": {
             "kind": "callback",
-            "params": [{ "name": "value", "type": { "kind": "union", "of": [{ "kind": "string" }, { "kind": "array", "items": { "kind": "string" } }] } }],
-            "returns": { "kind": "void" }
+            "params": [
+              {
+                "name": "value",
+                "type": {
+                  "kind": "union",
+                  "of": [
+                    {
+                      "kind": "string"
+                    },
+                    {
+                      "kind": "array",
+                      "items": {
+                        "kind": "string"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "returns": {
+              "kind": "void"
+            }
           },
           "description": "Called when selection changes."
         },
         {
           "name": "open",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Controlled open state."
         },
         {
           "name": "defaultOpen",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Default open state for uncontrolled usage.",
           "default": true
         },
@@ -237,30 +308,48 @@
           "name": "onOpenChange",
           "propType": {
             "kind": "callback",
-            "params": [{ "name": "open", "type": { "kind": "boolean" } }],
-            "returns": { "kind": "void" }
+            "params": [
+              {
+                "name": "open",
+                "type": {
+                  "kind": "boolean"
+                }
+              }
+            ],
+            "returns": {
+              "kind": "void"
+            }
           },
           "description": "Called when open state changes."
         },
         {
           "name": "multiple",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Allow multiple selections."
         },
         {
           "name": "disabled",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Disabled state."
         },
         {
           "name": "triggerLabel",
-          "propType": { "kind": "string" },
+          "propType": {
+            "kind": "string"
+          },
           "description": "Accessible name for the button that opens the option list.",
           "default": "Select an option"
         },
         {
           "name": "size",
-          "propType": { "kind": "ref", "to": "SelectSize" },
+          "propType": {
+            "kind": "ref",
+            "to": "SelectSize"
+          },
           "description": "Size variant.",
           "default": "md"
         },
@@ -269,22 +358,47 @@
           "propType": {
             "kind": "callback",
             "params": [
-              { "name": "option", "type": { "kind": "ref", "to": "SelectOption" } },
-              { "name": "searchTerm", "type": { "kind": "string" } }
+              {
+                "name": "option",
+                "type": {
+                  "kind": "ref",
+                  "to": "SelectOption"
+                }
+              },
+              {
+                "name": "searchTerm",
+                "type": {
+                  "kind": "string"
+                }
+              }
             ],
-            "returns": { "kind": "boolean" }
+            "returns": {
+              "kind": "boolean"
+            }
           },
           "description": "Custom filter function for search."
         },
         {
           "name": "searchable",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Whether to render the search input inside the dropdown."
         },
         {
           "name": "empty",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Whether the option list is empty (drives the empty-state slot)."
+        },
+        {
+          "name": "placeholder",
+          "propType": {
+            "kind": "string"
+          },
+          "description": "Visible prompt when no selected value matches an option.",
+          "default": "Select an option"
         }
       ]
     }
@@ -408,7 +522,7 @@
     "transitions": [
       {
         "name": "open",
-        "trigger": "openness=closed→open",
+        "trigger": "openness=closed\u2192open",
         "phase": "enter",
         "properties": [
           "opacity",
@@ -419,7 +533,7 @@
       },
       {
         "name": "close",
-        "trigger": "openness=open→closed",
+        "trigger": "openness=open\u2192closed",
         "phase": "exit",
         "properties": [
           "opacity",
@@ -484,16 +598,21 @@
   },
   "relationships": [
     {
-      "from": "trigger",
-      "to": "options",
+      "from": "root",
+      "to": "content",
       "attribute": "aria-controls",
-      "description": "Trigger controls the options listbox via aria-controls (Select's listbox role lives on the `options` anatomy part)."
+      "description": "References this instance's open listbox."
     },
     {
       "from": "trigger",
-      "to": "options",
-      "attribute": "aria-expanded",
-      "description": "Trigger reflects whether the options listbox is currently expanded."
+      "to": "content",
+      "attribute": "aria-controls",
+      "description": "References this instance's open listbox."
+    },
+    {
+      "from": "trigger",
+      "to": "content",
+      "attribute": "aria-expanded"
     }
   ],
   "a11y": {
@@ -555,6 +674,12 @@
         "key": "Escape",
         "action": "Close the dropdown and return focus to the trigger.",
         "when": "content"
+      },
+      {
+        "key": "Space",
+        "action": "Select the focused option.",
+        "when": "option",
+        "behavior": "select"
       }
     ]
   },

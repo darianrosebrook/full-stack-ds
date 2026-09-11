@@ -1,7 +1,7 @@
 {
   "$schema": "../../component.contract.schema.json",
   "name": "Input",
-  "description": "Native text input with design-system styling. Use inside TextField for label and error support.",
+  "description": "Native value input with design-system styling. The host input type supplies its intrinsic accessibility semantics. Use inside TextField for label and error support.",
   "layer": "primitive",
   "category": "input",
   "fieldAssociation": "control",
@@ -52,61 +52,90 @@
       "members": [
         {
           "name": "type",
-          "propType": { "kind": "string" },
+          "propType": {
+            "kind": "string"
+          },
           "description": "HTML input type (text, email, password, number, search, etc.)."
         },
         {
           "name": "value",
-          "propType": { "kind": "string" },
+          "propType": {
+            "kind": "string"
+          },
           "description": "Controlled value."
         },
         {
           "name": "defaultValue",
-          "propType": { "kind": "string" },
+          "propType": {
+            "kind": "string"
+          },
           "description": "Uncontrolled initial value."
         },
         {
           "name": "onChange",
           "propType": {
             "kind": "callback",
-            "params": [{ "name": "value", "type": { "kind": "string" } }],
-            "returns": { "kind": "void" }
+            "params": [
+              {
+                "name": "value",
+                "type": {
+                  "kind": "string"
+                }
+              }
+            ],
+            "returns": {
+              "kind": "void"
+            }
           },
           "description": "Called when value changes."
         },
         {
           "name": "placeholder",
-          "propType": { "kind": "string" },
+          "propType": {
+            "kind": "string"
+          },
           "description": "Placeholder text shown when empty."
         },
         {
           "name": "disabled",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Prevents interaction."
         },
         {
           "name": "invalid",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Applies error styling and sets aria-invalid."
         },
         {
           "name": "required",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Sets the native required attribute."
         },
         {
           "name": "name",
-          "propType": { "kind": "string" },
+          "propType": {
+            "kind": "string"
+          },
           "description": "Form name for native submission."
         },
         {
           "name": "ariaLabel",
-          "propType": { "kind": "string" },
+          "propType": {
+            "kind": "string"
+          },
           "description": "Direct accessible name for the native input."
         },
         {
           "name": "ariaLabelledby",
-          "propType": { "kind": "string" },
+          "propType": {
+            "kind": "string"
+          },
           "description": "Space-separated ids of elements that name the native input."
         }
       ]
@@ -220,7 +249,6 @@
     "flipIcon": false
   },
   "a11y": {
-    "role": "textbox",
     "labeling": [
       "aria-label",
       "aria-labelledby",

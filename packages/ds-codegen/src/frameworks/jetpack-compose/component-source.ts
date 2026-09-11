@@ -823,7 +823,7 @@ function collectVariantAxes(ir: ComponentIR) {
  *  on a single `code` part child, or the source prop of a content transform
  *  (highlight/markdown degrade to their source prop — the swift gate's facts).
  *  The IR owns the content binding shape; no per-component names. */
-function propTextSource(ir: ComponentIR): { prop: string } | undefined {
+function propTextSource(ir: ComponentIR): { prop: string; optionalContent?: boolean } | undefined {
   const direct = ir.dom?.content;
   if (direct && "prop" in direct) return { prop: direct.prop };
   const codeChild = (ir.dom?.children ?? []).find((c) => c.part === "code");
@@ -837,7 +837,19 @@ function propTextSource(ir: ComponentIR): { prop: string } | undefined {
   if (directSrc && typeof directSrc === "object" && "prop" in directSrc) {
     return { prop: (directSrc as { prop: string }).prop };
   }
-  return undefined;
+  const fallback = (node: NonNullable<ComponentIR["dom"]>): { prop: string; optionalContent: boolean } | undefined => {
+    const content = node.content;
+    const source = content && "source" in content ? content.source : content;
+    if (node.ifProp === "children" && node.ifNegated && source && "prop" in source) {
+      return { prop: source.prop, optionalContent: true };
+    }
+    for (const child of node.children ?? []) {
+      const found = fallback(child);
+      if (found) return found;
+    }
+    return undefined;
+  };
+  return ir.dom ? fallback(ir.dom) : undefined;
 }
 
 /** Prop-text leaf: a passive root (no channels, no surface) whose text
@@ -880,6 +892,11 @@ function emitPropTextLeaf(ir: ComponentIR): string {
   lines.push(`// @generated:start imports`);
   if (usesColors) lines.push(`import androidx.compose.foundation.background`);
   lines.push(`import androidx.compose.foundation.text.BasicText`);
+  if (textSource.optionalContent) {
+    lines.push(`import androidx.compose.foundation.layout.Box`);
+    lines.push(`import androidx.compose.runtime.CompositionLocalProvider`);
+    lines.push(`import com.fullstackds.tokens.LocalFsdsContentColor`);
+  }
   if (slots.minHeightSlot) lines.push(`import androidx.compose.foundation.layout.height`);
   if (slots.anyPaddingSlot) lines.push(`import androidx.compose.foundation.layout.padding`);
   if (slots.needsClip) lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
@@ -912,6 +929,7 @@ function emitPropTextLeaf(ir: ComponentIR): string {
     lines.push(`    ${textSource.prop}: String,`);
     lines.push(`    modifier: Modifier = Modifier,`);
   }
+  if (textSource.optionalContent) lines.push(`    content: (@Composable () -> Unit)? = null,`);
   lines.push(`) {`);
   if (usesTheme) {
     emitThemeHeader(lines, ir, "");
@@ -931,15 +949,24 @@ function emitPropTextLeaf(ir: ComponentIR): string {
       `        color = ${slots.fgSlot ? "contentColor ?: Color.Unspecified" : "Color.Unspecified"},`,
     );
     lines.push(`    )`);
+    if (textSource.optionalContent) {
+      lines.push(`    if (content != null) {`);
+      lines.push(`        CompositionLocalProvider(LocalFsdsContentColor provides (${slots.fgSlot ? "contentColor ?: Color.Unspecified" : "Color.Unspecified"})) {`);
+      lines.push(`            Box(modifier.then(chromeModifier)) { content() }`);
+      lines.push(`        }`, `    } else {`);
+    }
     lines.push(`    BasicText(`);
     lines.push(`        text = ${textSource.prop},`);
     lines.push(`        modifier = modifier.then(chromeModifier),`);
     lines.push(`        style = fsdsTextStyle,`);
     lines.push(`    )`);
+    if (textSource.optionalContent) lines.push(`    }`);
   } else {
+    if (textSource.optionalContent) lines.push(`    if (content != null) { Box(modifier) { content() } } else {`);
     lines.push(
       `    BasicText(text = ${textSource.prop}, modifier = modifier, style = TextStyle.Default)`,
     );
+    if (textSource.optionalContent) lines.push(`    }`);
   }
   lines.push(`}`);
   lines.push(`// @generated:end`);

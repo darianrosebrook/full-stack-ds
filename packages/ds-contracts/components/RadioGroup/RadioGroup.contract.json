@@ -1,0 +1,269 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "RadioGroup",
+  "description": "Single-choice group with native radio inputs, visible option labels and a controlled or uncontrolled selected value.",
+  "layer": "composer",
+  "category": "input",
+  "anatomy": {
+    "parts": [
+      "root",
+      "item",
+      "option",
+      "label"
+    ],
+    "details": {
+      "root": {
+        "tag": "fieldset",
+        "role": "root",
+        "description": "Named group of mutually exclusive choices.",
+        "aria": {
+          "role": "radiogroup",
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      },
+      "item": {
+        "tag": "label",
+        "role": "item",
+        "multiple": true,
+        "description": "Visible option surface that labels its nested radio input.",
+        "subcomponent": false
+      },
+      "option": {
+        "tag": "input",
+        "role": "trigger",
+        "multiple": true,
+        "interactive": true,
+        "focusable": true,
+        "description": "Native radio input; group name governs native keyboard navigation and form submission.",
+        "aria": {
+          "role": "radio",
+          "attributes": [
+            "aria-checked"
+          ]
+        },
+        "subcomponent": false
+      },
+      "label": {
+        "tag": "span",
+        "role": "label",
+        "multiple": true,
+        "description": "Human-readable option label."
+      }
+    },
+    "dom": {
+      "tag": "fieldset",
+      "part": "root",
+      "attrs": {
+        "role": "radiogroup"
+      },
+      "bindings": {
+        "aria-label": "prop:ariaLabel"
+      },
+      "children": [
+        {
+          "tag": "label",
+          "part": "item",
+          "iterate": {
+            "kind": "array",
+            "source": "prop:options",
+            "itemType": "RadioGroupOption"
+          },
+          "bindings": {
+            "data-checked": "predicate:eq(iter:item.value, channel:selection.value)",
+            "data-disabled": "iter:item.disabled",
+            "title": "iter:item.description"
+          },
+          "children": [
+            {
+              "tag": "input",
+              "part": "option",
+              "attrs": {
+                "type": "radio"
+              },
+              "bindings": {
+                "name": "prop:name",
+                "value": "iter:item.value",
+                "checked": "predicate:eq(iter:item.value, channel:selection.value)",
+                "disabled": "iter:item.disabled",
+                "aria-label": "iter:item.label",
+                "aria-checked": "predicate:eq(iter:item.value, channel:selection.value)"
+              }
+            },
+            {
+              "tag": "span",
+              "part": "label",
+              "content": "iter:item.label"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "compositeControl": {
+    "part": "option",
+    "channel": "selection",
+    "interactionModel": "collection-selection",
+    "commit": "change",
+    "update": "channel:selection.onChange(iter:item.value)"
+  },
+  "props": {
+    "designed": {
+      "members": [
+        {
+          "name": "options",
+          "propType": {
+            "kind": "array",
+            "items": {
+              "kind": "ref",
+              "to": "RadioGroupOption"
+            }
+          },
+          "required": true,
+          "description": "Choices with stable unique values and optional disabled state.",
+          "default": [
+            {
+              "value": "alpha",
+              "label": "Alpha"
+            },
+            {
+              "value": "beta",
+              "label": "Beta"
+            }
+          ]
+        },
+        {
+          "name": "name",
+          "propType": {
+            "kind": "string"
+          },
+          "required": true,
+          "description": "Native form group name. Use a distinct name for independent groups in the same form."
+        },
+        {
+          "name": "value",
+          "propType": {
+            "kind": "string"
+          },
+          "description": "Controlled selected value."
+        },
+        {
+          "name": "defaultValue",
+          "propType": {
+            "kind": "string"
+          },
+          "description": "Initial uncontrolled selected value."
+        },
+        {
+          "name": "onChange",
+          "propType": {
+            "kind": "callback",
+            "params": [
+              {
+                "name": "value",
+                "type": {
+                  "kind": "string"
+                }
+              }
+            ],
+            "returns": {
+              "kind": "void"
+            }
+          },
+          "description": "Called with the newly selected option value."
+        },
+        {
+          "name": "ariaLabel",
+          "propType": {
+            "kind": "string"
+          },
+          "description": "Accessible name of the group."
+        },
+        {
+          "name": "orientation",
+          "propType": {
+            "kind": "ref",
+            "to": "RadioGroupOrientation"
+          },
+          "default": "vertical",
+          "description": "Visual arrangement of the choices; native arrows navigate either arrangement."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "selection": {
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onChange",
+      "valueType": "string",
+      "description": "The single selected option value."
+    }
+  },
+  "types": {
+    "RadioGroupOption": {
+      "kind": "alias",
+      "alias": "{ value: string; label: string; disabled?: boolean; description?: string }"
+    },
+    "RadioGroupOrientation": {
+      "kind": "union",
+      "values": [
+        "vertical",
+        "horizontal"
+      ]
+    }
+  },
+  "variants": {
+    "orientation": [
+      "vertical",
+      "horizontal"
+    ]
+  },
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
+  },
+  "focus": {
+    "strategy": "none",
+    "description": "Native radio group behavior: Tab enters the checked choice, arrows move and select enabled choices, Space selects the focused choice."
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "a11y": {
+    "role": "radiogroup",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": [
+      {
+        "key": "ArrowLeft|ArrowRight|ArrowUp|ArrowDown",
+        "action": "Native radio navigation moves focus and selection, skipping disabled choices."
+      },
+      {
+        "key": "Space",
+        "action": "Select the focused radio."
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "Use a unique name for each independent group.",
+      "Set value and onChange for controlled selection, or defaultValue for uncontrolled selection.",
+      "Each option needs a unique value and a visible label."
+    ],
+    "children": {
+      "allowed": false
+    }
+  }
+}

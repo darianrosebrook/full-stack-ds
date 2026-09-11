@@ -20,7 +20,7 @@ export type SelectOption = { value: string; label: string; disabled?: boolean };
 // @custom:end
 
 // @generated:start props
-export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultOpen" | "defaultValue" | "disabled" | "empty" | "filterFn" | "multiple" | "onChange" | "onOpenChange" | "open" | "options" | "position" | "searchable" | "size" | "triggerLabel" | "value"> {
+export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultOpen" | "defaultValue" | "disabled" | "empty" | "filterFn" | "multiple" | "onChange" | "onOpenChange" | "open" | "options" | "placeholder" | "position" | "searchable" | "size" | "triggerLabel" | "value"> {
   options?: SelectOption[];
   value?: string | string[];
   defaultValue?: string | string[];
@@ -35,6 +35,7 @@ export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, "child
   filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   searchable?: boolean;
   empty?: boolean;
+  placeholder?: string;
   position?: string;
   className?: string;
   "data-testid"?: string;
@@ -119,9 +120,10 @@ export function Select({
   filterFn,
   searchable,
   empty,
+  placeholder = "Select an option",
   ...rest
 }: SelectProps) {
-  const { panelRef, selection, setSelection, open, setOpen, handleTriggerKeydown, handleContentKeydown, handleOptionKeydown } = useSelect({
+  const { panelRef, anchorRef, selection, setSelection, open, setOpen, handleTriggerKeydown, handleContentKeydown, handleOptionKeydown } = useSelect({
     value: controlledValue,
     defaultValue,
     onChange,
@@ -145,24 +147,26 @@ export function Select({
   const instanceId = useId();
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-label={triggerLabel} aria-expanded={open} aria-disabled={disabled} data-testid={testId} data-fsds-component="select" data-fsds-box="" {...rest}>
-    <button className="select__trigger" type="button" onClick={() => setOpen(!open)} onKeyDown={handleTriggerKeydown} disabled={disabled} aria-label={triggerLabel} aria-expanded={open} aria-controls={`${instanceId}-options`}>
-      <span className="select__text" />
+  <Stack layout="native" className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-label={triggerLabel} aria-expanded={open} aria-disabled={disabled} aria-controls={open ? `${instanceId}-content` : undefined} data-testid={testId} data-fsds-component="select" data-fsds-box="" {...rest}>
+    <button className="select__trigger" type="button" onClick={() => setOpen(!open)} onKeyDown={handleTriggerKeydown} disabled={disabled} aria-label={triggerLabel} aria-expanded={open} ref={element => { anchorRef.current = element; }} aria-controls={open ? `${instanceId}-content` : undefined}>
+      <span className="select__text">
+        {((options || []).filter(option => (Array.isArray(selection) ? selection : [selection]).includes(option.value)).map(option => option.label).join(', ') || placeholder)}
+      </span>
     </button>
     {open ? (
-      <div className="select__content" role="listbox" id="fsds-select-listbox" onKeyDown={handleContentKeydown} tabIndex={-1} ref={panelRef}>
+      <div className="select__content" role="listbox" onKeyDown={handleContentKeydown} tabIndex={-1} ref={panelRef} id={`${instanceId}-content`}>
         {searchable ? (
           <div className="select__search">
             <input type="text" />
           </div>
         ) : null}
-        <div className="select__options" id={`${instanceId}-options`}>
+        <div className="select__options">
           {(options ?? []).map((item, index) => (
-            <div className="select__option" role="option" onClick={() => setSelection(multiple ? ((Array.isArray(selection) ? selection : selection == null ? [] : [selection]).includes(item.value) ? (Array.isArray(selection) ? selection : selection == null ? [] : [selection]).filter((v) => v !== item.value) : [...(Array.isArray(selection) ? selection : selection == null ? [] : [selection]), item.value]) : item.value)} onKeyDown={(event) => handleOptionKeydown(event, item.value)} tabIndex={-1} aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} key={index}>
+            <button className="select__option" role="option" type="button" onClick={() => setSelection(multiple ? ((Array.isArray(selection) ? selection : selection == null ? [] : [selection]).includes(item.value) ? (Array.isArray(selection) ? selection : selection == null ? [] : [selection]).filter((v) => v !== item.value) : [...(Array.isArray(selection) ? selection : selection == null ? [] : [selection]), item.value]) : item.value)} onKeyDown={(event) => handleOptionKeydown(event, item.value)} tabIndex={-1} aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} disabled={item.disabled} aria-disabled={item.disabled} key={index}>
               <span>
                 {item.label}
               </span>
-            </div>
+            </button>
           ))}
         </div>
         {empty ? (

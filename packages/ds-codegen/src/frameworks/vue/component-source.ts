@@ -1654,6 +1654,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     }
     hookLines.push(`});`);
   }
+  if (domHasKeyboardPanel(ir)) hookLines.push(`function bindInteractionAnchor(element: unknown): void { behavior.anchorRef.value = element instanceof HTMLElement ? element : null; }`);
   if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) hookLines.push(`function bindInteractionPanel(element: unknown): void { behavior.panelRef.value = element instanceof HTMLElement ? element : null; }`);
   // Ephemeral-surface auto-dismiss (WCAG 2.2.1: pause listeners land on the
   // root via v-on). The presence budget flows from the *.timing.auto-dismiss
@@ -1847,7 +1848,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     // FEAT-A11Y-COMPOSITE-KEYBOARD-01: keyboard-action facts for the walker's
     // `@keydown` lowering and roving-item tabindex rules.
     keyboardActionsByPart: groupKeyboardActionsByPart(ir.keyboardActions),
-    compositeItemPart: ir.compositeControl?.part.name,
+    compositeItemPart: ir.behavior.focus?.strategy === "roving" ? ir.compositeControl?.part.name : undefined,
     compositeMemberExpr: compositeActivationMember(ir.compositeControl),
     ...(overlayClickTrigger && booleanChannel
       ? {
@@ -2136,6 +2137,7 @@ function renderVueDomNode(
   // focusContainer (trap/portal panels) and keyboardPanel (a keyboard `open`
   // action's post-open focus target) both receive the interaction panel ref.
   if (node.focusContainer || node.keyboardPanel) attrs.push(`:ref="bindInteractionPanel"`);
+  if (node.keyboardAnchor) attrs.push(`:ref="bindInteractionAnchor"`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -2251,10 +2253,10 @@ function renderVueDomNode(
     // A keyboard host that is not natively focusable must become
     // programmatically focusable so the delegated keys can fire and the
     // vue a11y lint holds; -1 keeps it out of tab order.
-    if (!NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+    if (isCompositeItem || !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
       attrs.push(`tabindex="-1"`);
     }
-  } else if (isCompositeItem && !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+  } else if (isCompositeItem) {
     // Composite roving item without its own keydown: still a roving focus
     // target — focusable for the roving focus path but out of tab order
     // (APG roving tabindex with DOM focus tracking).
@@ -2920,7 +2922,9 @@ function renderVueBindingValue(
       const source = renderVueBindingValue(expr.source, ctx);
       return source === null
         ? null
-        : composeBindingProjectionExpression(expr.op, source);
+        : expr.op === "selectionLabel"
+          ? composeBindingProjectionExpression(expr.op, source, renderVueBindingValue(expr.selection, ctx) ?? "undefined", renderVueBindingValue(expr.fallback, ctx) ?? "undefined")
+          : composeBindingProjectionExpression(expr.op, source);
     }
     case "valueMap": {
       const source = renderVueBindingValue(expr.source, ctx);

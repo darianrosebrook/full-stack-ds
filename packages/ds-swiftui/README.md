@@ -12,7 +12,7 @@ generated output and must not be hand-edited.
 From the repository root:
 
 ```bash
-pnpm run generate -- --target=all   # emits the allowlisted set (<!-- target-component-count:swiftui -->51 of the <!-- component-count -->51 corpus contracts)
+pnpm run generate -- --target=all   # emits the allowlisted set (<!-- target-component-count:swiftui -->51 of the <!-- component-count -->52 corpus contracts)
 ```
 
 `swiftui` is registered in `fsds.targets.json` with a **declared-admission

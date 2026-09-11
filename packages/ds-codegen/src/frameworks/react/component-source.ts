@@ -1938,7 +1938,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
   // ref must reach component scope. attachKeyboardActions guarantees the
   // mark exists whenever an open action does.
   if (ir.keyboardActions.some((action) => action.op === "open")) {
-    hookResultParts.push("panelRef");
+    hookResultParts.push("panelRef", "anchorRef");
   }
   for (const ch of channels) {
     hookResultParts.push(ch.name);
@@ -2215,7 +2215,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     formControlCommit: ir.formControl?.commit,
     rootSelectorAnchored: selectorAnchor !== null,
     keyboardActionsByPart: groupKeyboardActionsByPart(ir.keyboardActions),
-    compositeItemPart: ir.compositeControl?.part.name,
+    compositeItemPart: ir.behavior.focus?.strategy === "roving" ? ir.compositeControl?.part.name : undefined,
     compositeMemberExpr: compositeActivationMember(ir.compositeControl),
   };
   for (const { node, refName } of propertyBindingNodes) {
@@ -2674,10 +2674,10 @@ function renderReactDomNode(
     // A keyboard host that is not natively focusable must become
     // programmatically focusable so the delegated keys can fire and svelte's
     // a11y compiler checks hold; -1 keeps it out of tab order.
-    if (!NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+    if (isCompositeItem || !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
       attrs.push("tabIndex={-1}");
     }
-  } else if (isCompositeItem && !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+  } else if (isCompositeItem) {
     // Composite roving item without its own keydown: still a roving focus
     // target — focusable for the roving focus path but out of tab order
     // (APG roving tabindex with DOM focus tracking).
@@ -2763,6 +2763,7 @@ function renderReactDomNode(
   }
 
   if (node.focusContainer || node.keyboardPanel) attrs.push(`ref={panelRef}`);
+  if (node.keyboardAnchor) attrs.push(`ref={element => { anchorRef.current = element; }}`);
 
   // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: generated per-instance id on
   // relationship targets, and the lowered idref attributes on sources.
@@ -3146,7 +3147,7 @@ function inferBindingValueType(
     // shape against the iteration callback parameter's typed signature.
     return expr.local === "index" ? "number" : undefined;
   }
-  if (expr.kind === "projection") return "number";
+  if (expr.kind === "projection") return expr.op === "selectionLabel" ? "string" : "number";
   if (expr.kind === "predicate") {
     // BINDING-EXPRESSION-V2-PREDICATE-01: every predicate operator
     // (`eq`, `contains`, `memberOf`) evaluates to a boolean.
@@ -3195,7 +3196,9 @@ function renderReactBinding(
       const source = renderReactBinding("__projection_source__", expr.source, ctx);
       return source === null
         ? null
-        : composeBindingProjectionExpression(expr.op, source);
+        : expr.op === "selectionLabel"
+          ? composeBindingProjectionExpression(expr.op, source, renderReactBinding("__projection_operand__", expr.selection, ctx) ?? "undefined", renderReactBinding("__projection_operand__", expr.fallback, ctx) ?? "undefined")
+          : composeBindingProjectionExpression(expr.op, source);
     }
     case "valueMap": {
       const source = renderReactBinding(attr, expr.source, ctx);

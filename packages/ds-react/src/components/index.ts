@@ -31,6 +31,7 @@ export * from "./Popover/Popover";
 export * from "./Postcard/Postcard";
 export * from "./ProfileFlag/ProfileFlag";
 export * from "./Progress/Progress";
+export * from "./RadioGroup/RadioGroup";
 export * from "./Select/Select";
 export * from "./Sheet/Sheet";
 export * from "./ShowMore/ShowMore";

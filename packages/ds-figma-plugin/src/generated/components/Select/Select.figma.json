@@ -59,7 +59,7 @@
     {
       "name": "option",
       "semanticElement": "li",
-      "nativeTag": "div",
+      "nativeTag": "button",
       "isCompound": true,
       "isRootOnly": false,
       "layoutVariant": null
@@ -198,6 +198,15 @@
       "required": false,
       "description": "Whether the option list is empty (drives the empty-state slot).",
       "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "placeholder",
+      "safeName": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "Visible prompt when no selected value matches an option.",
+      "defaultExpr": "\"Select an option\"",
       "nodeKind": null
     }
   ],
@@ -1074,6 +1083,12 @@
         "key": "Escape",
         "action": "Close the dropdown and return focus to the trigger.",
         "when": "content"
+      },
+      {
+        "key": "Space",
+        "action": "Select the focused option.",
+        "when": "option",
+        "behavior": "select"
       }
     ]
   },
@@ -1212,7 +1227,11 @@
           "padding": "var(--fsds-select-size-padding-default, 4px)",
           "border-radius": "var(--fsds-select-size-radius-default, 6px)",
           "color": "var(--fsds-select-color-foreground-default, #141414)",
-          "cursor": "pointer"
+          "cursor": "pointer",
+          "border": "0",
+          "width": "100%",
+          "text-align": "start",
+          "font": "inherit"
         }
       },
       {

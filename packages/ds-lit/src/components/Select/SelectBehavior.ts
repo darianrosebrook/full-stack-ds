@@ -16,6 +16,7 @@ export interface SelectBehaviorOptions {
   defaultOpen?: boolean;
   onOpenChange?: (value: boolean) => void;
   containerEl?: HTMLElement;
+  anchorEl?: HTMLElement;
   /** Mode gate the keyboard select behavior reads. */
   multiple?: () => boolean | undefined;
 }
@@ -34,7 +35,7 @@ export class SelectBehavior {
     this.selectionState = new ControllableStateController<string | string[]>(host, {
       controlled: opts.value,
       defaultValue: opts.defaultValue ?? undefined as never,
-      onChange: opts.onChange,
+      onChange: (value) => { opts.onChange?.(value); if (!opts.multiple?.()) { this.anchorToggle.setOpen(false); requestAnimationFrame(() => { this.opts.anchorEl?.focus(); }); } },
     });
     this.anchorToggle = new AnchorToggleController(
       host as ReactiveControllerHost & EventTarget,
@@ -59,13 +60,13 @@ export class SelectBehavior {
     requestAnimationFrame(() => {
       const panel = this.opts.containerEl;
       if (!panel) return;
-      (panel.querySelector<HTMLElement>("input") ?? panel.querySelector<HTMLElement>("[role=\"option\"]"))?.focus();
+      (panel.querySelector<HTMLElement>("input") ?? panel.querySelector<HTMLElement>("[role=\"option\"]:not(:disabled)"))?.focus();
     });
   }
 
   handleContentKeydown(event: KeyboardEvent): void {
     const items = Array.from(
-      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>("[role=\"option\"]"),
+      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>("[role=\"option\"]:not(:disabled)"),
     );
     const root = (event.currentTarget as HTMLElement).getRootNode();
     const active = root instanceof ShadowRoot ? root.activeElement : document.activeElement;
@@ -89,7 +90,7 @@ export class SelectBehavior {
   }
 
   handleOptionKeydown(event: KeyboardEvent, value: string): void {
-    if (!(event.key === "Enter")) return;
+    if (!(event.key === "Enter" || event.key === "Space")) return;
     event.preventDefault();
     const currentValue = this.selection;
     const current: string[] = Array.isArray(currentValue) ? [...currentValue] : currentValue == null ? [] : [currentValue];

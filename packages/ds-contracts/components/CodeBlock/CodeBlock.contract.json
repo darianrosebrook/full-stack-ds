@@ -8,6 +8,7 @@
     "parts": [
       "root",
       "code",
+      "source",
       "token"
     ],
     "details": {
@@ -19,6 +20,11 @@
       "code": {
         "tag": "code",
         "description": "Literal source text rendered through the highlight content transform: one token span per syntax token when the highlight gate is enabled, a single plain text run otherwise. Never interpreted markup.",
+        "role": "content"
+      },
+      "source": {
+        "tag": "span",
+        "description": "Automatic literal source renderer used when no consumer content is supplied.",
         "role": "content"
       },
       "token": {
@@ -44,13 +50,23 @@
           "bindings": {
             "data-language": "prop:language"
           },
-          "content": {
-            "transform": "highlight",
-            "source": "prop:code",
-            "language": "prop:language",
-            "gate": "prop:highlight",
-            "tokenPart": "token"
-          }
+          "children": [
+            {
+              "tag": "children"
+            },
+            {
+              "tag": "span",
+              "part": "source",
+              "if": "!children",
+              "content": {
+                "transform": "highlight",
+                "source": "prop:code",
+                "language": "prop:language",
+                "gate": "prop:highlight",
+                "tokenPart": "token"
+              }
+            }
+          ]
         }
       ]
     }
@@ -60,19 +76,26 @@
       "members": [
         {
           "name": "code",
-          "propType": { "kind": "string" },
+          "propType": {
+            "kind": "string"
+          },
           "description": "Literal source text to display. The value is rendered as text and must not be treated as HTML.",
           "required": true
         },
         {
           "name": "language",
-          "propType": { "kind": "ref", "to": "CodeBlockLanguage" },
+          "propType": {
+            "kind": "ref",
+            "to": "CodeBlockLanguage"
+          },
           "description": "Declared language driving the highlight content transform's tokenizer, and retained for documentation and downstream adapters.",
           "required": true
         },
         {
           "name": "highlight",
-          "propType": { "kind": "boolean" },
+          "propType": {
+            "kind": "boolean"
+          },
           "description": "Gate for the highlight content transform. When true (default) the source is rendered as one span per syntax token; when false it is rendered as a single plain text run.",
           "default": true
         }
@@ -153,12 +176,16 @@
       "Set language to the closest supported language enum value",
       "Use plaintext when the content has no meaningful syntax language",
       "Set highlight to false to render the source as a single plain text run without token spans",
-      "Use CodeSnippet for inline code, keyboard keys, or sample output"
+      "Use CodeSnippet for inline code, keyboard keys, or sample output",
+      "Optional consumer content supplies annotated source inside the code region; when present it replaces the automatic source renderer. Keep code as the canonical source string."
     ],
     "children": {
-      "allowed": false,
+      "allowed": true,
       "slot": "children",
-      "accepts": []
+      "accepts": [
+        "text",
+        "components"
+      ]
     }
   }
 }

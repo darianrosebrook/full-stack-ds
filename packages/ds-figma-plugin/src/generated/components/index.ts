@@ -32,6 +32,7 @@ import Popover from "./Popover/Popover.figma.json" with { type: "json" };
 import Postcard from "./Postcard/Postcard.figma.json" with { type: "json" };
 import ProfileFlag from "./ProfileFlag/ProfileFlag.figma.json" with { type: "json" };
 import Progress from "./Progress/Progress.figma.json" with { type: "json" };
+import RadioGroup from "./RadioGroup/RadioGroup.figma.json" with { type: "json" };
 import Select from "./Select/Select.figma.json" with { type: "json" };
 import Sheet from "./Sheet/Sheet.figma.json" with { type: "json" };
 import ShowMore from "./ShowMore/ShowMore.figma.json" with { type: "json" };
@@ -85,6 +86,7 @@ export const figmaComponentRegistry = {
   "Postcard": Postcard,
   "ProfileFlag": ProfileFlag,
   "Progress": Progress,
+  "RadioGroup": RadioGroup,
   "Select": Select,
   "Sheet": Sheet,
   "ShowMore": ShowMore,

@@ -317,16 +317,15 @@ describe("Select — keyboard realization (FEAT-A11Y-COMPOSITE-KEYBOARD-01)", ()
     expect(document.activeElement).toBe(options[options.length - 1]);
   });
 
-  it("Enter on an option commits that option's value and does not close (click parity)", () => {
+  it("Enter on an option commits its value and honors single-selection dismissal", () => {
     const onChange = vi.fn();
     const onOpenChange = vi.fn();
     renderOpen({ value: "", onChange, onOpenChange });
     const options = screen.getAllByRole("option");
     fireEvent.keyDown(options[2], { key: "Enter" }); // Gamma
     expect(onChange).toHaveBeenLastCalledWith("gamma");
-    // The contract declares Enter = select only; closing is the dismissal
-    // trigger's authority, so keyboard mirrors the click wire exactly.
-    expect(onOpenChange).not.toHaveBeenCalled();
+    // The selection dismissal policy applies to keyboard and pointer commits.
+    expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it("Enter adds an absent option's value in multiple mode (controlled)", () => {

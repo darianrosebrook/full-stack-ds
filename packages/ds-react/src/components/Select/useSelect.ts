@@ -47,7 +47,7 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
   const [selection, setSelection] = useControllableState<string | string[]>({
     controlled: options.value,
     defaultValue: options.defaultValue ?? "beta",
-    onChange: options.onChange,
+    onChange: (value) => { options.onChange?.(value); if (!options.multiple) { anchorToggle.setOpen(false); requestAnimationFrame(() => { anchorToggle.anchorRef.current?.focus(); }); } },
   });
 
   // anchor + panel refs come from useAnchorToggle below.
@@ -64,7 +64,7 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
       anchorToggle.setOpen(true);
       requestAnimationFrame(() => {
         if (!anchorToggle.panelRef.current) return;
-        (anchorToggle.panelRef.current.querySelector<HTMLElement>("input") ?? anchorToggle.panelRef.current.querySelector<HTMLElement>("[role=\"option\"]"))?.focus();
+        (anchorToggle.panelRef.current.querySelector<HTMLElement>("input") ?? anchorToggle.panelRef.current.querySelector<HTMLElement>("[role=\"option\"]:not(:disabled)"))?.focus();
       });
     },
     [anchorToggle],
@@ -73,7 +73,7 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
   const handleContentKeydown = useCallback(
     (event: ReactKeyboardEvent<HTMLElement>) => {
       const items = Array.from(
-        event.currentTarget.querySelectorAll<HTMLElement>("[role=\"option\"]"),
+        event.currentTarget.querySelectorAll<HTMLElement>("[role=\"option\"]:not(:disabled)"),
       );
       const currentIndex = items.findIndex((item) => item === document.activeElement);
       if (event.key === "ArrowUp") {
@@ -98,7 +98,7 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
 
   const handleOptionKeydown = useCallback(
     (event: ReactKeyboardEvent<HTMLElement>, value: string) => {
-      if (!(event.key === "Enter")) return;
+      if (!(event.key === "Enter" || event.key === "Space")) return;
       event.preventDefault();
       const current = Array.isArray(selection) ? selection : selection == null ? [] : [selection];
       setSelection(options.multiple ? (current.includes(value) ? current.filter((member) => member !== value) : [...current, value]) : value);

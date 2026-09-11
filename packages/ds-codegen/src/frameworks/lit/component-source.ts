@@ -835,6 +835,7 @@ function generateCompoundStateRootClass(ir: ComponentIR): string {
   if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    const host = this;`);
   lines.push(`    return this.initializedBehavior ??= new ${ir.name}Behavior(this, {`);
   if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    get containerEl() { return host.interactionPanel; },`);
+    if (domHasKeyboardPanel(ir)) lines.push(`    get anchorEl() { return host.interactionAnchor; },`);
   lines.push(`    value: () => this.value,`);
   lines.push(`    defaultValue: this.defaultValue,`);
   lines.push(`    onValueChange: (v) => this.onValueChange?.(v),`);
@@ -1221,6 +1222,7 @@ function generateDisclosureRootClass(ir: ComponentIR): string {
   if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    const host = this;`);
   lines.push(`    return this.initializedBehavior ??= new ${ir.name}Behavior(this, {`);
   if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    get containerEl() { return host.interactionPanel; },`);
+    if (domHasKeyboardPanel(ir)) lines.push(`    get anchorEl() { return host.interactionAnchor; },`);
   lines.push(`    value: () => this.value,`);
   lines.push(`    defaultValue: this.defaultValue,`);
   lines.push(`    onValueChange: (v) => this.onValueChange?.(v),`);
@@ -1790,7 +1792,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     // FEAT-A11Y-COMPOSITE-KEYBOARD-01: keyboard-action facts for the walker's
     // `@keydown` lowering and roving-item tabindex rules.
     keyboardActionsByPart: groupKeyboardActionsByPart(ir.keyboardActions),
-    compositeItemPart: ir.compositeControl?.part.name,
+    compositeItemPart: ir.behavior.focus?.strategy === "roving" ? ir.compositeControl?.part.name : undefined,
     compositeMemberExpr: compositeActivationMember(ir.compositeControl),
   };
   // Inject the contract's effective ARIA role onto the root node if the
@@ -1857,7 +1859,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     );
     lines.push(`    if (slot) {`);
     lines.push(
-      `      const update = () => { this._hasChildren = slot.assignedNodes({ flatten: true }).length > 0; };`,
+      `      const update = () => { this._hasChildren = slot.assignedNodes({ flatten: true }).some(node => node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent !== "")); };`,
     );
     lines.push(`      slot.addEventListener('slotchange', update);`);
     lines.push(`      update();`);
@@ -1866,6 +1868,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   }
 
   if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`  private interactionPanel?: HTMLElement;`);
+  if (domHasKeyboardPanel(ir)) lines.push(`  private interactionAnchor?: HTMLElement;`);
   if (hasBehavior) {
     lines.push(``);
     lines.push(`  private initializedBehavior?: ${ir.name}Behavior;`);
@@ -1873,6 +1876,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    const host = this;`);
     lines.push(`    return this.initializedBehavior ??= new ${ir.name}Behavior(this, {`);
     if (ir.interaction?.focusContainer || domHasKeyboardPanel(ir)) lines.push(`    get containerEl() { return host.interactionPanel; },`);
+    if (domHasKeyboardPanel(ir)) lines.push(`    get anchorEl() { return host.interactionAnchor; },`);
     for (const ch of channels) {
       lines.push(`    ${ch.valueProp}: () => this.${ch.valueProp},`);
       if (ch.defaultValueProp) {
@@ -2558,6 +2562,7 @@ function renderLitDomNode(
 
   const attrs: string[] = [];
   if (node.focusContainer || node.keyboardPanel) attrs.push(`\${ref(element => { this.interactionPanel = element instanceof HTMLElement ? element : undefined; })}`);
+  if (node.keyboardAnchor) attrs.push(`\${ref(element => { this.interactionAnchor = element instanceof HTMLElement ? element : undefined; })}`);
   const classParts: string[] = [];
   if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
 
@@ -2648,10 +2653,10 @@ function renderLitDomNode(
     // A keyboard host that is not natively focusable must become
     // programmatically focusable so the delegated keys can fire and the
     // a11y lint holds; -1 keeps it out of tab order.
-    if (!NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+    if (isCompositeItem || !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
       attrs.push(`tabindex="-1"`);
     }
-  } else if (isCompositeItem && !NATIVE_FOCUSABLE_TAGS.has(node.tag)) {
+  } else if (isCompositeItem) {
     // Composite roving item without its own keydown: still a roving focus
     // target — focusable for the roving focus path but out of tab order
     // (APG roving tabindex with DOM focus tracking).
@@ -2928,7 +2933,7 @@ function renderLitDomNode(
       // state property that gets flipped true/false via a `slotchange` listener
       // on the inner <slot>. The class body generator injects this property and
       // the handler when it detects any `if: "children"` node in the tree.
-      withIfGuard = `\${this._hasChildren ? html\`${separator}${body}${separator}${pad}\` : nothing}`;
+      withIfGuard = `\${${node.ifNegated ? "!" : ""}this._hasChildren ? html\`${separator}${body}${separator}${pad}\` : nothing}`;
     } else {
       // IR-DOM-ITERATE-CAPABILITY-01: iteration aliases match before
       // channel lookup. A guard `if: "item"` resolves to the bare
@@ -3428,7 +3433,9 @@ function renderLitBindingValue(
       const source = renderLitBindingValue(expr.source, ctx);
       return source === null
         ? null
-        : composeBindingProjectionExpression(expr.op, source);
+        : expr.op === "selectionLabel"
+          ? composeBindingProjectionExpression(expr.op, source, renderLitBindingValue(expr.selection, ctx) ?? "undefined", renderLitBindingValue(expr.fallback, ctx) ?? "undefined")
+          : composeBindingProjectionExpression(expr.op, source);
     }
     case "valueMap": {
       const source = renderLitBindingValue(expr.source, ctx);

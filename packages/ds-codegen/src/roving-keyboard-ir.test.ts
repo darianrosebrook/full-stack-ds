@@ -81,7 +81,7 @@ describe("resolveRovingItemPartName", () => {
 
 describe("resolveRovingItemSelector", () => {
   it("resolves the composite item part's role (Select)", () => {
-    expect(resolveRovingItemSelector(loadIR("Select"))).toBe('[role="option"]');
+    expect(resolveRovingItemSelector(loadIR("Select"))).toBe('[role="option"]:not(:disabled)');
   });
 
   it("resolves the focusable-roving part's role (Tabs)", () => {

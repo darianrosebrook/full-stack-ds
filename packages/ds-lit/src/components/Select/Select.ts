@@ -211,6 +211,10 @@ export class SelectElement extends LitElement {
       border-radius: var(--fsds-select-design-option-shape-radius, var(--fsds-select-size-radius-default, 6px));
       color: var(--fsds-select-design-option-foreground-color, var(--fsds-select-color-foreground-default, #141414));
       cursor: pointer;
+      border: 0;
+      width: 100%;
+      text-align: start;
+      font: inherit;
     }
 
     .select__emptyState {
@@ -259,14 +263,17 @@ export class SelectElement extends LitElement {
   @property({ attribute: false }) filterFn?: (option: SelectOption, searchTerm: string) => boolean;
   @property({ type: Boolean }) searchable?: boolean;
   @property({ type: Boolean }) empty?: boolean;
+  @property({ type: String }) placeholder?: string = "Select an option";
   @property() position?: string;
   private interactionPanel?: HTMLElement;
+  private interactionAnchor?: HTMLElement;
 
   private initializedBehavior?: SelectBehavior;
   private get behavior(): SelectBehavior {
     const host = this;
     return this.initializedBehavior ??= new SelectBehavior(this, {
     get containerEl() { return host.interactionPanel; },
+    get anchorEl() { return host.interactionAnchor; },
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
@@ -293,22 +300,22 @@ export class SelectElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-label=${ifDefined((this.triggerLabel ?? "Select an option"))} aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${ifDefined(this.disabled === undefined ? undefined : (this.disabled ? 'true' : 'false'))} data-fsds-box="">
-  <button class=${'select__trigger'} type="button" @click=${() => this.behavior.setOpen(!this.behavior.open)} @keydown=${(e: KeyboardEvent) => this.behavior.handleTriggerKeydown(e)} ?disabled=${this.disabled ?? false} aria-label=${ifDefined((this.triggerLabel ?? "Select an option"))} aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-controls="select-options">
-    <span class=${'select__text'}></span>
+    return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-label=${ifDefined((this.triggerLabel ?? "Select an option"))} aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${ifDefined(this.disabled === undefined ? undefined : (this.disabled ? 'true' : 'false'))} aria-controls=${ifDefined([this.open ? 'select-content' : null].filter(Boolean).join(' ') || undefined)} data-fsds-box="">
+  <button class=${'select__trigger'} ${ref(element => { this.interactionAnchor = element instanceof HTMLElement ? element : undefined; })} type="button" @click=${() => this.behavior.setOpen(!this.behavior.open)} @keydown=${(e: KeyboardEvent) => this.behavior.handleTriggerKeydown(e)} ?disabled=${this.disabled ?? false} aria-label=${ifDefined((this.triggerLabel ?? "Select an option"))} aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-controls=${ifDefined([this.open ? 'select-content' : null].filter(Boolean).join(' ') || undefined)}>
+    <span class=${'select__text'}>${(((this.options ?? [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}]) || []).filter(option => (Array.isArray(this.behavior.selection) ? this.behavior.selection : [this.behavior.selection]).includes(option.value)).map(option => option.label).join(', ') || (this.placeholder ?? "Select an option"))}</span>
   </button>
   ${this.behavior.open ? html`
-  <div class=${'select__content'} ${ref(element => { this.interactionPanel = element instanceof HTMLElement ? element : undefined; })} role="listbox" id="fsds-select-listbox" @keydown=${(e: KeyboardEvent) => this.behavior.handleContentKeydown(e)} tabindex="-1" data-fsds-channel-renders="open">
+  <div class=${'select__content'} ${ref(element => { this.interactionPanel = element instanceof HTMLElement ? element : undefined; })} role="listbox" @keydown=${(e: KeyboardEvent) => this.behavior.handleContentKeydown(e)} tabindex="-1" id="select-content" data-fsds-channel-renders="open">
     ${this.searchable ? html`
     <div class=${'select__search'}>
       <input type="text" />
     </div>
     ` : nothing}
-    <div class=${'select__options'} id="select-options">
+    <div class=${'select__options'}>
       ${((this.options ?? [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}])).map((item, index) => html`
-      <div class=${'select__option'} role="option" @click=${() => this.behavior.setSelection(this.multiple ? ((Array.isArray(this.behavior.selection) ? this.behavior.selection : this.behavior.selection == null ? [] : [this.behavior.selection]).includes(item.value) ? (Array.isArray(this.behavior.selection) ? this.behavior.selection : this.behavior.selection == null ? [] : [this.behavior.selection]).filter((v) => v !== item.value) : [...(Array.isArray(this.behavior.selection) ? this.behavior.selection : this.behavior.selection == null ? [] : [this.behavior.selection]), item.value]) : item.value)} @keydown=${(e: KeyboardEvent) => this.behavior.handleOptionKeydown(e, item.value)} tabindex="-1" aria-selected=${((Array.isArray(this.behavior.selection) ? this.behavior.selection.includes(item.value) : item.value === this.behavior.selection)) ? 'true' : 'false'} data-value=${item.value}>
+      <button class=${'select__option'} role="option" type="button" @click=${() => this.behavior.setSelection(this.multiple ? ((Array.isArray(this.behavior.selection) ? this.behavior.selection : this.behavior.selection == null ? [] : [this.behavior.selection]).includes(item.value) ? (Array.isArray(this.behavior.selection) ? this.behavior.selection : this.behavior.selection == null ? [] : [this.behavior.selection]).filter((v) => v !== item.value) : [...(Array.isArray(this.behavior.selection) ? this.behavior.selection : this.behavior.selection == null ? [] : [this.behavior.selection]), item.value]) : item.value)} @keydown=${(e: KeyboardEvent) => this.behavior.handleOptionKeydown(e, item.value)} tabindex="-1" aria-selected=${((Array.isArray(this.behavior.selection) ? this.behavior.selection.includes(item.value) : item.value === this.behavior.selection)) ? 'true' : 'false'} data-value=${item.value} .disabled=${item.disabled} aria-disabled=${item.disabled}>
         <span>${item.label}</span>
-      </div>
+      </button>
       `)}
     </div>
     ${this.empty ? html`
@@ -514,6 +521,10 @@ export class SelectTriggerElement extends LitElement {
       border-radius: var(--fsds-select-design-option-shape-radius, var(--fsds-select-size-radius-default, 6px));
       color: var(--fsds-select-design-option-foreground-color, var(--fsds-select-color-foreground-default, #141414));
       cursor: pointer;
+      border: 0;
+      width: 100%;
+      text-align: start;
+      font: inherit;
     }
 
     .select__emptyState {
@@ -746,6 +757,10 @@ export class SelectContentElement extends LitElement {
       border-radius: var(--fsds-select-design-option-shape-radius, var(--fsds-select-size-radius-default, 6px));
       color: var(--fsds-select-design-option-foreground-color, var(--fsds-select-color-foreground-default, #141414));
       cursor: pointer;
+      border: 0;
+      width: 100%;
+      text-align: start;
+      font: inherit;
     }
 
     .select__emptyState {
@@ -978,6 +993,10 @@ export class SelectOptionElement extends LitElement {
       border-radius: var(--fsds-select-design-option-shape-radius, var(--fsds-select-size-radius-default, 6px));
       color: var(--fsds-select-design-option-foreground-color, var(--fsds-select-color-foreground-default, #141414));
       cursor: pointer;
+      border: 0;
+      width: 100%;
+      text-align: start;
+      font: inherit;
     }
 
     .select__emptyState {

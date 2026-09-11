@@ -1,6 +1,6 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { tokenizeCode } from '../../primitives/highlight/tokenize.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
@@ -166,6 +166,19 @@ export class CodeBlockElement extends LitElement {
   @property({ type: String }) language!: CodeBlockLanguage;
   @property({ type: Boolean }) highlight?: boolean = true;
 
+  // Tracks whether any content has been slotted in — used by the
+  // conditional label wrapper (if: "children" in the contract dom tree).
+  @state() private _hasChildren = false;
+
+  override firstUpdated(): void {
+    const slot = this.shadowRoot?.querySelector('slot:not([name])') as HTMLSlotElement | null;
+    if (slot) {
+      const update = () => { this._hasChildren = slot.assignedNodes({ flatten: true }).some(node => node.nodeType === Node.ELEMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent !== "")); };
+      slot.addEventListener('slotchange', update);
+      update();
+    }
+  }
+
   override connectedCallback(): void {
     super.connectedCallback();
     this.setAttribute("data-fsds-component", "code-block");
@@ -178,7 +191,7 @@ export class CodeBlockElement extends LitElement {
   }
 
   override render() {
-    return html`<pre class="${this.computeClasses()}" data-language=${ifDefined(this.language)} data-fsds-box=""><code class=${'code-block__code'} spellcheck="false" data-language=${ifDefined(this.language)}>${(this.highlight ?? true) ? tokenizeCode(this.code, this.language).map((token, tokenIndex) => html`<span class=${'code-block__token'} data-token=${token.kind}>${token.text}</span>`) : this.code}</code></pre>`;
+    return html`<pre class="${this.computeClasses()}" data-language=${ifDefined(this.language)} data-fsds-box=""><code class=${'code-block__code'} spellcheck="false" data-language=${ifDefined(this.language)}><slot></slot>${!this._hasChildren ? html`<span class=${'code-block__source'}>${(this.highlight ?? true) ? tokenizeCode(this.code, this.language).map((token, tokenIndex) => html`<span class=${'code-block__token'} data-token=${token.kind}>${token.text}</span>`) : this.code}</span>` : nothing}</code></pre>`;
   }
 }
 

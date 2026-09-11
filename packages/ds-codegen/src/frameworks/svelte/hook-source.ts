@@ -1,3 +1,4 @@
+import { selectionChangeHandler } from "../selection-dismissal.js";
 /**
  * Svelte 5 behavior file emitter — the framework-equivalent of
  * `frameworks/vue/hook-source.ts`. Produces a `use<Name>.svelte.ts` file
@@ -503,9 +504,8 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     lines.push(`    controlled: opts.${ch.valueProp},`);
     lines.push(`    defaultValue: ${defaultExpr},`);
     // opts.<changeHandlerProp> is a getter — invoke per-change to read latest fn.
-    lines.push(
-      `    onChange: (v) => opts.${ch.changeHandlerProp}?.()?.(v),`,
-    );
+    const selectionHandler = bindings.useAnchorToggle ? selectionChangeHandler(ir, ch.name, `opts.${ch.changeHandlerProp}?.()?.`, name => `opts.${name}?.()`, "anchorToggle.setOpen(false)", "anchorToggle.anchorRef.el?.focus()") : undefined;
+    lines.push(`    onChange: ${selectionHandler ?? `(v) => opts.${ch.changeHandlerProp}?.()?.(v)`},`);
     lines.push(`  });`);
     lines.push(``);
   }

@@ -1,0 +1,206 @@
+{
+  "root": {
+    "display": {
+      "literal": "flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "flex-direction": {
+      "literal": "column",
+      "platforms": [
+        "web"
+      ]
+    },
+    "min-width": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  "item": {
+    "display": {
+      "literal": "inline-flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "gap": {
+      "literal": "8px",
+      "platforms": [
+        "web"
+      ],
+      "design": {
+        "property": "spacing.gap",
+        "slot": "radio-group.design.item.spacing.gap"
+      }
+    },
+    "padding": {
+      "literal": "6px 10px",
+      "platforms": [
+        "web"
+      ],
+      "design": {
+        "property": "spacing.padding",
+        "slot": "radio-group.design.item.spacing.padding"
+      }
+    },
+    "border-radius": {
+      "literal": "999px",
+      "platforms": [
+        "web"
+      ],
+      "design": {
+        "property": "shape.radius",
+        "slot": "radio-group.design.item.shape.radius"
+      }
+    },
+    "background-color": {
+      "resolvesTo": "semantic.color.background.secondary",
+      "fallback": "#f7f7f7",
+      "design": {
+        "property": "background.fill",
+        "slot": "radio-group.design.item.background.fill"
+      }
+    },
+    "color": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414",
+      "design": {
+        "property": "foreground.color",
+        "slot": "radio-group.design.item.foreground.color"
+      }
+    },
+    "cursor": {
+      "literal": "pointer",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  "option": {
+    "margin": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "flex-shrink": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  "label": {
+    "min-width": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "overflow-wrap": {
+      "literal": "anywhere",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".radio-group--horizontal": {
+    "flex-direction": {
+      "literal": "row",
+      "platforms": [
+        "web"
+      ]
+    },
+    "flex-wrap": {
+      "literal": "wrap",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".radio-group__item[data-checked=\"true\"]": {
+    "background-color": {
+      "resolvesTo": "semantic.color.background.accent",
+      "fallback": "#d92d2e",
+      "design": {
+        "property": "background.fill",
+        "slot": "radio-group.design.selected.background.fill"
+      }
+    },
+    "color": {
+      "resolvesTo": "semantic.color.foreground.onColor",
+      "fallback": "#ffffff",
+      "design": {
+        "property": "foreground.color",
+        "slot": "radio-group.design.selected.foreground.color"
+      }
+    }
+  },
+  ".radio-group__item[data-disabled=\"true\"]": {
+    "opacity": {
+      "literal": "0.5",
+      "platforms": [
+        "web"
+      ],
+      "design": {
+        "property": "appearance.opacity",
+        "slot": "radio-group.design.disabled.appearance.opacity"
+      }
+    },
+    "cursor": {
+      "literal": "not-allowed",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".radio-group__item:focus-within": {
+    "outline-color": {
+      "resolvesTo": "semantic.focus.ring.color",
+      "fallback": "#0566fe",
+      "design": {
+        "property": "focus.color",
+        "slot": "radio-group.design.focus.focus.color"
+      }
+    },
+    "outline-width": {
+      "resolvesTo": "semantic.focus.ring.width",
+      "fallback": "2px",
+      "design": {
+        "property": "focus.width",
+        "slot": "radio-group.design.focus.focus.width"
+      }
+    },
+    "outline-style": {
+      "resolvesTo": "semantic.focus.ring.style",
+      "fallback": "solid",
+      "design": {
+        "property": "focus.style",
+        "slot": "radio-group.design.focus.focus.style"
+      }
+    },
+    "outline-offset": {
+      "resolvesTo": "semantic.focus.ring.offset",
+      "fallback": "2px",
+      "design": {
+        "property": "focus.offset",
+        "slot": "radio-group.design.focus.focus.offset"
+      }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import { selectionChangeHandler } from "../selection-dismissal.js";
 /**
  * React behavior hook emitter.
  *
@@ -832,7 +833,8 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     );
     lines.push(`    controlled: options.${ch.valueProp},`);
     lines.push(`    defaultValue: ${defaultExpr},`);
-    lines.push(`    onChange: options.${ch.changeHandlerProp},`);
+    const selectionHandler = bindings.useAnchorToggle ? selectionChangeHandler(ir, ch.name, `options.${ch.changeHandlerProp}?.`, name => `options.${name}`, "anchorToggle.setOpen(false)", "anchorToggle.anchorRef.current?.focus()") : undefined;
+    lines.push(`    onChange: ${selectionHandler ?? `options.${ch.changeHandlerProp}`},`);
     lines.push(`  });`);
     lines.push(``);
   }

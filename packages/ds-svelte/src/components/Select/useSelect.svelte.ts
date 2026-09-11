@@ -40,7 +40,7 @@ export function useSelect(opts: UseSelectOptions = {}): UseSelectResult {
   const selectionState = createControllableState<string | string[]>({
     controlled: opts.value,
     defaultValue: opts.defaultValue?.() ?? undefined as never,
-    onChange: (v) => opts.onChange?.()?.(v),
+    onChange: (value) => { opts.onChange?.()?.(value); if (!opts.multiple?.()) { anchorToggle.setOpen(false); requestAnimationFrame(() => { anchorToggle.anchorRef.el?.focus(); }); } },
   });
 
   const anchorToggle = createAnchorToggle({
@@ -55,13 +55,13 @@ export function useSelect(opts: UseSelectOptions = {}): UseSelectResult {
     anchorToggle.setOpen(true);
     requestAnimationFrame(() => {
       if (!anchorToggle.panelRef.el) return;
-      (anchorToggle.panelRef.el.querySelector<HTMLElement>("input") ?? anchorToggle.panelRef.el.querySelector<HTMLElement>("[role=\"option\"]"))?.focus();
+      (anchorToggle.panelRef.el.querySelector<HTMLElement>("input") ?? anchorToggle.panelRef.el.querySelector<HTMLElement>("[role=\"option\"]:not(:disabled)"))?.focus();
     });
   }
 
   function handleContentKeydown(event: KeyboardEvent): void {
     const items = Array.from(
-      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>("[role=\"option\"]"),
+      (event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>("[role=\"option\"]:not(:disabled)"),
     );
     const currentIndex = items.findIndex((item) => item === document.activeElement);
     if (event.key === "ArrowUp") {
@@ -83,7 +83,7 @@ export function useSelect(opts: UseSelectOptions = {}): UseSelectResult {
   }
 
   function handleOptionKeydown(event: KeyboardEvent, value: string): void {
-    if (!(event.key === "Enter")) return;
+    if (!(event.key === "Enter" || event.key === "Space")) return;
     event.preventDefault();
     const current = Array.isArray(selectionState.value) ? selectionState.value : selectionState.value == null ? [] : [selectionState.value];
     selectionState.set(opts.multiple?.() ? (current.includes(value) ? current.filter((member) => member !== value) : [...current, value]) : value);
