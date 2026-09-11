@@ -1,4 +1,4 @@
-import {
+import { Card,
   Badge,
   Table,
   TableBody,
@@ -6,7 +6,7 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-} from "@full-stack-ds/react";
+ } from "@full-stack-ds/react";
 import type { PropMember } from "../../types/data";
 
 interface PropsTableProps {
@@ -15,7 +15,7 @@ interface PropsTableProps {
 
 export function PropsTable({ members }: PropsTableProps) {
   return (
-    <div className="panel">
+    <Card className="showcase-card">
       <Table className="props-table" ariaLabel="Component props">
         <TableHead>
           <TableRow>
@@ -62,6 +62,6 @@ export function PropsTable({ members }: PropsTableProps) {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </Card>
   );
 }

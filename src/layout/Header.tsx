@@ -181,7 +181,7 @@ export function Header({ onOpenPalette, sidebarVisible, inspectorVisible, onTogg
             </Button>
           </Popover.Trigger>
           <Popover.Content
-            className="panel"
+            className="header-appearance-popover"
             style={{ minWidth: 240, padding: "var(--fsds-core-spacing-size-06)" }}
           >
             <Switch

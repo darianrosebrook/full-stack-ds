@@ -7,7 +7,7 @@ import type {
 import { type ReactNode, useId, useState } from "react";
 import { renderUsageTree } from "../../lib/render-usage";
 import { bundle } from "../../types/bundle";
-import { Button, PortalTargetProvider, Stack } from "@full-stack-ds/react";
+import { Card, Button, PortalTargetProvider, Stack  } from "@full-stack-ds/react";
 import {
   materialTokenRows,
   tokenOverridesToStyle,
@@ -187,8 +187,8 @@ function ExampleFrame({
     Object.values(contract.channels ?? {}).some((value) => value && typeof value === "object" && "valueType" in value && value.valueType === "boolean"));
   const containment = launched ? null : portalKind;
   return (
-    <div
-      className="panel"
+    <Card
+      className="showcase-card"
       data-usage-component={componentName}
       data-usage-example={example.name}
     >
@@ -220,7 +220,7 @@ function ExampleFrame({
           <ExampleController tree={renderedTree} contract={contract} portalKind={portalKind} />
         </PreviewContent>
       </Stack>
-    </div>
+    </Card>
   );
 }
 

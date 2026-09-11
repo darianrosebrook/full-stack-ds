@@ -69,7 +69,7 @@ describe("DS consumption guard (A7) — Pass 1 fixes must not silently regress",
     const hits = css.match(BARE_CARD_RULE) ?? [];
     expect(
       hits,
-      `app.css reintroduced a .card rule (use .panel for the app surface): ${hits.join(" | ")}`,
+      `app.css reintroduced a .card rule (compose Card with a scoped consumer class): ${hits.join(" | ")}`,
     ).toEqual([]);
   });
 
@@ -123,7 +123,7 @@ describe("DS consumption guard (A7) — Pass 1 fixes must not silently regress",
     const hits = css.match(BARE_CHIP_RULE) ?? [];
     expect(
       hits,
-      `app.css declared a .chip rule (use .pill for the app pill label): ${hits.join(" | ")}`,
+      `app.css declared a .chip rule (use the generated Badge family): ${hits.join(" | ")}`,
     ).toEqual([]);
   });
 
@@ -141,6 +141,14 @@ describe("DS consumption guard (A7) — Pass 1 fixes must not silently regress",
       offenders,
       `raw <table> markup found — render data tables via the DS Table compound (<Table>/<TableRow>/<TableCell>): ${offenders.join(", ")}`,
     ).toEqual([]);
+  });
+
+
+  it("keeps the annotated source viewer CSS separate from generated CodeBlock", () => {
+    const pattern = /\.code-block(?![-\w])[^{}(),]*\{/g;
+    expect(stripCssComments(read("styles/app.css")).match(pattern)).toBeNull();
+    expect(".code-block { padding: 12px; }".match(pattern)).not.toBeNull();
+    expect(".source-viewer__code { padding: 12px; }".match(pattern)).toBeNull();
   });
 
   it("negative control: the collision + raw-table guards actually bite, and stay silent on legitimate code", () => {

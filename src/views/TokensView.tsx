@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Chip, Input, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@full-stack-ds/react";
+import { Card, Chip, Input, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow  } from "@full-stack-ds/react";
 import type { Bundle, FoundationToken } from "../types/data";
 
 interface TokensViewProps {
@@ -311,7 +311,7 @@ export function TokensView({ bundle }: TokensViewProps) {
         </Stack>
       </Stack>
 
-      <div className="panel tokens-card">
+      <Card className="showcase-card tokens-card">
         <Table className="tokens-table" ariaLabel="Design tokens">
           <TableHead>
             <TableRow>
@@ -368,7 +368,7 @@ export function TokensView({ bundle }: TokensViewProps) {
             )}
           </TableBody>
         </Table>
-      </div>
+      </Card>
     </div>
   );
 }

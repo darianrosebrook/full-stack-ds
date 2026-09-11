@@ -525,16 +525,35 @@ button {
  * names. A lighter DS "Surface/Panel" primitive would let this consume the DS
  * directly — see SHOWCASE-CONSUMPTION-01 follow-ups.
  */
-.panel {
-  border: 1px solid var(--fsds-semantic-color-border-subtle);
-  border-radius: var(--fsds-core-shape-radius-04);
-  background: var(--fsds-semantic-color-background-elevated);
+.showcase-card {
+  --fsds-box-model-padding: 0;
+  --fsds-box-model-min-width: 0;
+  --fsds-card-design-root-spacing-padding: 0;
+  --fsds-card-design-root-spacing-gap: 0;
+  --fsds-card-design-root-border-color: var(--fsds-semantic-color-border-subtle);
+  --fsds-card-design-root-shape-radius: var(--fsds-core-shape-radius-04);
+  --fsds-card-design-root-background-fill: var(--fsds-semantic-color-background-elevated);
+  --fsds-card-design-root-typography-line-height: inherit;
+  display: block;
   overflow: hidden;
 }
 
-.panel--inset {
-  padding: var(--fsds-core-spacing-size-07);
+.showcase-card--inset {
+  --fsds-box-model-padding: var(--fsds-core-spacing-size-07);
+  --fsds-card-design-root-spacing-padding: var(--fsds-core-spacing-size-07);
 }
+
+/* A rendered example is a separate design scope from its showcase Card.
+   Inline inspector overrides on the preview frame still take precedence. */
+[data-usage-preview] {
+  --fsds-card-design-root-spacing-padding: initial;
+  --fsds-card-design-root-spacing-gap: initial;
+  --fsds-card-design-root-border-color: initial;
+  --fsds-card-design-root-shape-radius: initial;
+  --fsds-card-design-root-background-fill: initial;
+  --fsds-card-design-root-typography-line-height: initial;
+}
+
 
 .panel-toolbar {
   align-items: center;
@@ -718,7 +737,7 @@ button {
 }
 
 /* Code viewer */
-.code-block {
+.source-viewer__code {
   font-family: var(--fsds-core-typography-font-family-mono);
   font-size: var(--fsds-core-typography-ramp-2);
   line-height: 1.55;
@@ -732,7 +751,7 @@ button {
   white-space: pre;
 }
 
-.code-block code {
+.source-viewer__code code {
   font: inherit;
   display: block;
 }
@@ -833,23 +852,8 @@ button {
    scoped `.anatomy-tree .tag` rule already exists — a bare `.tag` would bleed
    pill chrome onto the anatomy tree. Joins .card→.panel and .tabs→.view-tabs
    as a renamed selector that no longer collides with a DS or app class. */
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--fsds-core-spacing-size-04);
-  padding: 2px var(--fsds-core-spacing-size-05);
-  border-radius: var(--fsds-core-shape-radius-full);
-  background: var(--fsds-semantic-color-background-subtle);
-  color: var(--fsds-semantic-color-foreground-secondary);
-  font-size: var(--fsds-core-typography-ramp-2);
-  font-weight: var(--fsds-semantic-typography-font-weight-medium);
-  border: 1px solid var(--fsds-semantic-color-border-subtle);
-  white-space: nowrap;
-}
-
-.pill--mono {
+.variant-value {
   font-family: var(--fsds-core-typography-font-family-mono);
-  font-size: var(--fsds-core-typography-ramp-2);
 }
 
 /* Variant matrix */
@@ -1653,26 +1657,15 @@ button {
   color: var(--fsds-semantic-color-foreground-tertiary);
 }
 
-.json-tree details > summary {
-  cursor: pointer;
-  list-style: none;
-  user-select: none;
-}
-
-.json-tree details > summary::-webkit-details-marker {
-  display: none;
-}
-
-.json-tree details > summary::before {
-  content: "▸";
-  display: inline-block;
-  width: 12px;
-  color: var(--fsds-semantic-color-foreground-tertiary);
-  transition: transform 100ms ease-out;
-}
-
-.json-tree details[open] > summary::before {
-  transform: rotate(90deg);
+.json-tree .details {
+  --fsds-details-design-root-spacing-padding: 0;
+  --fsds-details-design-root-shape-radius: 0;
+  --fsds-details-design-root-border-width: 0;
+  --fsds-details-design-root-background-fill: transparent;
+  --fsds-details-design-hover-background-fill: transparent;
+  --fsds-details-design-summary-spacing-padding: 0;
+  --fsds-details-design-summary-typography-weight: inherit;
+  --fsds-details-design-content-spacing-padding: 0;
 }
 
 .json-tree li {

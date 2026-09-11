@@ -12,7 +12,8 @@
 //   Component tokens — swatch+value rows, each re-bindable via the token picker
 //
 // Generated controls are used where they support the editor's interactions.
-// Specialized controls and the shared native selector remain explicit debt.
+// Native color/number controls and selects remain until their generated contracts
+// supply type-dependent roles and a visible selected-option label.
 
 import { useState } from "react";
 import type { ComponentBundle, FoundationToken } from "../../types/data";
@@ -36,7 +37,7 @@ import { TokenPicker, type TokenPick } from "./TokenPicker";
 import { TokenValueControl } from "./TokenValueControl";
 import { BoxModelEditor } from "./BoxModelEditor";
 import { PropertySection } from "./PropertySection";
-import { Input, Switch } from "@full-stack-ds/react";
+import { Button, Input, Switch } from "@full-stack-ds/react";
 import "./properties-panel.css";
 
 export interface PropertiesPanelProps {
@@ -117,12 +118,12 @@ function PropControl({
       );
     case "text":
       return (
-        <input
+        <Input
           className="fsds-pp__input"
           type="text"
           value={String(value ?? "")}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label={control.label}
+          onChange={onChange}
+          ariaLabel={control.label}
         />
       );
   }
@@ -156,15 +157,15 @@ function TokenRow({
       ) : (
         <span className="fsds-pp__swatch fsds-pp__swatch--dim" aria-hidden />
       )}
-      <input
+      <Input
         className="fsds-pp__token-value"
         type="text"
         value={value}
         placeholder={row.fallback ?? ""}
-        onChange={(e) => onChange(e.target.value)}
-        aria-label={`${row.slot} value`}
+        onChange={onChange}
+        ariaLabel={`${row.slot} value`}
       />
-      <button
+      <Button variant="ghost" size="small"
         type="button"
         className="fsds-pp__bind"
         title={
@@ -176,7 +177,7 @@ function TokenRow({
         aria-label={`Apply token to ${row.slot}`}
       >
         ◇
-      </button>
+      </Button>
     </div>
   );
 }
@@ -290,14 +291,14 @@ export function PropertiesPanel({
               ? "No overrides"
               : `${overrideCount} override${overrideCount === 1 ? "" : "s"}`}
           </span>
-          <button
+          <Button variant="ghost" size="small"
             type="button"
             className="fsds-pp__reset"
             onClick={onResetOverrides}
             disabled={overrideCount === 0}
           >
             Reset
-          </button>
+          </Button>
         </div>
       )}
 

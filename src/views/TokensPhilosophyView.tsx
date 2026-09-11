@@ -1,4 +1,4 @@
-import { Links, NavList, NavListItem, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@full-stack-ds/react";
+import { Card, Links, NavList, NavListItem, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow  } from "@full-stack-ds/react";
 import { buildHref, type TokensTab } from "../router";
 import { CodeViewer } from "../components/CodeViewer";
 
@@ -276,12 +276,12 @@ function OverviewPanel() {
       </Table>
 
       <h2>The golden rule</h2>
-      <div className="panel panel--inset">
+      <Card className="showcase-card showcase-card--inset">
         <strong>Never use raw values in components.</strong> Always reference
         tokens so the entire system can be re-themed by changing a single
         source file. This isn&apos;t just about efficiency — it&apos;s a
         structural guarantee of consistency.
-      </div>
+      </Card>
     </article>
   );
 }
@@ -1551,7 +1551,7 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
       }}
     >
       {layers.map((layer) => (
-        <div key={layer.title} className="panel panel--inset">
+        <Card key={layer.title} className="showcase-card showcase-card--inset">
           <Stack
             variant="horizontal"
             className="stack-gap-05"
@@ -1601,7 +1601,7 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
               </div>
             ))}
           </dl>
-        </div>
+        </Card>
       ))}
     </div>
   );

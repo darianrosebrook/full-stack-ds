@@ -1,5 +1,5 @@
 import { useMemo, useRef, useEffect, useState } from "react";
-import { Button, Stack, Toast, Tooltip } from "@full-stack-ds/react";
+import { Card, Button, Stack, Toast, Tooltip  } from "@full-stack-ds/react";
 import type { TraceHit } from "../trace/types";
 
 interface CodeViewerProps {
@@ -67,7 +67,7 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
   }, [selectedHitIndex]);
 
   return (
-    <div className="panel">
+    <Card className="showcase-card">
       {filename && (
         <Stack variant="horizontal" className="panel-toolbar stack-gap-00">
           <Stack variant="horizontal" className="stack-gap-04" style={{ alignItems: "baseline" }}>
@@ -88,7 +88,7 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
       >
         {filename ?? "Source"}
       </Toast>
-      <pre className="code-block" ref={containerRef} style={{ borderRadius: 0, border: "none" }}>
+      <pre className="source-viewer__code" ref={containerRef} style={{ borderRadius: 0, border: "none" }}>
         <code>
           {lines.map(({ lineNumber, segments }) => (
             <Stack key={lineNumber} variant="horizontal" className="stack-gap-00">
@@ -144,6 +144,6 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
           ))}
         </code>
       </pre>
-    </div>
+    </Card>
   );
 }

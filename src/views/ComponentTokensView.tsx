@@ -1,5 +1,5 @@
 import type { ComponentBundle } from "../types/data";
-import { Breadcrumbs, Stack } from "@full-stack-ds/react";
+import { Card, Breadcrumbs, Stack  } from "@full-stack-ds/react";
 import { ComponentViewTabs } from "./ComponentViewTabs";
 import { TokensTable } from "./sections/TokensTable";
 
@@ -41,9 +41,9 @@ export function ComponentTokensView({ component }: ComponentTokensViewProps) {
         {tokenCount > 0 ? (
           <TokensTable tokens={tokens} />
         ) : (
-          <div className="panel panel--inset muted">
+          <Card className="showcase-card showcase-card--inset muted">
             No component tokens declared for {component.name}.
-          </div>
+          </Card>
         )}
       </section>
     </div>

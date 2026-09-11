@@ -1,5 +1,5 @@
 import type { ComponentBundle } from "../../types/data";
-import { Stack } from "@full-stack-ds/react";
+import { Badge, Card, Stack   } from "@full-stack-ds/react";
 import { bundle } from "../../types/bundle";
 import { FrameworkPreview } from "../../runtime/FrameworkPreview";
 import { buildReactDemo } from "../../runtime/demos";
@@ -49,7 +49,7 @@ export function VariantsMatrix({
   const combos = cartesian(valueLists).slice(0, 36);
 
   return (
-    <div className="panel">
+    <Card className="showcase-card">
       <Stack variant="horizontal" className="panel-toolbar stack-gap-00">
         <span>
           {keys.length === 1
@@ -85,15 +85,15 @@ export function VariantsMatrix({
               </div>
               <Stack variant="horizontal" className="matrix-meta stack-gap-04">
                 {keys.map((k) => (
-                  <span className="pill pill--mono" key={k}>
+                  <Badge className="variant-value" key={k}>
                     {k}={String(props[k])}
-                  </span>
+                  </Badge>
                 ))}
               </Stack>
             </Stack>
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 }
