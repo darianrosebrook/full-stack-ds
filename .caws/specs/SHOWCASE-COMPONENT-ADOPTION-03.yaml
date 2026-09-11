@@ -96,3 +96,9 @@ evidence:
     recorded_at: "2026-09-11T18:25:16.093Z"
     artifact_path: tmp/showcase-controls/showcase-controls-lit-browser-final.log
     commit_sha: cb06ec65c7ce67c09368886725282d0745cecb36
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "src/components/shared-controls.test.tsx and e2e/showcase-controls.spec.ts: annotated source, line geometry, copy and trace navigation. e2e/codeblock-whitespace.spec.ts: five-target literal rendering. Lit standalone slot regression passes."
+    recorded_at: "2026-09-11T18:25:24.502Z"
+    artifact_path: tmp/showcase-controls/showcase-controls-browser-5.log
+    commit_sha: cb06ec65c7ce67c09368886725282d0745cecb36
