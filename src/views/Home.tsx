@@ -264,14 +264,14 @@ export function Home({ bundle }: HomeProps) {
           {samples.map((c) => (
             <a
               key={c.name}
-              className="panel panel--inset"
+              className="home-sample-link"
               href={buildHref({
                 kind: "component",
                 name: c.name,
                 tab: "design",
               })}
               style={{ display: "block" }}
-            >
+            ><Card className="showcase-card showcase-card--inset">
               <Stack
                 variant="horizontal"
                 className="stack-gap-05"
@@ -290,7 +290,7 @@ export function Home({ bundle }: HomeProps) {
               >
                 {c.contract.description ?? "—"}
               </p>
-            </a>
+            </Card></a>
           ))}
         </div>
       </section>

@@ -1,4 +1,6 @@
-import { useEffect, useRef, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
+
+import { Details } from "@full-stack-ds/react";
 
 interface JsonTreeViewerProps {
   value: unknown;
@@ -10,7 +12,16 @@ function pathFor(parent: string, key: string | number): string {
   return parent ? (typeof key === "number" ? `${parent}${segment}` : `${parent}.${segment}`) : segment;
 }
 
-function renderValue(value: unknown, parentPath: string, highlight: string | undefined, depth: number): JSX.Element {
+function containsPath(parent: string, path: string | undefined): boolean {
+  return !!path && (parent === "" || path === parent || path.startsWith(parent + ".") || path.startsWith(parent + "["));
+}
+
+interface BranchState {
+  open: Record<string, boolean>;
+  setOpen: (path: string, open: boolean) => void;
+}
+
+function renderValue(value: unknown, parentPath: string, highlight: string | undefined, depth: number, state: BranchState): JSX.Element {
   if (value === null) return <span className="null">null</span>;
   if (typeof value === "string") return <span className="string">"{escapeString(value)}"</span>;
   if (typeof value === "number") return <span className="number">{value}</span>;
@@ -18,49 +29,47 @@ function renderValue(value: unknown, parentPath: string, highlight: string | und
   if (Array.isArray(value)) {
     if (value.length === 0) return <span className="muted">[]</span>;
     return (
-      <details open={depth < 1}>
-        <summary>
-          <span className="muted">Array({value.length})</span>
-        </summary>
+      <Details variant="compact" summary={`Array(${value.length})`}
+        open={state.open[parentPath] ?? (depth < 1 || containsPath(parentPath, highlight))}
+        onOpenChange={(open) => state.setOpen(parentPath, open)}>
         <ul>
           {value.map((v, i) => {
             const itemPath = pathFor(parentPath, i);
-            const isHit = highlight && (itemPath === highlight || highlight.startsWith(itemPath + "."));
+            const isHit = containsPath(itemPath, highlight);
             return (
               <li key={i} data-path={itemPath} className={isHit ? "highlighted" : undefined}>
                 <span className="muted">{i}: </span>
-                {renderValue(v, itemPath, highlight, depth + 1)}
+                {renderValue(v, itemPath, highlight, depth + 1, state)}
               </li>
             );
           })}
         </ul>
-      </details>
+      </Details>
     );
   }
   if (typeof value === "object") {
     const entries = Object.entries(value as Record<string, unknown>);
     if (entries.length === 0) return <span className="muted">{`{}`}</span>;
     return (
-      <details open={depth < 1}>
-        <summary>
-          <span className="muted">{`{${entries.length}}`}</span>
-        </summary>
+      <Details variant="compact" summary={`{${entries.length}}`}
+        open={state.open[parentPath] ?? (depth < 1 || containsPath(parentPath, highlight))}
+        onOpenChange={(open) => state.setOpen(parentPath, open)}>
         <ul>
           {entries.map(([k, v]) => {
             const childPath = pathFor(parentPath, k);
-            const isHit = highlight && (childPath === highlight || highlight.startsWith(childPath + "."));
+            const isHit = containsPath(childPath, highlight);
             return (
               <li key={k} data-path={childPath}>
                 <span className={isHit ? "highlighted" : undefined}>
                   <span className="key">{escapeKey(k)}</span>
                   <span className="muted">: </span>
                 </span>
-                {renderValue(v, childPath, highlight, depth + 1)}
+                {renderValue(v, childPath, highlight, depth + 1, state)}
               </li>
             );
           })}
         </ul>
-      </details>
+      </Details>
     );
   }
   return <span className="muted">{String(value)}</span>;
@@ -76,35 +85,33 @@ function escapeString(s: string): string {
 
 export function JsonTreeViewer({ value, highlightPath }: JsonTreeViewerProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState<Record<string, boolean>>({});
+  const scrolledPath = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    if (!highlightPath || !ref.current) return;
-    // Open every ancestor of the highlighted path.
-    const segments = highlightPath.split(/\.|\[/).map((s) => s.replace("]", "")).filter(Boolean);
-    let acc = "";
-    for (const seg of segments) {
-      acc = acc ? (`${acc}.${seg}`) : seg;
-      const el = ref.current.querySelector<HTMLElement>(`[data-path="${cssAttr(acc)}"]`);
-      if (!el) continue;
-      let parent: HTMLElement | null = el;
-      while (parent) {
-        if (parent.tagName === "DETAILS") (parent as HTMLDetailsElement).open = true;
-        parent = parent.parentElement;
-      }
-    }
-    const target = ref.current.querySelector<HTMLElement>(`[data-path="${cssAttr(highlightPath)}"]`);
+    // A newly selected trace reveals its ancestors, including array branches.
+    // Other branches retain the reader's manual expansion state.
+    setOpen((previous) => Object.fromEntries(
+      Object.entries(previous).filter(([path]) => !containsPath(path, highlightPath)),
+    ));
+  }, [highlightPath]);
+
+  useEffect(() => {
+    if (!highlightPath) { scrolledPath.current = undefined; return; }
+    if (!ref.current || scrolledPath.current === highlightPath) return;
+    const target = [...ref.current.querySelectorAll<HTMLElement>("[data-path]")]
+      .find((element) => element.dataset.path === highlightPath);
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "center" });
+      scrolledPath.current = highlightPath;
     }
-  }, [highlightPath]);
+  }, [highlightPath, open]);
 
   return (
     <div ref={ref} className="json-tree">
-      {renderValue(value, "", highlightPath, 0)}
+      {renderValue(value, "", highlightPath, 0, {
+        open, setOpen: (path, expanded) => setOpen((previous) => ({ ...previous, [path]: expanded })),
+      })}
     </div>
   );
-}
-
-function cssAttr(value: string): string {
-  return value.replace(/"/g, '\\"');
 }

@@ -112,23 +112,26 @@ describe("usage sidecar render projection", () => {
       }
 
       const slug = name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+      // Showcase Card frames are app chrome; only the subject roots must be
+      // confined to a preview. Keep the body-wide scan to catch portal leaks.
+      const subjectSelector = `.${slug}:not([data-usage-example])`;
       const launchers = container.querySelectorAll<HTMLButtonElement>(".usage-launcher > button");
       if (launchers.length) {
-        expect(document.body.querySelectorAll(`.${slug}`)).toHaveLength(0);
+        expect(document.body.querySelectorAll(subjectSelector)).toHaveLength(0);
         expect(launchers).toHaveLength(entry.usage.length);
         for (const launcher of launchers) {
           launcher.focus();
           fireEvent.click(launcher);
-          await waitFor(() => expect(document.body.querySelectorAll(`.${slug}`)).toHaveLength(1));
-          const root = document.body.querySelector(`.${slug}`)!;
+          await waitFor(() => expect(document.body.querySelectorAll(subjectSelector)).toHaveLength(1));
+          const root = document.body.querySelector(subjectSelector)!;
           expect(root.closest("[data-usage-preview]")).toBeTruthy();
           fireEvent.keyDown(root, { key: "Escape" });
-          expect(document.body.querySelectorAll(`.${slug}`)).toHaveLength(0);
+          expect(document.body.querySelectorAll(subjectSelector)).toHaveLength(0);
           expect(document.activeElement).toBe(launcher);
         }
       } else {
         await waitFor(() => {
-          const roots = document.body.querySelectorAll(`.${slug}`);
+          const roots = document.body.querySelectorAll(subjectSelector);
           expect(roots.length).toBeGreaterThanOrEqual(entry.usage.length);
           for (const root of roots) expect(root.closest("[data-usage-preview]")).toBeTruthy();
         });

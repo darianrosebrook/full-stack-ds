@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { getPrefs } from "../prefs";
-import { Breadcrumbs, Checkbox, Stack, Status, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
+import { Card, Breadcrumbs, Checkbox, Stack, Status, Tabs, TabsList, TabsTab  } from "@full-stack-ds/react";
 import type { ComponentBundle, Framework } from "../types/data";
 import { bundle } from "../types/bundle";
 import {
@@ -160,7 +160,7 @@ export function DeveloperView({
       </p>
 
       {!componentFile ? (
-        <div className="panel panel--inset muted">No source available for {framework}.</div>
+        <Card className="showcase-card showcase-card--inset muted">No source available for {framework}.</Card>
       ) : (
         <>
           <section className="section" style={{ marginTop: 0 }}>
@@ -168,7 +168,7 @@ export function DeveloperView({
               <h2 className="section-title">Live preview</h2>
               <span className="section-meta">in-iframe {framework}</span>
             </Stack>
-            <div className="panel">
+            <Card className="showcase-card">
               <Stack variant="horizontal" className="panel-toolbar stack-gap-00">
                 <span>{framework}</span>
                 <label style={{ display: "inline-flex", alignItems: "center", gap: "var(--fsds-core-spacing-size-04)", fontSize: "var(--fsds-core-typography-ramp-2)", cursor: "pointer" }}>
@@ -195,7 +195,7 @@ export function DeveloperView({
                   config={config}
                 />
               </div>
-            </div>
+            </Card>
           </section>
 
           <section className="section">

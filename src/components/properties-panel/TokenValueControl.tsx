@@ -1,8 +1,8 @@
 // TokenValueControl — app-specific control for a single token-backed value.
 //
 // It is NOT a new design-system primitive: it is composed entirely of the
-// system's own outputs — the DS `Popover`, plain inputs/buttons styled with
-// `--fsds-` tokens, and the existing `TokenPicker`. It is the shared editor for
+// system's own outputs — the DS `Popover`, `Button`, `Input`, and the existing `TokenPicker`.
+// The native color well remains until Input models type-dependent semantics. It is the shared editor for
 // any value that resolves to a token: a box-model dimension, a radius, a fill
 // color. The `◇` marker indicates the value is token-linked; clicking opens a
 // popover with a literal editor (number stepper for dimensions, hex+swatch for
@@ -13,7 +13,7 @@
 // a resolvesTo binding, hollow when it's a raw literal override.
 
 import { useState } from "react";
-import { Popover } from "@full-stack-ds/react";
+import { Button, Input, Popover } from "@full-stack-ds/react";
 import type { FoundationToken } from "../../types/data";
 import type { TokenProvenance } from "./control-derivation";
 import { TokenPicker, type TokenPick } from "./TokenPicker";
@@ -117,12 +117,12 @@ export function TokenValueControl({
   return (
     <Popover open={open} onOpenChange={setOpen} placement="bottom">
       <Popover.Trigger asChild>
-        <button
+        <Button variant="ghost" size="small"
           type="button"
           className={
             "fsds-tvc__trigger" + (compact ? " fsds-tvc__trigger--compact" : "")
           }
-          aria-label={`Edit ${label}`}
+          ariaLabel={`Edit ${label}`}
           title={markerTitle}
         >
           {kind === "color" && isHex(value) && (
@@ -155,7 +155,7 @@ export function TokenValueControl({
           >
             {linked ? "◆" : "◇"}
           </span>
-        </button>
+        </Button>
       </Popover.Trigger>
 
       <Popover.Content className="fsds-tvc__popover">
@@ -165,31 +165,31 @@ export function TokenValueControl({
           </div>
           {kind === "dimension" ? (
             <div className="fsds-tvc__stepper">
-              <button
+              <Button variant="ghost" size="small"
                 type="button"
                 className="fsds-tvc__step"
                 onClick={() => bump(-step)}
-                aria-label={`Decrease ${label}`}
+                ariaLabel={`Decrease ${label}`}
                 disabled={Number.isNaN(num)}
               >
                 −
-              </button>
-              <input
+              </Button>
+              <Input
                 className="fsds-tvc__input"
                 type="text"
                 value={value}
-                onChange={(e) => onChange(e.target.value)}
-                aria-label={`${label} value`}
+                onChange={onChange}
+                ariaLabel={`${label} value`}
               />
-              <button
+              <Button variant="ghost" size="small"
                 type="button"
                 className="fsds-tvc__step"
                 onClick={() => bump(step)}
-                aria-label={`Increase ${label}`}
+                ariaLabel={`Increase ${label}`}
                 disabled={Number.isNaN(num)}
               >
                 +
-              </button>
+              </Button>
             </div>
           ) : (
             <div className="fsds-tvc__color-row">
@@ -200,12 +200,12 @@ export function TokenValueControl({
                 onChange={(e) => onChange(e.target.value)}
                 aria-label={`${label} color`}
               />
-              <input
+              <Input
                 className="fsds-tvc__input"
                 type="text"
                 value={value}
-                onChange={(e) => onChange(e.target.value)}
-                aria-label={`${label} value`}
+                onChange={onChange}
+                ariaLabel={`${label} value`}
               />
             </div>
           )}

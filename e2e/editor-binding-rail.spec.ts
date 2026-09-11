@@ -30,6 +30,7 @@ async function computedGap(page: Page): Promise<string> {
 test.describe("properties panel shared box bindings", () => {
   test("Button gap control sets the shared slot and clearing restores its default", async ({ page }) => {
     const frame = await openScratchPanel(page);
+    await page.getByRole("button", { name: "Component tokens", exact: true }).click();
     const gapInput = page.getByLabel("box-model.gap value", { exact: true }).first();
     await expect(gapInput).toBeVisible();
     await expect(gapInput).toBeEnabled();

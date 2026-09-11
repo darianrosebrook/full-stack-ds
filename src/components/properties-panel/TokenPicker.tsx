@@ -11,6 +11,7 @@
 // edit), so this stays a preview-only re-skin.
 
 import { useMemo, useState } from "react";
+import { Button, Input } from "@full-stack-ds/react";
 import type { FoundationToken } from "../../types/data";
 
 export interface TokenPick {
@@ -188,23 +189,23 @@ export function TokenPicker({
       }}
     >
       <div className="fsds-token-picker__head">
-        <input
+        <Input
           className="fsds-token-picker__search"
           type="search"
           placeholder="Search tokens…"
           value={query}
           autoFocus
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search tokens"
+          onChange={setQuery}
+          ariaLabel="Search tokens"
         />
-        <button
+        <Button variant="ghost" size="small"
           type="button"
           className="fsds-token-picker__close"
           onClick={onClose}
-          aria-label="Close"
+          ariaLabel="Close"
         >
           ×
-        </button>
+        </Button>
       </div>
       <div className="fsds-token-picker__body">
         {groups.length === 0 ? (
@@ -214,7 +215,7 @@ export function TokenPicker({
             <div className="fsds-token-picker__group" key={g.name}>
               <div className="fsds-token-picker__group-name">{g.name}</div>
               {g.items.map((t) => (
-                <button
+                <Button variant="ghost" size="small"
                   type="button"
                   className="fsds-token-picker__item"
                   key={`${t.layer}:${t.path}`}
@@ -236,7 +237,7 @@ export function TokenPicker({
                   </span>
                   <span className="fsds-token-picker__path">{t.path}</span>
                   <span className="fsds-token-picker__value">{t.value}</span>
-                </button>
+                </Button>
               ))}
             </div>
           ))

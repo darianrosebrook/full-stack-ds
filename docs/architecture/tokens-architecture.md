@@ -4,8 +4,8 @@ authority: architecture
 status: implemented
 title: Design Token Architecture
 owner: "@darianrosebrook"
-updated: 2026-09-06
-verified_at_commit: 2fce1451
+updated: 2026-09-10
+verified_at_commit: 3ed2648d
 governs:
   - packages/ds-tokens/src/**/*.tokens.json
   - src/components/properties-panel/**
@@ -246,6 +246,13 @@ An override is live when it reaches a real property through the CSS dependency g
 - **Rendering rule:** native-only or compile-time-only declarations are not editable Web CSS controls. Missing CSS proof establishes no live control.
 
 Verified at runtime by `e2e/editor-binding-rail.spec.ts` (Button: the shared gap control moves the preview's computed gap and clearing restores the default) and pinned by the read-proof block of `src/components/properties-panel/control-derivation.test.ts`.
+
+The [showcase adoption](design/showcase-component-adoption.md) changes the
+inspector's UI composition to generated Accordion, Button and Input without
+changing token derivation or override addresses. Collapsed sections now hide
+their controls; callers and tests open a section before editing. The remaining
+native color/number/select controls reflect missing component capabilities,
+not missing CSS bindings.
 
 ## Load-bearing decisions
 

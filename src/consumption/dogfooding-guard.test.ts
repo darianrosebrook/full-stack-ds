@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = resolve(HERE, "..");
 const RAW_CONTROL_TAGS = new Set([
+  "pre",
   "button",
   "details",
   "input",
@@ -27,28 +28,16 @@ interface DebtEntry {
  */
 const RAW_CONTROL_DEBT: Record<string, DebtEntry> = {
   "components/CodeViewer.tsx": {
-    tags: { button: 1 },
-    rationale: "Inline code-range hotspot; Button geometry is intentionally inappropriate.",
-  },
-  "components/JsonTreeViewer.tsx": {
-    tags: { details: 2, summary: 2 },
-    rationale: "Recursive native disclosure pending a ref-forwarding, state-synchronized Details API.",
+    tags: { pre: 1, button: 1 },
+    rationale: "CodeBlock lacks source-line and range-annotation rendering; the viewer also owns trace navigation.",
   },
   "components/properties-panel/PropertiesPanel.tsx": {
-    tags: { button: 2, input: 4, select: 1 },
-    rationale: "Remaining prop and color controls use native inputs; design-property values use the generated Input and retired unwired rows are removed.",
-  },
-  "components/properties-panel/PropertySection.tsx": {
-    tags: { button: 1 },
-    rationale: "App-local disclosure pending adoption of the Accordion compound.",
-  },
-  "components/properties-panel/TokenPicker.tsx": {
-    tags: { button: 2, input: 1 },
-    rationale: "Searchable token selection pending Command and dense-control realization.",
+    tags: { input: 2, select: 1 },
+    rationale: "Input fixes role=textbox regardless of type; Select emits an empty selected-value span. Native color/number/select controls preserve their semantics.",
   },
   "components/properties-panel/TokenValueControl.tsx": {
-    tags: { button: 3, input: 3 },
-    rationale: "Dense stepper and color editing need reusable NumberField and ColorField compounds.",
+    tags: { input: 1 },
+    rationale: "The native color well remains because Input fixes role=textbox regardless of the input type.",
   },
   "layout/Header.tsx": {
     tags: { input: 1 },
@@ -61,22 +50,9 @@ const RAW_CONTROL_DEBT: Record<string, DebtEntry> = {
 };
 
 const APP_SURROGATE_DEBT: Record<string, Record<string, number>> = {
-  panel: {
-    "components/CodeViewer.tsx": 1,
-    "layout/Header.tsx": 1,
-    "views/ComponentComplexityView.tsx": 1,
-    "views/ComponentTokensView.tsx": 1,
-    "views/DeveloperView.tsx": 2,
-    "views/Home.tsx": 1,
-    "views/TokensPhilosophyView.tsx": 2,
-    "views/TokensView.tsx": 1,
-    "views/sections/PropsTable.tsx": 1,
-    "views/sections/UsageExamples.tsx": 1,
-    "views/sections/VariantsMatrix.tsx": 1,
-  },
-  pill: {
-    "views/sections/VariantsMatrix.tsx": 1,
-  },
+  panel: {},
+  pill: {},
+  "code-block": {},
 };
 
 function collectProductionTsx(dir: string, acc: string[] = []): string[] {
@@ -188,7 +164,7 @@ function derivedSurrogateDebt(
 describe("showcase dogfooding debt ratchet", () => {
   const productionFiles = collectProductionTsx(SRC);
 
-  it("keeps every raw control explicit and prevents the accepted baseline from growing", () => {
+  it("keeps every raw component site explicit and prevents the accepted baseline from growing", () => {
     const expected = Object.fromEntries(
       Object.entries(RAW_CONTROL_DEBT).map(([file, entry]) => [file, entry.tags]),
     );
@@ -217,13 +193,13 @@ describe("showcase dogfooding debt ratchet", () => {
   it("recognizes real JSX while ignoring code samples and similarly named classes", () => {
     const fixture = ts.createSourceFile(
       "fixture.tsx",
-      'const sample = `<button class="panel">x</button>`; const ui = <><button className="panel panel--inset">x</button><div className="evidence-panel tokens-brand-pills" /></>;',
+      'const sample = `<button class="panel">x</button>`; const ui = <><button className="panel panel--inset">x</button><div className="evidence-panel tokens-brand-pills" /><pre>source</pre></>;',
       ts.ScriptTarget.Latest,
       true,
       ts.ScriptKind.TSX,
     );
 
-    expect(rawControls(fixture)).toEqual({ button: 1 });
+    expect(rawControls(fixture)).toEqual({ button: 1, pre: 1 });
     expect(classTokenCount(fixture, "panel")).toBe(1);
     expect(classTokenCount(fixture, "pill")).toBe(0);
   });

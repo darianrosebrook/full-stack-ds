@@ -1,4 +1,4 @@
-import { Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
+import { Card, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Tabs, TabsList, TabsTab  } from "@full-stack-ds/react";
 import { buildHref, type ComplexityTab } from "../router";
 import { CodeViewer } from "../components/CodeViewer";
 
@@ -1077,7 +1077,7 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
       }}
     >
       {layers.map((layer) => (
-        <div key={layer.title} className="panel panel--inset">
+        <Card key={layer.title} className="showcase-card showcase-card--inset">
           <Stack
             variant="horizontal"
             className="stack-gap-05"
@@ -1127,7 +1127,7 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
               </div>
             ))}
           </dl>
-        </div>
+        </Card>
       ))}
     </div>
   );
