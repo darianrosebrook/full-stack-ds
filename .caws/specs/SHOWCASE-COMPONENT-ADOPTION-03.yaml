@@ -90,3 +90,9 @@ evidence:
     recorded_at: "2026-09-11T18:25:07.719Z"
     artifact_path: tmp/showcase-controls/showcase-controls-color-final.log
     commit_sha: cb06ec65c7ce67c09368886725282d0745cecb36
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "e2e/showcase-controls.spec.ts: RadioGroup native keyboard and disabled options; Select labels, controlled updates and dismissal across five web targets. Logs: showcase-controls-browser-5.log and showcase-controls-lit-browser-final.log."
+    recorded_at: "2026-09-11T18:25:16.093Z"
+    artifact_path: tmp/showcase-controls/showcase-controls-lit-browser-final.log
+    commit_sha: cb06ec65c7ce67c09368886725282d0745cecb36
