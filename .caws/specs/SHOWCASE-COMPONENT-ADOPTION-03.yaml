@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: showcase-controls
 created_at: '2026-09-11T05:11:02.966Z'
-updated_at: '2026-09-11T05:58:53.906Z'
+updated_at: '2026-09-11T06:07:18.219Z'
 created_by_session: '01a074e8-6c81-7f93-8d64-5c64eca9cfa6'
 blast_radius:
   modules:
@@ -40,6 +40,7 @@ scope:
     - src/runtime/demos.ts
     - src/runtime/demos.test.ts
     - packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/components/CodeBlock
+    - packages/ds-codegen/src/roving-keyboard-ir.test.ts
   out: []
   support:
     - docs/current-implementation-snapshot.md
