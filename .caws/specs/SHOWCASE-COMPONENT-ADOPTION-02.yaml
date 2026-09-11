@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "Merged a2fdd3d2: generated Card, Badge, Accordion, Details, Button and Input adoption; source and CSS consumption guards pass; browser-ready.log shows 17 passing cases including Card appearance isolation; tmp/showcase-adoption/verification.md"
     recorded_at: "2026-09-11T03:04:20.237Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "src/components/showcase-compositions.test.tsx verifies selected array trace revelation, manual collapse, independent actions, token search and binding; e2e/editor-binding-rail.spec.ts verifies actual 8px to 24px to default preview gap; e2e/showcase-adoption.spec.ts verifies keyboard and responsive editor behavior; all pass in tmp/showcase-adoption/browser-ready.log and prepush.log"
+    recorded_at: "2026-09-11T03:04:22.533Z"
