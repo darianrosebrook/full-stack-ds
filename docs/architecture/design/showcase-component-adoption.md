@@ -48,8 +48,9 @@ the grouping and form-submission identity; consumers must supply different
 names for independent groups. Labels, disabled choices and horizontal/vertical
 layout are declared in the contract. React Native lowers each labeled radio
 to one accessible press target with a visible selection indicator. This
-component is emitted by the admitted JavaScript targets; the native explicit
-allowlists are unchanged.
+component is emitted by the admitted JavaScript targets and SwiftUI. The
+SwiftUI realization derives a native radio-style Picker from the same
+selection and label bindings; native form-name transport is not implied.
 
 **CodeBlock owns the source surface.** A consumer content region can replace
 the automatic literal-source renderer. CodeViewer supplies numbered lines and
@@ -80,6 +81,7 @@ part so it does not apply the root padding twice.
   `e2e/showcase-usability.spec.ts`: desktop/narrow surfaces, preview isolation,
   editor changes, disclosure, palette, shell and overlay regressions.
 
-Browser checks use Chromium. Native emitter checks establish generated
-structure; they do not establish native rendering or full accessibility
-conformance. Screenshots and local gate logs stay in ignored runtime evidence.
+Browser checks use Chromium. SwiftUI emission parity, compilation and
+component body evaluation were checked, including the new native radio
+realization. These do not establish native keyboard or accessibility
+interaction parity. Compose source checks establish emitted structure. Screenshots and local gate logs stay in ignored runtime evidence.

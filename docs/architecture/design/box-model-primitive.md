@@ -4,8 +4,8 @@ authority: architecture
 status: implemented
 title: Box-Model Primitive Slot Pool
 owner: "@darianrosebrook"
-updated: 2026-09-06
-verified_at_commit: ab30f3e8a58f3e54d3a761d8789f1938d1c22c99
+updated: 2026-09-10
+verified_at_commit: 90ad2f233b8441bd7d9f9c452348c29e0bce0e64
 governs:
   - packages/ds-contracts/box-model.primitive.schema.json
   - packages/ds-contracts/primitives/BoxModel.primitive.json
@@ -65,5 +65,6 @@ Padding uses logical axes and sides so it follows writing mode. Margin belongs t
 - `box-model.test.ts` verifies default precedence, schema rejection, non-hoisting, and variant defaults at property consumers.
 - `e2e/component-token-consumption.spec.ts` verifies that variant defaults cannot defeat shorthand, axis, and side overrides across Web targets.
 - `e2e/design-bindings.spec.ts` checks actual browser shorthand/side behavior, restoration, nested isolation, and consumer precedence without the global semantic stylesheet.
+- `e2e/showcase-controls.spec.ts` checks the composed inspector color well and source annotation geometry. Shared Input and Button consumers use scoped box/design overrides; this adoption adds no geometry slots.
 
 Portal surfaces need their own applicable boundary/selector; this does not transport an ancestor's custom properties into a portal. Native emitters project the normalized material facts down to the slots their generated code reads. Shared CSS controls do not imply a native override API, identical behavior on all host elements, or visual correctness for every possible value.

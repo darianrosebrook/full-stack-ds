@@ -5,7 +5,7 @@ status: implemented
 title: Design Token Architecture
 owner: "@darianrosebrook"
 updated: 2026-09-10
-verified_at_commit: 3ed2648d
+verified_at_commit: 90ad2f233b8441bd7d9f9c452348c29e0bce0e64
 governs:
   - packages/ds-tokens/src/**/*.tokens.json
   - src/components/properties-panel/**
@@ -248,11 +248,12 @@ An override is live when it reaches a real property through the CSS dependency g
 Verified at runtime by `e2e/editor-binding-rail.spec.ts` (Button: the shared gap control moves the preview's computed gap and clearing restores the default) and pinned by the read-proof block of `src/components/properties-panel/control-derivation.test.ts`.
 
 The [showcase adoption](design/showcase-component-adoption.md) changes the
-inspector's UI composition to generated Accordion, Button and Input without
-changing token derivation or override addresses. Collapsed sections now hide
-their controls; callers and tests open a section before editing. The remaining
-native color/number/select controls reflect missing component capabilities,
-not missing CSS bindings.
+inspector's UI composition to generated Accordion, Button, Input and Select
+without changing token derivation or override addresses. Input preserves
+native number/color semantics; Select provides labeled choices and keyboard
+selection. Collapsed sections hide their controls; callers and tests open a
+section before editing. The production AST guard requires zero hand-authored
+control sites.
 
 ## Load-bearing decisions
 
