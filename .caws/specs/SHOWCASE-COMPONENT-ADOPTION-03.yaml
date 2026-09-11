@@ -102,3 +102,9 @@ evidence:
     recorded_at: "2026-09-11T18:25:24.502Z"
     artifact_path: tmp/showcase-controls/showcase-controls-browser-5.log
     commit_sha: cb06ec65c7ce67c09368886725282d0745cecb36
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Zero raw production control and surrogate allowances enforced by src/consumption/dogfooding-guard.test.ts. Full PREPUSH_FULL=1 passed at cb06ec65 in 274 seconds; framework suites, 38 Chromium checks, final Lit 24 checks and visual inspection recorded in tmp/showcase-controls/verification.md."
+    recorded_at: "2026-09-11T18:25:33.049Z"
+    artifact_path: tmp/showcase-controls/showcase-controls-prepush-final.log
+    commit_sha: cb06ec65c7ce67c09368886725282d0745cecb36
