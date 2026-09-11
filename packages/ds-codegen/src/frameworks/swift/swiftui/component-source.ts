@@ -38,6 +38,7 @@ import { collectCollapseIntents, isContentTransform, nativeRootClipping } from "
 import { swiftLiteral } from "./icon-glyph.js";
 import nodeFs from "node:fs";
 import nodePath from "node:path";
+import { emitNativeRadioGroup } from "./radio-group.js";
 
 const INDENT = "    ";
 
@@ -75,6 +76,8 @@ export function generateSwiftUIComponentSource(ir: ComponentIR): string {
 }
 
 function emitSwiftUIComponentSource(ir: ComponentIR): string {
+  const radioGroup = emitNativeRadioGroup(ir, swiftExportName(ir.name));
+  if (radioGroup) return [emitImports(), emitTypes(ir), radioGroup].join("\n\n") + "\n";
   const collapseIntents = collectCollapseIntents(ir);
   const isNativeToggle = collapseIntents.has("native-toggle-affordance");
 

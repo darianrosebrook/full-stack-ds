@@ -69,7 +69,10 @@ final class ComponentSmokeTests: XCTestCase {
         cases.append(("Text", { AnyView(DsSwiftUI.Text { SwiftUI.Text("body") }) }))
         cases.append(("Status", { AnyView(Status { SwiftUI.Text("ok") }) }))
         cases.append(("Table", { AnyView(FsdsTable { SwiftUI.Text("row") }) }))
-        XCTAssertEqual(cases.count, 49, "factory table drifted from the allowlist")
+        cases.append(("RadioGroup", { AnyView(RadioGroup(options: [RadioGroupOption(value: "a", label: "A"), RadioGroupOption(value: "b", label: "B", disabled: true)], defaultValue: "a", ariaLabel: "Choices", orientation: .horizontal)) }))
+        cases.append(("Markdown", { AnyView(Markdown(content: "# Heading")) }))
+        cases.append(("NavTree", { AnyView(NavTree(icon: "alarm")) }))
+        XCTAssertEqual(cases.count, 52, "factory table drifted from the allowlist")
         for (name, factory) in cases {
             evaluate(name, factory)
         }
