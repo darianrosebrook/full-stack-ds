@@ -5,7 +5,7 @@ status: implemented
 title: Component design property bindings
 owner: "@darianrosebrook"
 updated: 2026-09-10
-verified_at_commit: d617cca20424fb4602f05c30f6e620f1d6ea74c9
+verified_at_commit: 3ed2648d
 governs:
   - packages/ds-codegen/src/design-properties.ts
   - packages/ds-contracts/component.styles.schema.json
@@ -59,6 +59,12 @@ Web override syntax is added in the CSS realization. It does not enter the defau
 ```
 
 Component-specific design slots inherit deliberately, including into nested components of the same type. Shared `box-model.*` overrides reset at each component boundary to avoid leaking a Card's padding into an embedded Button. The separate `data-fsds-box` marker identifies the element that consumes geometry, including the inner rendered root of Angular and Lit components. Targeting all Cards is therefore explicit. A consumer can use unlayered CSS or a later declared layer; custom authored override regions remain outside generated component layers.
+
+The [showcase adoption](showcase-component-adoption.md) is a concrete nested
+scope example: a Card frames a Card demonstration. The usage-preview container
+resets the showcase's Card appearance overrides so the demonstrated component
+retains its own defaults. Inline inspector overrides on that container still
+win. Inheritance remains part of the public interface.
 
 See [the box-model contract](./box-model-primitive.md) for default and shorthand precedence. Cross-portal inheritance still requires putting a consumer theme on an ancestor of the portaled surface or targeting that surface directly. This campaign does not transport scoped ancestor variables across a portal.
 

@@ -67,3 +67,31 @@ test("JSON disclosures use generated Details with native keyboard activation", a
   await anatomy.locator(":scope > summary").click();
   await page.screenshot({ path: info.outputPath("json-disclosures.png") });
 });
+
+test("generated token editor controls remain usable in their popover", async ({ page }, info) => {
+  await page.setViewportSize({ width: 1153, height: 943 });
+  await page.goto("/#/component/Card/design");
+  const trigger = page.locator(".fsds-pp .fsds-tvc__trigger").first();
+  await expect(trigger).toHaveAttribute("data-fsds-component", "button");
+  const label = (await trigger.getAttribute("aria-label"))!.replace(/^Edit /, "");
+  await trigger.click();
+  const input = page.getByRole("textbox", { name: `${label} value`, exact: true });
+  await expect(input).toHaveAttribute("data-fsds-component", "input");
+  await input.fill("23px");
+  await expect(page.locator(".fsds-pp__overrides-count")).toHaveText("1 override");
+  await page.screenshot({ path: info.outputPath("token-editor.png") });
+  await page.setViewportSize({ width: 390, height: 943 });
+  // The responsive shell hides the inspector. Reopen it through its control.
+  await page.getByRole("button", { name: "Show inspector", exact: true }).click();
+  await trigger.click();
+  await expect(input).toHaveValue("23px");
+  const popup = page.locator(".fsds-tvc__popover");
+  await expect.poll(() => popup.evaluate(el => {
+    const rect = el.getBoundingClientRect();
+    return rect.left >= 0 && rect.right <= innerWidth && el.scrollWidth <= el.clientWidth + 1;
+  })).toBe(true);
+  await page.screenshot({ path: info.outputPath("token-editor-390.png") });
+  await page.keyboard.press("Escape");
+  await expect(input).toBeHidden();
+  await expect(trigger).toHaveText(/23/);
+});
