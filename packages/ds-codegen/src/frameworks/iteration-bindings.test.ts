@@ -795,12 +795,10 @@ describe("BINDING-EXPRESSION-V2-PATH-01: object-field path lowering", () => {
   describe("Lit", () => {
     const src = generateLitComponentSource(ir);
 
-    it("emits item.value bare (no ifDefined wrap on iteration locals)", () => {
-      // Loop locals introduced by `.map((item, index) => ...)` are never
-      // undefined; the V2 emitter skips `ifDefined` on iterationLocal
-      // bindings — paths inherit the same dispatch.
-      expect(src).toMatch(/data-row-value=\$\{item\.value\}/);
-      expect(src).not.toMatch(/ifDefined\(item\.value\)/);
+    it("omits absent projected fields while reading the iteration item", () => {
+      // The callback item exists; a field read does not carry that guarantee.
+      expect(src).toMatch(/data-row-value=\$\{ifDefined\(item\.value\)\}/);
+      expect(src).not.toMatch(/this\.item/);
     });
 
     it("emits ${item.label} inside the inner <span>", () => {

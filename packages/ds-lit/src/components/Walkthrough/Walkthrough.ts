@@ -325,7 +325,7 @@ export class WalkthroughElement extends LitElement {
     <button class=${'walkthrough__prev'} type="button" @click=${this.onPrevious} aria-label="Previous step" ?disabled=${(this.previousDisabled ?? false)}>Previous</button>
     <div class=${'walkthrough__dots'}>
       ${((this.steps ?? [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}])).map((item, index) => html`
-      <button class=${'walkthrough__dot'} type="button" @click=${() => this.behavior.setStep(index)} aria-label=${ifDefined(item.title)} data-step-index=${ifDefined(index)}></button>
+      <button class=${'walkthrough__dot'} type="button" @click=${() => this.behavior.setStep(index)} aria-label=${ifDefined(item.title)} data-step-index=${index}></button>
       `)}
     </div>
     <span class=${'walkthrough__counter'}>${this.progressLabel}</span>

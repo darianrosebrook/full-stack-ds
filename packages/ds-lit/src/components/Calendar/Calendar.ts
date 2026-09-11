@@ -2,7 +2,6 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { CalendarBehavior } from './CalendarBehavior.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -261,7 +260,7 @@ export class CalendarElement extends LitElement {
     <tbody>
       <tr>
         ${(this.days ?? []).map((item, index) => html`
-        <td class=${'calendar__cell'} role="gridcell" data-calendar-index=${ifDefined(index)}>
+        <td class=${'calendar__cell'} role="gridcell" data-calendar-index=${index}>
           <button class=${'calendar__day'} @click=${() => this.behavior.setValue(item)} tabindex="-1">${item.getDate()}</button>
         </td>
         `)}

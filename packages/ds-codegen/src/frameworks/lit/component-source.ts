@@ -3199,7 +3199,8 @@ function renderLitBinding(
       if (!name) return null;
       const acc = appendPath(name, expr.path);
       if (isAttributeOnlyBinding(attr) || attr === "title") {
-        return `${attr}=\${ifDefined(${acc})}`;
+        const value = expr.path?.length ? `ifDefined(${acc})` : acc;
+        return `${attr}=\${${value}}`;
       }
       return `.${attr}=\${${acc}}`;
     }
