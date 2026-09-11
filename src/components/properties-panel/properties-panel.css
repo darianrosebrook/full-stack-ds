@@ -185,24 +185,9 @@
   color: var(--fsds-semantic-color-foreground-tertiary);
 }
 
-input.fsds-pp__input:not([data-fsds-component]),
-select.fsds-pp__input {
-  width: 100%;
-  min-height: var(--fsds-semantic-input-size-small-height, 24px);
-  box-sizing: border-box;
-  padding-block: var(--fsds-semantic-input-size-small-padding-block, 2px);
-  padding-inline: var(--fsds-semantic-input-size-small-padding-inline, 4px);
-  font: inherit;
-  color: var(--fsds-semantic-color-foreground-primary);
-  background: var(--fsds-semantic-color-background-subtle);
-  border: 1px solid var(--fsds-semantic-color-border-default);
-  border-radius: 4px;
-}
-
-input.fsds-pp__input:not([data-fsds-component]):focus,
-select.fsds-pp__input:focus {
-  outline: 2px solid var(--fsds-semantic-color-foreground-accent);
-  outline-offset: -1px;
+.fsds-pp__select {
+  --fsds-box-model-width: 100%;
+  --fsds-box-model-min-width: 0;
 }
 
 .fsds-pp__toggle {
@@ -822,3 +807,9 @@ select.fsds-pp__input:focus {
 .fsds-token-picker__search { min-width: 0; }
 
 .fsds-pp__token-value, .fsds-pp__input.input { width: 100%; }
+
+/* Color wells retain their square geometry within the dense Input composition. */
+.fsds-pp__swatch.input,
+.fsds-tvc__color-swatch.input {
+  --fsds-input-design-root-sizing-min-height: 0;
+}

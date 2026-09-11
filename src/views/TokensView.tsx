@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Card, Chip, Input, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow  } from "@full-stack-ds/react";
+import { Card, Chip, Input, RadioGroup, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow  } from "@full-stack-ds/react";
 import type { Bundle, FoundationToken } from "../types/data";
 
 interface TokensViewProps {
@@ -292,23 +292,17 @@ export function TokensView({ bundle }: TokensViewProps) {
         </Stack>
       </Stack>
 
-      <Stack variant="horizontal" className="tokens-brand-bar stack-gap-06" role="radiogroup" aria-label="Active brand">
+      <Stack variant="horizontal" className="tokens-brand-bar stack-gap-06">
         <span className="tokens-brand-bar-label">Brand</span>
-        <Stack layout="inline-stack" variant="horizontal" className="tokens-brand-pills stack-gap-04">
-          {brands.map((b) => (
-            <button
-              key={b.id}
-              type="button"
-              role="radio"
-              aria-checked={b.id === brandId}
-              className={`tokens-brand-pill ${b.id === brandId ? "is-active" : ""}`}
-              onClick={() => setBrandId(b.id)}
-              title={b.description ?? b.name}
-            >
-              {b.name}
-            </button>
-          ))}
-        </Stack>
+        <RadioGroup
+          className="tokens-brand-choices"
+          name="showcase-token-brand"
+          ariaLabel="Active brand"
+          orientation="horizontal"
+          options={brands.map((b) => ({ value: b.id, label: b.name, description: b.description }))}
+          value={brandId}
+          onChange={setBrandId}
+        />
       </Stack>
 
       <Card className="showcase-card tokens-card">

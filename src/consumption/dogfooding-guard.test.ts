@@ -16,44 +16,7 @@ const RAW_CONTROL_TAGS = new Set([
   "textarea",
 ]);
 
-interface DebtEntry {
-  tags: Record<string, number>;
-  rationale: string;
-}
-
-/**
- * Exact, two-directional debt ledger. New native controls fail the guard, and
- * removing an existing one makes its ledger row stale. The latter matters:
- * debt must disappear from both source and the accepted baseline.
- */
-const RAW_CONTROL_DEBT: Record<string, DebtEntry> = {
-  "components/CodeViewer.tsx": {
-    tags: { pre: 1, button: 1 },
-    rationale: "CodeBlock lacks source-line and range-annotation rendering; the viewer also owns trace navigation.",
-  },
-  "components/properties-panel/PropertiesPanel.tsx": {
-    tags: { input: 2, select: 1 },
-    rationale: "Input fixes role=textbox regardless of type; Select emits an empty selected-value span. Native color/number/select controls preserve their semantics.",
-  },
-  "components/properties-panel/TokenValueControl.tsx": {
-    tags: { input: 1 },
-    rationale: "The native color well remains because Input fixes role=textbox regardless of the input type.",
-  },
-  "layout/Header.tsx": {
-    tags: { input: 1 },
-    rationale: "Single-choice brand selection needs a generated RadioGroup family.",
-  },
-  "views/TokensView.tsx": {
-    tags: { button: 1 },
-    rationale: "Single-choice brand selection needs a generated RadioGroup family.",
-  },
-};
-
-const APP_SURROGATE_DEBT: Record<string, Record<string, number>> = {
-  panel: {},
-  pill: {},
-  "code-block": {},
-};
+const RETIRED_APP_CLASSES = ["panel", "pill", "code-block"];
 
 function collectProductionTsx(dir: string, acc: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {
@@ -142,7 +105,7 @@ function namedDsImports(file: ts.SourceFile): string[] {
   return names;
 }
 
-function derivedRawDebt(files: string[]): Record<string, Record<string, number>> {
+function rawControlSites(files: string[]): Record<string, Record<string, number>> {
   return Object.fromEntries(
     files
       .map((file) => [relative(SRC, file), rawControls(sourceFile(file))] as const)
@@ -150,7 +113,7 @@ function derivedRawDebt(files: string[]): Record<string, Record<string, number>>
   );
 }
 
-function derivedSurrogateDebt(
+function surrogateSites(
   files: string[],
   token: string,
 ): Record<string, number> {
@@ -161,23 +124,16 @@ function derivedSurrogateDebt(
   );
 }
 
-describe("showcase dogfooding debt ratchet", () => {
+describe("showcase component consumption", () => {
   const productionFiles = collectProductionTsx(SRC);
 
-  it("keeps every raw component site explicit and prevents the accepted baseline from growing", () => {
-    const expected = Object.fromEntries(
-      Object.entries(RAW_CONTROL_DEBT).map(([file, entry]) => [file, entry.tags]),
-    );
-
-    expect(derivedRawDebt(productionFiles)).toEqual(expected);
-    expect(
-      Object.values(RAW_CONTROL_DEBT).every((entry) => entry.rationale.trim().length > 20),
-    ).toBe(true);
+  it("uses generated components for every control with no raw-site allowances", () => {
+    expect(rawControlSites(productionFiles)).toEqual({});
   });
 
-  it("keeps app-local component surrogates on an exact, burn-down-only ledger", () => {
-    for (const [token, expected] of Object.entries(APP_SURROGATE_DEBT)) {
-      expect(derivedSurrogateDebt(productionFiles, token), token).toEqual(expected);
+  it("rejects retired app-local component surrogates", () => {
+    for (const token of RETIRED_APP_CLASSES) {
+      expect(surrogateSites(productionFiles, token), token).toEqual({});
     }
   });
 

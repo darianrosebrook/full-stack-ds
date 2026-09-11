@@ -8,6 +8,7 @@ import {
   buildDemo,
   defaultPropsFromContract,
   callbackPropNames,
+  childLabel,
 } from "./demos";
 import type { ComponentBundle } from "../types/data";
 
@@ -321,3 +322,9 @@ describe("buildDemo (dispatcher)", () => {
     expect(buildDemo("angular", bundle)).toContain('selector: "fsds-host"');
   });
 });
+
+ it("keeps a contract-authored fallback instead of inserting synthetic preview children", () => {
+   const component = makeBundle({ name: "AnnotatedSource", contract: { name: "AnnotatedSource", anatomy: { parts: ["root"], dom: { tag: "pre", children: [{ tag: "children" }, { tag: "span", if: "!children", content: "prop:code" }] } } } });
+   expect(childLabel(component)).toBe("");
+   expect(childLabel(makeBundle())).toBe("Button");
+ });

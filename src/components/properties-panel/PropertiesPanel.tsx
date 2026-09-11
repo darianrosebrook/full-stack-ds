@@ -11,9 +11,7 @@
 //   Properties  — typed prop controls (toggle/number/text/select)
 //   Component tokens — swatch+value rows, each re-bindable via the token picker
 //
-// Generated controls are used where they support the editor's interactions.
-// Native color/number controls and selects remain until their generated contracts
-// supply type-dependent roles and a visible selected-option label.
+// Generated controls own the input semantics and selected-option presentation.
 
 import { useState } from "react";
 import type { ComponentBundle, FoundationToken } from "../../types/data";
@@ -37,7 +35,7 @@ import { TokenPicker, type TokenPick } from "./TokenPicker";
 import { TokenValueControl } from "./TokenValueControl";
 import { BoxModelEditor } from "./BoxModelEditor";
 import { PropertySection } from "./PropertySection";
-import { Button, Input, Switch } from "@full-stack-ds/react";
+import { Button, Input, Select, Switch } from "@full-stack-ds/react";
 import "./properties-panel.css";
 
 export interface PropertiesPanelProps {
@@ -75,18 +73,16 @@ function PropControl({
   switch (control.kind) {
     case "select":
       return (
-        <select
-          className="fsds-pp__input"
+        <Select
+          className="fsds-pp__select"
           value={String(value ?? "")}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label={control.label}
-        >
-          {control.options.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
+          options={control.options.map((opt) => ({ value: opt, label: opt }))}
+          onChange={onChange}
+          defaultOpen={false}
+          triggerLabel={control.label}
+          placeholder="Choose an option"
+          size="sm"
+        />
       );
     case "boolean":
       // NOT a <label>: the DS Switch renders its own <label>+input, so wrapping
@@ -106,14 +102,14 @@ function PropControl({
       );
     case "number":
       return (
-        <input
+        <Input
           className="fsds-pp__input"
           type="number"
-          value={value === undefined || value === null ? "" : Number(value)}
-          onChange={(e) =>
-            onChange(e.target.value === "" ? undefined : Number(e.target.value))
+          value={value === undefined || value === null ? "" : String(value)}
+          onChange={(next) =>
+            onChange(next === "" ? undefined : Number(next))
           }
-          aria-label={control.label}
+          ariaLabel={control.label}
         />
       );
     case "text":
@@ -143,16 +139,16 @@ function TokenRow({
   return (
     <div className="fsds-pp__token-row">
       {row.isColor ? (
-        <input
+        <Input
           type="color"
           className="fsds-pp__swatch"
-          // <input type=color> needs a hex; fall back to a neutral when the
+          // Input type=color needs a hex; fall back to a neutral when the
           // value isn't a parseable hex (e.g. a token-bound rgb()) so the
           // native control stays usable. The text field below carries the
           // authoritative value.
           value={/^#[0-9a-f]{6}$/i.test(value) ? value : "#000000"}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label={`${row.slot} color`}
+          onChange={onChange}
+          ariaLabel={`${row.slot} color`}
         />
       ) : (
         <span className="fsds-pp__swatch fsds-pp__swatch--dim" aria-hidden />

@@ -64,7 +64,7 @@ describe("generated showcase compositions", () => {
     expect(literal).toHaveValue("9px");
     fireEvent.change(literal, { target: { value: "auto" } });
     expect(screen.getByRole("button", { name: "Decrease width" })).toBeDisabled();
-    fireEvent.change(screen.getByRole("textbox", { name: "Search tokens" }), { target: { value: "roomy" } });
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search tokens" }), { target: { value: "roomy" } });
     expect(screen.queryByRole("button", { name: /spacing.small/ })).toBeNull();
     expect(screen.queryByRole("button", { name: /color.red/ })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: /spacing.roomy/ }));

@@ -2,7 +2,7 @@
 //
 // It is NOT a new design-system primitive: it is composed entirely of the
 // system's own outputs — the DS `Popover`, `Button`, `Input`, and the existing `TokenPicker`.
-// The native color well remains until Input models type-dependent semantics. It is the shared editor for
+// Input preserves the native color well semantics. This is the shared editor for
 // any value that resolves to a token: a box-model dimension, a radius, a fill
 // color. The `◇` marker indicates the value is token-linked; clicking opens a
 // popover with a literal editor (number stepper for dimensions, hex+swatch for
@@ -193,12 +193,12 @@ export function TokenValueControl({
             </div>
           ) : (
             <div className="fsds-tvc__color-row">
-              <input
+              <Input
                 type="color"
                 className="fsds-tvc__color-swatch"
                 value={isHex(value) && value.length >= 7 ? value : "#000000"}
-                onChange={(e) => onChange(e.target.value)}
-                aria-label={`${label} color`}
+                onChange={onChange}
+                ariaLabel={`${label} color`}
               />
               <Input
                 className="fsds-tvc__input"
