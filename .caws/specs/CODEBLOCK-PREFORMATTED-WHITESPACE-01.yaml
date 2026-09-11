@@ -43,3 +43,8 @@ non_functional: {}
 contracts:
   - name: 'preformatted-content'
     type: behavior
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "e2e/codeblock-whitespace.spec.ts: Chromium exact single-line text and geometry pass for all five Web frameworks; tmp/codeblock-whitespace/browser.log and single-line screenshots."
+    recorded_at: "2026-09-11T00:00:41.991Z"
