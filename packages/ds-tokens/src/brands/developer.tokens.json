@@ -1,7 +1,7 @@
 {
   "$brand": {
     "name": "developer",
-    "description": "Developer-platform identity (Stripe-inspired): a precise indigo signature accent, small/crisp radii throughout, and refined layered shadows carrying depth instead of flatness - the opposite elevation posture from a flat-card brand. Motion is fast with a sharp-start ease. `components.Chip` demonstrates the component-scoped override capability: API/tech tag chips get an indigo-tinted fill instead of the generic neutral secondary-action background every other chip-shaped surface still uses.",
+    "description": "Compact developer UI with small surface corners, raised cards and a strong sans-serif hierarchy.",
     "accent": "indigo",
     "density": "compact"
   },
@@ -191,16 +191,15 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.02}",
-          "$description": "Small radius (4px) - crisp technical precision"
+          "$value": "6px",
+          "$description": "Default small control corner; content surfaces and actions have component-specific shape decisions."
         }
       }
     },
     "card": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.02}",
-        "$description": "Small card radius (4px) - depth comes from shadow, not curvature"
+        "$value": "8px"
       },
       "border": {
         "light": {
@@ -259,14 +258,13 @@
     "element": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.01}",
-        "$description": "Near-square precision (2px)"
+        "$value": "6px"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.02}"
+        "$value": "6px"
       }
     },
     "badge": {
@@ -280,7 +278,7 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.02}"
+          "$value": "6px"
         }
       },
       "border": {
@@ -321,20 +319,17 @@
     "component": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.05}",
-        "$description": "12px - dense docs/dashboard rows"
+        "$value": "16px"
       },
       "gap": {
         "$type": "dimension",
-        "$value": "{spacing.size.04}",
-        "$description": "8px"
+        "$value": "8px"
       }
     },
     "card": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.06}",
-        "$description": "16px"
+        "$value": "16px"
       }
     }
   },
@@ -342,8 +337,7 @@
     "interaction": {
       "duration": {
         "$type": "duration",
-        "$value": "{motion.duration.short2}",
-        "$description": "100ms - fast, technical"
+        "$value": "140ms"
       },
       "easing": {
         "$type": "cubicBezier",
@@ -365,9 +359,18 @@
       "font": {
         "weight": {
           "$type": "fontWeight",
-          "$value": "{typography.weight.semibold}",
-          "$description": "Semibold (600) - technical confidence, not decorative weight"
+          "$value": 600
         }
+      }
+    },
+    "semanticFamily": {
+      "heading": {
+        "$type": "fontFamily",
+        "$value": "{core.typography.font.family.sans}"
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": "{core.typography.font.family.inter}"
       }
     }
   },
@@ -391,14 +394,6 @@
               "fsds.light": "{color.palette.indigo.100}",
               "fsds.dark": "{color.palette.indigo.800}"
             }
-          },
-          "active": {
-            "$type": "color",
-            "$value": "{color.palette.indigo.200}",
-            "$extensions": {
-              "fsds.light": "{color.palette.indigo.200}",
-              "fsds.dark": "{color.palette.indigo.700}"
-            }
           }
         },
         "foreground": {
@@ -418,6 +413,301 @@
             "$extensions": {
               "fsds.light": "{color.palette.indigo.200}",
               "fsds.dark": "{color.palette.indigo.700}"
+            }
+          }
+        }
+      },
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "4px"
+            }
+          }
+        }
+      }
+    },
+    "Button": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "6px"
+            }
+          },
+          "typography": {
+            "weight": {
+              "$type": "fontWeight",
+              "$value": 600
+            }
+          }
+        }
+      }
+    },
+    "Input": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "6px"
+            }
+          }
+        }
+      }
+    },
+    "Card": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "16px"
+            },
+            "gap": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "1px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.raised}"
+            }
+          }
+        },
+        "media": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "4px"
+            }
+          }
+        }
+      },
+      "size": {
+        "padding": {
+          "inset": {
+            "$type": "dimension",
+            "$value": "8px",
+            "$description": "Compact card variant retains less padding than the default surface."
+          }
+        }
+      }
+    },
+    "CodeBlock": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "6px"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Popover": {
+      "design": {
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "1px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.overlay}"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          }
+        }
+      }
+    },
+    "Dialog": {
+      "design": {
+        "modal": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        }
+      }
+    },
+    "Select": {
+      "design": {
+        "trigger": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "6px"
+            }
+          }
+        },
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "1px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.overlay}"
+            }
+          }
+        },
+        "option": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "4px"
+            }
+          }
+        }
+      }
+    },
+    "Badge": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "4px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Tooltip": {
+      "design": {
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Toast": {
+      "design": {
+        "item": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Walkthrough": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        }
+      }
+    },
+    "Accordion": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        },
+        "item": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "6px"
+            }
+          }
+        }
+      }
+    },
+    "Tabs": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Breadcrumbs": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "0px"
             }
           }
         }

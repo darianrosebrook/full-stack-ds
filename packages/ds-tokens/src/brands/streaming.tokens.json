@@ -1,7 +1,7 @@
 {
   "$brand": {
     "name": "streaming",
-    "description": "Bold streaming/media-platform identity (Spotify-inspired): a vibrant lime signature accent carries every interactive surface, controls are fully pill-shaped, cards are borderless and flat (contrast does the separating, not hairlines), and motion is fast and punchy. `components.Avatar` demonstrates the component-scoped override capability: artist/profile avatars get a lime-tinted fill instead of the generic neutral-gray secondary background every other component's avatar-shaped surface would otherwise inherit.",
+    "description": "Media-focused UI with heavy sans-serif headings, pill actions and restrained borderless content surfaces.",
     "accent": "lime",
     "density": "compact"
   },
@@ -192,16 +192,15 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.full}",
-          "$description": "Pill controls - the signature rounded-everything streaming look"
+          "$value": "8px",
+          "$description": "Default small control corner; content surfaces and actions have component-specific shape decisions."
         }
       }
     },
     "card": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.04}",
-        "$description": "Rounded card (16px) - softly rounded playlist/album tiles, not a full pill"
+        "$value": "12px"
       },
       "border": {
         "light": {
@@ -262,14 +261,13 @@
     "element": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.04}"
+        "$value": "8px"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.full}",
-        "$description": "Pill button - the signature 'Play' CTA shape"
+        "$value": "9999px"
       }
     },
     "badge": {
@@ -282,8 +280,7 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.full}",
-          "$description": "Pill search field, consistent with the pill-everything language"
+          "$value": "8px"
         }
       },
       "border": {
@@ -324,20 +321,17 @@
     "component": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.05}",
-        "$description": "Compact padding (12px) - dense playlist/queue rows"
+        "$value": "20px"
       },
       "gap": {
         "$type": "dimension",
-        "$value": "{spacing.size.04}",
-        "$description": "Compact gap (8px)"
+        "$value": "12px"
       }
     },
     "card": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.06}",
-        "$description": "Card padding (16px)"
+        "$value": "20px"
       }
     }
   },
@@ -345,8 +339,7 @@
     "interaction": {
       "duration": {
         "$type": "duration",
-        "$value": "{motion.duration.short2}",
-        "$description": "Fast transitions (100ms) - punchy, immediate feedback"
+        "$value": "140ms"
       },
       "easing": {
         "$type": "cubicBezier",
@@ -369,9 +362,18 @@
       "font": {
         "weight": {
           "$type": "fontWeight",
-          "$value": "{typography.weight.black}",
-          "$description": "Black heading weight - oversized playlist/album titles carry maximum visual weight"
+          "$value": 800
         }
+      }
+    },
+    "semanticFamily": {
+      "heading": {
+        "$type": "fontFamily",
+        "$value": "{core.typography.font.family.sans}"
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": "{core.typography.font.family.inter}"
       }
     }
   },
@@ -398,6 +400,303 @@
               "fsds.dark": "{color.palette.lime.700}"
             },
             "$description": "Subtle lime ring, distinct from the generic neutral avatar border"
+          }
+        }
+      }
+    },
+    "Button": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "9999px"
+            }
+          },
+          "typography": {
+            "weight": {
+              "$type": "fontWeight",
+              "$value": 700
+            }
+          }
+        }
+      }
+    },
+    "Input": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Card": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "20px"
+            },
+            "gap": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.flat}"
+            }
+          }
+        },
+        "media": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      },
+      "size": {
+        "padding": {
+          "inset": {
+            "$type": "dimension",
+            "$value": "12px",
+            "$description": "Compact card variant retains less padding than the default surface."
+          }
+        }
+      }
+    },
+    "CodeBlock": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "20px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Popover": {
+      "design": {
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.overlay}"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          }
+        }
+      }
+    },
+    "Dialog": {
+      "design": {
+        "modal": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          }
+        }
+      }
+    },
+    "Select": {
+      "design": {
+        "trigger": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        },
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.overlay}"
+            }
+          }
+        },
+        "option": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "6px"
+            }
+          }
+        }
+      }
+    },
+    "Badge": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "9999px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Chip": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "9999px"
+            }
+          }
+        }
+      }
+    },
+    "Tooltip": {
+      "design": {
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Toast": {
+      "design": {
+        "item": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        }
+      }
+    },
+    "Walkthrough": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          }
+        }
+      }
+    },
+    "Accordion": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        },
+        "item": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Tabs": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Breadcrumbs": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
           }
         }
       }
