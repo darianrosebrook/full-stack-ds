@@ -4,8 +4,8 @@ authority: architecture
 status: implemented
 title: Design Token Architecture
 owner: "@darianrosebrook"
-updated: 2026-09-10
-verified_at_commit: 90ad2f233b8441bd7d9f9c452348c29e0bce0e64
+updated: 2026-09-11
+verified_at_commit: e62b77f7d4593c7208e7e4621a1ba31394d7946d
 governs:
   - packages/ds-tokens/src/**/*.tokens.json
   - src/components/properties-panel/**
@@ -184,21 +184,26 @@ cannot prove is read — see `FIX-EDITOR-CONTROL-BINDING-PROOF-01` — and the a
 unbound slots is an interface-completeness obligation, not a deletion list, see
 `FEAT-COMPONENT-SLOT-BINDING-COMPLETENESS-01`.
 
-### Brand-scoped: may declare ahead of use, must still resolve
+### Brand-scoped: semantic vocabulary may precede use; component overrides need consumers
 
 The brand layer's job is identity — hue, type family, radius character, motion
 feel. It may legitimately declare a family override, a single token, or a whole
 ramp intended for later use. A ramp shipped for later use is unreferenced *by
 definition*, so usage-gating this scope contradicts one of its stated purposes.
 What the brand layer does owe is resolvability, which `tokens:check-brand-refs`
-already enforces.
+already enforces. This allowance covers semantic vocabulary. Overrides under
+`components.<Name>` must address an existing Web property consumer, including an
+unset-by-default design slot; `generate:check` rejects retired names and typos.
 
 Two limits on the brand layer, both incident-derived:
 
-- **A brand sets identity, never per-component geometry.** Geometry is morphology —
-  a property of what the thing *is*, shared across brands. A brand that had to
-  declare geometry per component would be a fork, not a theme, and every new
-  component would become a migration across every brand.
+- **A brand specializes exposed design decisions without redefining structure.**
+  Component defaults remain complete, so a brand does not need a declaration for
+  every component. It may distinguish action radius from menu radius, card
+  padding from control padding, or outlined from borderless surfaces through the
+  current component token/design-slot interface. Anatomy and behavior stay in
+  the contract. [Brand expression](design/brand-expression.md) records the
+  application and component examples that exercise this distinction.
 - **A brand must not reach past a semantic role into a value another role depends
   on.** Re-pointing `action.background.primary` at the same core token
   `action.background.danger` uses collapses two opposed intents onto one value; the
@@ -279,7 +284,7 @@ Every emitted CSS custom property has the prefix `--fsds-`. The default is set i
 
 `@layer core, semantic, components, theme, brand, density;` at the top of every emitted `tokens.css` (`generateLayerDeclaration()` in `packages/ds-tokens/build/generators/global.ts`). The order is the precedence order: later layers win.
 
-**Why:** brand tokens are identity overrides — they should beat semantic defaults for the same path. Density tokens are content-density overrides — they should beat brand for spacing because density is a viewer preference, brand is a producer identity. Theme is reserved between semantic and components for light/dark variants where a brand wants to opt out (none currently use it, but the slot exists).
+**Why:** brand tokens are identity overrides — they should beat semantic defaults for the same path. Density tokens are content-density overrides — they should beat brand for spacing because density is a viewer preference, brand is a producer identity. Theme follows components and precedes brand, supplying light/dark values before the selected brand specializes them.
 
 `components` sits between `semantic` and `theme` for a reason distinct from the other layers: it doesn't hold token *values* the way `semantic`/`brand`/`density` do — it holds the generated component CSS itself. `ds-codegen`'s `emitTokensCss` (`packages/ds-codegen/src/css.ts`) wraps every component's structure/tokens CSS in `@layer components`. Per the CSS Cascade Layers spec, unlayered styles always beat layered styles regardless of specificity — so this also gives a consuming app's plain (unlayered) CSS a reliable way to override FSDS component CSS without `!important` or specificity games. It has to sit before `brand` so that a brand's component-scoped override (`components.<Name>.<path>` in a brand's token file, landing in `@layer brand`) wins over the component's own default — see "Component-scoped brand overrides" under "How to add a new brand" below. Shipped under `FEAT-BRAND-PERSONA-SCOPE-01` (closed, merge `8107091b`) and `FEAT-BRAND-PERSONA-VISUAL-QA-01` (closed, merge `3c5f398f`).
 
@@ -451,8 +456,8 @@ so disabled foreground keeps AA_LARGE 3:1) rather than loosening the gate.
 
 A brand file can also override a single component's own local token, without touching the shared semantic default every other component consumes. This is a separate capability from the top-level `color`/`typography`/`spacing`/`shape`/`motion` blocks above, keyed by component name instead of semantic path:
 
-1. Add a `components.<Name>.<path>` block to the brand file, where `<Name>` is the PascalCase component directory name (matching the contract, e.g. `Button`, `Badge`) and `<path>` is the same nested path shape the component's own `<Name>.tokens.json` sidecar uses (e.g. `components.Button.color.background.default`).
-2. Run `pnpm -F @full-stack-ds/tokens build`. `processComponentBrandTokens` / `walkComponentBrandSubtree` (`packages/ds-tokens/build/generators/global.ts`) compile this to a CSS custom property scoped to `[data-brand="<id>"] .<cssPrefix>` — the same `--fsds-<cssPrefix>-<path>` variable name the component's sidecar declares — landing in `@layer brand`.
+1. Add a `components.<Name>.<path>` block to the brand file, where `<Name>` is the PascalCase contract name and `<path>` omits the component prefix. Both consumed local tokens (`components.Card.size.padding.inset`) and design slots (`components.CodeBlock.design.root.shape.radius`) are valid destinations. Run `generate:check` to validate those destinations and `tokens:check-brand-refs` to validate referenced values.
+2. Run `pnpm -F @full-stack-ds/tokens build`. `processComponentBrandTokens` / `walkComponentBrandSubtree` (`packages/ds-tokens/build/generators/global.ts`) compile these to `--fsds-<cssPrefix>-<path>` variables in `@layer brand`. Values are emitted at the brand scope for detached parts and on component roots to supersede local defaults. Default applies both with and without an explicit root `data-brand` attribute. Portals outside a nested brand scope still need their intended brand at the portal destination.
 3. This only wins the cascade because the component's own CSS is wrapped in `@layer components`, declared earlier than `@layer brand` (see Decision 3 above and the layer table). Without that wrapping, the component's unlayered CSS would beat the layered brand override regardless of layer order.
 4. Schema reference: `packages/ds-tokens/src/brands/_schema.json`'s `components` property description. Use this only for values specific to one component in one brand — for values every component sharing that semantic path should also pick up, use the top-level blocks instead.
 
