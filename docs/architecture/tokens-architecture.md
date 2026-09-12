@@ -5,7 +5,7 @@ status: implemented
 title: Design Token Architecture
 owner: "@darianrosebrook"
 updated: 2026-09-11
-verified_at_commit: e62b77f7d4593c7208e7e4621a1ba31394d7946d
+verified_at_commit: 75af15dca077ee9c48029d915f9b62cd206eed91
 governs:
   - packages/ds-tokens/src/**/*.tokens.json
   - src/components/properties-panel/**
@@ -457,7 +457,7 @@ so disabled foreground keeps AA_LARGE 3:1) rather than loosening the gate.
 A brand file can also override a single component's own local token, without touching the shared semantic default every other component consumes. This is a separate capability from the top-level `color`/`typography`/`spacing`/`shape`/`motion` blocks above, keyed by component name instead of semantic path:
 
 1. Add a `components.<Name>.<path>` block to the brand file, where `<Name>` is the PascalCase contract name and `<path>` omits the component prefix. Both consumed local tokens (`components.Card.size.padding.inset`) and design slots (`components.CodeBlock.design.root.shape.radius`) are valid destinations. Run `generate:check` to validate those destinations and `tokens:check-brand-refs` to validate referenced values.
-2. Run `pnpm -F @full-stack-ds/tokens build`. `processComponentBrandTokens` / `walkComponentBrandSubtree` (`packages/ds-tokens/build/generators/global.ts`) compile these to `--fsds-<cssPrefix>-<path>` variables in `@layer brand`. Values are emitted at the brand scope for detached parts and on component roots to supersede local defaults. Default applies both with and without an explicit root `data-brand` attribute. Portals outside a nested brand scope still need their intended brand at the portal destination.
+2. Run `pnpm -F @full-stack-ds/tokens build`. `processComponentBrandTokens` / `walkComponentBrandSubtree` (`packages/ds-tokens/build/generators/global.ts`) compile these to `--fsds-<cssPrefix>-<path>` variables in `@layer brand`. Values are emitted at the brand scope for detached parts and on component roots to supersede local defaults. Default applies both with and without an explicit root `data-brand` attribute. Unscoped Default selectors use zero specificity so a named brand wins independently of brand-file order. Portals outside a nested brand scope still need their intended brand at the portal destination.
 3. This only wins the cascade because the component's own CSS is wrapped in `@layer components`, declared earlier than `@layer brand` (see Decision 3 above and the layer table). Without that wrapping, the component's unlayered CSS would beat the layered brand override regardless of layer order.
 4. Schema reference: `packages/ds-tokens/src/brands/_schema.json`'s `components` property description. Use this only for values specific to one component in one brand — for values every component sharing that semantic path should also pick up, use the top-level blocks instead.
 

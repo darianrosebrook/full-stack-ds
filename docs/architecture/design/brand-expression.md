@@ -31,7 +31,7 @@ This emits `--fsds-code-block-design-root-shape-radius`. The style sidecar binds
 
 The token generator emits component values in `@layer brand`, after the component layer. It emits namespaced values at the brand scope so detached content, such as a portalled Popover, can inherit them. It also emits component-root rules so component-local defaults yield to the brand. The Default brand covers both explicit `data-brand="default"` and the showcase's unbranded root state.
 
-Explicit light and dark modes override the operating system preference. A document-level brand reaches portals mounted beneath that document. An application that portals outside a nested brand scope must carry its intended brand to the portal destination; this slice does not change portal ownership. Consumer unlayered CSS and inline overrides on the component remain stronger than layered brand rules.
+Unscoped Default rules use zero specificity, preventing fallback values from overriding an explicit brand by file order. Explicit light and dark modes override the operating system preference. A document-level brand reaches portals mounted beneath that document. An application that portals outside a nested brand scope must carry its intended brand to the portal destination; this slice does not change portal ownership. Consumer unlayered CSS and inline overrides on the component remain stronger than layered brand rules.
 
 ## Authored distinctions
 
