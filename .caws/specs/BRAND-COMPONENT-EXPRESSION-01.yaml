@@ -54,3 +54,12 @@ contracts:
   - name: 'brand-overrides'
     type: schema
     path: 'packages/ds-tokens/src/brands/_schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "tmp/brand-expression/verification.md: final source f2003359805b713341e6612f4f2b054aebdc7791; full pre-push passed; all framework suites passed with two existing Lit skips; nine brand browser witnesses passed; 25 screenshots preserved; canonical docs gate passed after merge."
+    recorded_at: "2026-09-12T02:22:43.643Z"
+    test_nodeid: e2e/brand-expression.spec.ts
+    command: "FSDS_E2E_BASE=http://127.0.0.1:5199 pnpm exec playwright test e2e/brand-expression.spec.ts --workers=1"
+    exit_code: 0
+    commit_sha: f2003359805b713341e6612f4f2b054aebdc7791
