@@ -63,6 +63,25 @@ describe("componentTokenPathToCSSVar", () => {
   });
 });
 
+describe("detached component parts and the unbranded default", () => {
+  it("publishes component addresses at the brand boundary and on local roots", () => {
+    const css = generateBrandLayerCSS(new Map([["default", {
+      metadata: { name: "default", description: "Fixture", accent: "red" },
+      lightVars: {}, darkVars: {},
+      componentVars: new Map([["code-block", {
+        light: { "--fsds-code-block-design-root-background-fill": "#ffffff" },
+        dark: { "--fsds-code-block-design-root-background-fill": "#111111" },
+      }]]),
+    }]]));
+    expect(css).toContain(':root {\n    --fsds-code-block-design-root-background-fill: #ffffff;');
+    expect(css).toContain(':where(:root:not([data-brand])) .code-block {');
+    expect(css).toContain('[data-brand="default"] .code-block {');
+    expect(css).toContain(':root:not([data-brand]):is(.light, [data-theme="light"])');
+    expect(css).toContain(':root:not([data-brand]):is(.dark, [data-theme="dark"])');
+    expect(css).toContain('--fsds-code-block-design-root-background-fill: #111111;');
+  });
+});
+
 describe("walkComponentBrandSubtree", () => {
   it("collects a nested override into the exact slot var, using $value when there is no fsds.light extension", () => {
     const light: Record<string, string> = {};

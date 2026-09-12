@@ -8,6 +8,7 @@ interface AngularShellInput {
   componentName: string;
   componentSource: string;
   css?: string;
+  tokensCss?: string;
   demo: string;
 }
 
@@ -48,6 +49,7 @@ const FSDS_ICONOGRAPHY = `${ANGULAR_VENDOR_URL}/@full-stack-ds/iconography/index
 export function buildAngularShell({
   componentName,
   css,
+  tokensCss,
 }: AngularShellInput): string {
   const hostModuleUrl = `${ANGULAR_PREVIEW_URL_PREFIX}${ANGULAR_PREVIEW_HOSTS_SUBDIR}/${componentName}.host.component.js`;
   return `<!doctype html>
@@ -60,6 +62,7 @@ export function buildAngularShell({
   #root { display: contents; }
   #__fsds_err { position: fixed; inset: 12px; padding: 12px; background: #fee; color: #900; font-family: ui-monospace, monospace; font-size: 12px; border: 1px solid #fbb; border-radius: 6px; white-space: pre-wrap; overflow: auto; display: none; }
 </style>
+${tokensCss ? `<style data-fsds="tokens">${tokensCss.replace(/<\/style>/g, "<\\/style>")}</style>` : ""}
 ${css ? `<style data-fsds="component-css">${css.replace(/<\/style>/g, "<\\/style>")}</style>` : ""}
 <script type="importmap">
 {
