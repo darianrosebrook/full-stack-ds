@@ -1,7 +1,7 @@
 {
   "$brand": {
     "name": "marketplace",
-    "description": "Dense online-marketplace identity (eBay-inspired): a crisp cyan signature accent, minimal radii, visible (not hairline) borders so a busy grid of listing cards reads as separable rows/tiles, near-flat elevation, and utilitarian standard-easing motion - no personality flourish, information density is the personality.",
+    "description": "Dense browsing UI with compact spacing, small corners and flat outlined cards.",
     "accent": "cyan",
     "density": "tight"
   },
@@ -191,16 +191,15 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.01}",
-          "$description": "Minimal rounding (2px) - utilitarian, dense grid"
+          "$value": "4px",
+          "$description": "Default small control corner; content surfaces and actions have component-specific shape decisions."
         }
       }
     },
     "card": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.02}",
-        "$description": "Small radius (4px) - a busy grid of listing tiles"
+        "$value": "6px"
       },
       "border": {
         "light": {
@@ -260,13 +259,13 @@
     "element": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.01}"
+        "$value": "4px"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.02}"
+        "$value": "6px"
       }
     },
     "badge": {
@@ -280,7 +279,7 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.02}"
+          "$value": "4px"
         }
       },
       "border": {
@@ -321,20 +320,17 @@
     "component": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.03}",
-        "$description": "Tight padding (4px) - dense listing rows"
+        "$value": "12px"
       },
       "gap": {
         "$type": "dimension",
-        "$value": "{spacing.size.02}",
-        "$description": "Minimal gap (2px)"
+        "$value": "8px"
       }
     },
     "card": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.04}",
-        "$description": "Tight card padding (8px) - more listings fit on screen"
+        "$value": "12px"
       }
     }
   },
@@ -342,8 +338,7 @@
     "interaction": {
       "duration": {
         "$type": "duration",
-        "$value": "{motion.duration.short3}",
-        "$description": "167ms - standard, no flourish"
+        "$value": "160ms"
       },
       "easing": {
         "$type": "cubicBezier",
@@ -366,8 +361,316 @@
       "font": {
         "weight": {
           "$type": "fontWeight",
-          "$value": "{typography.weight.semibold}",
-          "$description": "Semibold (600) - price/title emphasis without shouting"
+          "$value": 600
+        }
+      }
+    },
+    "semanticFamily": {
+      "heading": {
+        "$type": "fontFamily",
+        "$value": "{core.typography.font.family.sans}"
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": "{core.typography.font.family.inter}"
+      }
+    }
+  },
+  "components": {
+    "Button": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "6px"
+            }
+          },
+          "typography": {
+            "weight": {
+              "$type": "fontWeight",
+              "$value": 600
+            }
+          }
+        }
+      }
+    },
+    "Input": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "4px"
+            }
+          }
+        }
+      }
+    },
+    "Card": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "6px"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "12px"
+            },
+            "gap": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "1px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.flat}"
+            }
+          }
+        },
+        "media": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "2px"
+            }
+          }
+        }
+      },
+      "size": {
+        "padding": {
+          "inset": {
+            "$type": "dimension",
+            "$value": "8px",
+            "$description": "Compact card variant retains less padding than the default surface."
+          }
+        }
+      }
+    },
+    "CodeBlock": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "4px"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Popover": {
+      "design": {
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "1px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.overlay}"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          }
+        }
+      }
+    },
+    "Dialog": {
+      "design": {
+        "modal": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Select": {
+      "design": {
+        "trigger": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "4px"
+            }
+          }
+        },
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "1px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.overlay}"
+            }
+          }
+        },
+        "option": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "2px"
+            }
+          }
+        }
+      }
+    },
+    "Badge": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "4px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Chip": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "4px"
+            }
+          }
+        }
+      }
+    },
+    "Tooltip": {
+      "design": {
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Toast": {
+      "design": {
+        "item": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Walkthrough": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Accordion": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "6px"
+            }
+          }
+        },
+        "item": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "4px"
+            }
+          }
+        }
+      }
+    },
+    "Tabs": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Breadcrumbs": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
         }
       }
     }

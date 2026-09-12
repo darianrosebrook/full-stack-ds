@@ -1,7 +1,7 @@
 {
   "$brand": {
     "name": "forest",
-    "description": "Natural forest brand — layered organic greens (lime fresh highlights, green primary, emerald cool depth), calm and grounded with generous spacing and soft rounded forms",
+    "description": "Organic green UI with serif headings, generous spacing, soft raised surfaces and pill actions.",
     "accent": "green",
     "density": "spacious"
   },
@@ -247,16 +247,15 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.04}",
-          "$description": "Generous radius (16px) — organic, softly rounded, natural"
+          "$value": "12px",
+          "$description": "Default small control corner; content surfaces and actions have component-specific shape decisions."
         }
       }
     },
     "card": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.05}",
-        "$description": "Extra-large card radius (32px) — spacious, organic, like smooth river stones"
+        "$value": "24px"
       },
       "border": {
         "light": {
@@ -322,15 +321,13 @@
     "element": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.04}",
-        "$description": "Internal element radius (16px) — organic curves throughout"
+        "$value": "12px"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.full}",
-        "$description": "Button radius (pill) — fully rounded, natural, gentle"
+        "$value": "9999px"
       }
     },
     "badge": {
@@ -344,8 +341,7 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.04}",
-          "$description": "Input border radius — organic, generous (16px)"
+          "$value": "12px"
         }
       },
       "border": {
@@ -392,20 +388,17 @@
     "component": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.08}",
-        "$description": "Spacious component padding (32px) — generous, breathable"
+        "$value": "24px"
       },
       "gap": {
         "$type": "dimension",
-        "$value": "{spacing.size.07}",
-        "$description": "Spacious component gap (24px) — room to breathe between elements"
+        "$value": "16px"
       }
     },
     "card": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.09}",
-        "$description": "Card padding (40px) — very generous, organic spaciousness"
+        "$value": "28px"
       }
     }
   },
@@ -413,8 +406,7 @@
     "interaction": {
       "duration": {
         "$type": "duration",
-        "$value": "{motion.duration.medium2}",
-        "$description": "Calm transitions (333ms) — unhurried, like a forest settling"
+        "$value": "280ms"
       },
       "easing": {
         "$type": "cubicBezier",
@@ -437,8 +429,316 @@
       "font": {
         "weight": {
           "$type": "fontWeight",
-          "$value": "{typography.weight.medium}",
-          "$description": "Medium heading weight (500) — grounded presence, not heavy"
+          "$value": 500
+        }
+      }
+    },
+    "semanticFamily": {
+      "heading": {
+        "$type": "fontFamily",
+        "$value": "{core.typography.font.family.serif}"
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": "{core.typography.font.family.inter}"
+      }
+    }
+  },
+  "components": {
+    "Button": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "9999px"
+            }
+          },
+          "typography": {
+            "weight": {
+              "$type": "fontWeight",
+              "$value": 500
+            }
+          }
+        }
+      }
+    },
+    "Input": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        }
+      }
+    },
+    "Card": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "24px"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "28px"
+            },
+            "gap": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.raised}"
+            }
+          }
+        },
+        "media": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "20px"
+            }
+          }
+        }
+      },
+      "size": {
+        "padding": {
+          "inset": {
+            "$type": "dimension",
+            "$value": "20px",
+            "$description": "Compact card variant retains less padding than the default surface."
+          }
+        }
+      }
+    },
+    "CodeBlock": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "20px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Popover": {
+      "design": {
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.overlay}"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "20px"
+            }
+          }
+        }
+      }
+    },
+    "Dialog": {
+      "design": {
+        "modal": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "24px"
+            }
+          }
+        }
+      }
+    },
+    "Select": {
+      "design": {
+        "trigger": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        },
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.overlay}"
+            }
+          }
+        },
+        "option": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "10px"
+            }
+          }
+        }
+      }
+    },
+    "Badge": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "9999px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Chip": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "9999px"
+            }
+          }
+        }
+      }
+    },
+    "Tooltip": {
+      "design": {
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Toast": {
+      "design": {
+        "item": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          }
+        }
+      }
+    },
+    "Walkthrough": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "24px"
+            }
+          }
+        }
+      }
+    },
+    "Accordion": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "24px"
+            }
+          }
+        },
+        "item": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        }
+      }
+    },
+    "Tabs": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Breadcrumbs": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
         }
       }
     }

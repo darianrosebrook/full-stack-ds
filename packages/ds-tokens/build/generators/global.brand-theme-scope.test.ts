@@ -59,7 +59,7 @@ function unscopedDarkMediaBlock(css: string): string {
     const next = css.indexOf(marker, i + 1);
     const chunk = css.slice(i, next === -1 ? undefined : next);
     // Only the unscoped one — the per-brand blocks select [data-brand=…].
-    if (/\n\s*:root\s*\{/.test(chunk)) return chunk;
+    if (/\n\s*:where\(:root\)\s*\{/.test(chunk)) return chunk;
   }
   return "";
 }
@@ -69,7 +69,7 @@ describe("default brand :root emission vs an explicit light theme", () => {
     const css = defaultBrandCss();
     // Guards the premise: if this stops being unscoped, the rest of the
     // contract below is moot rather than silently vacuous.
-    expect(css).toMatch(/\n\s*:root\s*\{/);
+    expect(css).toMatch(/\n\s*:where\(:root\)\s*\{/);
     expect(unscopedDarkMediaBlock(css)).not.toBe("");
   });
 
@@ -77,12 +77,12 @@ describe("default brand :root emission vs an explicit light theme", () => {
     const block = unscopedDarkMediaBlock(defaultBrandCss());
     // The guard must be unscoped. A [data-brand="default"] guard does not
     // match an unbranded page and would leave the bug in place.
-    expect(block).toMatch(/\.light,\s*\[data-theme="light"\]\s*\{/);
+    expect(block).toMatch(/:where\(\.light,\s*\[data-theme="light"\]\)\s*\{/);
   });
 
   it("gives the light guard the LIGHT value, not the dark one", () => {
     const block = unscopedDarkMediaBlock(defaultBrandCss());
-    const guardStart = block.search(/\.light,\s*\[data-theme="light"\]\s*\{/);
+    const guardStart = block.search(/:where\(\.light,\s*\[data-theme="light"\]\)\s*\{/);
     expect(guardStart).toBeGreaterThan(-1);
     // Bound the slice to the guard's OWN braces. Reading to the end of the
     // chunk would sweep in the sibling `.dark, [data-theme="dark"]` block,
@@ -100,8 +100,8 @@ describe("default brand :root emission vs an explicit light theme", () => {
 
   it("orders the light guard AFTER the dark :root so it wins at equal specificity", () => {
     const block = unscopedDarkMediaBlock(defaultBrandCss());
-    const rootIdx = block.search(/\n\s*:root\s*\{/);
-    const guardIdx = block.search(/\.light,\s*\[data-theme="light"\]\s*\{/);
+    const rootIdx = block.search(/\n\s*:where\(:root\)\s*\{/);
+    const guardIdx = block.search(/:where\(\.light,\s*\[data-theme="light"\]\)\s*\{/);
     expect(rootIdx).toBeGreaterThan(-1);
     expect(guardIdx).toBeGreaterThan(rootIdx);
   });
@@ -110,7 +110,7 @@ describe("default brand :root emission vs an explicit light theme", () => {
     // The inverse guard: the fix must not trade the light bug for a dark one.
     const css = defaultBrandCss();
     expect(css).toMatch(
-      /\.dark,\s*\[data-theme="dark"\]\s*\{[^}]*--fsds-semantic-color-border-light:\s*var\(--fsds-core-color-palette-neutral-700\);/,
+      /:where\(\.dark,\s*\[data-theme="dark"\]\)\s*\{[^}]*--fsds-semantic-color-border-light:\s*var\(--fsds-core-color-palette-neutral-700\);/,
     );
   });
 
@@ -127,6 +127,6 @@ describe("default brand :root emission vs an explicit light theme", () => {
       ]),
     );
     expect(unscopedDarkMediaBlock(css)).toBe("");
-    expect(css).not.toMatch(/\n\s*:root\s*\{/);
+    expect(css).not.toMatch(/\n\s*:where\(:root\)\s*\{/);
   });
 });

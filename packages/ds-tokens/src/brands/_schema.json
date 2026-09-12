@@ -2,13 +2,18 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "brand-tokens-schema",
   "title": "Brand Token Override Schema",
-  "description": "Schema for brand-specific semantic token overrides",
+  "description": "Schema for semantic and component-specific brand token overrides",
   "type": "object",
-  "required": ["$brand"],
+  "required": [
+    "$brand"
+  ],
   "properties": {
     "$brand": {
       "type": "object",
-      "required": ["name", "description"],
+      "required": [
+        "name",
+        "description"
+      ],
       "properties": {
         "name": {
           "type": "string",
@@ -46,7 +51,7 @@
     },
     "components": {
       "type": "object",
-      "description": "Component-scoped token overrides. Keyed by PascalCase component name (matching the contract's directory name, e.g. 'Button', 'Badge'), then by the same nested path shape the component's own <Name>.tokens.json sidecar uses (e.g. components.Button.color.background.default). Compiles to a CSS custom property scoped to [data-brand=\"<id>\"] .<cssPrefix> — the same --fsds-<cssPrefix>-<path> variable name the component's own sidecar declares, so it overrides that one component in that one brand without touching the shared semantic default other components consume. Requires the token build's @layer components wrapping (see docs/architecture/tokens-architecture.md) to actually win the cascade; do not use for values every component sharing that semantic path should also pick up — use the top-level color/shape/spacing/motion/typography blocks for that."
+      "description": "Component overrides keyed by current PascalCase contract name, then the token suffix without repeating the component prefix. For example, components.CodeBlock.design.root.shape.radius addresses --fsds-code-block-design-root-shape-radius. Values must reach a consumed Web component token or design slot; generate:check rejects unknown and unconsumed destinations. The brand layer emits namespaced values at the brand scope for detached parts and on component roots to override local defaults. The Default brand also applies when data-brand is absent. Use top-level semantic groups for decisions shared across components. Consumer unlayered CSS or inline component overrides can supersede the brand."
     }
   }
 }

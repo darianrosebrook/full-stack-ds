@@ -270,7 +270,15 @@ interface ComputeArgs {
 function computePosition(args: ComputeArgs): AnchoredPositionState {
   const { anchor, content, collision, offset, viewportPadding } = args;
   const anchorRect = anchor.getBoundingClientRect();
-  const contentRect = content.getBoundingClientRect();
+  // Entrance scale changes the painted rect but not the resting layout box.
+  // Clamp against the resting size so the surface stays inside the viewport
+  // after its animation ends (ResizeObserver does not observe transforms).
+  const paintedRect = content.getBoundingClientRect();
+  const contentRect = {
+    ...paintedRect,
+    width: content.offsetWidth || paintedRect.width,
+    height: content.offsetHeight || paintedRect.height,
+  } as DOMRect;
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
 

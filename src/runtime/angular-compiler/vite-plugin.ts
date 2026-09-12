@@ -266,12 +266,14 @@ export function angularPreviewPlugin(): Plugin {
           }
           const { buildAngularShell } = await import("../shells/angular");
           // css is optional fidelity; the rail asserts inline --fsds-* vars and
-          // DOM shape (author-written, present regardless of stylesheet), so we
-          // pass the component CSS when cheaply available and omit otherwise.
+          // DOM shape (author-written, present regardless of stylesheet). Load
+          // both global tokens and component CSS for the styled brand preview.
           let css: string | undefined;
+          let tokensCss: string | undefined;
           try {
             const { loadBundleFromDisk } = await import("./bundle-loader");
             const bundle = await loadBundleFromDisk();
+            tokensCss = bundle.tokensCss;
             css = bundle.components.find((c) => c.name === componentName)
               ?.sources.angular?.css?.code;
           } catch { /* css is optional — proceed without it */ }
@@ -282,6 +284,7 @@ export function angularPreviewPlugin(): Plugin {
             componentName,
             componentSource: "",
             css,
+            tokensCss,
             demo: "",
           });
           res.statusCode = 200;

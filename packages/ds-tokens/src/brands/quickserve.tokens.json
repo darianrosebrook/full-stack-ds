@@ -1,7 +1,7 @@
 {
   "$brand": {
     "name": "quickserve",
-    "description": "High-energy quick-service-restaurant identity (McDonald's-inspired): a bold, deep orange signature accent, chunky rounded shapes, punchy pop-off-the-page card elevation, generous touch targets, and fast bouncy motion for 'add to order' style feedback. `components.Badge` demonstrates the component-scoped override capability: 'limited time' style tags get a bold orange fill instead of the generic neutral secondary background every other badge-shaped surface still uses.",
+    "description": "Expressive, spacious UI with heavy headings, rounded raised cards, pill actions and brisk motion.",
     "accent": "orange",
     "density": "spacious"
   },
@@ -191,16 +191,15 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.04}",
-          "$description": "Chunky rounded radius (16px) - bold, punchy"
+          "$value": "12px",
+          "$description": "Default small control corner; content surfaces and actions have component-specific shape decisions."
         }
       }
     },
     "card": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.04}",
-        "$description": "Chunky rounded card (16px) - menu-item tiles pop off the page"
+        "$value": "20px"
       },
       "border": {
         "light": {
@@ -259,14 +258,13 @@
     "element": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.04}"
+        "$value": "12px"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.05}",
-        "$description": "Very rounded (32px) - big, chunky, tappable CTA"
+        "$value": "9999px"
       }
     },
     "badge": {
@@ -280,7 +278,7 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.04}"
+          "$value": "12px"
         }
       },
       "border": {
@@ -322,20 +320,17 @@
     "component": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.07}",
-        "$description": "Generous padding (24px) - big touch targets for counter/kiosk ordering"
+        "$value": "24px"
       },
       "gap": {
         "$type": "dimension",
-        "$value": "{spacing.size.06}",
-        "$description": "16px"
+        "$value": "12px"
       }
     },
     "card": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.08}",
-        "$description": "32px - roomy menu-item cards"
+        "$value": "24px"
       }
     }
   },
@@ -343,8 +338,7 @@
     "interaction": {
       "duration": {
         "$type": "duration",
-        "$value": "{motion.duration.short1}",
-        "$description": "50ms - instant, energetic feedback"
+        "$value": "120ms"
       },
       "easing": {
         "$type": "cubicBezier",
@@ -366,9 +360,18 @@
       "font": {
         "weight": {
           "$type": "fontWeight",
-          "$value": "{typography.weight.bold}",
-          "$description": "Bold (700) - big, punchy menu/price headlines"
+          "$value": 800
         }
+      }
+    },
+    "semanticFamily": {
+      "heading": {
+        "$type": "fontFamily",
+        "$value": "{core.typography.font.family.sans}"
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": "{core.typography.font.family.inter}"
       }
     }
   },
@@ -400,6 +403,301 @@
             "$extensions": {
               "fsds.light": "{color.palette.orange.700}",
               "fsds.dark": "{color.palette.orange.400}"
+            }
+          }
+        }
+      },
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "9999px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Button": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "9999px"
+            }
+          },
+          "typography": {
+            "weight": {
+              "$type": "fontWeight",
+              "$value": 700
+            }
+          }
+        }
+      }
+    },
+    "Input": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        }
+      }
+    },
+    "Card": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "20px"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "24px"
+            },
+            "gap": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.raised}"
+            }
+          }
+        },
+        "media": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "16px"
+            }
+          }
+        }
+      },
+      "size": {
+        "padding": {
+          "inset": {
+            "$type": "dimension",
+            "$value": "16px",
+            "$description": "Compact card variant retains less padding than the default surface."
+          }
+        }
+      }
+    },
+    "CodeBlock": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "20px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Popover": {
+      "design": {
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.overlay}"
+            }
+          },
+          "spacing": {
+            "padding": {
+              "$type": "dimension",
+              "$value": "20px"
+            }
+          }
+        }
+      }
+    },
+    "Dialog": {
+      "design": {
+        "modal": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "20px"
+            }
+          }
+        }
+      }
+    },
+    "Select": {
+      "design": {
+        "trigger": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        },
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          },
+          "border": {
+            "width": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          },
+          "elevation": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{semantic.elevation.surface.overlay}"
+            }
+          }
+        },
+        "option": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "10px"
+            }
+          }
+        }
+      }
+    },
+    "Chip": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "9999px"
+            }
+          }
+        }
+      }
+    },
+    "Tooltip": {
+      "design": {
+        "content": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "8px"
+            }
+          }
+        }
+      }
+    },
+    "Toast": {
+      "design": {
+        "item": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        }
+      }
+    },
+    "Walkthrough": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "20px"
+            }
+          }
+        }
+      }
+    },
+    "Accordion": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "20px"
+            }
+          }
+        },
+        "item": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "12px"
+            }
+          }
+        }
+      }
+    },
+    "Tabs": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "0px"
+            }
+          }
+        }
+      }
+    },
+    "Breadcrumbs": {
+      "design": {
+        "root": {
+          "shape": {
+            "radius": {
+              "$type": "dimension",
+              "$value": "0px"
             }
           }
         }

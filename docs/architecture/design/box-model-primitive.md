@@ -4,8 +4,8 @@ authority: architecture
 status: implemented
 title: Box-Model Primitive Slot Pool
 owner: "@darianrosebrook"
-updated: 2026-09-10
-verified_at_commit: 90ad2f233b8441bd7d9f9c452348c29e0bce0e64
+updated: 2026-09-11
+verified_at_commit: e62b77f7d4593c7208e7e4621a1ba31394d7946d
 governs:
   - packages/ds-contracts/box-model.primitive.schema.json
   - packages/ds-contracts/primitives/BoxModel.primitive.json
@@ -68,3 +68,5 @@ Padding uses logical axes and sides so it follows writing mode. Margin belongs t
 - `e2e/showcase-controls.spec.ts` checks the composed inspector color well and source annotation geometry. Shared Input and Button consumers use scoped box/design overrides; this adoption adds no geometry slots.
 
 Portal surfaces need their own applicable boundary/selector; this does not transport an ancestor's custom properties into a portal. Native emitters project the normalized material facts down to the slots their generated code reads. Shared CSS controls do not imply a native override API, identical behavior on all host elements, or visual correctness for every possible value.
+
+Brand-expression reconciliation at the verification stamp above reviewed the CLI destination-validation addition: it does not change the box schema, primitive defaults, IR merge or shared reset rules. Component-specific brand variables live in a separate namespace; they do not bypass the public box-control boundary.

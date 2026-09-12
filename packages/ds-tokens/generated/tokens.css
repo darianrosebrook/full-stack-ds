@@ -1478,8 +1478,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-yellow-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-yellow-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-yellow-300);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-05);
+    --fsds-semantic-shape-control-radius-default: 10px;
+    --fsds-semantic-shape-card-radius: 20px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-yellow-50);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-yellow-100);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-yellow-300);
@@ -1488,23 +1488,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-overlay);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-element-radius: 10px;
+    --fsds-semantic-shape-button-radius: 12px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-input-radius-default: 10px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-04);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-07);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-08);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short3);
+    --fsds-semantic-spacing-component-padding: 24px;
+    --fsds-semantic-spacing-component-gap: 16px;
+    --fsds-semantic-spacing-card-padding: 24px;
+    --fsds-semantic-motion-interaction-duration: 180ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-bounce);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-medium);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-bold);
+    --fsds-semantic-typography-heading-font-weight: 700;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 12px;
+    --fsds-button-design-root-typography-weight: 700;
+    --fsds-input-design-root-shape-radius: 10px;
+    --fsds-card-design-root-shape-radius: 20px;
+    --fsds-card-design-root-spacing-padding: 24px;
+    --fsds-card-design-root-spacing-gap: 16px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 16px;
+    --fsds-card-size-padding-inset: 16px;
+    --fsds-code-block-design-root-shape-radius: 10px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 14px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 20px;
+    --fsds-dialog-design-modal-shape-radius: 20px;
+    --fsds-select-design-trigger-shape-radius: 10px;
+    --fsds-select-design-content-shape-radius: 14px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 8px;
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 14px;
+    --fsds-walkthrough-design-root-shape-radius: 20px;
+    --fsds-accordion-design-root-shape-radius: 20px;
+    --fsds-accordion-design-item-shape-radius: 10px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   .light[data-brand="canary"], .light [data-brand="canary"], [data-theme="light"][data-brand="canary"], [data-theme="light"] [data-brand="canary"] {
@@ -1528,8 +1563,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-yellow-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-yellow-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-yellow-300);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-05);
+    --fsds-semantic-shape-control-radius-default: 10px;
+    --fsds-semantic-shape-card-radius: 20px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-yellow-50);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-yellow-100);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-yellow-300);
@@ -1538,23 +1573,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-overlay);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-element-radius: 10px;
+    --fsds-semantic-shape-button-radius: 12px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-input-radius-default: 10px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-04);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-07);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-08);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short3);
+    --fsds-semantic-spacing-component-padding: 24px;
+    --fsds-semantic-spacing-component-gap: 16px;
+    --fsds-semantic-spacing-card-padding: 24px;
+    --fsds-semantic-motion-interaction-duration: 180ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-bounce);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-medium);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-bold);
+    --fsds-semantic-typography-heading-font-weight: 700;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 12px;
+    --fsds-button-design-root-typography-weight: 700;
+    --fsds-input-design-root-shape-radius: 10px;
+    --fsds-card-design-root-shape-radius: 20px;
+    --fsds-card-design-root-spacing-padding: 24px;
+    --fsds-card-design-root-spacing-gap: 16px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 16px;
+    --fsds-card-size-padding-inset: 16px;
+    --fsds-code-block-design-root-shape-radius: 10px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 14px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 20px;
+    --fsds-dialog-design-modal-shape-radius: 20px;
+    --fsds-select-design-trigger-shape-radius: 10px;
+    --fsds-select-design-content-shape-radius: 14px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 8px;
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 14px;
+    --fsds-walkthrough-design-root-shape-radius: 20px;
+    --fsds-accordion-design-root-shape-radius: 20px;
+    --fsds-accordion-design-item-shape-radius: 10px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1603,6 +1673,84 @@
     --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
   }
 
+  [data-brand="canary"] .button {
+    --fsds-button-design-root-shape-radius: 12px;
+    --fsds-button-design-root-typography-weight: 700;
+  }
+
+  [data-brand="canary"] .input {
+    --fsds-input-design-root-shape-radius: 10px;
+  }
+
+  [data-brand="canary"] .card {
+    --fsds-card-design-root-shape-radius: 20px;
+    --fsds-card-design-root-spacing-padding: 24px;
+    --fsds-card-design-root-spacing-gap: 16px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 16px;
+    --fsds-card-size-padding-inset: 16px;
+  }
+
+  [data-brand="canary"] .code-block {
+    --fsds-code-block-design-root-shape-radius: 10px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  [data-brand="canary"] .popover {
+    --fsds-popover-design-content-shape-radius: 14px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 20px;
+  }
+
+  [data-brand="canary"] .dialog {
+    --fsds-dialog-design-modal-shape-radius: 20px;
+  }
+
+  [data-brand="canary"] .select {
+    --fsds-select-design-trigger-shape-radius: 10px;
+    --fsds-select-design-content-shape-radius: 14px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 8px;
+  }
+
+  [data-brand="canary"] .badge {
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+  }
+
+  [data-brand="canary"] .chip {
+    --fsds-chip-design-root-shape-radius: 9999px;
+  }
+
+  [data-brand="canary"] .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 8px;
+  }
+
+  [data-brand="canary"] .toast {
+    --fsds-toast-design-item-shape-radius: 14px;
+  }
+
+  [data-brand="canary"] .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 20px;
+  }
+
+  [data-brand="canary"] .accordion {
+    --fsds-accordion-design-root-shape-radius: 20px;
+    --fsds-accordion-design-item-shape-radius: 10px;
+  }
+
+  [data-brand="canary"] .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="canary"] .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
+  }
+
   [data-brand="corporate"] {
     --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-blue-600);
     --fsds-semantic-color-foreground-on-color: var(--fsds-core-color-mode-white);
@@ -1626,8 +1774,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-blue-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-blue-500);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-blue-500);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-control-radius-default: 4px;
+    --fsds-semantic-shape-card-radius: 4px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-blue-100);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-blue-200);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-blue-500);
@@ -1636,23 +1784,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-01);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-element-radius: 4px;
+    --fsds-semantic-shape-button-radius: 4px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-input-radius-default: 4px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-02);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-04);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short3);
+    --fsds-semantic-spacing-component-padding: 16px;
+    --fsds-semantic-spacing-component-gap: 8px;
+    --fsds-semantic-spacing-card-padding: 16px;
+    --fsds-semantic-motion-interaction-duration: 160ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-semibold);
+    --fsds-semantic-typography-heading-font-weight: 600;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 4px;
+    --fsds-button-design-root-typography-weight: 600;
+    --fsds-input-design-root-shape-radius: 4px;
+    --fsds-card-design-root-shape-radius: 4px;
+    --fsds-card-design-root-spacing-padding: 16px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 0px;
+    --fsds-card-size-padding-inset: 8px;
+    --fsds-code-block-design-root-shape-radius: 4px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 6px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 8px;
+    --fsds-select-design-trigger-shape-radius: 4px;
+    --fsds-select-design-content-shape-radius: 6px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 2px;
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 4px;
+    --fsds-tooltip-design-content-shape-radius: 6px;
+    --fsds-toast-design-item-shape-radius: 6px;
+    --fsds-walkthrough-design-root-shape-radius: 8px;
+    --fsds-accordion-design-root-shape-radius: 4px;
+    --fsds-accordion-design-item-shape-radius: 4px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   .light[data-brand="corporate"], .light [data-brand="corporate"], [data-theme="light"][data-brand="corporate"], [data-theme="light"] [data-brand="corporate"] {
@@ -1678,8 +1861,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-blue-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-blue-500);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-blue-500);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-control-radius-default: 4px;
+    --fsds-semantic-shape-card-radius: 4px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-blue-100);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-blue-200);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-blue-500);
@@ -1688,23 +1871,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-01);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-element-radius: 4px;
+    --fsds-semantic-shape-button-radius: 4px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-input-radius-default: 4px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-02);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-04);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short3);
+    --fsds-semantic-spacing-component-padding: 16px;
+    --fsds-semantic-spacing-component-gap: 8px;
+    --fsds-semantic-spacing-card-padding: 16px;
+    --fsds-semantic-motion-interaction-duration: 160ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-semibold);
+    --fsds-semantic-typography-heading-font-weight: 600;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 4px;
+    --fsds-button-design-root-typography-weight: 600;
+    --fsds-input-design-root-shape-radius: 4px;
+    --fsds-card-design-root-shape-radius: 4px;
+    --fsds-card-design-root-spacing-padding: 16px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 0px;
+    --fsds-card-size-padding-inset: 8px;
+    --fsds-code-block-design-root-shape-radius: 4px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 6px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 8px;
+    --fsds-select-design-trigger-shape-radius: 4px;
+    --fsds-select-design-content-shape-radius: 6px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 2px;
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 4px;
+    --fsds-tooltip-design-content-shape-radius: 6px;
+    --fsds-toast-design-item-shape-radius: 6px;
+    --fsds-walkthrough-design-root-shape-radius: 8px;
+    --fsds-accordion-design-root-shape-radius: 4px;
+    --fsds-accordion-design-item-shape-radius: 4px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1767,7 +1985,85 @@
     --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
   }
 
-  :root {
+  [data-brand="corporate"] .button {
+    --fsds-button-design-root-shape-radius: 4px;
+    --fsds-button-design-root-typography-weight: 600;
+  }
+
+  [data-brand="corporate"] .input {
+    --fsds-input-design-root-shape-radius: 4px;
+  }
+
+  [data-brand="corporate"] .card {
+    --fsds-card-design-root-shape-radius: 4px;
+    --fsds-card-design-root-spacing-padding: 16px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 0px;
+    --fsds-card-size-padding-inset: 8px;
+  }
+
+  [data-brand="corporate"] .code-block {
+    --fsds-code-block-design-root-shape-radius: 4px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  [data-brand="corporate"] .popover {
+    --fsds-popover-design-content-shape-radius: 6px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+  }
+
+  [data-brand="corporate"] .dialog {
+    --fsds-dialog-design-modal-shape-radius: 8px;
+  }
+
+  [data-brand="corporate"] .select {
+    --fsds-select-design-trigger-shape-radius: 4px;
+    --fsds-select-design-content-shape-radius: 6px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 2px;
+  }
+
+  [data-brand="corporate"] .badge {
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+  }
+
+  [data-brand="corporate"] .chip {
+    --fsds-chip-design-root-shape-radius: 4px;
+  }
+
+  [data-brand="corporate"] .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 6px;
+  }
+
+  [data-brand="corporate"] .toast {
+    --fsds-toast-design-item-shape-radius: 6px;
+  }
+
+  [data-brand="corporate"] .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 8px;
+  }
+
+  [data-brand="corporate"] .accordion {
+    --fsds-accordion-design-root-shape-radius: 4px;
+    --fsds-accordion-design-item-shape-radius: 4px;
+  }
+
+  [data-brand="corporate"] .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="corporate"] .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
+  }
+
+  :where(:root) {
     --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-500);
     --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-500);
     --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-600);
@@ -1791,8 +2087,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-red-500);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-red-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-red-400);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-03);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-control-radius-default: 8px;
+    --fsds-semantic-shape-card-radius: 12px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-300);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-400);
@@ -1801,23 +2097,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-03);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-element-radius: 8px;
+    --fsds-semantic-shape-button-radius: 8px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-input-radius-default: 8px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-03);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-07);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-medium1);
+    --fsds-semantic-spacing-component-padding: 20px;
+    --fsds-semantic-spacing-component-gap: 12px;
+    --fsds-semantic-spacing-card-padding: 20px;
+    --fsds-semantic-motion-interaction-duration: 200ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-medium);
+    --fsds-semantic-typography-heading-font-weight: 500;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 8px;
+    --fsds-button-design-root-typography-weight: 500;
+    --fsds-input-design-root-shape-radius: 8px;
+    --fsds-card-design-root-shape-radius: 12px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 8px;
+    --fsds-card-size-padding-inset: 12px;
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 10px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 14px;
+    --fsds-select-design-trigger-shape-radius: 8px;
+    --fsds-select-design-content-shape-radius: 10px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 6px;
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 10px;
+    --fsds-walkthrough-design-root-shape-radius: 14px;
+    --fsds-accordion-design-root-shape-radius: 12px;
+    --fsds-accordion-design-item-shape-radius: 8px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   [data-brand="default"] {
@@ -1844,8 +2175,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-red-500);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-red-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-red-400);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-03);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-control-radius-default: 8px;
+    --fsds-semantic-shape-card-radius: 12px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-300);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-400);
@@ -1854,23 +2185,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-03);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-element-radius: 8px;
+    --fsds-semantic-shape-button-radius: 8px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-input-radius-default: 8px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-03);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-07);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-medium1);
+    --fsds-semantic-spacing-component-padding: 20px;
+    --fsds-semantic-spacing-component-gap: 12px;
+    --fsds-semantic-spacing-card-padding: 20px;
+    --fsds-semantic-motion-interaction-duration: 200ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-medium);
+    --fsds-semantic-typography-heading-font-weight: 500;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 8px;
+    --fsds-button-design-root-typography-weight: 500;
+    --fsds-input-design-root-shape-radius: 8px;
+    --fsds-card-design-root-shape-radius: 12px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 8px;
+    --fsds-card-size-padding-inset: 12px;
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 10px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 14px;
+    --fsds-select-design-trigger-shape-radius: 8px;
+    --fsds-select-design-content-shape-radius: 10px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 6px;
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 10px;
+    --fsds-walkthrough-design-root-shape-radius: 14px;
+    --fsds-accordion-design-root-shape-radius: 12px;
+    --fsds-accordion-design-item-shape-radius: 8px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   .light[data-brand="default"], .light [data-brand="default"], [data-theme="light"][data-brand="default"], [data-theme="light"] [data-brand="default"] {
@@ -1897,8 +2263,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-red-500);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-red-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-red-400);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-03);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-control-radius-default: 8px;
+    --fsds-semantic-shape-card-radius: 12px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-300);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-400);
@@ -1907,23 +2273,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-03);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-element-radius: 8px;
+    --fsds-semantic-shape-button-radius: 8px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-input-radius-default: 8px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-03);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-07);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-medium1);
+    --fsds-semantic-spacing-component-padding: 20px;
+    --fsds-semantic-spacing-component-gap: 12px;
+    --fsds-semantic-spacing-card-padding: 20px;
+    --fsds-semantic-motion-interaction-duration: 200ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-medium);
+    --fsds-semantic-typography-heading-font-weight: 500;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 8px;
+    --fsds-button-design-root-typography-weight: 500;
+    --fsds-input-design-root-shape-radius: 8px;
+    --fsds-card-design-root-shape-radius: 12px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 8px;
+    --fsds-card-size-padding-inset: 12px;
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 10px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 14px;
+    --fsds-select-design-trigger-shape-radius: 8px;
+    --fsds-select-design-content-shape-radius: 10px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 6px;
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 10px;
+    --fsds-walkthrough-design-root-shape-radius: 14px;
+    --fsds-accordion-design-root-shape-radius: 12px;
+    --fsds-accordion-design-item-shape-radius: 8px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1973,7 +2374,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :root {
+    :where(:root) {
       --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-400);
       --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-400);
       --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-300);
@@ -1994,7 +2395,7 @@
       --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
       --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
     }
-    .light, [data-theme="light"] {
+    :where(.light, [data-theme="light"]) {
       --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-500);
       --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-500);
       --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-600);
@@ -2018,8 +2419,8 @@
       --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-red-500);
       --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-red-400);
       --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-red-400);
-      --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-03);
-      --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
+      --fsds-semantic-shape-control-radius-default: 8px;
+      --fsds-semantic-shape-card-radius: 12px;
       --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-200);
       --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-300);
       --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-400);
@@ -2028,27 +2429,62 @@
       --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-raised);
       --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-floating);
       --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-      --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-03);
-      --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-03);
+      --fsds-semantic-shape-element-radius: 8px;
+      --fsds-semantic-shape-button-radius: 8px;
       --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-      --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-03);
+      --fsds-semantic-shape-input-radius-default: 8px;
       --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
       --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
       --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
       --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-03);
       --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
       --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-      --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-06);
-      --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-05);
-      --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-07);
-      --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-medium1);
+      --fsds-semantic-spacing-component-padding: 20px;
+      --fsds-semantic-spacing-component-gap: 12px;
+      --fsds-semantic-spacing-card-padding: 20px;
+      --fsds-semantic-motion-interaction-duration: 200ms;
       --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
       --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-      --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-medium);
+      --fsds-semantic-typography-heading-font-weight: 500;
+      --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+      --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+      --fsds-button-design-root-shape-radius: 8px;
+      --fsds-button-design-root-typography-weight: 500;
+      --fsds-input-design-root-shape-radius: 8px;
+      --fsds-card-design-root-shape-radius: 12px;
+      --fsds-card-design-root-spacing-padding: 20px;
+      --fsds-card-design-root-spacing-gap: 12px;
+      --fsds-card-design-root-border-width: 1px;
+      --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+      --fsds-card-design-media-shape-radius: 8px;
+      --fsds-card-size-padding-inset: 12px;
+      --fsds-code-block-design-root-shape-radius: 6px;
+      --fsds-code-block-design-root-spacing-padding: 20px;
+      --fsds-code-block-design-root-border-width: 0px;
+      --fsds-popover-design-content-shape-radius: 10px;
+      --fsds-popover-design-content-border-width: 1px;
+      --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+      --fsds-popover-design-content-spacing-padding: 16px;
+      --fsds-dialog-design-modal-shape-radius: 14px;
+      --fsds-select-design-trigger-shape-radius: 8px;
+      --fsds-select-design-content-shape-radius: 10px;
+      --fsds-select-design-content-border-width: 1px;
+      --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+      --fsds-select-design-option-shape-radius: 6px;
+      --fsds-badge-design-root-shape-radius: 9999px;
+      --fsds-badge-design-root-border-width: 0px;
+      --fsds-chip-design-root-shape-radius: 9999px;
+      --fsds-tooltip-design-content-shape-radius: 8px;
+      --fsds-toast-design-item-shape-radius: 10px;
+      --fsds-walkthrough-design-root-shape-radius: 14px;
+      --fsds-accordion-design-root-shape-radius: 12px;
+      --fsds-accordion-design-item-shape-radius: 8px;
+      --fsds-tabs-design-root-shape-radius: 0px;
+      --fsds-breadcrumbs-design-root-shape-radius: 0px;
     }
   }
 
-  .dark, [data-theme="dark"] {
+  :where(.dark, [data-theme="dark"]) {
     --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-400);
     --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-400);
     --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-300);
@@ -2068,6 +2504,162 @@
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-600);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
     --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+  }
+
+  :where(:root:not([data-brand])) .button {
+    --fsds-button-design-root-shape-radius: 8px;
+    --fsds-button-design-root-typography-weight: 500;
+  }
+
+  [data-brand="default"] .button {
+    --fsds-button-design-root-shape-radius: 8px;
+    --fsds-button-design-root-typography-weight: 500;
+  }
+
+  :where(:root:not([data-brand])) .input {
+    --fsds-input-design-root-shape-radius: 8px;
+  }
+
+  [data-brand="default"] .input {
+    --fsds-input-design-root-shape-radius: 8px;
+  }
+
+  :where(:root:not([data-brand])) .card {
+    --fsds-card-design-root-shape-radius: 12px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 8px;
+    --fsds-card-size-padding-inset: 12px;
+  }
+
+  [data-brand="default"] .card {
+    --fsds-card-design-root-shape-radius: 12px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 8px;
+    --fsds-card-size-padding-inset: 12px;
+  }
+
+  :where(:root:not([data-brand])) .code-block {
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  [data-brand="default"] .code-block {
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  :where(:root:not([data-brand])) .popover {
+    --fsds-popover-design-content-shape-radius: 10px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+  }
+
+  [data-brand="default"] .popover {
+    --fsds-popover-design-content-shape-radius: 10px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+  }
+
+  :where(:root:not([data-brand])) .dialog {
+    --fsds-dialog-design-modal-shape-radius: 14px;
+  }
+
+  [data-brand="default"] .dialog {
+    --fsds-dialog-design-modal-shape-radius: 14px;
+  }
+
+  :where(:root:not([data-brand])) .select {
+    --fsds-select-design-trigger-shape-radius: 8px;
+    --fsds-select-design-content-shape-radius: 10px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 6px;
+  }
+
+  [data-brand="default"] .select {
+    --fsds-select-design-trigger-shape-radius: 8px;
+    --fsds-select-design-content-shape-radius: 10px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 6px;
+  }
+
+  :where(:root:not([data-brand])) .badge {
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+  }
+
+  [data-brand="default"] .badge {
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+  }
+
+  :where(:root:not([data-brand])) .chip {
+    --fsds-chip-design-root-shape-radius: 9999px;
+  }
+
+  [data-brand="default"] .chip {
+    --fsds-chip-design-root-shape-radius: 9999px;
+  }
+
+  :where(:root:not([data-brand])) .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 8px;
+  }
+
+  [data-brand="default"] .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 8px;
+  }
+
+  :where(:root:not([data-brand])) .toast {
+    --fsds-toast-design-item-shape-radius: 10px;
+  }
+
+  [data-brand="default"] .toast {
+    --fsds-toast-design-item-shape-radius: 10px;
+  }
+
+  :where(:root:not([data-brand])) .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 14px;
+  }
+
+  [data-brand="default"] .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 14px;
+  }
+
+  :where(:root:not([data-brand])) .accordion {
+    --fsds-accordion-design-root-shape-radius: 12px;
+    --fsds-accordion-design-item-shape-radius: 8px;
+  }
+
+  [data-brand="default"] .accordion {
+    --fsds-accordion-design-root-shape-radius: 12px;
+    --fsds-accordion-design-item-shape-radius: 8px;
+  }
+
+  :where(:root:not([data-brand])) .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="default"] .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  :where(:root:not([data-brand])) .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="default"] .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   [data-brand="developer"] {
@@ -2094,8 +2686,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-indigo-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-indigo-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-indigo-500);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-control-radius-default: 6px;
+    --fsds-semantic-shape-card-radius: 8px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-100);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-400);
@@ -2104,23 +2696,62 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-overlay);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-01);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-element-radius: 6px;
+    --fsds-semantic-shape-button-radius: 6px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-input-radius-default: 6px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-02);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-04);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short2);
+    --fsds-semantic-spacing-component-padding: 16px;
+    --fsds-semantic-spacing-component-gap: 8px;
+    --fsds-semantic-spacing-card-padding: 16px;
+    --fsds-semantic-motion-interaction-duration: 140ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-emphasized-in);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-semibold);
+    --fsds-semantic-typography-heading-font-weight: 600;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-chip-color-background-default: var(--fsds-core-color-palette-indigo-50);
+    --fsds-chip-color-background-hover: var(--fsds-core-color-palette-indigo-100);
+    --fsds-chip-color-foreground-default: var(--fsds-core-color-palette-indigo-700);
+    --fsds-chip-color-border-default: var(--fsds-core-color-palette-indigo-200);
+    --fsds-chip-design-root-shape-radius: 4px;
+    --fsds-button-design-root-shape-radius: 6px;
+    --fsds-button-design-root-typography-weight: 600;
+    --fsds-input-design-root-shape-radius: 6px;
+    --fsds-card-design-root-shape-radius: 8px;
+    --fsds-card-design-root-spacing-padding: 16px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 4px;
+    --fsds-card-size-padding-inset: 8px;
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 8px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 12px;
+    --fsds-select-design-trigger-shape-radius: 6px;
+    --fsds-select-design-content-shape-radius: 8px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 4px;
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 8px;
+    --fsds-walkthrough-design-root-shape-radius: 12px;
+    --fsds-accordion-design-root-shape-radius: 8px;
+    --fsds-accordion-design-item-shape-radius: 6px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   .light[data-brand="developer"], .light [data-brand="developer"], [data-theme="light"][data-brand="developer"], [data-theme="light"] [data-brand="developer"] {
@@ -2147,8 +2778,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-indigo-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-indigo-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-indigo-500);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-control-radius-default: 6px;
+    --fsds-semantic-shape-card-radius: 8px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-100);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-400);
@@ -2157,23 +2788,62 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-overlay);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-01);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-element-radius: 6px;
+    --fsds-semantic-shape-button-radius: 6px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-input-radius-default: 6px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-02);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-04);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short2);
+    --fsds-semantic-spacing-component-padding: 16px;
+    --fsds-semantic-spacing-component-gap: 8px;
+    --fsds-semantic-spacing-card-padding: 16px;
+    --fsds-semantic-motion-interaction-duration: 140ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-emphasized-in);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-semibold);
+    --fsds-semantic-typography-heading-font-weight: 600;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-chip-color-background-default: var(--fsds-core-color-palette-indigo-50);
+    --fsds-chip-color-background-hover: var(--fsds-core-color-palette-indigo-100);
+    --fsds-chip-color-foreground-default: var(--fsds-core-color-palette-indigo-700);
+    --fsds-chip-color-border-default: var(--fsds-core-color-palette-indigo-200);
+    --fsds-chip-design-root-shape-radius: 4px;
+    --fsds-button-design-root-shape-radius: 6px;
+    --fsds-button-design-root-typography-weight: 600;
+    --fsds-input-design-root-shape-radius: 6px;
+    --fsds-card-design-root-shape-radius: 8px;
+    --fsds-card-design-root-spacing-padding: 16px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 4px;
+    --fsds-card-size-padding-inset: 8px;
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 8px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 12px;
+    --fsds-select-design-trigger-shape-radius: 6px;
+    --fsds-select-design-content-shape-radius: 8px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 4px;
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 8px;
+    --fsds-walkthrough-design-root-shape-radius: 12px;
+    --fsds-accordion-design-root-shape-radius: 8px;
+    --fsds-accordion-design-item-shape-radius: 6px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -2197,6 +2867,10 @@
       --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-700);
       --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
       --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+      --fsds-chip-color-background-default: var(--fsds-core-color-palette-indigo-900);
+      --fsds-chip-color-background-hover: var(--fsds-core-color-palette-indigo-800);
+      --fsds-chip-color-foreground-default: var(--fsds-core-color-palette-indigo-200);
+      --fsds-chip-color-border-default: var(--fsds-core-color-palette-indigo-700);
     }
   }
 
@@ -2220,29 +2894,32 @@
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-700);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
     --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+    --fsds-chip-color-background-default: var(--fsds-core-color-palette-indigo-900);
+    --fsds-chip-color-background-hover: var(--fsds-core-color-palette-indigo-800);
+    --fsds-chip-color-foreground-default: var(--fsds-core-color-palette-indigo-200);
+    --fsds-chip-color-border-default: var(--fsds-core-color-palette-indigo-700);
   }
 
   [data-brand="developer"] .chip {
     --fsds-chip-color-background-default: var(--fsds-core-color-palette-indigo-50);
     --fsds-chip-color-background-hover: var(--fsds-core-color-palette-indigo-100);
-    --fsds-chip-color-background-active: var(--fsds-core-color-palette-indigo-200);
     --fsds-chip-color-foreground-default: var(--fsds-core-color-palette-indigo-700);
     --fsds-chip-color-border-default: var(--fsds-core-color-palette-indigo-200);
+    --fsds-chip-design-root-shape-radius: 4px;
   }
 
   .light[data-brand="developer"] .chip, [data-theme="light"][data-brand="developer"] .chip {
     --fsds-chip-color-background-default: var(--fsds-core-color-palette-indigo-50);
     --fsds-chip-color-background-hover: var(--fsds-core-color-palette-indigo-100);
-    --fsds-chip-color-background-active: var(--fsds-core-color-palette-indigo-200);
     --fsds-chip-color-foreground-default: var(--fsds-core-color-palette-indigo-700);
     --fsds-chip-color-border-default: var(--fsds-core-color-palette-indigo-200);
+    --fsds-chip-design-root-shape-radius: 4px;
   }
 
   @media (prefers-color-scheme: dark) {
     [data-brand="developer"] .chip {
     --fsds-chip-color-background-default: var(--fsds-core-color-palette-indigo-900);
     --fsds-chip-color-background-hover: var(--fsds-core-color-palette-indigo-800);
-    --fsds-chip-color-background-active: var(--fsds-core-color-palette-indigo-700);
     --fsds-chip-color-foreground-default: var(--fsds-core-color-palette-indigo-200);
     --fsds-chip-color-border-default: var(--fsds-core-color-palette-indigo-700);
     }
@@ -2251,9 +2928,82 @@
   .dark[data-brand="developer"] .chip, [data-theme="dark"][data-brand="developer"] .chip {
     --fsds-chip-color-background-default: var(--fsds-core-color-palette-indigo-900);
     --fsds-chip-color-background-hover: var(--fsds-core-color-palette-indigo-800);
-    --fsds-chip-color-background-active: var(--fsds-core-color-palette-indigo-700);
     --fsds-chip-color-foreground-default: var(--fsds-core-color-palette-indigo-200);
     --fsds-chip-color-border-default: var(--fsds-core-color-palette-indigo-700);
+  }
+
+  [data-brand="developer"] .button {
+    --fsds-button-design-root-shape-radius: 6px;
+    --fsds-button-design-root-typography-weight: 600;
+  }
+
+  [data-brand="developer"] .input {
+    --fsds-input-design-root-shape-radius: 6px;
+  }
+
+  [data-brand="developer"] .card {
+    --fsds-card-design-root-shape-radius: 8px;
+    --fsds-card-design-root-spacing-padding: 16px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 4px;
+    --fsds-card-size-padding-inset: 8px;
+  }
+
+  [data-brand="developer"] .code-block {
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  [data-brand="developer"] .popover {
+    --fsds-popover-design-content-shape-radius: 8px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+  }
+
+  [data-brand="developer"] .dialog {
+    --fsds-dialog-design-modal-shape-radius: 12px;
+  }
+
+  [data-brand="developer"] .select {
+    --fsds-select-design-trigger-shape-radius: 6px;
+    --fsds-select-design-content-shape-radius: 8px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 4px;
+  }
+
+  [data-brand="developer"] .badge {
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+  }
+
+  [data-brand="developer"] .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 8px;
+  }
+
+  [data-brand="developer"] .toast {
+    --fsds-toast-design-item-shape-radius: 8px;
+  }
+
+  [data-brand="developer"] .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 12px;
+  }
+
+  [data-brand="developer"] .accordion {
+    --fsds-accordion-design-root-shape-radius: 8px;
+    --fsds-accordion-design-item-shape-radius: 6px;
+  }
+
+  [data-brand="developer"] .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="developer"] .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   [data-brand="fintech"] {
@@ -2280,8 +3030,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-emerald-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-emerald-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-emerald-500);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-control-radius-default: 6px;
+    --fsds-semantic-shape-card-radius: 8px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-300);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
@@ -2290,23 +3040,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-element-radius: 6px;
+    --fsds-semantic-shape-button-radius: 8px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-input-radius-default: 6px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-02);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-04);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-03);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short3);
+    --fsds-semantic-spacing-component-padding: 16px;
+    --fsds-semantic-spacing-component-gap: 8px;
+    --fsds-semantic-spacing-card-padding: 16px;
+    --fsds-semantic-motion-interaction-duration: 160ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-semibold);
+    --fsds-semantic-typography-heading-font-weight: 600;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 8px;
+    --fsds-button-design-root-typography-weight: 600;
+    --fsds-input-design-root-shape-radius: 6px;
+    --fsds-card-design-root-shape-radius: 8px;
+    --fsds-card-design-root-spacing-padding: 16px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 4px;
+    --fsds-card-size-padding-inset: 8px;
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 8px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 12px;
+    --fsds-select-design-trigger-shape-radius: 6px;
+    --fsds-select-design-content-shape-radius: 8px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 4px;
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 4px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 8px;
+    --fsds-walkthrough-design-root-shape-radius: 12px;
+    --fsds-accordion-design-root-shape-radius: 8px;
+    --fsds-accordion-design-item-shape-radius: 6px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   .light[data-brand="fintech"], .light [data-brand="fintech"], [data-theme="light"][data-brand="fintech"], [data-theme="light"] [data-brand="fintech"] {
@@ -2333,8 +3118,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-emerald-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-emerald-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-emerald-500);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-control-radius-default: 6px;
+    --fsds-semantic-shape-card-radius: 8px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-300);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
@@ -2343,23 +3128,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-element-radius: 6px;
+    --fsds-semantic-shape-button-radius: 8px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-input-radius-default: 6px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-02);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-04);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-03);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short3);
+    --fsds-semantic-spacing-component-padding: 16px;
+    --fsds-semantic-spacing-component-gap: 8px;
+    --fsds-semantic-spacing-card-padding: 16px;
+    --fsds-semantic-motion-interaction-duration: 160ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-semibold);
+    --fsds-semantic-typography-heading-font-weight: 600;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 8px;
+    --fsds-button-design-root-typography-weight: 600;
+    --fsds-input-design-root-shape-radius: 6px;
+    --fsds-card-design-root-shape-radius: 8px;
+    --fsds-card-design-root-spacing-padding: 16px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 4px;
+    --fsds-card-size-padding-inset: 8px;
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 8px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 12px;
+    --fsds-select-design-trigger-shape-radius: 6px;
+    --fsds-select-design-content-shape-radius: 8px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 4px;
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 4px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 8px;
+    --fsds-walkthrough-design-root-shape-radius: 12px;
+    --fsds-accordion-design-root-shape-radius: 8px;
+    --fsds-accordion-design-item-shape-radius: 6px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -2408,6 +3228,84 @@
     --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
   }
 
+  [data-brand="fintech"] .button {
+    --fsds-button-design-root-shape-radius: 8px;
+    --fsds-button-design-root-typography-weight: 600;
+  }
+
+  [data-brand="fintech"] .input {
+    --fsds-input-design-root-shape-radius: 6px;
+  }
+
+  [data-brand="fintech"] .card {
+    --fsds-card-design-root-shape-radius: 8px;
+    --fsds-card-design-root-spacing-padding: 16px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 4px;
+    --fsds-card-size-padding-inset: 8px;
+  }
+
+  [data-brand="fintech"] .code-block {
+    --fsds-code-block-design-root-shape-radius: 6px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  [data-brand="fintech"] .popover {
+    --fsds-popover-design-content-shape-radius: 8px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+  }
+
+  [data-brand="fintech"] .dialog {
+    --fsds-dialog-design-modal-shape-radius: 12px;
+  }
+
+  [data-brand="fintech"] .select {
+    --fsds-select-design-trigger-shape-radius: 6px;
+    --fsds-select-design-content-shape-radius: 8px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 4px;
+  }
+
+  [data-brand="fintech"] .badge {
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+  }
+
+  [data-brand="fintech"] .chip {
+    --fsds-chip-design-root-shape-radius: 4px;
+  }
+
+  [data-brand="fintech"] .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 8px;
+  }
+
+  [data-brand="fintech"] .toast {
+    --fsds-toast-design-item-shape-radius: 8px;
+  }
+
+  [data-brand="fintech"] .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 12px;
+  }
+
+  [data-brand="fintech"] .accordion {
+    --fsds-accordion-design-root-shape-radius: 8px;
+    --fsds-accordion-design-item-shape-radius: 6px;
+  }
+
+  [data-brand="fintech"] .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="fintech"] .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
+  }
+
   [data-brand="forest"] {
     --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-green-600);
     --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-emerald-600);
@@ -2436,8 +3334,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-green-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-emerald-500);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-lime-400);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-05);
+    --fsds-semantic-shape-control-radius-default: 12px;
+    --fsds-semantic-shape-card-radius: 24px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-lime-100);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-emerald-100);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-green-400);
@@ -2446,23 +3344,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-overlay);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-full);
+    --fsds-semantic-shape-element-radius: 12px;
+    --fsds-semantic-shape-button-radius: 9999px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-input-radius-default: 12px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-04);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-08);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-07);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-09);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-medium2);
+    --fsds-semantic-spacing-component-padding: 24px;
+    --fsds-semantic-spacing-component-gap: 16px;
+    --fsds-semantic-spacing-card-padding: 28px;
+    --fsds-semantic-motion-interaction-duration: 280ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-soft-enter);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-medium);
+    --fsds-semantic-typography-heading-font-weight: 500;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-serif);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 9999px;
+    --fsds-button-design-root-typography-weight: 500;
+    --fsds-input-design-root-shape-radius: 12px;
+    --fsds-card-design-root-shape-radius: 24px;
+    --fsds-card-design-root-spacing-padding: 28px;
+    --fsds-card-design-root-spacing-gap: 16px;
+    --fsds-card-design-root-border-width: 0px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 20px;
+    --fsds-card-size-padding-inset: 20px;
+    --fsds-code-block-design-root-shape-radius: 12px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 16px;
+    --fsds-popover-design-content-border-width: 0px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 20px;
+    --fsds-dialog-design-modal-shape-radius: 24px;
+    --fsds-select-design-trigger-shape-radius: 12px;
+    --fsds-select-design-content-shape-radius: 16px;
+    --fsds-select-design-content-border-width: 0px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 10px;
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 16px;
+    --fsds-walkthrough-design-root-shape-radius: 24px;
+    --fsds-accordion-design-root-shape-radius: 24px;
+    --fsds-accordion-design-item-shape-radius: 12px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   .light[data-brand="forest"], .light [data-brand="forest"], [data-theme="light"][data-brand="forest"], [data-theme="light"] [data-brand="forest"] {
@@ -2493,8 +3426,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-green-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-emerald-500);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-lime-400);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-05);
+    --fsds-semantic-shape-control-radius-default: 12px;
+    --fsds-semantic-shape-card-radius: 24px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-lime-100);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-emerald-100);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-green-400);
@@ -2503,23 +3436,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-overlay);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-full);
+    --fsds-semantic-shape-element-radius: 12px;
+    --fsds-semantic-shape-button-radius: 9999px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-input-radius-default: 12px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-04);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-08);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-07);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-09);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-medium2);
+    --fsds-semantic-spacing-component-padding: 24px;
+    --fsds-semantic-spacing-component-gap: 16px;
+    --fsds-semantic-spacing-card-padding: 28px;
+    --fsds-semantic-motion-interaction-duration: 280ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-soft-enter);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-medium);
+    --fsds-semantic-typography-heading-font-weight: 500;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-serif);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 9999px;
+    --fsds-button-design-root-typography-weight: 500;
+    --fsds-input-design-root-shape-radius: 12px;
+    --fsds-card-design-root-shape-radius: 24px;
+    --fsds-card-design-root-spacing-padding: 28px;
+    --fsds-card-design-root-spacing-gap: 16px;
+    --fsds-card-design-root-border-width: 0px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 20px;
+    --fsds-card-size-padding-inset: 20px;
+    --fsds-code-block-design-root-shape-radius: 12px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 16px;
+    --fsds-popover-design-content-border-width: 0px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 20px;
+    --fsds-dialog-design-modal-shape-radius: 24px;
+    --fsds-select-design-trigger-shape-radius: 12px;
+    --fsds-select-design-content-shape-radius: 16px;
+    --fsds-select-design-content-border-width: 0px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 10px;
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 16px;
+    --fsds-walkthrough-design-root-shape-radius: 24px;
+    --fsds-accordion-design-root-shape-radius: 24px;
+    --fsds-accordion-design-item-shape-radius: 12px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -2582,6 +3550,84 @@
     --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
   }
 
+  [data-brand="forest"] .button {
+    --fsds-button-design-root-shape-radius: 9999px;
+    --fsds-button-design-root-typography-weight: 500;
+  }
+
+  [data-brand="forest"] .input {
+    --fsds-input-design-root-shape-radius: 12px;
+  }
+
+  [data-brand="forest"] .card {
+    --fsds-card-design-root-shape-radius: 24px;
+    --fsds-card-design-root-spacing-padding: 28px;
+    --fsds-card-design-root-spacing-gap: 16px;
+    --fsds-card-design-root-border-width: 0px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 20px;
+    --fsds-card-size-padding-inset: 20px;
+  }
+
+  [data-brand="forest"] .code-block {
+    --fsds-code-block-design-root-shape-radius: 12px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  [data-brand="forest"] .popover {
+    --fsds-popover-design-content-shape-radius: 16px;
+    --fsds-popover-design-content-border-width: 0px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 20px;
+  }
+
+  [data-brand="forest"] .dialog {
+    --fsds-dialog-design-modal-shape-radius: 24px;
+  }
+
+  [data-brand="forest"] .select {
+    --fsds-select-design-trigger-shape-radius: 12px;
+    --fsds-select-design-content-shape-radius: 16px;
+    --fsds-select-design-content-border-width: 0px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 10px;
+  }
+
+  [data-brand="forest"] .badge {
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+  }
+
+  [data-brand="forest"] .chip {
+    --fsds-chip-design-root-shape-radius: 9999px;
+  }
+
+  [data-brand="forest"] .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 8px;
+  }
+
+  [data-brand="forest"] .toast {
+    --fsds-toast-design-item-shape-radius: 16px;
+  }
+
+  [data-brand="forest"] .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 24px;
+  }
+
+  [data-brand="forest"] .accordion {
+    --fsds-accordion-design-root-shape-radius: 24px;
+    --fsds-accordion-design-item-shape-radius: 12px;
+  }
+
+  [data-brand="forest"] .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="forest"] .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
+  }
+
   [data-brand="marketplace"] {
     --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-cyan-600);
     --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-cyan-600);
@@ -2606,8 +3652,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-cyan-500);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-cyan-300);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-cyan-500);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-01);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-control-radius-default: 4px;
+    --fsds-semantic-shape-card-radius: 6px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-300);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-400);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
@@ -2616,23 +3662,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-flat);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-01);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-element-radius: 4px;
+    --fsds-semantic-shape-button-radius: 6px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-input-radius-default: 4px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-02);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-03);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-02);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-04);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short3);
+    --fsds-semantic-spacing-component-padding: 12px;
+    --fsds-semantic-spacing-component-gap: 8px;
+    --fsds-semantic-spacing-card-padding: 12px;
+    --fsds-semantic-motion-interaction-duration: 160ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-semibold);
+    --fsds-semantic-typography-heading-font-weight: 600;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 6px;
+    --fsds-button-design-root-typography-weight: 600;
+    --fsds-input-design-root-shape-radius: 4px;
+    --fsds-card-design-root-shape-radius: 6px;
+    --fsds-card-design-root-spacing-padding: 12px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 2px;
+    --fsds-card-size-padding-inset: 8px;
+    --fsds-code-block-design-root-shape-radius: 4px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 8px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 8px;
+    --fsds-select-design-trigger-shape-radius: 4px;
+    --fsds-select-design-content-shape-radius: 8px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 2px;
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 4px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 8px;
+    --fsds-walkthrough-design-root-shape-radius: 8px;
+    --fsds-accordion-design-root-shape-radius: 6px;
+    --fsds-accordion-design-item-shape-radius: 4px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   .light[data-brand="marketplace"], .light [data-brand="marketplace"], [data-theme="light"][data-brand="marketplace"], [data-theme="light"] [data-brand="marketplace"] {
@@ -2659,8 +3740,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-cyan-500);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-cyan-300);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-cyan-500);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-01);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-control-radius-default: 4px;
+    --fsds-semantic-shape-card-radius: 6px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-300);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-400);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
@@ -2669,23 +3750,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-flat);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-01);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-element-radius: 4px;
+    --fsds-semantic-shape-button-radius: 6px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-02);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-02);
+    --fsds-semantic-shape-input-radius-default: 4px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-02);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-03);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-02);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-04);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short3);
+    --fsds-semantic-spacing-component-padding: 12px;
+    --fsds-semantic-spacing-component-gap: 8px;
+    --fsds-semantic-spacing-card-padding: 12px;
+    --fsds-semantic-motion-interaction-duration: 160ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-semibold);
+    --fsds-semantic-typography-heading-font-weight: 600;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 6px;
+    --fsds-button-design-root-typography-weight: 600;
+    --fsds-input-design-root-shape-radius: 4px;
+    --fsds-card-design-root-shape-radius: 6px;
+    --fsds-card-design-root-spacing-padding: 12px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 2px;
+    --fsds-card-size-padding-inset: 8px;
+    --fsds-code-block-design-root-shape-radius: 4px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 8px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 8px;
+    --fsds-select-design-trigger-shape-radius: 4px;
+    --fsds-select-design-content-shape-radius: 8px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 2px;
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 4px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 8px;
+    --fsds-walkthrough-design-root-shape-radius: 8px;
+    --fsds-accordion-design-root-shape-radius: 6px;
+    --fsds-accordion-design-item-shape-radius: 4px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -2734,6 +3850,84 @@
     --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
   }
 
+  [data-brand="marketplace"] .button {
+    --fsds-button-design-root-shape-radius: 6px;
+    --fsds-button-design-root-typography-weight: 600;
+  }
+
+  [data-brand="marketplace"] .input {
+    --fsds-input-design-root-shape-radius: 4px;
+  }
+
+  [data-brand="marketplace"] .card {
+    --fsds-card-design-root-shape-radius: 6px;
+    --fsds-card-design-root-spacing-padding: 12px;
+    --fsds-card-design-root-spacing-gap: 8px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 2px;
+    --fsds-card-size-padding-inset: 8px;
+  }
+
+  [data-brand="marketplace"] .code-block {
+    --fsds-code-block-design-root-shape-radius: 4px;
+    --fsds-code-block-design-root-spacing-padding: 16px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  [data-brand="marketplace"] .popover {
+    --fsds-popover-design-content-shape-radius: 8px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+  }
+
+  [data-brand="marketplace"] .dialog {
+    --fsds-dialog-design-modal-shape-radius: 8px;
+  }
+
+  [data-brand="marketplace"] .select {
+    --fsds-select-design-trigger-shape-radius: 4px;
+    --fsds-select-design-content-shape-radius: 8px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 2px;
+  }
+
+  [data-brand="marketplace"] .badge {
+    --fsds-badge-design-root-shape-radius: 4px;
+    --fsds-badge-design-root-border-width: 0px;
+  }
+
+  [data-brand="marketplace"] .chip {
+    --fsds-chip-design-root-shape-radius: 4px;
+  }
+
+  [data-brand="marketplace"] .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 8px;
+  }
+
+  [data-brand="marketplace"] .toast {
+    --fsds-toast-design-item-shape-radius: 8px;
+  }
+
+  [data-brand="marketplace"] .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 8px;
+  }
+
+  [data-brand="marketplace"] .accordion {
+    --fsds-accordion-design-root-shape-radius: 6px;
+    --fsds-accordion-design-item-shape-radius: 4px;
+  }
+
+  [data-brand="marketplace"] .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="marketplace"] .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
+  }
+
   [data-brand="monochrome"] {
     --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-neutral-700);
     --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-neutral-700);
@@ -2765,8 +3959,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-neutral-800);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-neutral-600);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-neutral-700);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-none);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-none);
+    --fsds-semantic-shape-control-radius-default: 0px;
+    --fsds-semantic-shape-card-radius: 0px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-400);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-700);
@@ -2775,23 +3969,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-flat);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-none);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-none);
+    --fsds-semantic-shape-element-radius: 0px;
+    --fsds-semantic-shape-button-radius: 0px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-none);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-none);
+    --fsds-semantic-shape-input-radius-default: 0px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-none);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-hairline);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-03);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-02);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short1);
+    --fsds-semantic-spacing-component-padding: 20px;
+    --fsds-semantic-spacing-component-gap: 12px;
+    --fsds-semantic-spacing-card-padding: 20px;
+    --fsds-semantic-motion-interaction-duration: 100ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-linear);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-bold);
+    --fsds-semantic-typography-heading-font-weight: 700;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-serif);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 0px;
+    --fsds-button-design-root-typography-weight: 700;
+    --fsds-input-design-root-shape-radius: 0px;
+    --fsds-card-design-root-shape-radius: 0px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 0px;
+    --fsds-card-size-padding-inset: 12px;
+    --fsds-code-block-design-root-shape-radius: 0px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 0px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 0px;
+    --fsds-select-design-trigger-shape-radius: 0px;
+    --fsds-select-design-content-shape-radius: 0px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 0px;
+    --fsds-badge-design-root-shape-radius: 0px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 0px;
+    --fsds-tooltip-design-content-shape-radius: 0px;
+    --fsds-toast-design-item-shape-radius: 0px;
+    --fsds-walkthrough-design-root-shape-radius: 0px;
+    --fsds-accordion-design-root-shape-radius: 0px;
+    --fsds-accordion-design-item-shape-radius: 0px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   .light[data-brand="monochrome"], .light [data-brand="monochrome"], [data-theme="light"][data-brand="monochrome"], [data-theme="light"] [data-brand="monochrome"] {
@@ -2825,8 +4054,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-neutral-800);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-neutral-600);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-neutral-700);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-none);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-none);
+    --fsds-semantic-shape-control-radius-default: 0px;
+    --fsds-semantic-shape-card-radius: 0px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-400);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-700);
@@ -2835,23 +4064,58 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-flat);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-none);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-none);
+    --fsds-semantic-shape-element-radius: 0px;
+    --fsds-semantic-shape-button-radius: 0px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-none);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-none);
+    --fsds-semantic-shape-input-radius-default: 0px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-none);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-hairline);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-03);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-02);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short1);
+    --fsds-semantic-spacing-component-padding: 20px;
+    --fsds-semantic-spacing-component-gap: 12px;
+    --fsds-semantic-spacing-card-padding: 20px;
+    --fsds-semantic-motion-interaction-duration: 100ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-linear);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-bold);
+    --fsds-semantic-typography-heading-font-weight: 700;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-serif);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-button-design-root-shape-radius: 0px;
+    --fsds-button-design-root-typography-weight: 700;
+    --fsds-input-design-root-shape-radius: 0px;
+    --fsds-card-design-root-shape-radius: 0px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 0px;
+    --fsds-card-size-padding-inset: 12px;
+    --fsds-code-block-design-root-shape-radius: 0px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 0px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 0px;
+    --fsds-select-design-trigger-shape-radius: 0px;
+    --fsds-select-design-content-shape-radius: 0px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 0px;
+    --fsds-badge-design-root-shape-radius: 0px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 0px;
+    --fsds-tooltip-design-content-shape-radius: 0px;
+    --fsds-toast-design-item-shape-radius: 0px;
+    --fsds-walkthrough-design-root-shape-radius: 0px;
+    --fsds-accordion-design-root-shape-radius: 0px;
+    --fsds-accordion-design-item-shape-radius: 0px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -2924,6 +4188,84 @@
     --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
   }
 
+  [data-brand="monochrome"] .button {
+    --fsds-button-design-root-shape-radius: 0px;
+    --fsds-button-design-root-typography-weight: 700;
+  }
+
+  [data-brand="monochrome"] .input {
+    --fsds-input-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="monochrome"] .card {
+    --fsds-card-design-root-shape-radius: 0px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 1px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 0px;
+    --fsds-card-size-padding-inset: 12px;
+  }
+
+  [data-brand="monochrome"] .code-block {
+    --fsds-code-block-design-root-shape-radius: 0px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  [data-brand="monochrome"] .popover {
+    --fsds-popover-design-content-shape-radius: 0px;
+    --fsds-popover-design-content-border-width: 1px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+  }
+
+  [data-brand="monochrome"] .dialog {
+    --fsds-dialog-design-modal-shape-radius: 0px;
+  }
+
+  [data-brand="monochrome"] .select {
+    --fsds-select-design-trigger-shape-radius: 0px;
+    --fsds-select-design-content-shape-radius: 0px;
+    --fsds-select-design-content-border-width: 1px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 0px;
+  }
+
+  [data-brand="monochrome"] .badge {
+    --fsds-badge-design-root-shape-radius: 0px;
+    --fsds-badge-design-root-border-width: 0px;
+  }
+
+  [data-brand="monochrome"] .chip {
+    --fsds-chip-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="monochrome"] .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 0px;
+  }
+
+  [data-brand="monochrome"] .toast {
+    --fsds-toast-design-item-shape-radius: 0px;
+  }
+
+  [data-brand="monochrome"] .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="monochrome"] .accordion {
+    --fsds-accordion-design-root-shape-radius: 0px;
+    --fsds-accordion-design-item-shape-radius: 0px;
+  }
+
+  [data-brand="monochrome"] .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="monochrome"] .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
+  }
+
   [data-brand="quickserve"] {
     --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-orange-600);
     --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-orange-600);
@@ -2948,8 +4290,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-orange-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-orange-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-orange-300);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-control-radius-default: 12px;
+    --fsds-semantic-shape-card-radius: 20px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-100);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-400);
@@ -2958,23 +4300,61 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-overlay);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-05);
+    --fsds-semantic-shape-element-radius: 12px;
+    --fsds-semantic-shape-button-radius: 9999px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-input-radius-default: 12px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-04);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-07);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-08);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short1);
+    --fsds-semantic-spacing-component-padding: 24px;
+    --fsds-semantic-spacing-component-gap: 12px;
+    --fsds-semantic-spacing-card-padding: 24px;
+    --fsds-semantic-motion-interaction-duration: 120ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-bounce);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-medium);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-bold);
+    --fsds-semantic-typography-heading-font-weight: 800;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-badge-color-background-default: var(--fsds-core-color-palette-orange-600);
+    --fsds-badge-color-foreground-primary: var(--fsds-core-color-mode-light);
+    --fsds-badge-color-border-default: var(--fsds-core-color-palette-orange-700);
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-button-design-root-shape-radius: 9999px;
+    --fsds-button-design-root-typography-weight: 700;
+    --fsds-input-design-root-shape-radius: 12px;
+    --fsds-card-design-root-shape-radius: 20px;
+    --fsds-card-design-root-spacing-padding: 24px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 0px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 16px;
+    --fsds-card-size-padding-inset: 16px;
+    --fsds-code-block-design-root-shape-radius: 8px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 12px;
+    --fsds-popover-design-content-border-width: 0px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 20px;
+    --fsds-dialog-design-modal-shape-radius: 20px;
+    --fsds-select-design-trigger-shape-radius: 12px;
+    --fsds-select-design-content-shape-radius: 12px;
+    --fsds-select-design-content-border-width: 0px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 10px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 12px;
+    --fsds-walkthrough-design-root-shape-radius: 20px;
+    --fsds-accordion-design-root-shape-radius: 20px;
+    --fsds-accordion-design-item-shape-radius: 12px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   .light[data-brand="quickserve"], .light [data-brand="quickserve"], [data-theme="light"][data-brand="quickserve"], [data-theme="light"] [data-brand="quickserve"] {
@@ -3001,8 +4381,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-orange-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-orange-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-orange-300);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-control-radius-default: 12px;
+    --fsds-semantic-shape-card-radius: 20px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-neutral-100);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-400);
@@ -3011,23 +4391,61 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-floating);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-overlay);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-05);
+    --fsds-semantic-shape-element-radius: 12px;
+    --fsds-semantic-shape-button-radius: 9999px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-input-radius-default: 12px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-04);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-07);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-08);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short1);
+    --fsds-semantic-spacing-component-padding: 24px;
+    --fsds-semantic-spacing-component-gap: 12px;
+    --fsds-semantic-spacing-card-padding: 24px;
+    --fsds-semantic-motion-interaction-duration: 120ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-bounce);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-medium);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-bold);
+    --fsds-semantic-typography-heading-font-weight: 800;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-badge-color-background-default: var(--fsds-core-color-palette-orange-600);
+    --fsds-badge-color-foreground-primary: var(--fsds-core-color-mode-light);
+    --fsds-badge-color-border-default: var(--fsds-core-color-palette-orange-700);
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-button-design-root-shape-radius: 9999px;
+    --fsds-button-design-root-typography-weight: 700;
+    --fsds-input-design-root-shape-radius: 12px;
+    --fsds-card-design-root-shape-radius: 20px;
+    --fsds-card-design-root-spacing-padding: 24px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 0px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 16px;
+    --fsds-card-size-padding-inset: 16px;
+    --fsds-code-block-design-root-shape-radius: 8px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 12px;
+    --fsds-popover-design-content-border-width: 0px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 20px;
+    --fsds-dialog-design-modal-shape-radius: 20px;
+    --fsds-select-design-trigger-shape-radius: 12px;
+    --fsds-select-design-content-shape-radius: 12px;
+    --fsds-select-design-content-border-width: 0px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 10px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 12px;
+    --fsds-walkthrough-design-root-shape-radius: 20px;
+    --fsds-accordion-design-root-shape-radius: 20px;
+    --fsds-accordion-design-item-shape-radius: 12px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -3051,6 +4469,8 @@
       --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-700);
       --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
       --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+      --fsds-badge-color-background-default: var(--fsds-core-color-palette-orange-500);
+      --fsds-badge-color-border-default: var(--fsds-core-color-palette-orange-400);
     }
   }
 
@@ -3074,18 +4494,24 @@
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-700);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
     --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+    --fsds-badge-color-background-default: var(--fsds-core-color-palette-orange-500);
+    --fsds-badge-color-border-default: var(--fsds-core-color-palette-orange-400);
   }
 
   [data-brand="quickserve"] .badge {
     --fsds-badge-color-background-default: var(--fsds-core-color-palette-orange-600);
     --fsds-badge-color-foreground-primary: var(--fsds-core-color-mode-light);
     --fsds-badge-color-border-default: var(--fsds-core-color-palette-orange-700);
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
   }
 
   .light[data-brand="quickserve"] .badge, [data-theme="light"][data-brand="quickserve"] .badge {
     --fsds-badge-color-background-default: var(--fsds-core-color-palette-orange-600);
     --fsds-badge-color-foreground-primary: var(--fsds-core-color-mode-light);
     --fsds-badge-color-border-default: var(--fsds-core-color-palette-orange-700);
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -3098,6 +4524,79 @@
   .dark[data-brand="quickserve"] .badge, [data-theme="dark"][data-brand="quickserve"] .badge {
     --fsds-badge-color-background-default: var(--fsds-core-color-palette-orange-500);
     --fsds-badge-color-border-default: var(--fsds-core-color-palette-orange-400);
+  }
+
+  [data-brand="quickserve"] .button {
+    --fsds-button-design-root-shape-radius: 9999px;
+    --fsds-button-design-root-typography-weight: 700;
+  }
+
+  [data-brand="quickserve"] .input {
+    --fsds-input-design-root-shape-radius: 12px;
+  }
+
+  [data-brand="quickserve"] .card {
+    --fsds-card-design-root-shape-radius: 20px;
+    --fsds-card-design-root-spacing-padding: 24px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 0px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-raised);
+    --fsds-card-design-media-shape-radius: 16px;
+    --fsds-card-size-padding-inset: 16px;
+  }
+
+  [data-brand="quickserve"] .code-block {
+    --fsds-code-block-design-root-shape-radius: 8px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  [data-brand="quickserve"] .popover {
+    --fsds-popover-design-content-shape-radius: 12px;
+    --fsds-popover-design-content-border-width: 0px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 20px;
+  }
+
+  [data-brand="quickserve"] .dialog {
+    --fsds-dialog-design-modal-shape-radius: 20px;
+  }
+
+  [data-brand="quickserve"] .select {
+    --fsds-select-design-trigger-shape-radius: 12px;
+    --fsds-select-design-content-shape-radius: 12px;
+    --fsds-select-design-content-border-width: 0px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 10px;
+  }
+
+  [data-brand="quickserve"] .chip {
+    --fsds-chip-design-root-shape-radius: 9999px;
+  }
+
+  [data-brand="quickserve"] .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 8px;
+  }
+
+  [data-brand="quickserve"] .toast {
+    --fsds-toast-design-item-shape-radius: 12px;
+  }
+
+  [data-brand="quickserve"] .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 20px;
+  }
+
+  [data-brand="quickserve"] .accordion {
+    --fsds-accordion-design-root-shape-radius: 20px;
+    --fsds-accordion-design-item-shape-radius: 12px;
+  }
+
+  [data-brand="quickserve"] .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="quickserve"] .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   [data-brand="streaming"] {
@@ -3124,8 +4623,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-lime-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-lime-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-lime-300);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-control-radius-default: 8px;
+    --fsds-semantic-shape-card-radius: 12px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-mode-transparent);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-400);
@@ -3134,23 +4633,60 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-flat);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-full);
+    --fsds-semantic-shape-element-radius: 8px;
+    --fsds-semantic-shape-button-radius: 9999px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-full);
+    --fsds-semantic-shape-input-radius-default: 8px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-04);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-04);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short2);
+    --fsds-semantic-spacing-component-padding: 20px;
+    --fsds-semantic-spacing-component-gap: 12px;
+    --fsds-semantic-spacing-card-padding: 20px;
+    --fsds-semantic-motion-interaction-duration: 140ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-quick-enter);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-medium);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-black);
+    --fsds-semantic-typography-heading-font-weight: 800;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-avatar-color-background-default: var(--fsds-core-color-palette-lime-100);
+    --fsds-avatar-color-border-default: var(--fsds-core-color-palette-lime-300);
+    --fsds-button-design-root-shape-radius: 9999px;
+    --fsds-button-design-root-typography-weight: 700;
+    --fsds-input-design-root-shape-radius: 8px;
+    --fsds-card-design-root-shape-radius: 12px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 0px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 8px;
+    --fsds-card-size-padding-inset: 12px;
+    --fsds-code-block-design-root-shape-radius: 8px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 12px;
+    --fsds-popover-design-content-border-width: 0px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 16px;
+    --fsds-select-design-trigger-shape-radius: 8px;
+    --fsds-select-design-content-shape-radius: 12px;
+    --fsds-select-design-content-border-width: 0px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 6px;
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 12px;
+    --fsds-walkthrough-design-root-shape-radius: 16px;
+    --fsds-accordion-design-root-shape-radius: 12px;
+    --fsds-accordion-design-item-shape-radius: 8px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   .light[data-brand="streaming"], .light [data-brand="streaming"], [data-theme="light"][data-brand="streaming"], [data-theme="light"] [data-brand="streaming"] {
@@ -3177,8 +4713,8 @@
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-lime-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-lime-400);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-lime-300);
-    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-control-radius-default: 8px;
+    --fsds-semantic-shape-card-radius: 12px;
     --fsds-semantic-shape-card-border-light: var(--fsds-core-color-mode-transparent);
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-200);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-400);
@@ -3187,23 +4723,60 @@
     --fsds-semantic-shape-card-elevation-default: var(--fsds-semantic-elevation-surface-flat);
     --fsds-semantic-shape-card-elevation-far: var(--fsds-semantic-elevation-surface-raised);
     --fsds-semantic-shape-card-elevation-none: var(--fsds-semantic-elevation-surface-flat);
-    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-04);
-    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-full);
+    --fsds-semantic-shape-element-radius: 8px;
+    --fsds-semantic-shape-button-radius: 9999px;
     --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
-    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-full);
+    --fsds-semantic-shape-input-radius-default: 8px;
     --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
     --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
     --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-04);
     --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
     --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
-    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-05);
-    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-04);
-    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-06);
-    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-short2);
+    --fsds-semantic-spacing-component-padding: 20px;
+    --fsds-semantic-spacing-component-gap: 12px;
+    --fsds-semantic-spacing-card-padding: 20px;
+    --fsds-semantic-motion-interaction-duration: 140ms;
     --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-quick-enter);
     --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-medium);
-    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-black);
+    --fsds-semantic-typography-heading-font-weight: 800;
+    --fsds-semantic-typography-semantic-family-heading: var(--fsds-core-typography-font-family-sans);
+    --fsds-semantic-typography-semantic-family-body: var(--fsds-core-typography-font-family-inter);
+    --fsds-avatar-color-background-default: var(--fsds-core-color-palette-lime-100);
+    --fsds-avatar-color-border-default: var(--fsds-core-color-palette-lime-300);
+    --fsds-button-design-root-shape-radius: 9999px;
+    --fsds-button-design-root-typography-weight: 700;
+    --fsds-input-design-root-shape-radius: 8px;
+    --fsds-card-design-root-shape-radius: 12px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 0px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 8px;
+    --fsds-card-size-padding-inset: 12px;
+    --fsds-code-block-design-root-shape-radius: 8px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+    --fsds-popover-design-content-shape-radius: 12px;
+    --fsds-popover-design-content-border-width: 0px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+    --fsds-dialog-design-modal-shape-radius: 16px;
+    --fsds-select-design-trigger-shape-radius: 8px;
+    --fsds-select-design-content-shape-radius: 12px;
+    --fsds-select-design-content-border-width: 0px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 6px;
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+    --fsds-chip-design-root-shape-radius: 9999px;
+    --fsds-tooltip-design-content-shape-radius: 8px;
+    --fsds-toast-design-item-shape-radius: 12px;
+    --fsds-walkthrough-design-root-shape-radius: 16px;
+    --fsds-accordion-design-root-shape-radius: 12px;
+    --fsds-accordion-design-item-shape-radius: 8px;
+    --fsds-tabs-design-root-shape-radius: 0px;
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -3227,6 +4800,8 @@
       --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-700);
       --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
       --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+      --fsds-avatar-color-background-default: var(--fsds-core-color-palette-lime-900);
+      --fsds-avatar-color-border-default: var(--fsds-core-color-palette-lime-700);
     }
   }
 
@@ -3250,6 +4825,8 @@
     --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-neutral-700);
     --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
     --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+    --fsds-avatar-color-background-default: var(--fsds-core-color-palette-lime-900);
+    --fsds-avatar-color-border-default: var(--fsds-core-color-palette-lime-700);
   }
 
   [data-brand="streaming"] .avatar {
@@ -3272,6 +4849,84 @@
   .dark[data-brand="streaming"] .avatar, [data-theme="dark"][data-brand="streaming"] .avatar {
     --fsds-avatar-color-background-default: var(--fsds-core-color-palette-lime-900);
     --fsds-avatar-color-border-default: var(--fsds-core-color-palette-lime-700);
+  }
+
+  [data-brand="streaming"] .button {
+    --fsds-button-design-root-shape-radius: 9999px;
+    --fsds-button-design-root-typography-weight: 700;
+  }
+
+  [data-brand="streaming"] .input {
+    --fsds-input-design-root-shape-radius: 8px;
+  }
+
+  [data-brand="streaming"] .card {
+    --fsds-card-design-root-shape-radius: 12px;
+    --fsds-card-design-root-spacing-padding: 20px;
+    --fsds-card-design-root-spacing-gap: 12px;
+    --fsds-card-design-root-border-width: 0px;
+    --fsds-card-design-root-elevation-shadow: var(--fsds-semantic-elevation-surface-flat);
+    --fsds-card-design-media-shape-radius: 8px;
+    --fsds-card-size-padding-inset: 12px;
+  }
+
+  [data-brand="streaming"] .code-block {
+    --fsds-code-block-design-root-shape-radius: 8px;
+    --fsds-code-block-design-root-spacing-padding: 20px;
+    --fsds-code-block-design-root-border-width: 0px;
+  }
+
+  [data-brand="streaming"] .popover {
+    --fsds-popover-design-content-shape-radius: 12px;
+    --fsds-popover-design-content-border-width: 0px;
+    --fsds-popover-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-popover-design-content-spacing-padding: 16px;
+  }
+
+  [data-brand="streaming"] .dialog {
+    --fsds-dialog-design-modal-shape-radius: 16px;
+  }
+
+  [data-brand="streaming"] .select {
+    --fsds-select-design-trigger-shape-radius: 8px;
+    --fsds-select-design-content-shape-radius: 12px;
+    --fsds-select-design-content-border-width: 0px;
+    --fsds-select-design-content-elevation-shadow: var(--fsds-semantic-elevation-surface-overlay);
+    --fsds-select-design-option-shape-radius: 6px;
+  }
+
+  [data-brand="streaming"] .badge {
+    --fsds-badge-design-root-shape-radius: 9999px;
+    --fsds-badge-design-root-border-width: 0px;
+  }
+
+  [data-brand="streaming"] .chip {
+    --fsds-chip-design-root-shape-radius: 9999px;
+  }
+
+  [data-brand="streaming"] .tooltip {
+    --fsds-tooltip-design-content-shape-radius: 8px;
+  }
+
+  [data-brand="streaming"] .toast {
+    --fsds-toast-design-item-shape-radius: 12px;
+  }
+
+  [data-brand="streaming"] .walkthrough {
+    --fsds-walkthrough-design-root-shape-radius: 16px;
+  }
+
+  [data-brand="streaming"] .accordion {
+    --fsds-accordion-design-root-shape-radius: 12px;
+    --fsds-accordion-design-item-shape-radius: 8px;
+  }
+
+  [data-brand="streaming"] .tabs {
+    --fsds-tabs-design-root-shape-radius: 0px;
+  }
+
+  [data-brand="streaming"] .breadcrumbs {
+    --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
 }

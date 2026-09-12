@@ -928,8 +928,17 @@ export function generateBrandLayerCSS(
   const blocks: string[] = ["@layer brand {"];
 
   for (const [brandId, overrides] of brands) {
+    // Detached/portalled parts inherit from the brand scope, not the component
+    // root. Publish their already-namespaced addresses at that scope as well;
+    // the local blocks below still beat component-local default declarations.
+    const lightVars = { ...overrides.lightVars };
+    const darkVars = { ...overrides.darkVars };
+    for (const component of overrides.componentVars.values()) {
+      Object.assign(lightVars, component.light);
+      Object.assign(darkVars, component.dark);
+    }
     if (
-      Object.keys(overrides.lightVars).length === 0 &&
+      Object.keys(lightVars).length === 0 &&
       overrides.componentVars.size === 0
     ) {
       continue;
@@ -943,22 +952,24 @@ export function generateBrandLayerCSS(
     // palette's literal hues, not the project's actual brand. The default
     // brand override file IS the source of truth for the project's
     // canonical look, so it must be the unbranded default too.
+    // Zero specificity keeps this fallback below every explicit brand, even
+    // when that brand sorts before Default or omits a theme-specific value.
     if (brandId === "default") {
-      const rootProps = Object.entries(overrides.lightVars)
+      const rootProps = Object.entries(lightVars)
         .map(([p, v]) => `    ${p}: ${v};`)
         .join("\n");
-      blocks.push(`  :root {\n${rootProps}\n  }`);
+      blocks.push(`  :where(:root) {\n${rootProps}\n  }`);
     }
 
     // Light mode overrides (default)
-    const lightBlock = formatBrandBlock(brandId, overrides.lightVars);
+    const lightBlock = formatBrandBlock(brandId, lightVars);
     if (lightBlock) {
       blocks.push(lightBlock);
     }
 
     // Light mode class overrides (for manual .light/data-theme toggle when system prefers dark)
-    if (Object.keys(overrides.lightVars).length > 0) {
-      const lightProps = Object.entries(overrides.lightVars)
+    if (Object.keys(lightVars).length > 0) {
+      const lightProps = Object.entries(lightVars)
         .map(([p, v]) => `    ${p}: ${v};`)
         .join("\n");
       blocks.push(
@@ -967,15 +978,15 @@ export function generateBrandLayerCSS(
     }
 
     // Dark mode overrides within brand
-    if (Object.keys(overrides.darkVars).length > 0) {
-      const darkBlock = Object.entries(overrides.darkVars)
+    if (Object.keys(darkVars).length > 0) {
+      const darkBlock = Object.entries(darkVars)
         .map(([prop, value]) => `      ${prop}: ${value};`)
         .join("\n");
 
       blocks.push(
         `  @media (prefers-color-scheme: dark) {\n    [data-brand="${brandId}"] {\n${darkBlock}\n    }\n  }`,
       );
-      const darkProps = Object.entries(overrides.darkVars)
+      const darkProps = Object.entries(darkVars)
         .map(([p, v]) => `    ${p}: ${v};`)
         .join("\n");
       blocks.push(
@@ -997,22 +1008,35 @@ export function generateBrandLayerCSS(
       // mirrors the theme layer's own `:root` + `.light, [data-theme="light"]`
       // pairing inside the same media query.
       if (brandId === "default") {
-        const lightGuardProps = Object.entries(overrides.lightVars)
+        const lightGuardProps = Object.entries(lightVars)
           .map(([p, v]) => `      ${p}: ${v};`)
           .join("\n");
         blocks.push(
           lightGuardProps
-            ? `  @media (prefers-color-scheme: dark) {\n    :root {\n${darkBlock}\n    }\n    .light, [data-theme="light"] {\n${lightGuardProps}\n    }\n  }`
-            : `  @media (prefers-color-scheme: dark) {\n    :root {\n${darkBlock}\n    }\n  }`,
+            ? `  @media (prefers-color-scheme: dark) {\n    :where(:root) {\n${darkBlock}\n    }\n    :where(.light, [data-theme="light"]) {\n${lightGuardProps}\n    }\n  }`
+            : `  @media (prefers-color-scheme: dark) {\n    :where(:root) {\n${darkBlock}\n    }\n  }`,
         );
         blocks.push(
-          `  .dark, [data-theme="dark"] {\n${darkProps}\n  }`,
+          `  :where(.dark, [data-theme="dark"]) {\n${darkProps}\n  }`,
         );
       }
     }
 
     // Component-scoped overrides (brand `components.<Name>.*` block).
     for (const [componentKebab, compOverrides] of overrides.componentVars) {
+      // The showcase clears data-brand for Default. Its component decisions
+      // must have the same unbranded default as its semantic decisions.
+      // :where keeps explicit brand scopes and consumer overrides stronger.
+      if (brandId === "default") {
+        const selector = `:where(:root:not([data-brand])) .${componentKebab}`;
+        const props = (vars: Record<string, string>) => Object.entries(vars)
+          .map(([p, v]) => `    ${p}: ${v};`).join("\n");
+        blocks.push(`  ${selector} {\n${props(compOverrides.light)}\n  }`);
+        if (Object.keys(compOverrides.dark).length > 0) {
+          blocks.push(`  @media (prefers-color-scheme: dark) {\n    ${selector} {\n${props(compOverrides.dark)}\n    }\n    :where(:root:not([data-brand]):is(.light, [data-theme="light"])) .${componentKebab} {\n${props(compOverrides.light)}\n    }\n  }`);
+          blocks.push(`  :where(:root:not([data-brand]):is(.dark, [data-theme="dark"])) .${componentKebab} {\n${props(compOverrides.dark)}\n  }`);
+        }
+      }
       const lightCompBlock = formatComponentBrandBlock(
         brandId,
         componentKebab,

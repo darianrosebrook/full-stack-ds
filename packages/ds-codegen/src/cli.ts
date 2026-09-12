@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { validateComponentTokenConsumption } from "./validation/component-token-consumption.js";
+import { validateBrandComponentOverrides } from "./validation/brand-component-overrides.js";
 /**
  * Contract-driven codegen CLI.
  *
@@ -442,6 +443,23 @@ function main(): void {
     }
   }
 
+  // Brand values are checked by tokens:check-brand-refs; their destination
+  // addresses must also reach a current Web consumer in the contract.
+  const brandDir = path.resolve("packages/ds-tokens/src/brands");
+  const brandComponents = args.checkSemantics && fs.existsSync(brandDir)
+    ? fs.readdirSync(brandDir).filter(file => file.endsWith(".tokens.json")).map(file => ({
+      file, components: JSON.parse(fs.readFileSync(path.join(brandDir, file), "utf8")).components ?? {},
+    }))
+    : [];
+  for (const brand of brandComponents) {
+    for (const name of Object.keys(brand.components)) {
+      if (name.startsWith("$") || allContractsByName.has(name)) continue;
+      console.error(`DRIFT ${brand.file}`);
+      console.error(formatIssues(validateBrandComponentOverrides(name, brand.components[name])));
+      hasErrors = true;
+    }
+  }
+
   for (const entry of filtered) {
     const { filename: file, absPath: filePath } = entry;
     const rawBytes = fs.readFileSync(filePath);
@@ -561,6 +579,9 @@ function main(): void {
         }),
         ...validateContractTokens(result.value),
         ...validateComponentTokenConsumption(result.value),
+        ...brandComponents.flatMap(brand => brand.components[result.value.name] === undefined ? [] :
+          validateBrandComponentOverrides(result.value.name, brand.components[result.value.name], result.value)
+            .map(issue => ({ ...issue, message: `${brand.file}: ${issue.message}` }))),
         ...validateContractFallbackCompleteness(result.value),
         ...validateContractFallbackStale(result.value),
         ...validateContractEmittedCss(result.value),

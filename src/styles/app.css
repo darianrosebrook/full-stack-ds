@@ -3,15 +3,14 @@
  *
  * Color, type, spacing, radius, and elevation come from the published token
  * package `@full-stack-ds/tokens` (imported in main.tsx). The locals defined
- * below are not tokens — they're app-shell layout constants and an interaction
- * transition timing that no semantic token covers.
+ * below hold app-shell dimensions and an alias to semantic interaction timing.
  */
 
 :root {
   --fsds-app-sidebar-w: 280px;
   --fsds-app-header-h: 56px;
   --fsds-app-trace-w: 360px;
-  --fsds-app-transition-fast: 120ms ease;
+  --fsds-app-transition-fast: var(--fsds-semantic-motion-interaction-duration, 120ms) ease;
 }
 
 /*
@@ -60,7 +59,8 @@ body,
 }
 
 body {
-  font-family: var(--fsds-core-typography-font-family-sans);
+  font-family: var(--fsds-semantic-typography-semantic-family-body, var(--fsds-core-typography-font-family-sans));
+  font-weight: var(--fsds-semantic-typography-body-font-weight, 400);
   font-size: var(--fsds-core-typography-ramp-3);
   line-height: var(--fsds-semantic-typography-line-height-normal);
   color: var(--fsds-semantic-color-foreground-primary);
@@ -332,7 +332,7 @@ button {
 /*
  * Grouped sections render as NavTree branches from @full-stack-ds/react —
  * their heading, indentation and connector lines are DS-owned CSS. Only the
- * Badge sizing hack needs an app rule (see the .sidebar-item > .badge note
+ * Badge content sizing needs an app rule (see the .sidebar-item > .badge note
  * below), applied to tree rows as well.
  */
 .nav-tree__item .badge {
@@ -415,8 +415,7 @@ button {
 
 /* Main content */
 .page {
-  padding: var(--fsds-core-spacing-size-09) var(--fsds-core-spacing-size-10)
-    var(--fsds-core-spacing-size-10);
+  padding: clamp(24px, 4vw, calc(var(--fsds-semantic-spacing-component-padding, 16px) * 2));
   max-width: 1080px;
   margin: 0 auto;
 }
@@ -433,7 +432,8 @@ button {
 .page-title {
   font-size: var(--fsds-core-typography-ramp-9);
   line-height: var(--fsds-semantic-typography-line-height-tight);
-  font-weight: var(--fsds-semantic-typography-font-weight-medium);
+  font-family: var(--fsds-semantic-typography-semantic-family-heading, inherit);
+  font-weight: var(--fsds-semantic-typography-heading-font-weight, 500);
   letter-spacing: -0.02em;
   color: var(--fsds-semantic-color-foreground-primary);
   margin: 0 0 var(--fsds-core-spacing-size-05);
@@ -448,7 +448,7 @@ button {
 }
 
 .section {
-  margin: var(--fsds-core-spacing-size-10) 0;
+  margin: calc(var(--fsds-semantic-spacing-component-gap, 12px) * 3) 0;
 }
 
 .section-header {
@@ -466,7 +466,8 @@ button {
 .section-title {
   font-size: var(--fsds-core-typography-ramp-6);
   line-height: var(--fsds-semantic-typography-line-height-tight);
-  font-weight: var(--fsds-semantic-typography-font-weight-medium);
+  font-family: var(--fsds-semantic-typography-semantic-family-heading, inherit);
+  font-weight: var(--fsds-semantic-typography-heading-font-weight, 500);
   letter-spacing: -0.01em;
   color: var(--fsds-semantic-color-foreground-primary);
   margin: 0;
@@ -523,7 +524,6 @@ button {
   --fsds-card-design-root-spacing-padding: 0;
   --fsds-card-design-root-spacing-gap: 0;
   --fsds-card-design-root-border-color: var(--fsds-semantic-color-border-subtle);
-  --fsds-card-design-root-shape-radius: var(--fsds-core-shape-radius-04);
   --fsds-card-design-root-background-fill: var(--fsds-semantic-color-background-elevated);
   --fsds-card-design-root-typography-line-height: inherit;
   display: block;
@@ -531,8 +531,8 @@ button {
 }
 
 .showcase-card--inset {
-  --fsds-box-model-padding: var(--fsds-core-spacing-size-07);
-  --fsds-card-design-root-spacing-padding: var(--fsds-core-spacing-size-07);
+  --fsds-box-model-padding: var(--fsds-semantic-spacing-card-padding, 24px);
+  --fsds-card-design-root-spacing-padding: var(--fsds-semantic-spacing-card-padding, 24px);
 }
 
 /* A rendered example is a separate design scope from its showcase Card.
@@ -550,7 +550,7 @@ button {
 .panel-toolbar {
   align-items: center;
   justify-content: space-between;
-  padding: var(--fsds-core-spacing-size-06) var(--fsds-core-spacing-size-06);
+  padding: var(--fsds-semantic-spacing-component-padding, 16px);
   border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
   background: var(--fsds-semantic-color-background-subtle);
   font-size: var(--fsds-core-typography-ramp-2);
@@ -1603,9 +1603,9 @@ button {
 }
 
 .home-stat {
-  padding: var(--fsds-core-spacing-size-07);
+  padding: var(--fsds-semantic-spacing-card-padding, 24px);
   border: 1px solid var(--fsds-semantic-color-border-subtle);
-  border-radius: var(--fsds-core-shape-radius-04);
+  border-radius: var(--fsds-semantic-shape-card-radius, 16px);
   background: var(--fsds-semantic-color-background-elevated);
 }
 
