@@ -23,7 +23,8 @@ scope:
     - 'docs/architecture/design/brand-expression.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Brand component overrides must address current consumed component tokens or design slots; no legacy aliases or allowance ledger.'
+  - 'Control shapes and content-surface shapes vary independently; app styling consumes semantic or component tokens without per-brand CSS branches.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
