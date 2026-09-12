@@ -91,6 +91,8 @@ test("application cards retain distinct brand surfaces and readable content", as
       const s = getComputedStyle(e);
       return { radius: s.borderTopLeftRadius, border: s.borderTopWidth, shadow: s.boxShadow, padding: s.paddingTop };
     });
+    // App-owned summary surfaces must also follow the semantic card shape.
+    await expect(page.locator(".home-stat").first()).toHaveCSS("border-radius", style.radius);
     if (brand === "forest") {
       expect(style).toMatchObject({ radius: "24px", border: "0px", padding: "20px" });
       expect(style.shadow).not.toBe("none");
