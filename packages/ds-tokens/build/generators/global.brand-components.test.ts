@@ -73,7 +73,7 @@ describe("detached component parts and the unbranded default", () => {
         dark: { "--fsds-code-block-design-root-background-fill": "#111111" },
       }]]),
     }]]));
-    expect(css).toContain(':root {\n    --fsds-code-block-design-root-background-fill: #ffffff;');
+    expect(css).toContain(':where(:root) {\n    --fsds-code-block-design-root-background-fill: #ffffff;');
     expect(css).toContain(':where(:root:not([data-brand])) .code-block {');
     expect(css).toContain('[data-brand="default"] .code-block {');
     expect(css).toContain(':root:not([data-brand]):is(.light, [data-theme="light"])');

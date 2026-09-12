@@ -2063,7 +2063,7 @@
     --fsds-breadcrumbs-design-root-shape-radius: 0px;
   }
 
-  :root {
+  :where(:root) {
     --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-500);
     --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-500);
     --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-600);
@@ -2374,7 +2374,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :root {
+    :where(:root) {
       --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-400);
       --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-400);
       --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-300);
@@ -2395,7 +2395,7 @@
       --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-neutral-500);
       --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
     }
-    .light, [data-theme="light"] {
+    :where(.light, [data-theme="light"]) {
       --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-500);
       --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-500);
       --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-600);
@@ -2484,7 +2484,7 @@
     }
   }
 
-  .dark, [data-theme="dark"] {
+  :where(.dark, [data-theme="dark"]) {
     --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-400);
     --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-400);
     --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-300);

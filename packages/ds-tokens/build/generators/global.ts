@@ -952,11 +952,13 @@ export function generateBrandLayerCSS(
     // palette's literal hues, not the project's actual brand. The default
     // brand override file IS the source of truth for the project's
     // canonical look, so it must be the unbranded default too.
+    // Zero specificity keeps this fallback below every explicit brand, even
+    // when that brand sorts before Default or omits a theme-specific value.
     if (brandId === "default") {
       const rootProps = Object.entries(lightVars)
         .map(([p, v]) => `    ${p}: ${v};`)
         .join("\n");
-      blocks.push(`  :root {\n${rootProps}\n  }`);
+      blocks.push(`  :where(:root) {\n${rootProps}\n  }`);
     }
 
     // Light mode overrides (default)
@@ -1011,11 +1013,11 @@ export function generateBrandLayerCSS(
           .join("\n");
         blocks.push(
           lightGuardProps
-            ? `  @media (prefers-color-scheme: dark) {\n    :root {\n${darkBlock}\n    }\n    .light, [data-theme="light"] {\n${lightGuardProps}\n    }\n  }`
-            : `  @media (prefers-color-scheme: dark) {\n    :root {\n${darkBlock}\n    }\n  }`,
+            ? `  @media (prefers-color-scheme: dark) {\n    :where(:root) {\n${darkBlock}\n    }\n    :where(.light, [data-theme="light"]) {\n${lightGuardProps}\n    }\n  }`
+            : `  @media (prefers-color-scheme: dark) {\n    :where(:root) {\n${darkBlock}\n    }\n  }`,
         );
         blocks.push(
-          `  .dark, [data-theme="dark"] {\n${darkProps}\n  }`,
+          `  :where(.dark, [data-theme="dark"]) {\n${darkProps}\n  }`,
         );
       }
     }

@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const brands = ["default", "canary", "corporate", "developer", "fintech", "forest", "marketplace", "monochrome", "quickserve", "streaming"];
+const headingWeights: Record<string, string> = { default: "500", canary: "700", corporate: "600", developer: "600", fintech: "600", forest: "500", marketplace: "600", monochrome: "700", quickserve: "800", streaming: "800" };
 for (const theme of ["light", "dark"]) {
   test(`${theme}: brands reach content, detached menus and application rhythm`, async ({ page }, info) => {
     await page.setViewportSize({ width: 1427, height: 1205 });
@@ -34,6 +35,7 @@ for (const theme of ["light", "dark"]) {
         weight: await page.locator(".page-title").evaluate(e => getComputedStyle(e).fontWeight),
         family: await page.locator(".page-title").evaluate(e => getComputedStyle(e).fontFamily),
       };
+      expect(measurements[brand].weight, `${brand} heading weight in ${theme}`).toBe(headingWeights[brand]);
       await page.screenshot({ animations: "disabled", path: info.outputPath(`${brand}-${theme}.png`) });
       await page.keyboard.press("Escape");
       await expect(menu).not.toBeVisible();
