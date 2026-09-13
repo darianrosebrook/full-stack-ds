@@ -155,13 +155,13 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
   });
 
   it("throws loudly for non-static shapes instead of misrouting", () => {
-    // Checkbox and Divider gained classes (boolean control, bare-rule leaf);
-    // RadioGroup and Select remain unimplemented control shapes.
-    expect(() => generateJetpackComposeComponentSource(irFor("RadioGroup"))).toThrow(
-      /no emission class matches component "RadioGroup" on jetpack-compose/,
-    );
+    // RadioGroup gained its collection class; Select and Card remain
+    // unimplemented shapes (selection control and composer respectively).
     expect(() => generateJetpackComposeComponentSource(irFor("Select"))).toThrow(
       /no emission class matches component "Select" on jetpack-compose/,
+    );
+    expect(() => generateJetpackComposeComponentSource(irFor("Card"))).toThrow(
+      /no emission class matches component "Card" on jetpack-compose/,
     );
   });
 });
@@ -412,5 +412,36 @@ describe("generateJetpackComposeComponentSource — disclosure class (FEAT-COMPO
     expect(() => generateJetpackComposeComponentSource(irFor("Accordion"))).toThrow(
       /no emission class matches component "Accordion" on jetpack-compose/,
     );
+  });
+});
+
+describe("generateJetpackComposeComponentSource — radio-collection class (FEAT-COMPOSE-RADIO-ADMISSION-01)", () => {
+  it("lowers the shared radio facts onto selectable rows (RadioGroup)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("RadioGroup"));
+    // Option data class lowered from the contract alias.
+    expect(src).toContain("data class RadioGroupOption(");
+    expect(src).toContain("val value: String,");
+    expect(src).toContain("val label: String,");
+    // Channel trio + controlled-takes-precedence.
+    expect(src).toContain("value: String? = null,");
+    expect(src).toContain("val resolvedValue = value ?: uncontrolledValue");
+    expect(src).toContain("onChange?.invoke(item.value)");
+    // One selectable row per option with radio semantics.
+    expect(src).toContain("role = Role.RadioButton,");
+    expect(src).toContain("selected = selected,");
+    expect(src).toContain("if (orientation == RadioGroupOrientation.Horizontal)");
+    expect(src).toContain("Arrangement.spacedBy(groupGap, Alignment.CenterHorizontally)");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun RadioGroup\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+
+  it("keeps every radio read backed by a tokens-file definition (RadioGroup)", () => {
+    const source = generateJetpackComposeComponentSource(irFor("RadioGroup"));
+    const tokens = generateJetpackComposeTokensFile(irFor("RadioGroup"));
+    const reads = [...source.matchAll(/TokenScopes\["([^"]+)"\]\?\.get\("([^"]+)"\)/g)];
+    for (const [, scope, slot] of reads) {
+      const block = tokens.split(`"${scope}" to mapOf(`)[1]?.split("\n    ),")[0] ?? "";
+      expect(block, `${scope}: ${slot}`).toContain(`"${slot}" to ComponentTokenDefinition(`);
+    }
   });
 });

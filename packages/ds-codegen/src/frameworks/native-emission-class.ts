@@ -24,7 +24,12 @@
  * component NAME from here — a class predicate that special-cases a name
  * is a missing IR fact (see AGENTS.md layer authority).
  */
-import type { ComponentIR, DomNodeIR, NormalizedChannelIR } from "../ir.js";
+import type {
+  BindingExpression,
+  ComponentIR,
+  DomNodeIR,
+  NormalizedChannelIR,
+} from "../ir.js";
 
 /**
  * The projected-children action class: a native action affordance whose
@@ -287,4 +292,154 @@ export function isIconDecoratedContent(ir: ComponentIR): boolean {
   };
   walk(ir.dom);
   return childrenLeaves === 1 && hasIconPart && !strayInstance;
+}
+
+/** One member of a radio-group option alias, lowered to a scalar type. */
+export interface RadioGroupMemberFact {
+  name: string;
+  optional: boolean;
+  type: "String" | "Bool";
+}
+
+/**
+ * The native radio-collection facts: identity, label, disabled state, and
+ * channel writes all come from the IR. Returns null when the contract is
+ * not a single-choice collection.
+ *
+ * The gate is pure IR-fact extraction (dom role, compositeControl
+ * interaction model, iteration, member bindings, defined-type alias) — it
+ * is framework-neutral, which is why it lives here rather than in the
+ * swift emitter that first needed it.
+ */
+export interface RadioGroupFacts {
+  optionsProp: string;
+  itemType: string;
+  members: RadioGroupMemberFact[];
+  valueMember: string;
+  labelMember: string;
+  disabledMember?: string;
+  /** Member bound to the item's `title` (help text), when the alias has one. */
+  helpMember?: string;
+  disabledOptional: boolean;
+  channel: NormalizedChannelIR;
+  defaultValueProp?: string;
+  labelProp?: string;
+  orientation?: {
+    propName: string;
+    typeName: string;
+    values: string[];
+    defaultMember: string;
+  };
+}
+
+const memberOf = (binding: BindingExpression | undefined): string | undefined =>
+  binding?.kind === "iterationLocal" &&
+  binding.local === "item" &&
+  binding.path?.length === 1
+    ? binding.path[0]
+    : undefined;
+
+export function radioGroupFacts(ir: ComponentIR): RadioGroupFacts | null {
+  const control = ir.compositeControl;
+  if (
+    !ir.dom ||
+    ir.dom.attrs.role !== "radiogroup" ||
+    !control ||
+    control.interactionModel !== "collection-selection" ||
+    control.commit !== "change" ||
+    control.channel.valueType !== "string" ||
+    control.update.kind !== "channelCall"
+  ) {
+    return null;
+  }
+
+  const item = ir.dom.children.find((node) => node.iteration?.kind === "array");
+  const option = item?.children.find((node) => node.part === control.part.name);
+  const valueMember = memberOf(option?.bindings.value);
+  const labelMember = memberOf(option?.bindings["aria-label"]);
+  const disabledMember = memberOf(option?.bindings.disabled);
+  const checked = option?.bindings.checked;
+  if (
+    !item?.iteration?.itemType ||
+    !option ||
+    option.tag !== "input" ||
+    option.attrs.type !== "radio" ||
+    !valueMember ||
+    !labelMember ||
+    memberOf(control.update.arg) !== valueMember ||
+    checked?.kind !== "predicate" ||
+    checked.op !== "eq" ||
+    memberOf(checked.left) !== valueMember ||
+    checked.right.kind !== "channel" ||
+    checked.right.channel !== control.channel.name ||
+    checked.right.field !== "value"
+  ) {
+    return null;
+  }
+
+  const type = item.iteration.itemType;
+  const alias = ir.definedTypes[type]?.alias ?? "";
+  const members: RadioGroupMemberFact[] = [
+    ...alias.matchAll(/(\w+)(\?)?:\s*(string|boolean)(?=\s*[;}])/g),
+  ].map((match) => ({
+    name: match[1]!,
+    optional: !!match[2],
+    type: match[3] === "string" ? "String" : "Bool",
+  }));
+  const hasMember = (
+    name: string,
+    memberType: string,
+    required = false,
+  ): boolean =>
+    members.some(
+      (entry) =>
+        entry.name === name &&
+        entry.type === memberType &&
+        (!required || !entry.optional),
+    );
+  if (
+    !hasMember(valueMember, "String", true) ||
+    !hasMember(labelMember, "String", true) ||
+    (disabledMember && !hasMember(disabledMember, "Bool"))
+  ) {
+    return null;
+  }
+  const disabledOptional =
+    members.find((entry) => entry.name === disabledMember)?.optional ?? false;
+  const label = ir.dom.bindings["aria-label"];
+  const labelProp =
+    label?.kind === "prop" && !label.path?.length ? label.prop : undefined;
+  const orientation = ir.styledProps.find((prop) => prop.safeName === "orientation");
+  const orientationType = orientation?.typeRefs[0];
+  const hasOrientation =
+    orientationType &&
+    ir.definedTypes[orientationType]?.values?.includes("horizontal") &&
+    ir.definedTypes[orientationType]?.values?.includes("vertical");
+  const helpMember = memberOf(item.bindings.title);
+  const helpUsable = helpMember && hasMember(helpMember, "String");
+
+  return {
+    optionsProp: item.iteration.sourceProp,
+    itemType: type,
+    members,
+    valueMember,
+    labelMember,
+    disabledMember,
+    helpMember: helpUsable ? helpMember : undefined,
+    disabledOptional,
+    channel: control.channel,
+    defaultValueProp: control.channel.defaultValueProp,
+    labelProp,
+    orientation: hasOrientation
+      ? {
+          propName: orientation!.safeName,
+          typeName: orientationType!,
+          values: ir.definedTypes[orientationType!]!.values!,
+          defaultMember:
+            orientation!.defaultExpr === '"horizontal"'
+              ? "horizontal"
+              : "vertical",
+        }
+      : undefined,
+  };
 }

@@ -108,6 +108,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("icon: (@Composable () -> Unit)?")) return "iconDecorated";
   if (ktSource.includes("BasicTextField(")) return "textControl";
   if (ktSource.includes("AnimatedVisibility(")) return "disclosure";
+  if (ktSource.includes("Role.RadioButton")) return "radioGroup";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -131,6 +132,13 @@ function chromeRoleForPath(path) {
   if (path === "disclosure") {
     return new RegExp(
       ["details\\.(?:color|size)\\.", "box-model\\.(?:padding|min-width|min-height)"].join("|"),
+    );
+  }
+  /** Radio-collection path (RadioGroup): the shared box-model surface slots
+   *  incl. the group gap (the options really are laid out with it). */
+  if (path === "radioGroup") {
+    return new RegExp(
+      ["box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
     );
   }
   if (path === "progress") {
