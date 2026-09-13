@@ -33,7 +33,8 @@ shared substrate module, `packages/ds-codegen/src/frameworks/native-emission-cla
 the control family (`isValueChannelControl` with `soleInputElement` /
 `soleValueChannel`, `isLabeledTextControl`, `isSelectionControl`,
 `radioGroupFacts`), the collection family (`isArrayIteratedList`,
-`isInteractiveComposite`, `isCountIteratedFieldGroup`), the surface family
+`isInteractiveComposite`, `isCountIteratedFieldGroup`, `isDateGridSurface`),
+the surface family
 (`isCenteredSurface`, `surfaceStringChannel`, `isViewportEdgeSurface`,
 `isAnchoredSurface`), and the structural atoms (`countChildrenLeaves`,
 `hasEssentialComponentInstance`). The module's exports are the authority
@@ -77,7 +78,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->44`, realized through the
+`<!-- target-component-count:jetpack-compose -->45`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -92,6 +93,7 @@ local twin):
 | array-iterated list | `isArrayIteratedList` (substrate) | Shuttle |
 | interactive composite | `isInteractiveComposite` (substrate) | Accordion, Tabs |
 | count-iterated field group | `isCountIteratedFieldGroup` (substrate) | OTP |
+| date-grid surface | `isDateGridSurface` (substrate) | Calendar |
 | labeled text control | `isLabeledTextControl` (substrate) | TextField |
 | selection control | `isSelectionControl` (substrate) | Select |
 | centered surface | `isCenteredSurface` (substrate) + `surfaceStringChannel` (substrate) | Dialog, Command |
@@ -110,7 +112,7 @@ intent owns the realization before any structural class is consulted.
 
 ## Remaining components — required class and blocker
 
-The compose allowlist does not yet admit <!-- target-component-remainder:jetpack-compose -->8 corpus
+The compose allowlist does not yet admit <!-- target-component-remainder:jetpack-compose -->7 corpus
 contracts. Each row below names the class that would carry one, whether that
 class needs a shared-substrate move (the predicate is currently swift-local)
 or is target-local, and the concrete blocker or decision that gates the
@@ -123,7 +125,6 @@ classes and the IR probes recorded in the specs `FEAT-COMPOSE-*`.
 | Card | compound-part composer | no (target-local composer) | compound-part projection; five declared part carriers currently unrealized on web too |
 | Field | named-slot composer | no (target-local composer) | multi-slot projection (5 slots); label/description/error regions |
 | Chip | dual-action composite | no (target-local) | two `componentRef` buttons (primary + dismiss) lower as component instances |
-| Calendar | date-grid surface | yes (`isDateGridSurface`) | Date-array channel; month grid rendering |
 | NavTree | none of the above | no | no channel, `li` root with heading/list parts: needs a passive-tree class (or a glyph-host admission with its documented icon-only degradation, rejected so far) |
 | Image | media leaf | yes (`isMediaLeaf`) | foundation-only image loading does not exist; needs a painter/loader decision (degradation or a committed loader substrate) |
 | Avatar | src-or-fallback | yes (`resolveSrcFallbackRef`) | same loader decision as Image; falls back to initials |
@@ -131,13 +132,14 @@ classes and the IR probes recorded in the specs `FEAT-COMPOSE-*`.
 
 Measured vs. inferred: every class named above is read from the generated swift tree's own emission-class comment except **Card**, **Field**, and **NavTree**, which carry none — their required class is inferred from their anatomy and is confirmed at slice time, not asserted here.
 
-Shared-substrate ordering: the three predicates marked "yes" move into
+Shared-substrate ordering: the two predicates marked "yes" move into
 `native-emission-class.ts` exactly once, as `isProjectedChildrenAction` and
 every surface predicate before them did; each such move must leave the
-SwiftUI regeneration byte-identical (the drift gate is the proof). No
-surface predicate is outstanding for the admitted set: the only declared
-surface still outside the allowlist is Walkthrough, which `isAnchoredSurface`
-excludes because its anchor is selector-sourced.
+SwiftUI regeneration byte-identical (the drift gate is the proof) — the
+date-grid move is the latest proof of that rule. No surface predicate is
+outstanding for the admitted set: the only declared surface still outside the
+allowlist is Walkthrough, which `isAnchoredSurface` excludes because its
+anchor is selector-sourced.
 
 ## Ledgered divergences (compose)
 
@@ -159,6 +161,7 @@ excludes because its anchor is selector-sourced.
   multi-item shape for a later class).
 - **Popover / Tooltip (anchored surfaces)** — collision handling (`flip-shift`) is not realized (placement applied as declared, `auto` treated as bottom); the panel is offset by the anchor's size rather than the panel's own extent, so Top/Left placements overlap rather than nest; the Tooltip `describedby` relationship lowers to the popup host only. Walkthrough stays unadmitted: its anchor is selector-sourced and needs a DOM selector lookup the substrate does not have.
 - **Sheet / Toast (viewport-edge surfaces)** — Toast's `title`/`variant`/`politeness`/`action` are not lowered v1 (the content region carries the message) and a Toast without `duration` stays open until the channel closes; Sheet's `modal` axis is not lowered v1 (the host is always modal); both render through the foundation Dialog host with `usePlatformDefaultWidth = false` and an edge alignment driven by the placement enum.
+- **Calendar (date-grid surface)** — Compose realizes the declared grid itself: one row per calendar week of the contract's `days` prop, each day a selectable cell whose label is the closed `dateDayOfMonth` projection and whose activation writes the channel the IR's `compositeControl` names. `calendar.elevation.default` is a multi-layer shadow string with no elevation converter; `calendar.focus.ring.offset` has no outward box in a fixed-size grid, so both rings draw inside the cell bounds; the today ring reuses the declared focus-ring width because the contract declares no separate today-ring geometry; the nav triggers render as sized, labelled affordances with no month arithmetic (the contract supplies the visible `days`, so there is no month to step); `locale` and `shouldCloseOnSelect` are not lowered; `focus.strategy = "roving"` is not lowered (every day cell is a tab stop). SwiftUI still delegates this class to a platform `DatePicker` with its chrome unresolved — the shared predicate makes the same declared grid available to it, which is a separate slice.
 - **Dialog (centered surface)** — `size`, `initialFocus` and `returnFocus` are not lowered v1 (platform-default width and focus); the panel renders only while open, matching the contract's persistent presence; anchored and viewport-edge surfaces remain routed to their scaffold.
 - **Command (centered surface with a search channel)** — the second string channel lowers to a `BasicTextField` with the contract's `placeholder` default and the same controlled/uncontrolled split as the open channel. Eleven of the palette's nineteen declared slots are read — ten `command.*` slots plus `box-model.gap` — along with the merged box-model padding/min-width/min-height pool that every compose component receives. The eight unclaimed slots are: `command.color.overlay` is an `rgba()` value with no compose colour converter and the platform dialog already owns the scrim; `command.size.topOffset` is a `vh` value with no length converter; `command.shadow` is a multi-layer box-shadow string with no elevation converter; `command.size.icon` has no glyph host on a search-and-project root; `command.text.sizeSmall` styles result rows the consumer composes; `command.spacing.dialogPadding` loses to the merged box-model padding pool, which is the inset authority for every compose component; `command.color.backgroundHover` and `command.opacity.disabled` need hover and disabled interaction state the palette root does not keep v1. The `shouldFilter` / `filter` props and `label` / `searchLabel` / `emptyMessage` copy are not lowered (consumer-side data logic and labelling).
 - **Select (selection control)** — `searchable`, `filterFn`, `triggerLabel`, `size` and `empty` are not lowered v1; the trigger shows the selected label (placeholder fallback); single-select closes the popup after choosing, multi-select stays open, and a controlled `open` always wins.
