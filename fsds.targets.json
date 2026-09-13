@@ -120,6 +120,7 @@
         "CodeBlock",
         "CodeSnippet",
         "Details",
+        "Dialog",
         "Divider",
         "Icon",
         "Input",
