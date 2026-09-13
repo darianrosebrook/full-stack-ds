@@ -70,7 +70,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->41`, realized through the
+`<!-- target-component-count:jetpack-compose -->43`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -89,6 +89,7 @@ local twin):
 | selection control | `isSelectionControl` (substrate) | Select |
 | centered surface | `isCenteredSurface` (substrate) | Dialog |
 | viewport-edge surface | `isViewportEdgeSurface` (substrate) | Sheet, Toast |
+| anchored surface | `isAnchoredSurface` (substrate) | Popover, Tooltip |
 | bare-rule leaf | `isBareRuleLeaf` (substrate) | Divider |
 | glyph host | `isGlyphHost` (substrate) | Icon |
 | icon-decorated content | `isIconDecoratedContent` (substrate) | Alert, AlertNotice, Badge |
@@ -102,7 +103,7 @@ intent owns the realization before any structural class is consulted.
 
 ## Remaining components — required class and blocker
 
-The contracts still outside the compose allowlist (10 after the edge surfaces), each with the class
+The contracts still outside the compose allowlist (8 after the anchored surfaces), each with the class
 that would carry it, whether that class needs a shared-substrate move
 (the predicate is currently swift-local) or is target-local, and the
 concrete blocker or decision that gates the slice. Measured from
@@ -119,9 +120,7 @@ specs `FEAT-COMPOSE-*`.
 | Image | media leaf | yes (`isMediaLeaf`) | foundation-only image loading does not exist; needs a painter/loader decision (degradation or a committed loader substrate) |
 | Avatar | src-or-fallback | yes (`resolveSrcFallbackRef`) | same loader decision as Image; falls back to initials |
 | Command | centered-modal surface | no | same host, command-palette list anatomy |
-| Popover | anchored surface | no | `Popup` + position provider; anchor adoption via `onGloballyPositioned` |
-| Tooltip | anchored surface | no | `TooltipBox`-equivalent on foundation; hover/focus triggers |
-| Walkthrough | coachmark surface | no | selector-sourced anchor positioning + step channel |
+| Walkthrough | anchored (selector) | excluded by `isAnchoredSurface` | selector-sourced anchor (`surface.selectorAnchor`) needs a DOM selector lookup; step channel |
 
 Measured vs. inferred: every class named above is read from the generated swift tree's own emission-class comment except **Card**, **Field**, and **NavTree**, which carry none — their required class is inferred from their anatomy and is confirmed at slice time, not asserted here.
 
@@ -150,6 +149,7 @@ predicate move — it needs `surface-emit.ts` filled in from its scaffold.
   typography; content is a consumer composable). Accordion does NOT carry
   the disclosure intent (its `string | string[]` value channel is a
   multi-item shape for a later class).
+- **Popover / Tooltip (anchored surfaces)** — collision handling (`flip-shift`) is not realized (placement applied as declared, `auto` treated as bottom); the panel is offset by the anchor's size rather than the panel's own extent, so Top/Left placements overlap rather than nest; the Tooltip `describedby` relationship lowers to the popup host only. Walkthrough stays unadmitted: its anchor is selector-sourced and needs a DOM selector lookup the substrate does not have.
 - **Sheet / Toast (viewport-edge surfaces)** — Toast's `title`/`variant`/`politeness`/`action` are not lowered v1 (the content region carries the message) and a Toast without `duration` stays open until the channel closes; Sheet's `modal` axis is not lowered v1 (the host is always modal); both render through the foundation Dialog host with `usePlatformDefaultWidth = false` and an edge alignment driven by the placement enum.
 - **Dialog (centered surface)** — `size`, `initialFocus` and `returnFocus` are not lowered v1 (platform-default width and focus); the panel renders only while open, matching the contract's persistent presence; anchored and viewport-edge surfaces remain routed to their scaffold.
 - **Select (selection control)** — `searchable`, `filterFn`, `triggerLabel`, `size` and `empty` are not lowered v1; the trigger shows the selected label (placeholder fallback); single-select closes the popup after choosing, multi-select stays open, and a controlled `open` always wins.
