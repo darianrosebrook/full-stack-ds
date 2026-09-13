@@ -35,6 +35,10 @@
  *   fsds.targets.json; a target with no allowlist derives the full
  *   loader-discovered corpus count instead.)
  *
+ *   <!-- target-component-remainder:jetpack-compose -->8
+ *   (the complement — corpus contracts the allowlist does not admit —
+ *   derived as corpus-minus-allowlist over those same two authorities.)
+ *
  *   <!-- coverage-floor-lines:react -->79
  *   <!-- coverage-floor-branches:react -->77
  *   <!-- coverage-floor-functions:react -->70
@@ -108,6 +112,7 @@ const CLAIMS = {
 };
 
 const TARGET_COMPONENT_COUNT_PREFIX = "target-component-count:";
+const TARGET_COMPONENT_REMAINDER_PREFIX = "target-component-remainder:";
 const COVERAGE_FLOOR_LINES_PREFIX = "coverage-floor-lines:";
 const COVERAGE_FLOOR_BRANCHES_PREFIX = "coverage-floor-branches:";
 const COVERAGE_FLOOR_FUNCTIONS_PREFIX = "coverage-floor-functions:";
@@ -157,6 +162,12 @@ function resolveClaim(name) {
     const id = name.slice(TARGET_COMPONENT_COUNT_PREFIX.length);
     if (/^[a-z][a-z0-9-]*$/.test(id)) {
       return { derive: () => deriveTargetComponentCount(id) };
+    }
+  }
+  if (name.startsWith(TARGET_COMPONENT_REMAINDER_PREFIX)) {
+    const id = name.slice(TARGET_COMPONENT_REMAINDER_PREFIX.length);
+    if (/^[a-z][a-z0-9-]*$/.test(id)) {
+      return { derive: () => deriveTargetComponentRemainder(id) };
     }
   }
   const parametric = [
@@ -345,6 +356,18 @@ function deriveTargetComponentCount(id) {
     process.exit(2);
   }
   return Array.isArray(target.components) ? target.components.length : deriveComponentCount();
+}
+
+/**
+ * The allowlist complement — corpus contracts a target's `components`
+ * allowlist does not admit. Derived from the SAME two authorities as
+ * `deriveTargetComponentCount`, so the admission-criteria doc can state how
+ * many contracts remain without an ungoverned hand count that rots every
+ * time a slice lands. A target with no allowlist admits the whole corpus,
+ * so its remainder is zero rather than negative.
+ */
+function deriveTargetComponentRemainder(id) {
+  return Math.max(0, deriveComponentCount() - deriveTargetComponentCount(id));
 }
 
 /** Icon corpus — directories under the iconography package's icons/ root. */

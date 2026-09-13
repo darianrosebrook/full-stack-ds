@@ -110,12 +110,13 @@ intent owns the realization before any structural class is consulted.
 
 ## Remaining components — required class and blocker
 
-The contracts still outside the compose allowlist (7 after Command and the anchored surfaces), each with the class
-that would carry it, whether that class needs a shared-substrate move
-(the predicate is currently swift-local) or is target-local, and the
-concrete blocker or decision that gates the slice. Measured from
-`packages/ds-swiftui` emission classes and the IR probes recorded in the
-specs `FEAT-COMPOSE-*`.
+The compose allowlist does not yet admit <!-- target-component-remainder:jetpack-compose -->8 corpus
+contracts. Each row below names the class that would carry one, whether that
+class needs a shared-substrate move (the predicate is currently swift-local)
+or is target-local, and the concrete blocker or decision that gates the
+slice. The count is the derived complement of the `jetpack-compose`
+allowlist, not a hand count. Measured from `packages/ds-swiftui` emission
+classes and the IR probes recorded in the specs `FEAT-COMPOSE-*`.
 
 | Component | Required class | Substrate move | Blocker / decision |
 |---|---|---|---|

@@ -126,6 +126,7 @@ markdown file, and `docs:check-claims` derives and enforces it:
 | `<!-- icon-count -->` | directories under `packages/ds-iconography/icons/` |
 | `<!-- token-shard-count -->` | `*.tokens.json` shards under `packages/ds-tokens/src/` (mirrors the `--validate-only` walk) |
 | `<!-- target-component-count:<id> -->` | the `components` allowlist length for `<id>` in `fsds.targets.json` (the corpus count when the target declares no allowlist) |
+| `<!-- target-component-remainder:<id> -->` | the allowlist complement for `<id>` — corpus contracts that target's allowlist does not admit, over the same two authorities as the count above |
 | `<!-- web-framework-list -->` | rail-admitted descriptor ids minus `react-native`, in display order |
 | `<!-- web-framework-count -->` | the length of that derived web-framework list |
 | `<!-- snapshot-updated -->` | the `updated` frontmatter date of `docs/current-implementation-snapshot.md` |
