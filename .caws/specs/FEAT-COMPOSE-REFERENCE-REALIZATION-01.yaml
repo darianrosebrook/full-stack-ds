@@ -39,3 +39,8 @@ contracts:
   - name: 'component-reference-realization'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge b292adc8: node --test scripts/compose-parity-diff.test.mjs -> 19/19 (incl. the reference check in both directions, a ledger-typo guard, and the composed-component marker ignoring family substrates); node scripts/compose-parity-diff.mjs -> 46 allowlisted, 0 failures, with the Command:searchIcon entry removed it reports UNREALIZED REFERENCE for that component alone; gradlew :library:compileKotlin :library:test -> BUILD SUCCESSFUL; node packages/ds-codegen/dist/cli.js --target=swiftui -> packages/ds-swiftui byte-identical; pnpm run generate:check -> 52/52; pnpm run docs:check-claims -> 75 marked claims (remainder 7 -> 6); pnpm test -> 291 files / 3907 tests pass; pnpm run test:frameworks -> exit 0; pnpm run governed:rail -> exit 0, clean tree; fsds.targets.json jetpack-compose allowlist 45 -> 46"
+    recorded_at: "2026-09-13T05:38:48.380Z"
