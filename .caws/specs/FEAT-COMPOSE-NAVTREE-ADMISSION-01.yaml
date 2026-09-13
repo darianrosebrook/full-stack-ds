@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-NAVTREE-ADMISSION-01
 title: 'Shared passive-tree-item predicate; Compose NavTree admission'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'NavTree admitted as the 48th compose component through a shared passive-tree-item class that composes the catalog glyph beside the dom-named heading props and projects the list'
 created_at: '2026-09-13T06:47:12.868Z'
-updated_at: '2026-09-13T06:54:54.829Z'
+updated_at: '2026-09-13T06:55:29.207Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
