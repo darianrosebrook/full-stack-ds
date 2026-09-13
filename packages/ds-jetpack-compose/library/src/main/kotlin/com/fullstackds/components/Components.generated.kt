@@ -1,5 +1,5 @@
 // @generated:start barrel
-// ds-jetpack-compose generated components: Accordion, Alert, AlertNotice, Badge, Blockquote, Breadcrumbs, Button, Calendar, Checkbox, Chip, CodeBlock, CodeSnippet, Command, Details, Dialog, Divider, Icon, Input, Label, Links, List, Markdown, NavList, OTP, Popover, Postcard, ProfileFlag, Progress, RadioGroup, Select, Sheet, ShowMore, Shuttle, Skeleton, Spinner, Stat, Status, Switch, Table, Tabs, Text, TextField, Toast, ToggleSwitch, Tooltip, Truncate
+// ds-jetpack-compose generated components: Accordion, Alert, AlertNotice, Badge, Blockquote, Breadcrumbs, Button, Calendar, Checkbox, Chip, CodeBlock, CodeSnippet, Command, Details, Dialog, Divider, Field, Icon, Input, Label, Links, List, Markdown, NavList, NavTree, OTP, Popover, Postcard, ProfileFlag, Progress, RadioGroup, Select, Sheet, ShowMore, Shuttle, Skeleton, Spinner, Stat, Status, Switch, Table, Tabs, Text, TextField, Toast, ToggleSwitch, Tooltip, Truncate
 // The Gradle source set auto-exports all public symbols in this module;
 // this file intentionally declares none.
 // @generated:end

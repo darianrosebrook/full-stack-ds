@@ -108,6 +108,11 @@ function emitterPath(ktSource) {
   if (ktSource.includes("FsdsGlyphIcon")) return "glyphHost";
   if (ktSource.includes("FsdsDate.")) return "dateGrid";
   if (composedComponents(ktSource).length > 0) return "referencedComposite";
+  // A named-slot composer declares one nullable content region per slot, so the
+  // signature shape identifies the path without naming the component.
+  if ((ktSource.match(/: \(@Composable \(\) -> Unit\)\? = null/g) ?? []).length >= 3) {
+    return "namedSlotComposer";
+  }
   if (ktSource.includes("icon: (@Composable () -> Unit)?")) return "iconDecorated";
   // Surface classes are tested before every marker whose host they *reuse*:
   // an anchored surface is a `Popup(` host, a centered surface may carry a
@@ -178,6 +183,13 @@ function chromeRoleForPath(path) {
   if (path === "edgeSurface") {
     return new RegExp(
       ["(?:sheet|toast)\\.(?:border|color|surface)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
+  /** Named-slot composer path (Field): the field-part chrome family (surface,
+   *  label, radius, section and meta gaps) plus the shared box-model family. */
+  if (path === "namedSlotComposer") {
+    return new RegExp(
+      ["field\\.(?:color|size|label|focus|gap|pad|radius)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
     );
   }
   /** Referenced-action composite path (Chip): the chip-part chrome family plus

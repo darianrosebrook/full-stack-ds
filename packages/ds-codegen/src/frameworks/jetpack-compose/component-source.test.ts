@@ -155,14 +155,14 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
   });
 
   it("throws loudly for non-static shapes instead of misrouting", () => {
-    // Select gained the selection class and Chip the referenced-action
-    // composite; Card (composer) and Field (named-slot composer) remain
-    // unimplemented shapes.
+    // Select gained the selection class, Chip the referenced-action composite
+    // and Field the named-slot composer; Card (compound-part composer) and
+    // Image (passive tree) remain unimplemented shapes.
     expect(() => generateJetpackComposeComponentSource(irFor("Card"))).toThrow(
       /no emission class matches component "Card" on jetpack-compose/,
     );
-    expect(() => generateJetpackComposeComponentSource(irFor("Field"))).toThrow(
-      /no emission class matches component "Field" on jetpack-compose/,
+    expect(() => generateJetpackComposeComponentSource(irFor("Image"))).toThrow(
+      /no emission class matches component "Image" on jetpack-compose/,
     );
   });
 });
@@ -408,11 +408,12 @@ describe("generateJetpackComposeComponentSource — disclosure class (FEAT-COMPO
     expect(src.match(/fun Details\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 
-  it("Card and Field remain unadmitted shapes", () => {
+  it("Card and Image remain unadmitted shapes", () => {
     // Accordion/Tabs gained the interactive-composite class, Chip the
-    // referenced-action composite; Card (composer) and Field (named-slot
-    // composer) are still unimplemented.
-    for (const name of ["Card", "Field"]) {
+    // referenced-action composite and Field the named-slot composer; Card
+    // (composer) and Image (media leaf) are still unimplemented. Image emits
+    // through the glyph-host class but stays deliberately unadmitted.
+    for (const name of ["Card", "Image"]) {
       expect(() => generateJetpackComposeComponentSource(irFor(name))).toThrow(
         new RegExp(`no emission class matches component "${name}" on jetpack-compose`),
       );
@@ -543,6 +544,58 @@ describe("generateJetpackComposeComponentSource — selection control (FEAT-COMP
     expect(src).toContain('layeredSlot("select.size.radius.default")');
     expect(src).not.toMatch(/import androidx\.compose\.material/);
     expect(src.match(/fun Select\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+});
+
+describe("generateJetpackComposeComponentSource — named-slot composer (FEAT-COMPOSE-FIELD-ADMISSION-01)", () => {
+  it("lowers each declared slot to a null-safe content region in document order (Field)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Field"));
+    expect(src).toContain("enum class FieldStatus { Idle, Validating, Valid, Invalid }");
+    for (const slot of ["label", "control", "help", "error", "validatingIndicator"]) {
+      expect(src).toContain(`${slot}: (@Composable () -> Unit)? = null,`);
+    }
+    // Regions render in the dom's declared order, and the two text regions
+    // carry their declared typography through the content text-style local.
+    const order = ["label", "control", "help", "error", "validatingIndicator"].map((s) => src.indexOf(`${s}?.invoke()`));
+    expect(order.every((index, i) => index > 0 && (i === 0 || index > order[i - 1]!))).toBe(true);
+    expect(src).toContain("LocalFsdsTextStyle provides TextStyle(fontSize = fieldLabelSize, color = fieldLabelColor ?: Color.Unspecified)");
+    expect(src).toContain("LocalFsdsTextStyle provides TextStyle(color = fieldInvalidText ?: Color.Unspecified)");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Field\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+
+  it("keeps the field token set closed and names the slots it does not claim (Field)", () => {
+    const source = generateJetpackComposeComponentSource(irFor("Field"));
+    const tokens = generateJetpackComposeTokensFile(irFor("Field"));
+    for (const slot of [
+      "field.color.bg", "field.color.fg", "field.color.border", "field.color.invalid-text",
+      "field.label.color", "field.label.fontSize", "field.radius", "field.gap.y", "field.gap.meta",
+      "box-model.gap",
+    ]) {
+      expect(source).toContain(`layeredSlot(${JSON.stringify(slot)})`);
+      expect(tokens).toContain(`name = ${JSON.stringify(slot)}`);
+    }
+    const reads = [...source.matchAll(/layeredSlot\("([^"]+)"\)/g)].map((m) => m[1]!);
+    for (const slot of reads) expect(tokens, slot).toContain(`name = ${JSON.stringify(slot)}`);
+    for (const definition of tokens.matchAll(/name = "([^"]+)"/g)) {
+      expect(reads, definition[1]).toContain(definition[1]!);
+    }
+    for (const slot of [
+      "field.color.invalid-border", "field.color.valid-border", "field.color.focus-border",
+      "field.focus.ring.width", "field.focus.ring.color", "field.focus.ring.style",
+      "field.focus.ring.offset", "field.pad.x",
+    ]) {
+      expect(tokens).not.toContain(`name = ${JSON.stringify(slot)}`);
+    }
+  });
+
+  it("Field and Card remain the unadmitted composer shapes", () => {
+    expect(() => generateJetpackComposeComponentSource(irFor("Card"))).toThrow(
+      /no emission class matches component "Card" on jetpack-compose/,
+    );
+    expect(() => generateJetpackComposeComponentSource(irFor("Image"))).toThrow(
+      /no emission class matches component "Image" on jetpack-compose/,
+    );
   });
 });
 

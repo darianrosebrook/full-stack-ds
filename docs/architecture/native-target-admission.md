@@ -34,7 +34,7 @@ the control family (`isValueChannelControl` with `soleInputElement` /
 `soleValueChannel`, `isLabeledTextControl`, `isSelectionControl`,
 `radioGroupFacts`), the collection family (`isArrayIteratedList`,
 `isInteractiveComposite`, `isCountIteratedFieldGroup`, `isDateGridSurface`,
-`isReferencedActionComposite`), the surface family
+`isReferencedActionComposite`, `isNamedSlotComposer`), the surface family
 (`isCenteredSurface`, `surfaceStringChannel`, `isViewportEdgeSurface`,
 `isAnchoredSurface`), and the structural atoms (`countChildrenLeaves`,
 `hasEssentialComponentInstance`). The module's exports are the authority
@@ -79,7 +79,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->46`, realized through the
+`<!-- target-component-count:jetpack-compose -->47`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -96,6 +96,7 @@ local twin):
 | count-iterated field group | `isCountIteratedFieldGroup` (substrate) | OTP |
 | date-grid surface | `isDateGridSurface` (substrate) | Calendar |
 | referenced-action composite | `isReferencedActionComposite` (substrate) | Chip |
+| named-slot composer | `isNamedSlotComposer` (substrate) | Field |
 | labeled text control | `isLabeledTextControl` (substrate) | TextField |
 | selection control | `isSelectionControl` (substrate) | Select |
 | centered surface | `isCenteredSurface` (substrate) + `surfaceStringChannel` (substrate) | Dialog, Command |
@@ -114,7 +115,7 @@ intent owns the realization before any structural class is consulted.
 
 ## Remaining components — required class and blocker
 
-The compose allowlist does not yet admit <!-- target-component-remainder:jetpack-compose -->6 corpus
+The compose allowlist does not yet admit <!-- target-component-remainder:jetpack-compose -->5 corpus
 contracts. Each row below names the class that would carry one, whether that
 class needs a shared-substrate move (the predicate is currently swift-local)
 or is target-local, and the concrete blocker or decision that gates the
@@ -125,7 +126,6 @@ classes and the IR probes recorded in the specs `FEAT-COMPOSE-*`.
 | Component | Required class | Substrate move | Blocker / decision |
 |---|---|---|---|
 | Card | compound-part composer | no (target-local composer) | compound-part projection; five declared part carriers currently unrealized on web too |
-| Field | named-slot composer | no (target-local composer) | multi-slot projection (5 slots); label/description/error regions |
 | NavTree | none of the above | no | no channel, `li` root with heading/list parts: needs a passive-tree class (or a glyph-host admission with its documented icon-only degradation, rejected so far) |
 | Image | media leaf | yes (`isMediaLeaf`) | foundation-only image loading does not exist; needs a painter/loader decision (degradation or a committed loader substrate) |
 | Avatar | src-or-fallback | yes (`resolveSrcFallbackRef`) | same loader decision as Image; falls back to initials |
@@ -162,6 +162,7 @@ anchor is selector-sourced.
   multi-item shape for a later class).
 - **Popover / Tooltip (anchored surfaces)** — collision handling (`flip-shift`) is not realized (placement applied as declared, `auto` treated as bottom); the panel is offset by the anchor's size rather than the panel's own extent, so Top/Left placements overlap rather than nest; the Tooltip `describedby` relationship lowers to the popup host only. Walkthrough stays unadmitted: its anchor is selector-sourced and needs a DOM selector lookup the substrate does not have.
 - **Sheet / Toast (viewport-edge surfaces)** — Toast's `title`/`variant`/`politeness`/`action` are not lowered v1 (the content region carries the message) and a Toast without `duration` stays open until the channel closes; Sheet's `modal` axis is not lowered v1 (the host is always modal); both render through the foundation Dialog host with `usePlatformDefaultWidth = false` and an edge alignment driven by the placement enum.
+- **Field (named-slot composer)** — every declared slot becomes a null-safe content region rendered in document order, and the two text regions carry their declared typography through the content text-style local; the status axis drives the chrome through the layered lookup. The declared string channel is not threaded (the `control` slot owns the value, so a wrapper channel would be a second source of truth); `field.color.invalid-border` / `valid-border` / `focus-border`, `field.focus.ring.*` and `field.pad.x` are unclaimed (the status variants already override `field.color.border` in the layer the lookup reads, no focus interaction state is kept, and the merged box-model padding pool is the inset authority); `name` / `id` / `required` / `disabled` / `readOnly` / `validate` / `validating` are form wiring the consumer owns.
 - **Chip (referenced-action composite)** — the action and optional dismiss controls are *composed*, not re-implemented: the class lowers each declared `componentRef` to a call on the referenced generated composable, importing its package and the axis enums the call names. The reference vocabulary decides every fact (see the emitter docstring); `chip.color.*.selected` / `chip.size.padding.*` are unclaimed because the variant layers override the same default slot names the layered lookup reads and the merged box-model pool is the inset authority; `chip.dismiss.gap` is unclaimed in favour of the shared `chip.size.gap` the web realization consumes; `chip.motion.duration.fast` is a CSS transition input; `chip.text.weight` rides the content text-style local; the referenced controls' `aria-expanded` / `aria-pressed` state bindings are named by the vocabulary and not lowered. **Reference ledger (C8):** six declared references are not yet realized — Alert's dismiss (no trailing-action affordance in the icon-decorated layout), Accordion's and Details' chevrons (realized as painted equivalents), Status's icon (its name comes from a prop valueMap the target does not lower), Command's search icon, and Button's spinner (gated on `loading`, which the action path does not thread). Each is listed with its reason in the gate's `REFERENCE_DIVERGENCES`; none is silently dropped.
 - **Calendar (date-grid surface)** — Compose realizes the declared grid itself: one row per calendar week of the contract's `days` prop, each day a selectable cell whose label is the closed `dateDayOfMonth` projection and whose activation writes the channel the IR's `compositeControl` names. `calendar.elevation.default` is a multi-layer shadow string with no elevation converter; `calendar.focus.ring.offset` has no outward box in a fixed-size grid, so both rings draw inside the cell bounds; the today ring reuses the declared focus-ring width because the contract declares no separate today-ring geometry; the nav triggers render as sized, labelled affordances with no month arithmetic (the contract supplies the visible `days`, so there is no month to step); `locale` and `shouldCloseOnSelect` are not lowered; `focus.strategy = "roving"` is not lowered (every day cell is a tab stop). SwiftUI still delegates this class to a platform `DatePicker` with its chrome unresolved — the shared predicate makes the same declared grid available to it, which is a separate slice.
 - **Dialog (centered surface)** — `size`, `initialFocus` and `returnFocus` are not lowered v1 (platform-default width and focus); the panel renders only while open, matching the contract's persistent presence; anchored and viewport-edge surfaces remain routed to their scaffold.
