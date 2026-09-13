@@ -33,8 +33,8 @@ shared substrate module, `packages/ds-codegen/src/frameworks/native-emission-cla
 the control family (`isValueChannelControl` with `soleInputElement` /
 `soleValueChannel`, `isLabeledTextControl`, `isSelectionControl`,
 `radioGroupFacts`), the collection family (`isArrayIteratedList`,
-`isInteractiveComposite`, `isCountIteratedFieldGroup`, `isDateGridSurface`),
-the surface family
+`isInteractiveComposite`, `isCountIteratedFieldGroup`, `isDateGridSurface`,
+`isReferencedActionComposite`), the surface family
 (`isCenteredSurface`, `surfaceStringChannel`, `isViewportEdgeSurface`,
 `isAnchoredSurface`), and the structural atoms (`countChildrenLeaves`,
 `hasEssentialComponentInstance`). The module's exports are the authority
@@ -72,13 +72,14 @@ hold. Each rung is mechanically checked; none is a judgment call.
 | C4 Compile | The target's own toolchain compiles the tree. Compose: `gradlew :library:compileKotlin` (plus the CI kotlinc smoke lane and the settings example consumer). SwiftUI: `swift build`/`swift test` over the SwiftPM package (the test target additionally evaluates every admitted component body). | Native compile lanes in CI |
 | C5 Token parity | Every token definition the target emits is consumed, every lookup has a definition, shared slot identities agree with React Native, chrome roles are claimed per emitter path, and the composable API keeps `modifier` as the first optional parameter. The path must be the one that actually produced the bytes: a surface is classified by its own host marker **before** any marker whose host it reuses (an anchored surface is a `Popup(`, a centered surface may carry a `BasicTextField(`), because a misclassified path makes its chrome-role claim vacuous. Compose: `pnpm run parity:compose-tokens`. | `scripts/compose-parity-diff.mjs` (+ self-test, which pins each surface case in both directions) |
 | C6 Substrate discipline | Committed substrates are foundation-only (zero `androidx.compose.material` imports) and live in family-named directories (`toggle/`, `rule/`, `controls/`) that never match a component name in any casing — on case-insensitive filesystems a `checkbox/` substrate dir and the generated `Checkbox/` component dir are one physical directory with two owners. | Review + the parity script's per-path detection |
+| C8 Reference realization | A component that composes another generated component must (a) have that component on its own allowlist, so the generated call resolves, and (b) either realize each reference the contract declares or list it in the gate's divergence ledger. Both directions are mechanical: an unrealized reference that is not ledgered fails, and a ledgered reference that becomes realized fails as stale. | `scripts/compose-parity-diff.mjs` (`inspectComponentReferences`, reference ledger) |
 | C7 Divergences ledgered | Every contract fact the realization does not lower (omitted props, binary-only state, unclaimed layout slots) is named as a divergence in the emitter's docstring and here — never silently dropped. | This document |
 
 ## Current per-target state
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->45`, realized through the
+`<!-- target-component-count:jetpack-compose -->46`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -94,6 +95,7 @@ local twin):
 | interactive composite | `isInteractiveComposite` (substrate) | Accordion, Tabs |
 | count-iterated field group | `isCountIteratedFieldGroup` (substrate) | OTP |
 | date-grid surface | `isDateGridSurface` (substrate) | Calendar |
+| referenced-action composite | `isReferencedActionComposite` (substrate) | Chip |
 | labeled text control | `isLabeledTextControl` (substrate) | TextField |
 | selection control | `isSelectionControl` (substrate) | Select |
 | centered surface | `isCenteredSurface` (substrate) + `surfaceStringChannel` (substrate) | Dialog, Command |
@@ -112,7 +114,7 @@ intent owns the realization before any structural class is consulted.
 
 ## Remaining components — required class and blocker
 
-The compose allowlist does not yet admit <!-- target-component-remainder:jetpack-compose -->7 corpus
+The compose allowlist does not yet admit <!-- target-component-remainder:jetpack-compose -->6 corpus
 contracts. Each row below names the class that would carry one, whether that
 class needs a shared-substrate move (the predicate is currently swift-local)
 or is target-local, and the concrete blocker or decision that gates the
@@ -124,7 +126,6 @@ classes and the IR probes recorded in the specs `FEAT-COMPOSE-*`.
 |---|---|---|---|
 | Card | compound-part composer | no (target-local composer) | compound-part projection; five declared part carriers currently unrealized on web too |
 | Field | named-slot composer | no (target-local composer) | multi-slot projection (5 slots); label/description/error regions |
-| Chip | dual-action composite | no (target-local) | two `componentRef` buttons (primary + dismiss) lower as component instances |
 | NavTree | none of the above | no | no channel, `li` root with heading/list parts: needs a passive-tree class (or a glyph-host admission with its documented icon-only degradation, rejected so far) |
 | Image | media leaf | yes (`isMediaLeaf`) | foundation-only image loading does not exist; needs a painter/loader decision (degradation or a committed loader substrate) |
 | Avatar | src-or-fallback | yes (`resolveSrcFallbackRef`) | same loader decision as Image; falls back to initials |
@@ -161,6 +162,7 @@ anchor is selector-sourced.
   multi-item shape for a later class).
 - **Popover / Tooltip (anchored surfaces)** — collision handling (`flip-shift`) is not realized (placement applied as declared, `auto` treated as bottom); the panel is offset by the anchor's size rather than the panel's own extent, so Top/Left placements overlap rather than nest; the Tooltip `describedby` relationship lowers to the popup host only. Walkthrough stays unadmitted: its anchor is selector-sourced and needs a DOM selector lookup the substrate does not have.
 - **Sheet / Toast (viewport-edge surfaces)** — Toast's `title`/`variant`/`politeness`/`action` are not lowered v1 (the content region carries the message) and a Toast without `duration` stays open until the channel closes; Sheet's `modal` axis is not lowered v1 (the host is always modal); both render through the foundation Dialog host with `usePlatformDefaultWidth = false` and an edge alignment driven by the placement enum.
+- **Chip (referenced-action composite)** — the action and optional dismiss controls are *composed*, not re-implemented: the class lowers each declared `componentRef` to a call on the referenced generated composable, importing its package and the axis enums the call names. The reference vocabulary decides every fact (see the emitter docstring); `chip.color.*.selected` / `chip.size.padding.*` are unclaimed because the variant layers override the same default slot names the layered lookup reads and the merged box-model pool is the inset authority; `chip.dismiss.gap` is unclaimed in favour of the shared `chip.size.gap` the web realization consumes; `chip.motion.duration.fast` is a CSS transition input; `chip.text.weight` rides the content text-style local; the referenced controls' `aria-expanded` / `aria-pressed` state bindings are named by the vocabulary and not lowered. **Reference ledger (C8):** six declared references are not yet realized — Alert's dismiss (no trailing-action affordance in the icon-decorated layout), Accordion's and Details' chevrons (realized as painted equivalents), Status's icon (its name comes from a prop valueMap the target does not lower), Command's search icon, and Button's spinner (gated on `loading`, which the action path does not thread). Each is listed with its reason in the gate's `REFERENCE_DIVERGENCES`; none is silently dropped.
 - **Calendar (date-grid surface)** — Compose realizes the declared grid itself: one row per calendar week of the contract's `days` prop, each day a selectable cell whose label is the closed `dateDayOfMonth` projection and whose activation writes the channel the IR's `compositeControl` names. `calendar.elevation.default` is a multi-layer shadow string with no elevation converter; `calendar.focus.ring.offset` has no outward box in a fixed-size grid, so both rings draw inside the cell bounds; the today ring reuses the declared focus-ring width because the contract declares no separate today-ring geometry; the nav triggers render as sized, labelled affordances with no month arithmetic (the contract supplies the visible `days`, so there is no month to step); `locale` and `shouldCloseOnSelect` are not lowered; `focus.strategy = "roving"` is not lowered (every day cell is a tab stop). SwiftUI still delegates this class to a platform `DatePicker` with its chrome unresolved — the shared predicate makes the same declared grid available to it, which is a separate slice.
 - **Dialog (centered surface)** — `size`, `initialFocus` and `returnFocus` are not lowered v1 (platform-default width and focus); the panel renders only while open, matching the contract's persistent presence; anchored and viewport-edge surfaces remain routed to their scaffold.
 - **Command (centered surface with a search channel)** — the second string channel lowers to a `BasicTextField` with the contract's `placeholder` default and the same controlled/uncontrolled split as the open channel. Eleven of the palette's nineteen declared slots are read — ten `command.*` slots plus `box-model.gap` — along with the merged box-model padding/min-width/min-height pool that every compose component receives. The eight unclaimed slots are: `command.color.overlay` is an `rgba()` value with no compose colour converter and the platform dialog already owns the scrim; `command.size.topOffset` is a `vh` value with no length converter; `command.shadow` is a multi-layer box-shadow string with no elevation converter; `command.size.icon` has no glyph host on a search-and-project root; `command.text.sizeSmall` styles result rows the consumer composes; `command.spacing.dialogPadding` loses to the merged box-model padding pool, which is the inset authority for every compose component; `command.color.backgroundHover` and `command.opacity.disabled` need hover and disabled interaction state the palette root does not keep v1. The `shouldFilter` / `filter` props and `label` / `searchLabel` / `emptyMessage` copy are not lowered (consumer-side data logic and labelling).
