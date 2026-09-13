@@ -2,9 +2,10 @@ id: FEAT-COMPOSE-TEXT-CONTROL-01
 title: 'Compose string value-channel control: Input admission on the shared control-class machinery'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: compose-text-control
 created_at: '2026-09-13T01:37:39.935Z'
-updated_at: '2026-09-13T01:37:39.935Z'
+updated_at: '2026-09-13T01:37:41.530Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
