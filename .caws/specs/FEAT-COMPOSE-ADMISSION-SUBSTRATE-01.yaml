@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: compose-admission-substrate
 created_at: '2026-09-13T00:04:49.085Z'
-updated_at: '2026-09-13T00:05:23.615Z'
+updated_at: '2026-09-13T00:06:48.620Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
@@ -33,6 +33,7 @@ scope:
     - 'packages/ds-codegen/src/frameworks/jetpack-compose/README.md'
     - 'AGENTS.md'
     - 'CLAUDE.md'
+    - packages/ds-codegen/src/frameworks/native-emission-class.ts
   out: []
 invariants:
   - 'Emission classes dispatch on structural IR predicates owned by the shared frameworks/native substrate — never on component names (grep-verifiable in both native emitters).'
