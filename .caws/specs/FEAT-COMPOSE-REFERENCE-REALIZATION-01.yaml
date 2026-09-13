@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-REFERENCE-REALIZATION-01
 title: 'Component-reference lowering in Compose; Chip admission; a reference-realization gate'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Compose lowers declared component references through one fail-loud fact vocabulary, admitting Chip as the 46th component, and the new C8 rung makes every declared reference realized or ledgered in both directions'
 created_at: '2026-09-13T05:23:53.176Z'
-updated_at: '2026-09-13T05:23:55.678Z'
+updated_at: '2026-09-13T05:38:49.439Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
