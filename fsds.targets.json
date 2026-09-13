@@ -109,6 +109,7 @@
         "kind": "builtin"
       },
       "components": [
+        "Accordion",
         "Alert",
         "AlertNotice",
         "Badge",
@@ -139,6 +140,7 @@
         "Status",
         "Switch",
         "Table",
+        "Tabs",
         "Text",
         "ToggleSwitch",
         "Truncate"
