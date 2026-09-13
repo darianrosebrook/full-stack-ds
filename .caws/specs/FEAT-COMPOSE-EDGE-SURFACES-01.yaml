@@ -37,3 +37,8 @@ contracts:
   - name: 'viewport-edge-surface'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "isViewportEdgeSurface added to native-emission-class.ts (positioning.strategy === viewport-edge; anchored surfaces still route to the scaffold); compose 39-to-41: gradlew :library:compileKotlin BUILD SUCCESSFUL (Sheet.kt: side enum to edge alignment inside the foundation Dialog host with usePlatformDefaultWidth=false; Toast.kt: LaunchedEffect + kotlinx.coroutines.delay auto-dismiss driven by the duration prop; part-scoped chrome slots sheet.color.border / sheet.border.radius / sheet.border.width / toast.surface.radius now read); compose-parity-diff 41/41 0 failures AFTER fixing a real gate weakness this round exposed (the edge marker sat after the centered marker, so both edge surfaces were mis-classified as centered and the role check was bypassed — reordered, and the role then correctly required and found the part-scoped reads); generate:check 52/52; typecheck clean; docs:check-claims 74/74; emitter tests 40/40"
+    recorded_at: "2026-09-13T04:21:41.395Z"
