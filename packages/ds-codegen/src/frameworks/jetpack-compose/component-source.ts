@@ -21,11 +21,18 @@ import { composeTokenReads, consumedComposeTokenScopes } from "../native-token-c
  * prototype, `__golden__/Switch/Switch.compose.kt`, with its line-67 `??`
  * defect corrected to the Kotlin elvis operator).
  */
-import type { ComponentIR } from "../../ir.js";
+import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
-// Cross-framework gate reuse (precedent: vue → react hook-source): the IR
-// owns the projected-children action fact; swift's emitter is its steward.
-import { isProjectedChildrenAction } from "../swift/swiftui/component-source.js";
+// Shared native emission-class substrate (FEAT-COMPOSE-ADMISSION-SUBSTRATE-01):
+// the structural class facts this emitter dispatches on are target-neutral
+// and live exactly once there — swift's emitter used to steward them.
+import {
+  isBareRuleLeaf,
+  isProjectedChildrenAction,
+  isStaticContent,
+  isValueChannelControl,
+  soleValueChannel,
+} from "../native-emission-class.js";
 
 /** Kotlin hard keywords that cannot appear as package-name segments. */
 const KOTLIN_HARD_KEYWORDS = new Set([
@@ -80,6 +87,19 @@ const SIZE_TRACK_DP: Record<string, [number, number]> = {
   small: [36, 18],
   medium: [48, 24],
   large: [60, 30],
+};
+
+/** Checkbox visual-box side per size value (dp) — the boolean-control
+ *  class's framework-grammar table, the twin of SIZE_TRACK_DP. The token
+ *  graph carries no checkbox box-size slot yet; when it does, the default
+ *  size resolves through the scopes exactly as the toggle's md does. */
+const CHECKBOX_BOX_DP: Record<string, number> = {
+  sm: 14,
+  md: 18,
+  lg: 22,
+  small: 14,
+  medium: 18,
+  large: 22,
 };
 
 /** Find a slot by scope key and name suffix (corpus slot-name grammar —
@@ -387,43 +407,11 @@ export function generateJetpackComposeTokensFile(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
-/**
- * The static-content class: a passive non-container root (label,
- * blockquote, p, …) whose entire dom is one projected children region —
- * no channels, no surface. Mirror of the swift static-content gate: same
- * shared IR shape facts, no component-name lore.
- */
-function isStaticContent(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  if (ir.behavior.normalizedChannels.length > 0) return false;
-  if (ir.dom.tag === "button" || ir.dom.tag === "input") return false;
-  let childrenLeaves = 0;
-  let hasInstance = false;
-  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
-    if ((node as { componentRef?: string }).componentRef) {
-      const role = ir.parts.find((part) => part.name === node.part)?.details?.role;
-      // Compose has no emitted iconography target yet. A contract-authored
-      // decoration may degrade while essential component refs remain a hard
-      // stop; the native lane proves compilation, not visual parity.
-      if (role !== "decoration") hasInstance = true;
-    }
-    const kids = node.children ?? [];
-    if (node.tag === "children" && kids.length === 0) childrenLeaves += 1;
-    kids.forEach(walk);
-  };
-  walk(ir.dom);
-  if (hasInstance) return false;
-  if (ir.dom.tag === "img") return false;
-  if (childrenLeaves === 1) return true;
-  // Decorative box: no consumer content leaf at all and no content binding —
-  // a pure chrome surface (Skeleton). Purely internal decorative children do
-  // not change that; see the twin comment in the swiftui emitter for why
-  // requiring an empty child list here was a web-topology proxy.
-  if (childrenLeaves === 0 && !ir.dom.content) {
-    return true;
-  }
-  return false;
-}
+// The static-content class predicate is shared substrate
+// (native-emission-class.ts): passive root, at most one projected children
+// leaf, no essential component instances. A contract-authored decoration
+// may degrade on this target; the native lane proves compilation, not
+// visual parity.
 
 /** Chrome-role slots a passive root can realize, resolved through the corpus
  *  suffix grammar. Shared by the static-content, prop-text, expandable, and
@@ -1382,11 +1370,496 @@ function emitProgressIndicator(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
+/**
+ * The boolean-control class (FEAT-COMPOSE-ADMISSION-SUBSTRATE-01): a scalar
+ * value-channel control whose sole channel is boolean (Checkbox) — the
+ * control twin of the native-toggle collapse, realized on the
+ * foundation-only FsdsCheckbox substrate. Channel param names, the size
+ * axis, and passthrough props all derive from the IR, exactly as the
+ * toggle path does.
+ *
+ * Named divergences (ledgered in docs/architecture/native-target-admission.md):
+ *   - `indeterminate` is not lowered — the substrate is binary, mirroring
+ *     the SwiftUI boolean-control twin;
+ *   - `name`/`value`/`ariaLabelledby` form-wiring props are omitted v1;
+ *     `ariaLabel` lowers to the semantics contentDescription;
+ *   - checked-state colors fall back to ledgered constants until the token
+ *     graph carries checked-scope slots (the sidecar declares default
+ *     scope only), exactly as the toggle's dead-safe constants do.
+ */
+function emitBooleanControl(ir: ComponentIR, channel: NormalizedChannelIR): string {
+  const name = ir.name;
+  const segment = packageSegment(name);
+  const valueProp = channel.valueProp;
+  const defaultValueProp = channel.defaultValueProp ?? `${valueProp}Default`;
+  const changeProp = channel.changeHandlerProp;
+
+  // Size axis: a styled prop referencing a contract-defined enum type.
+  const sizeProp = ir.styledProps.find((p) =>
+    p.typeRefs.some((ref) => (ir.definedTypes[ref]?.values?.length ?? 0) > 0),
+  );
+  let sizeEnumName: string | null = null;
+  let sizeValues: string[] = [];
+  let sizeDefault: string | null = null;
+  if (sizeProp) {
+    const ref = sizeProp.typeRefs.find(
+      (r) => (ir.definedTypes[r]?.values?.length ?? 0) > 0,
+    )!;
+    const def = ir.definedTypes[ref]!;
+    sizeEnumName = ref;
+    sizeValues = def.values!;
+    const rawDefault = sizeProp.defaultExpr?.replace(/^"|"$/g, "") ?? null;
+    sizeDefault = rawDefault;
+    for (const value of sizeValues) {
+      if (!CHECKBOX_BOX_DP[value]) {
+        throw new Error(
+          `emitBooleanControl: no box dimensions for size value "${value}" on ${name} — extend the framework-grammar table or the token graph`,
+        );
+      }
+    }
+  }
+
+  const hasDisabled = ir.styledProps.some(
+    (p) => p.name === "disabled" && p.propType.kind === "boolean",
+  );
+  const handled = new Set<string>([
+    valueProp,
+    defaultValueProp,
+    changeProp,
+    "indeterminate",
+    "name",
+    "value",
+    "ariaLabel",
+    "ariaLabelledby",
+    ...(sizeProp ? [sizeProp.safeName] : []),
+    ...(hasDisabled ? ["disabled"] : []),
+  ]);
+  const stringProps = ir.styledProps.filter(
+    (p) => p.propType.kind === "string" && !handled.has(p.name),
+  );
+
+  const bgSlot = findTokenSlot(ir, "root", ".color.background.default");
+  const borderSlot = findTokenSlot(ir, "root", ".color.border.default");
+  const borderWidthSlot = findTokenSlot(ir, "root", ".border.width");
+  const radiusSlot = findTokenSlot(ir, "root", ".border.radius");
+  const transitionSlot = findTokenSlot(ir, "root", ".transition.duration");
+  const focusColorSlot = findTokenSlot(ir, "root", ".focus.ring.color");
+  const focusWidthSlot = findTokenSlot(ir, "root", ".focus.ring.width");
+  const minWidthSlot = findTokenSlot(ir, "root", "box-model.min-width");
+  const minHeightSlot = findTokenSlot(ir, "root", "box-model.min-height");
+  const paddingInlineStartSlot = findTokenSlot(ir, "root", "box-model.padding-inline-start");
+  const paddingInlineEndSlot = findTokenSlot(ir, "root", "box-model.padding-inline-end");
+  const paddingBlockStartSlot = findTokenSlot(ir, "root", "box-model.padding-block-start");
+  const paddingBlockEndSlot = findTokenSlot(ir, "root", "box-model.padding-block-end");
+  const consumesTokens =
+    Boolean(
+      bgSlot || borderSlot || borderWidthSlot || radiusSlot ||
+      transitionSlot || focusColorSlot || focusWidthSlot ||
+      minWidthSlot || minHeightSlot || paddingInlineStartSlot ||
+      paddingInlineEndSlot || paddingBlockStartSlot || paddingBlockEndSlot,
+    ) || ir.tokenScopes.some((scope) => scope.values.length > 0);
+
+  const lines: string[] = [];
+  lines.push(
+    `// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`,
+  );
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`// @generated:start imports`);
+  lines.push(`import androidx.compose.foundation.layout.PaddingValues`);
+  lines.push(`import androidx.compose.runtime.Composable`);
+  lines.push(`import androidx.compose.runtime.getValue`);
+  lines.push(`import androidx.compose.runtime.mutableStateOf`);
+  lines.push(`import androidx.compose.runtime.remember`);
+  lines.push(`import androidx.compose.runtime.setValue`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  lines.push(`import androidx.compose.ui.graphics.Color`);
+  lines.push(`import androidx.compose.ui.unit.dp`);
+  lines.push(`import com.fullstackds.components.controls.FsdsCheckbox`);
+  lines.push(`import com.fullstackds.components.controls.FsdsCheckboxStyle`);
+  if (consumesTokens) {
+    lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+    lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+    lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+    lines.push(`import com.fullstackds.tokens.toFsdsMs`);
+  }
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start component`);
+  if (sizeEnumName && sizeValues.length > 0) {
+    lines.push(
+      `/** Size axis lowered from the contract's ${sizeEnumName} type. */`,
+    );
+    lines.push(
+      `enum class ${sizeEnumName} { ${sizeValues.map(kotlinEnumName).join(", ")} }`,
+    );
+    lines.push(``);
+  }
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  // AOSP Compose API guideline: `modifier` is the first optional parameter.
+  lines.push(`    modifier: Modifier = Modifier,`);
+  lines.push(`    ${valueProp}: Boolean? = null,`);
+  lines.push(`    ${defaultValueProp}: Boolean = false,`);
+  lines.push(`    ${changeProp}: ((Boolean) -> Unit)? = null,`);
+  if (sizeEnumName && sizeDefault) {
+    lines.push(
+      `    size: ${sizeEnumName} = ${sizeEnumName}.${kotlinEnumName(sizeDefault)},`,
+    );
+  }
+  if (hasDisabled) {
+    lines.push(`    enabled: Boolean = true,`);
+  }
+  for (const prop of stringProps) {
+    lines.push(`    ${prop.safeName}: String? = null,`);
+  }
+  lines.push(`    contentDescription: String? = null,`);
+  lines.push(`) {`);
+  lines.push(
+    `    var uncontrolled${pascalCase(valueProp)} by remember { mutableStateOf(${defaultValueProp}) }`,
+  );
+  lines.push(
+    `    val resolved${pascalCase(valueProp)} = ${valueProp} ?: uncontrolled${pascalCase(valueProp)}`,
+  );
+  if (consumesTokens) {
+    lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
+    const colorVal = (valName: string, slot: { name: string } | undefined) => {
+      if (slot) {
+        lines.push(
+          `    val ${valName} = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(slot.name)}))?.toFsdsColor()`,
+        );
+      } else {
+        lines.push(`    val ${valName}: Color? = null`);
+      }
+    };
+    colorVal("boxColorUnchecked", bgSlot);
+    colorVal("boxBorderColor", borderSlot);
+    colorVal("focusRingColor", focusColorSlot);
+    if (borderWidthSlot) {
+      lines.push(
+        `    val boxBorderWidth = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(borderWidthSlot.name)}))?.toFsdsDp() ?: 1.dp`,
+      );
+    }
+    if (radiusSlot) {
+      lines.push(
+        `    val boxRadius = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(radiusSlot.name)}))?.toFsdsDp() ?: 4.dp`,
+      );
+    }
+    if (transitionSlot) {
+      lines.push(
+        `    val transitionDurationMs = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(transitionSlot.name)}))?.toFsdsMs() ?: 150`,
+      );
+    }
+    if (focusWidthSlot) {
+      lines.push(
+        `    val focusRingWidth = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(focusWidthSlot.name)}))?.toFsdsDp() ?: 2.dp`,
+      );
+    }
+    if (minWidthSlot) {
+      lines.push(
+        `    val minTouchWidth = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(minWidthSlot.name)}))?.toFsdsDp() ?: 32.dp`,
+      );
+    }
+    if (minHeightSlot) {
+      lines.push(
+        `    val minTouchHeight = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(minHeightSlot.name)}))?.toFsdsDp() ?: 32.dp`,
+      );
+    }
+    if (
+      paddingInlineStartSlot || paddingInlineEndSlot ||
+      paddingBlockStartSlot || paddingBlockEndSlot
+    ) {
+      const side = (slot: { name: string } | undefined) =>
+        slot
+          ? `fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(slot.name)}))?.toFsdsDp() ?: 0.dp`
+          : `0.dp`;
+      lines.push(
+        `    val checkboxPadding = PaddingValues(start = ${side(paddingInlineStartSlot)}, end = ${side(paddingInlineEndSlot)}, top = ${side(paddingBlockStartSlot)}, bottom = ${side(paddingBlockEndSlot)})`,
+      );
+    }
+    lines.push(``);
+  }
+  lines.push(`    val checkboxStyle = FsdsCheckboxStyle(`);
+  if (sizeEnumName) {
+    lines.push(`        boxSize = when (size) {`);
+    for (const value of sizeValues) {
+      lines.push(
+        `            ${sizeEnumName}.${kotlinEnumName(value)} -> ${CHECKBOX_BOX_DP[value]}.dp`,
+      );
+    }
+    lines.push(`        },`);
+  } else {
+    lines.push(`        boxSize = ${CHECKBOX_BOX_DP.md}.dp,`);
+  }
+  lines.push(
+    `        boxColorChecked = Color(0xFF0566FE), // ledgered constant — no checked-scope slot in the token graph yet`,
+  );
+  lines.push(
+    `        boxColorUnchecked = boxColorUnchecked ?: Color(0xFFFFFFFF),`,
+  );
+  lines.push(
+    `        boxColorDisabled = boxColorUnchecked ?: Color(0xFFE4E4E5),`,
+  );
+  lines.push(`        checkColorChecked = Color(0xFFFFFFFF),`);
+  lines.push(`        checkColorDisabled = Color(0xFF9A9A9C),`);
+  lines.push(`        borderColor = boxBorderColor,`);
+  if (borderWidthSlot) {
+    lines.push(`        borderWidth = boxBorderWidth,`);
+  }
+  if (radiusSlot) {
+    lines.push(`        boxRadius = boxRadius,`);
+  }
+  if (focusColorSlot) {
+    lines.push(`        focusRingColor = focusRingColor,`);
+  }
+  if (focusWidthSlot) {
+    lines.push(`        focusRingWidth = focusRingWidth,`);
+  }
+  if (transitionSlot) {
+    lines.push(`        transitionDurationMs = transitionDurationMs,`);
+  }
+  if (minWidthSlot) {
+    lines.push(`        minTouchWidth = minTouchWidth,`);
+  }
+  if (minHeightSlot) {
+    lines.push(`        minTouchHeight = minTouchHeight,`);
+  }
+  if (
+    paddingInlineStartSlot || paddingInlineEndSlot ||
+    paddingBlockStartSlot || paddingBlockEndSlot
+  ) {
+    lines.push(`        padding = checkboxPadding,`);
+  }
+  lines.push(`    )`);
+  lines.push(``);
+  lines.push(`    FsdsCheckbox(`);
+  lines.push(`        checked = resolved${pascalCase(valueProp)},`);
+  lines.push(`        onCheckedChange = { next ->`);
+  lines.push(`            if (${valueProp} == null) {`);
+  lines.push(`                uncontrolled${pascalCase(valueProp)} = next`);
+  lines.push(`            }`);
+  lines.push(`            ${changeProp}?.invoke(next)`);
+  lines.push(`        },`);
+  lines.push(`        style = checkboxStyle,`);
+  if (hasDisabled) {
+    lines.push(`        enabled = enabled,`);
+  }
+  lines.push(`        contentDescription = contentDescription,`);
+  lines.push(`        modifier = modifier,`);
+  lines.push(`    )`);
+  lines.push(`}`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  return lines.join("\n");
+}
+
+/**
+ * The bare-rule-leaf class (FEAT-COMPOSE-ADMISSION-SUBSTRATE-01): an hr
+ * root with no children and no channels (Divider) — a separator whose
+ * paint (color/thickness) and surface geometry resolve from the token
+ * scopes, orientation from the contract's enum axis. Realized on the
+ * foundation-only FsdsRule substrate.
+ *
+ * Named divergences (ledgered in docs/architecture/native-target-admission.md):
+ *   - the `thickness`/`title` string props are omitted v1 (token slot
+ *     drives thickness; the web's title attribute has no Compose analog
+ *     short of a semantics description, which a bare rule does not carry);
+ *   - `divider.spacing.margin` is unread — this class realizes the rule,
+ *     not the surrounding layout rhythm (RN leaves it unread in styles too).
+ */
+function emitBareRuleLeaf(ir: ComponentIR): string {
+  const name = ir.name;
+  const segment = packageSegment(name);
+  const orientationProp = ir.styledProps.find(
+    (p) =>
+      p.name === "orientation" &&
+      typeof p.propType === "object" &&
+      "kind" in p.propType &&
+      p.propType.kind === "enum",
+  );
+  const orientationValues =
+    orientationProp && typeof orientationProp.propType === "object" &&
+    "kind" in orientationProp.propType &&
+    orientationProp.propType.kind === "enum"
+      ? (orientationProp.propType as { values: string[] }).values
+      : null;
+  const hasDecorative = ir.styledProps.some(
+    (p) => p.name === "decorative" && p.propType.kind === "boolean",
+  );
+  const handled = new Set<string>(["orientation", "decorative", "thickness", "title"]);
+  const stringProps = ir.styledProps.filter(
+    (p) => p.propType.kind === "string" && !handled.has(p.name),
+  );
+
+  const colorSlot = findTokenSlot(ir, "root", ".color.default");
+  const thicknessSlot = findTokenSlot(ir, "root", ".size.thickness");
+  const minWidthSlot = findTokenSlot(ir, "root", "box-model.min-width");
+  const minHeightSlot = findTokenSlot(ir, "root", "box-model.min-height");
+  const paddingInlineStartSlot = findTokenSlot(ir, "root", "box-model.padding-inline-start");
+  const paddingInlineEndSlot = findTokenSlot(ir, "root", "box-model.padding-inline-end");
+  const paddingBlockStartSlot = findTokenSlot(ir, "root", "box-model.padding-block-start");
+  const paddingBlockEndSlot = findTokenSlot(ir, "root", "box-model.padding-block-end");
+  const anyColorSlot = Boolean(colorSlot);
+  const anyDimSlot = Boolean(
+    thicknessSlot || minWidthSlot || minHeightSlot || paddingInlineStartSlot ||
+    paddingInlineEndSlot || paddingBlockStartSlot || paddingBlockEndSlot,
+  );
+  const consumesTokens = anyColorSlot || anyDimSlot;
+
+  const lines: string[] = [];
+  lines.push(
+    `// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`,
+  );
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`// @generated:start imports`);
+  if (
+    paddingInlineStartSlot || paddingInlineEndSlot ||
+    paddingBlockStartSlot || paddingBlockEndSlot
+  ) {
+    lines.push(`import androidx.compose.foundation.layout.PaddingValues`);
+  }
+  lines.push(`import androidx.compose.runtime.Composable`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  lines.push(`import androidx.compose.ui.graphics.Color`);
+  lines.push(`import androidx.compose.ui.unit.dp`);
+  lines.push(`import com.fullstackds.components.rule.FsdsRule`);
+  lines.push(`import com.fullstackds.components.rule.FsdsRuleOrientation`);
+  lines.push(`import com.fullstackds.components.rule.FsdsRuleStyle`);
+  if (consumesTokens) {
+    lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+    if (anyColorSlot) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+    if (anyDimSlot) lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+  }
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start component`);
+  if (orientationValues) {
+    lines.push(
+      `/** Orientation axis lowered from the contract's inline enum. */`,
+    );
+    lines.push(
+      `enum class ${name}Orientation { ${orientationValues.map(kotlinEnumName).join(", ")} }`,
+    );
+    lines.push(``);
+  }
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  lines.push(`    modifier: Modifier = Modifier,`);
+  if (orientationValues) {
+    lines.push(
+      `    orientation: ${name}Orientation = ${name}Orientation.${kotlinEnumName(orientationValues[0]!)},`,
+    );
+  }
+  if (hasDecorative) {
+    lines.push(`    decorative: Boolean = false,`);
+  }
+  for (const prop of stringProps) {
+    lines.push(`    ${prop.safeName}: String? = null,`);
+  }
+  lines.push(`) {`);
+  if (consumesTokens) {
+    lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
+  }
+  if (colorSlot) {
+    lines.push(
+      `    val ruleColor = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(colorSlot.name)}))?.toFsdsColor() ?: Color(0xFFB8B8B8)`,
+    );
+  } else {
+    lines.push(`    val ruleColor = Color(0xFFB8B8B8)`);
+  }
+  if (thicknessSlot) {
+    lines.push(
+      `    val ruleThickness = fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(thicknessSlot.name)}))?.toFsdsDp() ?: 1.dp`,
+    );
+  } else {
+    lines.push(`    val ruleThickness = 1.dp`);
+  }
+  if (minWidthSlot || minHeightSlot) {
+    lines.push(
+      `    val ruleMinWidth = ${minWidthSlot ? `fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(minWidthSlot.name)}))?.toFsdsDp() ?: 0.dp` : "0.dp"}`,
+    );
+    lines.push(
+      `    val ruleMinHeight = ${minHeightSlot ? `fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(minHeightSlot.name)}))?.toFsdsDp() ?: 0.dp` : "0.dp"}`,
+    );
+  }
+  if (
+    paddingInlineStartSlot || paddingInlineEndSlot ||
+    paddingBlockStartSlot || paddingBlockEndSlot
+  ) {
+    const side = (slot: { name: string } | undefined) =>
+      slot
+        ? `fsdsTheme.resolve(${tokenConstName(ir)}["root"]?.get(${JSON.stringify(slot.name)}))?.toFsdsDp() ?: 0.dp`
+        : `0.dp`;
+    lines.push(
+      `    val rulePadding = PaddingValues(start = ${side(paddingInlineStartSlot)}, end = ${side(paddingInlineEndSlot)}, top = ${side(paddingBlockStartSlot)}, bottom = ${side(paddingBlockEndSlot)})`,
+    );
+  }
+  lines.push(`    FsdsRule(`);
+  if (orientationValues) {
+    lines.push(`        orientation = when (orientation) {`);
+    for (const value of orientationValues) {
+      const target = value === "vertical" ? "Vertical" : "Horizontal";
+      lines.push(
+        `            ${name}Orientation.${kotlinEnumName(value)} -> FsdsRuleOrientation.${target}`,
+      );
+    }
+    lines.push(`        },`);
+  } else {
+    lines.push(`        orientation = FsdsRuleOrientation.Horizontal,`);
+  }
+  lines.push(`        style = FsdsRuleStyle(`);
+  lines.push(`            color = ruleColor,`);
+  lines.push(`            thickness = ruleThickness,`);
+  if (minWidthSlot || minHeightSlot) {
+    lines.push(`            minWidth = ruleMinWidth,`);
+    lines.push(`            minHeight = ruleMinHeight,`);
+  }
+  if (
+    paddingInlineStartSlot || paddingInlineEndSlot ||
+    paddingBlockStartSlot || paddingBlockEndSlot
+  ) {
+    lines.push(`            padding = rulePadding,`);
+  }
+  lines.push(`        ),`);
+  lines.push(`        modifier = modifier,`);
+  if (hasDecorative) {
+    lines.push(`        decorative = decorative,`);
+  }
+  lines.push(`    )`);
+  lines.push(`}`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  return lines.join("\n");
+}
+
 export function generateJetpackComposeComponentSource(
   ir: ComponentIR,
 ): string {
+  // Collapse intents dispatch FIRST, mirroring the swift dispatcher's
+  // precedence: a contract that declares a native collapse owns its
+  // realization even if its dom shape would also match a control class.
+  if (collectCollapseIntents(ir).has("native-toggle-affordance")) {
+    const collapseChannel = ir.behavior.normalizedChannels[0];
+    if (!collapseChannel || collapseChannel.valueType !== "boolean") {
+      throw new Error(
+        `generateJetpackComposeComponentSource: ${ir.name} declares native-toggle-affordance without a boolean value channel`,
+      );
+    }
+    return emitNativeToggleCollapse(ir, collapseChannel);
+  }
   if (isProjectedChildrenAction(ir)) {
     return emitProjectedChildrenAction(ir);
+  }
+  if (isValueChannelControl(ir)) {
+    const channel = soleValueChannel(ir)!;
+    if (channel.valueType === "boolean") {
+      return emitBooleanControl(ir, channel);
+    }
+    throw new Error(
+      `generateJetpackComposeComponentSource: the string value-channel control class is not implemented for ${ir.name} yet — ` +
+        `only the boolean control (checkbox) realization has landed.`,
+    );
   }
   if (isPropTextLeaf(ir)) {
     return emitPropTextLeaf(ir);
@@ -1397,23 +1870,29 @@ export function generateJetpackComposeComponentSource(
   if (isProgressIndicator(ir)) {
     return emitProgressIndicator(ir);
   }
+  if (isBareRuleLeaf(ir)) {
+    return emitBareRuleLeaf(ir);
+  }
   if (isStaticContent(ir)) {
     return emitStaticContent(ir);
   }
-  const collapseIntents = collectCollapseIntents(ir);
-  if (!collapseIntents.has("native-toggle-affordance")) {
-    throw new Error(
-      `generateJetpackComposeComponentSource: only the native-toggle collapse path is implemented for ${ir.name} — ` +
-        `multi-part anatomy, surfaces, and other collapse classes throw by design until their slices land.`,
-    );
-  }
-  const channel = ir.behavior.normalizedChannels[0];
-  if (!channel || channel.valueType !== "boolean") {
-    throw new Error(
-      `generateJetpackComposeComponentSource: ${ir.name} declares native-toggle-affordance without a boolean value channel`,
-    );
-  }
+  throw new Error(
+    `generateJetpackComposeComponentSource: no emission class matches component "${ir.name}" on jetpack-compose — ` +
+      `multi-part anatomy, surfaces, and other collapse classes throw by design until their slices land.`,
+  );
+}
 
+/**
+ * The native-toggle collapse path (Switch/ToggleSwitch via
+ * `native-toggle-affordance`), extracted verbatim from the dispatcher —
+ * dispatch precedence moved it ahead of the structural classes to mirror
+ * the swift dispatcher (a declared collapse owns its realization even when
+ * the dom shape would also match a control class).
+ */
+function emitNativeToggleCollapse(
+  ir: ComponentIR,
+  channel: NormalizedChannelIR,
+): string {
   const name = ir.name;
   const segment = packageSegment(name);
   const valueProp = channel.valueProp;

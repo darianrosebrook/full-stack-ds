@@ -54,6 +54,18 @@ const CHROME_ROLE_BUTTON = new RegExp(
   [CHROME_ROLE_STATIC.source, "box-model\\.min-width(?:\\.|$)"].join("|"),
 );
 const CHROME_ROLE_TOGGLE = /(?!)/;
+/** Boolean-control path (Checkbox): the checkbox-part token vocabulary plus
+ *  the shared box-model surface slots it realizes. `box-model.gap` is
+ *  deliberately unclaimed — a lone control lays out no children; the
+ *  label/gap realization belongs to composer classes. */
+const CHROME_ROLE_CHECKBOX = new RegExp(
+  ["checkbox\\.(?:color|border|focus\\.ring|transition)\\.", "box-model\\.(?:padding|min-width|min-height)"].join("|"),
+);
+/** Bare-rule-leaf path (Divider): the rule paint (part-scoped color default
+ *  + thickness) and its surface minimums. */
+const CHROME_ROLE_RULE = new RegExp(
+  ["\\.color\\.default$", "\\.size\\.thickness", "box-model\\.(?:padding|min-width|min-height)"].join("|"),
+);
 /** Font-size role: claimed by the prop-text leaf path (the corpus's
  *  text-leaf size vocabulary — `code-block.size.fontSize.default` etc.). */
 const FONT_SIZE_ROLE = /\.size\.fontSize\.|\.typography\.fontSize\./;
@@ -68,6 +80,8 @@ const TYPO_ROLE = /text\.size\.|text\.typography\.fontWeight\./;
 function emitterPath(ktSource) {
   if (ktSource.includes("FsdsButtonScope")) return "button";
   if (ktSource.includes("FsdsToggle")) return "toggle";
+  if (ktSource.includes("FsdsCheckbox")) return "checkbox";
+  if (ktSource.includes("FsdsRule")) return "rule";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -80,6 +94,8 @@ function emitterPath(ktSource) {
 function chromeRoleForPath(path) {
   if (path === "button") return CHROME_ROLE_BUTTON;
   if (path === "toggle") return CHROME_ROLE_TOGGLE;
+  if (path === "checkbox") return CHROME_ROLE_CHECKBOX;
+  if (path === "rule") return CHROME_ROLE_RULE;
   if (path === "progress") {
     return new RegExp([CHROME_ROLE_STATIC.source, TEXT_COLOR_ROLE.source].join("|"));
   }
