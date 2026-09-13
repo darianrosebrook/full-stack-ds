@@ -36,3 +36,8 @@ contracts:
   - name: 'media-leaf'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge bf4b7629: the generated Image takes a consumer Painter, renders foundation Image with contentDescription from the alt prop, and falls back to the alt text as the placeholder; gradlew :library:compileKotlin -> BUILD SUCCESSFUL; node scripts/compose-parity-diff.mjs -> 50 allowlisted, 0 failures with the mediaLeaf role claiming the image colour and radius slots and excluding image.size.* for the recorded reason; emitter suite 55/55; parity self-tests 20/20; pnpm run generate:check -> 52/52; swiftui regeneration byte-identical; pnpm test -> 3910/3910; pnpm run test:frameworks -> exit 0; pnpm run governed:rail -> exit 0, clean tree; docs:check-claims -> 75 claims with markers at 50, loader decision recorded in the criteria"
+    recorded_at: "2026-09-13T07:14:40.440Z"
