@@ -237,7 +237,8 @@ describe("generateJetpackComposeComponentSource — boolean-control class (FEAT-
     // Controlled-takes-precedence uncontrolled fallback.
     expect(src).toContain("val resolvedChecked = checked ?: uncontrolledChecked");
     expect(src).toContain("if (checked == null) {");
-    expect(src).toContain("onChange?.invoke(next)");
+    // The change-handler prop name comes from the contract channel.
+    expect(src).toMatch(/\?\.invoke\(next\)/);
     // Foundation-only substrate: the painted control, never a material import.
     expect(src).toContain("FsdsCheckbox(");
     expect(src).toContain("FsdsCheckboxStyle(");
@@ -443,5 +444,21 @@ describe("generateJetpackComposeComponentSource — radio-collection class (FEAT
       const block = tokens.split(`"${scope}" to mapOf(`)[1]?.split("\n    ),")[0] ?? "";
       expect(block, `${scope}: ${slot}`).toContain(`"${slot}" to ComponentTokenDefinition(`);
     }
+  });
+});
+
+describe("generateJetpackComposeComponentSource — array-iterated list class (FEAT-COMPOSE-SHUTTLE-ADMISSION-01)", () => {
+  it("lowers the array channel onto removable rows (Shuttle)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Shuttle"));
+    expect(src).toContain("value: List<String>? = null,");
+    expect(src).toContain("defaultValue: List<String> = emptyList(),");
+    expect(src).toContain("val resolvedValue = value ?: uncontrolledValue");
+    expect(src).toContain("resolvedValue.forEach { item ->");
+    expect(src).toContain("val next = resolvedValue.filter { it != item }");
+    // The change-handler prop name comes from the contract channel.
+    expect(src).toMatch(/\?\.invoke\(next\)/);
+    expect(src).toContain('layeredSlot("shuttle.color.background.default")');
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Shuttle\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 });

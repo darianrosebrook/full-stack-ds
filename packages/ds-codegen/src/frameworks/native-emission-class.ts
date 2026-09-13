@@ -443,3 +443,27 @@ export function radioGroupFacts(ir: ComponentIR): RadioGroupFacts | null {
       : undefined,
   };
 }
+
+/**
+ * The array-iterated list class: exactly one channel whose value type is
+ * an array (excluding Date arrays, which are grids) over a dom tree that
+ * contains an array-iteration node. Shuttle is the corpus consumer.
+ *
+ * Pure structural facts — target-neutral, which is why it lives here
+ * rather than in the swift emitter that first needed it
+ * (FEAT-COMPOSE-SHUTTLE-ADMISSION-01).
+ */
+export function isArrayIteratedList(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  const channels = ir.behavior.normalizedChannels;
+  if (channels.length !== 1) return false;
+  const vt = channels[0]!.valueType ?? "";
+  if (!vt.includes("[]")) return false;
+  if (vt.includes("Date")) return false;
+  const walk = (node: DomNodeIR): boolean => {
+    const iteration = (node as { iteration?: { kind?: string } }).iteration;
+    if (iteration?.kind === "array") return true;
+    return (node.children ?? []).some(walk);
+  };
+  return walk(ir.dom);
+}

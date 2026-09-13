@@ -41,6 +41,7 @@ import { collectCollapseIntents, isContentTransform, nativeRootClipping } from "
 import {
   countChildrenLeaves,
   domGlyph,
+  isArrayIteratedList,
   isBareRuleLeaf,
   isGlyphHost,
   isIconDecoratedContent,
@@ -1017,25 +1018,10 @@ function emitIconDecoratedContent(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
-/**
- * Array-iterated list: a root whose single array-typed channel drives an
- * iteration rendering iterationLocal spans (Shuttle). The channel rides
- * ControllableValue<[String]>; ForEach realizes the iteration.
- */
-function isArrayIteratedList(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  const channels = ir.behavior.normalizedChannels;
-  if (channels.length !== 1) return false;
-  const vt = channels[0]!.valueType ?? "";
-  if (!vt.includes("[]")) return false;
-  if (vt.includes("Date")) return false;
-  const walk = (node: NonNullable<ComponentIR["dom"]>): boolean => {
-    const iteration = (node as { iteration?: { kind?: string } }).iteration;
-    if (iteration?.kind === "array") return true;
-    return (node.children ?? []).some(walk);
-  };
-  return walk(ir.dom);
-}
+// The array-iterated list predicate is shared substrate
+// (native-emission-class.ts): one array channel over an array-iteration
+// node. The channel rides ControllableValue<[String]>; ForEach realizes
+// the iteration.
 
 function emitArrayIteratedList(ir: ComponentIR): string {
   const exportName = swiftExportName(ir.name);
