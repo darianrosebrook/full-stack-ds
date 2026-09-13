@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-SELECT-ADMISSION-01
 title: 'Selection-control predicate to shared substrate; Compose Select admission'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Select admitted on the selection-control class; predicate moved to the shared substrate with byte-identical swift regeneration; compose 37-to-38'
 created_at: '2026-09-13T04:06:06.650Z'
-updated_at: '2026-09-13T04:06:08.968Z'
+updated_at: '2026-09-13T04:12:17.258Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
