@@ -1,0 +1,33 @@
+id: FEAT-COMPOSE-STATUS-ICON-REALIZATION-01
+title: 'Realize Status''s valueMap-driven icon through the reference mechanism'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-13T06:08:38.191Z'
+updated_at: '2026-09-13T06:08:38.191Z'
+created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+    - 'packages/ds-jetpack-compose/library/src/main/kotlin'
+    - 'scripts/compose-parity-diff.mjs'
+    - 'docs/architecture/native-target-admission.md'
+    - 'docs/normal-form.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given Status declares an Icon reference whose name binding is a valueMap over its status axis; when the static-content class lowers it through the reference vocabulary; then the generated Status compiles with an exhaustive when, the C8 ledger loses that entry while the three remaining stay enforced, and SwiftUI regeneration is unchanged'
+non_functional: {}
+contracts:
+  - name: 'reference-realization'
+    type: behavior
+    path: 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
