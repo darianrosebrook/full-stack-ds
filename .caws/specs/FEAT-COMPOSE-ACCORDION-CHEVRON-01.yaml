@@ -8,7 +8,7 @@ updated_at: '2026-09-13T06:38:48.346Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (interactive-composite trigger reference)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -20,7 +20,7 @@ scope:
     - 'docs/normal-form.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'With the ledger empty, every corpus reference is realized: no entry can name a reference that is not a painted divergence.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
