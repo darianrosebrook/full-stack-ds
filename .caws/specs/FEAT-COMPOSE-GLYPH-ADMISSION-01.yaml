@@ -61,3 +61,8 @@ contracts:
   - name: 'glyph-host-predicate'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "isGlyphHost/domGlyph/isIconDecoratedContent moved to native-emission-class.ts; swift regeneration after the move is byte-identical (52 groups, zero git diff over packages/ds-swiftui, re-verified post-merge); the move caught and fixed a real transcription defect (inverted ir.surface == null check rejected every component); codegen suite green 291/291 files, 3882/3882 tests"
+    recorded_at: "2026-09-13T01:35:35.607Z"
