@@ -3,7 +3,6 @@ title: 'Array-iterated list predicate to shared substrate; Compose Shuttle admis
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: compose-shuttle
 created_at: '2026-09-13T03:12:44.279Z'
 updated_at: '2026-09-13T03:12:48.876Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
