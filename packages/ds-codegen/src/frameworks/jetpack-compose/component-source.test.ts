@@ -543,3 +543,21 @@ describe("generateJetpackComposeComponentSource — selection control (FEAT-COMP
     expect(src.match(/fun Select\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 });
+
+describe("generateJetpackComposeComponentSource — centered surface (FEAT-COMPOSE-DIALOG-ADMISSION-01)", () => {
+  it("hosts the centered surface on the foundation Dialog with dismissal wiring (Dialog)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Dialog"));
+    expect(src).toContain("import androidx.compose.ui.window.Dialog as ComposeDialog");
+    expect(src).toContain("open: Boolean? = null,");
+    expect(src).toContain("val resolvedOpen = open ?: uncontrolledOpen");
+    expect(src).toContain("ComposeDialog(");
+    expect(src).toContain("onDismissRequest = { dismiss() }");
+    expect(src).toContain("dismissOnBackPress = closeOnEscape,");
+    expect(src).toContain("dismissOnClickOutside = closeOnBackdropClick,");
+    expect(src).toContain("if (!resolvedOpen) return");
+    expect(src).toContain('layeredSlot("dialog.color.background.default")');
+    expect(src).toContain('layeredSlot("dialog.size.radius.default")');
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Dialog\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+});

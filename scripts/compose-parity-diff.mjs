@@ -114,6 +114,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("padEnd(length")) return "countField";
   if (ktSource.includes("inputModifier")) return "labeledText";
   if (ktSource.includes("Popup(")) return "selectionControl";
+  if (ktSource.includes("ComposeDialog(")) return "centeredSurface";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -152,6 +153,13 @@ function chromeRoleForPath(path) {
    *  plus the shared box-model family. */
   /** Selection-control path (Select): the select-part chrome (background,
    *  border color/width, radius) plus the shared box-model family. */
+  /** Centered-surface path (Dialog): the dialog-part chrome plus the
+   *  shared box-model family. */
+  if (path === "centeredSurface") {
+    return new RegExp(
+      ["dialog\\.(?:color|size)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
   if (path === "selectionControl") {
     return new RegExp(
       ["select\\.(?:color|size)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),

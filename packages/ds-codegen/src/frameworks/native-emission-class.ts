@@ -576,3 +576,19 @@ export function isSelectionControl(ir: ComponentIR): boolean {
     (p) => p.safeName === "options" && typeof p.type === "string" && p.type.includes("[]"),
   );
 }
+
+/**
+ * The centered-surface class: a declared surface whose positioning
+ * strategy is `centered` — a modal panel attached to the viewport rather
+ * than to an anchor. Dialog is the corpus consumer. Anchored surfaces
+ * (Popover/Tooltip/Walkthrough) and viewport-edge surfaces (Sheet/Toast)
+ * are separate classes.
+ *
+ * Pure structural facts — target-neutral, which is why it lives here
+ * rather than in the target that first needed it
+ * (FEAT-COMPOSE-DIALOG-ADMISSION-01).
+ */
+export function isCenteredSurface(ir: ComponentIR): boolean {
+  if (!ir.surface) return false;
+  return ir.surface.positioning?.strategy === "centered";
+}
