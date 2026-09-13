@@ -1,0 +1,39 @@
+id: FEAT-COMPOSE-ANCHORED-SURFACES-01
+title: 'Anchored surface class: Compose Popover and Tooltip admission on the surface scaffold'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-13T04:22:14.874Z'
+updated_at: '2026-09-13T04:22:14.874Z'
+created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/surface-emit.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.test.ts'
+    - 'packages/ds-jetpack-compose/library/src/main/kotlin'
+    - 'fsds.targets.json'
+    - 'scripts/compose-parity-diff.mjs'
+    - 'docs/architecture/native-target-admission.md'
+    - 'docs/current-implementation-snapshot.md'
+    - 'AGENTS.md'
+    - 'README.md'
+    - 'docs/normal-form.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the surface IR exposes anchored positioning with an anchor part, an openTriggers list and a placement enum; when the anchored-surface predicate lands in the shared substrate and the compose surface scaffold emits Popover (click trigger) and Tooltip (hover/focus trigger) with measured anchor offsets and a foundation Popup; then both compile via gradle, compose grows 41 to 43, parity/doc gates stay green, and Walkthrough remains unadmitted with its selector-anchor reason recorded'
+non_functional: {}
+contracts:
+  - name: 'anchored-surface'
+    type: behavior
+    path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
