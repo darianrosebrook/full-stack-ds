@@ -72,3 +72,7 @@ evidence:
     status: pass
     evidence_ref: "gradlew -p packages/ds-jetpack-compose :library:compileKotlin BUILD SUCCESSFUL (25 file groups incl. Checkbox.kt/CheckboxTokens.kt on FsdsCheckbox, Divider.kt/DividerTokens.kt on FsdsRule); zero material imports (unit test asserts no androidx.compose.material in generated Checkbox); dispatch on shared predicates — rename test proves Checkbox still routes as RenamedControl; Input throws the explicit string-control not-implemented"
     recorded_at: "2026-09-13T00:43:12.677Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "compose-parity-diff.mjs: '25 allowlisted components; 0 failures' (checkbox+rule paths added to emitterPath/chromeRoleForPath with self-test 8/8); docs:check-claims OK 71/71 after marker fix (23->25 in AGENTS.md/README.md/normal-form/snapshot); generate:check 52/52; governed:rail Overall PASS exit 0"
+    recorded_at: "2026-09-13T00:43:13.784Z"
