@@ -111,6 +111,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("Role.RadioButton")) return "radioGroup";
   if (ktSource.includes("filter { it != item }")) return "arrayList";
   if (ktSource.includes("compositionLocalOf")) return "interactiveComposite";
+  if (ktSource.includes("padEnd(length")) return "countField";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -143,6 +144,13 @@ function chromeRoleForPath(path) {
   /** Interactive-composite path (Accordion/Tabs): the part-scoped container paint
    *  (accordion border / tabs shape radius) plus the shared box-model family.
    *  Part-scoped typography (`accordion.text.*`) deliberately unclaimed. */
+  /** Count-iterated field-group path (OTP): the otp-part chrome plus the
+   *  shared box-model family incl. the slot gap. */
+  if (path === "countField") {
+    return new RegExp(
+      ["otp\\.(?:color|size)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
   if (path === "interactiveComposite") {
     return new RegExp(
       ["(?:accordion\\.border|tabs\\.shape)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
