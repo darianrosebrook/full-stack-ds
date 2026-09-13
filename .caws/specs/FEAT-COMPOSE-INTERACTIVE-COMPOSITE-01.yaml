@@ -38,3 +38,8 @@ contracts:
   - name: 'interactive-composite'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "isInteractiveComposite moved to native-emission-class.ts (pure IR extraction: div root, one scalar/union channel, trigger/tab + content/panel parts) with byte-identical swift regeneration (52 groups, zero diff); compose 33-to-35: gradlew :library:compileKotlin BUILD SUCCESSFUL (Accordion.kt/Tabs.kt: compound-context state class + compositionLocalOf, trigger subcomponents selecting/toggling, content subcomponents gated, chrome from scopes); compose-parity-diff 35/35 0 failures (interactiveComposite path+role, self-test 8/8); generate:check 52/52; typecheck clean; docs:check-claims 74/74; emitter tests 34/34. Reduced gate coverage this round (full root suite + governed rail deferred to the next round's verification) — compile, parity, claims, typecheck and swift byte-identity are the landed evidence"
+    recorded_at: "2026-09-13T03:35:44.893Z"
