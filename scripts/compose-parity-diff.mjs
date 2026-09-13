@@ -114,6 +114,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("padEnd(length")) return "countField";
   if (ktSource.includes("inputModifier")) return "labeledText";
   if (ktSource.includes("Popup(")) return "selectionControl";
+  if (ktSource.includes("onGloballyPositioned")) return "anchoredSurface";
   if (ktSource.includes("fillMaxSize()")) return "edgeSurface";
   if (ktSource.includes("ComposeDialog(")) return "centeredSurface";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
@@ -159,6 +160,13 @@ function chromeRoleForPath(path) {
   /** Viewport-edge surface path (Sheet/Toast): the sheet/toast-part chrome
    *  (border colour/width, radius) plus the shared box-model family. Note
    *  `sheet.color.border` is the contract's border colour slot. */
+  /** Anchored-surface path (Popover/Tooltip): the popover/tooltip-part chrome
+   *  plus the shared box-model family. */
+  if (path === "anchoredSurface") {
+    return new RegExp(
+      ["(?:popover|tooltip)\\.(?:color|size)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
   if (path === "edgeSurface") {
     return new RegExp(
       ["(?:sheet|toast)\\.(?:border|color|surface)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),

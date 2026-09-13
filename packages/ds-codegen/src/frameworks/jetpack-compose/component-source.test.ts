@@ -585,3 +585,30 @@ describe("generateJetpackComposeComponentSource — viewport-edge surfaces (FEAT
     expect(src).not.toMatch(/import androidx\.compose\.material/);
   });
 });
+
+describe("anchored surfaces (FEAT-COMPOSE-ANCHORED-SURFACES-01)", () => {
+  it("emits a measured-anchor Popup for a click-triggered surface (Popover)", async () => {
+    const { generateJetpackComposeSurfaceFiles } = await import("./surface-emit.js");
+    const { componentFile, tokensFile } = generateJetpackComposeSurfaceFiles(irFor("Popover"));
+    expect(componentFile).toContain("enum class PopoverPlacement {");
+    expect(componentFile).toContain("trigger: @Composable () -> Unit,");
+    expect(componentFile).toContain(".onGloballyPositioned { coords ->");
+    expect(componentFile).toContain(".clickable { setOpen(!resolvedOpen) }");
+    expect(componentFile).toContain("Popup(");
+    expect(componentFile).toContain("offset = IntOffset(offsetX(placement, anchorWidth), offsetY(placement, anchorHeight)),");
+    expect(componentFile).toContain('layeredSlot("popover.color.border.default")');
+    expect(componentFile).not.toMatch(/import androidx\.compose\.material/);
+    // The surface path now emits a tokens file (definitions the parity gate requires).
+    expect(tokensFile).toContain("ComponentTokenDefinition(");
+  });
+
+  it("opens a hover/focus-triggered surface from interaction state (Tooltip)", async () => {
+    const { generateJetpackComposeSurfaceFiles } = await import("./surface-emit.js");
+    const { componentFile } = generateJetpackComposeSurfaceFiles(irFor("Tooltip"));
+    expect(componentFile).toContain("val hovered by interactionSource.collectIsHoveredAsState()");
+    expect(componentFile).toContain("val focused by interactionSource.collectIsFocusedAsState()");
+    expect(componentFile).toContain("LaunchedEffect(hovered, focused) {");
+    expect(componentFile).toContain(".hoverable(interactionSource = interactionSource)");
+    expect(componentFile).toContain('layeredSlot("tooltip.color.background.default")');
+  });
+});

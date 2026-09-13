@@ -378,8 +378,11 @@ function emitProjectedChildrenAction(ir: ComponentIR): string {
  * ship as data (name/cssVar/ref/literal/fallback as raw strings;
  * the FsdsTheme runtime parses and resolves).
  */
-export function generateJetpackComposeTokensFile(ir: ComponentIR): string {
-  const used = composeTokenReads(generateJetpackComposeComponentSource(ir));
+export function generateJetpackComposeTokensFile(
+  ir: ComponentIR,
+  sourceOverride?: string,
+): string {
+  const used = composeTokenReads(sourceOverride ?? generateJetpackComposeComponentSource(ir));
   ir = { ...ir, tokenScopes: consumedComposeTokenScopes(ir, used) };
   const lines: string[] = [];
   lines.push(
