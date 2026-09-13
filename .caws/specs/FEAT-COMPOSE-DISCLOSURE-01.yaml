@@ -46,3 +46,7 @@ evidence:
     status: pass
     evidence_ref: "gradlew :library:compileKotlin BUILD SUCCESSFUL (31 groups incl. Details.kt); controlled-open hoisting (open/defaultOpen/onOpenChange) on a foundation toggleable header with Role.Button + stateDescription, painted rotating chevron, AnimatedVisibility content; dispatch on collapseIntents native-disclosure — zero component-name checks; Accordion correctly still throws (no intent, string|string[] channel)"
     recorded_at: "2026-09-13T02:13:04.270Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "compose-parity-diff.mjs 31/31 0 failures (disclosure path+role; LocalFsdsContentColor provided for consumer content); docs:check-claims 74/74 after 30-to-31 markers; swiftui regeneration byte-identical; governed:rail PASS; pnpm test 291/291 files 3884/3884; frameworks 87/87; settings example exit 0"
+    recorded_at: "2026-09-13T02:13:04.739Z"
