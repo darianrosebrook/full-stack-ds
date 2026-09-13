@@ -8,7 +8,9 @@ updated_at: '2026-09-13T05:05:08.306Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/native-emission-class.ts (isDateGridSurface moved from swift and strengthened with the dateDayOfMonth projection fact)'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (date-grid emitter path)'
+    - 'packages/ds-jetpack-compose/library/src/main/kotlin/com/fullstackds/date/ (committed JVM date substrate)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -28,7 +30,9 @@ scope:
     - 'docs/normal-form.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The date-grid predicate is the complement of the Date exclusions already in isArrayIteratedList and isInteractiveComposite: moving it to the substrate leaves SwiftUI regeneration byte-identical.'
+  - 'Every layeredSlot read in the emitted Calendar has a definition in the emitted tokens file, and every definition is read.'
+  - 'Calendar stays inside the foundation-only compose surface: zero androidx.compose.material imports.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
