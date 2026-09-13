@@ -40,3 +40,8 @@ contracts:
   - name: 'anchored-surface'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "isAnchoredSurface added to the shared substrate (anchored strategy + anchor part, selector-anchored surfaces excluded so Walkthrough stays unadmitted); the compose surface scaffold became a real emitter: measured anchor via onGloballyPositioned, foundation Popup offset by anchor extent along the placement enum, click trigger for Popover and hover/focus interaction-state trigger for Tooltip; two real infrastructure gaps found and fixed this round — (1) surface components emitted no token-scope file at all (parity requires one), now generated from the surface's own source via a sourceOverride parameter on generateJetpackComposeTokensFile, and (2) the token-consumption validator assumed every allowlisted component flows through component-source and therefore threw on surface components, now routed through the surface emitter; compose 41-to-43: gradlew :library:compileKotlin BUILD SUCCESSFUL; compose-parity-diff 43/43 0 failures (anchoredSurface path+role); generate:check 52/52; typecheck clean; docs:check-claims 74/74; emitter tests 42/42"
+    recorded_at: "2026-09-13T04:27:29.088Z"
