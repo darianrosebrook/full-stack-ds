@@ -1,0 +1,27 @@
+id: DOC-NAVTREE-ADMISSION-SPEC-01
+title: 'Record the measured NavTree admission specification'
+risk_tier: 3
+mode: chore
+lifecycle_state: draft
+created_at: '2026-09-13T06:46:25.528Z'
+updated_at: '2026-09-13T06:46:25.528Z'
+created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/architecture/native-target-admission.md'
+    - 'docs/normal-form.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given NavTree is the last unadmitted component whose class is neither a capability gap nor a design decision already recorded; when its measured anatomy, slot vocabulary and required class are written into the disposition table; then the next slice is mechanical and docs:check-claims stays green'
+non_functional: {}
+contracts: []
