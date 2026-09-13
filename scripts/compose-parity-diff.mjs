@@ -107,7 +107,10 @@ function emitterPath(ktSource) {
   if (ktSource.includes("FsdsRule")) return "rule";
   if (ktSource.includes("FsdsGlyphIcon")) return "glyphHost";
   if (ktSource.includes("FsdsDate.")) return "dateGrid";
-  if (composedComponents(ktSource).length > 0) return "referencedComposite";
+  // A component is *composed from* references when it composes more than one
+  // control; a single decoration reference is a fact of whatever class owns the
+  // layout (Status renders one icon and stays a static-content box).
+  if (composedCallSites(ktSource) >= 2) return "referencedComposite";
   // A named-slot composer declares one nullable content region per slot, so the
   // signature shape identifies the path without naming the component.
   if ((ktSource.match(/: \(@Composable \(\) -> Unit\)\? = null/g) ?? []).length >= 3) {
@@ -264,7 +267,6 @@ export const REFERENCE_DIVERGENCES = {
   "Alert:dismiss": "the icon-decorated layout has no trailing-action affordance yet; the Button class and the reference vocabulary both exist, so this is placement work",
   "Accordion:chevron": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
   "Details:icon": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
-  "Status:icon": "the icon name comes from a prop valueMap, which this target does not lower yet",
 };
 
 /** Generated components this source composes by reference. The committed
@@ -278,6 +280,15 @@ export function composedComponents(ktSource) {
     if (pkg.charAt(0).toUpperCase() + pkg.slice(1) === symbol) out.push(symbol);
   }
   return out;
+}
+
+/** How many times this source calls a generated component it imports. */
+function composedCallSites(ktSource) {
+  let total = 0;
+  for (const symbol of composedComponents(ktSource)) {
+    total += (ktSource.match(new RegExp(`${symbol}\\(`, "g")) ?? []).length;
+  }
+  return total;
 }
 
 /** Declared `componentRef` parts in a contract's dom, in declaration order. */

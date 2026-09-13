@@ -715,6 +715,7 @@ function emitStaticContent(ir: ComponentIR): string {
   }
   if (usesTheme) {
     lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+    for (const line of referenceImports(ir)) lines.push(line);
     if (slots.usesColors) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
     if (slots.usesDims) lines.push(`import com.fullstackds.tokens.toFsdsDp`);
   }
@@ -805,9 +806,19 @@ function emitStaticContent(ir: ComponentIR): string {
       lines.push(`    }`);
       lines.push(``);
     }
+    const decorationRefs = referenceNodes(ir, "decoration");
+    const decorationBody =
+      decorationRefs.length > 0
+        ? [
+            "{",
+            ...decorationRefs.flatMap((ref) => emitComponentReference(ir, ref, "    ")),
+            "    content()",
+            "}",
+          ].join("\n")
+        : "{ content() }";
     const box = elementAxis
-      ? `Box(modifier.then(chromeModifier).then(headingModifier)) { content() }`
-      : `Box(modifier.then(chromeModifier)) { content() }`;
+      ? `Box(modifier.then(chromeModifier).then(headingModifier)) ${decorationBody}`
+      : `Box(modifier.then(chromeModifier)) ${decorationBody}`;
     // Wrapping: text style outermost (M3 LocalTextStyle bridge), then the
     // content-color provider, then the box — each only when its fact exists.
     const contentLines: string[] = [];
@@ -4537,10 +4548,13 @@ function referenceCallFacts(
         throw new Error('component reference `name` binding is not a prop valueMap');
       }
       const axisProp = ir.styledProps.find((p) => p.safeName === map.source!.prop);
-      const axisType = axisProp?.typeRefs?.find(
+      const declaredType = axisProp?.typeRefs?.find(
         (ref) => (ir.definedTypes[ref]?.values?.length ?? 0) > 0,
       );
-      const axisValues = axisType ? ir.definedTypes[axisType]!.values! : [];
+      // The emitter names a variant axis enum `<Component><Axis>`, which the
+      // contract's declared type name need not match.
+      const axisType = axisProp ? `${ir.name}${pascalCase(axisProp.safeName)}` : declaredType;
+      const axisValues = declaredType ? ir.definedTypes[declaredType]!.values! : [];
       const missing = axisValues.filter((value) => !(value in map.values!));
       if (missing.length > 0) {
         throw new Error(
