@@ -2,9 +2,10 @@ id: FEAT-COMPOSE-TEXTFIELD-ADMISSION-01
 title: 'Labeled text-control predicate to shared substrate; Compose TextField admission'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: compose-textfield
 created_at: '2026-09-13T03:54:05.048Z'
-updated_at: '2026-09-13T03:54:05.048Z'
+updated_at: '2026-09-13T03:54:08.053Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
