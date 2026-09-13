@@ -1,16 +1,21 @@
 # Jetpack Compose framework emitter
 
-Status: **wired as an explicit-only builtin target** (`FEAT-COMPOSE-EMITTER-WIRING-001`):
-`--target=jetpack-compose` emits the native-collapse path (Switch/ToggleSwitch
-via `native-toggle-affordance`) into the Gradle package
+Status: **registered generation target with an allowlist-gated corpus** —
+`--target=all` (and `--target=jetpack-compose`) emit the
+`fsds.targets.json` allowlist into the Gradle package
 `packages/ds-jetpack-compose` (components root
-`library/src/main/kotlin/com/fullstackds/components`). The
-`fsds.targets.json` components allowlist gates full-corpus runs; explicit
-requests bypass it. No `railFrameworkId` — outside rail verification and CI
-drift diffs. The declared Android ladder: JVM real-runtime compile here
-(rung 1 of 3) → full Android SDK + Gradle compile lane (rung 2) → runtime
-admission (rung 3). Multi-part anatomy and anchored surfaces still throw
-explicit not-implemented errors.
+`library/src/main/kotlin/com/fullstackds/components`). Emission classes
+dispatch on the shared structural predicates in
+`frameworks/native-emission-class.ts` (plus documented target-local gates):
+native-toggle collapse, projected-children action, boolean control,
+bare-rule leaf, prop-text leaf, expandable content, progress indicator,
+static content. Unimplemented shapes throw explicit not-implemented
+errors — the allowlist scopes default generation, never silences a gap.
+Admission criteria: `docs/architecture/native-target-admission.md` (the
+C1–C7 ladder). No `railFrameworkId` — outside the six-target admission
+rail. The declared Android ladder: JVM real-runtime compile here (rung 1
+of 3) → full Android SDK + Gradle compile lane (rung 2) → runtime
+admission (rung 3).
 
 ## Layout
 

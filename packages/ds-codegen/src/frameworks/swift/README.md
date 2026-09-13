@@ -1,10 +1,15 @@
 # Swift framework emitter
 
-Status: **swiftui is a registered explicit-only builtin target** (`--target=swiftui`),
-emitting into the SwiftPM package `packages/ds-swiftui`. It is not in
-`fsds.targets.json`, so `--target=all` and `pnpm run governed:rail` do not
-generate it, and it carries no `railFrameworkId` (outside the admission rail)
-until the emitter covers the corpus. `uikit/` remains scaffold-only.
+Status: **swiftui is a registered builtin target with a full-corpus
+allowlist** in `fsds.targets.json` — `--target=all` emits every contract's
+SwiftUI projection into the SwiftPM package `packages/ds-swiftui`, whose
+generated tree is CI drift-gated and whose `swift test` target evaluates
+every admitted component body. Emission classes dispatch on the shared
+structural predicates in `frameworks/native-emission-class.ts` (plus
+target-local gates: disclosure collapse, glyph host, date grid, selection,
+radio group, composers, surfaces). Admission criteria:
+`docs/architecture/native-target-admission.md`. No `railFrameworkId` —
+outside the six-target admission rail. `uikit/` remains scaffold-only.
 
 ## What is implemented (swiftui)
 
