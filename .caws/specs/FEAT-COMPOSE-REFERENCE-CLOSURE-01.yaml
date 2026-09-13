@@ -34,3 +34,8 @@ contracts:
   - name: 'reference-realization'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge 209d9204: node scripts/compose-parity-diff.mjs -> 47 allowlisted, 0 failures with the Command:searchIcon ledger entry REMOVED (the gate's stale-entry direction and the realized call agree) and the five remaining entries still enforced; gradlew :library:compileKotlin -> BUILD SUCCESSFUL including the deleted stray NavTree tree; node --test scripts/compose-parity-diff.test.mjs -> 20/20; emitter suite 55/55; pnpm test -> 3910/3910; pnpm run test:frameworks -> exit 0; pnpm run governed:rail -> exit 0, clean tree; pnpm run docs:check-claims -> 75 marked claims with normal-form.md restamped at 679b3e3d"
+    recorded_at: "2026-09-13T06:00:06.743Z"
