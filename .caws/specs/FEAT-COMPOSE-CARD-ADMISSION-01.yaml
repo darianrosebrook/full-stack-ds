@@ -36,3 +36,8 @@ contracts:
   - name: 'compound-part-composer'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge d2dca6bb: the generated Card emits a CardScope marker plus one region composable per declared compound part (header/media/content/footer/actions/badge/description/link/note) over the root chrome; gradlew :library:compileKotlin -> BUILD SUCCESSFUL; node scripts/compose-parity-diff.mjs -> 49 allowlisted, 0 failures with React Native's consumed card chrome claimed by the compoundPartComposer role; emitter suite 55/55; parity self-tests 20/20; pnpm run generate:check -> 52/52; swiftui regeneration byte-identical; pnpm test -> 3910/3910; pnpm run test:frameworks -> exit 0; pnpm run governed:rail -> exit 0, clean tree; docs:check-claims -> 75 claims with markers at 49 and normal-form.md restamped"
+    recorded_at: "2026-09-13T07:05:18.308Z"
