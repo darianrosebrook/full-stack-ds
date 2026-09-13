@@ -31,6 +31,7 @@ import {
   isArrayIteratedList,
   isBareRuleLeaf,
   isCenteredSurface,
+  isDateGridSurface,
   surfaceStringChannel,
   isGlyphHost,
   isCountIteratedFieldGroup,
@@ -4006,6 +4007,387 @@ function emitSelectionControl(ir: ComponentIR): string {
  *   - the panel region renders only while open (the host is not composed
  *     otherwise), matching the contract's persistent presence.
  */
+/** Find every dom node carrying the given part name. */
+function domNodesForPart(ir: ComponentIR, part: string) {
+  const out: NonNullable<ComponentIR["dom"]>[] = [];
+  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
+    if (node.part === part) out.push(node);
+    (node.children ?? []).forEach(walk);
+  };
+  if (ir.dom) walk(ir.dom);
+  return out;
+}
+
+/**
+ * The date-grid surface class (FEAT-COMPOSE-CALENDAR-ADMISSION-01): a
+ * Date-valued channel over a header/grid anatomy whose cells project the
+ * closed `dateDayOfMonth` projection. Compose realizes the declared grid
+ * itself — one row per calendar week of the contract's own `days` prop, each
+ * day a selectable cell — rather than delegating to a platform picker, so the
+ * declared calendar chrome is actually consumed. Day-granular comparison and
+ * labelling come from the committed `FsdsDate` substrate; the activation,
+ * its event and its written channel come from the IR's `compositeControl`
+ * fact, and the nav/grid accessible labels are the contract's own dom attrs.
+ *
+ * The contract declares the union's arms (`Date | Date[] | null`) and the
+ * `mode` axis's members (`single | range`) as two ordered lists with no
+ * explicit correspondence, so the collection arm pairs positionally with the
+ * axis member at the same index. That pairing is derived at emit time and is
+ * never named here: a contract that reorders the axis moves the pairing with
+ * it (the emitter test flips the order and pins the member).
+ *
+ * Named divergences (ledgered in docs/architecture/native-target-admission.md):
+ *   - `calendar.elevation.default` is a multi-layer shadow string with no
+ *     elevation converter on this target;
+ *   - `calendar.focus.ring.offset` has no outward box in a fixed-size grid, so
+ *     the ring is drawn inside the cell bounds;
+ *   - the today ring reuses the declared focus-ring width — the contract
+ *     declares no separate today-ring geometry;
+ *   - the declared nav triggers render as labelled, sized affordances with no
+ *     month arithmetic: the contract supplies the visible `days`, so there is
+ *     no month to step;
+ *   - `locale` and `shouldCloseOnSelect` are not lowered (the closed
+ *     day-of-month projection is locale-independent, and the grid owns no
+ *     close semantics);
+ *   - `focus.strategy = "roving"` is not lowered: every day cell is a tab stop.
+ */
+function emitDateGridSurface(ir: ComponentIR): string {
+  const name = ir.name;
+  const segment = packageSegment(name);
+  const activation = ir.compositeControl;
+  if (activation?.commit !== "activation") {
+    throw new Error(
+      `emitDateGridSurface: ${name} declares no activation-committed composite control`,
+    );
+  }
+  const channel = ir.behavior.normalizedChannels.find((c) =>
+    (c.valueType ?? "").includes("Date"),
+  )!;
+  const valueProp = channel.valueProp;
+  const defaultValueProp = channel.defaultValueProp ?? `${valueProp}Default`;
+  const changeProp = channel.changeHandlerProp;
+  // The union's second arm is a collection, so the realized API is the
+  // scalar/many pair the selection-control class established; the mode axis
+  // selects which arm an activation writes.
+  const manyValueProp = `${valueProp}s`;
+  const manyDefaultValueProp = `${defaultValueProp}s`;
+  const manyChangeProp = `on${pascalCase(manyValueProp)}Change`;
+
+  const armKinds = (channel.valueType ?? "")
+    .split("|")
+    .map((arm) => arm.trim())
+    .filter((arm) => arm.length > 0 && arm !== "null");
+  const collectionArm = armKinds.findIndex((arm) => arm.endsWith("[]"));
+  const axisProp = ir.styledProps.find((p) =>
+    p.typeRefs?.some((ref) => (ir.definedTypes[ref]?.values?.length ?? 0) > 1),
+  );
+  const axisRef = axisProp?.typeRefs?.find(
+    (ref) => (ir.definedTypes[ref]?.values?.length ?? 0) > 1,
+  );
+  const axisValues = axisRef ? ir.definedTypes[axisRef]!.values! : [];
+  const axisEnumName = axisRef ?? `${name}Mode`;
+  const manyMember =
+    collectionArm >= 0 && collectionArm < axisValues.length
+      ? kotlinEnumName(axisValues[collectionArm]!)
+      : undefined;
+  const axisDefaultValue = (
+    axisProp?.defaultExpr?.replace(/^["']|["']$/g, "") ?? axisValues[0] ?? ""
+  );
+  const axisParam = axisProp?.safeName ?? "mode";
+
+  const daysProp = ir.styledProps.find((p) => p.type === "Date[]");
+  const captionProp = ir.styledProps.find((p) => p.safeName === "caption");
+  const hasDisabled = ir.styledProps.some(
+    (p) => p.name === "disabled" && p.propType.kind === "boolean",
+  );
+  const minDateProp = ir.styledProps.find((p) => p.safeName === "minDate");
+  const maxDateProp = ir.styledProps.find((p) => p.safeName === "maxDate");
+
+  // The header renders in the dom's own child order, so a contract that moves
+  // the caption between the nav controls keeps it there. Nav labels and the
+  // grid label are contract-authored accessible labels, never emitter text.
+  const headerChildren = domNodesForPart(ir, "header")[0]?.children ?? [];
+  const headerItems: Array<{ kind: "nav" | "caption"; label?: string }> = [];
+  for (const child of headerChildren) {
+    const label = child.attrs?.["aria-label"];
+    if (child.part === "nav" && typeof label === "string" && label.length > 0) {
+      headerItems.push({ kind: "nav", label });
+    } else if (captionProp && propNameOf(child.content as { kind?: string; prop?: string } | undefined) === captionProp.safeName) {
+      headerItems.push({ kind: "caption" });
+    }
+  }
+  if (headerItems.length === 0) {
+    for (const label of domNodesForPart(ir, "nav")
+      .map((node) => node.attrs?.["aria-label"])
+      .filter((value): value is string => typeof value === "string" && value.length > 0)) {
+      headerItems.push({ kind: "nav", label });
+    }
+    if (captionProp) headerItems.push({ kind: "caption" });
+  }
+  const gridLabel = domNodesForPart(ir, "grid")[0]?.attrs?.["aria-label"];
+
+  const bgSlot = findLayeredSlotAny(ir, ["root"], [".color.background.default"]);
+  const fgSlot = findLayeredSlotAny(ir, ["root"], [".color.foreground.primary"]);
+  const mutedSlot = findLayeredSlotAny(ir, ["root"], [".color.foreground.muted"]);
+  const borderSlot = findLayeredSlotAny(ir, ["root"], [".color.border.default"]);
+  const hoverSlot = findLayeredSlotAny(ir, ["root"], [".color.day.hover"]);
+  const selectedBgSlot = findLayeredSlotAny(ir, ["root"], [".color.day.selected.background"]);
+  const selectedFgSlot = findLayeredSlotAny(ir, ["root"], [".color.day.selected.foreground"]);
+  const todayRingSlot = findLayeredSlotAny(ir, ["root"], [".color.today.ring"]);
+  const focusRingSlot = findLayeredSlotAny(ir, ["root"], [".color.focus.ring"]);
+  const ringWidthSlot = findLayeredSlotAny(ir, ["root"], [".focus.ring.width"]);
+  const insetSlot = findLayeredSlotAny(ir, ["root"], [".size.padding.default"]);
+  const cellSlot = findLayeredSlotAny(ir, ["root"], [".size.cell"]);
+  const navSizeSlot = findLayeredSlotAny(ir, ["root"], [".size.nav"]);
+  const radiusSlot = findLayeredSlotAny(ir, ["root"], [".size.radius.default"]);
+  const dayRadiusSlot = findLayeredSlotAny(ir, ["root"], [".size.radius.day"]);
+  const captionSizeSlot = findLayeredSlotAny(ir, ["root"], [".typography.caption.size"]);
+  const daySizeSlot = findLayeredSlotAny(ir, ["root"], [".typography.day.size"]);
+  const gapSlot = findTokenSlot(ir, "root", "box-model.gap");
+  const minWidthSlot = findTokenSlot(ir, "root", "box-model.min-width");
+  const minHeightSlot = findTokenSlot(ir, "root", "box-model.min-height");
+  const paddingInlineStartSlot = findTokenSlot(ir, "root", "box-model.padding-inline-start");
+  const paddingInlineEndSlot = findTokenSlot(ir, "root", "box-model.padding-inline-end");
+  const paddingBlockStartSlot = findTokenSlot(ir, "root", "box-model.padding-block-start");
+  const paddingBlockEndSlot = findTokenSlot(ir, "root", "box-model.padding-block-end");
+  const consumesTokens = ir.tokenScopes.some((s) => s.values.length > 0);
+
+  const lines: string[] = [];
+  lines.push(`// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`);
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`// @generated:start imports`);
+  lines.push(`import androidx.compose.foundation.background`);
+  if (borderSlot) lines.push(`import androidx.compose.foundation.border`);
+  lines.push(`import androidx.compose.foundation.hoverable`);
+  lines.push(`import androidx.compose.foundation.interaction.MutableInteractionSource`);
+  lines.push(`import androidx.compose.foundation.interaction.collectIsHoveredAsState`);
+  lines.push(`import androidx.compose.foundation.layout.Arrangement`);
+  lines.push(`import androidx.compose.foundation.layout.Box`);
+  lines.push(`import androidx.compose.foundation.layout.Column`);
+  lines.push(`import androidx.compose.foundation.layout.PaddingValues`);
+  lines.push(`import androidx.compose.foundation.layout.Row`);
+  lines.push(`import androidx.compose.foundation.layout.padding`);
+  lines.push(`import androidx.compose.foundation.layout.requiredSizeIn`);
+  lines.push(`import androidx.compose.foundation.layout.size`);
+  lines.push(`import androidx.compose.foundation.selection.selectable`);
+  lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  lines.push(`import androidx.compose.foundation.text.BasicText`);
+  lines.push(`import androidx.compose.runtime.Composable`);
+  lines.push(`import androidx.compose.runtime.getValue`);
+  lines.push(`import androidx.compose.runtime.mutableStateOf`);
+  lines.push(`import androidx.compose.runtime.remember`);
+  lines.push(`import androidx.compose.runtime.setValue`);
+  lines.push(`import androidx.compose.ui.Alignment`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  lines.push(`import androidx.compose.ui.draw.clip`);
+  lines.push(`import androidx.compose.ui.focus.onFocusChanged`);
+  lines.push(`import androidx.compose.ui.graphics.Color`);
+  lines.push(`import androidx.compose.ui.semantics.Role`);
+  if (gridLabel) lines.push(`import androidx.compose.ui.semantics.contentDescription`);
+  if (gridLabel) lines.push(`import androidx.compose.ui.semantics.semantics`);
+  lines.push(`import androidx.compose.ui.text.TextStyle`);
+  lines.push(`import androidx.compose.ui.unit.TextUnit`);
+  lines.push(`import androidx.compose.ui.unit.dp`);
+  lines.push(`import com.fullstackds.date.FsdsDate`);
+  lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+  if (bgSlot || fgSlot || mutedSlot || borderSlot || hoverSlot || selectedBgSlot || selectedFgSlot || todayRingSlot || focusRingSlot) {
+    lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+  }
+  lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+  if (captionSizeSlot || daySizeSlot) lines.push(`import com.fullstackds.tokens.toFsdsSp`);
+  lines.push(`import java.util.Date`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start types`);
+  if (axisRef) {
+    lines.push(`/** ${axisParam} axis lowered from the contract's ${axisRef} type. */`);
+    lines.push(`enum class ${axisEnumName} { ${axisValues.map(kotlinEnumName).join(", ")} }`);
+    lines.push(``);
+  }
+  lines.push(`/** Days per grid row. The contract declares no week-length axis, so the`);
+  lines.push(` *  conventional calendar week is the emitter's framework-grammar constant. */`);
+  lines.push(`private const val fsdsWeekLength = 7`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start component`);
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  lines.push(`    modifier: Modifier = Modifier,`);
+  lines.push(`    ${valueProp}: Date? = null,`);
+  lines.push(`    ${defaultValueProp}: Date? = null,`);
+  lines.push(`    ${changeProp}: ((Date?) -> Unit)? = null,`);
+  lines.push(`    ${manyValueProp}: List<Date>? = null,`);
+  lines.push(`    ${manyDefaultValueProp}: List<Date> = emptyList(),`);
+  lines.push(`    ${manyChangeProp}: ((List<Date>) -> Unit)? = null,`);
+  if (axisRef) lines.push(`    ${axisParam}: ${axisEnumName} = ${axisEnumName}.${kotlinEnumName(axisDefaultValue)},`);
+  if (daysProp) lines.push(`    ${daysProp.safeName}: List<Date> = emptyList(),`);
+  if (captionProp) {
+    const captionDefault = captionProp.defaultExpr?.replace(/^["']|["']$/g, "") ?? "";
+    lines.push(`    ${captionProp.safeName}: String = ${JSON.stringify(captionDefault)},`);
+  }
+  if (hasDisabled) lines.push(`    disabled: Boolean = false,`);
+  if (minDateProp) lines.push(`    ${minDateProp.safeName}: Date? = null,`);
+  if (maxDateProp) lines.push(`    ${maxDateProp.safeName}: Date? = null,`);
+  lines.push(`) {`);
+  lines.push(`    var uncontrolled${pascalCase(valueProp)} by remember { mutableStateOf(${defaultValueProp}) }`);
+  lines.push(`    val resolved${pascalCase(valueProp)} = ${valueProp} ?: uncontrolled${pascalCase(valueProp)}`);
+  lines.push(`    var uncontrolled${pascalCase(manyValueProp)} by remember { mutableStateOf(${manyDefaultValueProp}) }`);
+  lines.push(`    val resolved${pascalCase(manyValueProp)} = ${manyValueProp} ?: uncontrolled${pascalCase(manyValueProp)}`);
+  if (consumesTokens) {
+    lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
+    lines.push(`    fun layeredSlot(slotName: String): String? {`);
+    lines.push(`        val def = ${tokenConstName(ir)}["root"]?.get(slotName)`);
+    lines.push(`        return def?.let { fsdsTheme.resolve(it) }`);
+    lines.push(`    }`);
+    const color = (slot: { name: string } | undefined) =>
+      slot ? `layeredSlot(${JSON.stringify(slot.name)})?.toFsdsColor()` : undefined;
+    const dp = (slot: { name: string } | undefined) =>
+      slot ? `layeredSlot(${JSON.stringify(slot.name)})?.toFsdsDp() ?: 0.dp` : "0.dp";
+    const sp = (slot: { name: string } | undefined) =>
+      slot ? `layeredSlot(${JSON.stringify(slot.name)})?.toFsdsSp() ?: TextUnit.Unspecified` : "TextUnit.Unspecified";
+    const declare = (local: string, expression: string | undefined) => {
+      if (expression) lines.push(`    val ${local} = ${expression}`);
+    };
+    declare("gridBackground", color(bgSlot));
+    declare("gridForeground", color(fgSlot));
+    declare("gridMuted", color(mutedSlot));
+    declare("gridBorder", color(borderSlot));
+    declare("dayHover", color(hoverSlot));
+    declare("daySelectedBackground", color(selectedBgSlot));
+    declare("daySelectedForeground", color(selectedFgSlot));
+    declare("todayRing", color(todayRingSlot));
+    declare("focusRing", color(focusRingSlot));
+    lines.push(`    val gridRadius = ${radiusSlot ? `layeredSlot(${JSON.stringify(radiusSlot.name)})?.toFsdsDp() ?: 0.dp` : "0.dp"}`);
+    lines.push(`    val dayRadius = ${dayRadiusSlot ? `layeredSlot(${JSON.stringify(dayRadiusSlot.name)})?.toFsdsDp() ?: 0.dp` : "0.dp"}`);
+    lines.push(`    val cellSize = ${dp(cellSlot)}`);
+    lines.push(`    val navSize = ${dp(navSizeSlot)}`);
+    lines.push(`    val ringWidth = ${dp(ringWidthSlot)}`);
+    lines.push(`    val gridGap = ${dp(gapSlot)}`);
+    lines.push(`    val gridInset = ${dp(insetSlot)}`);
+    lines.push(`    val gridMinWidth = ${dp(minWidthSlot)}`);
+    lines.push(`    val gridMinHeight = ${dp(minHeightSlot)}`);
+    const side = (slot: { name: string } | undefined) =>
+      slot ? `layeredSlot(${JSON.stringify(slot.name)})?.toFsdsDp() ?: 0.dp` : `0.dp`;
+    lines.push(
+      `    val gridPadding = PaddingValues(start = ${side(paddingInlineStartSlot)}, end = ${side(paddingInlineEndSlot)}, top = ${side(paddingBlockStartSlot)}, bottom = ${side(paddingBlockEndSlot)})`,
+    );
+    declare("captionSize", sp(captionSizeSlot));
+    declare("daySize", sp(daySizeSlot));
+  } else {
+    lines.push(`    val gridRadius = 0.dp`);
+    lines.push(`    val dayRadius = 0.dp`);
+    lines.push(`    val cellSize = 0.dp`);
+    lines.push(`    val navSize = 0.dp`);
+    lines.push(`    val ringWidth = 0.dp`);
+    lines.push(`    val gridGap = 0.dp`);
+    lines.push(`    val gridInset = 0.dp`);
+    lines.push(`    val gridMinWidth = 0.dp`);
+    lines.push(`    val gridMinHeight = 0.dp`);
+    lines.push(`    val gridPadding = PaddingValues(0.dp)`);
+    lines.push(`    val captionSize = TextUnit.Unspecified`);
+    lines.push(`    val daySize = TextUnit.Unspecified`);
+  }
+  lines.push(`    val gridShape = RoundedCornerShape(gridRadius)`);
+  lines.push(`    val dayShape = RoundedCornerShape(dayRadius)`);
+  lines.push(``);
+  lines.push(`    Column(`);
+  lines.push(`        modifier`);
+  lines.push(`            .requiredSizeIn(minWidth = gridMinWidth, minHeight = gridMinHeight)`);
+  lines.push(`            .clip(gridShape)`);
+  if (bgSlot) lines.push(`            .then(if (gridBackground != null) Modifier.background(gridBackground, gridShape) else Modifier)`);
+  if (borderSlot) lines.push(`            .then(if (gridBorder != null) Modifier.border(1.dp, gridBorder, gridShape) else Modifier)`);
+  lines.push(`            .padding(PaddingValues(gridInset))`);
+  lines.push(`,`);
+  lines.push(`        verticalArrangement = Arrangement.spacedBy(gridGap),`);
+  lines.push(`    ) {`);
+  lines.push(`        Row(`);
+  lines.push(`            horizontalArrangement = Arrangement.spacedBy(gridGap),`);
+  lines.push(`            verticalAlignment = Alignment.CenterVertically,`);
+  lines.push(`        ) {`);
+  for (const item of headerItems) {
+    if (item.kind === "nav") {
+      lines.push(`            Box(`);
+      lines.push(`                Modifier`);
+      lines.push(`                    .size(navSize)`);
+      lines.push(`                    .semantics { contentDescription = ${JSON.stringify(item.label)} },`);
+      lines.push(`                contentAlignment = Alignment.Center,`);
+      lines.push(`            ) { }`);
+    } else {
+      lines.push(`            BasicText(`);
+      lines.push(`                text = ${captionProp!.safeName},`);
+      lines.push(`                style = TextStyle(color = ${fgSlot ? "gridForeground ?: Color.Unspecified" : "Color.Unspecified"}, fontSize = captionSize),`);
+      lines.push(`            )`);
+    }
+  }
+  lines.push(`        }`);
+  lines.push(`        Column(`);
+  lines.push(`            Modifier${gridLabel ? `.semantics { contentDescription = ${JSON.stringify(gridLabel)} }` : ""}.padding(gridPadding),`);
+  lines.push(`        ) {`);
+  lines.push(`            ${daysProp ? daysProp.safeName : "days"}.chunked(fsdsWeekLength).forEach { week ->`);
+  lines.push(`                Row(horizontalArrangement = Arrangement.spacedBy(gridGap)) {`);
+  lines.push(`                    week.forEach { item ->`);
+  lines.push(`                        val selected = ${manyMember ? `if (${axisParam} == ${axisEnumName}.${manyMember}) FsdsDate.isSameDayAsAny(item, resolved${pascalCase(manyValueProp)}) else FsdsDate.isSameDay(item, resolved${pascalCase(valueProp)})` : `FsdsDate.isSameDay(item, resolved${pascalCase(valueProp)})`}`);
+  lines.push(`                        val dayEnabled = ${hasDisabled ? "!disabled" : "true"} && !FsdsDate.isBefore(item, ${minDateProp ? minDateProp.safeName : "null"}) && !FsdsDate.isAfter(item, ${maxDateProp ? maxDateProp.safeName : "null"})`);
+  lines.push(`                        val interactionSource = remember { MutableInteractionSource() }`);
+  lines.push(`                        val hovered by interactionSource.collectIsHoveredAsState()`);
+  lines.push(`                        var focused by remember { mutableStateOf(false) }`);
+  lines.push(`                        val dayBackground = when {`);
+  lines.push(`                            selected -> ${selectedBgSlot ? "daySelectedBackground" : "null"}`);
+  lines.push(`                            hovered && dayEnabled -> ${hoverSlot ? "dayHover" : "null"}`);
+  lines.push(`                            else -> null`);
+  lines.push(`                        }`);
+  lines.push(`                        val dayRing = when {`);
+  lines.push(`                            focused -> ${focusRingSlot ? "focusRing" : "null"}`);
+  lines.push(`                            FsdsDate.isToday(item) && !selected -> ${todayRingSlot ? "todayRing" : "null"}`);
+  lines.push(`                            else -> null`);
+  lines.push(`                        }`);
+  lines.push(`                        Box(`);
+  lines.push(`                            Modifier`);
+  lines.push(`                                .size(cellSize)`);
+  lines.push(`                                .clip(dayShape)`);
+  lines.push(`                                .then(if (dayBackground != null) Modifier.background(dayBackground, dayShape) else Modifier)`);
+  lines.push(`                                .hoverable(interactionSource, enabled = dayEnabled)`);
+  lines.push(`                                .selectable(`);
+  lines.push(`                                    selected = selected,`);
+  lines.push(`                                    enabled = dayEnabled,`);
+  lines.push(`                                    role = Role.Button,`);
+  lines.push(`                                    onClick = {`);
+  if (manyMember) {
+    lines.push(`                                        if (${axisParam} == ${axisEnumName}.${manyMember}) {`);
+    lines.push(`                                            val next = FsdsDate.toggle(resolved${pascalCase(manyValueProp)}, item)`);
+    lines.push(`                                            if (${manyValueProp} == null) { uncontrolled${pascalCase(manyValueProp)} = next }`);
+    lines.push(`                                            ${manyChangeProp}?.invoke(next)`);
+    lines.push(`                                        } else {`);
+    lines.push(`                                            if (${valueProp} == null) { uncontrolled${pascalCase(valueProp)} = item }`);
+    lines.push(`                                            ${changeProp}?.invoke(item)`);
+    lines.push(`                                        }`);
+  } else {
+    lines.push(`                                        if (${valueProp} == null) { uncontrolled${pascalCase(valueProp)} = item }`);
+    lines.push(`                                        ${changeProp}?.invoke(item)`);
+  }
+  lines.push(`                                    },`);
+  lines.push(`                                )`);
+  lines.push(`                                .onFocusChanged { focused = it.isFocused }`);
+  lines.push(`                                .then(if (dayRing != null && ringWidth > 0.dp) Modifier.border(ringWidth, dayRing, dayShape) else Modifier),`);
+  lines.push(`                            contentAlignment = Alignment.Center,`);
+  lines.push(`                        ) {`);
+  lines.push(`                            BasicText(`);
+  lines.push(`                                text = FsdsDate.dayOfMonth(item).toString(),`);
+  lines.push(`                                style = TextStyle(color = ${selectedFgSlot ? `(if (selected) daySelectedForeground ?: gridForeground else gridForeground) ?: Color.Unspecified` : `${fgSlot ? "gridForeground" : "null"} ?: Color.Unspecified`}, fontSize = daySize),`);
+  lines.push(`                            )`);
+  lines.push(`                        }`);
+  lines.push(`                    }`);
+  lines.push(`                }`);
+  lines.push(`            }`);
+  lines.push(`        }`);
+  lines.push(`    }`);
+  lines.push(`}`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  return lines.join("\n");
+}
+
 function emitCenteredSurface(ir: ComponentIR): string {
   const name = ir.name;
   const segment = packageSegment(name);
@@ -4450,6 +4832,9 @@ export function generateJetpackComposeComponentSource(
   }
   if (collectCollapseIntents(ir).has("native-disclosure")) {
     return emitDisclosureComponent(ir);
+  }
+  if (isDateGridSurface(ir)) {
+    return emitDateGridSurface(ir);
   }
   if (radioGroupFacts(ir)) {
     return emitRadioGroup(ir, radioGroupFacts(ir)!);

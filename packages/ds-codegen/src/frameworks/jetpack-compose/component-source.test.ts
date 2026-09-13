@@ -544,6 +544,91 @@ describe("generateJetpackComposeComponentSource — selection control (FEAT-COMP
   });
 });
 
+describe("generateJetpackComposeComponentSource — date-grid surface (FEAT-COMPOSE-CALENDAR-ADMISSION-01)", () => {
+  it("realizes the declared grid over the days prop and the day-of-month projection (Calendar)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Calendar"));
+    // The date substrate carries the projection and the day-granular state.
+    expect(src).toContain("import com.fullstackds.date.FsdsDate");
+    expect(src).toContain("text = FsdsDate.dayOfMonth(item).toString(),");
+    expect(src).toContain("val selected = if (mode == CalendarMode.Range)");
+    expect(src).toContain("FsdsDate.toggle(resolvedValues, item)");
+    // The range arm is the union's collection arm; the axis member that
+    // selects it is derived from the declared axis order.
+    expect(src).toContain("if (mode == CalendarMode.Range) {");
+    // Channel arms lowered as the scalar/many pair; no component-name lore.
+    expect(src).toContain("value: Date? = null,");
+    expect(src).toContain("values: List<Date>? = null,");
+    expect(src).toContain("onValuesChange: ((List<Date>) -> Unit)? = null,");
+    expect(src).toContain("mode: CalendarMode = CalendarMode.Single,");
+    expect(src).toContain("days: List<Date> = emptyList(),");
+    // One row per calendar week, and the contract's own accessible labels.
+    expect(src).toContain("days.chunked(fsdsWeekLength).forEach { week ->");
+    expect(src).toContain('contentDescription = "Previous month"');
+    expect(src).toContain('contentDescription = "Next month"');
+    expect(src).toContain('contentDescription = "Calendar"');
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Calendar\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+
+  it("derives the range arm from the declared axis order instead of naming it", () => {
+    const base = irFor("Calendar");
+    const reversed = {
+      ...base,
+      definedTypes: {
+        ...base.definedTypes,
+        CalendarMode: { kind: "union", values: ["range", "single"] },
+      },
+    } as Parameters<typeof generateJetpackComposeComponentSource>[0];
+    const src = generateJetpackComposeComponentSource(reversed);
+    // The collection arm now pairs with the FIRST declared axis member, so the
+    // emitted comparison moves with the contract rather than staying on the
+    // string "range".
+    expect(src).toContain("enum class CalendarMode { Range, Single }");
+    expect(src).toContain("if (mode == CalendarMode.Single)");
+    expect(src).not.toContain("if (mode == CalendarMode.Range)");
+  });
+
+  it("reads exactly the calendar chrome it realizes, with a closed token set (Calendar)", () => {
+    const source = generateJetpackComposeComponentSource(irFor("Calendar"));
+    const tokens = generateJetpackComposeTokensFile(irFor("Calendar"));
+    for (const slot of [
+      "calendar.color.background.default",
+      "calendar.color.foreground.primary",
+      "calendar.color.foreground.muted",
+      "calendar.color.border.default",
+      "calendar.color.day.hover",
+      "calendar.color.day.selected.background",
+      "calendar.color.day.selected.foreground",
+      "calendar.color.today.ring",
+      "calendar.color.focus.ring",
+      "calendar.focus.ring.width",
+      "calendar.size.padding.default",
+      "calendar.size.cell",
+      "calendar.size.nav",
+      "calendar.size.radius.default",
+      "calendar.size.radius.day",
+      "calendar.typography.caption.size",
+      "calendar.typography.day.size",
+      "box-model.gap",
+    ]) {
+      expect(source).toContain(`layeredSlot(${JSON.stringify(slot)})`);
+      expect(tokens).toContain(`name = ${JSON.stringify(slot)}`);
+    }
+    const reads = [...source.matchAll(/layeredSlot\("([^"]+)"\)/g)].map((m) => m[1]!);
+    for (const slot of reads) expect(tokens, slot).toContain(`name = ${JSON.stringify(slot)}`);
+    for (const definition of tokens.matchAll(/name = "([^"]+)"/g)) {
+      expect(reads, definition[1]).toContain(definition[1]!);
+    }
+  });
+
+  it("names the calendar slots it does not realize, so each divergence is a decision (Calendar)", () => {
+    const tokens = generateJetpackComposeTokensFile(irFor("Calendar"));
+    for (const slot of ["calendar.elevation.default", "calendar.focus.ring.offset"]) {
+      expect(tokens).not.toContain(`name = ${JSON.stringify(slot)}`);
+    }
+  });
+});
+
 describe("generateJetpackComposeComponentSource — centered surface (FEAT-COMPOSE-DIALOG-ADMISSION-01)", () => {
   it("hosts the centered surface on the foundation Dialog with dismissal wiring (Dialog)", () => {
     const src = generateJetpackComposeComponentSource(irFor("Dialog"));
