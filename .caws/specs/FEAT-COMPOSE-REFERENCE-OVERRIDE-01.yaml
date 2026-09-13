@@ -34,3 +34,8 @@ contracts:
   - name: 'reference-override'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge: the generated Avatar calls Image(painter = painter, alt = \"\") inside the contract's src guard; gradlew :library:compileKotlin -> BUILD SUCCESSFUL; node scripts/compose-parity-diff.mjs -> 51 allowlisted, 0 failures with REFERENCE_DIVERGENCES empty again (every declared reference realized); emitter suite 55/55; parity self-tests 20/20; pnpm run generate:check -> 52/52; swiftui regeneration byte-identical; pnpm test -> 3909/3910 with only the known intermittent 5s analytical sweep failing under load; pnpm run test:frameworks -> exit 0; pnpm run governed:rail -> exit 0, clean tree; docs:check-claims -> 75 claims with normal-form.md restamped"
+    recorded_at: "2026-09-13T07:32:23.222Z"
