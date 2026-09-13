@@ -80,6 +80,14 @@ const CHROME_ROLE_GLYPH_HOST = new RegExp(
 const CHROME_ROLE_ICON_DECORATED = new RegExp(
   ["\\.color\\.(?:background|border|foreground)\\.", "\\.(?:size|border)\\.radius", "\\.spacing\\.gap", "box-model\\.(?:padding|min-width|min-height)"].join("|"),
 );
+/** Text-control path (Input): the input-part chrome vocabulary (colors incl.
+ *  disabled variants, border width, radius, typography size) plus the
+ *  surface minimums. `input.opacity.disabled` deliberately unclaimed — a
+ *  unitless numeric with no toFsds converter; disabled styling rides the
+ *  color slots. */
+const CHROME_ROLE_TEXT_CONTROL = new RegExp(
+  ["input\\.(?:color|size|typography)\\.", "box-model\\.(?:padding|min-width|min-height)"].join("|"),
+);
 /** Font-size role: claimed by the prop-text leaf path (the corpus's
  *  text-leaf size vocabulary — `code-block.size.fontSize.default` etc.). */
 const FONT_SIZE_ROLE = /\.size\.fontSize\.|\.typography\.fontSize\./;
@@ -98,6 +106,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("FsdsRule")) return "rule";
   if (ktSource.includes("FsdsGlyphIcon")) return "glyphHost";
   if (ktSource.includes("icon: (@Composable () -> Unit)?")) return "iconDecorated";
+  if (ktSource.includes("BasicTextField(")) return "textControl";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -114,6 +123,7 @@ function chromeRoleForPath(path) {
   if (path === "rule") return CHROME_ROLE_RULE;
   if (path === "glyphHost") return CHROME_ROLE_GLYPH_HOST;
   if (path === "iconDecorated") return CHROME_ROLE_ICON_DECORATED;
+  if (path === "textControl") return CHROME_ROLE_TEXT_CONTROL;
   if (path === "progress") {
     return new RegExp([CHROME_ROLE_STATIC.source, TEXT_COLOR_ROLE.source].join("|"));
   }

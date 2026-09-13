@@ -270,10 +270,18 @@ describe("generateJetpackComposeComponentSource — boolean-control class (FEAT-
     expect(src).toContain('["root"]?.get("checkbox.color.background.default")');
   });
 
-  it("throws loudly for the string value-channel control (Input) instead of misrouting", () => {
-    expect(() => generateJetpackComposeComponentSource(irFor("Input"))).toThrow(
-      /string value-channel control class is not implemented/,
-    );
+  it("lowers the string value channel onto a foundation BasicTextField with input-part chrome (Input)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Input"));
+    expect(src).toContain("value: String? = null,");
+    expect(src).toContain("defaultValue: String = \"\",");
+    expect(src).toContain("onChange: ((String) -> Unit)? = null,");
+    expect(src).toContain("val resolvedValue = value ?: uncontrolledValue");
+    expect(src).toContain("BasicTextField(");
+    expect(src).toContain('fsdsTheme.resolve(inputTokenScopes["root"]?.get("input.color.bg.default"))?.toFsdsColor()');
+    expect(src).toContain('fsdsTheme.resolve(inputTokenScopes["root"]?.get("input.typography.size.default"))?.toFsdsSp()');
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src).not.toContain("input.opacity.disabled");
+    expect(src.match(/fun Input\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 
   it("keeps the declared native-toggle collapse ahead of structural control classes", () => {
