@@ -70,7 +70,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->30`, realized through the
+`<!-- target-component-count:jetpack-compose -->31`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -80,6 +80,7 @@ local twin):
 | projected-children action | `isProjectedChildrenAction` (substrate) | Button, Links, NavList |
 | boolean control | `isValueChannelControl` + boolean channel (substrate) | Checkbox |
 | text control | `isValueChannelControl` + string channel (substrate) | Input |
+| native-disclosure collapse | `collapseIntents: native-disclosure` | Details |
 | bare-rule leaf | `isBareRuleLeaf` (substrate) | Divider |
 | glyph host | `isGlyphHost` (substrate) | Icon |
 | icon-decorated content | `isIconDecoratedContent` (substrate) | Alert, AlertNotice, Badge |
@@ -103,6 +104,12 @@ intent owns the realization before any structural class is consulted.
 - **Divider** — the `thickness`/`title` string props are omitted v1 (the
   token slot drives thickness); `divider.spacing.margin` is unread (this
   class realizes the rule, not the surrounding layout rhythm).
+- **Details (native disclosure)** — hover-scoped and focus-ring slots are
+  unclaimed (the header keeps no hover interaction state v1); `details.
+  typography.*` and `details.spacing.*` are unclaimed (default summary
+  typography; content is a consumer composable). Accordion does NOT carry
+  the disclosure intent (its `string | string[]` value channel is a
+  multi-item shape for a later class).
 - **Input (text control)** — `input.opacity.disabled` is unclaimed (a
   unitless numeric with no toFsds converter; disabled styling rides the
   bg/border color slots); form-wiring props (`name`/`id`/`ariaLabelledby`)
