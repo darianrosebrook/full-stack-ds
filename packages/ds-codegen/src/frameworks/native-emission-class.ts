@@ -608,3 +608,21 @@ export function isViewportEdgeSurface(ir: ComponentIR): boolean {
   if (!ir.surface) return false;
   return ir.surface.positioning?.strategy === "viewport-edge";
 }
+
+/**
+ * The anchored-surface class: a declared surface positioned relative to an
+ * anchor part rather than to the viewport. The anchor is a contract part
+ * (`surface.anchor`), and the open triggers come from
+ * `surface.openTriggers` (click for Popover, hover/focus for Tooltip).
+ * Walkthrough is excluded: its anchor is selector-sourced
+ * (`surface.selectorAnchor`), which needs a DOM selector lookup this
+ * substrate does not have.
+ *
+ * Pure structural facts — target-neutral (FEAT-COMPOSE-ANCHORED-SURFACES-01).
+ */
+export function isAnchoredSurface(ir: ComponentIR): boolean {
+  if (!ir.surface) return false;
+  if (ir.surface.selectorAnchor) return false;
+  if (!ir.surface.anchor) return false;
+  return ir.surface.positioning?.strategy === "anchored";
+}

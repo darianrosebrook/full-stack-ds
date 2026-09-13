@@ -130,6 +130,7 @@
         "Markdown",
         "NavList",
         "OTP",
+        "Popover",
         "Postcard",
         "ProfileFlag",
         "Progress",
@@ -149,6 +150,7 @@
         "TextField",
         "Toast",
         "ToggleSwitch",
+        "Tooltip",
         "Truncate"
       ]
     },

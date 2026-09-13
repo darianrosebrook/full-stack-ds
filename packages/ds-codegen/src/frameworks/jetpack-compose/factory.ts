@@ -57,6 +57,11 @@ export function createJetpackComposeEmitter(): FrameworkEmitter {
             contents: surfaceFiles.componentFile,
             preservable: true,
           },
+          {
+            relativePath: `${ir.name}/${ir.name}Tokens.kt`,
+            contents: surfaceFiles.tokensFile,
+            preservable: true,
+          },
         ];
       }
       const source = generateJetpackComposeComponentSource(ir);

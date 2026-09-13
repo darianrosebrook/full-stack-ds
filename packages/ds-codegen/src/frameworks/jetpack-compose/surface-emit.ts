@@ -1,29 +1,33 @@
 /**
- * Jetpack Compose Anchored Presence Surface emitter — scaffold.
+ * Jetpack Compose Anchored Presence Surface emitter
+ * (FEAT-COMPOSE-ANCHORED-SURFACES-01).
  *
- * Compose's native substrate:
- *   - `TooltipBox` + `PlainTooltip` / `RichTooltip` (Material 3)  → Tooltip surface
- *   - `Popup` with a custom `PopupPositionProvider`              → Popover surface
- *   - `Dialog`                                                   → Modal surface (separate family)
- *   - `BackHandler`                                              → system-back dismissal
+ * An anchored surface positions relative to a contract-declared anchor
+ * part. The anchor is measured with `Modifier.onGloballyPositioned` and the
+ * panel opens in a foundation `Popup` offset by the measured anchor size
+ * along the contract's placement axis. Open triggers come from
+ * `surface.openTriggers`: a click trigger (Popover) renders a clickable
+ * anchor; hover/focus triggers (Tooltip) observe the anchor's interaction
+ * state and open while hovered or focused.
  *
- * Host adoption: Compose doesn't have a slot model in the
- * React `asChild` / Vue slot-props / Svelte split-binding sense. Instead,
- * the consumer composes their anchor inside the surface's content lambda
- * and the surface uses `Modifier.onGloballyPositioned { coords -> ... }`
- * to capture the anchor's layout coordinates. The IR's host-capability
- * facts feed this directly; no Compose-specific re-interpretation in the
- * emitter beyond modifier composition.
+ * Walkthrough is deliberately excluded by `isAnchoredSurface`: its anchor
+ * is selector-sourced (`surface.selectorAnchor`), which needs a DOM
+ * selector lookup this substrate does not have.
+ *
+ * Named divergences (ledgered in docs/architecture/native-target-admission.md):
+ *   - collision handling (`flip-shift`) is not realized — placement is
+ *     applied as declared, with `auto` treated as bottom;
+ *   - the panel is offset by the anchor's size, not by the panel's own
+ *     measured extent, so a Top/Left placement overlaps rather than nests;
+ *   - Tooltip's `describedby` relationship lowers to the popup host only
+ *     (no separate accessibility description node).
  *
  * `isSurfaceComponent` mirrors the gate used by the other emitters so the
  * factory can dispatch without knowing surface internals.
- *
- * Returns the component file plus an optional state file. The state
- * file holds anchor coordinates + open/closed state when the surface
- * is more complex than a single `MutableState<Boolean>`.
  */
 import type { ComponentIR } from "../../ir.js";
 import { isPartAnchoredSurface } from "../../semantics.js";
+import { generateJetpackComposeTokensFile } from "./component-source.js";
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
   return ir.surface != null && isPartAnchoredSurface(ir.surface);
@@ -31,13 +35,224 @@ export function isSurfaceComponent(ir: ComponentIR): boolean {
 
 export interface JetpackComposeSurfaceFiles {
   componentFile: string;
+  tokensFile: string;
   stateFile: string | null;
 }
 
+const kotlinEnumName = (value: string): string =>
+  value.charAt(0).toUpperCase() + value.slice(1).replace(/[^A-Za-z0-9]/g, "");
+
+/** Slot lookup by suffix across the root scope. */
+function slot(ir: ComponentIR, suffix: string) {
+  return ir.tokenScopes
+    .find((scope) => scope.scope === "root")
+    ?.values.find((value) => value.name.endsWith(suffix));
+}
+
 export function generateJetpackComposeSurfaceFiles(
-  _ir: ComponentIR,
+  ir: ComponentIR,
 ): JetpackComposeSurfaceFiles {
-  throw new Error(
-    "generateJetpackComposeSurfaceFiles: not implemented — Jetpack Compose emitter is scaffold-only.",
+  const name = ir.name;
+  const segment = name.replace(/([a-z0-9])([A-Z])/g, "$1$2").toLowerCase();
+  const channel = ir.behavior.normalizedChannels.find(
+    (c) => c.valueType === "boolean",
+  )!;
+  const valueProp = channel.valueProp;
+  const defaultValueProp = channel.defaultValueProp ?? `${valueProp}Default`;
+  const changeProp = channel.changeHandlerProp;
+  const triggers = ir.surface?.openTriggers ?? [];
+  const isClick = triggers.includes("click");
+  const isHover = triggers.includes("hover") || triggers.includes("focus");
+  const placementProp = ir.styledProps.find((p) => p.safeName === "placement");
+  const placementRef = placementProp?.typeRefs?.find(
+    (r) => (ir.definedTypes[r]?.values?.length ?? 0) > 0,
   );
+  const placementValues = placementRef ? ir.definedTypes[placementRef]!.values! : [];
+  const placementDefault =
+    placementProp?.defaultExpr?.replace(/^["']|["']$/g, "") ?? placementValues[0] ?? "bottom";
+  const hasDisabled = ir.styledProps.some(
+    (p) => p.name === "disabled" && p.propType.kind === "boolean",
+  );
+
+  const bgSlot = slot(ir, ".color.background.default");
+  const borderSlot = slot(ir, ".color.border.default");
+  const radiusSlot = slot(ir, ".size.radius.default");
+  const gapSlot = slot(ir, "box-model.gap");
+  const minWidthSlot = slot(ir, "box-model.min-width");
+  const minHeightSlot = slot(ir, "box-model.min-height");
+  const paddingInlineStartSlot = slot(ir, "box-model.padding-inline-start");
+  const paddingInlineEndSlot = slot(ir, "box-model.padding-inline-end");
+  const paddingBlockStartSlot = slot(ir, "box-model.padding-block-start");
+  const paddingBlockEndSlot = slot(ir, "box-model.padding-block-end");
+  const consumesTokens = ir.tokenScopes.some((s) => s.values.length > 0);
+  const tokenConst = `${name.charAt(0).toLowerCase()}${name.slice(1)}TokenScopes`;
+
+  const lines: string[] = [];
+  lines.push(`// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`);
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`// @generated:start imports`);
+  if (bgSlot) lines.push(`import androidx.compose.foundation.background`);
+  if (borderSlot) lines.push(`import androidx.compose.foundation.border`);
+  if (isClick) lines.push(`import androidx.compose.foundation.clickable`);
+  if (isHover) {
+    lines.push(`import androidx.compose.foundation.focusable`);
+    lines.push(`import androidx.compose.foundation.hoverable`);
+    lines.push(`import androidx.compose.foundation.interaction.MutableInteractionSource`);
+    lines.push(`import androidx.compose.foundation.interaction.collectIsFocusedAsState`);
+    lines.push(`import androidx.compose.foundation.interaction.collectIsHoveredAsState`);
+  }
+  lines.push(`import androidx.compose.foundation.layout.Arrangement`);
+  lines.push(`import androidx.compose.foundation.layout.Box`);
+  lines.push(`import androidx.compose.foundation.layout.Column`);
+  lines.push(`import androidx.compose.foundation.layout.PaddingValues`);
+  lines.push(`import androidx.compose.foundation.layout.padding`);
+  lines.push(`import androidx.compose.foundation.layout.requiredSizeIn`);
+  lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  lines.push(`import androidx.compose.runtime.Composable`);
+  lines.push(`import androidx.compose.runtime.LaunchedEffect`);
+  lines.push(`import androidx.compose.runtime.getValue`);
+  lines.push(`import androidx.compose.runtime.mutableStateOf`);
+  lines.push(`import androidx.compose.runtime.remember`);
+  lines.push(`import androidx.compose.runtime.setValue`);
+  lines.push(`import androidx.compose.ui.Alignment`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  lines.push(`import androidx.compose.ui.draw.clip`);
+  lines.push(`import androidx.compose.ui.layout.onGloballyPositioned`);
+  lines.push(`import androidx.compose.ui.unit.IntOffset`);
+  lines.push(`import androidx.compose.ui.unit.dp`);
+  lines.push(`import androidx.compose.ui.window.Popup`);
+  lines.push(`import androidx.compose.ui.window.PopupProperties`);
+  if (consumesTokens) {
+    lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+    if (bgSlot || borderSlot) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+    lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+  }
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start component`);
+  if (placementValues.length > 0) {
+    lines.push(`/** Placement axis lowered from the contract's ${placementRef} type. */`);
+    lines.push(`enum class ${placementRef} { ${placementValues.map(kotlinEnumName).join(", ")} }`);
+    lines.push(``);
+    lines.push(`private fun offsetX(placement: ${placementRef}, anchorWidth: Int): Int = when (placement) {`);
+    lines.push(`    ${placementRef}.${kotlinEnumName("right")} -> anchorWidth`);
+    lines.push(`    ${placementRef}.${kotlinEnumName("left")} -> -anchorWidth`);
+    lines.push(`    else -> 0`);
+    lines.push(`}`);
+    lines.push(``);
+    lines.push(`private fun offsetY(placement: ${placementRef}, anchorHeight: Int): Int = when (placement) {`);
+    lines.push(`    ${placementRef}.${kotlinEnumName("bottom")} -> anchorHeight`);
+    lines.push(`    ${placementRef}.${kotlinEnumName("top")} -> -anchorHeight`);
+    lines.push(`    else -> 0`);
+    lines.push(`}`);
+    lines.push(``);
+  }
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  lines.push(`    modifier: Modifier = Modifier,`);
+  lines.push(`    trigger: @Composable () -> Unit,`);
+  lines.push(`    ${valueProp}: Boolean? = null,`);
+  lines.push(`    ${defaultValueProp}: Boolean = false,`);
+  lines.push(`    ${changeProp}: ((Boolean) -> Unit)? = null,`);
+  if (placementValues.length > 0) {
+    lines.push(`    placement: ${placementRef} = ${placementRef}.${kotlinEnumName(placementDefault)},`);
+  }
+  if (hasDisabled) lines.push(`    enabled: Boolean = true,`);
+  lines.push(`    content: @Composable () -> Unit,`);
+  lines.push(`) {`);
+  lines.push(`    var uncontrolled${valueProp.charAt(0).toUpperCase()}${valueProp.slice(1)} by remember { mutableStateOf(${defaultValueProp}) }`);
+  const resolved = `resolved${valueProp.charAt(0).toUpperCase()}${valueProp.slice(1)}`;
+  lines.push(`    val ${resolved} = ${valueProp} ?: uncontrolled${valueProp.charAt(0).toUpperCase()}${valueProp.slice(1)}`);
+  lines.push(`    var anchorWidth by remember { mutableStateOf(0) }`);
+  lines.push(`    var anchorHeight by remember { mutableStateOf(0) }`);
+  lines.push(`    fun setOpen(next: Boolean) {`);
+  lines.push(`        if (${valueProp} == null) { uncontrolled${valueProp.charAt(0).toUpperCase()}${valueProp.slice(1)} = next }`);
+  lines.push(`        ${changeProp}?.invoke(next)`);
+  lines.push(`    }`);
+  if (isHover) {
+    lines.push(`    val interactionSource = remember { MutableInteractionSource() }`);
+    lines.push(`    val hovered by interactionSource.collectIsHoveredAsState()`);
+    lines.push(`    val focused by interactionSource.collectIsFocusedAsState()`);
+    lines.push(`    LaunchedEffect(hovered, focused${hasDisabled ? ", enabled" : ""}) {`);
+    lines.push(`        if (${hasDisabled ? "enabled" : "true"}) { setOpen(hovered || focused) }`);
+    lines.push(`    }`);
+  }
+  if (consumesTokens) {
+    lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
+    lines.push(`    fun layeredSlot(slotName: String): String? {`);
+    lines.push(`        val def = ${tokenConst}["root"]?.get(slotName)`);
+    lines.push(`        return def?.let { fsdsTheme.resolve(it) }`);
+    lines.push(`    }`);
+    if (bgSlot) lines.push(`    val panelBg = layeredSlot(${JSON.stringify(bgSlot.name)})?.toFsdsColor()`);
+    if (borderSlot) lines.push(`    val panelBorder = layeredSlot(${JSON.stringify(borderSlot.name)})?.toFsdsColor()`);
+    if (radiusSlot) lines.push(`    val panelRadius = layeredSlot(${JSON.stringify(radiusSlot.name)})?.toFsdsDp() ?: 0.dp`);
+    if (gapSlot) lines.push(`    val panelGap = layeredSlot(${JSON.stringify(gapSlot.name)})?.toFsdsDp() ?: 0.dp`);
+    else lines.push(`    val panelGap = 0.dp`);
+    const side = (s: { name: string } | undefined) =>
+      s ? `layeredSlot(${JSON.stringify(s.name)})?.toFsdsDp() ?: 0.dp` : `0.dp`;
+    lines.push(
+      `    val panelPadding = PaddingValues(start = ${side(paddingInlineStartSlot)}, end = ${side(paddingInlineEndSlot)}, top = ${side(paddingBlockStartSlot)}, bottom = ${side(paddingBlockEndSlot)})`,
+    );
+    if (minWidthSlot) lines.push(`    val panelMinWidth = layeredSlot(${JSON.stringify(minWidthSlot.name)})?.toFsdsDp() ?: 0.dp`);
+    if (minHeightSlot) lines.push(`    val panelMinHeight = layeredSlot(${JSON.stringify(minHeightSlot.name)})?.toFsdsDp() ?: 0.dp`);
+    lines.push(``);
+  } else {
+    lines.push(`    val panelGap = 0.dp`);
+    lines.push(`    val panelPadding = PaddingValues(0.dp)`);
+  }
+  lines.push(`    val panelShape = RoundedCornerShape(${radiusSlot ? "panelRadius" : "0.dp"})`);
+  const anchorModifier: string[] = [
+    `        val anchorModifier = Modifier`,
+    `            .onGloballyPositioned { coords ->`,
+    `                anchorWidth = coords.size.width`,
+    `                anchorHeight = coords.size.height`,
+    `            }`,
+  ];
+  if (isClick) {
+    anchorModifier.push(hasDisabled
+      ? `            .clickable(enabled = enabled) { setOpen(!${resolved}) }`
+      : `            .clickable { setOpen(!${resolved}) }`);
+  }
+  if (isHover) {
+    anchorModifier.push(`            .hoverable(interactionSource = interactionSource)`);
+    anchorModifier.push(`            .focusable(interactionSource = interactionSource)`);
+  }
+  lines.push(`    Box(modifier) {`);
+  lines.push(...anchorModifier);
+  lines.push(`        Box(anchorModifier) { trigger() }`);
+  lines.push(`        if (${resolved}) {`);
+  lines.push(`            Popup(`);
+  lines.push(`                alignment = Alignment.TopStart,`);
+  if (placementValues.length > 0) {
+    lines.push(`                offset = IntOffset(offsetX(placement, anchorWidth), offsetY(placement, anchorHeight)),`);
+  } else {
+    lines.push(`                offset = IntOffset(0, anchorHeight),`);
+  }
+  lines.push(`                onDismissRequest = { setOpen(false) },`);
+  lines.push(`                properties = PopupProperties(focusable = true),`);
+  lines.push(`            ) {`);
+  lines.push(`                Column(`);
+  lines.push(`                    Modifier`);
+  if (minWidthSlot || minHeightSlot) {
+    lines.push(`                        .requiredSizeIn(minWidth = ${minWidthSlot ? "panelMinWidth" : "0.dp"}, minHeight = ${minHeightSlot ? "panelMinHeight" : "0.dp"})`);
+  }
+  lines.push(`                        .clip(panelShape)`);
+  if (bgSlot) lines.push(`                        .then(if (panelBg != null) Modifier.background(panelBg, panelShape) else Modifier)`);
+  if (borderSlot) lines.push(`                        .then(if (panelBorder != null) Modifier.border(1.dp, panelBorder, panelShape) else Modifier)`);
+  lines.push(`                        .padding(panelPadding),`);
+  lines.push(`                    verticalArrangement = Arrangement.spacedBy(panelGap),`);
+  lines.push(`                ) { content() }`);
+  lines.push(`            }`);
+  lines.push(`        }`);
+  lines.push(`    }`);
+  lines.push(`}`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  const componentFile = lines.join("\n");
+  return {
+    componentFile,
+    tokensFile: generateJetpackComposeTokensFile(ir, componentFile),
+    stateFile: null,
+  };
 }
