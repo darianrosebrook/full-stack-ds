@@ -5,7 +5,7 @@ status: implemented
 title: Component token consumption
 owner: "@darianrosebrook"
 updated: 2026-09-06
-verified_at_commit: cdaa1cb1
+verified_at_commit: 8d12146d8b3d38213c16d95296be1e87b24d5e2e
 governs:
   - packages/ds-codegen/src/css-token-consumption.ts
   - packages/ds-codegen/src/validation/component-token-consumption.ts
