@@ -2,9 +2,11 @@ id: DOC-WALKTHROUGH-ANCHOR-DECISION-01
 title: 'Decide and record Walkthrough''s selector-anchor degradation'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Walkthrough''s selector-anchor degradation is decided and recorded with the measured class shape and the SwiftUI precedent, leaving one mechanical slice'
 created_at: '2026-09-13T07:33:10.304Z'
-updated_at: '2026-09-13T07:33:13.055Z'
+updated_at: '2026-09-13T07:33:37.767Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
