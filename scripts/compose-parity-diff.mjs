@@ -107,6 +107,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("FsdsGlyphIcon")) return "glyphHost";
   if (ktSource.includes("icon: (@Composable () -> Unit)?")) return "iconDecorated";
   if (ktSource.includes("BasicTextField(")) return "textControl";
+  if (ktSource.includes("AnimatedVisibility(")) return "disclosure";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -124,6 +125,14 @@ function chromeRoleForPath(path) {
   if (path === "glyphHost") return CHROME_ROLE_GLYPH_HOST;
   if (path === "iconDecorated") return CHROME_ROLE_ICON_DECORATED;
   if (path === "textControl") return CHROME_ROLE_TEXT_CONTROL;
+  /** Disclosure path (Details): the details-part chrome vocabulary plus the
+   *  surface minimums. Hover-scoped slots, focus-ring slots, typography and
+   *  spacing deliberately unclaimed (ledgered divergences). */
+  if (path === "disclosure") {
+    return new RegExp(
+      ["details\\.(?:color|size)\\.", "box-model\\.(?:padding|min-width|min-height)"].join("|"),
+    );
+  }
   if (path === "progress") {
     return new RegExp([CHROME_ROLE_STATIC.source, TEXT_COLOR_ROLE.source].join("|"));
   }

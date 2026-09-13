@@ -388,3 +388,29 @@ describe("generateJetpackComposeComponentSource — glyph classes (FEAT-COMPOSE-
     expect(tokens).not.toContain('name = "box-model.gap"');
   });
 });
+
+describe("generateJetpackComposeComponentSource — disclosure class (FEAT-COMPOSE-DISCLOSURE-01)", () => {
+  it("lowers native-disclosure onto a toggleable header with animated content (Details)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Details"));
+    expect(src).toContain("open: Boolean? = null,");
+    expect(src).toContain("val resolvedOpen = open ?: uncontrolledOpen");
+    expect(src).toContain("onOpenChange?.invoke(next)");
+    expect(src).toContain("summary: String? = null,");
+    expect(src).toContain("AnimatedVisibility(visible = resolvedOpen)");
+    expect(src).toContain("role = Role.Button,");
+    expect(src).toContain('stateDescription = if (resolvedOpen) "expanded" else "collapsed"');
+    expect(src).toContain('layeredSlot("details.color.background.default")');
+    // Consumer content inherits the foreground through the local.
+    expect(src).toContain("LocalFsdsContentColor provides (contentColor ?: Color.Unspecified)");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Details\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+
+  it("Accordion does not carry native-disclosure and stays unadmitted", () => {
+    // Accordion's value channel is string|string[] — a multi-item shape for
+    // a later class, not the disclosure collapse.
+    expect(() => generateJetpackComposeComponentSource(irFor("Accordion"))).toThrow(
+      /no emission class matches component "Accordion" on jetpack-compose/,
+    );
+  });
+});
