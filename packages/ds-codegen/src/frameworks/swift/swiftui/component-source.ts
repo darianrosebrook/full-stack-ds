@@ -45,6 +45,7 @@ import {
   isBareRuleLeaf,
   isGlyphHost,
   isIconDecoratedContent,
+  isInteractiveComposite,
   isProjectedChildrenAction,
   isStaticContent,
   isValueChannelControl,
@@ -1101,32 +1102,10 @@ function emitArrayIteratedList(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
-/**
- * Interactive composite: a single scalar channel (openness union or
- * activeTab string) over a trigger/list + content/panel anatomy
- * (Accordion, Tabs). Emits a header row driving the channel and a
- * content region closure.
- */
-function isInteractiveComposite(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  if (ir.dom.tag !== "div") return false;
-  const channels = ir.behavior.normalizedChannels;
-  if (channels.length !== 1) return false;
-  const t = channels[0]!.valueType ?? "";
-  if (t.includes("Date")) return false;
-  const isScalar = t === "string" || t.includes("|");
-  if (!isScalar) return false;
-  // trigger/tab + content/panel part pair required
-  const parts = new Set<string>();
-  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
-    if (node.part) parts.add(node.part);
-    (node.children ?? []).forEach(walk);
-  };
-  walk(ir.dom);
-  const hasTrigger = parts.has("trigger") || parts.has("tab");
-  const hasContent = parts.has("content") || parts.has("panel");
-  return hasTrigger && hasContent;
-}
+// The interactive-composite predicate is shared substrate
+// (native-emission-class.ts): one scalar channel over a trigger+content
+// anatomy. This emitter lowers the compound-context realization.
+
 
 function emitInteractiveComposite(ir: ComponentIR): string {
   const exportName = swiftExportName(ir.name);

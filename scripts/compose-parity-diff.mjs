@@ -110,6 +110,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("AnimatedVisibility(")) return "disclosure";
   if (ktSource.includes("Role.RadioButton")) return "radioGroup";
   if (ktSource.includes("filter { it != item }")) return "arrayList";
+  if (ktSource.includes("compositionLocalOf")) return "interactiveComposite";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -139,6 +140,14 @@ function chromeRoleForPath(path) {
    *  incl. the group gap (the options really are laid out with it). */
   /** Array-iterated list path (Shuttle): the shuttle-part chrome plus the
    *  shared box-model family incl. the list gap. */
+  /** Interactive-composite path (Accordion/Tabs): the part-scoped container paint
+   *  (accordion border / tabs shape radius) plus the shared box-model family.
+   *  Part-scoped typography (`accordion.text.*`) deliberately unclaimed. */
+  if (path === "interactiveComposite") {
+    return new RegExp(
+      ["(?:accordion\\.border|tabs\\.shape)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
   if (path === "arrayList") {
     return new RegExp(
       ["shuttle\\.(?:color|size)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),

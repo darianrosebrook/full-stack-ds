@@ -407,12 +407,14 @@ describe("generateJetpackComposeComponentSource — disclosure class (FEAT-COMPO
     expect(src.match(/fun Details\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 
-  it("Accordion does not carry native-disclosure and stays unadmitted", () => {
-    // Accordion's value channel is string|string[] — a multi-item shape for
-    // a later class, not the disclosure collapse.
-    expect(() => generateJetpackComposeComponentSource(irFor("Accordion"))).toThrow(
-      /no emission class matches component "Accordion" on jetpack-compose/,
-    );
+  it("Card and Select remain unadmitted shapes", () => {
+    // Accordion/Tabs gained the interactive-composite class; Card (composer)
+    // and Select (selection control) are still unimplemented.
+    for (const name of ["Card", "Select"]) {
+      expect(() => generateJetpackComposeComponentSource(irFor(name))).toThrow(
+        new RegExp(`no emission class matches component "${name}" on jetpack-compose`),
+      );
+    }
   });
 });
 
@@ -460,5 +462,33 @@ describe("generateJetpackComposeComponentSource — array-iterated list class (F
     expect(src).toContain('layeredSlot("shuttle.color.background.default")');
     expect(src).not.toMatch(/import androidx\.compose\.material/);
     expect(src.match(/fun Shuttle\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+});
+
+describe("generateJetpackComposeComponentSource — interactive-composite class (FEAT-COMPOSE-INTERACTIVE-COMPOSITE-01)", () => {
+  it("lowers the union openness channel to a compound context (Accordion)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Accordion"));
+    expect(src).toContain("class AccordionState(");
+    expect(src).toContain("val value: List<String>,");
+    expect(src).toContain("val onToggle: (String) -> Unit,");
+    expect(src).toContain("val LocalAccordionState = compositionLocalOf<AccordionState?> { null }");
+    expect(src).toContain("value: List<String>? = null,");
+    expect(src).toContain("fun AccordionTrigger(");
+    expect(src).toContain("fun AccordionContent(");
+    expect(src).toContain("state.value.contains(key)");
+    expect(src).toContain('error("AccordionTrigger must be used inside Accordion")');
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+  });
+
+  it("lowers the scalar activeTab channel to a compound context (Tabs)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Tabs"));
+    expect(src).toContain("class TabsState(");
+    expect(src).toContain("val value: String,");
+    expect(src).toContain("val onSelect: (String) -> Unit,");
+    expect(src).toContain("value: String? = null,");
+    expect(src).toContain("fun TabsTab(");
+    expect(src).toContain("fun TabsPanel(");
+    expect(src).toContain("state.value == key");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
   });
 });
