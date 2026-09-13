@@ -19,6 +19,7 @@ import com.fullstackds.tokens.LocalFsdsContentColor
 import com.fullstackds.tokens.LocalFsdsTheme
 import com.fullstackds.tokens.toFsdsColor
 import com.fullstackds.tokens.toFsdsDp
+import com.fullstackds.components.button.Button
 // @generated:end
 
 // @generated:start component
@@ -34,6 +35,9 @@ fun Alert(
     intent: AlertIntent? = null,
     level: AlertLevel? = null,
     icon: (@Composable () -> Unit)? = null,
+    dismissible: Boolean = false,
+    dismissLabel: String = "Dismiss",
+    onDismiss: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     val fsdsTheme = LocalFsdsTheme.current
@@ -68,6 +72,13 @@ fun Alert(
         ) {
             icon?.invoke()
             content()
+            if (dismissible) {
+                Button(
+                    accessibilityLabel = dismissLabel,
+                    onClick = { onDismiss?.invoke() },
+                ) {
+                }
+            }
         }
     }
 }
