@@ -5,7 +5,7 @@ status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
 updated: 2026-09-13
-verified_at_commit: 1817771b8995c12ad19c4c5b3e32d6a7425128ed
+verified_at_commit: 4f4a01ff0dc379cbbaa059c07573183ce3b00112
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
