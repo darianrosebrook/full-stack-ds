@@ -9,6 +9,7 @@ import { consumedNativeTokenScopes, reactNativeTokenReads } from "../frameworks/
 
 import { nativeSlotArguments, nativeTokenScopes, composeTokenReads, consumedComposeTokenScopes } from "../frameworks/native-token-consumption.js";
 import { generateJetpackComposeComponentSource } from "../frameworks/jetpack-compose/component-source.js";
+import { generateJetpackComposeSurfaceFiles, isSurfaceComponent } from "../frameworks/jetpack-compose/surface-emit.js";
 import { createSwiftUIEmitter } from "../frameworks/swift/swiftui/factory.js";
 
 import { loadTargetRegistryConfigV1 } from "../target-packs/config.js";
@@ -22,7 +23,18 @@ export function inspectComponentTokenConsumption(contract: ComponentContract, wo
   const nativeFiles = generateReactNativeComponentSource(ir);
   const native = new Set([
     ...(admitted("react-native") ? consumedNativeTokenScopes(ir, reactNativeTokenReads([nativeFiles.componentFile, nativeFiles.stylesFile])) : []),
-    ...(admitted("jetpack-compose") ? consumedComposeTokenScopes(ir, composeTokenReads(generateJetpackComposeComponentSource(ir))) : []),
+    // Surfaces do not flow through the component-source dispatcher; they emit
+    // through the surface emitter (FEAT-COMPOSE-ANCHORED-SURFACES-01).
+    ...(admitted("jetpack-compose")
+      ? consumedComposeTokenScopes(
+          ir,
+          composeTokenReads(
+            isSurfaceComponent(ir)
+              ? generateJetpackComposeSurfaceFiles(ir).componentFile
+              : generateJetpackComposeComponentSource(ir),
+          ),
+        )
+      : []),
     ...(admitted("swiftui") ? nativeTokenScopes(ir, nativeSlotArguments(createSwiftUIEmitter().emitComponent(ir, { componentsRoot: "packages/ds-swiftui/Sources/DsSwiftUI/Components", contractsRoot: "packages/ds-contracts" }).map(file => file.contents).join("\n"), ["colorSlot", "pxSlot"]), true) : []),
   ].flatMap(scope => scope.values.map(value => value.name)));
   const behavior = new Set<string>();
