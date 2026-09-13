@@ -96,6 +96,43 @@ local twin):
 Dispatch precedence mirrors the swift dispatcher: a declared collapse
 intent owns the realization before any structural class is consulted.
 
+## Remaining components — required class and blocker
+
+The 16 contracts still outside the compose allowlist, each with the class
+that would carry it, whether that class needs a shared-substrate move
+(the predicate is currently swift-local) or is target-local, and the
+concrete blocker or decision that gates the slice. Measured from
+`packages/ds-swiftui` emission classes and the IR probes recorded in the
+specs `FEAT-COMPOSE-*`.
+
+| Component | Required class | Substrate move | Blocker / decision |
+|---|---|---|---|
+| TextField | labeled text control | yes (`isLabeledTextControl`) | slot regions (label/description/error) must lower; reuses the text-control chrome |
+| Select | selection control | yes (`isSelectionControl`: union channel + options array) | union channel split (single/multi) + options-alias lowering; Menu substrate |
+| Card | compound-part composer | no (target-local composer) | compound-part projection; five declared part carriers currently unrealized on web too |
+| Field | named-slot composer | no (target-local composer) | multi-slot projection (5 slots); label/description/error regions |
+| Chip | dual-action composite | no (target-local) | two `componentRef` buttons (primary + dismiss) lower as component instances |
+| Calendar | date-grid surface | yes (`isDateGridSurface`) | Date-array channel; month grid rendering |
+| NavTree | none of the above | no | no channel, `li` root with heading/list parts: needs a passive-tree class (or a glyph-host admission with its documented icon-only degradation, rejected so far) |
+| Image | media leaf | yes (`isMediaLeaf`) | foundation-only image loading does not exist; needs a painter/loader decision (degradation or a committed loader substrate) |
+| Avatar | src-or-fallback | yes (`resolveSrcFallbackRef`) | same loader decision as Image; falls back to initials |
+| Dialog | centered-modal surface | no | `androidx.compose.ui.window.Dialog` host + dismissal channels |
+| Sheet | centered-modal surface | no | same host, sheet presentation axis |
+| Command | centered-modal surface | no | same host, command-palette list anatomy |
+| Popover | anchored surface | no | `Popup` + position provider; anchor adoption via `onGloballyPositioned` |
+| Tooltip | anchored surface | no | `TooltipBox`-equivalent on foundation; hover/focus triggers |
+| Toast | toast surface | no | overlay presenter + dwell-token auto-dismiss (`.task`/delay) |
+| Walkthrough | coachmark surface | no | selector-sourced anchor positioning + step channel |
+
+Measured vs. inferred: every class named above is read from the generated swift tree's own emission-class comment except **Card**, **Field**, and **NavTree**, which carry none — their required class is inferred from their anatomy and is confirmed at slice time, not asserted here.
+
+Shared-substrate ordering: the four predicates marked "yes" move into
+`native-emission-class.ts` exactly once, as `isProjectedChildrenAction`
+and the seven predicates already there did; each such move must leave the
+SwiftUI regeneration byte-identical (the drift gate is the proof). The
+surface family (7 contracts) is the largest single unlock and needs no
+predicate move — it needs `surface-emit.ts` filled in from its scaffold.
+
 ## Ledgered divergences (compose)
 
 - **Checkbox** — `indeterminate` is not lowered (the substrate is binary,
