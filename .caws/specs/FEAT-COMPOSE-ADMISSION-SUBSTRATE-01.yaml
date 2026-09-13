@@ -8,7 +8,12 @@ updated_at: '2026-09-13T00:04:49.085Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/native (new shared emission-class substrate)'
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts (predicate stewardship moves to the substrate)'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (+tests; boolean-control and bare-rule-leaf classes)'
+    - 'packages/ds-jetpack-compose/library (committed FsdsCheckbox substrate + regenerated Checkbox/Divider trees)'
+    - 'fsds.targets.json + scripts/compose-parity-diff.mjs (+test) + AGENTS.md/CLAUDE.md count markers'
+    - 'docs/architecture/native-target-admission.md + snapshot native row + emitter README status paragraphs'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -29,7 +34,11 @@ scope:
     - 'CLAUDE.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Emission classes dispatch on structural IR predicates owned by the shared frameworks/native substrate — never on component names (grep-verifiable in both native emitters).'
+  - 'The substrate move is behavior-preserving: every previously admitted SwiftUI and Compose component regenerates byte-identically; the native drift gates prove it.'
+  - 'Compose substrates stay foundation-only: zero androidx.compose.material imports in committed substrate files and generated component bodies (FEAT-COMPOSE-CUSTOM-PAINTED-001 precedent).'
+  - 'The fsds.targets.json allowlist scopes default generation only; unimplemented shapes keep their fail-loud not-implemented throws — admission never silences an emitter gap.'
+  - 'Admission criteria are mechanical per codegen output (predicate dispatch + allowlist + drift gate + native compile + token parity) and every criteria doc claim carries its compile-only non-claim.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
