@@ -271,6 +271,7 @@ function emitProjectedChildrenAction(ir: ComponentIR): string {
   lines.push(`import androidx.compose.ui.unit.dp`);
   lines.push(`import com.fullstackds.components.button.FsdsButton`);
   lines.push(`import com.fullstackds.components.button.FsdsButtonScope`);
+  for (const line of referenceImports(ir)) lines.push(line);
   lines.push(`import com.fullstackds.components.button.FsdsButtonStyle`);
   lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
   lines.push(`import com.fullstackds.tokens.toFsdsColor`);
@@ -383,7 +384,17 @@ function emitProjectedChildrenAction(ir: ComponentIR): string {
   lines.push(
     `        contentDescription = ${hasAriaLabel ? "accessibilityLabel" : "null"},`,
   );
-  lines.push(`        content = content,`);
+  const decorationRefs = referenceNodes(ir, "decoration");
+  if (decorationRefs.length > 0) {
+    lines.push(`        content = {`);
+    for (const ref of decorationRefs) {
+      lines.push(...emitComponentReference(ir, ref, "            "));
+    }
+    lines.push(`            content()`);
+    lines.push(`        },`);
+  } else {
+    lines.push(`        content = content,`);
+  }
   lines.push(`    )`);
   lines.push(`}`);
   lines.push(`// @generated:end`);
@@ -4630,7 +4641,9 @@ function referenceImports(ir: ComponentIR): string[] {
   };
   if (ir.dom) walk(ir.dom);
   const lines: string[] = [];
-  if (/(^|\s)"ariaHidden"\s*:/.test(ir.dom ? JSON.stringify(ir.dom) : "")) {
+  // JSON.stringify puts no space before a key, so the boundary must not be
+  // anchored on whitespace.
+  if (ir.dom && JSON.stringify(ir.dom).includes('"ariaHidden"')) {
     lines.push(`import androidx.compose.ui.semantics.clearAndSetSemantics`);
   }
   for (const ref of [...refs.keys()].sort()) {

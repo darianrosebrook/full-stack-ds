@@ -265,7 +265,6 @@ export const REFERENCE_DIVERGENCES = {
   "Accordion:chevron": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
   "Details:icon": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
   "Status:icon": "the icon name comes from a prop valueMap, which this target does not lower yet",
-  "Button:spinner": "the spinner is gated on the `loading` prop, which the projected-children action does not thread yet",
 };
 
 /** Generated components this source composes by reference. The committed
