@@ -31,3 +31,8 @@ contracts:
   - name: 'reference-realization'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge 7dfeed4c: the generated Status contains 'Icon(size = IconSize.Sm, name = when (status) { StatusStatus.Info -> \"info\" ... StatusStatus.Error -> \"triangle-alert\" })' with the emitter's own axis enum name; gradlew :library:compileKotlin -> BUILD SUCCESSFUL; node scripts/compose-parity-diff.mjs -> 47 allowlisted, 0 failures with the Status:icon ledger entry removed and the three remaining enforced, and Status keeps its static-content role; pnpm exec vitest run component-source.test.ts -> 55/55; node --test scripts/compose-parity-diff.test.mjs -> 20/20; pnpm run generate:check -> 52/52; swiftui regeneration byte-identical; pnpm test -> 3909/3910 with only the known intermittent 5s analytical sweep failing under load (55/55 in isolation); pnpm run test:frameworks -> exit 0; pnpm run governed:rail -> exit 0, clean tree"
+    recorded_at: "2026-09-13T06:17:10.530Z"
