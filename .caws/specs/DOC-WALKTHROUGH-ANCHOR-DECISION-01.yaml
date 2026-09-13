@@ -8,7 +8,7 @@ updated_at: '2026-09-13T07:33:10.304Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'docs/architecture/native-target-admission.md (Walkthrough disposition row and anchor decision)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -17,7 +17,7 @@ scope:
     - 'docs/normal-form.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The recorded decision mirrors the target that already realizes the class, and names what degrades rather than implying the panel is unchanged.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
