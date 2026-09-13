@@ -25,3 +25,8 @@ acceptance:
     then: 'given Walkthrough is the last unadmitted component and the only declared surface whose anchor is selector-sourced; when the anchor decision, the class name, the measured channel/props/slots and the SwiftUI precedent are written into the disposition table; then the next slice is mechanical and docs:check-claims stays green'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge 57f2eda2: the disposition row records the anchor decision (the selector source degrades to a viewport-placed overlay; the declared placement prop still drives alignment) with the SwiftUI emitCoachmarkSurface precedent named, plus the measured channel (number index/defaultIndex/onStepChange), the step specs and four callbacks with their disabled/label props, the placement axis, the title/description slots and the 23 root slots; pnpm run docs:check-claims -> 75 marked claims OK"
+    recorded_at: "2026-09-13T07:33:36.743Z"
