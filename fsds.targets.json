@@ -118,6 +118,7 @@
         "Checkbox",
         "CodeBlock",
         "CodeSnippet",
+        "Details",
         "Divider",
         "Icon",
         "Input",
