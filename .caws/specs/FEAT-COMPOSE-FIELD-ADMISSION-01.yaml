@@ -1,0 +1,40 @@
+id: FEAT-COMPOSE-FIELD-ADMISSION-01
+title: 'Shared named-slot composer predicate; Compose Field admission'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-13T05:40:28.074Z'
+updated_at: '2026-09-13T05:40:28.074Z'
+created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.test.ts'
+    - 'packages/ds-jetpack-compose/library/src/main/kotlin'
+    - 'fsds.targets.json'
+    - 'scripts/compose-parity-diff.mjs'
+    - 'scripts/compose-parity-diff.test.mjs'
+    - 'docs/architecture/native-target-admission.md'
+    - 'docs/current-implementation-snapshot.md'
+    - 'AGENTS.md'
+    - 'docs/normal-form.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given Field''s dom is a passive container whose every leaf is a named slot (label, control, help, error, validatingIndicator); when the named-slot composer predicate and its atoms move into the shared native substrate and Compose lowers the class to a region composable; then SwiftUI regeneration stays byte-identical, Field compiles through gradle, the compose allowlist grows 46 to 47, and the parity and doc gates stay green'
+non_functional: {}
+contracts:
+  - name: 'named-slot-composer'
+    type: behavior
+    path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
