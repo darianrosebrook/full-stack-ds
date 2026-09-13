@@ -9,6 +9,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.fullstackds.components.button.FsdsButton
 import com.fullstackds.components.button.FsdsButtonScope
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import com.fullstackds.components.spinner.Spinner
+import com.fullstackds.components.spinner.SpinnerSize
 import com.fullstackds.components.button.FsdsButtonStyle
 import com.fullstackds.tokens.LocalFsdsTheme
 import com.fullstackds.tokens.toFsdsColor
@@ -83,7 +86,15 @@ fun Button(
         modifier = modifier,
         enabled = !disabled && !loading,
         contentDescription = accessibilityLabel,
-        content = content,
+        content = {
+            if (loading) {
+                Spinner(
+                    size = SpinnerSize.Sm,
+                    modifier = Modifier.clearAndSetSemantics { },
+                )
+            }
+            content()
+        },
     )
 }
 // @generated:end
