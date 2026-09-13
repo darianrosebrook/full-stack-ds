@@ -43,3 +43,8 @@ contracts:
   - name: 'centered-surface-second-channel'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge 5e19c21e: Command emitted by the centered class (Command.kt contains ComposeDialog( + BasicTextField( + layeredSlot(\"command.border.width\")); gradlew -p packages/ds-jetpack-compose :library:compileKotlin --no-daemon -> BUILD SUCCESSFUL; pnpm run parity:compose-tokens -> self-test 14/14 and 44 allowlisted components, 0 failures; pnpm run generate:check -> 52/52; pnpm run docs:check-claims -> 74 marked claims match; fsds.targets.json jetpack-compose allowlist 43 -> 44"
+    recorded_at: "2026-09-13T04:54:10.730Z"
