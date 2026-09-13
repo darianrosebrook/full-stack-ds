@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-FIELD-ADMISSION-01
 title: 'Shared named-slot composer predicate; Compose Field admission'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'The last target-local composer predicate moved to the shared substrate (SwiftUI byte-identical) and Field is admitted as the 47th compose component with every declared slot lowered to a content region'
 created_at: '2026-09-13T05:40:28.074Z'
-updated_at: '2026-09-13T05:40:31.556Z'
+updated_at: '2026-09-13T05:51:26.036Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
