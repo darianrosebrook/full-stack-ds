@@ -127,6 +127,7 @@
         "Dialog",
         "Divider",
         "Field",
+        "Image",
         "Icon",
         "Input",
         "Label",

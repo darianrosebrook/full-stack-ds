@@ -109,6 +109,7 @@ function emitterPath(ktSource) {
   // A compound-part composer emits a marker scope plus one region composable
   // per declared part, because it has no dom to walk.
   if (/^private object \w+ScopeImpl : /m.test(ktSource)) return "compoundPartComposer";
+  if (ktSource.includes("FoundationImage(")) return "mediaLeaf";
   if (ktSource.includes("FsdsDate.")) return "dateGrid";
   // A passive tree item renders a heading with text beside its catalog glyph;
   // the glyph-host class renders the glyph alone.
@@ -192,6 +193,16 @@ function chromeRoleForPath(path) {
   if (path === "edgeSurface") {
     return new RegExp(
       ["(?:sheet|toast)\\.(?:border|color|surface)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
+  /** Media leaf path (Image): the image-part chrome the corpus declares slots
+   *  for — colour and radius — plus the shared box-model family. `image.size.*`
+   *  is React Native-consumed but the contract declares the size axis as a
+   *  variant, not as slots, so no Compose read can resolve it; the divergence
+   *  is ledgered rather than papered over. */
+  if (path === "mediaLeaf") {
+    return new RegExp(
+      ["image\\.(?:color|radius)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
     );
   }
   /** Compound-part composer path (Card): the card-part chrome family plus the

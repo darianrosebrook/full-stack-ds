@@ -720,6 +720,20 @@ export function isCompoundPartComposer(ir: ComponentIR): boolean {
 }
 
 /**
+ * The media leaf class: a childless `img` root with no channel — the corpus's
+ * only declared media element. What the target does with the image itself is a
+ * loader decision, not a structural one; the class claims the shape.
+ *
+ * Pure structural facts — target-neutral (FEAT-COMPOSE-IMAGE-ADMISSION-01).
+ */
+export function isMediaLeaf(ir: ComponentIR): boolean {
+  if (ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  if (ir.dom?.tag !== "img") return false;
+  return (ir.dom.children ?? []).length === 0;
+}
+
+/**
  * The centered-surface class: a declared surface whose positioning
  * strategy is `centered` — a modal panel attached to the viewport rather
  * than to an anchor. Dialog is the corpus consumer. Anchored surfaces
