@@ -4630,6 +4630,9 @@ function referenceImports(ir: ComponentIR): string[] {
   };
   if (ir.dom) walk(ir.dom);
   const lines: string[] = [];
+  if (/(^|\s)"ariaHidden"\s*:/.test(ir.dom ? JSON.stringify(ir.dom) : "")) {
+    lines.push(`import androidx.compose.ui.semantics.clearAndSetSemantics`);
+  }
   for (const ref of [...refs.keys()].sort()) {
     lines.push(`import com.fullstackds.components.${packageSegment(ref)}.${ref}`);
     for (const type of [...refs.get(ref)!].sort()) {
@@ -5179,6 +5182,7 @@ function emitCenteredSurface(ir: ComponentIR): string {
     lines.push(`import com.fullstackds.tokens.toFsdsDp`);
     if (textSizeSlot) lines.push(`import com.fullstackds.tokens.toFsdsSp`);
   }
+  for (const line of referenceImports(ir)) lines.push(line);
   lines.push(`// @generated:end`);
   lines.push(``);
   lines.push(`// @generated:start component`);
@@ -5293,11 +5297,17 @@ function emitCenteredSurface(ir: ComponentIR): string {
     const styleArgs = [`color = panelText ?: Color.Unspecified`];
     if (textSizeSlot) styleArgs.push(`fontSize = panelSearchSize`);
     lines.push(`${inner}    textStyle = TextStyle(${styleArgs.join(", ")}),`);
-    if (placeholderProp) {
+    const decorationRefs = referenceNodes(ir, "decoration");
+    if (placeholderProp || decorationRefs.length > 0) {
       lines.push(`${inner}    decorationBox = { inner ->`);
+      for (const ref of decorationRefs) {
+        lines.push(...emitComponentReference(ir, ref, `${inner}        `));
+      }
+      if (placeholderProp) {
       lines.push(`${inner}        if (resolved${pascalCase(stringChannel.valueProp)}.isEmpty() && placeholder.isNotEmpty()) {`);
       lines.push(`${inner}            BasicText(text = placeholder, style = TextStyle(color = ${mutedSlot ? "panelMuted ?: Color.Unspecified" : "Color.Unspecified"}))`);
       lines.push(`${inner}        }`);
+      }
       lines.push(`${inner}        inner()`);
       lines.push(`${inner}    },`);
     }

@@ -266,7 +266,6 @@ export const REFERENCE_DIVERGENCES = {
   "Details:icon": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
   "Status:icon": "the icon name comes from a prop valueMap, which this target does not lower yet",
   "Button:spinner": "the spinner is gated on the `loading` prop, which the projected-children action does not thread yet",
-  "Command:searchIcon": "the centered surface renders the search field without its declared leading glyph",
 };
 
 /** Generated components this source composes by reference. The committed
