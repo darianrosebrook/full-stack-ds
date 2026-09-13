@@ -509,3 +509,19 @@ describe("generateJetpackComposeComponentSource — count-iterated field group (
     expect(src.match(/fun OTP\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 });
+
+describe("generateJetpackComposeComponentSource — labeled text control (FEAT-COMPOSE-TEXTFIELD-ADMISSION-01)", () => {
+  it("wraps the string channel with label/description/error regions (TextField)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("TextField"));
+    expect(src).toContain("value: String? = null,");
+    expect(src).toContain("defaultValue: String = \"\",");
+    expect(src).toContain("label: (@Composable () -> Unit)? = null,");
+    expect(src).toContain("error: (@Composable () -> Unit)? = null,");
+    expect(src).toContain("invalid: Boolean = false,");
+    expect(src).toContain("BasicTextField(");
+    expect(src).toContain('layeredSlot("text-field.border.radius")');
+    expect(src).toContain("if (invalid) region()");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun TextField\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+});

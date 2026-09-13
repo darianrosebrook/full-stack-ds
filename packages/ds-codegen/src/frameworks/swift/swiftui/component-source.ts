@@ -47,6 +47,7 @@ import {
   isGlyphHost,
   isIconDecoratedContent,
   isInteractiveComposite,
+  isLabeledTextControl,
   isProjectedChildrenAction,
   isStaticContent,
   isValueChannelControl,
@@ -1329,29 +1330,9 @@ function emitDateGridSurface(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
-/**
- * Labeled text control: a div-rooted field part carrying the single
- * string channel, with label/description/error slot regions around it
- * (TextField). The channel rides ControllableValue<String>; the regions
- * are consumer closures.
- */
-function isLabeledTextControl(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  if (ir.dom.tag !== "div") return false;
-  const strings = ir.behavior.normalizedChannels.filter(
-    (c) => c.valueType === "string",
-  );
-  if (strings.length !== 1 || ir.behavior.normalizedChannels.length !== 1) {
-    return false;
-  }
-  let hasInputPart = false;
-  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
-    if (node.tag === "input") hasInputPart = true;
-    (node.children ?? []).forEach(walk);
-  };
-  walk(ir.dom);
-  return hasInputPart;
-}
+// The labeled text-control predicate is shared substrate
+// (native-emission-class.ts): one string channel over an input under a div root.
+
 
 /** Named-slot region closures present in the dom (label/description/error). */
 function domSlotNames(ir: ComponentIR): string[] {

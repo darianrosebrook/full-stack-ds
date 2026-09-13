@@ -112,6 +112,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("filter { it != item }")) return "arrayList";
   if (ktSource.includes("compositionLocalOf")) return "interactiveComposite";
   if (ktSource.includes("padEnd(length")) return "countField";
+  if (ktSource.includes("inputModifier")) return "labeledText";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -146,6 +147,13 @@ function chromeRoleForPath(path) {
    *  Part-scoped typography (`accordion.text.*`) deliberately unclaimed. */
   /** Count-iterated field-group path (OTP): the otp-part chrome plus the
    *  shared box-model family incl. the slot gap. */
+  /** Labeled text-control path (TextField): the text-field border chrome
+   *  plus the shared box-model family. */
+  if (path === "labeledText") {
+    return new RegExp(
+      ["text-field\\.border\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
   if (path === "countField") {
     return new RegExp(
       ["otp\\.(?:color|size)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),

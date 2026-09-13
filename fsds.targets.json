@@ -143,6 +143,7 @@
         "Table",
         "Tabs",
         "Text",
+        "TextField",
         "ToggleSwitch",
         "Truncate"
       ]

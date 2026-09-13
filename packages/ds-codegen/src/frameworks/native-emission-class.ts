@@ -527,3 +527,31 @@ export function isCountIteratedFieldGroup(ir: ComponentIR): boolean {
   walk(ir.dom);
   return hasCountField;
 }
+
+/**
+ * The labeled text-control class: a div root with exactly one string
+ * channel over a dom tree containing an `input`. Unlike the input-root
+ * value-channel control, this shape wraps the control in label/
+ * description/error regions — TextField is the corpus consumer.
+ *
+ * Pure structural facts — target-neutral, which is why it lives here
+ * rather than in the swift emitter that first needed it
+ * (FEAT-COMPOSE-TEXTFIELD-ADMISSION-01).
+ */
+export function isLabeledTextControl(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.dom.tag !== "div") return false;
+  const strings = ir.behavior.normalizedChannels.filter(
+    (c) => c.valueType === "string",
+  );
+  if (strings.length !== 1 || ir.behavior.normalizedChannels.length !== 1) {
+    return false;
+  }
+  let hasInputPart = false;
+  const walk = (node: DomNodeIR): void => {
+    if (node.tag === "input") hasInputPart = true;
+    (node.children ?? []).forEach(walk);
+  };
+  walk(ir.dom);
+  return hasInputPart;
+}
