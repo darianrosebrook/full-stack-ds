@@ -40,3 +40,8 @@ contracts:
   - name: 'text-control-lowering'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "gradlew :library:compileKotlin BUILD SUCCESSFUL (30 groups incl. Input.kt on BasicTextField); zero component-name checks — dispatch is isValueChannelControl + string channel on the shared substrate predicate; zero androidx.compose.material imports asserted by unit test"
+    recorded_at: "2026-09-13T01:50:56.851Z"
