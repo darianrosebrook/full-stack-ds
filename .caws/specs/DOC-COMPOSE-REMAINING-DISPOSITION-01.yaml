@@ -2,9 +2,11 @@ id: DOC-COMPOSE-REMAINING-DISPOSITION-01
 title: 'Remaining-component disposition table in the native admission criteria'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'verified green on main; native-target admission slice landed'
 created_at: '2026-09-13T03:52:18.246Z'
-updated_at: '2026-09-13T03:52:22.020Z'
+updated_at: '2026-09-13T03:58:30.148Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
