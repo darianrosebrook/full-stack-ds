@@ -467,3 +467,35 @@ export function isArrayIteratedList(ir: ComponentIR): boolean {
   };
   return walk(ir.dom);
 }
+
+/**
+ * The interactive-composite class: a div root with one scalar channel
+ * (a string or a union of string members, excluding Date grids) over an
+ * anatomy that carries both a trigger part (`trigger`/`tab`) and a content
+ * part (`content`/`panel`). Accordion (union openness) and Tabs (scalar
+ * activeTab) are the corpus consumers; the realization is the
+ * compound-context pattern (root injects the channel, subcomponents
+ * consume and mutate it).
+ *
+ * Pure structural facts — target-neutral, which is why it lives here
+ * rather than in the swift emitter that first needed it.
+ */
+export function isInteractiveComposite(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.dom.tag !== "div") return false;
+  const channels = ir.behavior.normalizedChannels;
+  if (channels.length !== 1) return false;
+  const t = channels[0]!.valueType ?? "";
+  if (t.includes("Date")) return false;
+  const isScalar = t === "string" || t.includes("|");
+  if (!isScalar) return false;
+  const parts = new Set<string>();
+  const walk = (node: DomNodeIR): void => {
+    if (node.part) parts.add(node.part);
+    (node.children ?? []).forEach(walk);
+  };
+  walk(ir.dom);
+  const hasTrigger = parts.has("trigger") || parts.has("tab");
+  const hasContent = parts.has("content") || parts.has("panel");
+  return hasTrigger && hasContent;
+}
