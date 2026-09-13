@@ -109,6 +109,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("BasicTextField(")) return "textControl";
   if (ktSource.includes("AnimatedVisibility(")) return "disclosure";
   if (ktSource.includes("Role.RadioButton")) return "radioGroup";
+  if (ktSource.includes("filter { it != item }")) return "arrayList";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -136,6 +137,13 @@ function chromeRoleForPath(path) {
   }
   /** Radio-collection path (RadioGroup): the shared box-model surface slots
    *  incl. the group gap (the options really are laid out with it). */
+  /** Array-iterated list path (Shuttle): the shuttle-part chrome plus the
+   *  shared box-model family incl. the list gap. */
+  if (path === "arrayList") {
+    return new RegExp(
+      ["shuttle\\.(?:color|size)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
   if (path === "radioGroup") {
     return new RegExp(
       ["box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
