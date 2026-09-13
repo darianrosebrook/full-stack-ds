@@ -3,7 +3,6 @@ title: 'Realize Command''s search glyph and Button''s loading spinner; restamp t
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: compose-refclosure
 created_at: '2026-09-13T05:52:10.127Z'
 updated_at: '2026-09-13T05:52:13.552Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
