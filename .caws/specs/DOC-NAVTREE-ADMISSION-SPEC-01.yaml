@@ -25,3 +25,8 @@ acceptance:
     then: 'given NavTree is the last unadmitted component whose class is neither a capability gap nor a design decision already recorded; when its measured anatomy, slot vocabulary and required class are written into the disposition table; then the next slice is mechanical and docs:check-claims stays green'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge 80d0f126: the disposition row names NavTree's measured anatomy (li root; heading with glyph slot and dom-sourced link/label content props; list holding projected children), its four props and iconSize axis, all 18 nav-tree slots, the FsdsGlyphIcon call the Icon class already makes, and the open parity-role decision; pnpm run docs:check-claims -> 75 marked claims OK"
+    recorded_at: "2026-09-13T06:46:51.124Z"
