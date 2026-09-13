@@ -38,3 +38,8 @@ contracts:
   - name: 'labeled-text-control'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "isLabeledTextControl moved to native-emission-class.ts (pure IR extraction: div root, one string channel, an input node) with byte-identical swift regeneration (52 groups, zero diff); compose 36-to-37: gradlew :library:compileKotlin BUILD SUCCESSFUL (TextField.kt: label/description/error regions derived from DOM parts, error gated by invalid, string channel trio, text-field.border chrome + box-model family); compose-parity-diff 37/37 0 failures (labeledText path+role, self-test 8/8); generate:check 52/52; typecheck clean; docs:check-claims 74/74; emitter tests 36/36"
+    recorded_at: "2026-09-13T03:57:40.819Z"
