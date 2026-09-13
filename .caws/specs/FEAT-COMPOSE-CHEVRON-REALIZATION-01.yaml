@@ -31,3 +31,8 @@ contracts:
   - name: 'reference-realization'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge: the generated Details calls Icon(name = \"chevron-down\", size = IconSize.Sm, modifier = Modifier.size(chevronSize).rotate(chevronProgress)) with no drawBehind left in the class; gradlew :library:compileKotlin -> BUILD SUCCESSFUL; node scripts/compose-parity-diff.mjs -> 47 allowlisted, 0 failures with the Details:icon ledger entry REMOVED and Accordion:chevron still enforced; emitter suite 55/55; parity self-tests 20/20; pnpm run generate:check -> 52/52; swiftui regeneration byte-identical; pnpm test -> 3910/3910; pnpm run test:frameworks -> exit 0; pnpm run governed:rail -> exit 0, clean tree; docs:check-claims -> 75 claims with normal-form.md restamped"
+    recorded_at: "2026-09-13T06:37:43.728Z"
