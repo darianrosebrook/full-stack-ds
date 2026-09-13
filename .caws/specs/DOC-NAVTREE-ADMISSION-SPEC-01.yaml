@@ -2,9 +2,10 @@ id: DOC-NAVTREE-ADMISSION-SPEC-01
 title: 'Record the measured NavTree admission specification'
 risk_tier: 3
 mode: chore
-lifecycle_state: draft
+lifecycle_state: active
+worktree: navtree-spec
 created_at: '2026-09-13T06:46:25.528Z'
-updated_at: '2026-09-13T06:46:25.528Z'
+updated_at: '2026-09-13T06:46:28.327Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
