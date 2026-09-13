@@ -3287,6 +3287,8 @@ function emitInteractiveComposite(ir: ComponentIR): string {
   if (consumesTokens) lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
   if (bgSlot || borderSlot) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
   if (consumesTokens) lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+  if (referenceNodes(ir, "decoration").length > 0) lines.push(`import androidx.compose.ui.draw.rotate`);
+  for (const line of referenceImports(ir)) lines.push(line);
   lines.push(`// @generated:end`);
   lines.push(``);
   lines.push(`// @generated:start component`);
@@ -3396,6 +3398,11 @@ function emitInteractiveComposite(ir: ComponentIR): string {
   );
   lines.push(`    val selected = ${isUnion ? "state.value.contains(key)" : "state.value == key"}`);
   lines.push(`    Column(modifier.clickable { ${isUnion ? "state.onToggle(key)" : "state.onSelect(key)"} }.semantics { stateDescription = if (selected) "selected" else "not selected" }) {`);
+  for (const ref of referenceNodes(ir, "decoration")) {
+    lines.push(...emitComponentReference(ir, ref, "        ", [
+      `Modifier.rotate(if (selected) 180f else 0f)`,
+    ]));
+  }
   lines.push(`        content()`);
   lines.push(`    }`);
   lines.push(`}`);
