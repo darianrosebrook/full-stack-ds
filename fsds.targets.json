@@ -135,6 +135,7 @@
         "Progress",
         "RadioGroup",
         "Select",
+        "Sheet",
         "ShowMore",
         "Shuttle",
         "Skeleton",
@@ -146,6 +147,7 @@
         "Tabs",
         "Text",
         "TextField",
+        "Toast",
         "ToggleSwitch",
         "Truncate"
       ]

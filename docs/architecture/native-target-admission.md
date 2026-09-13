@@ -70,7 +70,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->39`, realized through the
+`<!-- target-component-count:jetpack-compose -->41`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -88,6 +88,7 @@ local twin):
 | labeled text control | `isLabeledTextControl` (substrate) | TextField |
 | selection control | `isSelectionControl` (substrate) | Select |
 | centered surface | `isCenteredSurface` (substrate) | Dialog |
+| viewport-edge surface | `isViewportEdgeSurface` (substrate) | Sheet, Toast |
 | bare-rule leaf | `isBareRuleLeaf` (substrate) | Divider |
 | glyph host | `isGlyphHost` (substrate) | Icon |
 | icon-decorated content | `isIconDecoratedContent` (substrate) | Alert, AlertNotice, Badge |
@@ -101,7 +102,7 @@ intent owns the realization before any structural class is consulted.
 
 ## Remaining components — required class and blocker
 
-The contracts still outside the compose allowlist (12 after Dialog), each with the class
+The contracts still outside the compose allowlist (10 after the edge surfaces), each with the class
 that would carry it, whether that class needs a shared-substrate move
 (the predicate is currently swift-local) or is target-local, and the
 concrete blocker or decision that gates the slice. Measured from
@@ -117,11 +118,9 @@ specs `FEAT-COMPOSE-*`.
 | NavTree | none of the above | no | no channel, `li` root with heading/list parts: needs a passive-tree class (or a glyph-host admission with its documented icon-only degradation, rejected so far) |
 | Image | media leaf | yes (`isMediaLeaf`) | foundation-only image loading does not exist; needs a painter/loader decision (degradation or a committed loader substrate) |
 | Avatar | src-or-fallback | yes (`resolveSrcFallbackRef`) | same loader decision as Image; falls back to initials |
-| Sheet | viewport-edge surface | yes (`isViewportEdgeSurface`) | same foundation Dialog host, edge placement |
 | Command | centered-modal surface | no | same host, command-palette list anatomy |
 | Popover | anchored surface | no | `Popup` + position provider; anchor adoption via `onGloballyPositioned` |
 | Tooltip | anchored surface | no | `TooltipBox`-equivalent on foundation; hover/focus triggers |
-| Toast | toast surface | no | overlay presenter + dwell-token auto-dismiss (`.task`/delay) |
 | Walkthrough | coachmark surface | no | selector-sourced anchor positioning + step channel |
 
 Measured vs. inferred: every class named above is read from the generated swift tree's own emission-class comment except **Card**, **Field**, and **NavTree**, which carry none — their required class is inferred from their anatomy and is confirmed at slice time, not asserted here.
@@ -151,6 +150,7 @@ predicate move — it needs `surface-emit.ts` filled in from its scaffold.
   typography; content is a consumer composable). Accordion does NOT carry
   the disclosure intent (its `string | string[]` value channel is a
   multi-item shape for a later class).
+- **Sheet / Toast (viewport-edge surfaces)** — Toast's `title`/`variant`/`politeness`/`action` are not lowered v1 (the content region carries the message) and a Toast without `duration` stays open until the channel closes; Sheet's `modal` axis is not lowered v1 (the host is always modal); both render through the foundation Dialog host with `usePlatformDefaultWidth = false` and an edge alignment driven by the placement enum.
 - **Dialog (centered surface)** — `size`, `initialFocus` and `returnFocus` are not lowered v1 (platform-default width and focus); the panel renders only while open, matching the contract's persistent presence; anchored and viewport-edge surfaces remain routed to their scaffold.
 - **Select (selection control)** — `searchable`, `filterFn`, `triggerLabel`, `size` and `empty` are not lowered v1; the trigger shows the selected label (placeholder fallback); single-select closes the popup after choosing, multi-select stays open, and a controlled `open` always wins.
 - **TextField (labeled text control)** — `type`, `name`, `required` and `ariaDescribedby` form-wiring props are not lowered v1; `invalid` gates the error region, which renders only when the consumer supplies it.

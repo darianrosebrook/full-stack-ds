@@ -592,3 +592,19 @@ export function isCenteredSurface(ir: ComponentIR): boolean {
   if (!ir.surface) return false;
   return ir.surface.positioning?.strategy === "centered";
 }
+
+/**
+ * The viewport-edge surface class: a declared surface positioned against a
+ * viewport edge rather than an anchor — Sheet (with a `side` placement
+ * prop) and Toast (edge placement plus a `duration` auto-dismiss prop) are
+ * the corpus consumers. Distinct from the centered class and from anchored
+ * surfaces, which position relative to a trigger.
+ *
+ * Pure structural facts — target-neutral, which is why it lives here
+ * rather than in the target that first needed it
+ * (FEAT-COMPOSE-EDGE-SURFACES-01).
+ */
+export function isViewportEdgeSurface(ir: ComponentIR): boolean {
+  if (!ir.surface) return false;
+  return ir.surface.positioning?.strategy === "viewport-edge";
+}
