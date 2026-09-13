@@ -70,3 +70,7 @@ evidence:
     status: pass
     evidence_ref: "gradlew :library:compileKotlin BUILD SUCCESSFUL over 29 groups; Icon.kt lowers iconGlyph sizeHints to a synthesized IconSize enum with token-scoped icon.size.* dims preferred and hint fallback; decorative-by-default via FsdsGlyphCatalog.decorativeDefaults + clearAndSetSemantics; generated FsdsGlyphCatalog.kt + committed FsdsSvgPath.kt (arc-to-cubic port, zero material imports)"
     recorded_at: "2026-09-13T01:35:36.125Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "compose-parity-diff.mjs: 29 allowlisted components, 0 failures (glyphHost + iconDecorated paths added with self-test 8/8); member-named variant slots incl. error-to-danger sole-family closure — AlertNotice when(status) reads every RN-consumed role key; reads-backed-by-definitions asserted in unit tests 27/27"
+    recorded_at: "2026-09-13T01:35:47.760Z"
