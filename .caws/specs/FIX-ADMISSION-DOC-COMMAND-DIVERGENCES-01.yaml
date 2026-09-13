@@ -1,0 +1,26 @@
+id: FIX-ADMISSION-DOC-COMMAND-DIVERGENCES-01
+title: 'Correct the Command divergence ledger in the admission criteria'
+risk_tier: 3
+mode: chore
+lifecycle_state: draft
+created_at: '2026-09-13T04:54:43.194Z'
+updated_at: '2026-09-13T04:54:43.194Z'
+created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/architecture/native-target-admission.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the Command ledger entry lists the palette slots the compose realization does not claim; when it is read against the merged Command.kt and CommandTokens.kt; then every unclaimed slot is named, the count matches, and docs:check-claims stays green'
+non_functional: {}
+contracts: []
