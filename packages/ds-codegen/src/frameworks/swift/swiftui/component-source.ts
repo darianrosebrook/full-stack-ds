@@ -49,6 +49,7 @@ import {
   isInteractiveComposite,
   isLabeledTextControl,
   isProjectedChildrenAction,
+  isSelectionControl,
   isStaticContent,
   isValueChannelControl,
   isVisualOnlyLeaf,
@@ -725,24 +726,9 @@ function emitGlyphHostComponent(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
-/**
- * The selection-control class: a passive dom whose channel set carries
- * exactly one union (string | string[]) selection channel plus an options
- * array prop (Select). The union channel lowers to SelectionState — the
- * mode-gated substrate — with ForEach(options) realizing iteration and
- * the channelCall binding lowering to a Menu item action.
- */
-function isSelectionControl(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  if (ir.root.element !== "div") return false;
-  const union = ir.behavior.normalizedChannels.filter(
-    (c) => (c.valueType ?? "").includes("|"),
-  );
-  if (union.length !== 1) return false;
-  return ir.styledProps.some(
-    (p) => p.safeName === "options" && typeof p.type === "string" && p.type.includes("[]"),
-  );
-}
+// The selection-control predicate is shared substrate
+// (native-emission-class.ts). This emitter lowers the selection realization.
+
 
 function emitSelectionControl(ir: ComponentIR): string {
   const exportName = swiftExportName(ir.name);

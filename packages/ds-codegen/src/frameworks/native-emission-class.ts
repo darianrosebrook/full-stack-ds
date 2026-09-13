@@ -555,3 +555,24 @@ export function isLabeledTextControl(ir: ComponentIR): boolean {
   walk(ir.dom);
   return hasInputPart;
 }
+
+/**
+ * The selection-control class: a div root whose one union-typed channel
+ * drives an options-array control (single/multi projections of the same
+ * union). Select is the corpus consumer.
+ *
+ * Moved verbatim from the swift emitter that first needed it — pure
+ * structural facts, so it lives in the shared substrate
+ * (FEAT-COMPOSE-SELECT-ADMISSION-01).
+ */
+export function isSelectionControl(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.root.element !== "div") return false;
+  const union = ir.behavior.normalizedChannels.filter(
+    (c) => (c.valueType ?? "").includes("|"),
+  );
+  if (union.length !== 1) return false;
+  return ir.styledProps.some(
+    (p) => p.safeName === "options" && typeof p.type === "string" && p.type.includes("[]"),
+  );
+}
