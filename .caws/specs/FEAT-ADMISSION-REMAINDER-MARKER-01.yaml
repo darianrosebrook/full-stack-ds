@@ -1,0 +1,33 @@
+id: FEAT-ADMISSION-REMAINDER-MARKER-01
+title: 'Govern the admission doc''s remaining-component count with a derived marker'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-13T04:58:08.361Z'
+updated_at: '2026-09-13T04:58:08.361Z'
+created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/docs-claims-check.mjs'
+    - 'scripts/docs-claims-remainder.selftest.mjs'
+    - 'package.json'
+    - 'docs/architecture/native-target-admission.md'
+    - 'AGENTS.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a registered target with a component allowlist and a loader-discovered corpus; when a tracked doc writes the target-component-remainder marker for that target; then the gate derives corpus-minus-allowlist, accepts the correct number, fails on a wrong number or an unregistered id, and the admission doc states the remaining-component count without an ungoverned hand count'
+non_functional: {}
+contracts:
+  - name: 'admission-remainder-marker'
+    type: behavior
+    path: 'scripts/docs-claims-check.mjs'
