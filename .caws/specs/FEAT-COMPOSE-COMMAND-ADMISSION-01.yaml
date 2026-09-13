@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: compose-command
 created_at: '2026-09-13T04:27:58.762Z'
-updated_at: '2026-09-13T04:28:00.828Z'
+updated_at: '2026-09-13T04:43:01.973Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
@@ -24,6 +24,9 @@ scope:
     - 'AGENTS.md'
     - 'README.md'
     - 'docs/normal-form.md'
+    - packages/ds-codegen/src/frameworks/native-emission-class.ts
+    - scripts/compose-parity-diff.test.mjs
+    - docs/architecture/design/component-token-consumption.md
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
