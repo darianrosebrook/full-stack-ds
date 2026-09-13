@@ -8,7 +8,11 @@ updated_at: '2026-09-13T00:49:57.103Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/native-emission-class.ts (isGlyphHost/domGlyph/isIconDecoratedContent move here)'
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts (imports the substrate)'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/{component-source.ts,icon-glyph.ts,factory.ts} (+tests; glyph-host and icon-decorated classes; catalog emission)'
+    - 'packages/ds-jetpack-compose/library (committed FsdsSvgPath runtime + generated FsdsGlyphCatalog + regenerated Icon/Alert/AlertNotice/Badge trees)'
+    - 'fsds.targets.json + scripts/compose-parity-diff.mjs (+test) + count-marker docs'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -30,7 +34,11 @@ scope:
     - 'docs/normal-form.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Emission classes dispatch on structural IR predicates owned by the shared substrate — never component names (grep-verifiable).'
+  - 'The substrate move is behavior-preserving: every previously admitted SwiftUI and Compose component regenerates byte-identically.'
+  - 'Compose glyph substrates stay foundation-only (zero androidx.compose.material imports); substrate dirs are family-named and never case-collide with component names.'
+  - 'The allowlist is the admission decision, not the dispatch: NavTree matches isGlyphHost but stays unadmitted on compose until its list class lands (ledgered divergence).'
+  - 'Arc conversion uses the standard SVG endpoint parameterization proven by the swift spike — no silent geometry drift between native targets.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
