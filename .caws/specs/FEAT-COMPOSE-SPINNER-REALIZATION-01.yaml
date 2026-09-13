@@ -2,9 +2,10 @@ id: FEAT-COMPOSE-SPINNER-REALIZATION-01
 title: 'Realize Button''s declared loading spinner through the reference mechanism'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: compose-spinner
 created_at: '2026-09-13T06:00:34.819Z'
-updated_at: '2026-09-13T06:00:34.819Z'
+updated_at: '2026-09-13T06:00:37.580Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
