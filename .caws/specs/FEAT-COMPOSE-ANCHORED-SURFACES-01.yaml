@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-ANCHORED-SURFACES-01
 title: 'Anchored surface class: Compose Popover and Tooltip admission on the surface scaffold'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Popover and Tooltip admitted on the anchored-surface class; surface emitter implemented and two validator/tokens infrastructure gaps fixed; compose 41-to-43'
 created_at: '2026-09-13T04:22:14.874Z'
-updated_at: '2026-09-13T04:26:23.030Z'
+updated_at: '2026-09-13T04:27:29.978Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
