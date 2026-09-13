@@ -2,9 +2,10 @@ id: FEAT-COMPOSE-INTERACTIVE-COMPOSITE-01
 title: 'Interactive-composite predicate to shared substrate; Compose Accordion and Tabs admission'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: compose-interactive
 created_at: '2026-09-13T03:30:45.576Z'
-updated_at: '2026-09-13T03:30:45.576Z'
+updated_at: '2026-09-13T03:30:48.024Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
