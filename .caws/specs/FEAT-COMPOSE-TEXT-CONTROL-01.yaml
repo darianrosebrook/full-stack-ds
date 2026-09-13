@@ -45,3 +45,7 @@ evidence:
     status: pass
     evidence_ref: "gradlew :library:compileKotlin BUILD SUCCESSFUL (30 groups incl. Input.kt on BasicTextField); zero component-name checks — dispatch is isValueChannelControl + string channel on the shared substrate predicate; zero androidx.compose.material imports asserted by unit test"
     recorded_at: "2026-09-13T01:50:56.851Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "compose-parity-diff.mjs 30/30 0 failures (textControl path+role added, self-test 8/8); docs:check-claims 74/74 after 29-to-30 markers; swiftui regeneration byte-identical (52 groups, zero diff); governed:rail PASS; pnpm test 291/291 files 3882/3882; frameworks 87/87; settings example exit 0"
+    recorded_at: "2026-09-13T01:50:57.677Z"
