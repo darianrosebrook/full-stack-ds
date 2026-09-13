@@ -8,7 +8,7 @@ updated_at: '2026-09-13T06:00:34.819Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (decoration reference in the projected-children action)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -20,7 +20,7 @@ scope:
     - 'docs/architecture/native-target-admission.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The guard, size and aria-hidden facts all come from the node; nothing about Button is special-cased by name.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
