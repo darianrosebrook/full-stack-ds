@@ -264,7 +264,6 @@ function chromeRoleForPath(path) {
  * declared reference can never be dropped silently.
  */
 export const REFERENCE_DIVERGENCES = {
-  "Accordion:chevron": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
 };
 
 /** Generated components this source composes by reference. The committed

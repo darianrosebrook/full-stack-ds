@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.dp
 import com.fullstackds.tokens.LocalFsdsTheme
 import com.fullstackds.tokens.toFsdsColor
 import com.fullstackds.tokens.toFsdsDp
+import androidx.compose.ui.draw.rotate
+import com.fullstackds.components.icon.Icon
+import com.fullstackds.components.icon.IconSize
 // @generated:end
 
 // @generated:start component
@@ -95,6 +98,11 @@ fun AccordionTrigger(
     val state = LocalAccordionState.current ?: error("AccordionTrigger must be used inside Accordion")
     val selected = state.value.contains(key)
     Column(modifier.clickable { state.onToggle(key) }.semantics { stateDescription = if (selected) "selected" else "not selected" }) {
+        Icon(
+            name = "chevron-down",
+            size = IconSize.Sm,
+            modifier = Modifier.rotate(if (selected) 180f else 0f),
+        )
         content()
     }
 }
