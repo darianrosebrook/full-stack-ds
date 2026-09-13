@@ -43,3 +43,8 @@ contracts:
   - name: 'date-grid-surface'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge 943844da: gradlew -p packages/ds-jetpack-compose :library:compileKotlin :library:test --no-daemon -> BUILD SUCCESSFUL (FsdsDateTest 6 cases incl. midnight straddle, zone flip, day-granular toggle); pnpm run parity:compose-tokens -> self-test 16/16 and 45 allowlisted components, 0 failures; node packages/ds-codegen/dist/cli.js --target=swiftui -> packages/ds-swiftui byte-identical after the predicate move; pnpm run generate:check -> 52/52; pnpm run docs:check-claims -> 75 marked claims match (remainder derived 8 -> 7); pnpm test -> 291 files / 3905 tests pass; pnpm run test:frameworks -> exit 0; pnpm run governed:rail -> exit 0 with a clean tree; fsds.targets.json jetpack-compose allowlist 44 -> 45"
+    recorded_at: "2026-09-13T05:21:02.668Z"
