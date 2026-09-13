@@ -92,6 +92,27 @@ for (const [path, markers, roleKey] of SURFACE_CASES) {
   });
 }
 
+/** A date-grid fixture: the committed date substrate is the class marker, and
+ *  the role key below is claimed only by the date-grid path — the static,
+ *  prop-text and expandable roles all accept a bare `.background`/`.radius`
+ *  vocabulary and would let this key go unchecked. */
+const dateGridFixture = (body) => fixture({
+  component: `fun Example(modifier: Modifier = Modifier) { FsdsDate.dayOfMonth(Date()); ${body}; val x = exampleTokenScopes["root"]?.get("example.width") }`,
+  rnStyles: 'tokens.root?.["calendar.color.day.selected.background"];',
+});
+
+test('a date grid is classified by its substrate call, not as a text-bearing leaf', () => {
+  assert.deepEqual(inspectComposeTokens(dateGridFixture('BasicText(text = "")')), [
+    'USAGE DIVERGENCE dateGrid: calendar.color.day.selected.background',
+  ]);
+});
+test('the date-grid chrome role is satisfiable, so the divergence above is not an artifact', () => {
+  assert.deepEqual(inspectComposeTokens({
+    ...dateGridFixture('layeredSlot("calendar.color.day.selected.background")'),
+    tokens: definition('example.width') + definition('calendar.color.day.selected.background'),
+  }), []);
+});
+
 test('projected controls claim canonical padding edges and typography loss cannot erase its obligation', () => {
   assert.deepEqual(inspectComposeTokens(fixture({
     component: fixture().component.replace('val x =', 'FsdsButtonScope; val x ='),

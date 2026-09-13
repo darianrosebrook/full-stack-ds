@@ -578,6 +578,52 @@ export function isSelectionControl(ir: ComponentIR): boolean {
 }
 
 /**
+ * The date-grid surface class: a dom-bearing, non-surface component whose
+ * sole channel is Date-valued and whose grid projects each item's day of
+ * month through the closed `dateDayOfMonth` projection. Calendar is the
+ * corpus consumer.
+ *
+ * This is the class the collection predicates already reserve: both
+ * `isArrayIteratedList` and `isInteractiveComposite` reject a Date-typed
+ * channel outright, because a date grid iterates its own `days` prop rather
+ * than carrying an array *channel* or a trigger/content anatomy.
+ *
+ * Moved out of the swift emitter that first needed it, and strengthened
+ * there with the projection fact: a Date-valued channel with no day grid (a
+ * future date picker, a range summary) is no longer silently claimed by
+ * this class (FEAT-COMPOSE-CALENDAR-ADMISSION-01).
+ *
+ * Pure structural facts — target-neutral.
+ */
+export function isDateGridSurface(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  const channels = ir.behavior.normalizedChannels;
+  if (channels.length !== 1) return false;
+  if (!(channels[0]!.valueType ?? "").includes("Date")) return false;
+  return domProjectsDateDayOfMonth(ir.dom);
+}
+
+/** Does any dom node realize the closed `dateDayOfMonth` projection as its
+ *  content or an attribute binding? Walks the projection's own source chain
+ *  so a nested/composed expression still counts. */
+function domProjectsDateDayOfMonth(node: DomNodeIR): boolean {
+  const projections = [
+    ...Object.values(node.bindings ?? {}),
+    node.content,
+  ];
+  if (projections.some(isDateDayOfMonthProjection)) return true;
+  return (node.children ?? []).some(domProjectsDateDayOfMonth);
+}
+
+function isDateDayOfMonthProjection(expression: unknown): boolean {
+  if (!expression || typeof expression !== "object") return false;
+  const candidate = expression as { kind?: string; op?: string; source?: unknown };
+  if (candidate.kind === "projection" && candidate.op === "dateDayOfMonth") return true;
+  if (candidate.kind === "projection") return isDateDayOfMonthProjection(candidate.source);
+  return false;
+}
+
+/**
  * The centered-surface class: a declared surface whose positioning
  * strategy is `centered` — a modal panel attached to the viewport rather
  * than to an anchor. Dialog is the corpus consumer. Anchored surfaces

@@ -105,6 +105,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("FsdsCheckbox")) return "checkbox";
   if (ktSource.includes("FsdsRule")) return "rule";
   if (ktSource.includes("FsdsGlyphIcon")) return "glyphHost";
+  if (ktSource.includes("FsdsDate.")) return "dateGrid";
   if (ktSource.includes("icon: (@Composable () -> Unit)?")) return "iconDecorated";
   // Surface classes are tested before every marker whose host they *reuse*:
   // an anchored surface is a `Popup(` host, a centered surface may carry a
@@ -175,6 +176,14 @@ function chromeRoleForPath(path) {
   if (path === "edgeSurface") {
     return new RegExp(
       ["(?:sheet|toast)\\.(?:border|color|surface)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
+  /** Date-grid path (Calendar): the calendar-part chrome family (surface,
+   *  day states, today/focus rings, cell/nav/radius geometry, typography)
+   *  plus the shared box-model family. */
+  if (path === "dateGrid") {
+    return new RegExp(
+      ["calendar\\.(?:color|size|typography|focus)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
     );
   }
   if (path === "centeredSurface") {

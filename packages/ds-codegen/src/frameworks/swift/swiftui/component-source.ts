@@ -43,6 +43,7 @@ import {
   domGlyph,
   isCountIteratedFieldGroup,
   isArrayIteratedList,
+  isDateGridSurface,
   isBareRuleLeaf,
   isGlyphHost,
   isIconDecoratedContent,
@@ -1250,18 +1251,6 @@ function emitInteractiveComposite(ir: ComponentIR): string {
   lines.push("// @generated:end");
   void hasDisabled;
   return lines.join("\n");
-}
-
-/**
- * Date grid surface: a Date-union channel over a header/grid anatomy
- * (Calendar). v1 emits the chrome shell with the channel present in the
- * API; grid realization is a follow-up (mode/locale omitted-and-documented).
- */
-function isDateGridSurface(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  const channels = ir.behavior.normalizedChannels;
-  if (channels.length !== 1) return false;
-  return (channels[0]!.valueType ?? "").includes("Date");
 }
 
 function emitDateGridSurface(ir: ComponentIR): string {
