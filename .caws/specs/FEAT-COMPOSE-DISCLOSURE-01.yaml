@@ -41,3 +41,8 @@ contracts:
   - name: 'disclosure-lowering'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "gradlew :library:compileKotlin BUILD SUCCESSFUL (31 groups incl. Details.kt); controlled-open hoisting (open/defaultOpen/onOpenChange) on a foundation toggleable header with Role.Button + stateDescription, painted rotating chevron, AnimatedVisibility content; dispatch on collapseIntents native-disclosure — zero component-name checks; Accordion correctly still throws (no intent, string|string[] channel)"
+    recorded_at: "2026-09-13T02:13:04.270Z"
