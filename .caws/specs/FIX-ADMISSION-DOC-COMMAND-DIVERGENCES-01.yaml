@@ -2,9 +2,10 @@ id: FIX-ADMISSION-DOC-COMMAND-DIVERGENCES-01
 title: 'Correct the Command divergence ledger in the admission criteria'
 risk_tier: 3
 mode: chore
-lifecycle_state: draft
+lifecycle_state: active
+worktree: doc-fix-command-divergences
 created_at: '2026-09-13T04:54:43.194Z'
-updated_at: '2026-09-13T04:54:43.194Z'
+updated_at: '2026-09-13T04:54:51.413Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
