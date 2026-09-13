@@ -155,11 +155,13 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
   });
 
   it("throws loudly for non-static shapes instead of misrouting", () => {
-    expect(() => generateJetpackComposeComponentSource(irFor("Checkbox"))).toThrow(
-      /only the native-toggle collapse path is implemented/,
+    // Checkbox and Divider gained classes (boolean control, bare-rule leaf);
+    // RadioGroup and Select remain unimplemented control shapes.
+    expect(() => generateJetpackComposeComponentSource(irFor("RadioGroup"))).toThrow(
+      /no emission class matches component "RadioGroup" on jetpack-compose/,
     );
     expect(() => generateJetpackComposeComponentSource(irFor("Select"))).toThrow(
-      /only the native-toggle collapse path is implemented/,
+      /no emission class matches component "Select" on jetpack-compose/,
     );
   });
 });
@@ -222,5 +224,96 @@ describe("generateJetpackComposeComponentSource — passive-leaf families", () =
     expect(src).toContain('SpinnerSize.Md -> "spinner.size.md"');
     expect(src).toContain('SpinnerThickness.Regular -> "spinner.thickness.regular"');
     expect(src).toContain("FsdsProgressIndicator(");
+  });
+});
+
+describe("generateJetpackComposeComponentSource — boolean-control class (FEAT-COMPOSE-ADMISSION-SUBSTRATE-01)", () => {
+  it("lowers the boolean value channel onto the FsdsCheckbox substrate with controlled-state hoisting (Checkbox)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Checkbox"));
+    // Channel param names come from the IR's normalized channel.
+    expect(src).toContain("checked: Boolean? = null,");
+    expect(src).toContain("defaultChecked: Boolean = false,");
+    expect(src).toContain("onChange: ((Boolean) -> Unit)? = null,");
+    // Controlled-takes-precedence uncontrolled fallback.
+    expect(src).toContain("val resolvedChecked = checked ?: uncontrolledChecked");
+    expect(src).toContain("if (checked == null) {");
+    expect(src).toContain("onChange?.invoke(next)");
+    // Foundation-only substrate: the painted control, never a material import.
+    expect(src).toContain("FsdsCheckbox(");
+    expect(src).toContain("FsdsCheckboxStyle(");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    // Modifier is the first optional parameter (AOSP guideline).
+    expect(src.match(/fun Checkbox\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+    // Named divergence: the binary substrate does not lower indeterminate.
+    expect(src).not.toContain("indeterminate");
+  });
+
+  it("keeps every root-scope read backed by a tokens-file definition (Checkbox)", () => {
+    const source = generateJetpackComposeComponentSource(irFor("Checkbox"));
+    const tokens = generateJetpackComposeTokensFile(irFor("Checkbox"));
+    const reads = [...source.matchAll(/TokenScopes\["([^"]+)"\]\?\.get\("([^"]+)"\)/g)];
+    expect(reads.length).toBeGreaterThanOrEqual(9);
+    for (const [, scope, slot] of reads) {
+      const block = tokens.split(`"${scope}" to mapOf(`)[1]?.split("\n    ),")[0] ?? "";
+      expect(block, `${scope}: ${slot}`).toContain(`"${slot}" to ComponentTokenDefinition(`);
+    }
+    // box-model.gap is RN-consumed but deliberately unclaimed by this path.
+    expect(tokens).not.toContain('name = "box-model.gap"');
+  });
+
+  it("dispatches on the structural class, not the component name", () => {
+    const ir = irFor("Checkbox");
+    const renamed = { ...ir, name: "RenamedControl" };
+    const src = generateJetpackComposeComponentSource(renamed);
+    expect(src).toContain("fun RenamedControl(");
+    expect(src).toContain("FsdsCheckbox(");
+    expect(src).toContain('["root"]?.get("checkbox.color.background.default")');
+  });
+
+  it("throws loudly for the string value-channel control (Input) instead of misrouting", () => {
+    expect(() => generateJetpackComposeComponentSource(irFor("Input"))).toThrow(
+      /string value-channel control class is not implemented/,
+    );
+  });
+
+  it("keeps the declared native-toggle collapse ahead of structural control classes", () => {
+    // Switch declares native-toggle-affordance; the collapse must own the
+    // realization even though its boolean channel would match the control class.
+    const src = generateJetpackComposeComponentSource(irFor("Switch"));
+    expect(src).toContain("FsdsToggle(");
+    expect(src).not.toContain("FsdsCheckbox(");
+  });
+});
+
+describe("generateJetpackComposeComponentSource — bare-rule-leaf class (FEAT-COMPOSE-ADMISSION-SUBSTRATE-01)", () => {
+  it("lowers the hr root onto the FsdsRule substrate with the orientation axis (Divider)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Divider"));
+    expect(src).toContain("enum class DividerOrientation { Horizontal, Vertical }");
+    expect(src).toContain("DividerOrientation.Horizontal -> FsdsRuleOrientation.Horizontal");
+    expect(src).toContain("DividerOrientation.Vertical -> FsdsRuleOrientation.Vertical");
+    expect(src).toContain("decorative: Boolean = false,");
+    expect(src).toContain("FsdsRuleStyle(");
+    expect(src).toContain('["root"]?.get("divider.color.default")');
+    expect(src).toContain('["root"]?.get("divider.size.thickness")');
+    // Named divergences: thickness/title string props are omitted v1.
+    expect(src).not.toContain("thickness: String");
+    expect(src).not.toContain("title: String");
+    // Modifier is the first optional parameter.
+    expect(src.match(/fun Divider\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+
+  it("keeps every rule read backed by a tokens-file definition; gap stays unread (Divider)", () => {
+    const source = generateJetpackComposeComponentSource(irFor("Divider"));
+    const tokens = generateJetpackComposeTokensFile(irFor("Divider"));
+    const reads = [...source.matchAll(/TokenScopes\["([^"]+)"\]\?\.get\("([^"]+)"\)/g)];
+    // The test-env IR carries the sidecar's own slots (color + thickness);
+    // the CLI additionally injects box-model primitive geometry, widening
+    // the read set. The closure property below holds in both environments.
+    expect(reads.length).toBeGreaterThanOrEqual(2);
+    for (const [, scope, slot] of reads) {
+      const block = tokens.split(`"${scope}" to mapOf(`)[1]?.split("\n    ),")[0] ?? "";
+      expect(block, `${scope}: ${slot}`).toContain(`"${slot}" to ComponentTokenDefinition(`);
+    }
+    expect(tokens).not.toContain('name = "box-model.gap"');
   });
 });
