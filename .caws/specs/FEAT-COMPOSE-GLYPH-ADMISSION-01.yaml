@@ -74,3 +74,7 @@ evidence:
     status: pass
     evidence_ref: "compose-parity-diff.mjs: 29 allowlisted components, 0 failures (glyphHost + iconDecorated paths added with self-test 8/8); member-named variant slots incl. error-to-danger sole-family closure — AlertNotice when(status) reads every RN-consumed role key; reads-backed-by-definitions asserted in unit tests 27/27"
     recorded_at: "2026-09-13T01:35:47.760Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "fsds.targets.json jetpack-compose allowlist 25 to 29 (Icon, Alert, AlertNotice, Badge); NavTree absent despite matching isGlyphHost — decision ledgered in docs/architecture/native-target-admission.md divergence section (admission is the allowlist's decision, not the dispatch's); docs:check-claims OK 74/74, links 107/107"
+    recorded_at: "2026-09-13T01:35:48.223Z"
