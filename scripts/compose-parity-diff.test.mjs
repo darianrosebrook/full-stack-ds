@@ -113,6 +113,22 @@ test('the date-grid chrome role is satisfiable, so the divergence above is not a
   }), []);
 });
 
+test('a named-slot composer is classified by its region signature, not as a text leaf', () => {
+  const slot = (name) => `${name}: (@Composable () -> Unit)? = null`;
+  const input = fixture({
+    component: `fun Example(modifier: Modifier = Modifier, ${slot('label')}, ${slot('control')}, ${slot('help')}, ${slot('error')}) { BasicText(text = "") ; val x = exampleTokenScopes["root"]?.get("example.width") }`,
+    rnStyles: 'tokens.root?.["field.color.invalid-text"];',
+  });
+  assert.deepEqual(inspectComposeTokens(input), [
+    'USAGE DIVERGENCE namedSlotComposer: field.color.invalid-text',
+  ]);
+  assert.deepEqual(inspectComposeTokens({
+    ...input,
+    tokens: definition('example.width') + definition('field.color.invalid-text'),
+    component: input.component.replace('val x =', 'layeredSlot("field.color.invalid-text"); val x ='),
+  }), []);
+});
+
 test('projected controls claim canonical padding edges and typography loss cannot erase its obligation', () => {
   assert.deepEqual(inspectComposeTokens(fixture({
     component: fixture().component.replace('val x =', 'FsdsButtonScope; val x ='),

@@ -39,6 +39,7 @@ import { collectCollapseIntents, isContentTransform, nativeRootClipping } from "
 // emitter dispatches on are target-neutral and live exactly once there
 // (FEAT-COMPOSE-ADMISSION-SUBSTRATE-01). This file used to steward them.
 import {
+  collectDomSlots,
   countChildrenLeaves,
   domGlyph,
   isCountIteratedFieldGroup,
@@ -49,6 +50,7 @@ import {
   isIconDecoratedContent,
   isInteractiveComposite,
   isLabeledTextControl,
+  isNamedSlotComposer,
   isProjectedChildrenAction,
   isSelectionControl,
   isStaticContent,
@@ -2332,49 +2334,6 @@ function isCompoundPartComposer(ir: ComponentIR): boolean {
     ir.compoundParts.length > 0 &&
     ir.root.element === "div"
   );
-}
-
-/**
- * The named-slot composer class: a passive container WITH a root dom tree
- * whose every leaf is a named slot — semantic wrapper elements (label,
- * help spans) above the slots are allowed; component-instance leaves
- * (TextField's Input) and surfaces are not. Field is the corpus consumer.
- */
-function isNamedSlotComposer(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  if (ir.root.element !== "div") return false;
-  const slots = collectDomSlots(ir.dom);
-  return slots.length > 0 && allDomLeavesAreSlots(ir.dom);
-}
-
-/** Ordered named-slot list from the dom tree (document order). */
-function collectDomSlots(
-  node: NonNullable<ComponentIR["dom"]>,
-): string[] {
-  const out: string[] = [];
-  const walk = (n: NonNullable<ComponentIR["dom"]>): void => {
-    if (n.tag === "slot") {
-      const name = (n as { slotName?: string; name?: string }).slotName
-        ?? (n as { name?: string }).name;
-      if (name) out.push(name);
-    }
-    for (const child of n.children ?? []) walk(child);
-  };
-  walk(node);
-  return out;
-}
-
-/** True when every leaf of the dom tree is a named slot node. */
-function allDomLeavesAreSlots(
-  node: NonNullable<ComponentIR["dom"]>,
-): boolean {
-  const children = node.children ?? [];
-  if (children.length === 0) {
-    return node.tag === "slot"
-      && ((node as { slotName?: string; name?: string }).slotName
-        ?? (node as { name?: string }).name) !== undefined;
-  }
-  return children.every((child) => allDomLeavesAreSlots(child));
 }
 
 /**
