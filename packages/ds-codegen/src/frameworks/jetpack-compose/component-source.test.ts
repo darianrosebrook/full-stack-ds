@@ -561,3 +561,27 @@ describe("generateJetpackComposeComponentSource — centered surface (FEAT-COMPO
     expect(src.match(/fun Dialog\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 });
+
+describe("generateJetpackComposeComponentSource — viewport-edge surfaces (FEAT-COMPOSE-EDGE-SURFACES-01)", () => {
+  it("places Sheet at the declared edge (side enum -> alignment)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Sheet"));
+    expect(src).toContain("enum class SheetSide {");
+    expect(src).toContain("side: SheetSide =");
+    expect(src).toContain("Box(Modifier.fillMaxSize(), contentAlignment = when (side) {");
+    expect(src).toContain("SheetSide.Right -> Alignment.CenterEnd");
+    expect(src).toContain("usePlatformDefaultWidth = false,");
+    expect(src).toContain('layeredSlot("sheet.border.radius")');
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Sheet\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+
+  it("auto-dismisses Toast through its duration prop", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Toast"));
+    expect(src).toContain("duration: Int? = null,");
+    expect(src).toContain("LaunchedEffect(resolvedOpen, duration) {");
+    expect(src).toContain("kotlinx.coroutines.delay(duration.toLong())");
+    expect(src).toContain("dismiss()");
+    expect(src).toContain('layeredSlot("toast.surface.radius")');
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+  });
+});
