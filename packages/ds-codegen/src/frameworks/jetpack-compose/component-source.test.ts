@@ -492,3 +492,20 @@ describe("generateJetpackComposeComponentSource — interactive-composite class 
     expect(src).not.toMatch(/import androidx\.compose\.material/);
   });
 });
+
+describe("generateJetpackComposeComponentSource — count-iterated field group (FEAT-COMPOSE-OTP-ADMISSION-01)", () => {
+  it("distributes the string channel over length per-slot fields (OTP)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("OTP"));
+    expect(src).toContain("value: String? = null,");
+    expect(src).toContain("defaultValue: String = \"\",");
+    expect(src).toContain("length: Int = 6,");
+    expect(src).toContain("val resolvedValue = value ?: uncontrolledValue");
+    expect(src).toContain("repeat(length) { index ->");
+    expect(src).toContain("BasicTextField(");
+    expect(src).toContain("resolvedValue.padEnd(length, ' ').toCharArray()");
+    expect(src).toContain('layeredSlot("otp.color.background.default")');
+    expect(src).toContain('layeredSlot("otp.size.radius.default")');
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun OTP\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+});

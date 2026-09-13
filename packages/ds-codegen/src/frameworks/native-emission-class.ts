@@ -499,3 +499,31 @@ export function isInteractiveComposite(ir: ComponentIR): boolean {
   const hasContent = parts.has("content") || parts.has("panel");
   return hasTrigger && hasContent;
 }
+
+/**
+ * The count-iterated field-group class: a div root whose sole channel is a
+ * string over a dom tree containing a count-iterated `input` — a fixed
+ * number of per-slot controls writing one character each. OTP is the
+ * corpus consumer (the `length` prop drives the slot count).
+ *
+ * Pure structural facts — target-neutral, which is why it lives here
+ * rather than in the swift emitter that first needed it
+ * (FEAT-COMPOSE-OTP-ADMISSION-01).
+ */
+export function isCountIteratedFieldGroup(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.root.element !== "div") return false;
+  const stringChannels = ir.behavior.normalizedChannels.filter(
+    (c) => c.valueType === "string",
+  );
+  if (stringChannels.length !== 1) return false;
+  if (ir.behavior.normalizedChannels.length !== 1) return false;
+  let hasCountField = false;
+  const walk = (node: DomNodeIR): void => {
+    const iteration = (node as { iteration?: { kind?: string } }).iteration;
+    if (node.tag === "input" && iteration?.kind === "count") hasCountField = true;
+    (node.children ?? []).forEach(walk);
+  };
+  walk(ir.dom);
+  return hasCountField;
+}

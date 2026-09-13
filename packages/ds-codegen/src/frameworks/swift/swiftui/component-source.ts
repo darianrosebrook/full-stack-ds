@@ -41,6 +41,7 @@ import { collectCollapseIntents, isContentTransform, nativeRootClipping } from "
 import {
   countChildrenLeaves,
   domGlyph,
+  isCountIteratedFieldGroup,
   isArrayIteratedList,
   isBareRuleLeaf,
   isGlyphHost,
@@ -1596,31 +1597,9 @@ function emitDualActionComposite(ir: ComponentIR, refs: DualActionRefs): string 
   return lines.join("\n");
 }
 
-/**
- * The count-iterated field group: a passive root whose single string
- * channel feeds N single-character inputs (OTP). The iteration fact
- * (kind=count, source=prop) drives ForEach over field indices; the
- * channel rides the ControllableValue substrate with setCharAt
- * distribution (last character of a multi-char payload wins) and
- * onComplete at length.
- */
-function isCountIteratedFieldGroup(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  if (ir.root.element !== "div") return false;
-  const stringChannels = ir.behavior.normalizedChannels.filter(
-    (c) => c.valueType === "string",
-  );
-  if (stringChannels.length !== 1) return false;
-  if (ir.behavior.normalizedChannels.length !== 1) return false;
-  let hasCountField = false;
-  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
-    const iteration = (node as { iteration?: { kind?: string } }).iteration;
-    if (node.tag === "input" && iteration?.kind === "count") hasCountField = true;
-    (node.children ?? []).forEach(walk);
-  };
-  walk(ir.dom);
-  return hasCountField;
-}
+// The count-iterated field-group predicate is shared substrate
+// (native-emission-class.ts): one string channel over a count-iterated input.
+
 
 function emitCountFieldGroup(ir: ComponentIR): string {
   const exportName = swiftExportName(ir.name);

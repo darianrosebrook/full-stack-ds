@@ -70,7 +70,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->35`, realized through the
+`<!-- target-component-count:jetpack-compose -->36`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -84,6 +84,7 @@ local twin):
 | radio collection | `radioGroupFacts` (substrate) | RadioGroup |
 | array-iterated list | `isArrayIteratedList` (substrate) | Shuttle |
 | interactive composite | `isInteractiveComposite` (substrate) | Accordion, Tabs |
+| count-iterated field group | `isCountIteratedFieldGroup` (substrate) | OTP |
 | bare-rule leaf | `isBareRuleLeaf` (substrate) | Divider |
 | glyph host | `isGlyphHost` (substrate) | Icon |
 | icon-decorated content | `isIconDecoratedContent` (substrate) | Alert, AlertNotice, Badge |
@@ -113,6 +114,7 @@ intent owns the realization before any structural class is consulted.
   typography; content is a consumer composable). Accordion does NOT carry
   the disclosure intent (its `string | string[]` value channel is a
   multi-item shape for a later class).
+- **OTP (count-iterated field group)** — `onComplete`, the `mode` axis, and `readOnly` are not lowered v1 (value changes ride the channel); `label`/`fieldLabel`/`ariaDescribedby` lower to a single group contentDescription.
 - **Accordion / Tabs (interactive composite)** — part-scoped typography (`accordion.text.sizeContent`) is unclaimed; group-level `disabled` is not lowered v1; a subcomponent used outside its root throws at CompositionLocal access (the swift @EnvironmentObject / RN compound-context trap).
 - **Shuttle (array-iterated list)** — item removal is the swift twin's documented write (filter the item out); hover/active-scoped slots are unclaimed (no interaction state v1).
 - **RadioGroup (radio collection)** — the option alias's `title`/help
