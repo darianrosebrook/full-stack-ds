@@ -3,7 +3,6 @@ title: 't'
 risk_tier: 3
 mode: feature
 lifecycle_state: active
-worktree: compose-radio
 created_at: '2026-09-13T02:16:06.611Z'
 updated_at: '2026-09-13T02:17:11.032Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
