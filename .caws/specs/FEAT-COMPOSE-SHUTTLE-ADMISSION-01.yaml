@@ -38,3 +38,8 @@ contracts:
   - name: 'array-iterated-list'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "isArrayIteratedList moved to native-emission-class.ts (pure IR extraction: one non-Date array channel over an array-iteration node); swift regeneration after the rewire is byte-identical (52 groups, zero diff); compose 32-to-33: gradlew :library:compileKotlin BUILD SUCCESSFUL (Shuttle.kt: array channel controlled/uncontrolled, removable rows, chrome from scopes); compose-parity-diff 33/33 0 failures (arrayList path+role); governed:rail PASS; pnpm test 3886/3887 with the unrelated analytical erasure-plan load-flake passing 55/55 in isolation; frameworks 87/87; docs:check-claims 74/74; typecheck clean; generate:check 52/52"
+    recorded_at: "2026-09-13T03:29:40.143Z"
