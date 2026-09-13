@@ -8,7 +8,7 @@ updated_at: '2026-09-13T05:52:10.127Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (reference realization in the centered surface and the projected-children action)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -23,7 +23,7 @@ scope:
     - 'docs/normal-form.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The C8 ledger shrinks only by realizing the reference: a removed entry with an unrealized reference fails the gate.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
