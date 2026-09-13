@@ -38,5 +38,5 @@ contracts: []
 evidence:
   - criterion_id: A1
     status: pass
-    evidence_ref: "radioGroupFacts moved to native-emission-class.ts (pure IR extraction: dom role, compositeControl collection-selection, iteration, member bindings, alias); swift regeneration after the rewire is byte-identical (52 groups, zero git diff over packages/ds-swiftui); codegen suite green 291/291 files, 3886/3886 tests"
-    recorded_at: "2026-09-13T03:10:46.631Z"
+    evidence_ref: "radioGroupFacts extracted to native-emission-class.ts (pure IR extraction) with byte-identical swift regeneration (52 groups, zero diff) — compose 31-to-32: gradlew :library:compileKotlin BUILD SUCCESSFUL (RadioGroup.kt: option data class from the alias, selectable rows Role.RadioButton, orientation layout, controlled string channel); compose-parity-diff 32/32 0 failures (radioGroup path+role, self-test 8/8); governed:rail PASS; pnpm test 291/291 files 3886/3886; frameworks 87/87; docs:check-claims 74/74; settings example exit 0"
+    recorded_at: "2026-09-13T03:11:15.783Z"
