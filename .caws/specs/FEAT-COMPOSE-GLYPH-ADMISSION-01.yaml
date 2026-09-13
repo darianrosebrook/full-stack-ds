@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-GLYPH-ADMISSION-01
 title: 'Compose glyph pipeline: Icon glyph-host + icon-decorated Alert/AlertNotice/Badge admission'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Compose glyph pipeline landed: Icon via glyph-host, Alert/AlertNotice/Badge via icon-decorated content on shared substrate predicates; 25-to-29 admitted; NavTree divergence ledgered'
 created_at: '2026-09-13T00:49:57.103Z'
-updated_at: '2026-09-13T00:50:36.512Z'
+updated_at: '2026-09-13T01:35:48.900Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
