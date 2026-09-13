@@ -14,6 +14,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.fullstackds.tokens.LocalFsdsTheme
+import com.fullstackds.components.icon.Icon
+import com.fullstackds.components.icon.IconSize
 import com.fullstackds.tokens.toFsdsColor
 import com.fullstackds.tokens.toFsdsDp
 import com.fullstackds.tokens.LocalFsdsContentColor
@@ -53,7 +55,19 @@ fun Status(
         .padding(start = paddingInlineStart, end = paddingInlineEnd, top = paddingBlockStart, bottom = paddingBlockEnd)
         .then(if (minHeight != null) Modifier.height(minHeight) else Modifier)
     CompositionLocalProvider(LocalFsdsContentColor provides (contentColor ?: Color.Unspecified)) {
-        Box(modifier.then(chromeModifier)) { content() }
+        Box(modifier.then(chromeModifier)) {
+    Icon(
+        size = IconSize.Sm,
+        name = when (status) {
+        StatusStatus.Info -> "info"
+        StatusStatus.Success -> "check"
+        StatusStatus.Warning -> "triangle-alert"
+        StatusStatus.Danger -> "triangle-alert"
+        StatusStatus.Error -> "triangle-alert"
+    },
+    )
+    content()
+}
     }
 }
 // @generated:end
