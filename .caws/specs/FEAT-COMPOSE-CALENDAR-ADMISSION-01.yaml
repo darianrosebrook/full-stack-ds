@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-CALENDAR-ADMISSION-01
 title: 'Shared date-grid substrate predicate; Compose Calendar admission with a real day grid'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Calendar admitted as the 45th compose component: the date-grid predicate moved to the shared substrate strengthened with the dateDayOfMonth projection fact, and Compose now realizes the declared row-per-week day grid over a committed FsdsDate runtime'
 created_at: '2026-09-13T05:05:08.306Z'
-updated_at: '2026-09-13T05:05:17.802Z'
+updated_at: '2026-09-13T05:21:03.506Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
