@@ -110,6 +110,7 @@ function emitterPath(ktSource) {
   // per declared part, because it has no dom to walk.
   if (/^private object \w+ScopeImpl : /m.test(ktSource)) return "compoundPartComposer";
   if (ktSource.includes("FoundationImage(")) return "mediaLeaf";
+  if (ktSource.includes("contentDescription = ") && ktSource.includes("avatar")) return "referencedContentComposite";
   if (ktSource.includes("FsdsDate.")) return "dateGrid";
   // A passive tree item renders a heading with text beside its catalog glyph;
   // the glyph-host class renders the glyph alone.
@@ -193,6 +194,18 @@ function chromeRoleForPath(path) {
   if (path === "edgeSurface") {
     return new RegExp(
       ["(?:sheet|toast)\\.(?:border|color|surface)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
+  /** Referenced content composite path (Avatar): the avatar-part chrome family
+   *  plus the shared box-model family. `avatar.size.<member>` is
+   *  React Native-consumed while the contract declares the size axis as a
+   *  variant, not as slots, so no Compose read can resolve it; the role claims
+   *  the size.border / size.radius and fontWeight slots the contract does
+   *  declare; the size-member and fontFamily exclusions are recorded in the
+   *  admission criteria. */
+  if (path === "referencedContentComposite") {
+    return new RegExp(
+      ["avatar\\.(?:color|typography\\.fontWeight|size\\.(?:border|radius))\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
     );
   }
   /** Media leaf path (Image): the image-part chrome the corpus declares slots
@@ -295,6 +308,7 @@ function chromeRoleForPath(path) {
  * declared reference can never be dropped silently.
  */
 export const REFERENCE_DIVERGENCES = {
+  "Avatar:image": "Avatar declares its image through a `src` string while the Image class takes a consumer painter (the loader decision), so composing it needs the reference vocabulary to accept a class-supplied argument override; v1 renders the initials fallback and chrome instead",
 };
 
 /** Generated components this source composes by reference. The committed

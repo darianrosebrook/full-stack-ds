@@ -734,6 +734,24 @@ export function isMediaLeaf(ir: ComponentIR): boolean {
 }
 
 /**
+ * The referenced content composite class: a passive root with no channel whose
+ * only component reference is a content-role part. Avatar is the corpus
+ * consumer (an image reference beside a gated initials leaf). Trigger-role
+ * references belong to the action composite and decoration-role references to
+ * the classes that own a layout.
+ *
+ * Pure structural facts — target-neutral (FEAT-COMPOSE-AVATAR-ADMISSION-01).
+ */
+export function isReferencedContentComposite(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  if (ir.dom.tag === "img") return false;
+  return ir.parts.some(
+    (part) => part.componentRef && part.details?.role === "content",
+  );
+}
+
+/**
  * The centered-surface class: a declared surface whose positioning
  * strategy is `centered` — a modal panel attached to the viewport rather
  * than to an anchor. Dialog is the corpus consumer. Anchored surfaces
