@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: compose-navtree
 created_at: '2026-09-13T06:47:12.868Z'
-updated_at: '2026-09-13T06:47:15.649Z'
+updated_at: '2026-09-13T06:54:54.829Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
@@ -21,6 +21,8 @@ scope:
     - 'scripts/compose-parity-diff.mjs'
     - 'docs/architecture/native-target-admission.md'
     - 'docs/normal-form.md'
+    - AGENTS.md
+    - docs/current-implementation-snapshot.md
   out: []
 invariants:
   - 'The heading glyph, link and label come from the dom and the props it names; the emitter names neither a prop nor an icon.'
