@@ -37,3 +37,8 @@ contracts:
   - name: 'centered-surface'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "isCenteredSurface added to native-emission-class.ts (surface positioning.strategy === centered; anchored surfaces still route to the scaffold and viewport-edge is a separate class); compose 38-to-39: gradlew :library:compileKotlin BUILD SUCCESSFUL (Dialog.kt: foundation Dialog host via import alias ComposeDialog, controlled/uncontrolled open channel, onDismissRequest honoring closeOnEscape/closeOnBackdropClick, dialog chrome + box-model family, panel renders only while open); compose-parity-diff 39/39 0 failures (centeredSurface path+role, self-test 8/8); generate:check 52/52; typecheck clean; docs:check-claims 74/74; emitter tests 38/38"
+    recorded_at: "2026-09-13T04:16:39.239Z"
