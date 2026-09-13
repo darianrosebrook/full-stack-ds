@@ -3,7 +3,6 @@ title: 'Compose glyph pipeline: Icon glyph-host + icon-decorated Alert/AlertNoti
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: compose-glyph-admission
 created_at: '2026-09-13T00:49:57.103Z'
 updated_at: '2026-09-13T00:50:36.512Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
