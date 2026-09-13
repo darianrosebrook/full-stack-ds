@@ -24,3 +24,8 @@ acceptance:
     then: 'given the Command ledger entry lists the palette slots the compose realization does not claim; when it is read against the merged Command.kt and CommandTokens.kt; then every unclaimed slot is named, the count matches, and docs:check-claims stays green'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "comm -12/comm -13 between the committed CommandTokens.kt name list and the ledger's claimed/unclaimed lists are both empty; declared-minus-closure equals exactly the eight unclaimed names; 11 claimed (10 command.* + box-model.gap) + 8 unclaimed = the 19 declared slots; pnpm run docs:check-claims -> 74 marked claims OK"
+    recorded_at: "2026-09-13T04:56:15.079Z"
