@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-SPINNER-REALIZATION-01
 title: 'Realize Button''s declared loading spinner through the reference mechanism'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Button''s loading-gated spinner is composed through the reference vocabulary (C8 ledger 5 to 4) and the aria-hidden import guard it exposed is fixed'
 created_at: '2026-09-13T06:00:34.819Z'
-updated_at: '2026-09-13T06:07:54.763Z'
+updated_at: '2026-09-13T06:08:16.445Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
