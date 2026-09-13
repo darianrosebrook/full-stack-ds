@@ -27,10 +27,17 @@ A component's durable semantics live in its contract; each native target is
 a realization backend. Between the IR and the native emitters sits one
 shared substrate module, `packages/ds-codegen/src/frameworks/native-emission-class.ts`
 (sibling of `native-token-consumption.ts`), which owns the framework-neutral
-**emission-class predicates**: `isProjectedChildrenAction`, `isStaticContent`,
-`isBareRuleLeaf`, `isVisualOnlyLeaf`, `isValueChannelControl` (with
-`soleInputElement` / `soleValueChannel`), plus the structural atoms
-(`countChildrenLeaves`, `hasEssentialComponentInstance`).
+**emission-class predicates**: the content-shape family
+(`isProjectedChildrenAction`, `isStaticContent`, `isBareRuleLeaf`,
+`isVisualOnlyLeaf`, `isGlyphHost`, `domGlyph`, `isIconDecoratedContent`),
+the control family (`isValueChannelControl` with `soleInputElement` /
+`soleValueChannel`, `isLabeledTextControl`, `isSelectionControl`,
+`radioGroupFacts`), the collection family (`isArrayIteratedList`,
+`isInteractiveComposite`, `isCountIteratedFieldGroup`), the surface family
+(`isCenteredSurface`, `surfaceStringChannel`, `isViewportEdgeSurface`,
+`isAnchoredSurface`), and the structural atoms (`countChildrenLeaves`,
+`hasEssentialComponentInstance`). The module's exports are the authority
+for the current list; this paragraph names the families, not a count.
 
 Two rules govern what lives there:
 
@@ -62,7 +69,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 | C2 Registration | The component is on the target's `components` allowlist in `fsds.targets.json`. The allowlist scopes *default* generation only — explicit per-component requests bypass it and must hit the emitter's fail-loud not-implemented throw for unimplemented classes. Admission never silences an emitter gap. | `fsds.targets.json`; CLI allowlist filter |
 | C3 Bytes | The target's generated tree is committed and regeneration is byte-identical. | CI generated-tree diff; local `generate` + `git diff --exit-code` |
 | C4 Compile | The target's own toolchain compiles the tree. Compose: `gradlew :library:compileKotlin` (plus the CI kotlinc smoke lane and the settings example consumer). SwiftUI: `swift build`/`swift test` over the SwiftPM package (the test target additionally evaluates every admitted component body). | Native compile lanes in CI |
-| C5 Token parity | Every token definition the target emits is consumed, every lookup has a definition, shared slot identities agree with React Native, chrome roles are claimed per emitter path, and the composable API keeps `modifier` as the first optional parameter. Compose: `pnpm run parity:compose-tokens`. | `scripts/compose-parity-diff.mjs` (+ self-test) |
+| C5 Token parity | Every token definition the target emits is consumed, every lookup has a definition, shared slot identities agree with React Native, chrome roles are claimed per emitter path, and the composable API keeps `modifier` as the first optional parameter. The path must be the one that actually produced the bytes: a surface is classified by its own host marker **before** any marker whose host it reuses (an anchored surface is a `Popup(`, a centered surface may carry a `BasicTextField(`), because a misclassified path makes its chrome-role claim vacuous. Compose: `pnpm run parity:compose-tokens`. | `scripts/compose-parity-diff.mjs` (+ self-test, which pins each surface case in both directions) |
 | C6 Substrate discipline | Committed substrates are foundation-only (zero `androidx.compose.material` imports) and live in family-named directories (`toggle/`, `rule/`, `controls/`) that never match a component name in any casing — on case-insensitive filesystems a `checkbox/` substrate dir and the generated `Checkbox/` component dir are one physical directory with two owners. | Review + the parity script's per-path detection |
 | C7 Divergences ledgered | Every contract fact the realization does not lower (omitted props, binary-only state, unclaimed layout slots) is named as a divergence in the emitter's docstring and here — never silently dropped. | This document |
 
@@ -70,7 +77,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->43`, realized through the
+`<!-- target-component-count:jetpack-compose -->44`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -87,7 +94,7 @@ local twin):
 | count-iterated field group | `isCountIteratedFieldGroup` (substrate) | OTP |
 | labeled text control | `isLabeledTextControl` (substrate) | TextField |
 | selection control | `isSelectionControl` (substrate) | Select |
-| centered surface | `isCenteredSurface` (substrate) | Dialog |
+| centered surface | `isCenteredSurface` (substrate) + `surfaceStringChannel` (substrate) | Dialog, Command |
 | viewport-edge surface | `isViewportEdgeSurface` (substrate) | Sheet, Toast |
 | anchored surface | `isAnchoredSurface` (substrate) | Popover, Tooltip |
 | bare-rule leaf | `isBareRuleLeaf` (substrate) | Divider |
@@ -103,7 +110,7 @@ intent owns the realization before any structural class is consulted.
 
 ## Remaining components — required class and blocker
 
-The contracts still outside the compose allowlist (8 after the anchored surfaces), each with the class
+The contracts still outside the compose allowlist (7 after Command and the anchored surfaces), each with the class
 that would carry it, whether that class needs a shared-substrate move
 (the predicate is currently swift-local) or is target-local, and the
 concrete blocker or decision that gates the slice. Measured from
@@ -119,17 +126,17 @@ specs `FEAT-COMPOSE-*`.
 | NavTree | none of the above | no | no channel, `li` root with heading/list parts: needs a passive-tree class (or a glyph-host admission with its documented icon-only degradation, rejected so far) |
 | Image | media leaf | yes (`isMediaLeaf`) | foundation-only image loading does not exist; needs a painter/loader decision (degradation or a committed loader substrate) |
 | Avatar | src-or-fallback | yes (`resolveSrcFallbackRef`) | same loader decision as Image; falls back to initials |
-| Command | centered-modal surface | no | same host, command-palette list anatomy |
 | Walkthrough | anchored (selector) | excluded by `isAnchoredSurface` | selector-sourced anchor (`surface.selectorAnchor`) needs a DOM selector lookup; step channel |
 
 Measured vs. inferred: every class named above is read from the generated swift tree's own emission-class comment except **Card**, **Field**, and **NavTree**, which carry none — their required class is inferred from their anatomy and is confirmed at slice time, not asserted here.
 
-Shared-substrate ordering: the four predicates marked "yes" move into
-`native-emission-class.ts` exactly once, as `isProjectedChildrenAction`
-and the seven predicates already there did; each such move must leave the
-SwiftUI regeneration byte-identical (the drift gate is the proof). The
-surface family (7 contracts) is the largest single unlock and needs no
-predicate move — it needs `surface-emit.ts` filled in from its scaffold.
+Shared-substrate ordering: the three predicates marked "yes" move into
+`native-emission-class.ts` exactly once, as `isProjectedChildrenAction` and
+every surface predicate before them did; each such move must leave the
+SwiftUI regeneration byte-identical (the drift gate is the proof). No
+surface predicate is outstanding for the admitted set: the only declared
+surface still outside the allowlist is Walkthrough, which `isAnchoredSurface`
+excludes because its anchor is selector-sourced.
 
 ## Ledgered divergences (compose)
 
@@ -152,6 +159,7 @@ predicate move — it needs `surface-emit.ts` filled in from its scaffold.
 - **Popover / Tooltip (anchored surfaces)** — collision handling (`flip-shift`) is not realized (placement applied as declared, `auto` treated as bottom); the panel is offset by the anchor's size rather than the panel's own extent, so Top/Left placements overlap rather than nest; the Tooltip `describedby` relationship lowers to the popup host only. Walkthrough stays unadmitted: its anchor is selector-sourced and needs a DOM selector lookup the substrate does not have.
 - **Sheet / Toast (viewport-edge surfaces)** — Toast's `title`/`variant`/`politeness`/`action` are not lowered v1 (the content region carries the message) and a Toast without `duration` stays open until the channel closes; Sheet's `modal` axis is not lowered v1 (the host is always modal); both render through the foundation Dialog host with `usePlatformDefaultWidth = false` and an edge alignment driven by the placement enum.
 - **Dialog (centered surface)** — `size`, `initialFocus` and `returnFocus` are not lowered v1 (platform-default width and focus); the panel renders only while open, matching the contract's persistent presence; anchored and viewport-edge surfaces remain routed to their scaffold.
+- **Command (centered surface with a search channel)** — the second string channel lowers to a `BasicTextField` with the contract's `placeholder` default and the same controlled/uncontrolled split as the open channel. Seven of the palette's nineteen declared slots are unclaimed: `command.color.overlay` is an `rgba()` value with no compose colour converter and the platform dialog already owns the scrim; `command.size.topOffset` is a `vh` value with no length converter; `command.shadow` is a multi-layer box-shadow string with no elevation converter; `command.size.icon` has no glyph host on a search-and-project root; `command.text.sizeSmall` styles result rows the consumer composes; `command.color.backgroundHover` and `command.opacity.disabled` need hover and disabled interaction state the palette root does not keep v1. The `shouldFilter` / `filter` props and `label` / `searchLabel` / `emptyMessage` copy are not lowered (consumer-side data logic and labelling).
 - **Select (selection control)** — `searchable`, `filterFn`, `triggerLabel`, `size` and `empty` are not lowered v1; the trigger shows the selected label (placeholder fallback); single-select closes the popup after choosing, multi-select stays open, and a controlled `open` always wins.
 - **TextField (labeled text control)** — `type`, `name`, `required` and `ariaDescribedby` form-wiring props are not lowered v1; `invalid` gates the error region, which renders only when the consumer supplies it.
 - **OTP (count-iterated field group)** — `onComplete`, the `mode` axis, and `readOnly` are not lowered v1 (value changes ride the channel); `label`/`fieldLabel`/`ariaDescribedby` lower to a single group contentDescription.

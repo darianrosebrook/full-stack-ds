@@ -562,6 +562,84 @@ describe("generateJetpackComposeComponentSource — centered surface (FEAT-COMPO
   });
 });
 
+describe("generateJetpackComposeComponentSource — centered surface with a string channel (FEAT-COMPOSE-COMMAND-ADMISSION-01)", () => {
+  it("lowers the second string channel to a search field and keeps the palette chrome part-scoped (Command)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Command"));
+    expect(src).toContain("ComposeDialog(");
+    expect(src).toContain("BasicTextField(");
+    expect(src).toContain("search: String? = null,");
+    expect(src).toContain('defaultSearch: String = "",');
+    expect(src).toContain("onSearchChange: ((String) -> Unit)? = null,");
+    expect(src).toContain('placeholder: String = "Search...",');
+    expect(src).toContain("if (search == null) { uncontrolledSearch = next }");
+    expect(src).toContain("onSearchChange?.invoke(next)");
+    expect(src).toContain("val resolvedSearch = search ?: uncontrolledSearch");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Command\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+
+  it("reads exactly the chrome it realizes, with every read backed by a tokens definition (Command)", () => {
+    const source = generateJetpackComposeComponentSource(irFor("Command"));
+    const tokens = generateJetpackComposeTokensFile(irFor("Command"));
+    for (const slot of [
+      "command.color.background",
+      "command.color.text",
+      "command.color.textMuted",
+      "command.color.borderLight",
+      "command.color.border",
+      "command.border.width",
+      "command.border.radius",
+      "command.text.size",
+      "command.size.maxWidth",
+      "command.size.maxHeight",
+      "box-model.gap",
+    ]) {
+      expect(source).toContain(`layeredSlot(${JSON.stringify(slot)})`);
+      expect(tokens).toContain(`name = ${JSON.stringify(slot)}`);
+    }
+    // The panel is bounded by the palette's own max-size slots, not by the
+    // platform dialog width.
+    expect(source).toMatch(
+      /\.requiredSizeIn\(minWidth = .*?, minHeight = .*?, maxWidth = panelMaxWidth, maxHeight = panelMaxHeight\)/,
+    );
+    // Closure property: the tokens file is exactly the read set, in the test
+    // IR and in the CLI IR (which additionally injects box-model geometry).
+    const reads = [...source.matchAll(/layeredSlot\("([^"]+)"\)/g)].map((m) => m[1]!);
+    expect(reads.length).toBeGreaterThanOrEqual(10);
+    for (const slot of reads) {
+      expect(tokens, slot).toContain(`name = ${JSON.stringify(slot)}`);
+    }
+    for (const definition of tokens.matchAll(/name = "([^"]+)"/g)) {
+      expect(reads, definition[1]).toContain(definition[1]!);
+    }
+  });
+
+  it("names the palette slots it does not realize, so the divergence is a decision not an omission (Command)", () => {
+    const tokens = generateJetpackComposeTokensFile(irFor("Command"));
+    for (const slot of [
+      "command.color.overlay",
+      "command.color.backgroundHover",
+      "command.spacing.dialogPadding",
+      "command.size.topOffset",
+      "command.size.icon",
+      "command.text.sizeSmall",
+      "command.shadow",
+      "command.opacity.disabled",
+    ]) {
+      expect(tokens).not.toContain(`name = ${JSON.stringify(slot)}`);
+    }
+  });
+
+  it("adds no search affordance to a centered surface without a string channel (Dialog)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Dialog"));
+    expect(src).not.toContain("BasicTextField(");
+    expect(src).not.toContain("panelMaxWidth");
+    expect(src).not.toContain("CompositionLocalProvider");
+    expect(src).not.toContain("import androidx.compose.ui.text.TextStyle");
+    expect(src).toContain('layeredSlot("dialog.color.background.default")');
+  });
+});
+
 describe("generateJetpackComposeComponentSource — viewport-edge surfaces (FEAT-COMPOSE-EDGE-SURFACES-01)", () => {
   it("places Sheet at the declared edge (side enum -> alignment)", () => {
     const src = generateJetpackComposeComponentSource(irFor("Sheet"));

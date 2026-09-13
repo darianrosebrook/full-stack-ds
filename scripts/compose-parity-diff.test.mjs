@@ -59,6 +59,39 @@ test('content propagation and modifier ordering remain obligations', () => {
   assert.deepEqual(inspectComposeTokens(fixture({ component: fixture().component.replace('modifier: Modifier = Modifier', 'size: Int = 8, modifier: Modifier = Modifier') })), ['MODIFIER ORDER: modifier must be first optional']);
 });
 
+/** A surface fixture whose Kotlin carries the given host markers plus one
+ *  ordinary read, and whose RN styles consume exactly one chrome role. */
+const surfaceFixture = (markers, roleKey) => fixture({
+  component: `fun Example(modifier: Modifier = Modifier) { ${markers} val x = exampleTokenScopes["root"]?.get("example.width") }`,
+  rnStyles: `tokens.root?.["${roleKey}"];`,
+});
+
+/** Surface shapes whose Kotlin carries a host marker the lower-level paths
+ *  also test for. A centered surface may carry a search field; an anchored
+ *  surface is a `Popup(` host; a viewport-edge surface is a `ComposeDialog(`
+ *  host — so each must be classified by its own marker, not by the reused
+ *  one, or its chrome-role claim becomes vacuous. */
+const SURFACE_CASES = [
+  ['centeredSurface', 'ComposeDialog(onDismissRequest = {}) { BasicTextField(value = "", onValueChange = {}) }', 'command.color.border'],
+  ['anchoredSurface', 'Popup(onDismissRequest = {}) { onGloballyPositioned { } }', 'popover.color.border'],
+  ['edgeSurface', 'ComposeDialog(onDismissRequest = {}) { Box(Modifier.fillMaxSize()) }', 'sheet.color.border'],
+];
+
+for (const [path, markers, roleKey] of SURFACE_CASES) {
+  test(`a ${path} is classified by its own host, not by a host it reuses`, () => {
+    assert.deepEqual(inspectComposeTokens(surfaceFixture(markers, roleKey)), [
+      `USAGE DIVERGENCE ${path}: ${roleKey}`,
+    ]);
+  });
+  test(`the ${path} chrome role is satisfiable, so the divergence above is not an artifact`, () => {
+    assert.deepEqual(inspectComposeTokens({
+      ...surfaceFixture(markers, roleKey),
+      tokens: definition('example.width') + definition(roleKey),
+      component: surfaceFixture(markers, roleKey).component.replace('val x =', `layeredSlot("${roleKey}"); val x =`),
+    }), []);
+  });
+}
+
 test('projected controls claim canonical padding edges and typography loss cannot erase its obligation', () => {
   assert.deepEqual(inspectComposeTokens(fixture({
     component: fixture().component.replace('val x =', 'FsdsButtonScope; val x ='),

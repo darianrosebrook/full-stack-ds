@@ -106,6 +106,14 @@ function emitterPath(ktSource) {
   if (ktSource.includes("FsdsRule")) return "rule";
   if (ktSource.includes("FsdsGlyphIcon")) return "glyphHost";
   if (ktSource.includes("icon: (@Composable () -> Unit)?")) return "iconDecorated";
+  // Surface classes are tested before every marker whose host they *reuse*:
+  // an anchored surface is a `Popup(` host, a centered surface may carry a
+  // `BasicTextField(` search channel, and a viewport-edge surface is a
+  // `ComposeDialog(` host. Classifying one of those as the lower-level class
+  // makes its chrome-role claim vacuous, so the specific marker wins.
+  if (ktSource.includes("onGloballyPositioned")) return "anchoredSurface";
+  if (ktSource.includes("fillMaxSize()")) return "edgeSurface";
+  if (ktSource.includes("ComposeDialog(")) return "centeredSurface";
   if (ktSource.includes("BasicTextField(")) return "textControl";
   if (ktSource.includes("AnimatedVisibility(")) return "disclosure";
   if (ktSource.includes("Role.RadioButton")) return "radioGroup";
@@ -114,9 +122,6 @@ function emitterPath(ktSource) {
   if (ktSource.includes("padEnd(length")) return "countField";
   if (ktSource.includes("inputModifier")) return "labeledText";
   if (ktSource.includes("Popup(")) return "selectionControl";
-  if (ktSource.includes("onGloballyPositioned")) return "anchoredSurface";
-  if (ktSource.includes("fillMaxSize()")) return "edgeSurface";
-  if (ktSource.includes("ComposeDialog(")) return "centeredSurface";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -155,8 +160,8 @@ function chromeRoleForPath(path) {
    *  plus the shared box-model family. */
   /** Selection-control path (Select): the select-part chrome (background,
    *  border color/width, radius) plus the shared box-model family. */
-  /** Centered-surface path (Dialog): the dialog-part chrome plus the
-   *  shared box-model family. */
+  /** Centered-surface path (Dialog/Command): the part-scoped chrome family
+   *  (`dialog.*`, `command.*`) plus the shared box-model family. */
   /** Viewport-edge surface path (Sheet/Toast): the sheet/toast-part chrome
    *  (border colour/width, radius) plus the shared box-model family. Note
    *  `sheet.color.border` is the contract's border colour slot. */
@@ -174,7 +179,7 @@ function chromeRoleForPath(path) {
   }
   if (path === "centeredSurface") {
     return new RegExp(
-      ["dialog\\.(?:color|size)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+      ["(?:dialog|command)\\.(?:color|size|border|spacing|text)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
     );
   }
   if (path === "selectionControl") {

@@ -31,6 +31,7 @@ import {
   isArrayIteratedList,
   isBareRuleLeaf,
   isCenteredSurface,
+  surfaceStringChannel,
   isGlyphHost,
   isCountIteratedFieldGroup,
   isIconDecoratedContent,
@@ -173,6 +174,20 @@ function findLayeredSlotAny(
     }
   }
   return undefined;
+}
+
+/** The surface's *own* size constraint slot (`<prefix>.size.maxWidth`), not a
+ *  per-variant size (`dialog.size.md.maxWidth`) — the variant-scoped slots
+ *  select a named size, which a variant-less surface has no input for. */
+function findSurfaceOwnSizeSlot(
+  ir: ComponentIR,
+  key: "maxWidth" | "maxHeight",
+) {
+  const scope = ir.tokenScopes.find((s) => s.scope === "root");
+  const hit = scope?.values.find((v) =>
+    new RegExp(`^[A-Za-z0-9-]+[.]size[.]${key}$`).test(v.name)
+  );
+  return hit ? { scopeKey: "root", name: hit.name } : undefined;
 }
 
 /** Corpus chrome-role suffix grammar, mirroring the RN emitter's lists. */
@@ -4000,17 +4015,39 @@ function emitCenteredSurface(ir: ComponentIR): string {
   const valueProp = openChannel.valueProp;
   const defaultValueProp = openChannel.defaultValueProp ?? `${valueProp}Default`;
   const changeProp = openChannel.changeHandlerProp;
+  // A centered surface may carry a second, string-typed channel — Command's
+  // `search` query. It lowers to a search field above the consumer content
+  // rather than to a second modal behaviour; the fact is framework-neutral
+  // and lives in the shared native substrate (`surfaceStringChannel`).
+  const stringChannel = surfaceStringChannel(ir);
+  const placeholderProp = stringChannel
+    ? ir.styledProps.find((p) => p.safeName === "placeholder")
+    : undefined;
   const hasEscape = ir.styledProps.some((p) => p.safeName === "closeOnEscape");
   const hasBackdrop = ir.styledProps.some((p) => p.safeName === "closeOnBackdropClick");
   const hasAriaLabel = ir.styledProps.some((p) => p.safeName === "ariaLabel");
 
-  const bgSlot = findLayeredSlotAny(ir, ["root"], [".color.background.default"]);
-  const fgSlot = findLayeredSlotAny(ir, ["root"], [".color.foreground.primary", ".color.text.default"]);
-  const borderSlot = findLayeredSlotAny(ir, ["root"], [".color.border.default"]);
-  const radiusSlot = findLayeredSlotAny(ir, ["root"], [".size.radius.default"]);
+  // Chrome grammar: default-scope suffixes first (Dialog), then the
+  // part-scoped grammar later surface contracts use (`command.color.background`).
+  const bgSlot = findLayeredSlotAny(ir, ["root"], [".color.background.default", ".color.background"]);
+  const fgSlot = findLayeredSlotAny(ir, ["root"], [".color.foreground.primary", ".color.text.default", ".color.text"]);
+  const borderSlot = findLayeredSlotAny(ir, ["root"], [".color.border.default", ".color.border"]);
+  const borderWidthSlot = findLayeredSlotAny(ir, ["root"], [".border.width"]);
+  const radiusSlot = findLayeredSlotAny(ir, ["root"], [".size.radius.default", ".border.radius", ".surface.radius"]);
+  const mutedSlot = stringChannel && placeholderProp
+    ? findLayeredSlotAny(ir, ["root"], [".color.textMuted", ".color.foreground.muted"])
+    : undefined;
+  const dividerSlot = stringChannel
+    ? findLayeredSlotAny(ir, ["root"], [".color.borderLight", ".color.border.subtle"])
+    : undefined;
+  const textSizeSlot = stringChannel
+    ? findLayeredSlotAny(ir, ["root"], [".text.size"])
+    : undefined;
   const gapSlot = findTokenSlot(ir, "root", "box-model.gap");
   const minWidthSlot = findTokenSlot(ir, "root", "box-model.min-width");
   const minHeightSlot = findTokenSlot(ir, "root", "box-model.min-height");
+  const maxWidthSlot = findSurfaceOwnSizeSlot(ir, "maxWidth");
+  const maxHeightSlot = findSurfaceOwnSizeSlot(ir, "maxHeight");
   const paddingInlineStartSlot = findTokenSlot(ir, "root", "box-model.padding-inline-start");
   const paddingInlineEndSlot = findTokenSlot(ir, "root", "box-model.padding-inline-end");
   const paddingBlockStartSlot = findTokenSlot(ir, "root", "box-model.padding-block-start");
@@ -4022,15 +4059,21 @@ function emitCenteredSurface(ir: ComponentIR): string {
   lines.push(`package com.fullstackds.components.${segment}`);
   lines.push(``);
   lines.push(`// @generated:start imports`);
-  if (bgSlot) lines.push(`import androidx.compose.foundation.background`);
+  if (bgSlot || dividerSlot) lines.push(`import androidx.compose.foundation.background`);
   if (borderSlot) lines.push(`import androidx.compose.foundation.border`);
   lines.push(`import androidx.compose.foundation.layout.Arrangement`);
+  if (dividerSlot) lines.push(`import androidx.compose.foundation.layout.Box`);
   lines.push(`import androidx.compose.foundation.layout.Column`);
   lines.push(`import androidx.compose.foundation.layout.PaddingValues`);
+  if (dividerSlot) lines.push(`import androidx.compose.foundation.layout.fillMaxWidth`);
+  if (dividerSlot) lines.push(`import androidx.compose.foundation.layout.height`);
   lines.push(`import androidx.compose.foundation.layout.padding`);
   lines.push(`import androidx.compose.foundation.layout.requiredSizeIn`);
   lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  if (stringChannel) lines.push(`import androidx.compose.foundation.text.BasicText`);
+  if (stringChannel) lines.push(`import androidx.compose.foundation.text.BasicTextField`);
   lines.push(`import androidx.compose.runtime.Composable`);
+  if (fgSlot) lines.push(`import androidx.compose.runtime.CompositionLocalProvider`);
   lines.push(`import androidx.compose.runtime.getValue`);
   lines.push(`import androidx.compose.runtime.mutableStateOf`);
   lines.push(`import androidx.compose.runtime.remember`);
@@ -4038,13 +4081,18 @@ function emitCenteredSurface(ir: ComponentIR): string {
   lines.push(`import androidx.compose.ui.Modifier`);
   lines.push(`import androidx.compose.ui.draw.clip`);
   lines.push(`import androidx.compose.ui.graphics.Color`);
+  if (stringChannel) lines.push(`import androidx.compose.ui.text.TextStyle`);
+  if (maxWidthSlot || maxHeightSlot) lines.push(`import androidx.compose.ui.unit.Dp`);
+  if (textSizeSlot) lines.push(`import androidx.compose.ui.unit.TextUnit`);
   lines.push(`import androidx.compose.ui.unit.dp`);
   lines.push(`import androidx.compose.ui.window.Dialog as ComposeDialog`);
   lines.push(`import androidx.compose.ui.window.DialogProperties`);
   if (consumesTokens) {
+    if (fgSlot) lines.push(`import com.fullstackds.tokens.LocalFsdsContentColor`);
     lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
-    if (bgSlot || fgSlot || borderSlot) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+    if (bgSlot || fgSlot || borderSlot || mutedSlot || dividerSlot) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
     lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+    if (textSizeSlot) lines.push(`import com.fullstackds.tokens.toFsdsSp`);
   }
   lines.push(`// @generated:end`);
   lines.push(``);
@@ -4055,6 +4103,17 @@ function emitCenteredSurface(ir: ComponentIR): string {
   lines.push(`    ${valueProp}: Boolean? = null,`);
   lines.push(`    ${defaultValueProp}: Boolean = false,`);
   lines.push(`    ${changeProp}: ((Boolean) -> Unit)? = null,`);
+  if (stringChannel) {
+    const stringDefault = stringChannel.defaultValueProp ?? `${stringChannel.valueProp}Default`;
+    lines.push(`    ${stringChannel.valueProp}: String? = null,`);
+    lines.push(`    ${stringDefault}: String = "",`);
+    lines.push(`    ${stringChannel.changeHandlerProp}: ((String) -> Unit)? = null,`);
+    if (placeholderProp?.defaultExpr) {
+      lines.push(`    placeholder: String = ${JSON.stringify(placeholderProp.defaultExpr.replace(/^["']|["']$/g, ""))},`);
+    } else if (placeholderProp) {
+      lines.push(`    placeholder: String = "",`);
+    }
+  }
   if (hasEscape) lines.push(`    closeOnEscape: Boolean = true,`);
   if (hasBackdrop) lines.push(`    closeOnBackdropClick: Boolean = true,`);
   if (hasAriaLabel) lines.push(`    ariaLabel: String? = null,`);
@@ -4062,6 +4121,11 @@ function emitCenteredSurface(ir: ComponentIR): string {
   lines.push(`) {`);
   lines.push(`    var uncontrolled${pascalCase(valueProp)} by remember { mutableStateOf(${defaultValueProp}) }`);
   lines.push(`    val resolved${pascalCase(valueProp)} = ${valueProp} ?: uncontrolled${pascalCase(valueProp)}`);
+  if (stringChannel) {
+    const stringDefault = stringChannel.defaultValueProp ?? `${stringChannel.valueProp}Default`;
+    lines.push(`    var uncontrolled${pascalCase(stringChannel.valueProp)} by remember { mutableStateOf(${stringDefault}) }`);
+    lines.push(`    val resolved${pascalCase(stringChannel.valueProp)} = ${stringChannel.valueProp} ?: uncontrolled${pascalCase(stringChannel.valueProp)}`);
+  }
   if (consumesTokens) {
     lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
     lines.push(`    fun layeredSlot(slotName: String): String? {`);
@@ -4070,8 +4134,11 @@ function emitCenteredSurface(ir: ComponentIR): string {
     lines.push(`    }`);
     if (bgSlot) lines.push(`    val panelBg = layeredSlot(${JSON.stringify(bgSlot.name)})?.toFsdsColor()`);
     if (fgSlot) lines.push(`    val panelText = layeredSlot(${JSON.stringify(fgSlot.name)})?.toFsdsColor()`);
+    if (mutedSlot) lines.push(`    val panelMuted = layeredSlot(${JSON.stringify(mutedSlot.name)})?.toFsdsColor()`);
+    if (dividerSlot) lines.push(`    val panelDivider = layeredSlot(${JSON.stringify(dividerSlot.name)})?.toFsdsColor()`);
     if (borderSlot) lines.push(`    val panelBorder = layeredSlot(${JSON.stringify(borderSlot.name)})?.toFsdsColor()`);
     if (radiusSlot) lines.push(`    val panelRadius = layeredSlot(${JSON.stringify(radiusSlot.name)})?.toFsdsDp() ?: 0.dp`);
+    if (textSizeSlot) lines.push(`    val panelSearchSize = layeredSlot(${JSON.stringify(textSizeSlot.name)})?.toFsdsSp() ?: TextUnit.Unspecified`);
     if (gapSlot) lines.push(`    val panelGap = layeredSlot(${JSON.stringify(gapSlot.name)})?.toFsdsDp() ?: 0.dp`);
     else lines.push(`    val panelGap = 0.dp`);
     const side = (slot: { name: string } | undefined) =>
@@ -4081,6 +4148,8 @@ function emitCenteredSurface(ir: ComponentIR): string {
     );
     if (minWidthSlot) lines.push(`    val panelMinWidth = layeredSlot(${JSON.stringify(minWidthSlot.name)})?.toFsdsDp() ?: 0.dp`);
     if (minHeightSlot) lines.push(`    val panelMinHeight = layeredSlot(${JSON.stringify(minHeightSlot.name)})?.toFsdsDp() ?: 0.dp`);
+    if (maxWidthSlot) lines.push(`    val panelMaxWidth = layeredSlot(${JSON.stringify(maxWidthSlot.name)})?.toFsdsDp() ?: Dp.Unspecified`);
+    if (maxHeightSlot) lines.push(`    val panelMaxHeight = layeredSlot(${JSON.stringify(maxHeightSlot.name)})?.toFsdsDp() ?: Dp.Unspecified`);
     lines.push(``);
   } else {
     lines.push(`    val panelGap = 0.dp`);
@@ -4100,20 +4169,63 @@ function emitCenteredSurface(ir: ComponentIR): string {
   lines.push(`            usePlatformDefaultWidth = false,`);
   lines.push(`        ),`);
   lines.push(`    ) {`);
-  lines.push(`        Column(`);
-  lines.push(`            modifier`);
-  if (minWidthSlot || minHeightSlot) {
-    lines.push(`                .requiredSizeIn(minWidth = ${minWidthSlot ? "panelMinWidth" : "0.dp"}, minHeight = ${minHeightSlot ? "panelMinHeight" : "0.dp"})`);
+  if (fgSlot) {
+    lines.push(`        CompositionLocalProvider(LocalFsdsContentColor provides (panelText ?: Color.Unspecified)) {`);
   }
-  lines.push(`                .clip(panelShape)`);
-  if (bgSlot) lines.push(`                .then(if (panelBg != null) Modifier.background(panelBg, panelShape) else Modifier)`);
-  if (borderSlot) lines.push(`                .then(if (panelBorder != null) Modifier.border(1.dp, panelBorder, panelShape) else Modifier)`);
-  lines.push(`                .padding(panelPadding)`);
+  const pad = fgSlot ? "            " : "        ";
+  lines.push(`${pad}Column(`);
+  lines.push(`${pad}    modifier`);
+  if (minWidthSlot || minHeightSlot || maxWidthSlot || maxHeightSlot) {
+    const sizeArgs = [
+      `minWidth = ${minWidthSlot ? "panelMinWidth" : "0.dp"}`,
+      `minHeight = ${minHeightSlot ? "panelMinHeight" : "0.dp"}`,
+    ];
+    if (maxWidthSlot) sizeArgs.push(`maxWidth = panelMaxWidth`);
+    if (maxHeightSlot) sizeArgs.push(`maxHeight = panelMaxHeight`);
+    lines.push(`${pad}        .requiredSizeIn(${sizeArgs.join(", ")})`);
+  }
+  lines.push(`${pad}        .clip(panelShape)`);
+  if (bgSlot) lines.push(`${pad}        .then(if (panelBg != null) Modifier.background(panelBg, panelShape) else Modifier)`);
+  if (borderSlot) {
+    const width = borderWidthSlot
+      ? `layeredSlot(${JSON.stringify(borderWidthSlot.name)})?.toFsdsDp() ?: 1.dp`
+      : "1.dp";
+    lines.push(`${pad}        .then(if (panelBorder != null) Modifier.border(${width}, panelBorder, panelShape) else Modifier)`);
+  }
+  lines.push(`${pad}        .padding(panelPadding)`);
   lines.push(`,`);
-  lines.push(`            verticalArrangement = Arrangement.spacedBy(panelGap),`);
-  lines.push(`        ) {`);
-  lines.push(`            content()`);
-  lines.push(`        }`);
+  lines.push(`${pad}    verticalArrangement = Arrangement.spacedBy(panelGap),`);
+  lines.push(`${pad}) {`);
+  if (stringChannel) {
+    const inner = `${pad}    `;
+    lines.push(`${inner}BasicTextField(`);
+    lines.push(`${inner}    value = resolved${pascalCase(stringChannel.valueProp)},`);
+    lines.push(`${inner}    onValueChange = { next ->`);
+    lines.push(`${inner}        if (${stringChannel.valueProp} == null) { uncontrolled${pascalCase(stringChannel.valueProp)} = next }`);
+    lines.push(`${inner}        ${stringChannel.changeHandlerProp}?.invoke(next)`);
+    lines.push(`${inner}    },`);
+    lines.push(`${inner}    singleLine = true,`);
+    const styleArgs = [`color = panelText ?: Color.Unspecified`];
+    if (textSizeSlot) styleArgs.push(`fontSize = panelSearchSize`);
+    lines.push(`${inner}    textStyle = TextStyle(${styleArgs.join(", ")}),`);
+    if (placeholderProp) {
+      lines.push(`${inner}    decorationBox = { inner ->`);
+      lines.push(`${inner}        if (resolved${pascalCase(stringChannel.valueProp)}.isEmpty() && placeholder.isNotEmpty()) {`);
+      lines.push(`${inner}            BasicText(text = placeholder, style = TextStyle(color = ${mutedSlot ? "panelMuted ?: Color.Unspecified" : "Color.Unspecified"}))`);
+      lines.push(`${inner}        }`);
+      lines.push(`${inner}        inner()`);
+      lines.push(`${inner}    },`);
+    }
+    lines.push(`${inner})`);
+    if (dividerSlot) {
+      lines.push(`${inner}if (panelDivider != null) {`);
+      lines.push(`${inner}    Box(Modifier.fillMaxWidth().height(1.dp).background(panelDivider))`);
+      lines.push(`${inner}}`);
+    }
+  }
+  lines.push(`${pad}    content()`);
+  lines.push(`${pad}}`);
+  if (fgSlot) lines.push(`        }`);
   lines.push(`    }`);
   lines.push(`}`);
   lines.push(`// @generated:end`);
