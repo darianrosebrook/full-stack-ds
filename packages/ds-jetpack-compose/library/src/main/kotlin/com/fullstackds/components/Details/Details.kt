@@ -37,6 +37,8 @@ import com.fullstackds.tokens.LocalFsdsContentColor
 import com.fullstackds.tokens.LocalFsdsTheme
 import com.fullstackds.tokens.toFsdsColor
 import com.fullstackds.tokens.toFsdsDp
+import com.fullstackds.components.icon.Icon
+import com.fullstackds.components.icon.IconSize
 // @generated:end
 
 // @generated:start component
@@ -99,20 +101,10 @@ fun Details(
                     style = TextStyle(color = contentColor ?: Color.Unspecified),
                 )
             }
-            Box(
-                Modifier
-                    .size(chevronSize)
-                    .rotate(chevronProgress)
-                    .drawBehind {
-                        // Painted disclosure chevron: two strokes from the left
-                        // edge to the middle and back — no glyph dependency.
-                        val w = this.size.width
-                        val h = this.size.height
-                        val stroke = androidx.compose.ui.graphics.drawscope.Stroke(width = w * 0.12f)
-                        val color = contentColor ?: Color.Unspecified
-                        drawLine(color, androidx.compose.ui.geometry.Offset(w * 0.25f, h * 0.3f), androidx.compose.ui.geometry.Offset(w * 0.55f, h * 0.7f), stroke.width)
-                        drawLine(color, androidx.compose.ui.geometry.Offset(w * 0.55f, h * 0.7f), androidx.compose.ui.geometry.Offset(w * 0.85f, h * 0.3f), stroke.width)
-                    },
+            Icon(
+                name = "chevron-down",
+                size = IconSize.Sm,
+                modifier = Modifier.size(chevronSize).rotate(chevronProgress),
             )
         }
         AnimatedVisibility(visible = resolvedOpen) {
