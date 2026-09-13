@@ -8,7 +8,7 @@ updated_at: '2026-09-13T07:15:18.299Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (referenced media composite class)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -26,7 +26,7 @@ scope:
     - 'docs/normal-form.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The declared Image reference is composed through the reference vocabulary; the class never re-implements it.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
