@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-REFERENCE-CLOSURE-01
 title: 'Realize Command''s search glyph and Button''s loading spinner; restamp the stale governed doc'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Command''s declared search glyph is realized through the reference mechanism (C8 ledger 6 to 5), a stray un-allowlisted NavTree tree committed by a probe is removed, and normal-form.md is restamped'
 created_at: '2026-09-13T05:52:10.127Z'
-updated_at: '2026-09-13T05:52:13.552Z'
+updated_at: '2026-09-13T06:00:08.130Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
