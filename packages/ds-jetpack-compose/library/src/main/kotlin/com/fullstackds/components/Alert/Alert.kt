@@ -33,7 +33,11 @@ fun Alert(
     modifier: Modifier = Modifier,
     intent: AlertIntent? = null,
     level: AlertLevel? = null,
+import com.fullstackds.components.button.Button
     icon: (@Composable () -> Unit)? = null,
+    dismissible: Boolean = false,
+    dismissLabel: String = "Dismiss",
+    onDismiss: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     val fsdsTheme = LocalFsdsTheme.current
@@ -68,6 +72,13 @@ fun Alert(
         ) {
             icon?.invoke()
             content()
+            if (dismissible) {
+                Button(
+                    accessibilityLabel = dismissLabel,
+                    onClick = { onDismiss?.invoke() },
+                ) {
+                }
+            }
         }
     }
 }

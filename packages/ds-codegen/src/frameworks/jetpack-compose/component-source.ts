@@ -2244,7 +2244,9 @@ function emitIconDecoratedContent(ir: ComponentIR): string {
         : `    ${kotlinParamName(axis.propName)}: ${axis.enumName}? = null,`,
     );
   }
+  for (const line of referenceImports(ir)) lines.push(line);
   lines.push(`    icon: (@Composable () -> Unit)? = null,`);
+  for (const ref of referenceNodes(ir, "trigger")) lines.push(...referenceParameterLines(ir, ref));
   lines.push(`    content: @Composable () -> Unit,`);
   lines.push(`) {`);
   if (usesTheme) {
@@ -2325,6 +2327,7 @@ function emitIconDecoratedContent(ir: ComponentIR): string {
   lines.push(`        ) {`);
   lines.push(`            icon?.invoke()`);
   lines.push(`            content()`);
+  for (const ref of referenceNodes(ir, "trigger")) lines.push(...emitComponentReference(ir, ref, "            "));
   lines.push(`        }`);
   lines.push(`    }`);
   lines.push(`}`);
@@ -4623,6 +4626,29 @@ function emitComponentReference(ir: ComponentIR, node: DomNodeIR, indent: string
     lines.push(`${inner})`);
   }
   if (facts.guard) lines.push(`${indent}}`);
+  return lines;
+}
+
+
+/** Props a reference binds or handles, declared as parameters from the
+ *  contract's own defaults; a binding with no declaration fails loudly. */
+function referenceParameterLines(ir: ComponentIR, node: DomNodeIR): string[] {
+  const names = new Set<string>();
+  // The render guard is a parameter too: the call is wrapped in it.
+  if (node.ifProp) names.add(node.ifProp);
+  for (const expression of [...Object.values(node.bindings ?? {}), ...Object.values(node.events ?? {})]) {
+    const binding = expression as { kind?: string; prop?: string };
+    if (binding.kind === "prop" && binding.prop) names.add(binding.prop);
+  }
+  const lines: string[] = [];
+  for (const name of names) {
+    const prop = ir.styledProps.find((p) => p.safeName === name);
+    if (!prop) throw new Error(`reference bound prop "${name}" is not declared on ${ir.name}`);
+    if (prop.type.startsWith("(")) lines.push(`    ${kotlinParamName(name)}: (() -> Unit)? = null,`);
+    else if (prop.type === "boolean") lines.push(`    ${kotlinParamName(name)}: Boolean = ${prop.defaultExpr ?? "false"},`);
+    else if (prop.defaultExpr) lines.push(`    ${kotlinParamName(name)}: String = ${JSON.stringify(prop.defaultExpr.replace(/^["']|["']$/g, ""))},`);
+    else lines.push(`    ${kotlinParamName(name)}: String? = null,`);
+  }
   return lines;
 }
 
