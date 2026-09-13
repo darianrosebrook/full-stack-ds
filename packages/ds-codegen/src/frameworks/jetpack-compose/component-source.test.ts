@@ -155,13 +155,13 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
   });
 
   it("throws loudly for non-static shapes instead of misrouting", () => {
-    // RadioGroup gained its collection class; Select and Card remain
-    // unimplemented shapes (selection control and composer respectively).
-    expect(() => generateJetpackComposeComponentSource(irFor("Select"))).toThrow(
-      /no emission class matches component "Select" on jetpack-compose/,
-    );
+    // Select gained the selection class; Card and Chip remain unimplemented
+    // shapes (composer and dual-action composite respectively).
     expect(() => generateJetpackComposeComponentSource(irFor("Card"))).toThrow(
       /no emission class matches component "Card" on jetpack-compose/,
+    );
+    expect(() => generateJetpackComposeComponentSource(irFor("Chip"))).toThrow(
+      /no emission class matches component "Chip" on jetpack-compose/,
     );
   });
 });
@@ -409,8 +409,8 @@ describe("generateJetpackComposeComponentSource — disclosure class (FEAT-COMPO
 
   it("Card and Select remain unadmitted shapes", () => {
     // Accordion/Tabs gained the interactive-composite class; Card (composer)
-    // and Select (selection control) are still unimplemented.
-    for (const name of ["Card", "Select"]) {
+    // and Chip (dual-action composite) are still unimplemented.
+    for (const name of ["Card", "Chip"]) {
       expect(() => generateJetpackComposeComponentSource(irFor(name))).toThrow(
         new RegExp(`no emission class matches component "${name}" on jetpack-compose`),
       );
@@ -523,5 +523,23 @@ describe("generateJetpackComposeComponentSource — labeled text control (FEAT-C
     expect(src).toContain("if (invalid) region()");
     expect(src).not.toMatch(/import androidx\.compose\.material/);
     expect(src.match(/fun TextField\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+});
+
+describe("generateJetpackComposeComponentSource — selection control (FEAT-COMPOSE-SELECT-ADMISSION-01)", () => {
+  it("lowers the union selection channel onto a Popup option list (Select)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Select"));
+    expect(src).toContain("data class SelectOption(");
+    expect(src).toContain("options: List<SelectOption> = emptyList(),");
+    expect(src).toContain("value: String? = null,");
+    expect(src).toContain("multiple: Boolean = false,");
+    expect(src).toContain("values: List<String>? = null,");
+    expect(src).toContain("open: Boolean? = null,");
+    expect(src).toContain("Popup(onDismissRequest = {");
+    expect(src).toContain("role = Role.RadioButton,");
+    expect(src).toContain('layeredSlot("select.color.background.default")');
+    expect(src).toContain('layeredSlot("select.size.radius.default")');
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Select\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 });

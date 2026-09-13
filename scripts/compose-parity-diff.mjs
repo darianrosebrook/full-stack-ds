@@ -113,6 +113,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("compositionLocalOf")) return "interactiveComposite";
   if (ktSource.includes("padEnd(length")) return "countField";
   if (ktSource.includes("inputModifier")) return "labeledText";
+  if (ktSource.includes("Popup(")) return "selectionControl";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -149,6 +150,13 @@ function chromeRoleForPath(path) {
    *  shared box-model family incl. the slot gap. */
   /** Labeled text-control path (TextField): the text-field border chrome
    *  plus the shared box-model family. */
+  /** Selection-control path (Select): the select-part chrome (background,
+   *  border color/width, radius) plus the shared box-model family. */
+  if (path === "selectionControl") {
+    return new RegExp(
+      ["select\\.(?:color|size)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
   if (path === "labeledText") {
     return new RegExp(
       ["text-field\\.border\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
