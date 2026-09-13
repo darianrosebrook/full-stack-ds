@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: compose-admission-substrate
 created_at: '2026-09-13T00:04:49.085Z'
-updated_at: '2026-09-13T00:06:48.620Z'
+updated_at: '2026-09-13T00:06:49.528Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
@@ -19,7 +19,6 @@ blast_radius:
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'packages/ds-codegen/src/frameworks/native'
     - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts'
     - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
     - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.test.ts'
