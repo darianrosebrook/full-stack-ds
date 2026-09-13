@@ -70,7 +70,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->31`, realized through the
+`<!-- target-component-count:jetpack-compose -->32`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -81,6 +81,7 @@ local twin):
 | boolean control | `isValueChannelControl` + boolean channel (substrate) | Checkbox |
 | text control | `isValueChannelControl` + string channel (substrate) | Input |
 | native-disclosure collapse | `collapseIntents: native-disclosure` | Details |
+| radio collection | `radioGroupFacts` (substrate) | RadioGroup |
 | bare-rule leaf | `isBareRuleLeaf` (substrate) | Divider |
 | glyph host | `isGlyphHost` (substrate) | Icon |
 | icon-decorated content | `isIconDecoratedContent` (substrate) | Alert, AlertNotice, Badge |
@@ -110,6 +111,11 @@ intent owns the realization before any structural class is consulted.
   typography; content is a consumer composable). Accordion does NOT carry
   the disclosure intent (its `string | string[]` value channel is a
   multi-item shape for a later class).
+- **RadioGroup (radio collection)** — the option alias's `title`/help
+  member is carried on the lowered data class but not rendered v1 (the
+  SwiftUI twin lowers it to `.help`); the option rows use the content
+  color for indicator and label (the contracts declare no radio-part
+  color slots — RN consumes only the shared box-model family).
 - **Input (text control)** — `input.opacity.disabled` is unclaimed (a
   unitless numeric with no toFsds converter; disabled styling rides the
   bg/border color slots); form-wiring props (`name`/`id`/`ariaLabelledby`)
