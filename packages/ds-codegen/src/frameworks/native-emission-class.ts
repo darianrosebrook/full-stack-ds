@@ -626,3 +626,23 @@ export function isAnchoredSurface(ir: ComponentIR): boolean {
   if (!ir.surface.anchor) return false;
   return ir.surface.positioning?.strategy === "anchored";
 }
+
+/**
+ * The surface's secondary string channel: a declared surface component whose
+ * channels are one boolean (`open`) plus one string channel — Command's
+ * `search` query. A surface that filters its own content needs the same fact
+ * on every native backend, so it lives here, not in the target that first
+ * needed it (FEAT-COMPOSE-COMMAND-ADMISSION-01). Returns the string channel,
+ * or undefined when the surface declares no such channel.
+ *
+ * Pure structural fact — target-neutral.
+ */
+export function surfaceStringChannel(
+  ir: ComponentIR,
+): NormalizedChannelIR | undefined {
+  if (!ir.surface) return undefined;
+  if (!ir.behavior.normalizedChannels.some((c) => c.valueType === "boolean")) {
+    return undefined;
+  }
+  return ir.behavior.normalizedChannels.find((c) => c.valueType === "string");
+}
