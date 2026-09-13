@@ -690,6 +690,22 @@ function allDomLeavesAreSlots(
 }
 
 /**
+ * The passive tree item class: a passive list-item root (`li`) whose heading
+ * carries a glyph, link and label, and whose list holds projected children.
+ * NavTree is the corpus consumer. Distinguished from the other passive leaves
+ * by its list-item root, which no other corpus component declares.
+ *
+ * Pure structural facts — target-neutral (FEAT-COMPOSE-NAVTREE-ADMISSION-01).
+ */
+export function isPassiveTreeItem(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  if (ir.dom.tag !== "li") return false;
+  const parts = new Set(ir.parts.map((part) => part.name));
+  return parts.has("heading") && parts.has("list");
+}
+
+/**
  * The centered-surface class: a declared surface whose positioning
  * strategy is `centered` — a modal panel attached to the viewport rather
  * than to an anchor. Dialog is the corpus consumer. Anchored surfaces

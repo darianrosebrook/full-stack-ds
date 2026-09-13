@@ -107,6 +107,9 @@ function emitterPath(ktSource) {
   if (ktSource.includes("FsdsRule")) return "rule";
   if (ktSource.includes("FsdsGlyphIcon")) return "glyphHost";
   if (ktSource.includes("FsdsDate.")) return "dateGrid";
+  // A passive tree item renders a heading with text beside its catalog glyph;
+  // the glyph-host class renders the glyph alone.
+  if (ktSource.includes("FsdsGlyphIcon(") && ktSource.includes("BasicText(")) return "passiveTree";
   // A component is *composed from* references when it composes more than one
   // control; a single decoration reference is a fact of whatever class owns the
   // layout (Status renders one icon and stays a static-content box).
@@ -186,6 +189,13 @@ function chromeRoleForPath(path) {
   if (path === "edgeSurface") {
     return new RegExp(
       ["(?:sheet|toast)\\.(?:border|color|surface)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
+  /** Passive tree item path (NavTree): the nav-tree chrome family plus the
+   *  shared box-model family. */
+  if (path === "passiveTree") {
+    return new RegExp(
+      ["nav-tree\\.(?:color|size|stateLayer)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
     );
   }
   /** Named-slot composer path (Field): the field-part chrome family (surface,

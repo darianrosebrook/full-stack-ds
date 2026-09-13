@@ -133,6 +133,7 @@
         "List",
         "Markdown",
         "NavList",
+        "NavTree",
         "OTP",
         "Popover",
         "Postcard",
