@@ -8,7 +8,8 @@ updated_at: '2026-09-13T05:40:28.074Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/native-emission-class.ts (isNamedSlotComposer + its two dom atoms)'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (named-slot composer path)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -27,7 +28,8 @@ scope:
     - 'docs/normal-form.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The predicate move is behaviour-preserving: SwiftUI regeneration after it is byte-identical.'
+  - 'Every layeredSlot read in the emitted Field has a definition in the emitted tokens file, and every definition is read.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
