@@ -63,3 +63,8 @@ contracts:
   - name: 'native-emission-class'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native/emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "swiftui regeneration after the substrate move is byte-identical: generate --target=swiftui produced 52 groups with zero git diff over packages/ds-swiftui (drift-gated); codegen suite green — jetpack component-source.test.ts 23/23, full root vitest 3877/3878 (the one failure is the unrelated analytical erasure-plan population sweep timing out at its 5s budget under full-suite load; passes 55/55 in isolation); typecheck clean"
+    recorded_at: "2026-09-13T00:42:57.068Z"
