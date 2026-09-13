@@ -106,6 +106,9 @@ function emitterPath(ktSource) {
   if (ktSource.includes("FsdsCheckbox")) return "checkbox";
   if (ktSource.includes("FsdsRule")) return "rule";
   if (ktSource.includes("FsdsGlyphIcon")) return "glyphHost";
+  // A compound-part composer emits a marker scope plus one region composable
+  // per declared part, because it has no dom to walk.
+  if (/^private object \w+ScopeImpl : /m.test(ktSource)) return "compoundPartComposer";
   if (ktSource.includes("FsdsDate.")) return "dateGrid";
   // A passive tree item renders a heading with text beside its catalog glyph;
   // the glyph-host class renders the glyph alone.
@@ -189,6 +192,13 @@ function chromeRoleForPath(path) {
   if (path === "edgeSurface") {
     return new RegExp(
       ["(?:sheet|toast)\\.(?:border|color|surface)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
+  /** Compound-part composer path (Card): the card-part chrome family plus the
+   *  shared box-model family. */
+  if (path === "compoundPartComposer") {
+    return new RegExp(
+      ["card\\.(?:color|size|typography|elevation|focus)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
     );
   }
   /** Passive tree item path (NavTree): the nav-tree chrome family plus the

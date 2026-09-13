@@ -706,6 +706,20 @@ export function isPassiveTreeItem(ir: ComponentIR): boolean {
 }
 
 /**
+ * The compound-part composer class: a root that declares no dom of its own and
+ * a set of compound parts, so the part vocabulary is the structure. Card is
+ * the corpus consumer; a component with a dom carries its structure there
+ * instead.
+ *
+ * Pure structural facts — target-neutral (FEAT-COMPOSE-CARD-ADMISSION-01).
+ */
+export function isCompoundPartComposer(ir: ComponentIR): boolean {
+  if (ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  return ir.compoundParts.length >= 2;
+}
+
+/**
  * The centered-surface class: a declared surface whose positioning
  * strategy is `centered` — a modal panel attached to the viewport rather
  * than to an anchor. Dialog is the corpus consumer. Anchored surfaces

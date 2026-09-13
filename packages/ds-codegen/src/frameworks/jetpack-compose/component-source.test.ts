@@ -158,8 +158,8 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
     // Select gained the selection class, Chip the referenced-action composite
     // and Field the named-slot composer; Card (compound-part composer) and
     // Image (passive tree) remain unimplemented shapes.
-    expect(() => generateJetpackComposeComponentSource(irFor("Card"))).toThrow(
-      /no emission class matches component "Card" on jetpack-compose/,
+    expect(() => generateJetpackComposeComponentSource(irFor("Avatar"))).toThrow(
+      /no emission class matches component "Avatar" on jetpack-compose/,
     );
     expect(() => generateJetpackComposeComponentSource(irFor("Image"))).toThrow(
       /no emission class matches component "Image" on jetpack-compose/,
@@ -408,12 +408,12 @@ describe("generateJetpackComposeComponentSource — disclosure class (FEAT-COMPO
     expect(src.match(/fun Details\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 
-  it("Card and Image remain unadmitted shapes", () => {
+  it("Avatar and Image remain unadmitted shapes", () => {
     // Accordion/Tabs gained the interactive-composite class, Chip the
     // referenced-action composite and Field the named-slot composer; Card
     // (composer) and Image (media leaf) are still unimplemented. Image emits
     // through the glyph-host class but stays deliberately unadmitted.
-    for (const name of ["Card", "Image"]) {
+    for (const name of ["Avatar", "Image"]) {
       expect(() => generateJetpackComposeComponentSource(irFor(name))).toThrow(
         new RegExp(`no emission class matches component "${name}" on jetpack-compose`),
       );
@@ -589,9 +589,9 @@ describe("generateJetpackComposeComponentSource — named-slot composer (FEAT-CO
     }
   });
 
-  it("Field and Card remain the unadmitted composer shapes", () => {
-    expect(() => generateJetpackComposeComponentSource(irFor("Card"))).toThrow(
-      /no emission class matches component "Card" on jetpack-compose/,
+  it("Field and Avatar remain the unadmitted composer shapes", () => {
+    expect(() => generateJetpackComposeComponentSource(irFor("Avatar"))).toThrow(
+      /no emission class matches component "Avatar" on jetpack-compose/,
     );
     expect(() => generateJetpackComposeComponentSource(irFor("Image"))).toThrow(
       /no emission class matches component "Image" on jetpack-compose/,
