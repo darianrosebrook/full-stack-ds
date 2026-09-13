@@ -3,7 +3,6 @@ title: 'Painter-supplied media leaf; Compose Image admission with the loader dec
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: compose-image
 created_at: '2026-09-13T07:05:55.782Z'
 updated_at: '2026-09-13T07:05:58.689Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
