@@ -70,7 +70,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->37`, realized through the
+`<!-- target-component-count:jetpack-compose -->38`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -86,6 +86,7 @@ local twin):
 | interactive composite | `isInteractiveComposite` (substrate) | Accordion, Tabs |
 | count-iterated field group | `isCountIteratedFieldGroup` (substrate) | OTP |
 | labeled text control | `isLabeledTextControl` (substrate) | TextField |
+| selection control | `isSelectionControl` (substrate) | Select |
 | bare-rule leaf | `isBareRuleLeaf` (substrate) | Divider |
 | glyph host | `isGlyphHost` (substrate) | Icon |
 | icon-decorated content | `isIconDecoratedContent` (substrate) | Alert, AlertNotice, Badge |
@@ -99,7 +100,7 @@ intent owns the realization before any structural class is consulted.
 
 ## Remaining components — required class and blocker
 
-The contracts still outside the compose allowlist (15 after TextField), each with the class
+The contracts still outside the compose allowlist (14 after Select), each with the class
 that would carry it, whether that class needs a shared-substrate move
 (the predicate is currently swift-local) or is target-local, and the
 concrete blocker or decision that gates the slice. Measured from
@@ -108,7 +109,6 @@ specs `FEAT-COMPOSE-*`.
 
 | Component | Required class | Substrate move | Blocker / decision |
 |---|---|---|---|
-| Select | selection control | yes (`isSelectionControl`: union channel + options array) | union channel split (single/multi) + options-alias lowering; Menu substrate |
 | Card | compound-part composer | no (target-local composer) | compound-part projection; five declared part carriers currently unrealized on web too |
 | Field | named-slot composer | no (target-local composer) | multi-slot projection (5 slots); label/description/error regions |
 | Chip | dual-action composite | no (target-local) | two `componentRef` buttons (primary + dismiss) lower as component instances |
@@ -151,6 +151,7 @@ predicate move — it needs `surface-emit.ts` filled in from its scaffold.
   typography; content is a consumer composable). Accordion does NOT carry
   the disclosure intent (its `string | string[]` value channel is a
   multi-item shape for a later class).
+- **Select (selection control)** — `searchable`, `filterFn`, `triggerLabel`, `size` and `empty` are not lowered v1; the trigger shows the selected label (placeholder fallback); single-select closes the popup after choosing, multi-select stays open, and a controlled `open` always wins.
 - **TextField (labeled text control)** — `type`, `name`, `required` and `ariaDescribedby` form-wiring props are not lowered v1; `invalid` gates the error region, which renders only when the consumer supplies it.
 - **OTP (count-iterated field group)** — `onComplete`, the `mode` axis, and `readOnly` are not lowered v1 (value changes ride the channel); `label`/`fieldLabel`/`ariaDescribedby` lower to a single group contentDescription.
 - **Accordion / Tabs (interactive composite)** — part-scoped typography (`accordion.text.sizeContent`) is unclaimed; group-level `disabled` is not lowered v1; a subcomponent used outside its root throws at CompositionLocal access (the swift @EnvironmentObject / RN compound-context trap).
