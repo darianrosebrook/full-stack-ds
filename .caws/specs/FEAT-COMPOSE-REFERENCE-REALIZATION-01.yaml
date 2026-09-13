@@ -3,7 +3,6 @@ title: 'Component-reference lowering in Compose; Chip admission; a reference-rea
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: compose-refs
 created_at: '2026-09-13T05:23:53.176Z'
 updated_at: '2026-09-13T05:23:55.678Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
