@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "swiftui regeneration after the substrate move is byte-identical: generate --target=swiftui produced 52 groups with zero git diff over packages/ds-swiftui (drift-gated); codegen suite green — jetpack component-source.test.ts 23/23, full root vitest 3877/3878 (the one failure is the unrelated analytical erasure-plan population sweep timing out at its 5s budget under full-suite load; passes 55/55 in isolation); typecheck clean"
     recorded_at: "2026-09-13T00:42:57.068Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "gradlew -p packages/ds-jetpack-compose :library:compileKotlin BUILD SUCCESSFUL (25 file groups incl. Checkbox.kt/CheckboxTokens.kt on FsdsCheckbox, Divider.kt/DividerTokens.kt on FsdsRule); zero material imports (unit test asserts no androidx.compose.material in generated Checkbox); dispatch on shared predicates — rename test proves Checkbox still routes as RenamedControl; Input throws the explicit string-control not-implemented"
+    recorded_at: "2026-09-13T00:43:12.677Z"
