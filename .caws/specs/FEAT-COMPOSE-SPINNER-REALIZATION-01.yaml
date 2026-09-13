@@ -32,3 +32,8 @@ contracts:
   - name: 'reference-realization'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge 43f60550: the generated Button contains 'content = { if (loading) { Spinner(size = SpinnerSize.Sm, modifier = Modifier.clearAndSetSemantics { }) }; content() }' — guard, size axis and aria-hidden all from the node; gradlew :library:compileKotlin -> BUILD SUCCESSFUL; node scripts/compose-parity-diff.mjs -> 47 allowlisted, 0 failures with the Button:spinner ledger entry REMOVED and the four remaining enforced; emitter suite 55/55; pnpm test -> 3910/3910; pnpm run test:frameworks -> exit 0; pnpm run governed:rail -> exit 0, clean tree; pnpm run generate:check -> 52/52; swiftui regeneration byte-identical"
+    recorded_at: "2026-09-13T06:08:15.540Z"
