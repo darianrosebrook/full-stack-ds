@@ -2660,6 +2660,7 @@ function emitDisclosureComponent(ir: ComponentIR): string {
     if (bgSlot || fgSlot || borderSlot) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
     lines.push(`import com.fullstackds.tokens.toFsdsDp`);
   }
+  for (const line of referenceImports(ir)) lines.push(line);
   lines.push(`// @generated:end`);
   lines.push(``);
   lines.push(`// @generated:start component`);
@@ -2772,21 +2773,12 @@ function emitDisclosureComponent(ir: ComponentIR): string {
     lines.push(`                )`);
     lines.push(`            }`);
   }
-  lines.push(`            Box(`);
-  lines.push(`                Modifier`);
-  lines.push(`                    .size(${iconSizeSlot ? "chevronSize" : "16.dp"})`);
-  lines.push(`                    .rotate(chevronProgress)`);
-  lines.push(`                    .drawBehind {`);
-  lines.push(`                        // Painted disclosure chevron: two strokes from the left`);
-  lines.push(`                        // edge to the middle and back — no glyph dependency.`);
-  lines.push(`                        val w = this.size.width`);
-  lines.push(`                        val h = this.size.height`);
-  lines.push(`                        val stroke = androidx.compose.ui.graphics.drawscope.Stroke(width = w * 0.12f)`);
-  lines.push(`                        val color = ${fgSlot ? "contentColor ?: Color.Unspecified" : "Color.Unspecified"}`);
-  lines.push(`                        drawLine(color, androidx.compose.ui.geometry.Offset(w * 0.25f, h * 0.3f), androidx.compose.ui.geometry.Offset(w * 0.55f, h * 0.7f), stroke.width)`);
-  lines.push(`                        drawLine(color, androidx.compose.ui.geometry.Offset(w * 0.55f, h * 0.7f), androidx.compose.ui.geometry.Offset(w * 0.85f, h * 0.3f), stroke.width)`);
-  lines.push(`                    },`);
-  lines.push(`            )`);
+  for (const ref of referenceNodes(ir, "decoration")) {
+    lines.push(...emitComponentReference(ir, ref, "            ", [
+      `Modifier.size(chevronSize)`,
+      `Modifier.rotate(chevronProgress)`,
+    ]));
+  }
   lines.push(`        }`);
   lines.push(`        AnimatedVisibility(visible = resolved${pascalCase(valueProp)}) {`);
   if (fgSlot) {
@@ -4607,7 +4599,9 @@ function referenceCallFacts(
 }
 
 /** Render one reference call at `indent`, wrapped in its declared guard. */
-function emitComponentReference(ir: ComponentIR, node: DomNodeIR, indent: string): string[] {
+function emitComponentReference(ir: ComponentIR, node: DomNodeIR, indent: string,
+  extraModifiers: string[] = [],
+): string[] {
   const facts = referenceCallFacts(ir, node, indent);
   const lines: string[] = [];
   const inner = facts.guard ? `${indent}    ` : indent;
@@ -4615,7 +4609,11 @@ function emitComponentReference(ir: ComponentIR, node: DomNodeIR, indent: string
     lines.push(`${indent}if (${facts.guard.negated ? "!" : ""}${facts.guard.prop}) {`);
   }
   const args = [...facts.arguments];
-  if (facts.modifiers.length > 0) args.push(`modifier = ${facts.modifiers.join(".")}`);
+  facts.modifiers.push(...extraModifiers);
+  if (facts.modifiers.length > 0) {
+    const chain = facts.modifiers.map((m) => m.replace(/^Modifier\./, "")).join(".");
+    args.push(`modifier = Modifier.${chain}`);
+  }
   lines.push(`${inner}${facts.reference}(`);
   for (const argument of args) lines.push(`${inner}    ${argument},`);
   if (facts.bodyRequired) {

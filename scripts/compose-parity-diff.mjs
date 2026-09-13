@@ -265,7 +265,6 @@ function chromeRoleForPath(path) {
  */
 export const REFERENCE_DIVERGENCES = {
   "Accordion:chevron": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
-  "Details:icon": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
 };
 
 /** Generated components this source composes by reference. The committed
