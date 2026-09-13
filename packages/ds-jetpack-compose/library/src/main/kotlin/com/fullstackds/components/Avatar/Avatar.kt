@@ -23,6 +23,8 @@ import com.fullstackds.tokens.LocalFsdsTheme
 import com.fullstackds.tokens.toFsdsColor
 import com.fullstackds.tokens.toFsdsDp
 import com.fullstackds.tokens.toFsdsWeight
+import androidx.compose.ui.graphics.painter.Painter
+import com.fullstackds.components.image.Image
 // @generated:end
 
 // @generated:start types
@@ -35,6 +37,8 @@ enum class AvatarSize { Small, Medium, Large, ExtraLarge }
 @Composable
 fun Avatar(
     modifier: Modifier = Modifier,
+    painter: Painter? = null,
+    src: String? = null,
     name: String? = null,
     initials: String? = null,
 ) {
@@ -67,6 +71,12 @@ fun Avatar(
             .semantics { if (name != null) contentDescription = name!! },
         contentAlignment = Alignment.Center,
     ) {
+        if (src != null) {
+            Image(
+                painter = painter,
+                alt = "",
+            )
+        }
         if (initials != null) {
             BasicText(
                 text = initials!!,

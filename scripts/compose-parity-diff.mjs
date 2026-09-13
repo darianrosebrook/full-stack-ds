@@ -308,7 +308,6 @@ function chromeRoleForPath(path) {
  * declared reference can never be dropped silently.
  */
 export const REFERENCE_DIVERGENCES = {
-  "Avatar:image": "Avatar declares its image through a `src` string while the Image class takes a consumer painter (the loader decision), so composing it needs the reference vocabulary to accept a class-supplied argument override; v1 renders the initials fallback and chrome instead",
 };
 
 /** Generated components this source composes by reference. The committed

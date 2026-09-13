@@ -4451,6 +4451,13 @@ function emitDateGridSurface(ir: ComponentIR): string {
  *                                   docs/architecture/native-target-admission.md.
  *   ifProp                       -> the call is wrapped in that guard
  */
+interface ReferenceArgumentOverride {
+  /** The callee's parameter name. */
+  parameter: string;
+  /** The Kotlin expression the caller supplies. */
+  expression: string;
+}
+
 interface ReferenceCallFacts {
   reference: string;
   arguments: string[];
@@ -4459,7 +4466,7 @@ interface ReferenceCallFacts {
   /** A composite control's content parameter is required, so a trigger
    *  reference always passes a body — empty when it projects nothing. */
   bodyRequired: boolean;
-  guard?: { prop: string; negated: boolean };
+  guard?: { prop: string; negated: boolean; boolean: boolean };
 }
 
 function referenceBindingExpr(expression: unknown): string {
@@ -4467,6 +4474,13 @@ function referenceBindingExpr(expression: unknown): string {
     throw new Error("component reference binding is not an expression");
   }
   const binding = expression as { kind?: string; prop?: string; path?: string[] };
+  if (binding.kind === "literal") {
+    const literal = expression as { value?: string };
+    if (typeof literal.value !== "string") {
+      throw new Error("component reference literal binding has no string value");
+    }
+    return JSON.stringify(literal.value);
+  }
   if (binding.kind !== "prop" || !binding.prop) {
     throw new Error(
       `component reference binding kind "${binding.kind ?? "(none)"}" has no parameter mapping`,
@@ -4517,6 +4531,7 @@ function referenceCallFacts(
   ir: ComponentIR,
   node: DomNodeIR,
   indent: string,
+  argumentOverrides: Record<string, ReferenceArgumentOverride> = {},
 ): ReferenceCallFacts {
   const reference = node.componentRef;
   if (!reference) throw new Error("referenceCallFacts requires a componentRef node");
@@ -4544,6 +4559,14 @@ function referenceCallFacts(
   }
 
   for (const [binding, expression] of Object.entries(node.bindings ?? {})) {
+    const override = argumentOverrides[binding];
+    if (override) {
+      // The contract's prop exists; the callee cannot take it. The caller
+      // supplies the substitute, so the declared prop is realised as the
+      // expression rather than dropped.
+      facts.arguments.push(`${override.parameter} = ${override.expression}`);
+      continue;
+    }
     if (binding === "name") {
       const map = expression as {
         kind?: string;
@@ -4589,6 +4612,11 @@ function referenceCallFacts(
     } else if (binding === "type") {
       // HTML form authoring (`button`/`submit`/`reset`), as in attrs.
       continue;
+    } else if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(binding)) {
+      // The default rule: a binding maps to the same-named callee parameter.
+      // The cases above are the exceptions (ariaLabel -> accessibilityLabel,
+      // HTML-only facts, state bindings the callee cannot take).
+      facts.arguments.push(`${binding} = ${referenceBindingExpr(expression)}`);
     } else {
       throw new Error(`component reference binding "${binding}" has no parameter mapping`);
     }
@@ -4604,7 +4632,15 @@ function referenceCallFacts(
   if (isTrigger) facts.body = referenceBodyLines(ir, node, `${indent}    `);
 
   if (node.ifProp) {
-    facts.guard = { prop: kotlinParamName(node.ifProp), negated: node.ifNegated };
+    // A boolean prop is the guard; anything else can only be checked for
+    // existence, which is how a nullable string gate reads.
+    const guardProp = ir.styledProps.find((p) => p.safeName === node.ifProp);
+    const boolean = guardProp?.type === "boolean";
+    facts.guard = {
+      prop: kotlinParamName(node.ifProp),
+      negated: node.ifNegated,
+      boolean,
+    };
   }
   return facts;
 }
@@ -4612,12 +4648,16 @@ function referenceCallFacts(
 /** Render one reference call at `indent`, wrapped in its declared guard. */
 function emitComponentReference(ir: ComponentIR, node: DomNodeIR, indent: string,
   extraModifiers: string[] = [],
+  argumentOverrides: Record<string, ReferenceArgumentOverride> = {},
 ): string[] {
-  const facts = referenceCallFacts(ir, node, indent);
+  const facts = referenceCallFacts(ir, node, indent, argumentOverrides);
   const lines: string[] = [];
   const inner = facts.guard ? `${indent}    ` : indent;
   if (facts.guard) {
-    lines.push(`${indent}if (${facts.guard.negated ? "!" : ""}${facts.guard.prop}) {`);
+    const check = facts.guard.boolean
+      ? `${facts.guard.negated ? "!" : ""}${facts.guard.prop}`
+      : `${facts.guard.prop} ${facts.guard.negated ? "==" : "!="} null`;
+    lines.push(`${indent}if (${check}) {`);
   }
   const args = [...facts.arguments];
   facts.modifiers.push(...extraModifiers);
@@ -5101,6 +5141,8 @@ function emitReferencedContentComposite(ir: ComponentIR): string {
   lines.push(`import com.fullstackds.tokens.toFsdsColor`);
   lines.push(`import com.fullstackds.tokens.toFsdsDp`);
   lines.push(`import com.fullstackds.tokens.toFsdsWeight`);
+  lines.push(`import androidx.compose.ui.graphics.painter.Painter`);
+  for (const line of referenceImports(ir)) lines.push(line);
   lines.push(`// @generated:end`);
   lines.push(``);
   lines.push(`// @generated:start types`);
@@ -5115,13 +5157,19 @@ function emitReferencedContentComposite(ir: ComponentIR): string {
   lines.push(`@Composable`);
   lines.push(`fun ${name}(`);
   lines.push(`    modifier: Modifier = Modifier,`);
+  lines.push(`    painter: Painter? = null,`);
   if (sizeProp && sizeValues.length > 0) {
     lines.push(
       `    ${sizeProp.safeName}: ${sizeEnum} = ${sizeEnum}.${kotlinEnumName(sizeValues[0]!)},`,
     );
   }
-  if (nameProp) lines.push(`    ${nameProp.safeName}: String? = null,`);
-  if (initialsProp) lines.push(`    ${initialsProp.safeName}: String? = null,`);
+  // Every declared string prop is a parameter: the reference guard reads one of
+  // them, so declaring only the ones the body happens to use would drop it.
+  for (const prop of ir.styledProps) {
+    if (prop.type === "string" && prop.safeName !== sizeProp?.safeName) {
+      lines.push(`    ${prop.safeName}: String? = null,`);
+    }
+  }
   lines.push(`) {`);
   if (consumesTokens) {
     lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
@@ -5178,13 +5226,16 @@ function emitReferencedContentComposite(ir: ComponentIR): string {
   }
   lines.push(`        contentAlignment = Alignment.Center,`);
   lines.push(`    ) {`);
+  for (const ref of referenceNodes(ir, "content")) {
+    lines.push(...emitComponentReference(ir, ref, "        ", [], {
+      src: { parameter: "painter", expression: "painter" },
+    }));
+  }
   if (initialsProp) {
     lines.push(`        if (${initialsProp.safeName} != null) {`);
     lines.push(`            BasicText(`);
     lines.push(`                text = ${initialsProp.safeName}!!,`);
-    lines.push(
-      `                style = TextStyle(color = ${fgSlot ? "avatarForeground ?: Color.Unspecified" : "Color.Unspecified"}${weightSlot ? ", fontWeight = avatarWeight" : ""}),`,
-    );
+    lines.push(`                style = TextStyle(color = ${fgSlot ? "avatarForeground ?: Color.Unspecified" : "Color.Unspecified"}${weightSlot ? ", fontWeight = avatarWeight" : ""}),`);
     lines.push(`                modifier = Modifier.padding(avatarGap),`);
     lines.push(`            )`);
     lines.push(`        }`);
