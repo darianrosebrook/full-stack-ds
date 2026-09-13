@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-ACCORDION-CHEVRON-01
 title: 'Realize Accordion''s declared chevron; close the C8 reference ledger'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Accordion composes its declared chevron, emptying the C8 reference ledger, and the false painted-equivalent claim for that class is corrected'
 created_at: '2026-09-13T06:38:48.346Z'
-updated_at: '2026-09-13T06:38:50.979Z'
+updated_at: '2026-09-13T06:45:18.343Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
