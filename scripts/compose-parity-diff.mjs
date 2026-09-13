@@ -16,6 +16,7 @@ const COMPOSE_ROOT = join(
   "com", "fullstackds", "components",
 );
 const RN_ROOT = join(ROOT, "packages", "ds-react-native", "src", "components");
+const CONTRACTS_ROOT = join(ROOT, "packages", "ds-contracts", "components");
 
 const registry = JSON.parse(readFileSync(join(ROOT, "fsds.targets.json"), "utf8"));
 const compose = registry.targets.find((t) => t.id === "jetpack-compose");
@@ -106,6 +107,7 @@ function emitterPath(ktSource) {
   if (ktSource.includes("FsdsRule")) return "rule";
   if (ktSource.includes("FsdsGlyphIcon")) return "glyphHost";
   if (ktSource.includes("FsdsDate.")) return "dateGrid";
+  if (composedComponents(ktSource).length > 0) return "referencedComposite";
   if (ktSource.includes("icon: (@Composable () -> Unit)?")) return "iconDecorated";
   // Surface classes are tested before every marker whose host they *reuse*:
   // an anchored surface is a `Popup(` host, a centered surface may carry a
@@ -178,6 +180,14 @@ function chromeRoleForPath(path) {
       ["(?:sheet|toast)\\.(?:border|color|surface)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
     );
   }
+  /** Referenced-action composite path (Chip): the chip-part chrome family plus
+   *  the shared box-model family. The referenced controls carry their own
+   *  chrome from their own generated class. */
+  if (path === "referencedComposite") {
+    return new RegExp(
+      ["chip\\.(?:color|size|text|motion)\\.", "box-model\\.(?:gap|padding|min-width|min-height)"].join("|"),
+    );
+  }
   /** Date-grid path (Calendar): the calendar-part chrome family (surface,
    *  day states, today/focus rings, cell/nav/radius geometry, typography)
    *  plus the shared box-model family. */
@@ -229,6 +239,67 @@ function chromeRoleForPath(path) {
   }
   if (path === "expandable") return CHROME_ROLE_STATIC;
   return CHROME_ROLE_STATIC;
+}
+
+/**
+ * Declared component references the target does not yet realize, each with the
+ * reason. Two-directional: an unlisted unrealized reference fails, and a listed
+ * reference that becomes realized fails as a stale entry. Every entry is a
+ * decision recorded in docs/architecture/native-target-admission.md, so a
+ * declared reference can never be dropped silently.
+ */
+export const REFERENCE_DIVERGENCES = {
+  "Alert:dismiss": "the icon-decorated layout has no trailing-action affordance yet; the Button class and the reference vocabulary both exist, so this is placement work",
+  "Accordion:chevron": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
+  "Details:icon": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
+  "Status:icon": "the icon name comes from a prop valueMap, which this target does not lower yet",
+  "Button:spinner": "the spinner is gated on the `loading` prop, which the projected-children action does not thread yet",
+  "Command:searchIcon": "the centered surface renders the search field without its declared leading glyph",
+};
+
+/** Generated components this source composes by reference. The committed
+ *  substrates under `components/<family>/` share the prefix but are not
+ *  components, so the import must name the component its package is named for
+ *  (`components/button/Button`). */
+export function composedComponents(ktSource) {
+  const out = [];
+  for (const match of ktSource.matchAll(/^import com\.fullstackds\.components\.([a-z0-9]+)\.([A-Z]\w*)$/gm)) {
+    const [, pkg, symbol] = match;
+    if (pkg.charAt(0).toUpperCase() + pkg.slice(1) === symbol) out.push(symbol);
+  }
+  return out;
+}
+
+/** Declared `componentRef` parts in a contract's dom, in declaration order. */
+function declaredReferences(contract) {
+  const out = [];
+  const walk = (node) => {
+    if (!node || typeof node !== "object") return;
+    const ref = node.componentRef;
+    if (typeof ref === "string") {
+      out.push({ part: node.part ?? "(unparted)", ref: ref.replace(/^fsds\./, "") });
+    }
+    (node.children ?? []).forEach(walk);
+  };
+  walk(contract?.anatomy?.dom);
+  return out;
+}
+
+/** Every declared reference is realized in the generated Kotlin, or listed in
+ *  the divergence ledger as a deliberate gap. */
+export function inspectComponentReferences({ name, contract, component, ledger = REFERENCE_DIVERGENCES }) {
+  const issues = [];
+  for (const { part, ref } of declaredReferences(contract)) {
+    const key = `${name}:${part}`;
+    const realized = component.includes(`${ref}(`);
+    if (realized && ledger[key]) {
+      issues.push(`STALE REFERENCE LEDGER ${key}: the reference to ${ref} is realized — remove the entry`);
+    }
+    if (!realized && !ledger[key]) {
+      issues.push(`UNREALIZED REFERENCE ${key}: the contract declares a reference to ${ref} and the emitted source never calls it`);
+    }
+  }
+  return issues;
 }
 
 /** First parameter that carries a default in the composable signature. */
@@ -299,8 +370,18 @@ export function auditComposeCorpus() {
     };
     const missing = Object.values(paths).filter(path => !existsSync(path));
     const issues = missing.length ? missing.map(path => `MISSING ${path}`) :
-      inspectComposeTokens({ name, ...Object.fromEntries(Object.entries(paths).map(([key, path]) =>
-        [key, readFileSync(path, "utf8")])) });
+      (() => {
+        const sources = Object.fromEntries(Object.entries(paths).map(([key, path]) =>
+          [key, readFileSync(path, "utf8")]));
+        const contractPath = join(CONTRACTS_ROOT, name, `${name}.contract.json`);
+        const contract = existsSync(contractPath)
+          ? JSON.parse(readFileSync(contractPath, "utf8"))
+          : undefined;
+        return [
+          ...inspectComposeTokens({ name, ...sources }),
+          ...(contract ? inspectComponentReferences({ name, contract, component: sources.component }) : []),
+        ];
+      })();
     results.push({ name, issues });
   }
   return results;

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { inspectComposeTokens } from './compose-parity-diff.mjs';
+import { composedComponents, inspectComponentReferences, inspectComposeTokens, REFERENCE_DIVERGENCES } from './compose-parity-diff.mjs';
 
 const definition = (key, scope = 'root', fields = 'fallback = "8px",') =>
   `"${scope}" to mapOf("${key}" to ComponentTokenDefinition(name = "${key}", cssVar = "--fsds-${key.replaceAll('.', '-')}", ${fields})),`;
@@ -125,4 +125,48 @@ test('projected controls claim canonical padding edges and typography loss canno
     rnTokens: 'name: "text.size.md", cssVar: "--fsds-text-size-md",',
     rnStyles: 'tokens.root?.["text.size.md"];',
   })), ['USAGE DIVERGENCE static: text.size.md']);
+});
+
+test('a composed component is imported by the package it is named for, not a family substrate', () => {
+  assert.deepEqual(composedComponents([
+    'import com.fullstackds.components.button.Button',
+    'import com.fullstackds.components.button.ButtonVariant',
+    'import com.fullstackds.components.toggle.FsdsToggle',
+    'import com.fullstackds.components.date.FsdsDate',
+    'import com.fullstackds.components.glyph.FsdsGlyphIcon',
+  ].join('\n')), ['Button']);
+});
+
+test('a declared component reference is realized, ledgered, or reported', () => {
+  const contract = { anatomy: { dom: { tag: 'span', part: 'action', componentRef: 'fsds.Button' } } };
+  const unrealized = inspectComponentReferences({ name: 'Probe', contract, component: 'fun Probe() { }', ledger: {} });
+  assert.deepEqual(unrealized, [
+    'UNREALIZED REFERENCE Probe:action: the contract declares a reference to Button and the emitted source never calls it',
+  ]);
+  assert.deepEqual(inspectComponentReferences({ name: 'Probe', contract, component: 'fun Probe() { Button() }', ledger: {} }), []);
+  assert.deepEqual(inspectComponentReferences({ name: 'Probe', contract, component: 'fun Probe() { }', ledger: { 'Probe:action': 'why' } }), []);
+  // The ledger is two-directional: realizing a listed reference is a stale entry.
+  assert.deepEqual(inspectComponentReferences({ name: 'Probe', contract, component: 'fun Probe() { Button() }', ledger: { 'Probe:action': 'why' } }), [
+    'STALE REFERENCE LEDGER Probe:action: the reference to Button is realized — remove the entry',
+  ]);
+});
+
+test('every ledgered reference names a real declared reference, so a typo cannot hide a drop', async () => {
+  const { readFileSync, existsSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  const root = join(import.meta.dirname, '..');
+  for (const key of Object.keys(REFERENCE_DIVERGENCES)) {
+    const [name, part] = key.split(':');
+    const path = join(root, 'packages', 'ds-contracts', 'components', name, `${name}.contract.json`);
+    assert.ok(existsSync(path), `ledger entry ${key} names no contract`);
+    const contract = JSON.parse(readFileSync(path, 'utf8'));
+    const parts = [];
+    const walk = (node) => {
+      if (!node || typeof node !== 'object') return;
+      if (typeof node.componentRef === 'string') parts.push(node.part ?? '(unparted)');
+      (node.children ?? []).forEach(walk);
+    };
+    walk(contract.anatomy?.dom);
+    assert.ok(parts.includes(part), `ledger entry ${key} names no declared reference`);
+  }
 });
