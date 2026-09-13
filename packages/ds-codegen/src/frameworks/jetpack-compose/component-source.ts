@@ -21,7 +21,7 @@ import { composeTokenReads, consumedComposeTokenScopes } from "../native-token-c
  * prototype, `__golden__/Switch/Switch.compose.kt`, with its line-67 `??`
  * defect corrected to the Kotlin elvis operator).
  */
-import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
+import type { ComponentIR, DomNodeIR, NormalizedChannelIR } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
 // Shared native emission-class substrate (FEAT-COMPOSE-ADMISSION-SUBSTRATE-01):
 // the structural class facts this emitter dispatches on are target-neutral
@@ -39,6 +39,7 @@ import {
   isInteractiveComposite,
   isLabeledTextControl,
   isProjectedChildrenAction,
+  isReferencedActionComposite,
   isSelectionControl,
   isStaticContent,
   isValueChannelControl,
@@ -4388,6 +4389,524 @@ function emitDateGridSurface(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
+/**
+ * Component-reference lowering (FEAT-COMPOSE-REFERENCE-REALIZATION-01): lower
+ * a dom node that declares `componentRef` to a call on the referenced
+ * generated composable. The call is assembled from the node's own IR facts
+ * through one declared fact vocabulary; a fact outside that vocabulary fails
+ * loudly at emit time, so a declared reference is never silently dropped and
+ * never silently mis-argued.
+ *
+ * The vocabulary (every entry is a decision, not a default):
+ *   attrs.name / bindings.name   -> `name` (a `valueMap` binding lowers to an
+ *                                   exhaustive `when` over the source prop, and
+ *                                   an incomplete map is an emit-time error)
+ *   attrs.size                   -> `size = <Ref>Size.<Member>`
+ *   attrs.variant                -> `variant = <Ref>Variant.<Member>`
+ *   attrs["aria-label"]          -> `accessibilityLabel`
+ *   attrs.disabled               -> `disabled`
+ *   bindings.ariaLabel           -> `accessibilityLabel`
+ *   bindings.disabled            -> `disabled`
+ *   events.click                 -> `onClick = { <prop>?.invoke() }`
+ *   children (role `trigger`)    -> `content = { ... }` (empty when the node
+ *                                   projects nothing, because a composite
+ *                                   control's content parameter is required)
+ *   bindings.ariaHidden          -> `Modifier.clearAndSetSemantics { }`
+ *   bindings.inline              -> structural: composing inline is the default
+ *   attrs.type                   -> structural: HTML form authoring only
+ *   bindings.ariaExpanded / ariaPressed
+ *                                -> structural: the referenced control exposes
+ *                                   no state-semantics parameter. Named here so
+ *                                   the drop is a decision; ledgered in
+ *                                   docs/architecture/native-target-admission.md.
+ *   ifProp                       -> the call is wrapped in that guard
+ */
+interface ReferenceCallFacts {
+  reference: string;
+  arguments: string[];
+  modifiers: string[];
+  body: string[];
+  /** A composite control's content parameter is required, so a trigger
+   *  reference always passes a body — empty when it projects nothing. */
+  bodyRequired: boolean;
+  guard?: { prop: string; negated: boolean };
+}
+
+function referenceBindingExpr(expression: unknown): string {
+  if (!expression || typeof expression !== "object") {
+    throw new Error("component reference binding is not an expression");
+  }
+  const binding = expression as { kind?: string; prop?: string; path?: string[] };
+  if (binding.kind !== "prop" || !binding.prop) {
+    throw new Error(
+      `component reference binding kind "${binding.kind ?? "(none)"}" has no parameter mapping`,
+    );
+  }
+  const base = kotlinParamName(binding.prop);
+  return (binding.path ?? []).reduce((acc, segment) => `${acc}.${segment}`, base);
+}
+
+/** Render a referenced node's projected children, or its required empty body. */
+function referenceBodyLines(ir: ComponentIR, node: DomNodeIR, indent: string): string[] {
+  const lines: string[] = [];
+  const emitContent = (child: DomNodeIR): void => {
+    if (child.tag === "children") {
+      lines.push(`${indent}content()`);
+      return;
+    }
+    if (child.content && typeof child.content === "object") {
+      const content = child.content as { kind?: string; prop?: string };
+      if (content.kind === "prop" && content.prop) {
+        const prop = ir.styledProps.find((p) => p.safeName === content.prop);
+        if (prop?.type === "ReactNode") {
+          lines.push(`${indent}${kotlinParamName(content.prop)}?.invoke()`);
+          return;
+        }
+        if (prop?.type === "string") {
+          lines.push(
+            `${indent}BasicText(text = ${kotlinParamName(content.prop)}, style = TextStyle(color = LocalFsdsContentColor.current))`,
+          );
+          return;
+        }
+      }
+    }
+    const nested = child.children ?? [];
+    if (nested.some((c) => c.tag === "children")) {
+      nested.forEach(emitContent);
+      return;
+    }
+    throw new Error(
+      `component reference content node <${child.tag || "ref"}> has no mapped lowering`,
+    );
+  };
+  (node.children ?? []).forEach(emitContent);
+  return lines;
+}
+
+function referenceCallFacts(
+  ir: ComponentIR,
+  node: DomNodeIR,
+  indent: string,
+): ReferenceCallFacts {
+  const reference = node.componentRef;
+  if (!reference) throw new Error("referenceCallFacts requires a componentRef node");
+  const facts: ReferenceCallFacts = {
+    reference,
+    arguments: [],
+    modifiers: [],
+    body: [],
+    bodyRequired: false,
+  };
+
+  const enumArgument = (parameter: string, suffix: string, member: string): string =>
+    `${parameter} = ${reference}${suffix}.${kotlinEnumName(member)}`;
+
+  for (const [attr, value] of Object.entries(node.attrs ?? {})) {
+    if (attr === "name") facts.arguments.push(`name = ${JSON.stringify(value)}`);
+    else if (attr === "size") facts.arguments.push(enumArgument("size", "Size", value));
+    else if (attr === "variant") facts.arguments.push(enumArgument("variant", "Variant", value));
+    else if (attr === "aria-label") facts.arguments.push(`accessibilityLabel = ${JSON.stringify(value)}`);
+    else if (attr === "disabled") facts.arguments.push(`disabled = ${value === "true"}`);
+    // HTML form authoring: `type` selects submit/reset browser behavior, which
+    // no native target has. Structural, never an argument.
+    else if (attr === "type") continue;
+    else throw new Error(`component reference attr "${attr}" has no parameter mapping`);
+  }
+
+  for (const [binding, expression] of Object.entries(node.bindings ?? {})) {
+    if (binding === "name") {
+      const map = expression as {
+        kind?: string;
+        source?: { kind?: string; prop?: string };
+        values?: Record<string, string>;
+      };
+      if (map.kind !== "valueMap" || !map.source?.prop || !map.values) {
+        throw new Error('component reference `name` binding is not a prop valueMap');
+      }
+      const axisProp = ir.styledProps.find((p) => p.safeName === map.source!.prop);
+      const axisType = axisProp?.typeRefs?.find(
+        (ref) => (ir.definedTypes[ref]?.values?.length ?? 0) > 0,
+      );
+      const axisValues = axisType ? ir.definedTypes[axisType]!.values! : [];
+      const missing = axisValues.filter((value) => !(value in map.values!));
+      if (missing.length > 0) {
+        throw new Error(
+          `component reference \`name\` map omits axis value(s) ${missing.join(", ")}`,
+        );
+      }
+      const pad = `${indent}    `;
+      const arms = axisValues.map(
+        (value) => `${pad}${axisType}.${kotlinEnumName(value)} -> ${JSON.stringify(map.values![value])}`,
+      );
+      facts.arguments.push(
+        `name = when (${kotlinParamName(map.source.prop)}) {\n${arms.join("\n")}\n${indent}}`,
+      );
+    } else if (binding === "ariaLabel") {
+      facts.arguments.push(`accessibilityLabel = ${referenceBindingExpr(expression)}`);
+    } else if (binding === "disabled") {
+      facts.arguments.push(`disabled = ${referenceBindingExpr(expression)}`);
+    } else if (binding === "ariaHidden") {
+      facts.modifiers.push("Modifier.clearAndSetSemantics { }");
+    } else if (binding === "ariaExpanded" || binding === "ariaPressed") {
+      // Named, not silent: the referenced control exposes no state-semantics
+      // parameter. Ledgered in the admission criteria.
+      continue;
+    } else if (binding === "inline") {
+      continue;
+    } else if (binding === "type") {
+      // HTML form authoring (`button`/`submit`/`reset`), as in attrs.
+      continue;
+    } else {
+      throw new Error(`component reference binding "${binding}" has no parameter mapping`);
+    }
+  }
+
+  const click = node.events?.click;
+  if (click) facts.arguments.push(`onClick = { ${referenceBindingExpr(click)}?.invoke() }`);
+
+  // A composite control's content parameter is required, so a trigger
+  // reference always receives a body — empty when it projects nothing.
+  const isTrigger = (ir.parts.find((p) => p.name === node.part)?.details?.role) === "trigger";
+  facts.bodyRequired = isTrigger;
+  if (isTrigger) facts.body = referenceBodyLines(ir, node, `${indent}    `);
+
+  if (node.ifProp) {
+    facts.guard = { prop: kotlinParamName(node.ifProp), negated: node.ifNegated };
+  }
+  return facts;
+}
+
+/** Render one reference call at `indent`, wrapped in its declared guard. */
+function emitComponentReference(ir: ComponentIR, node: DomNodeIR, indent: string): string[] {
+  const facts = referenceCallFacts(ir, node, indent);
+  const lines: string[] = [];
+  const inner = facts.guard ? `${indent}    ` : indent;
+  if (facts.guard) {
+    lines.push(`${indent}if (${facts.guard.negated ? "!" : ""}${facts.guard.prop}) {`);
+  }
+  const args = [...facts.arguments];
+  if (facts.modifiers.length > 0) args.push(`modifier = ${facts.modifiers.join(".")}`);
+  lines.push(`${inner}${facts.reference}(`);
+  for (const argument of args) lines.push(`${inner}    ${argument},`);
+  if (facts.bodyRequired) {
+    lines.push(`${inner}) {`);
+    lines.push(...facts.body);
+    lines.push(`${inner}}`);
+  } else {
+    lines.push(`${inner})`);
+  }
+  if (facts.guard) lines.push(`${indent}}`);
+  return lines;
+}
+
+/** Referenced parts of a kind, in dom order. */
+function referenceNodes(ir: ComponentIR, role: string) {
+  const out: DomNodeIR[] = [];
+  const walk = (node: DomNodeIR): void => {
+    const part = ir.parts.find((p) => p.name === node.part);
+    if (node.componentRef && part?.details?.role === role) out.push(node);
+    (node.children ?? []).forEach(walk);
+  };
+  if (ir.dom) walk(ir.dom);
+  return out;
+}
+
+/** Import lines for every referenced component: its generated package, plus
+ *  the axis enums the call names. The enum type for an axis is the emitter's
+ *  own convention (`<Ref>Variant`, `<Ref>Size`), which is what makes a
+ *  cross-component call expressible without the callee's signature. */
+function referenceImports(ir: ComponentIR): string[] {
+  const refs = new Map<string, Set<string>>();
+  const walk = (node: DomNodeIR): void => {
+    if (node.componentRef) {
+      const types = refs.get(node.componentRef) ?? new Set<string>();
+      if (node.attrs?.variant) types.add(`${node.componentRef}Variant`);
+      if (node.attrs?.size) types.add(`${node.componentRef}Size`);
+      refs.set(node.componentRef, types);
+    }
+    (node.children ?? []).forEach(walk);
+  };
+  if (ir.dom) walk(ir.dom);
+  const lines: string[] = [];
+  for (const ref of [...refs.keys()].sort()) {
+    lines.push(`import com.fullstackds.components.${packageSegment(ref)}.${ref}`);
+    for (const type of [...refs.get(ref)!].sort()) {
+      lines.push(`import com.fullstackds.components.${packageSegment(ref)}.${type}`);
+    }
+  }
+  return lines;
+}
+
+/**
+ * The referenced-action composite class
+ * (FEAT-COMPOSE-REFERENCE-REALIZATION-01): a passive root that declares no
+ * value channel of its own and whose interactivity is supplied entirely by two
+ * or more referenced interactive components. Chip is the corpus consumer — a
+ * chip's action and optional dismiss controls are both contract references to
+ * Button, so the emitter composes them rather than re-implementing them.
+ *
+ * Named divergences (ledgered in docs/architecture/native-target-admission.md):
+ *   - `chip.color.background.selected` / `chip.color.foreground.selected` /
+ *     `chip.color.border.selected` and `chip.size.padding.horizontal` /
+ *     `.vertical` are unclaimed: the variant layers override the same default
+ *     slot names the layered lookup reads, and the merged box-model padding pool
+ *     is the inset authority;
+ *   - `chip.dismiss.gap` is unclaimed: the row uses the shared `chip.size.gap`,
+ *     which is what the web realization consumes;
+ *   - `chip.motion.duration.fast` is a CSS transition input and no native
+ *     transition is lowered;
+ *   - `chip.text.weight` rides the content text-style local, so it styles the
+ *     content the consumer composes rather than an emitter-owned label node;
+ *   - the referenced controls' declared `aria-expanded` / `aria-pressed` state
+ *     bindings are not lowered (the referenced component exposes no
+ *     state-semantics parameter) — named by the reference vocabulary, not
+ *     dropped by omission.
+ */
+function emitReferencedActionComposite(ir: ComponentIR): string {
+  const name = ir.name;
+  const segment = packageSegment(name);
+  const axes = Object.keys(ir.variants ?? {}).map((axis) => {
+    const values = ir.variants[axis] ?? [];
+    const prop = ir.styledProps.find((p) => p.safeName === axis);
+    return {
+      propName: prop?.safeName ?? axis,
+      enumName: `${name}${pascalCase(axis)}`,
+      values,
+      defaultMember: prop?.defaultExpr?.replace(/^["']|["']$/g, "") ?? values[0] ?? "",
+    };
+  });
+  // A declared enum prop that is not a variant axis (an HTML-authoring axis
+  // such as Chip's `type`) still needs its Kotlin enum and parameter.
+  const extraEnumProps = ir.styledProps
+    .filter(
+      (p) =>
+        !axes.some((a) => a.propName === p.safeName) &&
+        p.typeRefs?.some((ref) => (ir.definedTypes[ref]?.values?.length ?? 0) > 0),
+    )
+    .map((p) => {
+      const typeRef = p.typeRefs!.find((ref) => (ir.definedTypes[ref]?.values?.length ?? 0) > 0)!;
+      const values = ir.definedTypes[typeRef]!.values!;
+      return {
+        propName: p.safeName,
+        enumName: typeRef,
+        values,
+        defaultMember: p.defaultExpr?.replace(/^["']|["']$/g, "") ?? values[0] ?? "",
+      };
+    });
+  const styles = [...axes, ...extraEnumProps];
+
+  const triggers = referenceNodes(ir, "trigger");
+
+  const bgSlot = findLayeredSlotAny(ir, ["root"], [".color.background.default", ".color.bg.default"]);
+  const fgSlot = findLayeredSlotAny(ir, ["root"], [".color.foreground.default", ".color.foreground.primary"]);
+  const borderSlot = findLayeredSlotAny(ir, ["root"], [".color.border.default"]);
+  const hoverSlot = findLayeredSlotAny(ir, ["root"], [".color.background.hover"]);
+  const borderWidthSlot = findLayeredSlotAny(ir, ["root"], [".size.border"]);
+  const radiusSlot = findLayeredSlotAny(ir, ["root"], [".size.radius"]);
+  const textSizeSlot = findLayeredSlotAny(ir, ["root"], [".text.size"]);
+  const textWeightSlot = findLayeredSlotAny(ir, ["root"], [".text.weight"]);
+  const minHeightSlot = findLayeredSlotAny(ir, ["root"], [".size.minHeight"]);
+  const gapSlot = findLayeredSlotAny(ir, ["root"], [".size.gap"]);
+  const boxGapSlot = findTokenSlot(ir, "root", "box-model.gap");
+  const minWidthSlot = findTokenSlot(ir, "root", "box-model.min-width");
+  const minHeightBoxSlot = findTokenSlot(ir, "root", "box-model.min-height");
+  const paddingInlineStartSlot = findTokenSlot(ir, "root", "box-model.padding-inline-start");
+  const paddingInlineEndSlot = findTokenSlot(ir, "root", "box-model.padding-inline-end");
+  const paddingBlockStartSlot = findTokenSlot(ir, "root", "box-model.padding-block-start");
+  const paddingBlockEndSlot = findTokenSlot(ir, "root", "box-model.padding-block-end");
+  const consumesTokens = ir.tokenScopes.some((s) => s.values.length > 0);
+
+  const optionalBoolean = (safeName: string) =>
+    ir.styledProps.find((p) => p.safeName === safeName && p.type === "boolean");
+  const optionalString = (safeName: string) => ir.styledProps.find((p) => p.safeName === safeName);
+  const disabledProp = optionalBoolean("disabled");
+  const contentProp = ir.styledProps.find((p) => p.safeName === "content" || p.type === "ReactNode");
+
+  const lines: string[] = [];
+  lines.push(`// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`);
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`// @generated:start imports`);
+  lines.push(`import androidx.compose.foundation.background`);
+  lines.push(`import androidx.compose.foundation.border`);
+  lines.push(`import androidx.compose.foundation.hoverable`);
+  lines.push(`import androidx.compose.foundation.interaction.MutableInteractionSource`);
+  lines.push(`import androidx.compose.foundation.interaction.collectIsHoveredAsState`);
+  lines.push(`import androidx.compose.foundation.layout.Arrangement`);
+  lines.push(`import androidx.compose.foundation.layout.PaddingValues`);
+  lines.push(`import androidx.compose.foundation.layout.Row`);
+  lines.push(`import androidx.compose.foundation.layout.heightIn`);
+  lines.push(`import androidx.compose.foundation.layout.padding`);
+  lines.push(`import androidx.compose.foundation.layout.requiredSizeIn`);
+  lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  lines.push(`import androidx.compose.runtime.Composable`);
+  lines.push(`import androidx.compose.runtime.CompositionLocalProvider`);
+  lines.push(`import androidx.compose.runtime.getValue`);
+  lines.push(`import androidx.compose.runtime.remember`);
+  lines.push(`import androidx.compose.ui.Alignment`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  lines.push(`import androidx.compose.ui.draw.clip`);
+  lines.push(`import androidx.compose.ui.graphics.Color`);
+  lines.push(`import androidx.compose.ui.text.TextStyle`);
+  lines.push(`import androidx.compose.ui.unit.TextUnit`);
+  lines.push(`import androidx.compose.ui.unit.dp`);
+  for (const refImport of referenceImports(ir)) lines.push(refImport);
+  lines.push(`import com.fullstackds.tokens.LocalFsdsContentColor`);
+  lines.push(`import com.fullstackds.tokens.LocalFsdsTextStyle`);
+  lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+  lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+  lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+  lines.push(`import com.fullstackds.tokens.toFsdsSp`);
+  lines.push(`import com.fullstackds.tokens.toFsdsWeight`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start types`);
+  for (const axis of styles) {
+    lines.push(`/** ${axis.propName} axis lowered from the contract's ${axis.enumName} type. */`);
+    lines.push(`enum class ${axis.enumName} { ${axis.values.map(kotlinEnumName).join(", ")} }`);
+    lines.push(``);
+  }
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start component`);
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  lines.push(`    modifier: Modifier = Modifier,`);
+  for (const axis of styles) {
+    lines.push(
+      `    ${kotlinParamName(axis.propName)}: ${axis.enumName} = ${axis.enumName}.${kotlinEnumName(axis.defaultMember)},`,
+    );
+  }
+  if (disabledProp) lines.push(`    disabled: Boolean = false,`);
+  for (const trigger of triggers) {
+    if (trigger.ifProp) {
+      const gate = optionalBoolean(trigger.ifProp);
+      if (gate) lines.push(`    ${kotlinParamName(trigger.ifProp)}: Boolean = false,`);
+    }
+  }
+  const dismissLabel = optionalString("dismissLabel");
+  if (dismissLabel?.defaultExpr) {
+    lines.push(
+      `    dismissLabel: String = ${JSON.stringify(dismissLabel.defaultExpr.replace(/^["']|["']$/g, ""))},`,
+    );
+  } else if (dismissLabel) {
+    lines.push(`    dismissLabel: String = "",`);
+  }
+  if (optionalString("ariaLabel")) lines.push(`    ariaLabel: String? = null,`);
+  if (contentProp) {
+    lines.push(`    ${kotlinParamName(contentProp.safeName)}: (@Composable () -> Unit)? = null,`);
+  }
+  for (const callback of ir.styledProps.filter((p) => p.type.startsWith("("))) {
+    lines.push(`    ${kotlinParamName(callback.safeName)}: (() -> Unit)? = null,`);
+  }
+  lines.push(`    content: @Composable () -> Unit,`);
+  lines.push(`) {`);
+  if (consumesTokens) {
+    lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
+    lines.push(`    fun layeredSlot(slotName: String): String? {`);
+    lines.push(
+      `        for (key in listOf(${axes
+        .map((a) => `"variant_" + ${kotlinParamName(a.propName)}.name.lowercase()`)
+        .concat(['"root"'])
+        .join(", ")})) {`,
+    );
+    lines.push(`            val def = ${tokenConstName(ir)}[key]?.get(slotName)`);
+    lines.push(`            if (def != null) return fsdsTheme.resolve(def)`);
+    lines.push(`        }`);
+    lines.push(`        return null`);
+    lines.push(`    }`);
+    const color = (slot: { name: string } | undefined) =>
+      slot ? `layeredSlot(${JSON.stringify(slot.name)})?.toFsdsColor()` : undefined;
+    const dp = (slot: { name: string } | undefined) =>
+      slot ? `layeredSlot(${JSON.stringify(slot.name)})?.toFsdsDp() ?: 0.dp` : "0.dp";
+    const declare = (local: string, expression: string | undefined) => {
+      if (expression) lines.push(`    val ${local} = ${expression}`);
+    };
+    declare("chipBackground", color(bgSlot));
+    declare("chipForeground", color(fgSlot));
+    declare("chipBorder", color(borderSlot));
+    declare("chipHover", color(hoverSlot));
+    lines.push(`    val chipRadius = ${dp(radiusSlot)}`);
+    lines.push(`    val chipBorderWidth = ${dp(borderWidthSlot)}`);
+    // The component's own gap wins; the shared box-model pool is the fallback.
+    // Both are declared facts and both are read, so neither is a silent skip.
+    lines.push(
+      `    val chipGap = layeredSlot(${JSON.stringify(gapSlot?.name ?? "chip.size.gap")})?.toFsdsDp() ?: layeredSlot(${JSON.stringify(boxGapSlot?.name ?? "box-model.gap")})?.toFsdsDp() ?: 0.dp`,
+    );
+    lines.push(`    val chipMinHeight = ${dp(minHeightSlot)}`);
+    lines.push(`    val chipMinWidth = ${dp(minWidthSlot)}`);
+    lines.push(`    val chipBoxMinHeight = ${dp(minHeightBoxSlot)}`);
+    lines.push(
+      `    val chipPadding = PaddingValues(start = ${dp(paddingInlineStartSlot)}, end = ${dp(paddingInlineEndSlot)}, top = ${dp(paddingBlockStartSlot)}, bottom = ${dp(paddingBlockEndSlot)})`,
+    );
+    if (textSizeSlot) {
+      lines.push(
+        `    val chipTextSize = layeredSlot(${JSON.stringify(textSizeSlot.name)})?.toFsdsSp() ?: TextUnit.Unspecified`,
+      );
+    }
+    if (textWeightSlot) {
+      lines.push(`    val chipTextWeight = layeredSlot(${JSON.stringify(textWeightSlot.name)})?.toFsdsWeight()`);
+    }
+  } else {
+    lines.push(`    val chipRadius = 0.dp`);
+    lines.push(`    val chipBorderWidth = 0.dp`);
+    lines.push(`    val chipGap = 0.dp`);
+    lines.push(`    val chipMinHeight = 0.dp`);
+    lines.push(`    val chipMinWidth = 0.dp`);
+    lines.push(`    val chipBoxMinHeight = 0.dp`);
+    lines.push(`    val chipPadding = PaddingValues(0.dp)`);
+  }
+  lines.push(`    val chipShape = RoundedCornerShape(chipRadius)`);
+  lines.push(`    val interactionSource = remember { MutableInteractionSource() }`);
+  lines.push(`    val hovered by interactionSource.collectIsHoveredAsState()`);
+  const contentStyle = [
+    textSizeSlot ? "fontSize = chipTextSize" : null,
+    textWeightSlot ? "fontWeight = chipTextWeight" : null,
+  ].filter((part): part is string => part !== null);
+  lines.push(`    Row(`);
+  lines.push(`        modifier`);
+  lines.push(`            .requiredSizeIn(minWidth = chipMinWidth, minHeight = chipBoxMinHeight)`);
+  lines.push(`            .heightIn(min = chipMinHeight)`);
+  lines.push(`            .clip(chipShape)`);
+  if (bgSlot) {
+    lines.push(
+      `            .then(if (hovered && chipHover != null) Modifier.background(chipHover, chipShape) else if (chipBackground != null) Modifier.background(chipBackground, chipShape) else Modifier)`,
+    );
+  } else if (hoverSlot) {
+    lines.push(
+      `            .then(if (hovered && chipHover != null) Modifier.background(chipHover, chipShape) else Modifier)`,
+    );
+  }
+  if (borderSlot) {
+    lines.push(
+      `            .then(if (chipBorder != null) Modifier.border(chipBorderWidth, chipBorder, chipShape) else Modifier)`,
+    );
+  }
+  lines.push(`            .hoverable(interactionSource)`);
+  lines.push(`            .padding(chipPadding)`);
+  lines.push(`,`);
+  lines.push(`        horizontalArrangement = Arrangement.spacedBy(chipGap),`);
+  lines.push(`        verticalAlignment = Alignment.CenterVertically,`);
+  lines.push(`    ) {`);
+  lines.push(
+    `        CompositionLocalProvider(`,
+  );
+  lines.push(`            LocalFsdsContentColor provides (${fgSlot ? "chipForeground ?: Color.Unspecified" : "Color.Unspecified"}),`);
+  if (contentStyle.length > 0) {
+    lines.push(`            LocalFsdsTextStyle provides TextStyle(${contentStyle.join(", ")}),`);
+  }
+  lines.push(`        ) {`);
+  for (const trigger of triggers) {
+    lines.push(...emitComponentReference(ir, trigger, "            "));
+  }
+  lines.push(`        }`);
+  lines.push(`    }`);
+  lines.push(`}`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  return lines.join("\n");
+}
+
 function emitCenteredSurface(ir: ComponentIR): string {
   const name = ir.name;
   const segment = packageSegment(name);
@@ -4832,6 +5351,9 @@ export function generateJetpackComposeComponentSource(
   }
   if (collectCollapseIntents(ir).has("native-disclosure")) {
     return emitDisclosureComponent(ir);
+  }
+  if (isReferencedActionComposite(ir)) {
+    return emitReferencedActionComposite(ir);
   }
   if (isDateGridSurface(ir)) {
     return emitDateGridSurface(ir);

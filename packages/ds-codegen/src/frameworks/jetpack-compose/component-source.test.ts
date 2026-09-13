@@ -155,13 +155,14 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
   });
 
   it("throws loudly for non-static shapes instead of misrouting", () => {
-    // Select gained the selection class; Card and Chip remain unimplemented
-    // shapes (composer and dual-action composite respectively).
+    // Select gained the selection class and Chip the referenced-action
+    // composite; Card (composer) and Field (named-slot composer) remain
+    // unimplemented shapes.
     expect(() => generateJetpackComposeComponentSource(irFor("Card"))).toThrow(
       /no emission class matches component "Card" on jetpack-compose/,
     );
-    expect(() => generateJetpackComposeComponentSource(irFor("Chip"))).toThrow(
-      /no emission class matches component "Chip" on jetpack-compose/,
+    expect(() => generateJetpackComposeComponentSource(irFor("Field"))).toThrow(
+      /no emission class matches component "Field" on jetpack-compose/,
     );
   });
 });
@@ -407,10 +408,11 @@ describe("generateJetpackComposeComponentSource — disclosure class (FEAT-COMPO
     expect(src.match(/fun Details\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 
-  it("Card and Select remain unadmitted shapes", () => {
-    // Accordion/Tabs gained the interactive-composite class; Card (composer)
-    // and Chip (dual-action composite) are still unimplemented.
-    for (const name of ["Card", "Chip"]) {
+  it("Card and Field remain unadmitted shapes", () => {
+    // Accordion/Tabs gained the interactive-composite class, Chip the
+    // referenced-action composite; Card (composer) and Field (named-slot
+    // composer) are still unimplemented.
+    for (const name of ["Card", "Field"]) {
       expect(() => generateJetpackComposeComponentSource(irFor(name))).toThrow(
         new RegExp(`no emission class matches component "${name}" on jetpack-compose`),
       );
@@ -541,6 +543,73 @@ describe("generateJetpackComposeComponentSource — selection control (FEAT-COMP
     expect(src).toContain('layeredSlot("select.size.radius.default")');
     expect(src).not.toMatch(/import androidx\.compose\.material/);
     expect(src.match(/fun Select\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+});
+
+describe("generateJetpackComposeComponentSource — referenced-action composite (FEAT-COMPOSE-REFERENCE-REALIZATION-01)", () => {
+  it("composes the contract's referenced controls instead of re-implementing them (Chip)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Chip"));
+    // The declared references lower to calls on the referenced generated class,
+    // with the axis enums imported from that class's own package.
+    expect(src).toContain("import com.fullstackds.components.button.Button");
+    expect(src).toContain("import com.fullstackds.components.button.ButtonVariant");
+    expect(src).toContain("enum class ChipVariant { Default, Selected, Dismissible }");
+    expect(src).toContain("enum class ChipSize { Small, Medium, Large }");
+    expect(src).toContain("enum class ChipType { Button, Submit, Reset }");
+    // Action reference: declared variant, bound disabled/aria label, click
+    // callback and the projected icon + consumer content.
+    expect(src).toContain("variant = ButtonVariant.Ghost,");
+    expect(src).toContain("disabled = disabled,");
+    expect(src).toContain("accessibilityLabel = ariaLabel,");
+    expect(src).toContain("onClick = { onClick?.invoke() },");
+    expect(src).toContain("icon?.invoke()");
+    // Dismiss reference: guarded by the contract's `if: dismissible`, and a
+    // composite control's content parameter is required, so it passes a body.
+    expect(src).toContain("if (dismissible) {");
+    expect(src).toContain("accessibilityLabel = dismissLabel,");
+    expect(src).toContain("onClick = { onDismiss?.invoke() },");
+    // The node's HTML-authoring facts are structural, never arguments.
+    expect(src).not.toContain("type = ChipType.Button,");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Chip\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+
+  it("keeps the chip token set closed and names the slots it does not claim (Chip)", () => {
+    const source = generateJetpackComposeComponentSource(irFor("Chip"));
+    const tokens = generateJetpackComposeTokensFile(irFor("Chip"));
+    for (const slot of [
+      "chip.color.background.default",
+      "chip.color.foreground.default",
+      "chip.color.border.default",
+      "chip.color.background.hover",
+      "chip.size.border",
+      "chip.size.gap",
+      "chip.size.radius",
+      "chip.size.minHeight",
+      "chip.text.size",
+      "chip.text.weight",
+      "box-model.gap",
+    ]) {
+      expect(source).toContain(`layeredSlot(${JSON.stringify(slot)})`);
+      expect(tokens).toContain(`name = ${JSON.stringify(slot)}`);
+    }
+    const reads = [...source.matchAll(/layeredSlot\("([^"]+)"\)/g)].map((m) => m[1]!);
+    for (const slot of reads) expect(tokens, slot).toContain(`name = ${JSON.stringify(slot)}`);
+    for (const definition of tokens.matchAll(/name = "([^"]+)"/g)) {
+      expect(reads, definition[1]).toContain(definition[1]!);
+    }
+    for (const slot of [
+      "chip.color.background.selected",
+      "chip.color.foreground.selected",
+      "chip.color.border.selected",
+      "chip.size.padding.horizontal",
+      "chip.size.padding.vertical",
+      "chip.dismiss.gap",
+      "chip.motion.duration.fast",
+      "chip.dismiss.size",
+    ]) {
+      expect(tokens).not.toContain(`name = ${JSON.stringify(slot)}`);
+    }
   });
 });
 
