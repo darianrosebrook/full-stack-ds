@@ -96,6 +96,7 @@ local twin):
 | count-iterated field group | `isCountIteratedFieldGroup` (substrate) | OTP |
 | date-grid surface | `isDateGridSurface` (substrate) | Calendar |
 | referenced-action composite | `isReferencedActionComposite` (substrate) | Chip |
+| passive tree item | `isPassiveTreeItem` (substrate) | NavTree |
 | named-slot composer | `isNamedSlotComposer` (substrate) | Field |
 | labeled text control | `isLabeledTextControl` (substrate) | TextField |
 | selection control | `isSelectionControl` (substrate) | Select |
@@ -126,7 +127,7 @@ classes and the IR probes recorded in the specs `FEAT-COMPOSE-*`.
 | Component | Required class | Substrate move | Blocker / decision |
 |---|---|---|---|
 | Card | compound-part composer | no (target-local composer) | compound-part projection; five declared part carriers currently unrealized on web too |
-| NavTree | passive tree item | yes (`isPassiveTreeItem`) | measured, so the slice is mechanical: a `li` root (no channel, no references) containing `heading` (glyph slot, `a#headingLink` and `span#headingLabel` whose content props are read from the dom, not named here) and `list`, which holds the consumer's projected children. Props: `label`, `href`, `icon` (a catalog glyph name) and the `iconSize` variant axis (`sm`/`md`). 18 root slots (`nav-tree.color.*`, `size.fontSize.*`, `size.gap.*`, `size.indent`, `size.margin.group`, `size.padding.*`, `size.radius.default`, `size.stateLayer.*`). The glyph is composed through the committed `FsdsGlyphIcon(named, size, tint, modifier)` the Icon class already calls. A glyph-host admission was rejected because it would render a bare glyph and claim a tree; this class realizes the heading and projects the list. Remaining decision: which `nav-tree.color.connector` / `stateLayer.*` / `outline.focus` slots the v1 realization claims (the parity role must match React Native's consumed set). |
+| NavTree | passive tree item | realized (`isPassiveTreeItem`, substrate) | the heading composes the catalog glyph beside the dom's link and label content props, and the list projects the consumer's children inside the declared content color. Unclaimed: `nav-tree.color.connector`, `color.foreground.current` / `.hover` / `.headingHover`, `color.outline.focus`, `size.fontSize.item`, `size.gap.item`, `size.margin.group` and `stateLayer.hover` / `.selected`, because the tree renders one heading and projects its items, so item-level and interaction-state slots have no node of their own. The glyph-host admission stays rejected: it would render a bare glyph and claim a tree. |
 | Image | media leaf | yes (`isMediaLeaf`) | foundation-only image loading does not exist; needs a painter/loader decision (degradation or a committed loader substrate) |
 | Avatar | src-or-fallback | yes (`resolveSrcFallbackRef`) | same loader decision as Image; falls back to initials |
 | Walkthrough | anchored (selector) | excluded by `isAnchoredSurface` | selector-sourced anchor (`surface.selectorAnchor`) needs a DOM selector lookup; step channel |
