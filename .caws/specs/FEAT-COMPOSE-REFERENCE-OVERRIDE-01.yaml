@@ -3,7 +3,6 @@ title: 'Reference argument overrides; compose Avatar''s declared Image reference
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: compose-refoverride
 created_at: '2026-09-13T07:23:34.879Z'
 updated_at: '2026-09-13T07:23:38.030Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
