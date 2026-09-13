@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-ADMISSION-SUBSTRATE-01
 title: 'Native emission-class substrate; Compose Checkbox/Divider admission; admissibility criteria'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Shared native emission-class substrate landed; Compose Checkbox+Divider admitted 23-to-25 on foundation-only substrates; C1-C7 admission criteria doc committed'
 created_at: '2026-09-13T00:04:49.085Z'
-updated_at: '2026-09-13T00:28:07.901Z'
+updated_at: '2026-09-13T00:43:28.609Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
