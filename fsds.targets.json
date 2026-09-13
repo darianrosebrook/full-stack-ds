@@ -120,6 +120,7 @@
         "CodeSnippet",
         "Divider",
         "Icon",
+        "Input",
         "Label",
         "Links",
         "List",
