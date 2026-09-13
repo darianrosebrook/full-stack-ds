@@ -2,9 +2,10 @@ id: FEAT-COMPOSE-OTP-ADMISSION-01
 title: 'Count-iterated field-group predicate to shared substrate; Compose OTP admission'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: compose-otp
 created_at: '2026-09-13T03:47:29.690Z'
-updated_at: '2026-09-13T03:47:29.690Z'
+updated_at: '2026-09-13T03:47:31.607Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
