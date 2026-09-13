@@ -9,7 +9,9 @@ updated_at: '2026-09-13T04:43:01.973Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts (centered-surface emitter: part-scoped chrome grammar, optional second string channel, own size constraints)'
+    - 'packages/ds-codegen/src/frameworks/native-emission-class.ts (shared substrate: surfaceStringChannel)'
+    - 'scripts/compose-parity-diff.mjs (surface host precedence; centered-surface chrome role widened to the command family)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -29,7 +31,9 @@ scope:
     - docs/architecture/design/component-token-consumption.md
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'A centered surface with no string channel emits byte-identical Kotlin to before the change (Dialog is the witness).'
+  - 'Every layeredSlot read in the emitted Kotlin has a definition in the emitted tokens file, and every definition is read.'
+  - 'Command stays inside the foundation-only compose surface: zero androidx.compose.material imports.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
