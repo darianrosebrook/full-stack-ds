@@ -1,0 +1,26 @@
+id: FEAT-COMPOSE-RADIO-ADMISSION-01
+title: 't'
+risk_tier: 3
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-13T02:16:06.611Z'
+updated_at: '2026-09-13T02:16:06.611Z'
+created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'a'
+non_functional: {}
+contracts: []
