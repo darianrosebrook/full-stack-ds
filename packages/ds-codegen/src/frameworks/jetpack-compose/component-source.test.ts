@@ -270,10 +270,18 @@ describe("generateJetpackComposeComponentSource — boolean-control class (FEAT-
     expect(src).toContain('["root"]?.get("checkbox.color.background.default")');
   });
 
-  it("throws loudly for the string value-channel control (Input) instead of misrouting", () => {
-    expect(() => generateJetpackComposeComponentSource(irFor("Input"))).toThrow(
-      /string value-channel control class is not implemented/,
-    );
+  it("lowers the string value channel onto a foundation BasicTextField with input-part chrome (Input)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Input"));
+    expect(src).toContain("value: String? = null,");
+    expect(src).toContain("defaultValue: String = \"\",");
+    expect(src).toContain("onChange: ((String) -> Unit)? = null,");
+    expect(src).toContain("val resolvedValue = value ?: uncontrolledValue");
+    expect(src).toContain("BasicTextField(");
+    expect(src).toContain('fsdsTheme.resolve(inputTokenScopes["root"]?.get("input.color.bg.default"))?.toFsdsColor()');
+    expect(src).toContain('fsdsTheme.resolve(inputTokenScopes["root"]?.get("input.typography.size.default"))?.toFsdsSp()');
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src).not.toContain("input.opacity.disabled");
+    expect(src.match(/fun Input\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 
   it("keeps the declared native-toggle collapse ahead of structural control classes", () => {
@@ -378,5 +386,31 @@ describe("generateJetpackComposeComponentSource — glyph classes (FEAT-COMPOSE-
       expect(block, `${scope}: ${slot}`).toContain(`"${slot}" to ComponentTokenDefinition(`);
     }
     expect(tokens).not.toContain('name = "box-model.gap"');
+  });
+});
+
+describe("generateJetpackComposeComponentSource — disclosure class (FEAT-COMPOSE-DISCLOSURE-01)", () => {
+  it("lowers native-disclosure onto a toggleable header with animated content (Details)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Details"));
+    expect(src).toContain("open: Boolean? = null,");
+    expect(src).toContain("val resolvedOpen = open ?: uncontrolledOpen");
+    expect(src).toContain("onOpenChange?.invoke(next)");
+    expect(src).toContain("summary: String? = null,");
+    expect(src).toContain("AnimatedVisibility(visible = resolvedOpen)");
+    expect(src).toContain("role = Role.Button,");
+    expect(src).toContain('stateDescription = if (resolvedOpen) "expanded" else "collapsed"');
+    expect(src).toContain('layeredSlot("details.color.background.default")');
+    // Consumer content inherits the foreground through the local.
+    expect(src).toContain("LocalFsdsContentColor provides (contentColor ?: Color.Unspecified)");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Details\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+
+  it("Accordion does not carry native-disclosure and stays unadmitted", () => {
+    // Accordion's value channel is string|string[] — a multi-item shape for
+    // a later class, not the disclosure collapse.
+    expect(() => generateJetpackComposeComponentSource(irFor("Accordion"))).toThrow(
+      /no emission class matches component "Accordion" on jetpack-compose/,
+    );
   });
 });
