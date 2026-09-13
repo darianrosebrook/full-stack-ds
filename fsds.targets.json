@@ -109,6 +109,9 @@
         "kind": "builtin"
       },
       "components": [
+        "Alert",
+        "AlertNotice",
+        "Badge",
         "Blockquote",
         "Breadcrumbs",
         "Button",
@@ -116,6 +119,7 @@
         "CodeBlock",
         "CodeSnippet",
         "Divider",
+        "Icon",
         "Label",
         "Links",
         "List",

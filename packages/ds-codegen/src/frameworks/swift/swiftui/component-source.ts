@@ -40,7 +40,10 @@ import { collectCollapseIntents, isContentTransform, nativeRootClipping } from "
 // (FEAT-COMPOSE-ADMISSION-SUBSTRATE-01). This file used to steward them.
 import {
   countChildrenLeaves,
+  domGlyph,
   isBareRuleLeaf,
+  isGlyphHost,
+  isIconDecoratedContent,
   isProjectedChildrenAction,
   isStaticContent,
   isValueChannelControl,
@@ -623,26 +626,8 @@ function emitLeafComponent(ir: ComponentIR): string {
 }
 
 /** A glyph host: some dom node carries the iconGlyph fact (Icon). */
-function isGlyphHost(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  const stack = [ir.dom];
-  while (stack.length > 0) {
-    const node = stack.pop()!;
-    if (node.iconGlyph) return true;
-    stack.push(...(node.children ?? []));
-  }
-  return false;
-}
-
-function domGlyph(ir: ComponentIR): NonNullable<ComponentIR["dom"]>["iconGlyph"] {
-  const stack = [ir.dom!];
-  while (stack.length > 0) {
-    const node = stack.pop()!;
-    if (node.iconGlyph) return node.iconGlyph;
-    stack.push(...(node.children ?? []));
-  }
-  return undefined;
-}
+// The glyph-host predicate and its dom-walk helper are shared substrate
+// (native-emission-class.ts); this emitter lowers the fact below.
 
 /**
  * The glyph-host class: a component whose dom carries iconGlyph lowers to
@@ -895,34 +880,9 @@ function emitSelectionControl(ir: ComponentIR): string {
  * GlyphCatalog registry; Chip is excluded by the component-instance leaf
  * rule (the TextField precedent).
  */
-function isIconDecoratedContent(ir: ComponentIR): boolean {
-  if (!ir.dom || ir.surface != null) return false;
-  if (ir.root.element !== "div" && ir.root.element !== "span") return false;
-  if (ir.behavior.normalizedChannels.length > 0) return false;
-  // The icon must be author-addressable: a string prop (registry lookup)
-  // or a ReactNode prop (consumer region). Status has neither — its glyph
-  // is state-driven and needs a status→glyph intent table (follow-up).
-  const hasIconProp = ir.styledProps.some(
-    (p) => p.safeName === "icon" && (p.type === "string" || p.type === "ReactNode"),
-  );
-  if (!hasIconProp) return false;
-  // exactly one children leaf, an icon part, and component-instance
-  // children only under a dismiss part (its omission is documented).
-  let childrenLeaves = 0;
-  let hasIconPart = false;
-  let strayInstance = false;
-  const walk = (node: NonNullable<ComponentIR["dom"]>): void => {
-    if (node.part === "icon") hasIconPart = true;
-    const isInstance = Boolean((node as { componentRef?: string }).componentRef);
-    const isDismissPart = node.part === "dismiss";
-    if (isInstance && !isDismissPart) strayInstance = true;
-    const kids = node.children ?? [];
-    if (node.tag === "children" && kids.length === 0) childrenLeaves += 1;
-    kids.forEach(walk);
-  };
-  walk(ir.dom);
-  return childrenLeaves === 1 && hasIconPart && !strayInstance;
-}
+// The icon-decorated-content predicate is shared substrate
+// (native-emission-class.ts): one consumer region beside an author-
+// addressable icon (string registry lookup or ReactNode region).
 
 function emitIconDecoratedContent(ir: ComponentIR): string {
   const exportName = swiftExportName(ir.name);

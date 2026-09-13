@@ -1,3 +1,18 @@
+---
+doc_id: ARCH-NATIVE-TARGET-ADMISSION-001
+authority: canonical
+status: active
+title: Native target admission — criteria per codegen output
+owner: "@darianrosebrook"
+updated: 2026-09-13
+governs:
+  - packages/ds-codegen/src/frameworks/native-emission-class.ts
+  - packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts
+  - packages/ds-codegen/src/frameworks/jetpack-compose
+  - fsds.targets.json
+  - scripts/compose-parity-diff.mjs
+---
+
 # Native target admission — criteria per codegen output
 
 Status: active doctrine. Governs which components a native codegen output
@@ -55,7 +70,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->25`, realized through the
+`<!-- target-component-count:jetpack-compose -->29`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -65,6 +80,8 @@ local twin):
 | projected-children action | `isProjectedChildrenAction` (substrate) | Button, Links, NavList |
 | boolean control | `isValueChannelControl` + boolean channel (substrate) | Checkbox |
 | bare-rule leaf | `isBareRuleLeaf` (substrate) | Divider |
+| glyph host | `isGlyphHost` (substrate) | Icon |
+| icon-decorated content | `isIconDecoratedContent` (substrate) | Alert, AlertNotice, Badge |
 | prop-text leaf | target-local (broader than swift) | CodeBlock, CodeSnippet, Markdown, Text-leaf family |
 | expandable content | target-local (broader than swift) | ShowMore, Truncate |
 | progress indicator | target-local role+shape gate | Progress, Spinner |
@@ -85,6 +102,21 @@ intent owns the realization before any structural class is consulted.
 - **Divider** — the `thickness`/`title` string props are omitted v1 (the
   token slot drives thickness); `divider.spacing.margin` is unread (this
   class realizes the rule, not the surrounding layout rhythm).
+- **Icon (glyph host)** — NavTree also matches `isGlyphHost` (its item
+  icons carry the fact) but stays **unadmitted** on compose: its best
+  class is array-iterated list, not yet landed; admission is the
+  allowlist's decision, not the dispatch's. SwiftUI admits NavTree as a
+  glyph-host v1 (icon-only rendering) — its own ledgered degradation.
+  Icon's unknown-name fallback paints a dashed placeholder rather than
+  nothing; glyph stroke inherits the content color (the `currentColor`
+  analog).
+- **Icon-decorated content (Alert/AlertNotice/Badge)** — part-scoped text
+  typography (`*.text.size`/`*.text.weight`) is unclaimed: the content
+  region is a consumer composable, not styled text (RN styles it); border
+  width is 1.dp when a border color slot exists (no width slot in these
+  contracts); a variant member whose semantic slot name differs
+  (`error`↔`danger`) binds through the sole-unassigned-family-slot
+  closure — deterministic from the scope facts, never a name table.
 - **All control paths** — `box-model.gap` is unclaimed chrome: a lone
   control lays out no children; label/gap realization belongs to composer
   classes.

@@ -317,3 +317,66 @@ describe("generateJetpackComposeComponentSource — bare-rule-leaf class (FEAT-C
     expect(tokens).not.toContain('name = "box-model.gap"');
   });
 });
+
+describe("generateJetpackComposeComponentSource — glyph classes (FEAT-COMPOSE-GLYPH-ADMISSION-01)", () => {
+  it("lowers the iconGlyph fact onto the shared glyph registry with hint-driven sizes (Icon)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Icon"));
+    expect(src).toContain("enum class IconSize { Sm, Md, Lg, Xl }");
+    expect(src).toContain("size: IconSize = IconSize.Md,");
+    // Token-scoped frame dims preferred, hint table fallback — the when
+    // covers every hint member from the IR fact.
+    expect(src).toContain('IconSize.Sm -> fsdsTheme.resolve(iconTokenScopes["root"]?.get("icon.size.sm"))?.toFsdsDp() ?: 16.dp');
+    expect(src).toContain("FsdsGlyphIcon(");
+    // Decorative-by-default semantics come from the catalog flags.
+    expect(src).toContain("FsdsGlyphCatalog.decorativeDefaults.contains(name)");
+    expect(src).toContain("Modifier.clearAndSetSemantics { }");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+    expect(src.match(/fun Icon\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
+  });
+
+  it("emits the glyph catalog substrate from the iconography corpus", async () => {
+    const { generateComposeGlyphCatalogFile } = await import("./icon-glyph.js");
+    const catalog = generateComposeGlyphCatalogFile();
+    expect(catalog).not.toBeNull();
+    expect(catalog!.relativePath).toBe("../glyph/FsdsGlyphCatalog.kt");
+    expect(catalog!.contents).toContain("object FsdsGlyphCatalog {");
+    expect(catalog!.contents).toContain("FsdsSvgPath.parse(stroke.d)");
+    // Kotlin literals escape dollars so path data cannot interpolate.
+    expect(catalog!.contents).not.toMatch(/[^\\]\$/);
+  });
+
+  it("lowers the ReactNode icon region beside one content region with variant-layered chrome (Alert)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("Alert"));
+    expect(src).toContain("icon: (@Composable () -> Unit)? = null,");
+    expect(src).toContain("content: @Composable () -> Unit,");
+    expect(src).toContain("enum class AlertIntent { Info, Success, Warning, Danger }");
+    // Nullable axes contribute a layer only when set.
+    expect(src).toContain(
+      'if (intent != null) "variant_" + intent.name.lowercase() else null',
+    );
+    expect(src).toContain('layeredSlot("alert.color.background.primary")');
+    expect(src).toContain("Arrangement.spacedBy(gap)");
+    expect(src).toContain("LocalFsdsContentColor provides (contentColor ?: Color.Unspecified)");
+    expect(src).not.toMatch(/import androidx\.compose\.material/);
+  });
+
+  it("maps member-named variant slots including the error-to-danger family closure (AlertNotice)", () => {
+    const src = generateJetpackComposeComponentSource(irFor("AlertNotice"));
+    // Exact name-grammar members.
+    expect(src).toContain(
+      'AlertNoticeStatus.Info -> fsdsTheme.resolve(alertNoticeTokenScopes["root"]?.get("alert-notice.color.background.info"))',
+    );
+    // The sole unmatched member binds the sole unassigned family slot.
+    expect(src).toContain(
+      'AlertNoticeStatus.Error -> fsdsTheme.resolve(alertNoticeTokenScopes["root"]?.get("alert-notice.color.background.danger"))',
+    );
+    const tokens = generateJetpackComposeTokensFile(irFor("AlertNotice"));
+    const reads = [...src.matchAll(/TokenScopes\["([^"]+)"\]\?\.get\("([^"]+)"\)/g)];
+    expect(reads.length).toBeGreaterThanOrEqual(10);
+    for (const [, scope, slot] of reads) {
+      const block = tokens.split(`"${scope}" to mapOf(`)[1]?.split("\n    ),")[0] ?? "";
+      expect(block, `${scope}: ${slot}`).toContain(`"${slot}" to ComponentTokenDefinition(`);
+    }
+    expect(tokens).not.toContain('name = "box-model.gap"');
+  });
+});

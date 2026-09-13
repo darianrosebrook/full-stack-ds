@@ -66,6 +66,20 @@ const CHROME_ROLE_CHECKBOX = new RegExp(
 const CHROME_ROLE_RULE = new RegExp(
   ["\\.color\\.default$", "\\.size\\.thickness", "box-model\\.(?:padding|min-width|min-height)"].join("|"),
 );
+/** Glyph-host path (Icon): per-member frame dims (`icon.size.*`) and the
+ *  touch-surface box-model slots. `box-model.gap` unclaimed — a lone glyph
+ *  lays out no children. */
+const CHROME_ROLE_GLYPH_HOST = new RegExp(
+  ["icon\\.size\\.", "box-model\\.(?:padding|min-width|min-height)"].join("|"),
+);
+/** Icon-decorated path (Alert/AlertNotice/Badge): container paint (part-
+ *  scoped bg/border/fg incl. variant layers), radius, the icon↔content gap,
+ *  and the surface minimums. Part-scoped text typography (`.text.size`/
+ *  `.text.weight`) deliberately unclaimed — the content region is a
+ *  consumer composable, not styled text. */
+const CHROME_ROLE_ICON_DECORATED = new RegExp(
+  ["\\.color\\.(?:background|border|foreground)\\.", "\\.(?:size|border)\\.radius", "\\.spacing\\.gap", "box-model\\.(?:padding|min-width|min-height)"].join("|"),
+);
 /** Font-size role: claimed by the prop-text leaf path (the corpus's
  *  text-leaf size vocabulary — `code-block.size.fontSize.default` etc.). */
 const FONT_SIZE_ROLE = /\.size\.fontSize\.|\.typography\.fontSize\./;
@@ -82,6 +96,8 @@ function emitterPath(ktSource) {
   if (ktSource.includes("FsdsToggle")) return "toggle";
   if (ktSource.includes("FsdsCheckbox")) return "checkbox";
   if (ktSource.includes("FsdsRule")) return "rule";
+  if (ktSource.includes("FsdsGlyphIcon")) return "glyphHost";
+  if (ktSource.includes("icon: (@Composable () -> Unit)?")) return "iconDecorated";
   if (ktSource.includes("FsdsProgressIndicator")) return "progress";
   if (ktSource.includes("BasicText(") && !ktSource.includes("content: @Composable")) {
     return "propText";
@@ -96,6 +112,8 @@ function chromeRoleForPath(path) {
   if (path === "toggle") return CHROME_ROLE_TOGGLE;
   if (path === "checkbox") return CHROME_ROLE_CHECKBOX;
   if (path === "rule") return CHROME_ROLE_RULE;
+  if (path === "glyphHost") return CHROME_ROLE_GLYPH_HOST;
+  if (path === "iconDecorated") return CHROME_ROLE_ICON_DECORATED;
   if (path === "progress") {
     return new RegExp([CHROME_ROLE_STATIC.source, TEXT_COLOR_ROLE.source].join("|"));
   }

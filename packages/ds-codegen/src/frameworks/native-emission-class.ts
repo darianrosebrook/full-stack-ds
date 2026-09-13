@@ -218,3 +218,73 @@ export function isValueChannelControl(ir: ComponentIR): boolean {
   if (soleInputElement(ir.dom) === null) return false;
   return soleValueChannel(ir) !== null;
 }
+
+/**
+ * The glyph-host class: some dom node carries the iconGlyph fact (Icon,
+ * NavTree). The component lowers to a registry lookup over the shared
+ * glyph substrate; size hints from the IR map the size prop to the
+ * rendered frame; decorative-by-default comes from the catalog semantics.
+ *
+ * The predicate is "any node carries iconGlyph," which is deliberately
+ * greedy: NavTree matches because its item icons carry the fact, even
+ * though its primary shape is a list. Admission is the allowlist's
+ * decision, not the dispatch's — a target may decline to admit a
+ * component whose best class has not landed (compose and NavTree).
+ */
+export function isGlyphHost(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  const stack = [ir.dom];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.iconGlyph) return true;
+    stack.push(...(node.children ?? []));
+  }
+  return false;
+}
+
+/** The first iconGlyph fact in the dom walk, for emitters that lower it. */
+export function domGlyph(
+  ir: ComponentIR,
+): NonNullable<ComponentIR["dom"]>["iconGlyph"] {
+  const stack = [ir.dom!];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.iconGlyph) return node.iconGlyph;
+    stack.push(...(node.children ?? []));
+  }
+  return undefined;
+}
+
+/**
+ * The icon-decorated-content class: a passive root (no channels, no
+ * surface) whose content is one consumer region beside an author-
+ * addressable icon — a string icon prop (registry lookup) or a ReactNode
+ * icon prop (consumer region). Status has neither (its glyph is
+ * state-driven) and needs a status→glyph intent table instead.
+ *
+ * Exactly one children leaf, an icon part, and component-instance
+ * children only under a dismiss part (its omission is documented).
+ */
+export function isIconDecoratedContent(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.root.element !== "div" && ir.root.element !== "span") return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  const hasIconProp = ir.styledProps.some(
+    (p) => p.safeName === "icon" && (p.type === "string" || p.type === "ReactNode"),
+  );
+  if (!hasIconProp) return false;
+  let childrenLeaves = 0;
+  let hasIconPart = false;
+  let strayInstance = false;
+  const walk = (node: DomNodeIR): void => {
+    if (node.part === "icon") hasIconPart = true;
+    const isInstance = Boolean((node as { componentRef?: string }).componentRef);
+    const isDismissPart = node.part === "dismiss";
+    if (isInstance && !isDismissPart) strayInstance = true;
+    const kids = node.children ?? [];
+    if (node.tag === "children" && kids.length === 0) childrenLeaves += 1;
+    kids.forEach(walk);
+  };
+  walk(ir.dom);
+  return childrenLeaves === 1 && hasIconPart && !strayInstance;
+}
