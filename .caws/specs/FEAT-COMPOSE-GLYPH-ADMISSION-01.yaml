@@ -1,0 +1,55 @@
+id: FEAT-COMPOSE-GLYPH-ADMISSION-01
+title: 'Compose glyph pipeline: Icon glyph-host + icon-decorated Alert/AlertNotice/Badge admission'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-13T00:49:57.103Z'
+updated_at: '2026-09-13T00:49:57.103Z'
+created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.test.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/icon-glyph.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/factory.ts'
+    - 'packages/ds-jetpack-compose/library/src/main/kotlin'
+    - 'fsds.targets.json'
+    - 'scripts/compose-parity-diff.mjs'
+    - 'scripts/compose-parity-diff.test.mjs'
+    - 'docs/architecture/native-target-admission.md'
+    - 'docs/current-implementation-snapshot.md'
+    - 'AGENTS.md'
+    - 'README.md'
+    - 'docs/normal-form.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given isGlyphHost and isIconDecoratedContent are target-neutral structural facts swift currently keeps local; when they move into the shared native-emission-class substrate consumed by both emitters; then swiftui regeneration stays byte-identical for all 52 admitted components and the codegen suite passes'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the iconography corpus drives a generated glyph catalog and a committed foundation-only FsdsSvgPath runtime with the proven arc-to-cubic conversion; when the compose emitter gains the glyph-host class (Icon) dispatching on the substrate predicate; then Icon.kt compiles via gradle with size hints from the IR iconGlyph fact and decorative-by-default semantics from catalog flags'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given Alert, AlertNotice, and Badge are icon-decorated content (ReactNode icon region plus one content region with variant-layered chrome); when the compose emitter gains the icon-decorated class on the substrate predicate; then all three generate, compile via gradle, and satisfy the parity gate with their chrome roles claimed and RN shared identities agreeing'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given NavTree also matches isGlyphHost as a degraded route swift tolerates; when the compose allowlist grows to 29; then NavTree stays deliberately unadmitted with the decision ledgered in the admission criteria doc divergence section'
+non_functional: {}
+contracts:
+  - name: 'glyph-host-predicate'
+    type: behavior
+    path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
