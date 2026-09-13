@@ -35,3 +35,8 @@ acceptance:
     then: 'a'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "radioGroupFacts moved to native-emission-class.ts (pure IR extraction: dom role, compositeControl collection-selection, iteration, member bindings, alias); swift regeneration after the rewire is byte-identical (52 groups, zero git diff over packages/ds-swiftui); codegen suite green 291/291 files, 3886/3886 tests"
+    recorded_at: "2026-09-13T03:10:46.631Z"
