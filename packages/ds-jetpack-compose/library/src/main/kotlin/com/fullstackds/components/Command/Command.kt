@@ -35,6 +35,8 @@ import com.fullstackds.tokens.LocalFsdsTheme
 import com.fullstackds.tokens.toFsdsColor
 import com.fullstackds.tokens.toFsdsDp
 import com.fullstackds.tokens.toFsdsSp
+import com.fullstackds.components.icon.Icon
+import com.fullstackds.components.icon.IconSize
 // @generated:end
 
 // @generated:start component
@@ -107,6 +109,10 @@ fun Command(
                     singleLine = true,
                     textStyle = TextStyle(color = panelText ?: Color.Unspecified, fontSize = panelSearchSize),
                     decorationBox = { inner ->
+                        Icon(
+                            name = "search",
+                            size = IconSize.Sm,
+                        )
                         if (resolvedSearch.isEmpty() && placeholder.isNotEmpty()) {
                             BasicText(text = placeholder, style = TextStyle(color = panelMuted ?: Color.Unspecified))
                         }
