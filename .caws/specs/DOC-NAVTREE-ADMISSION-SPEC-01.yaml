@@ -8,7 +8,7 @@ updated_at: '2026-09-13T06:46:25.528Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'docs/architecture/native-target-admission.md (NavTree disposition row)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -17,7 +17,7 @@ scope:
     - 'docs/normal-form.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Every anatomy, slot and prop fact in the entry is measured from the corpus, not inferred from the component name.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
