@@ -24,3 +24,8 @@ acceptance:
     then: 'given 16 compose components remain unadmitted; when the criteria doc gains a per-component disposition table naming each required class, its shared-substrate move, and its concrete blocker or decision; then docs:check-links and docs:check-claims stay green and the table matches the measured class map'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "docs/architecture/native-target-admission.md gains the 16-row disposition table (component / required class / substrate move / blocker-decision) with the measured-vs-inferred footnote for Card/Field/NavTree; docs:check-claims 74/74 and docs:check-links 107/107 green on the worktree commit"
+    recorded_at: "2026-09-13T03:53:21.017Z"
