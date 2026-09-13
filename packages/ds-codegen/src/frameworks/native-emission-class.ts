@@ -624,6 +624,29 @@ function isDateDayOfMonthProjection(expression: unknown): boolean {
 }
 
 /**
+ * The referenced-action composite class: a passive root that declares no value
+ * channel of its own and whose interactivity is supplied entirely by two or
+ * more referenced interactive components. Chip is the corpus consumer — its
+ * action and optional dismiss controls are both contract references to Button,
+ * so the class is composed rather than re-implemented.
+ *
+ * The threshold is two, not one: a single referenced trigger is a decoration or
+ * a slot on some other class's anatomy (Alert's dismiss, Avatar's image), while
+ * two or more mean the component *is* the composition. Exactly one corpus
+ * component matches.
+ *
+ * Pure structural facts — target-neutral (FEAT-COMPOSE-REFERENCE-REALIZATION-01).
+ */
+export function isReferencedActionComposite(ir: ComponentIR): boolean {
+  if (!ir.dom || ir.surface != null) return false;
+  if (ir.behavior.normalizedChannels.length > 0) return false;
+  const triggers = ir.parts.filter(
+    (part) => part.componentRef && part.details?.role === "trigger",
+  );
+  return triggers.length >= 2;
+}
+
+/**
  * The centered-surface class: a declared surface whose positioning
  * strategy is `centered` — a modal panel attached to the viewport rather
  * than to an anchor. Dialog is the corpus consumer. Anchored surfaces
