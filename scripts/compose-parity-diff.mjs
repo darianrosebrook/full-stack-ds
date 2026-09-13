@@ -264,7 +264,6 @@ function chromeRoleForPath(path) {
  * declared reference can never be dropped silently.
  */
 export const REFERENCE_DIVERGENCES = {
-  "Alert:dismiss": "the icon-decorated layout has no trailing-action affordance yet; the Button class and the reference vocabulary both exist, so this is placement work",
   "Accordion:chevron": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
   "Details:icon": "realized as a painted chevron (the disclosure twin's documented no-glyph-dependency divergence)",
 };

@@ -2224,6 +2224,7 @@ function emitIconDecoratedContent(ir: ComponentIR): string {
     if (bgSlot || fgSlot || borderSlot) lines.push(`import com.fullstackds.tokens.toFsdsColor`);
     lines.push(`import com.fullstackds.tokens.toFsdsDp`);
   }
+  for (const line of referenceImports(ir)) lines.push(line);
   lines.push(`// @generated:end`);
   lines.push(``);
   lines.push(`// @generated:start component`);
@@ -2244,7 +2245,6 @@ function emitIconDecoratedContent(ir: ComponentIR): string {
         : `    ${kotlinParamName(axis.propName)}: ${axis.enumName}? = null,`,
     );
   }
-  for (const line of referenceImports(ir)) lines.push(line);
   lines.push(`    icon: (@Composable () -> Unit)? = null,`);
   for (const ref of referenceNodes(ir, "trigger")) lines.push(...referenceParameterLines(ir, ref));
   lines.push(`    content: @Composable () -> Unit,`);

@@ -19,6 +19,7 @@ import com.fullstackds.tokens.LocalFsdsContentColor
 import com.fullstackds.tokens.LocalFsdsTheme
 import com.fullstackds.tokens.toFsdsColor
 import com.fullstackds.tokens.toFsdsDp
+import com.fullstackds.components.button.Button
 // @generated:end
 
 // @generated:start component
@@ -33,7 +34,6 @@ fun Alert(
     modifier: Modifier = Modifier,
     intent: AlertIntent? = null,
     level: AlertLevel? = null,
-import com.fullstackds.components.button.Button
     icon: (@Composable () -> Unit)? = null,
     dismissible: Boolean = false,
     dismissLabel: String = "Dismiss",
