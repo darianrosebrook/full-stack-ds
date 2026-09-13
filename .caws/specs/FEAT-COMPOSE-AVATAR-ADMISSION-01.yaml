@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-AVATAR-ADMISSION-01
 title: 'Compose Avatar admission composing its declared Image reference'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Avatar admitted as the 51st compose component with its declared Image reference ledgered rather than faked, naming the argument-override capability the composition needs'
 created_at: '2026-09-13T07:15:18.299Z'
-updated_at: '2026-09-13T07:15:21.475Z'
+updated_at: '2026-09-13T07:22:58.806Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
