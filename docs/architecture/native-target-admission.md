@@ -1,0 +1,104 @@
+# Native target admission — criteria per codegen output
+
+Status: active doctrine. Governs which components a native codegen output
+(SwiftUI, Jetpack Compose) may admit, and what "admitted" proves. The
+rail-admitted web family (React, Vue, Svelte, Angular, Lit, React Native)
+is out of scope here; its admission authority is the admission-descriptor
+registry plus the governed rail.
+
+## The shared substrate
+
+A component's durable semantics live in its contract; each native target is
+a realization backend. Between the IR and the native emitters sits one
+shared substrate module, `packages/ds-codegen/src/frameworks/native-emission-class.ts`
+(sibling of `native-token-consumption.ts`), which owns the framework-neutral
+**emission-class predicates**: `isProjectedChildrenAction`, `isStaticContent`,
+`isBareRuleLeaf`, `isVisualOnlyLeaf`, `isValueChannelControl` (with
+`soleInputElement` / `soleValueChannel`), plus the structural atoms
+(`countChildrenLeaves`, `hasEssentialComponentInstance`).
+
+Two rules govern what lives there:
+
+1. **Identical predicates are written once.** When two targets implement the
+   same class word-for-word (static content, projected-children action,
+   bare-rule leaf, value-channel control), the predicate lives in the
+   substrate and both emitters import it. A copy is a drift defect waiting
+   to happen — this is how `isProjectedChildrenAction` started (exported
+   from the swift emitter for the jetpack action path) before it had a
+   durable home.
+2. **Divergent predicates stay at the target, built from shared atoms.** The
+   jetpack prop-text and expandable gates are deliberately broader than
+   swift's (they realize shapes swift routes elsewhere). That divergence is
+   target-capability information: unifying it would silently change one
+   target's admitted set. Divergent predicates compose from the substrate's
+   atoms so the difference is visible at the dispatch site.
+
+An emission-class predicate that special-cases a component name is a
+missing IR fact — push the fact down, never the name up.
+
+## The admission ladder
+
+A component is admissible for a native target when **all** of the following
+hold. Each rung is mechanically checked; none is a judgment call.
+
+| Rung | Criterion | Authority |
+|---|---|---|
+| C1 Class | The component's structural emission class is realized by the target's emitter, dispatching on a substrate (or explicitly target-local) predicate. Zero component-name checks in the dispatch path. | Code review + `grep` for name literals in dispatch; unit tests pin class routing |
+| C2 Registration | The component is on the target's `components` allowlist in `fsds.targets.json`. The allowlist scopes *default* generation only — explicit per-component requests bypass it and must hit the emitter's fail-loud not-implemented throw for unimplemented classes. Admission never silences an emitter gap. | `fsds.targets.json`; CLI allowlist filter |
+| C3 Bytes | The target's generated tree is committed and regeneration is byte-identical. | CI generated-tree diff; local `generate` + `git diff --exit-code` |
+| C4 Compile | The target's own toolchain compiles the tree. Compose: `gradlew :library:compileKotlin` (plus the CI kotlinc smoke lane and the settings example consumer). SwiftUI: `swift build`/`swift test` over the SwiftPM package (the test target additionally evaluates every admitted component body). | Native compile lanes in CI |
+| C5 Token parity | Every token definition the target emits is consumed, every lookup has a definition, shared slot identities agree with React Native, chrome roles are claimed per emitter path, and the composable API keeps `modifier` as the first optional parameter. Compose: `pnpm run parity:compose-tokens`. | `scripts/compose-parity-diff.mjs` (+ self-test) |
+| C6 Substrate discipline | Committed substrates are foundation-only (zero `androidx.compose.material` imports) and live in family-named directories (`toggle/`, `rule/`, `controls/`) that never match a component name in any casing — on case-insensitive filesystems a `checkbox/` substrate dir and the generated `Checkbox/` component dir are one physical directory with two owners. | Review + the parity script's per-path detection |
+| C7 Divergences ledgered | Every contract fact the realization does not lower (omitted props, binary-only state, unclaimed layout slots) is named as a divergence in the emitter's docstring and here — never silently dropped. | This document |
+
+## Current per-target state
+
+SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
+of `<!-- component-count -->52` contracts. Jetpack Compose admits
+`<!-- target-component-count:jetpack-compose -->25`, realized through the
+emitter paths below (each dispatches on the substrate or its documented
+local twin):
+
+| Compose emitter path | Substrate predicate | Corpus consumers |
+|---|---|---|
+| native-toggle collapse | `collapseIntents: native-toggle-affordance` | Switch, ToggleSwitch |
+| projected-children action | `isProjectedChildrenAction` (substrate) | Button, Links, NavList |
+| boolean control | `isValueChannelControl` + boolean channel (substrate) | Checkbox |
+| bare-rule leaf | `isBareRuleLeaf` (substrate) | Divider |
+| prop-text leaf | target-local (broader than swift) | CodeBlock, CodeSnippet, Markdown, Text-leaf family |
+| expandable content | target-local (broader than swift) | ShowMore, Truncate |
+| progress indicator | target-local role+shape gate | Progress, Spinner |
+| static content | `isStaticContent` (substrate) | the passive chrome family |
+
+Dispatch precedence mirrors the swift dispatcher: a declared collapse
+intent owns the realization before any structural class is consulted.
+
+## Ledgered divergences (compose)
+
+- **Checkbox** — `indeterminate` is not lowered (the substrate is binary,
+  matching the SwiftUI boolean-control twin); `name`/`value`/
+  `ariaLabelledby` form-wiring props are omitted v1; `ariaLabel` lowers to
+  the semantics `contentDescription`; checked-state colors fall back to
+  ledgered constants until the token graph carries checked-scope slots;
+  visual box geometry comes from the emitter's framework-grammar table
+  because no `checkbox.size.*` token exists.
+- **Divider** — the `thickness`/`title` string props are omitted v1 (the
+  token slot drives thickness); `divider.spacing.margin` is unread (this
+  class realizes the rule, not the surrounding layout rhythm).
+- **All control paths** — `box-model.gap` is unclaimed chrome: a lone
+  control lays out no children; label/gap realization belongs to composer
+  classes.
+
+Adding a component is therefore not an emitter edit: land the class (or
+confirm the existing class covers the shape), extend the parity script's
+path/role table if the path is new, add the allowlist entry, regenerate,
+and run C3–C5. Growing the corpus grows the ladder, not the criteria.
+
+## Non-claims
+
+Admission proves emit → drift-gate → compile → token-parity binding. It
+does not prove visual parity with the web family, accessibility adequacy,
+Android SDK/device or iOS simulator behavior, or component correctness
+beyond what the SwiftUI test target's bounded facts cover. The Compose
+lane has no UI-runtime lane; the SwiftUI PressProof harness is a
+separately-invoked macOS witness, not a CI step.
