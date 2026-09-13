@@ -79,7 +79,7 @@ hold. Each rung is mechanically checked; none is a judgment call.
 
 SwiftUI admits the full corpus: `<!-- target-component-count:swiftui -->52`
 of `<!-- component-count -->52` contracts. Jetpack Compose admits
-`<!-- target-component-count:jetpack-compose -->49`, realized through the
+`<!-- target-component-count:jetpack-compose -->50`, realized through the
 emitter paths below (each dispatches on the substrate or its documented
 local twin):
 
@@ -98,6 +98,7 @@ local twin):
 | referenced-action composite | `isReferencedActionComposite` (substrate) | Chip |
 | passive tree item | `isPassiveTreeItem` (substrate) | NavTree |
 | compound-part composer | `isCompoundPartComposer` (substrate) | Card |
+| media leaf | `isMediaLeaf` (substrate) | Image |
 | named-slot composer | `isNamedSlotComposer` (substrate) | Field |
 | labeled text control | `isLabeledTextControl` (substrate) | TextField |
 | selection control | `isSelectionControl` (substrate) | Select |
@@ -117,7 +118,7 @@ intent owns the realization before any structural class is consulted.
 
 ## Remaining components — required class and blocker
 
-The compose allowlist does not yet admit <!-- target-component-remainder:jetpack-compose -->3 corpus
+The compose allowlist does not yet admit <!-- target-component-remainder:jetpack-compose -->2 corpus
 contracts. Each row below names the class that would carry one, whether that
 class needs a shared-substrate move (the predicate is currently swift-local)
 or is target-local, and the concrete blocker or decision that gates the
@@ -128,7 +129,6 @@ classes and the IR probes recorded in the specs `FEAT-COMPOSE-*`.
 | Component | Required class | Substrate move | Blocker / decision |
 |---|---|---|---|
 | NavTree | passive tree item | realized (`isPassiveTreeItem`, substrate) | the heading composes the catalog glyph beside the dom's link and label content props, and the list projects the consumer's children inside the declared content color. Unclaimed: `nav-tree.color.connector`, `color.foreground.current` / `.hover` / `.headingHover`, `color.outline.focus`, `size.fontSize.item`, `size.gap.item`, `size.margin.group` and `stateLayer.hover` / `.selected`, because the tree renders one heading and projects its items, so item-level and interaction-state slots have no node of their own. The glyph-host admission stays rejected: it would render a bare glyph and claim a tree. |
-| Image | media leaf | yes (`isMediaLeaf`) | foundation-only image loading does not exist; needs a painter/loader decision (degradation or a committed loader substrate) |
 | Avatar | src-or-fallback | yes (`resolveSrcFallbackRef`) | same loader decision as Image; falls back to initials |
 | Walkthrough | anchored (selector) | excluded by `isAnchoredSurface` | selector-sourced anchor (`surface.selectorAnchor`) needs a DOM selector lookup; step channel |
 
@@ -163,6 +163,7 @@ anchor is selector-sourced.
   multi-item shape for a later class).
 - **Popover / Tooltip (anchored surfaces)** — collision handling (`flip-shift`) is not realized (placement applied as declared, `auto` treated as bottom); the panel is offset by the anchor's size rather than the panel's own extent, so Top/Left placements overlap rather than nest; the Tooltip `describedby` relationship lowers to the popup host only. Walkthrough stays unadmitted: its anchor is selector-sourced and needs a DOM selector lookup the substrate does not have.
 - **Sheet / Toast (viewport-edge surfaces)** — Toast's `title`/`variant`/`politeness`/`action` are not lowered v1 (the content region carries the message) and a Toast without `duration` stays open until the channel closes; Sheet's `modal` axis is not lowered v1 (the host is always modal); both render through the foundation Dialog host with `usePlatformDefaultWidth = false` and an edge alignment driven by the placement enum.
+- **Image (media leaf)** — **the loader decision, recorded:** a foundation-only native target fetches and decodes nothing, so the image itself is the consumer's `Painter` and the class realizes the declared chrome plus the accessible name. With no painter it renders the alt text as the placeholder, which is also what keeps `box-model.gap` a real read rather than a claim. Unlowered: `src`, `width`, `height`, `aspectRatio`, `objectFit`, `objectPosition`, `loading`, `sizes`, `fallbackSrc`, the `placeholder` / `errorState` parts (there is no error channel to render), and `showPlaceholder` (supplying a painter is the consumer's choice). `image.size.*` is React Native-consumed but the contract declares the size axis as a variant, not as slots, so no Compose read can resolve it — the path role claims colour and radius only, and that exclusion is written here rather than silently narrowed.
 - **Card (compound-part composer)** — with no dom and no per-part slots, the part vocabulary *is* the structure: the class emits a marker scope plus one region composable per declared part (read from the anatomy, never named in the emitter) and the root carries the declared chrome. The parts apply only their own modifier, because there is no declared geometry to apply inside one; `card.elevation.resting` / `.raised` are shadow strings with no converter; `card.color.focus.ring` and `card.focus.ring.width` / `.offset` need focus state the root does not keep; `card.color.background.hover` needs hover state; `card.size.gap.default` / `.padding.default` / `.padding.inset` and `card.typography.lineHeight.*` lose to the merged box-model pool and the content text style. The part-scoped description/link/note scopes are unread.
 - **Field (named-slot composer)** — every declared slot becomes a null-safe content region rendered in document order, and the two text regions carry their declared typography through the content text-style local; the status axis drives the chrome through the layered lookup. The declared string channel is not threaded (the `control` slot owns the value, so a wrapper channel would be a second source of truth); `field.color.invalid-border` / `valid-border` / `focus-border`, `field.focus.ring.*` and `field.pad.x` are unclaimed (the status variants already override `field.color.border` in the layer the lookup reads, no focus interaction state is kept, and the merged box-model padding pool is the inset authority); `name` / `id` / `required` / `disabled` / `readOnly` / `validate` / `validating` are form wiring the consumer owns.
 - **Chip (referenced-action composite)** — the action and optional dismiss controls are *composed*, not re-implemented: the class lowers each declared `componentRef` to a call on the referenced generated composable, importing its package and the axis enums the call names. The reference vocabulary decides every fact (see the emitter docstring); `chip.color.*.selected` / `chip.size.padding.*` are unclaimed because the variant layers override the same default slot names the layered lookup reads and the merged box-model pool is the inset authority; `chip.dismiss.gap` is unclaimed in favour of the shared `chip.size.gap` the web realization consumes; `chip.motion.duration.fast` is a CSS transition input; `chip.text.weight` rides the content text-style local; the referenced controls' `aria-expanded` / `aria-pressed` state bindings are named by the vocabulary and not lowered. **Reference ledger (C8): empty.** Every `componentRef` the corpus declares is realized: Details' and Accordion's chevrons, Alert's dismiss, Button's `loading`-gated spinner, Command's search glyph and Status's valueMap-named icon all compose the referenced generated component through one fact vocabulary, which declares a reference's bound props and its render guard as parameters from the contract's own defaults and accepts the modifier segments a class's own behavior needs (the disclosure and trigger rotations). The ledger remains a two-directional gate: adding a reference to any contract without realizing it fails, and an entry for a reference that becomes realized fails as stale. Accordion's chevron was dropped outright until this slice — the earlier entry that called it a painted equivalent was wrong, and realizing it is what corrected the record.

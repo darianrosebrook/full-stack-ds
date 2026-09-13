@@ -161,8 +161,8 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
     expect(() => generateJetpackComposeComponentSource(irFor("Avatar"))).toThrow(
       /no emission class matches component "Avatar" on jetpack-compose/,
     );
-    expect(() => generateJetpackComposeComponentSource(irFor("Image"))).toThrow(
-      /no emission class matches component "Image" on jetpack-compose/,
+    expect(() => generateJetpackComposeComponentSource(irFor("Walkthrough"))).toThrow(
+      /no emission class matches component "Walkthrough" on jetpack-compose/,
     );
   });
 });
@@ -408,12 +408,12 @@ describe("generateJetpackComposeComponentSource — disclosure class (FEAT-COMPO
     expect(src.match(/fun Details\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 
-  it("Avatar and Image remain unadmitted shapes", () => {
+  it("Avatar and Walkthrough remain unadmitted shapes", () => {
     // Accordion/Tabs gained the interactive-composite class, Chip the
     // referenced-action composite and Field the named-slot composer; Card
     // (composer) and Image (media leaf) are still unimplemented. Image emits
     // through the glyph-host class but stays deliberately unadmitted.
-    for (const name of ["Avatar", "Image"]) {
+    for (const name of ["Avatar", "Walkthrough"]) {
       expect(() => generateJetpackComposeComponentSource(irFor(name))).toThrow(
         new RegExp(`no emission class matches component "${name}" on jetpack-compose`),
       );
@@ -593,8 +593,8 @@ describe("generateJetpackComposeComponentSource — named-slot composer (FEAT-CO
     expect(() => generateJetpackComposeComponentSource(irFor("Avatar"))).toThrow(
       /no emission class matches component "Avatar" on jetpack-compose/,
     );
-    expect(() => generateJetpackComposeComponentSource(irFor("Image"))).toThrow(
-      /no emission class matches component "Image" on jetpack-compose/,
+    expect(() => generateJetpackComposeComponentSource(irFor("Walkthrough"))).toThrow(
+      /no emission class matches component "Walkthrough" on jetpack-compose/,
     );
   });
 });
