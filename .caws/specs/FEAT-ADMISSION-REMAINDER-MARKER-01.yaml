@@ -8,7 +8,8 @@ updated_at: '2026-09-13T04:58:08.361Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'scripts/docs-claims-check.mjs (target-component-remainder:<id> parametric family)'
+    - 'scripts/docs-claims-remainder.selftest.mjs (fixture-repo falsification of the new family)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -20,7 +21,8 @@ scope:
     - 'AGENTS.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The remainder derivation is corpus-minus-allowlist over the same two registries the count marker uses, so the two markers cannot disagree.'
+  - 'An unregistered target id exits nonzero rather than deriving a plausible number.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
