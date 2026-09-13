@@ -1,0 +1,54 @@
+id: FEAT-COMPOSE-ADMISSION-SUBSTRATE-01
+title: 'Native emission-class substrate; Compose Checkbox/Divider admission; admissibility criteria'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-13T00:04:49.085Z'
+updated_at: '2026-09-13T00:04:49.085Z'
+created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/native'
+    - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/component-source.test.ts'
+    - 'packages/ds-jetpack-compose/library/src/main/kotlin'
+    - 'fsds.targets.json'
+    - 'scripts/compose-parity-diff.mjs'
+    - 'scripts/compose-parity-diff.test.mjs'
+    - 'docs/architecture/native-target-admission.md'
+    - 'docs/current-implementation-snapshot.md'
+    - 'packages/ds-codegen/src/frameworks/swift/README.md'
+    - 'packages/ds-codegen/src/frameworks/jetpack-compose/README.md'
+    - 'AGENTS.md'
+    - 'CLAUDE.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the framework-neutral emission-class predicates duplicated across the swift and jetpack emitters; when they move into a shared frameworks/native substrate consumed by both targets; then swiftui and compose regeneration stay byte-identical for every previously admitted component and the codegen suite passes'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the Checkbox contract (boolean checked channel) and the Divider contract (hr bare-rule leaf); when the compose emitter gains boolean-control and bare-rule-leaf classes dispatching on shared structural predicates with a foundation-only checkbox substrate; then --target=all emits Checkbox and Divider trees that compile via gradle :library:compileKotlin with zero component-name checks in the new paths'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given Checkbox and Divider join the jetpack-compose allowlist 23 to 25; when parity and doc gates run; then parity:compose-tokens passes with the new emitter paths chrome roles claimed and RN shared identities agreeing, docs:check-claims passes with updated target counts, and generate:check stays green'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given each codegen output needs a named admissibility bar; when docs/architecture/native-target-admission.md lands; then it states the mechanical per-target admission criteria, the shared substrate doctrine, the supported-class matrix, and compile-only non-claims, and the snapshot row cites it'
+non_functional: {}
+contracts:
+  - name: 'native-emission-class'
+    type: behavior
+    path: 'packages/ds-codegen/src/frameworks/native/emission-class.ts'
