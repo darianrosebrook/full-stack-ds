@@ -2,9 +2,11 @@ id: FEAT-COMPOSE-STATUS-ICON-REALIZATION-01
 title: 'Realize Status''s valueMap-driven icon through the reference mechanism'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Status''s valueMap-named icon is composed through the reference vocabulary (C8 ledger 4 to 3), which exposed and fixed the valueMap axis-enum naming defect, and path classification now requires more than one composed control'
 created_at: '2026-09-13T06:08:38.191Z'
-updated_at: '2026-09-13T06:08:40.860Z'
+updated_at: '2026-09-13T06:17:11.552Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
