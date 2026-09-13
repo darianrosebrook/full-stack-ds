@@ -2,9 +2,10 @@ id: FEAT-COMPOSE-STATUS-ICON-REALIZATION-01
 title: 'Realize Status''s valueMap-driven icon through the reference mechanism'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: compose-statusicon
 created_at: '2026-09-13T06:08:38.191Z'
-updated_at: '2026-09-13T06:08:38.191Z'
+updated_at: '2026-09-13T06:08:40.860Z'
 created_by_session: 'session-a57bcf71-039b-4b33-98c5-60665c7bccd2'
 blast_radius:
   modules:
