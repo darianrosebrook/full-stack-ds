@@ -32,9 +32,11 @@ import type {
   GeneratedFile,
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
+import type { PrimitiveIR } from "../../primitive-contract.js";
 import { generateJetpackComposeComponentSource } from "./component-source.js";
 import { generateJetpackComposeTokensFile } from "./component-source.js";
 import { generateJetpackComposeBarrel } from "./barrel.js";
+import { generateComposeGlyphCatalogFile } from "./icon-glyph.js";
 import {
   generateJetpackComposeSurfaceFiles,
   isSurfaceComponent,
@@ -75,6 +77,16 @@ export function createJetpackComposeEmitter(): FrameworkEmitter {
 
     emitTests(_ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       return [];
+    },
+
+    // The glyph catalog rides the primitives channel (the swift emitter's
+    // precedent): a shared substrate every iconGlyph surface composes. The
+    // Stack primitive itself has no jetpack-compose target in the primitive
+    // contract yet, so this channel carries only the catalog — its
+    // `../glyph/` path lands it beside the committed FsdsSvgPath runtime.
+    emitPrimitives(_ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
+      const catalog = generateComposeGlyphCatalogFile();
+      return catalog ? [catalog] : [];
     },
 
     emitHook(_ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
