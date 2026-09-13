@@ -33,3 +33,8 @@ contracts:
   - name: 'admission-remainder-marker'
     type: behavior
     path: 'scripts/docs-claims-check.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge 344f5c46: node scripts/docs-claims-remainder.selftest.mjs -> 6 passed, 0 failed (correct value passes; a wrong number is named and fails; --fix rewrites exactly that number; an unregistered id exits 2; a neighbouring typo exits 2); pnpm run docs:check-claims -> 75 marked claims OK and derives 8 for the admission doc; a deliberate 9 in docs/architecture/native-target-admission.md fails with 'stated \"9\" but derived value is \"8\"'"
+    recorded_at: "2026-09-13T05:01:05.990Z"
