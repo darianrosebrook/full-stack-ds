@@ -84,7 +84,12 @@ describe("renderMarkdownToHtml — blocks", () => {
 describe("renderMarkdownToHtml — links route into the app", () => {
   it("rewrites relative md links to docs routes with fragments", () => {
     const html = render("see [overview](./overview.md#intro)", "docs/arch/guide.md");
-    expect(html).toBe('<p>see <a href="/docs/arch/overview#intro">overview</a></p>');
+    expect(html).toBe('<p>see <a href="#/docs/arch/overview#intro">overview</a></p>');
+  });
+
+  it("neutralizes dangerous schemes in link hrefs and image srcs", () => {
+    expect(render("[x](javascript:alert(1))")).toContain('<a href="#">x</a>');
+    expect(render("![i](data:text/html,x)")).toContain('<img src="#"');
   });
 
   it("renders images with resolved src and preserved alt text", () => {

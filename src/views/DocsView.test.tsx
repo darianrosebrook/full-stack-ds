@@ -47,7 +47,7 @@ const PAGE: DocsPage = {
   },
   headings: [{ depth: 2, text: "Intro", id: "intro" }],
   content:
-    "# Architecture Overview\n\nSee [the readme](../../README.md) and the <!-- component-count -->52 corpus.\n",
+    "# Architecture Overview\n\n## Intro\n\nSee [the readme](../../README.md) and the <!-- component-count -->52 corpus.\n",
 };
 
 const GRAPH: DocsGraphPayload = {
@@ -109,15 +109,72 @@ describe("DocsView reader", () => {
     });
     expect(screen.getByText("authority: architecture")).toBeInTheDocument();
     expect(screen.getByText("status: active")).toBeInTheDocument();
-    // Relative markdown link routed into the app; marker invisible; count text kept.
+    // Relative markdown link routed INSIDE the hash router; marker invisible.
     const link = screen.getByRole("link", { name: "the readme" });
-    expect(link).toHaveAttribute("href", "/docs/readme");
+    expect(link).toHaveAttribute("href", "#/docs/readme");
     expect(screen.getByText(/52 corpus/)).toBeInTheDocument();
     expect(screen.queryByText(/component-count/)).not.toBeInTheDocument();
     // Sidebar groups by derived section, pager walks the sorted index
     // (overview is the second of two entries, so it pages back to the readme).
     expect(screen.getByText("Start")).toBeInTheDocument();
     expect(screen.getByText("Previous: Root Readme")).toBeInTheDocument();
+  });
+
+  it("renders exactly one h1 when the frontmatter title differs from the body h1", async () => {
+    // Model what the projection emits for such a doc: page.title carries the
+    // frontmatter title while the body opens with a different heading.
+    const mismatched: DocsPage = {
+      ...PAGE,
+      title: "Different Frontmatter Title",
+      frontmatter: { ...PAGE.frontmatter, title: "Different Frontmatter Title" },
+      content: "# Body Heading\n\nProse that must survive.\n",
+    };
+    stubFetch({
+      "/docs-data/index.json": INDEX,
+      "/docs-data/pages/bbbbbbbbbbbbbbbb.json": mismatched,
+    });
+    render(<DocsView path="architecture/overview" />);
+    await waitFor(() => {
+      expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    });
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "Different Frontmatter Title"
+    );
+    expect(screen.queryByText("Body Heading")).not.toBeInTheDocument();
+    expect(screen.getByText("Prose that must survive.")).toBeInTheDocument();
+  });
+
+  it("restores the prior document title on unmount", async () => {
+    document.title = "Showcase";
+    stubFetch({
+      "/docs-data/index.json": INDEX,
+      "/docs-data/pages/bbbbbbbbbbbbbbbb.json": PAGE,
+    });
+    const view = render(<DocsView path="architecture/overview" />);
+    await waitFor(() => {
+      expect(document.title).toBe("Architecture Overview | full-stack-ds Docs");
+    });
+    view.unmount();
+    expect(document.title).toBe("Showcase");
+  });
+
+  it("scrolls to the slugified heading when a fragment is present", async () => {
+    const original = Element.prototype.scrollIntoView;
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    stubFetch({
+      "/docs-data/index.json": INDEX,
+      "/docs-data/pages/bbbbbbbbbbbbbbbb.json": PAGE,
+    });
+    try {
+      render(<DocsView path="architecture/overview" fragment="intro" />);
+      await waitFor(() => {
+        expect(document.getElementById("intro")).not.toBeNull();
+      });
+      expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    } finally {
+      Element.prototype.scrollIntoView = original;
+    }
   });
 
   it("reports an unregistered route as not-found rather than crashing", async () => {

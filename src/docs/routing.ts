@@ -59,13 +59,26 @@ export function slugify(value: string): string {
 }
 
 /**
- * Rewrite a markdown href against the current document's repo-relative path.
- * External/anchor/api/data hrefs pass through untouched; relative `.md`
- * targets resolve (`.`/`..` aware) and map to their app route, keeping any
- * fragment. Non-md relative targets pass through unchanged (images resolve
- * at their own layer; the corpus carries none under docs/ today).
+ * Rewrite a markdown href against the current document's repo-relative path
+ * for a HASH-ROUTED app: in-app targets come back as `#/docs/...` (keeping
+ * any `#fragment`), so a click stays inside the router instead of navigating
+ * to a server path. External http(s)/mailto, same-doc anchors, and /api//
+ * /data/ prefixes pass through untouched. Non-md relative targets pass
+ * through unchanged (images resolve at their own layer).
+ *
+ * Scheme hardening: javascript:/data:/vbscript:/file: hrefs are neutralized
+ * to "#" — the renderer's escape-first posture covers tag injection, not
+ * scheme injection, so the rewrite layer owns the URL-scheme allowlist.
  */
+const DANGEROUS_SCHEME = /^(?:javascript|data|vbscript|file):/i;
+
+/** "#" for dangerous schemes, otherwise the href unchanged. */
+export function neutralizeHrefScheme(href: string): string {
+  return DANGEROUS_SCHEME.test(href) ? "#" : href;
+}
+
 export function resolveDocsHref(href: string, currentRelPath: string): string {
+  if (DANGEROUS_SCHEME.test(href)) return "#";
   if (
     href.startsWith("http://") ||
     href.startsWith("https://") ||
@@ -104,5 +117,6 @@ export function resolveDocsHref(href: string, currentRelPath: string): string {
   }
 
   const route = docsRouteFromRelPath(resolvedParts.join("/"));
-  return hashPart ? `${route}${hashPart}` : route;
+  const hashRoute = `#${route}`;
+  return hashPart ? `${hashRoute}${hashPart}` : hashRoute;
 }
