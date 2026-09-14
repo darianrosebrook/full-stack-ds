@@ -31,3 +31,8 @@ contracts:
   - name: 'token-resolvability'
     type: contract-test
     path: 'docs/token-resolvability-audit/resolvability-matrix.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm run audit:token-resolvability at 83dd2326: RAIL-TOKEN-REFERENCE-RESOLVABILITY-01 — 0 unresolvable reference(s) across 0 distinct name(s); findings=0 unledgered=0 stale=0. Committed tokens.css reads the declared names (27x --fsds-semantic-color-background-primary, 9x --fsds-core-typography-font-family-monaspace) and 0x the two undeclared spellings; tokens:build:check reproduces the committed output byte-identically."
+    recorded_at: "2026-09-14T14:10:27.847Z"
