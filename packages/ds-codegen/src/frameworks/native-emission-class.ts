@@ -752,6 +752,18 @@ export function isReferencedContentComposite(ir: ComponentIR): boolean {
 }
 
 /**
+ * The coachmark surface class: a declared surface whose anchor is
+ * selector-sourced, distinguished from the anchored classes by its surface
+ * kind. Where the anchor comes from is a target capability; that the surface is
+ * a coachmark is a contract fact, so the predicate lives here.
+ *
+ * Pure structural facts — target-neutral (FEAT-COMPOSE-WALKTHROUGH-ADMISSION-01).
+ */
+export function isCoachmarkSurface(ir: ComponentIR): boolean {
+  return ir.surface?.kind === "coachmark";
+}
+
+/**
  * The centered-surface class: a declared surface whose positioning
  * strategy is `centered` — a modal panel attached to the viewport rather
  * than to an anchor. Dialog is the corpus consumer. Anchored surfaces
