@@ -45,3 +45,7 @@ evidence:
     status: pass
     evidence_ref: "grep '@layer core, semantic, components, theme, brand, density' matches README.md:28 and generated/tokens.css:6 byte-for-byte; grep -c 'token-types|per-brand CSS' README => 0; governed:rail PASS (6 frameworks, 312 groups)"
     recorded_at: "2026-09-14T03:58:30.215Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "test ! -d packages/ds-tokens/components => absent on merged main 3c89043c; git ls-files packages/ds-tokens/generated/ => exactly tokens.css + resolved.tokens.json, matching the corrected .gitignore header"
+    recorded_at: "2026-09-14T03:58:30.671Z"
