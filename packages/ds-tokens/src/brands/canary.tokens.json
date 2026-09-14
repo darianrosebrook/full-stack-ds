@@ -303,7 +303,7 @@
       },
       "onColor": {
         "$type": "color",
-        "$value": "{color.background.primary}"
+        "$value": "{semantic.color.background.primary}"
       },
       "success": {
         "strong": {
@@ -1334,7 +1334,7 @@
         "font": {
           "family": {
             "$type": "fontFamily",
-            "$value": "{typography.font.family.monaspace}"
+            "$value": "{core.typography.font.family.monaspace}"
           }
         }
       },
@@ -1342,7 +1342,7 @@
         "font": {
           "family": {
             "$type": "fontFamily",
-            "$value": "{typography.font.family.monaspace}"
+            "$value": "{core.typography.font.family.monaspace}"
           }
         }
       }

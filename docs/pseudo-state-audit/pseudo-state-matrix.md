@@ -2,7 +2,7 @@
 
 `PSEUDO-STATE-STYLING-RAIL-01` — read-only. Each declared state obligation (from `states.dimensions`, plus the empty-field input prompt for text inputs) is classified against the generated React CSS using the codegen's realization vocabulary: a derivable pseudo-class (`:hover`/`:focus-visible`/`:disabled`/`:checked`), an ARIA-attribute selector (`[aria-expanded="true"]`), the `:has(.<prefix>__input:<state>)` input wrapper, or a BEM modifier (`.<prefix>--<value>`). An obligation is **realized** if any valid form exists, **base** if it is the dimension's initial value, **behavioral** if it is channel-driven / suppressed / focus-exempt (not a CSS gap), or a **gap** otherwise.
 
-Components with states: **50** · obligations: **235** · realized: **66** · gaps: **17**
+Components with states: **51** · obligations: **236** · realized: **66** · gaps: **17**
 
 ## Gaps — declared state obligations with no realization
 
@@ -258,6 +258,12 @@ Components with states: **50** · obligations: **235** · realized: **66** · ga
 | `pointer` | interaction | default | default∘ hover✓ |
 
 ### Progress  `.progress`
+
+| dim | category | initial | values (✓ realized · ✗ gap · ∘ base · ~ behavioral) |
+|---|---|---|---|
+| `pointer` | interaction | default | default∘ |
+
+### RadioGroup  `.radio-group` · focus:none
 
 | dim | category | initial | values (✓ realized · ✗ gap · ∘ base · ~ behavioral) |
 |---|---|---|---|

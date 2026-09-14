@@ -1,7 +1,7 @@
 {
   "spec": "PSEUDO-STATE-STYLING-RAIL-01",
-  "componentsWithStates": 50,
-  "totalObligations": 235,
+  "componentsWithStates": 51,
+  "totalObligations": 236,
   "realized": 66,
   "gaps": 17,
   "failing": [
@@ -2055,6 +2055,31 @@
               "value": "default",
               "category": "interaction",
               "expected": ".progress--default",
+              "status": "base"
+            }
+          ],
+          "realizedCount": 0,
+          "gaps": [],
+          "total": 1
+        }
+      ],
+      "promptObligation": null
+    },
+    {
+      "component": "RadioGroup",
+      "prefix": "radio-group",
+      "inputBacked": false,
+      "focusStrategyNone": true,
+      "dims": [
+        {
+          "dim": "pointer",
+          "category": "interaction",
+          "initial": "default",
+          "values": [
+            {
+              "value": "default",
+              "category": "interaction",
+              "expected": ".radio-group--default",
               "status": "base"
             }
           ],
