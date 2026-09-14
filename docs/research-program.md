@@ -93,8 +93,12 @@ taxonomy of the research.
   with a named diagnostic; insufficient evidence remains `unproven` with an
   explicit obligation. The L0–L2 kernel is ratified by construction and by a
   necessity census — every coordinate carries a witness that removing it makes
-  two states indistinguishable, or it has left the kernel. The projection space
-  and realizations are deliberately not yet built. Doctrine:
+  two states indistinguishable, or it has left the kernel. Stage 2 adds the L3
+  derivation algebra: a derivation is a typed operator whose result is itself a
+  relation, stated by one locus (`OPERATOR_LAWS`) and re-earning its coordinates
+  by quotient and subtraction rather than by inspection. That slice's close
+  condition is open. The projection space and realizations are deliberately not
+  yet built. Doctrine:
   [analytical relation doctrine](architecture/analytical-relation-doctrine.md).
 - **Documentation/showcase.** Component evidence pages derive anatomy, props,
   states, accessibility, usage, A2UI, token information, preview state, and
@@ -164,8 +168,9 @@ Each domain carries graded proof strength; the snapshot's claim ledger is
 authoritative for all of it. In one line each: components are the only family
 proven end-to-end (emit → rail → runtime); tokens are CI-gated through build,
 validation, contrast, and resolvability; iconography is drift-gated through
-build and ledger; analytical relations have a ratified kernel and deliberately
-absent projections; the documentation/showcase surfaces are implemented and
+build and ledger; analytical relations have a ratified L0–L2 kernel, a built L3
+derivation algebra under an open close condition, and deliberately absent
+projections; the documentation/showcase surfaces are implemented and
 consumption-guarded; the evidence machinery is CI-gated; target packs are a
 metadata-only extension seam. Where a domain has nothing built yet, that is
 named rather than disguised — the analytical realization stage is deliberately
