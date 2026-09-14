@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "DocsView.test.tsx mismatched-title case: exactly one h1 ('Different Frontmatter Title'), body h1 dropped, prose preserved; unconditional leading-h1 strip with whitespace guard"
     recorded_at: "2026-09-14T13:34:53.078Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "DocsView.test.tsx title-restore test: 'Showcase' -> 'Architecture Overview | full-stack-ds Docs' -> restored to 'Showcase' on unmount"
+    recorded_at: "2026-09-14T13:34:53.536Z"
