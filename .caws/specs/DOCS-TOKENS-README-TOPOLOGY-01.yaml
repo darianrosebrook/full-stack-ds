@@ -18,7 +18,9 @@ scope:
     - 'packages/ds-tokens/components/.gitkeep'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'No emitted artifact path changes: the five web framework packages keep their committed <Component>.tokens.css siblings byte-identical; this slice only rewrites documentation and removes an unused placeholder directory.'
+  - 'Every path, artifact name, and layer order stated in packages/ds-tokens/README.md is verifiable against the repo tree and generated/tokens.css at merge HEAD.'
+  - 'packages/ds-tokens/.gitignore header names only files git actually tracks under generated/.'
 acceptance:
   - id: A1
     given: 'the ds-tokens README claims component tokens CSS is emitted into packages/ds-tokens/components/ by a codegen tokens emitter target'
