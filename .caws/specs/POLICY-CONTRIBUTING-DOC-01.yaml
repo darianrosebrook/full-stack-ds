@@ -37,3 +37,7 @@ evidence:
     status: pass
     evidence_ref: "probe tmp/probe-contributing.mts over git ls-files: entry /docs/CONTRIBUTING titled 'Contributing', graph node authority policy, corpus 44 nodes / 69 edges / 3 dropped; corpus ratchet 5/5 green; docs:check-links OK (110 links incl. the guide's 3); docs:check-claims OK 75"
     recorded_at: "2026-09-14T16:32:49.946Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "the walkthrough commands are the live CLI surface exercised by this very slice: caws specs create (--plan --json dry-run then real), worktree create + claim + scope check pattern, pnpm worktree:install, merge --dry-run then --no-close, evidence, close"
+    recorded_at: "2026-09-14T16:32:50.503Z"
