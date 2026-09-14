@@ -57,3 +57,8 @@ contracts:
   - name: 'docs-site-projection'
     type: schema
     path: 'src/docs/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "vitest run src/docs/projection.test.ts src/docs/projection.corpus.test.ts (15 tests): routes/edges/degrees derived from git ls-files + frontmatter + parsed links; real-corpus ratchet: 43 nodes / 66 edges / 3 dropped, no docs/internal/ leakage, edge-endpoint closure; no hand-maintained graph input exists in the repo"
+    recorded_at: "2026-09-14T05:19:42.445Z"
