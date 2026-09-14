@@ -3,7 +3,6 @@ title: 'Docs reader navigation fixes: hash-router links, fragments, single h1, t
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: docs-nav-fix
 created_at: '2026-09-14T13:24:35.104Z'
 updated_at: '2026-09-14T13:24:36.402Z'
 created_by_session: 'session-670775d8-8388-4f26-b6cd-14dc1b73c8fd'
