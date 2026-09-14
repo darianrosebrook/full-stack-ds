@@ -2,9 +2,10 @@ id: DOCS-TOKENS-README-TOPOLOGY-01
 title: 'Truth ds-tokens README to per-framework token CSS emission'
 risk_tier: 3
 mode: doc
-lifecycle_state: draft
+lifecycle_state: active
+worktree: docs-tokens-readme
 created_at: '2026-09-14T03:46:13.972Z'
-updated_at: '2026-09-14T03:46:13.972Z'
+updated_at: '2026-09-14T03:46:39.168Z'
 created_by_session: 'session-bf2f88f8-c1ec-4df7-8e1f-f78ddf354df5'
 blast_radius:
   modules:
