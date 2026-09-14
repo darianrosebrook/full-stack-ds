@@ -109,7 +109,7 @@
     {
       "id": "operator-law-locus",
       "condition": "One authoritative locus states the per-operator transition law.",
-      "why": "Today it is three-way: the doctrine names the operator set and two illustrative typing rules, relation-model.ts declares each signature, derivation.ts implements the certification law. Deliberately NOT fixed before the `kind` pass — centralizing the laws first would risk designing the abstraction the subtraction is supposed to discover. Sequence: finish subtraction, observe the surviving operator normal form, then establish the locus from that result."
+      "why": "Established after the `kind` pass, from the surviving operator normal form rather than ahead of it: `OPERATOR_LAWS` in derivation.ts co-locates each operator's prose statement and its executable certifier, and a test pins that every kind carries both. The locus does not subsume the whole per-kind surface — grain determination (`determinedGrain`), semantic findings (`semanticFindings`) and identity (`derivationKey`) remain separate switches, and a certifier can still drift from its own sentence."
     },
     {
       "id": "ruledigest-boundary",
@@ -731,5 +731,5 @@
       "disposition": "unresolved"
     }
   },
-  "$authorityNote": "The entries under `constructors` are EVIDENCE that a constructor survived Stage-2 necessity, never definitions of what it means. `authorityRef` names where the law actually lives, and the honest state of that is a finding rather than a tidy answer: no single locus states the per-operator transition law today. The doctrine names the operator set and gives two illustrative typing rules; `relation-model.ts` declares each constructor's signature; `derivation.ts` implements the law that certifies a declared result. Stage 2 has therefore surfaced a need for an explicit operator-law authority, which this ledger deliberately does NOT become — a subtraction that authored the definitions it then found necessary would be circular, which is the failure this whole slice has been removing."
+  "$authorityNote": "The entries under `constructors` are EVIDENCE that a constructor survived Stage-2 necessity, never definitions of what it means. `authorityRef` names where the law actually lives, and that is a single locus rather than an open finding: `OPERATOR_LAWS` in derivation.ts co-locates each operator's prose statement with its executable certifier, and a test pins that every kind carries both. The doctrine names the operator set and gives two illustrative typing rules; `relation-model.ts` declares each constructor's signature; `OPERATOR_LAWS` states the transition law that certifies a declared result. It is the locus this ledger deliberately does NOT become — a subtraction that authored the definitions it then found necessary would be circular, which is the failure this whole slice has been removing."
 }
