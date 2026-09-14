@@ -66,3 +66,7 @@ evidence:
     status: pass
     evidence_ref: "DocsView.test.tsx title-restore test: 'Showcase' -> 'Architecture Overview | full-stack-ds Docs' -> restored to 'Showcase' on unmount"
     recorded_at: "2026-09-14T13:34:53.536Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "routing.test.ts + markdown.test.ts: javascript:/data:/vbscript:/file: hrefs and data: image srcs -> '#'; neutralizeHrefScheme unit table"
+    recorded_at: "2026-09-14T13:34:53.998Z"
