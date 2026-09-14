@@ -36,3 +36,8 @@ contracts:
   - name: 'coachmark-surface'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/native-emission-class.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "merge a090ed3c: the generated Walkthrough places a viewport overlay by its declared placement prop (a when over the WalkthroughPlacement axis) and renders the panel with the declared surface/title/description/button chrome, the corpus's only number channel (index/defaultIndex/onStepChange) and the contract-labelled next control; gradlew :library:compileKotlin -> BUILD SUCCESSFUL; node scripts/compose-parity-diff.mjs -> 52 allowlisted, 0 failures with the coachmarkSurface role claiming the walkthrough chrome plus box-model; pnpm run generate:check -> 52/52; emitter suite 52/52; parity self-tests 20/20; swiftui regeneration byte-identical; pnpm test -> 3907/3907; pnpm run test:frameworks -> exit 0; pnpm run governed:rail -> exit 0, clean tree; docs:check-claims -> markers at 52"
+    recorded_at: "2026-09-14T02:53:57.427Z"
