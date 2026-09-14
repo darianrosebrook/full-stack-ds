@@ -41,3 +41,7 @@ evidence:
     status: pass
     evidence_ref: "the walkthrough commands are the live CLI surface exercised by this very slice: caws specs create (--plan --json dry-run then real), worktree create + claim + scope check pattern, pnpm worktree:install, merge --dry-run then --no-close, evidence, close"
     recorded_at: "2026-09-14T16:32:50.503Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "docs/CONTRIBUTING.md 'Landing work: merge autonomy' section: spec-bound work with all ACs recorded (pass/reasoned waiver) + gates green + clean owned lane + dry-run vs quiet main may merge without human approval; unspec'd work, unmet/unrecorded ACs, foreign lanes, gate weakening, and origin pushes named as human-coordination territory; closed-badge-is-not-proof caveat included"
+    recorded_at: "2026-09-14T16:32:51.028Z"
