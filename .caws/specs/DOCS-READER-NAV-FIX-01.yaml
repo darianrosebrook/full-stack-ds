@@ -49,3 +49,8 @@ contracts:
   - name: 'docs-reader-nav'
     type: behavior
     path: 'src/docs/routing.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "live probe tmp/review-link-verify.mjs: body link href #/docs/document_governance, click keeps URL in hash router and opens 'Document Governance' reader (was server-path navigation pre-fix); unit: routing.test.ts hash-router href table"
+    recorded_at: "2026-09-14T13:34:52.137Z"
