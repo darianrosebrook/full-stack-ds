@@ -41,3 +41,7 @@ evidence:
     status: pass
     evidence_ref: "grep -c 'ds-tokens/components|tokens emitter target|step 6a' packages/ds-tokens/README.md => 0; sibling topology sentence present (README:42); docs:check-links OK (107 links); docs:check-claims OK (75 claims)"
     recorded_at: "2026-09-14T03:58:29.753Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "grep '@layer core, semantic, components, theme, brand, density' matches README.md:28 and generated/tokens.css:6 byte-for-byte; grep -c 'token-types|per-brand CSS' README => 0; governed:rail PASS (6 frameworks, 312 groups)"
+    recorded_at: "2026-09-14T03:58:30.215Z"
