@@ -32,3 +32,8 @@ acceptance:
     then: 'given the merge policy section; when spec-bound work meets every recorded AC with gates green; then autonomous merge to main is permitted without approvals, and any work outside that boundary requires human coordination'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "probe tmp/probe-contributing.mts over git ls-files: entry /docs/CONTRIBUTING titled 'Contributing', graph node authority policy, corpus 44 nodes / 69 edges / 3 dropped; corpus ratchet 5/5 green; docs:check-links OK (110 links incl. the guide's 3); docs:check-claims OK 75"
+    recorded_at: "2026-09-14T16:32:49.946Z"
