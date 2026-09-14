@@ -20,6 +20,7 @@ import {
   IDENTITIES,
   moduleClosure,
   ownerOf,
+  UNIDENTIFIED_MODULES,
   WITNESS_AUTHORITY,
   authorityIdentities,
 } from "./authority.js";
@@ -54,6 +55,31 @@ describe("the identities partition the code that can move a verdict", () => {
     for (const i of IDENTITIES) {
       const unaccounted = [...moduleClosure(i.entryPoints)].filter((f) => ownerOf(f) === undefined && !ruleModules.has(f) && !(f in i.excluded)).sort();
       expect(unaccounted, `reachable from ${i.name} but neither digested nor excused`).toEqual([]);
+    }
+  });
+
+  it("every production module in the directory has a disposition, whether or not any walk reaches it", () => {
+    // Reachability is not the completeness rule. `localImports` reads static
+    // relative specifiers, so a module reached only through a deferred
+    // `import()` is invisible to the walk — which is how `stimulus.ts` and
+    // `final-quotient.ts` both came to govern evidence with no identity moving
+    // when they changed. Totality over the directory is the rule; the walk
+    // above is a second check.
+    const modules = fs
+      .readdirSync(HERE)
+      .filter((f) => f.endsWith(".ts") && !f.endsWith(".test.ts"))
+      .sort();
+    const undisposed = modules.filter((f) => ownerOf(f) === undefined && !ruleModules.has(f) && !(f in UNIDENTIFIED_MODULES)).sort();
+    expect(undisposed, "in the analytical directory but neither owned, a rule source, nor listed in UNIDENTIFIED_MODULES").toEqual([]);
+
+    // The list may not rot in the other direction either: an entry naming a
+    // module that no longer exists, or one that some identity now owns, would
+    // read as a considered exemption while being noise.
+    for (const [f, reason] of Object.entries(UNIDENTIFIED_MODULES)) {
+      expect(modules.includes(f), `UNIDENTIFIED_MODULES names ${f}, which is not a production module here`).toBe(true);
+      expect(ownerOf(f), `${f} is listed as unidentified and also owned`).toBeUndefined();
+      expect(ruleModules.has(f), `${f} is listed as unidentified and is also a rule source`).toBe(false);
+      expect(reason.trim().length, `${f} is exempted with no reason`).toBeGreaterThan(10);
     }
   });
 

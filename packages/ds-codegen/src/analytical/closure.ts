@@ -966,7 +966,25 @@ if (invokedDirectly && process.argv.includes("--restamp")) {
   } else if (process.argv.includes("--gate")) {
     const g = closureGate(r);
     console.log(g.message);
-    if (!g.ok) process.exit(1);
+    // The receipts are read here rather than inside `checkClosure` because
+    // `stimulus.ts` reads this module's carrier parsing and holder locator: a
+    // static import back would be a cycle, and a cycle in a module with
+    // top-level work leaves the await unsettled and the process exiting 13.
+    // Every closure that HAS stimuli must have a receipt that binds them to one
+    // occurrence; a stimulus pair whose cause could be about either derivation
+    // in its fixture is not evidence for the pair it names.
+    void import("./stimulus.js").then(({ checkReceipts, summarizeReceipts }) => {
+      const receipts = checkReceipts();
+      console.log(summarizeReceipts(receipts));
+      const bound = new Set(receipts.checks.filter((c) => c.verdict === "held").map((c) => c.carrier));
+      const unbound = loadClosures()
+        .closures.filter((c) => c.a && c.b && !bound.has(c.carrier))
+        .map((c) => c.carrier);
+      if (unbound.length > 0) {
+        console.log(`  ${unbound.length} closure(s) carry stimuli with no held occurrence receipt: ${unbound.join(", ")}`);
+      }
+      if (!g.ok || !receipts.ok || unbound.length > 0) process.exit(1);
+    });
   } else {
     const byPromotion = new Map<string, number>();
     for (const c of r.checks) byPromotion.set(c.promotion, (byPromotion.get(c.promotion) ?? 0) + 1);

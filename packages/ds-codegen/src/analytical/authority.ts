@@ -100,12 +100,19 @@ export const COORDINATE_BASIS: AuthorityIdentity = {
  * plan registry, because two of the defects that motivated it — a slot written
  * into existence, an array element deleted as a null hole — left the registry
  * untouched and lived entirely in the executor.
+ *
+ * `erasure-specimens.ts` is owned for a reason that separates it from the
+ * ledger writers: it synthesizes the separating pairs every footprint claim is
+ * TESTED over, and that population is not itself a committed artifact. A
+ * recorder whose rule changes produces a different ledger and is caught by its
+ * own byte comparison; a specimen generator can produce weaker pairs for the
+ * same coordinates, which is a falsifier moving with nothing to diff against.
  */
 export const ERASURE_AUTHORITY: AuthorityIdentity = {
   name: "erasureAuthority",
   invalidates: "every collision, footprint and freeze entry, since the images they were measured over may differ",
-  entryPoints: ["erasure-plan.ts", "quotient.ts", "quotient-image.ts", "alpha-rename.ts"],
-  owns: ["alpha-rename.ts", "erasure-plan.ts", "quotient-image.ts", "quotient.ts"],
+  entryPoints: ["erasure-plan.ts", "quotient.ts", "quotient-image.ts", "alpha-rename.ts", "erasure-specimens.ts"],
+  owns: ["alpha-rename.ts", "erasure-plan.ts", "erasure-specimens.ts", "quotient-image.ts", "quotient.ts"],
   excluded: {
     "census.ts": "owned by coordinateBasis",
     "relation-model.ts": "owned by coordinateBasis",
@@ -128,12 +135,23 @@ export const ERASURE_AUTHORITY: AuthorityIdentity = {
  * `derivation.ts` and `codes.ts` are the instrument the isolation check runs
  * and are covered by the rule digest, which is a different cause and stays
  * that way.
+ *
+ * `stimulus.ts` and `final-quotient.ts` are named as entry points rather than
+ * left to the walk. Both are reached only through a deferred `import()` — a
+ * static import back would be a cycle — and `localImports` reads static
+ * relative specifiers, out of the file TEXT, so the walk cannot see them and
+ * writing one here as an example would itself register as an import. Each
+ * decides what is admitted as evidence: which stimulus pairs stand for a
+ * carrier, and whether the simultaneous removal set leaves every artifact
+ * redundant. Reachability is not the completeness rule for that reason —
+ * `authority.test.ts` requires a disposition for every module in the directory
+ * and treats the walk as a second check.
  */
 export const WITNESS_AUTHORITY: AuthorityIdentity = {
   name: "witnessAuthority",
   invalidates: "every witness and closure verdict, since what counts as holding may have changed",
-  entryPoints: ["necessity.ts", "closure.ts"],
-  owns: ["capabilities.ts", "closure.ts", "corpus-integrity.ts", "experiments.ts", "necessity.ts", "subtraction.ts"],
+  entryPoints: ["necessity.ts", "closure.ts", "stimulus.ts", "final-quotient.ts"],
+  owns: ["capabilities.ts", "closure.ts", "corpus-integrity.ts", "experiments.ts", "final-quotient.ts", "necessity.ts", "stimulus.ts", "subtraction.ts"],
   excluded: {
     "census.ts": "owned by coordinateBasis",
     "relation-model.ts": "owned by coordinateBasis",
@@ -151,6 +169,33 @@ export const WITNESS_AUTHORITY: AuthorityIdentity = {
 };
 
 export const IDENTITIES: readonly AuthorityIdentity[] = [COORDINATE_BASIS, ERASURE_AUTHORITY, WITNESS_AUTHORITY];
+
+/**
+ * Production modules that belong to NO identity, each with the reason.
+ *
+ * This exists because reachability is the wrong completeness rule. The import
+ * walk finds what an identity's entry points reach through static specifiers,
+ * so a module reached only by a deferred `import()` is neither owned nor
+ * reported — `stimulus.ts` and `final-quotient.ts` both arrived that way, the
+ * second of them governing a close condition. `authority.test.ts` therefore
+ * requires every module in this directory to be owned, a rule source, or
+ * listed here, and keeps the walk as a second check rather than the definition.
+ *
+ * The line these all sit on: each WRITES a committed ledger and CHECKS it by
+ * byte comparison, so a change to its rule necessarily changes the artifact it
+ * would be caught by. That is not true of a module whose output is consumed
+ * and never committed — `erasure-specimens.ts` is owned for exactly that
+ * reason, and a new module here has to answer the same question before it is
+ * admitted to this list.
+ */
+export const UNIDENTIFIED_MODULES: Readonly<Record<string, string>> = {
+  "authority.ts": "defines the identities; a module inside an identity's closure cannot also be the module that defines it, and a change here moves every digest it computes",
+  "baseline.ts": "records and byte-compares the Phase-A baseline ledger; a changed rule changes the ledger it checks itself against",
+  "emit-schemas.ts": "emits the JSON schemas, which are digested as coordinateBasis ARTIFACTS; the emitter cannot move a schema without moving that digest",
+  "erasure-audit.ts": "computes the footprint report and checks the committed one against a fresh computation; a changed rule cannot leave the recorded report identical",
+  "freeze.ts": "records and checks the stage-2 freeze the same way",
+  "legacy-comparison.ts": "compares the live ledgers against the legacy record; it reports a difference and adjudicates nothing",
+};
 
 /** Local `./x.js` imports of one analytical module, by basename. */
 export function localImports(file: string, dir = HERE): string[] {

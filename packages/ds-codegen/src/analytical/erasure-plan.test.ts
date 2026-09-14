@@ -782,7 +782,12 @@ describe("composition — derived ordering and confluence over the bound registr
     // Not vacuous: the declared family is exercised by the population.
     expect(declared.length).toBeGreaterThan(0);
     expect(declared.every((d) => d.includes("#arity") && d.includes("#order"))).toBe(true);
-  });
+    // Every same-slot plan pair against the whole specimen population, each
+    // surviving pair executed in both listings: quadratic in the registry and
+    // measured at ~6s, which sat just under the 5s default until it did not.
+    // The budget is declared rather than the sweep narrowed — a sampled
+    // certificate is not one.
+  }, 60_000);
 
   it("refuses to certify beyond the exhaustive bound rather than sampling", () => {
     const tooMany = [...plans.values()].slice(0, CONFLUENCE_BOUND + 1);
