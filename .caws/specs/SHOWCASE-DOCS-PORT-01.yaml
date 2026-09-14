@@ -2,9 +2,11 @@ id: SHOWCASE-DOCS-PORT-01
 title: 'Showcase docs port: derived corpus site with dependency-graph landing'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Derived docs corpus site: git-tracked projection (reader + link-derived dependency graph landing) merged as 072b9d47'
 created_at: '2026-09-14T04:44:34.718Z'
-updated_at: '2026-09-14T05:13:00.845Z'
+updated_at: '2026-09-14T05:20:06.924Z'
 created_by_session: 'session-670775d8-8388-4f26-b6cd-14dc1b73c8fd'
 blast_radius:
   modules:
