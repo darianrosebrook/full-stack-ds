@@ -1,0 +1,34 @@
+id: POLICY-CONTRIBUTING-DOC-01
+title: 'Contributor guide: setup, CAWS walkthrough, and merge-autonomy policy'
+risk_tier: 3
+mode: chore
+lifecycle_state: draft
+created_at: '2026-09-14T16:30:04.630Z'
+updated_at: '2026-09-14T16:30:04.630Z'
+created_by_session: 'session-670775d8-8388-4f26-b6cd-14dc1b73c8fd'
+blast_radius:
+  modules:
+    - 'contributor documentation'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/CONTRIBUTING.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given docs/CONTRIBUTING.md authored with governed frontmatter; when the projection runs; then the doc appears in the docs site index and graph with authority policy'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the guide; when a contributor follows its CAWS walkthrough; then the commands match the live CLI surface (create/worktree/claim/install/merge/evidence/close)'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the merge policy section; when spec-bound work meets every recorded AC with gates green; then autonomous merge to main is permitted without approvals, and any work outside that boundary requires human coordination'
+non_functional: {}
+contracts: []
