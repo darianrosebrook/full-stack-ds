@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "live probe tmp/review-link-verify.mjs: body link href #/docs/document_governance, click keeps URL in hash router and opens 'Document Governance' reader (was server-path navigation pre-fix); unit: routing.test.ts hash-router href table"
     recorded_at: "2026-09-14T13:34:52.137Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "routing.test.ts parseHash fragment split + buildHref round-trip; DocsView.test.tsx fragment scrollIntoView spy; live probe: #/docs/readme#full-stack-ds resolves (not-found gone), anchor top 56px after scroll via headline title-slug id"
+    recorded_at: "2026-09-14T13:34:52.601Z"
