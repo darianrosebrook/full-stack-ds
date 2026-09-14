@@ -74,3 +74,7 @@ evidence:
     status: pass
     evidence_ref: "vitest run src/docs/graph (20 tests: degree-sqrt sizing, deterministic authority categories, adjacency, hit-testing, popover Open->route + Escape/outside dismiss) plus browser witness node tmp/docs-graph-smoke.mjs via Playwright: canvas painted (6465 sampled non-transparent px), 7 legend categories, totals line '43 docs · 66 links · 3 out-of-scope links dropped', reader h1 + 15 routed body links"
     recorded_at: "2026-09-14T05:19:52.701Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "worktree gate run at b5d7a177/15a81896: pnpm test 300 files / 3977 tests green; pnpm run lint + typecheck clean; docs:check-claims OK 75 claims after :fix rewrote 8 markers (route-count 13, view-list +DocsView, src-dir-count 12); test:coverage:showcase above floors (88.86 lines / 78.1 branches / 71.61 funcs vs 80/70/62); governed:rail verify OK; test:frameworks all five suites green; docs:check-links OK 107 links"
+    recorded_at: "2026-09-14T05:19:53.209Z"
