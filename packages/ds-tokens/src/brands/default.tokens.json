@@ -299,7 +299,7 @@
       },
       "onColor": {
         "$type": "color",
-        "$value": "{color.background.primary}"
+        "$value": "{semantic.color.background.primary}"
       },
       "success": {
         "strong": {
