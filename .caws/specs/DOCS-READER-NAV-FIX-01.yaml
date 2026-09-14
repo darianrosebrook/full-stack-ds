@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "routing.test.ts parseHash fragment split + buildHref round-trip; DocsView.test.tsx fragment scrollIntoView spy; live probe: #/docs/readme#full-stack-ds resolves (not-found gone), anchor top 56px after scroll via headline title-slug id"
     recorded_at: "2026-09-14T13:34:52.601Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "DocsView.test.tsx mismatched-title case: exactly one h1 ('Different Frontmatter Title'), body h1 dropped, prose preserved; unconditional leading-h1 strip with whitespace guard"
+    recorded_at: "2026-09-14T13:34:53.078Z"
