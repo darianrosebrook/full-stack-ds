@@ -70,3 +70,7 @@ evidence:
     status: pass
     evidence_ref: "vitest run src/docs/markdown.test.ts src/views/DocsView.test.tsx (20 tests): mid-sentence <!-- marker --> stripped, <script> and raw HTML escaped, relative md link rewritten to /docs/readme, reader pills/pager render, not-found and fetch-error states"
     recorded_at: "2026-09-14T05:19:43.375Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "vitest run src/docs/graph (20 tests: degree-sqrt sizing, deterministic authority categories, adjacency, hit-testing, popover Open->route + Escape/outside dismiss) plus browser witness node tmp/docs-graph-smoke.mjs via Playwright: canvas painted (6465 sampled non-transparent px), 7 legend categories, totals line '43 docs · 66 links · 3 out-of-scope links dropped', reader h1 + 15 routed body links"
+    recorded_at: "2026-09-14T05:19:52.701Z"
