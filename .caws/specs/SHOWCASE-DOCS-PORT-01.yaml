@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "vitest run src/docs/projection.test.ts src/docs/projection.corpus.test.ts (15 tests): routes/edges/degrees derived from git ls-files + frontmatter + parsed links; real-corpus ratchet: 43 nodes / 66 edges / 3 dropped, no docs/internal/ leakage, edge-endpoint closure; no hand-maintained graph input exists in the repo"
     recorded_at: "2026-09-14T05:19:42.445Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "dev middleware curl /docs-data/* -> totals {nodes:43,edges:66,droppedLinks:3}, 404 JSON for unknown page/route; tracked-only boundary witnessed live (zz-smoke.md absent until git add -N, then served at /docs/zz-smoke); pnpm run build emits dist/docs-data with 43 page JSONs from the same module src/docs/vite-plugin.ts"
+    recorded_at: "2026-09-14T05:19:42.910Z"
