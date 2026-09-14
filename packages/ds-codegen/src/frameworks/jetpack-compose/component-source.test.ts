@@ -154,17 +154,6 @@ describe("generateJetpackComposeComponentSource — static-content path", () => 
     expect(src).toContain("TextSize.Xs");
   });
 
-  it("throws loudly for non-static shapes instead of misrouting", () => {
-    // Select gained the selection class, Chip the referenced-action composite
-    // and Field the named-slot composer; Card (compound-part composer) and
-    // Image (passive tree) remain unimplemented shapes.
-    expect(() => generateJetpackComposeComponentSource(irFor("Walkthrough"))).toThrow(
-      /no emission class matches component "Walkthrough" on jetpack-compose/,
-    );
-    expect(() => generateJetpackComposeComponentSource(irFor("Walkthrough"))).toThrow(
-      /no emission class matches component "Walkthrough" on jetpack-compose/,
-    );
-  });
 });
 
 describe("generateJetpackComposeComponentSource — passive-leaf families", () => {
@@ -408,17 +397,6 @@ describe("generateJetpackComposeComponentSource — disclosure class (FEAT-COMPO
     expect(src.match(/fun Details\(([^)]*)\)/)![1]!.trim().startsWith("modifier: Modifier = Modifier,")).toBe(true);
   });
 
-  it("Walkthrough remains the unadmitted shape", () => {
-    // Accordion/Tabs gained the interactive-composite class, Chip the
-    // referenced-action composite and Field the named-slot composer; Card
-    // (composer) and Image (media leaf) are still unimplemented. Image emits
-    // through the glyph-host class but stays deliberately unadmitted.
-    for (const name of ["Walkthrough", "Walkthrough"]) {
-      expect(() => generateJetpackComposeComponentSource(irFor(name))).toThrow(
-        new RegExp(`no emission class matches component "${name}" on jetpack-compose`),
-      );
-    }
-  });
 });
 
 describe("generateJetpackComposeComponentSource — radio-collection class (FEAT-COMPOSE-RADIO-ADMISSION-01)", () => {
@@ -589,14 +567,6 @@ describe("generateJetpackComposeComponentSource — named-slot composer (FEAT-CO
     }
   });
 
-  it("Field and Walkthrough remain the unadmitted composer shapes", () => {
-    expect(() => generateJetpackComposeComponentSource(irFor("Walkthrough"))).toThrow(
-      /no emission class matches component "Walkthrough" on jetpack-compose/,
-    );
-    expect(() => generateJetpackComposeComponentSource(irFor("Walkthrough"))).toThrow(
-      /no emission class matches component "Walkthrough" on jetpack-compose/,
-    );
-  });
 });
 
 describe("generateJetpackComposeComponentSource — referenced-action composite (FEAT-COMPOSE-REFERENCE-REALIZATION-01)", () => {

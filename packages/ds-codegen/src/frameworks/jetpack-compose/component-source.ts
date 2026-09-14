@@ -32,6 +32,7 @@ import {
   isBareRuleLeaf,
   collectDomSlots,
   isCenteredSurface,
+  isCoachmarkSurface,
   isDateGridSurface,
   surfaceStringChannel,
   isGlyphHost,
@@ -4021,6 +4022,282 @@ function emitSelectionControl(ir: ComponentIR): string {
 }
 
 /**
+ * The coachmark surface class (FEAT-COMPOSE-WALKTHROUGH-ADMISSION-01): a
+ * declared surface whose anchor is selector-sourced. The decision recorded in
+ * the admission criteria: a non-DOM target has no document to query, so the
+ * anchor *source* degrades to a viewport-placed overlay while the contract's
+ * declared `placement` prop still drives the panel's alignment — the same call
+ * the SwiftUI `emitCoachmarkSurface` path already makes.
+ *
+ * Named divergences (ledgered in docs/architecture/native-target-admission.md):
+ *   - the previous / complete / skip controls are lowered as callbacks but no
+ *     control is emitted for them: the contract declares no label for those
+ *     controls and this emitter does not invent control text (the same rule the
+ *     calendar's nav affordances follow). The next control is the one the
+ *     contract labels (`nextLabel`);
+ *   - the dots strip is unclaimed: the step count comes from `steps`, a
+ *     declared alias this class does not materialise, so progress is the
+ *     declared `progressLabel`;
+ *   - `walkthrough.surface.shadow` is a shadow string with no converter,
+ *     `storageKey` / `autoStart` / `closeOnOutsideClick` are host concerns, and
+ *     presence is the consumer's: the contract declares no boolean open channel,
+ *     so the panel renders whenever it is composed.
+ */
+function emitCoachmarkSurface(ir: ComponentIR): string {
+  const name = ir.name;
+  const segment = packageSegment(name);
+  const stepChannel = ir.behavior.normalizedChannels.find((c) => c.valueType === "number")!;
+  const valueProp = stepChannel.valueProp;
+  const defaultValueProp = stepChannel.defaultValueProp ?? `${valueProp}Default`;
+  const changeProp = stepChannel.changeHandlerProp;
+  const placementProp = ir.styledProps.find(
+    (p) => p.typeRefs?.some((ref) => (ir.definedTypes[ref]?.values?.length ?? 0) > 0),
+  );
+  const placementRef = placementProp?.typeRefs?.find(
+    (ref) => (ir.definedTypes[ref]?.values?.length ?? 0) > 0,
+  );
+  const placementValues = placementRef ? ir.definedTypes[placementRef]!.values! : [];
+  const placementEnum = placementRef ?? `${name}Placement`;
+  const placementDefault =
+    placementProp?.defaultExpr?.replace(/^["']|["']$/g, "") ?? placementValues[0] ?? "";
+  const slots = collectDomSlots(ir.dom!);
+
+  const surfaceBgSlot = findLayeredSlotAny(ir, ["root"], [".surface.bg", ".color.background.default"]);
+  const surfaceBorderSlot = findLayeredSlotAny(ir, ["root"], [".surface.border", ".color.border.default"]);
+  const surfaceRadiusSlot = findLayeredSlotAny(ir, ["root"], [".surface.radius", ".size.radius.default"]);
+  const surfacePaddingSlot = findLayeredSlotAny(ir, ["root"], [".surface.padding"]);
+  const titleColorSlot = findLayeredSlotAny(ir, ["root"], [".title.color"]);
+  const titleSizeSlot = findLayeredSlotAny(ir, ["root"], [".title.fontSize"]);
+  const titleWeightSlot = findLayeredSlotAny(ir, ["root"], [".title.fontWeight"]);
+  const descriptionColorSlot = findLayeredSlotAny(ir, ["root"], [".description.color"]);
+  const descriptionSizeSlot = findLayeredSlotAny(ir, ["root"], [".description.fontSize"]);
+  const descriptionMarginSlot = findLayeredSlotAny(ir, ["root"], [".description.marginTop"]);
+  const controlsGapSlot = findLayeredSlotAny(ir, ["root"], [".controls.gap"]);
+  const controlsMarginSlot = findLayeredSlotAny(ir, ["root"], [".controls.marginTop"]);
+  const primaryBgSlot = findLayeredSlotAny(ir, ["root"], [".button.primary.bg"]);
+  const primaryColorSlot = findLayeredSlotAny(ir, ["root"], [".button.primary.color"]);
+  const primaryRadiusSlot = findLayeredSlotAny(ir, ["root"], [".button.primary.radius"]);
+  const secondaryBgSlot = findLayeredSlotAny(ir, ["root"], [".button.secondary.bg"]);
+  const secondaryBorderSlot = findLayeredSlotAny(ir, ["root"], [".button.secondary.border"]);
+  const secondaryRadiusSlot = findLayeredSlotAny(ir, ["root"], [".button.secondary.radius"]);
+  const gapSlot = findTokenSlot(ir, "root", "box-model.gap");
+  const minWidthSlot = findTokenSlot(ir, "root", "box-model.min-width");
+  const minHeightSlot = findTokenSlot(ir, "root", "box-model.min-height");
+  const paddingInlineStartSlot = findTokenSlot(ir, "root", "box-model.padding-inline-start");
+  const paddingInlineEndSlot = findTokenSlot(ir, "root", "box-model.padding-inline-end");
+  const paddingBlockStartSlot = findTokenSlot(ir, "root", "box-model.padding-block-start");
+  const paddingBlockEndSlot = findTokenSlot(ir, "root", "box-model.padding-block-end");
+  const consumesTokens = ir.tokenScopes.some((s) => s.values.length > 0);
+
+  const alignments = placementValues
+    .map((value) => {
+      const lower = value.toLowerCase();
+      const alignment = lower.includes("top")
+        ? "Alignment.TopCenter"
+        : lower.includes("bottom")
+          ? "Alignment.BottomCenter"
+          : lower.includes("left") || lower.includes("start")
+            ? "Alignment.CenterStart"
+            : lower.includes("right") || lower.includes("end")
+              ? "Alignment.CenterEnd"
+              : "Alignment.Center";
+      return `${placementEnum}.${kotlinEnumName(value)} -> ${alignment}`;
+    })
+    .join("; ");
+
+  const lines: string[] = [];
+  lines.push(`// @generated by ds-codegen from components/${name}/${name}.contract.json — do not edit by hand.`);
+  lines.push(`package com.fullstackds.components.${segment}`);
+  lines.push(``);
+  lines.push(`// @generated:start imports`);
+  lines.push(`import androidx.compose.foundation.background`);
+  lines.push(`import androidx.compose.foundation.border`);
+  lines.push(`import androidx.compose.foundation.clickable`);
+  lines.push(`import androidx.compose.foundation.layout.Arrangement`);
+  lines.push(`import androidx.compose.foundation.layout.Box`);
+  lines.push(`import androidx.compose.foundation.layout.Column`);
+  lines.push(`import androidx.compose.foundation.layout.PaddingValues`);
+  lines.push(`import androidx.compose.foundation.layout.Row`);
+  lines.push(`import androidx.compose.foundation.layout.fillMaxSize`);
+  lines.push(`import androidx.compose.foundation.layout.padding`);
+  lines.push(`import androidx.compose.foundation.layout.requiredSizeIn`);
+  lines.push(`import androidx.compose.foundation.shape.RoundedCornerShape`);
+  lines.push(`import androidx.compose.foundation.text.BasicText`);
+  lines.push(`import androidx.compose.runtime.Composable`);
+  lines.push(`import androidx.compose.runtime.CompositionLocalProvider`);
+  lines.push(`import androidx.compose.runtime.getValue`);
+  lines.push(`import androidx.compose.runtime.mutableStateOf`);
+  lines.push(`import androidx.compose.runtime.remember`);
+  lines.push(`import androidx.compose.runtime.setValue`);
+  lines.push(`import androidx.compose.ui.Alignment`);
+  lines.push(`import androidx.compose.ui.Modifier`);
+  lines.push(`import androidx.compose.ui.draw.clip`);
+  lines.push(`import androidx.compose.ui.graphics.Color`);
+  lines.push(`import androidx.compose.ui.text.TextStyle`);
+  lines.push(`import androidx.compose.ui.unit.TextUnit`);
+  lines.push(`import androidx.compose.ui.unit.dp`);
+  lines.push(`import com.fullstackds.tokens.LocalFsdsContentColor`);
+  lines.push(`import com.fullstackds.tokens.LocalFsdsTheme`);
+  lines.push(`import com.fullstackds.tokens.toFsdsColor`);
+  lines.push(`import com.fullstackds.tokens.toFsdsDp`);
+  lines.push(`import com.fullstackds.tokens.toFsdsSp`);
+  lines.push(`import com.fullstackds.tokens.toFsdsWeight`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start types`);
+  if (placementRef) {
+    lines.push(`/** ${placementProp!.safeName} axis lowered from the contract's ${placementRef} type. */`);
+    lines.push(`enum class ${placementEnum} { ${placementValues.map(kotlinEnumName).join(", ")} }`);
+    lines.push(``);
+  }
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  lines.push(`// @generated:start component`);
+  lines.push(`@Composable`);
+  lines.push(`fun ${name}(`);
+  lines.push(`    modifier: Modifier = Modifier,`);
+  lines.push(`    ${valueProp}: Int? = null,`);
+  lines.push(`    ${defaultValueProp}: Int = 0,`);
+  lines.push(`    ${changeProp}: ((Int) -> Unit)? = null,`);
+  if (placementRef) lines.push(`    ${placementProp!.safeName}: ${placementEnum} = ${placementEnum}.${kotlinEnumName(placementDefault)},`);
+  for (const prop of ir.styledProps) {
+    if (prop.type === "string") lines.push(`    ${prop.safeName}: String? = null,`);
+  }
+  if (ir.styledProps.some((p) => p.safeName === "previousDisabled")) {
+    lines.push(`    previousDisabled: Boolean = false,`);
+  }
+  for (const callback of ir.styledProps.filter((p) => p.type === "() => void")) {
+    if (callback.safeName === changeProp) continue;
+    lines.push(`    ${callback.safeName}: (() -> Unit)? = null,`);
+  }
+  for (const slot of slots) {
+    lines.push(`    ${kotlinParamName(slot)}: (@Composable () -> Unit)? = null,`);
+  }
+  lines.push(`) {`);
+  lines.push(`    var uncontrolled${pascalCase(valueProp)} by remember { mutableStateOf(${defaultValueProp}) }`);
+  lines.push(`    val resolved${pascalCase(valueProp)} = ${valueProp} ?: uncontrolled${pascalCase(valueProp)}`);
+  if (consumesTokens) {
+    lines.push(`    val fsdsTheme = LocalFsdsTheme.current`);
+    lines.push(`    fun layeredSlot(slotName: String): String? {`);
+    lines.push(`        val def = ${tokenConstName(ir)}["root"]?.get(slotName)`);
+    lines.push(`        return def?.let { fsdsTheme.resolve(it) }`);
+    lines.push(`    }`);
+    const color = (slot: { name: string } | undefined) =>
+      slot ? `layeredSlot(${JSON.stringify(slot.name)})?.toFsdsColor()` : undefined;
+    const dp = (slot: { name: string } | undefined) =>
+      slot ? `layeredSlot(${JSON.stringify(slot.name)})?.toFsdsDp() ?: 0.dp` : "0.dp";
+    const declare = (local: string, expression: string | undefined) => {
+      if (expression) lines.push(`    val ${local} = ${expression}`);
+    };
+    declare("coachmarkBackground", color(surfaceBgSlot));
+    declare("coachmarkBorder", color(surfaceBorderSlot));
+    declare("coachmarkTitleColor", color(titleColorSlot));
+    declare("coachmarkDescriptionColor", color(descriptionColorSlot));
+    declare("coachmarkPrimaryBackground", color(primaryBgSlot));
+    declare("coachmarkPrimaryColor", color(primaryColorSlot));
+    declare("coachmarkSecondaryBackground", color(secondaryBgSlot));
+    declare("coachmarkSecondaryBorder", color(secondaryBorderSlot));
+    lines.push(`    val coachmarkRadius = ${dp(surfaceRadiusSlot)}`);
+    lines.push(`    val coachmarkGap = ${dp(gapSlot)}`);
+    lines.push(`    val coachmarkMinWidth = ${dp(minWidthSlot)}`);
+    lines.push(`    val coachmarkMinHeight = ${dp(minHeightSlot)}`);
+    lines.push(`    val coachmarkInset = ${dp(surfacePaddingSlot)}`);
+    lines.push(`    val coachmarkDescriptionTop = ${dp(descriptionMarginSlot)}`);
+    lines.push(`    val coachmarkControlsGap = ${controlsGapSlot ? `layeredSlot(${JSON.stringify(controlsGapSlot.name)})?.toFsdsDp() ?: coachmarkGap` : "coachmarkGap"}`);
+    lines.push(`    val coachmarkControlsTop = ${dp(controlsMarginSlot)}`);
+    lines.push(`    val coachmarkPrimaryRadius = ${dp(primaryRadiusSlot)}`);
+    lines.push(`    val coachmarkSecondaryRadius = ${dp(secondaryRadiusSlot)}`);
+    lines.push(
+      `    val coachmarkPadding = PaddingValues(start = ${dp(paddingInlineStartSlot)}, end = ${dp(paddingInlineEndSlot)}, top = ${dp(paddingBlockStartSlot)}, bottom = ${dp(paddingBlockEndSlot)})`,
+    );
+    const sp = (slot: { name: string } | undefined) =>
+      slot ? `layeredSlot(${JSON.stringify(slot.name)})?.toFsdsSp() ?: TextUnit.Unspecified` : "TextUnit.Unspecified";
+    declare("coachmarkTitleSize", titleSizeSlot ? sp(titleSizeSlot) : undefined);
+    declare("coachmarkTitleWeight", titleWeightSlot ? `layeredSlot(${JSON.stringify(titleWeightSlot.name)})?.toFsdsWeight()` : undefined);
+    declare("coachmarkDescriptionSize", descriptionSizeSlot ? sp(descriptionSizeSlot) : undefined);
+  } else {
+    lines.push(`    val coachmarkRadius = 0.dp`);
+    lines.push(`    val coachmarkGap = 0.dp`);
+    lines.push(`    val coachmarkMinWidth = 0.dp`);
+    lines.push(`    val coachmarkMinHeight = 0.dp`);
+    lines.push(`    val coachmarkInset = 0.dp`);
+    lines.push(`    val coachmarkDescriptionTop = 0.dp`);
+    lines.push(`    val coachmarkControlsGap = 0.dp`);
+    lines.push(`    val coachmarkControlsTop = 0.dp`);
+    lines.push(`    val coachmarkPrimaryRadius = 0.dp`);
+    lines.push(`    val coachmarkSecondaryRadius = 0.dp`);
+    lines.push(`    val coachmarkPadding = PaddingValues(0.dp)`);
+    lines.push(`    val coachmarkTitleSize = TextUnit.Unspecified`);
+    lines.push(`    val coachmarkDescriptionSize = TextUnit.Unspecified`);
+  }
+  lines.push(`    val coachmarkShape = RoundedCornerShape(coachmarkRadius)`);
+  lines.push(`    Box(`);
+  lines.push(`        modifier.fillMaxSize(),`);
+  if (placementRef) {
+    lines.push(`        contentAlignment = when (${placementProp!.safeName}) { ${alignments} },`);
+  } else {
+    lines.push(`        contentAlignment = Alignment.Center,`);
+  }
+  lines.push(`    ) {`);
+  lines.push(`        Column(`);
+  lines.push(`            Modifier`);
+  lines.push(`                .requiredSizeIn(minWidth = coachmarkMinWidth, minHeight = coachmarkMinHeight)`);
+  lines.push(`                .clip(coachmarkShape)`);
+  lines.push(`                .then(if (coachmarkBackground != null) Modifier.background(coachmarkBackground, coachmarkShape) else Modifier)`);
+  lines.push(`                .then(if (coachmarkBorder != null) Modifier.border(1.dp, coachmarkBorder, coachmarkShape) else Modifier)`);
+  lines.push(`                .padding(coachmarkPadding)`);
+  lines.push(`                .padding(coachmarkInset),`);
+  lines.push(`            verticalArrangement = Arrangement.spacedBy(coachmarkGap),`);
+  lines.push(`        ) {`);
+  if (slots.includes("title")) {
+    lines.push(`            CompositionLocalProvider(`);
+    lines.push(`                LocalFsdsContentColor provides (${titleColorSlot ? "coachmarkTitleColor" : "null"} ?: Color.Unspecified),`);
+    lines.push(`            ) { title?.invoke() }`);
+  }
+  if (slots.includes("description")) {
+    lines.push(`            CompositionLocalProvider(`);
+    lines.push(`                LocalFsdsContentColor provides (${descriptionColorSlot ? "coachmarkDescriptionColor" : "null"} ?: Color.Unspecified),`);
+    lines.push(`            ) { description?.invoke() }`);
+  }
+  lines.push(`            if (progressLabel != null) {`);
+  lines.push(`                BasicText(text = progressLabel!!, modifier = Modifier.padding(top = coachmarkDescriptionTop))`);
+  lines.push(`            }`);
+  lines.push(`            Row(`);
+  lines.push(`                Modifier.padding(top = coachmarkControlsTop),`);
+  lines.push(`                horizontalArrangement = Arrangement.spacedBy(coachmarkControlsGap),`);
+  lines.push(`            ) {`);
+  lines.push(`                Box(`);
+  lines.push(`                    Modifier`);
+  lines.push(`                        .clip(RoundedCornerShape(coachmarkSecondaryRadius))`);
+  lines.push(`                        .then(if (coachmarkSecondaryBackground != null) Modifier.background(coachmarkSecondaryBackground, RoundedCornerShape(coachmarkSecondaryRadius)) else Modifier)`);
+  lines.push(`                        .then(if (coachmarkSecondaryBorder != null) Modifier.border(1.dp, coachmarkSecondaryBorder, RoundedCornerShape(coachmarkSecondaryRadius)) else Modifier)`);
+  lines.push(`                        .padding(coachmarkInset)`);
+  lines.push(`                        .clickable(enabled = !previousDisabled) { onPrevious?.invoke() },`);
+  lines.push(`                ) { }`);
+  lines.push(`                Box(`);
+  lines.push(`                    Modifier`);
+  lines.push(`                        .clip(RoundedCornerShape(coachmarkPrimaryRadius))`);
+  lines.push(`                        .then(if (coachmarkPrimaryBackground != null) Modifier.background(coachmarkPrimaryBackground, RoundedCornerShape(coachmarkPrimaryRadius)) else Modifier)`);
+  lines.push(`                        .padding(coachmarkInset)`);
+  lines.push(`                        .clickable { onNext?.invoke() },`);
+  lines.push(`                ) {`);
+  lines.push(`                    if (nextLabel != null) {`);
+  lines.push(`                        BasicText(`);
+  lines.push(`                            text = nextLabel!!,`);
+  lines.push(`                            style = TextStyle(color = ${primaryColorSlot ? "coachmarkPrimaryColor ?: Color.Unspecified" : "Color.Unspecified"}),`);
+  lines.push(`                        )`);
+  lines.push(`                    }`);
+  lines.push(`                }`);
+  lines.push(`            }`);
+  lines.push(`        }`);
+  lines.push(`    }`);
+  lines.push(`}`);
+  lines.push(`// @generated:end`);
+  lines.push(``);
+  return lines.join("\n");
+}
+
+/**
  * The centered-surface class (FEAT-COMPOSE-DIALOG-ADMISSION-01): a
  * `centered` surface lowers to the foundation `Dialog` host. The
  * contract's boolean openness channel rides the controlled/uncontrolled
@@ -6393,6 +6670,9 @@ export function generateJetpackComposeComponentSource(
   }
   if (isSelectionControl(ir)) {
     return emitSelectionControl(ir);
+  }
+  if (isCoachmarkSurface(ir)) {
+    return emitCoachmarkSurface(ir);
   }
   if (isCenteredSurface(ir)) {
     return emitCenteredSurface(ir);
