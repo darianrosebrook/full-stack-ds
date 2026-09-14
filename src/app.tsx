@@ -129,7 +129,9 @@ export function App() {
         {route.kind === "settings" && <SettingsView />}
         {route.kind === "activity" && <ActivityView bundle={bundle} />}
         {route.kind === "display-case" && <DisplayCaseView bundle={bundle} />}
-        {route.kind === "docs" && <DocsView path={route.path} />}
+        {route.kind === "docs" && (
+          <DocsView path={route.path} fragment={route.fragment ?? null} />
+        )}
         {route.kind === "tokens-philosophy" && (
           <TokensPhilosophyView tab={route.tab} />
         )}

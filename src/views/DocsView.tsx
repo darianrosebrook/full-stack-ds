@@ -2,7 +2,7 @@ import { TextField } from "@full-stack-ds/react";
 import { useEffect, useMemo, useState } from "react";
 
 import { renderMarkdownToHtml } from "../docs/markdown";
-import { normalizeDocsPath } from "../docs/routing";
+import { normalizeDocsPath, slugify } from "../docs/routing";
 import type { DocsGraphPayload, DocsIndexEntry, DocsPage } from "../docs/types";
 import {
   projectDocsGraph,
@@ -24,6 +24,8 @@ import "../docs/docs.css";
 interface DocsViewProps {
   /** Docs path segment: "" is the graph landing, otherwise the doc route tail. */
   path: string;
+  /** Slugified heading id from a `#fragment` route tail; null when absent. */
+  fragment?: string | null;
 }
 
 interface DocsState {
@@ -71,11 +73,7 @@ function entryMatches(entry: DocsIndexEntry, query: string): boolean {
   return tokens.every((token) => haystack.includes(token));
 }
 
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-export function DocsView({ path }: DocsViewProps) {
+export function DocsView({ path, fragment = null }: DocsViewProps) {
   const [state, setState] = useState<DocsState>(INITIAL_STATE);
   const [query, setQuery] = useState("");
   const isLanding = path === "";
@@ -123,11 +121,28 @@ export function DocsView({ path }: DocsViewProps) {
     };
   }, [route, isLanding]);
 
+  // Own the tab title while mounted; restore whatever came before on
+  // unmount so leaving docs does not strand a stale "… | Docs" title.
   useEffect(() => {
+    const previousTitle = document.title;
     document.title = state.page
       ? `${state.page.title} | full-stack-ds Docs`
       : "full-stack-ds Documentation";
+    return () => {
+      document.title = previousTitle;
+    };
   }, [state.page]);
+
+  // A #fragment route tail names a slugified heading: scroll to it once the
+  // page content is in the DOM. Unknown slugs are a no-op (authors link
+  // GitHub-style; the renderer owns the slug rule).
+  useEffect(() => {
+    if (state.page === null || fragment === null || fragment === "") return;
+    const target = document.getElementById(fragment);
+    if (target !== null && typeof target.scrollIntoView === "function") {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [state.page, fragment]);
 
   const visibleIndex = useMemo(() => {
     if (!query.trim()) return state.index;
@@ -155,13 +170,13 @@ export function DocsView({ path }: DocsViewProps) {
 
   const contentHtml = useMemo(() => {
     if (state.page === null) return "";
-    // The headline already carries the title; drop a leading body h1 that
-    // repeats it so the article renders exactly one h1 (the corpus convention
-    // is frontmatter-or-heading titles, so they usually match).
-    const body = state.page.content.replace(
-      new RegExp(`^#\\s+${escapeRegExp(state.page.title)}\\s*\\n?`),
-      ""
-    );
+    // The headline carries the title in every case (frontmatter, first h1,
+    // or stem fallback), so the body's own leading h1 is always redundant —
+    // strip it unconditionally rather than exact-matching it against the
+    // title, which silently double-h1'd the 8 docs whose frontmatter title
+    // differs from their body heading. Only a true leading heading line is
+    // stripped: `# ` with whitespace, so "#tofu" prose survives.
+    const body = state.page.content.replace(/^#[ \t]+[^\n]*\n?/, "");
     return renderMarkdownToHtml(body, { currentRelPath: state.page.relPath });
   }, [state.page]);
 
@@ -251,7 +266,10 @@ export function DocsView({ path }: DocsViewProps) {
             </nav>
 
             <header className="docs-headline">
-              <h1>{state.page.title}</h1>
+              {/* The slugified title id keeps `doc.md#doc-title` fragment
+                  links resolving after the body's own leading h1 is stripped
+                  for the single-h1 rule — the headline IS that anchor now. */}
+              <h1 id={slugify(state.page.title)}>{state.page.title}</h1>
               <div className="docs-meta">
                 <span className="docs-pill">{state.page.section}</span>
                 {(["doc_id", "authority", "status", "updated"] as const)

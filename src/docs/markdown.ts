@@ -1,4 +1,4 @@
-import { resolveDocsHref, slugify } from "./routing";
+import { neutralizeHrefScheme, resolveDocsHref, slugify } from "./routing";
 
 /**
  * Hand-rolled markdown-to-HTML renderer for the docs corpus, ported from the
@@ -49,7 +49,9 @@ function renderInline(rawSource: string, options: RenderOptions): string {
   value = value.replace(
     /!\[([^\]]*)\]\(([^)]+)\)/g,
     (_, alt: string, href: string) =>
-      `<img src="${escapeHtml(resolveDocsHref(href, options.currentRelPath))}" alt="${escapeHtml(alt)}" />`
+      // Image srcs are resource URLs, not routes: no hash prefixing, but the
+      // same scheme allowlist applies (data:/javascript: srcs neutralized).
+      `<img src="${escapeHtml(neutralizeHrefScheme(href))}" alt="${escapeHtml(alt)}" />`
   );
   value = value.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,

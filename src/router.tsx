@@ -43,8 +43,11 @@ export type Route =
   | { kind: "complexity"; tab: ComplexityTab }
   | { kind: "standards"; tab: StandardsTab }
   // Docs site: path "" is the dependency-graph landing; otherwise the tail of
-  // a /docs/<route> derived from the tracked markdown corpus.
-  | { kind: "docs"; path: string }
+  // a /docs/<route> derived from the tracked markdown corpus. A `#fragment`
+  // tail names the slugified heading to scroll to once the doc renders —
+  // the hash router's own "#" prefix means the fragment rides as a second
+  // "#" inside window.location.hash.
+  | { kind: "docs"; path: string; fragment?: string | null }
   // Scratch surfaces — reachable by URL only, not in the Sidebar nav. Used to
   // design UI (e.g. the properties panel) and to house data playgrounds (e.g.
   // the analytical-fixture corpus) before they land in the app.
@@ -83,7 +86,8 @@ const STANDARDS_TABS = new Set<StandardsTab>([
 
 const COMPONENT_TABS = new Set<ComponentTab>(["design", "developer", "tokens"]);
 
-function parseHash(hash: string): Route {
+/** Hash -> Route. Exported for router-level tests. */
+export function parseHash(hash: string): Route {
   const raw = hash.startsWith("#") ? hash.slice(1) : hash;
   const cleaned = raw.startsWith("/") ? raw.slice(1) : raw;
   if (!cleaned) return { kind: "home" };
@@ -111,7 +115,13 @@ function parseHash(hash: string): Route {
   if (parts[0] === "tokens") return { kind: "tokens" };
   if (parts[0] === "architecture") return { kind: "architecture" };
   if (parts[0] === "docs") {
-    return { kind: "docs", path: parts.slice(1).join("/") };
+    const joined = parts.slice(1).join("/");
+    const fragmentIndex = joined.indexOf("#");
+    return {
+      kind: "docs",
+      path: fragmentIndex === -1 ? joined : joined.slice(0, fragmentIndex),
+      fragment: fragmentIndex === -1 ? null : joined.slice(fragmentIndex + 1),
+    };
   }
   if (parts[0] === "tokens-philosophy") {
     const tab = (parts[1] ?? "overview") as TokensTab;
@@ -167,8 +177,10 @@ function buildHref(route: Route): string {
       return "#/settings";
     case "activity":
       return "#/activity";
-    case "docs":
-      return route.path === "" ? "#/docs" : `#/docs/${route.path}`;
+    case "docs": {
+      const base = route.path === "" ? "#/docs" : `#/docs/${route.path}`;
+      return route.fragment ? `${base}#${route.fragment}` : base;
+    }
     case "scratch":
       return `#/scratch/${route.name}`;
   }
