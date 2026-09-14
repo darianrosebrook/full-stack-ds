@@ -2,9 +2,10 @@ id: POLICY-CONTRIBUTING-DOC-01
 title: 'Contributor guide: setup, CAWS walkthrough, and merge-autonomy policy'
 risk_tier: 3
 mode: chore
-lifecycle_state: draft
+lifecycle_state: active
+worktree: contributing-doc
 created_at: '2026-09-14T16:30:04.630Z'
-updated_at: '2026-09-14T16:30:04.630Z'
+updated_at: '2026-09-14T16:30:05.973Z'
 created_by_session: 'session-670775d8-8388-4f26-b6cd-14dc1b73c8fd'
 blast_radius:
   modules:
