@@ -20,6 +20,7 @@ import { DisplayCaseView } from "./views/DisplayCaseView";
 import { PrimitiveView } from "./views/PrimitiveView";
 import { PropertiesScratchView } from "./views/PropertiesScratchView";
 import { AnalyticalFixturesScratchView } from "./views/AnalyticalFixturesScratchView";
+import { DocsView } from "./views/DocsView";
 import { useRoute } from "./router";
 import type { TraceSelection } from "./trace/types";
 
@@ -128,6 +129,7 @@ export function App() {
         {route.kind === "settings" && <SettingsView />}
         {route.kind === "activity" && <ActivityView bundle={bundle} />}
         {route.kind === "display-case" && <DisplayCaseView bundle={bundle} />}
+        {route.kind === "docs" && <DocsView path={route.path} />}
         {route.kind === "tokens-philosophy" && (
           <TokensPhilosophyView tab={route.tab} />
         )}

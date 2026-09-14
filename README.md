@@ -110,11 +110,11 @@ packages/
   ds-iconography/                # Icon authoring source + emission ledger
   ds-figma-plugin/               # Consumes generated figma descriptors
 
-src/                            # React showcase app (Vite) — <!-- src-top-level-dir-count -->11 top-level dirs
+src/                            # React showcase app (Vite) — <!-- src-top-level-dir-count -->12 top-level dirs
   app.tsx                       # Shell: Header/Sidebar/TracePanel + route switch
-  router.tsx                    # <!-- showcase-route-count -->12 hash routes
-  views/                        # <!-- src-view-count -->16 top-level view modules + sections/
-                                #   <!-- src-view-list -->ActivityView, AnalyticalFixturesScratchView, ArchitectureView, ComponentComplexityView, ComponentStandardsView, ComponentTokensView, ComponentViewTabs, DesignView, DeveloperView, DisplayCaseView, Home, PrimitiveView, PropertiesScratchView, SettingsView, TokensPhilosophyView, TokensView
+  router.tsx                    # <!-- showcase-route-count -->13 hash routes
+  views/                        # <!-- src-view-count -->17 top-level view modules + sections/
+                                #   <!-- src-view-list -->ActivityView, AnalyticalFixturesScratchView, ArchitectureView, ComponentComplexityView, ComponentStandardsView, ComponentTokensView, ComponentViewTabs, DesignView, DeveloperView, DisplayCaseView, DocsView, Home, PrimitiveView, PropertiesScratchView, SettingsView, TokensPhilosophyView, TokensView
   runtime/                      # Framework preview pipeline (per-framework iframe mounts)
   components/                   # App chrome (CommandPalette, CodeViewer) + properties-panel/
   layout/                       # Header, Sidebar, TracePanel

@@ -42,6 +42,9 @@ export type Route =
   | { kind: "tokens-philosophy"; tab: TokensTab }
   | { kind: "complexity"; tab: ComplexityTab }
   | { kind: "standards"; tab: StandardsTab }
+  // Docs site: path "" is the dependency-graph landing; otherwise the tail of
+  // a /docs/<route> derived from the tracked markdown corpus.
+  | { kind: "docs"; path: string }
   // Scratch surfaces — reachable by URL only, not in the Sidebar nav. Used to
   // design UI (e.g. the properties panel) and to house data playgrounds (e.g.
   // the analytical-fixture corpus) before they land in the app.
@@ -107,6 +110,9 @@ function parseHash(hash: string): Route {
   if (parts[0] === "display-case") return { kind: "display-case" };
   if (parts[0] === "tokens") return { kind: "tokens" };
   if (parts[0] === "architecture") return { kind: "architecture" };
+  if (parts[0] === "docs") {
+    return { kind: "docs", path: parts.slice(1).join("/") };
+  }
   if (parts[0] === "tokens-philosophy") {
     const tab = (parts[1] ?? "overview") as TokensTab;
     return {
@@ -161,6 +167,8 @@ function buildHref(route: Route): string {
       return "#/settings";
     case "activity":
       return "#/activity";
+    case "docs":
+      return route.path === "" ? "#/docs" : `#/docs/${route.path}`;
     case "scratch":
       return `#/scratch/${route.name}`;
   }
