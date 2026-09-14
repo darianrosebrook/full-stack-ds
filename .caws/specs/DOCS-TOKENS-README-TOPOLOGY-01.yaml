@@ -36,3 +36,8 @@ acceptance:
     then: 'the directory is absent from the tracked tree and the .gitignore header names only artifacts that are actually tracked'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "grep -c 'ds-tokens/components|tokens emitter target|step 6a' packages/ds-tokens/README.md => 0; sibling topology sentence present (README:42); docs:check-links OK (107 links); docs:check-claims OK (75 claims)"
+    recorded_at: "2026-09-14T03:58:29.753Z"
