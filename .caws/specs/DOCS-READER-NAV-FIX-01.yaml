@@ -2,9 +2,11 @@ id: DOCS-READER-NAV-FIX-01
 title: 'Docs reader navigation fixes: hash-router links, fragments, single h1, title restore, scheme hardening'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Docs reader nav fixes (hash-router links, fragment anchors, single h1, title restore, scheme hardening) merged as 9bf1581'
 created_at: '2026-09-14T13:24:35.104Z'
-updated_at: '2026-09-14T13:24:36.402Z'
+updated_at: '2026-09-14T13:35:01.847Z'
 created_by_session: 'session-670775d8-8388-4f26-b6cd-14dc1b73c8fd'
 blast_radius:
   modules:
