@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: research-docs
 created_at: '2026-09-03T00:45:23.014Z'
-updated_at: '2026-09-04T07:18:23.627Z'
+updated_at: '2026-09-14T14:00:33.251Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/analytical (zod model gains the L3 derivation algebra; engines gain the stage-2 rules; census gains member-vs-absence; necessity harness gains stage-2 witnesses)'
@@ -22,6 +22,7 @@ scope:
     - 'src/data/analytical-fixtures'
     - 'src/views/AnalyticalFixturesScratchView.tsx'
     - package.json
+    - docs/research-program.md
   out: []
   support:
     - docs/current-implementation-snapshot.md
