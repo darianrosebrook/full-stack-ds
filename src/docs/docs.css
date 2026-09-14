@@ -1,0 +1,387 @@
+/*
+ * Docs site styles. Colored through the token system (the graph palette
+ * resolves the categorical datavis ramp); nothing here hardcodes a brand
+ * value. The shell reuses the app chrome (Header/Sidebar) and adds the
+ * docs-specific panes below.
+ */
+
+.docs-root {
+  --docs-graph-c-0: var(--fsds-core-color-datavis-categorical-1);
+  --docs-graph-c-1: var(--fsds-core-color-datavis-categorical-2);
+  --docs-graph-c-2: var(--fsds-core-color-datavis-categorical-3);
+  --docs-graph-c-3: var(--fsds-core-color-datavis-categorical-4);
+  --docs-graph-c-4: var(--fsds-core-color-datavis-categorical-5);
+  --docs-graph-c-5: var(--fsds-core-color-datavis-categorical-6);
+  --docs-graph-c-6: var(--fsds-core-color-datavis-categorical-7);
+  --docs-graph-c-7: var(--fsds-core-color-datavis-categorical-8);
+
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+
+.docs-sidebar {
+  border-right: 1px solid var(--fsds-core-color-mode-light, #e2e8f0);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.docs-sidebar__search {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 6px 10px;
+  font: inherit;
+  border: 1px solid var(--fsds-core-color-mode-light, #cbd5e1);
+  border-radius: 6px;
+}
+
+.docs-sidebar__group-label {
+  margin: 14px 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.docs-sidebar__item {
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.docs-sidebar__item:hover {
+  background: var(--fsds-core-color-mode-light, #f1f5f9);
+}
+
+.docs-sidebar__item--active {
+  background: var(--fsds-core-color-mode-light, #e2e8f0);
+  font-weight: 600;
+}
+
+.docs-main {
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.docs-state {
+  padding: 48px 32px;
+  opacity: 0.7;
+}
+
+/* Reader */
+
+.docs-article {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 32px 72px;
+}
+
+.docs-breadcrumbs {
+  font-size: 12px;
+  opacity: 0.65;
+  margin-bottom: 12px;
+}
+
+.docs-headline h1 {
+  margin: 0 0 8px;
+}
+
+.docs-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.docs-pill {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--fsds-core-color-mode-light, #cbd5e1);
+  opacity: 0.85;
+}
+
+.docs-body {
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.docs-body h1,
+.docs-body h2,
+.docs-body h3,
+.docs-body h4 {
+  line-height: 1.25;
+  margin: 28px 0 10px;
+}
+
+.docs-body h1 {
+  font-size: 30px;
+}
+
+.docs-body h2 {
+  font-size: 22px;
+}
+
+.docs-body h3 {
+  font-size: 18px;
+}
+
+.docs-body p {
+  margin: 12px 0;
+}
+
+.docs-body a {
+  color: var(--fsds-core-color-palette-blue-700, #1d4ed8);
+}
+
+.docs-body code {
+  background: var(--fsds-core-color-mode-light, #f1f5f9);
+  border-radius: 4px;
+  padding: 0.12em 0.34em;
+  font-size: 0.9em;
+}
+
+.docs-body pre {
+  overflow: auto;
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.docs-body pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.docs-body blockquote {
+  margin: 12px 0;
+  padding: 4px 16px;
+  border-left: 3px solid var(--fsds-core-color-mode-light, #cbd5e1);
+  opacity: 0.85;
+}
+
+.docs-body hr {
+  border: none;
+  border-top: 1px solid var(--fsds-core-color-mode-light, #e2e8f0);
+  margin: 24px 0;
+}
+
+.docs-table-wrap {
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.docs-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.docs-body th,
+.docs-body td {
+  border-bottom: 1px solid var(--fsds-core-color-mode-light, #e2e8f0);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.docs-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 48px;
+  font-size: 13px;
+}
+
+/* Graph landing */
+
+.docs-landing {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px 24px;
+  min-height: 0;
+}
+
+.docs-landing__header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.docs-landing__header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.docs-landing__totals {
+  font-size: 12px;
+  opacity: 0.65;
+}
+
+.docs-graph-canvas-container {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border: 1px solid var(--fsds-core-color-mode-light, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--fsds-core-color-mode-white, #ffffff);
+}
+
+.docs-graph-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+
+.docs-graph-canvas:active {
+  cursor: grabbing;
+}
+
+.docs-graph-canvas-unavailable {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  opacity: 0.7;
+}
+
+.docs-graph-hover-card {
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--fsds-core-color-mode-white, #ffffff);
+  border: 1px solid var(--fsds-core-color-mode-light, #e2e8f0);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  box-shadow: 0 4px 16px rgb(15 23 42 / 12%);
+  max-width: 280px;
+  z-index: 2;
+}
+
+.docs-graph-hover-card__title {
+  font-weight: 600;
+}
+
+.docs-graph-hover-card__path {
+  opacity: 0.6;
+}
+
+.docs-graph-popover-anchor {
+  position: absolute;
+  z-index: 3;
+}
+
+.docs-graph-popover {
+  background: var(--fsds-core-color-mode-white, #ffffff);
+  border: 1px solid var(--fsds-core-color-mode-light, #e2e8f0);
+  border-radius: 10px;
+  padding: 12px 14px;
+  width: 260px;
+  box-shadow: 0 8px 28px rgb(15 23 42 / 16%);
+}
+
+.docs-graph-popover__title {
+  margin: 0 0 2px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.docs-graph-popover__path {
+  margin: 0 0 10px;
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.docs-graph-popover__meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 10px;
+  margin: 0 0 12px;
+  font-size: 12px;
+}
+
+.docs-graph-popover__meta dt {
+  opacity: 0.6;
+}
+
+.docs-graph-popover__meta dd {
+  margin: 0;
+}
+
+.docs-graph-popover__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.docs-graph-popover__open {
+  flex: 1;
+  text-align: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--fsds-semantic-color-action-background-primary-default, #1d4ed8);
+  color: var(--fsds-core-color-mode-white, #ffffff);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.docs-graph-popover__close {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--fsds-core-color-mode-light, #cbd5e1);
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+}
+
+.docs-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.docs-graph-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.docs-graph-legend__chip {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.docs-graph-legend__count {
+  opacity: 0.55;
+}
+
+@media (max-width: 900px) {
+  .docs-root {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-sidebar {
+    display: none;
+  }
+}

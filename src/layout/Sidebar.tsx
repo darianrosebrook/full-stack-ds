@@ -77,6 +77,16 @@ export function Sidebar({ bundle, route }: SidebarProps) {
           </a>
         </NavListItem>
 
+        <NavListItem className="sidebar-item-host">
+          <a
+            className={`sidebar-item${route.kind === "docs" ? " sidebar-item--active" : ""}`}
+            href={buildHref({ kind: "docs", path: "" })}
+            aria-current={route.kind === "docs" ? "page" : undefined}
+          >
+            <span>Docs</span>
+          </a>
+        </NavListItem>
+
         <NavTree label="Standards" icon="check">
           <NavTreeItem>
             <a

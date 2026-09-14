@@ -110,7 +110,7 @@ function deriveHeadings(body: string) {
   return headings;
 }
 
-const MARKDOWN_LINK = /(?<!!!)\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+const MARKDOWN_LINK = /(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 
 /**
  * Resolve a link target against the source doc's directory; null when the
