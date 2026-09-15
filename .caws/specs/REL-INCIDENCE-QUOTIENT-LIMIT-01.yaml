@@ -2,9 +2,10 @@ id: REL-INCIDENCE-QUOTIENT-LIMIT-01
 title: 'Measure and pin why the derivation-operand topology facets cannot be witnessed: their erasure is not a legal quotient'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: incidence-quotient-limit
 created_at: '2026-09-15T06:36:43.706Z'
-updated_at: '2026-09-15T06:36:43.706Z'
+updated_at: '2026-09-15T06:36:59.348Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
@@ -20,7 +21,8 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'A coordinate is adjudicated from evidence that can actually be produced. Where a coordinate''s own erasure makes the representation an illegal declaration, so that every witness naming it fails the isolation obligation by construction, the absence of a verdict is a measured limit of the quotient and must not be converted into a disposition, nor read as missing corpus coverage.'
+  - 'A refusal is classified by what produced it: an erasure refused because the boundary can no longer resolve the structure is a different fact from an erasure that is a no-op for want of a corpus instance, and the two are enumerated separately rather than collapsed into "no witness found".'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
