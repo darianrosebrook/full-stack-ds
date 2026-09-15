@@ -1,0 +1,32 @@
+id: REL-TOPOLOGY-AUTHORED-STIMULUS-01
+title: 'Witness a keystone topology facet with an authored stimulus whose judgment follows from an existing cause'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T06:17:34.041Z'
+updated_at: '2026-09-15T06:17:34.041Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-contracts/analytical-fixtures/witnesses.json (the nest.levels order witness)'
+    - 'packages/ds-contracts/analytical-fixtures/subtraction-stage2.json (its witnessed verdict)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'The adjudication policy admits a new {base, patch} stimulus exactly where its judgment follows mechanically from an already-existing Stage-2 cause; a patch that varies ONLY the coordinate under test and flips that cause is a witness, while a patch whose difference is about a companion coordinate is not.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the sixteen keystone reference-topology facets were recorded as evidence-blocked on the committed specimens; when a {base, patch} stimulus varying exactly nest.levels order is authored against the existing grain cause; then checkWitness accepts a single-coordinate witness, the verdict is recorded witnessed, the unadjudicated count falls by one, and the snapshot records that a keystone facet is reachable by an authored stimulus so the sixteen are a per-facet obligation rather than a corpus-coverage one'
+non_functional: {}
+contracts:
+  - name: 'authored-stimulus'
+    type: contract-test
+    path: 'packages/ds-contracts/analytical-fixtures/witnesses.json'
