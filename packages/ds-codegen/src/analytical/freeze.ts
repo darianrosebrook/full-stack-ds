@@ -234,11 +234,12 @@ const SUPERSESSION_EFFECT: Record<string, string> = {
     "coordinate's verdict changed, and the subtraction reports 72 of 118 unadjudicated rather than 77.",
   ].join(" "),
   "forget-reference-incidence": [
-    "A BOUND reference now rebinds to the operand's own DECLARED names instead of rewriting them to reserved tokens, because a token image stops resolving and the boundary",
-    "refuses it as a declaration -- so the erasure was the corruption rather than an ablation, and no witness naming the coordinate could be admitted. Only the derivation",
-    "operands changed: a reference that declares no namespace (an assertion's field, an additivity dimension, a grain witness) keeps the reserved token and its images are",
-    "unchanged. Reach moves for the bound slots because a canonical rebinding is the IDENTITY wherever the slot already holds the operand's declared prefix, and several",
-    "committed fixtures do -- so a coordinate can stop reaching any fixture while becoming WITNESSABLE, which is why reach is reported and never read as necessity.",
+    "The binding quotient reached the one name list the branch map could not: `structure.peers` now carries the same `x-fsds-operands` map the derivation",
+    "branches carry, and an array's ELEMENTS inherit their annotated property's namespace, so a peer set rebinds to declared RELATION names instead of reserved",
+    "tokens -- the executor is untouched, and the erasure authority moved through its emitted SCHEMA artifact alone. Reach falls 4 -> 2 because the canonical bind is",
+    "the IDENTITY on a peer set that already names the structure's first two relations, which two committed fixtures do; where it moves, the image is a lawful peer",
+    "claim for a measured reason -- the bind lands on the first-declared relation, a BASE relation in this corpus, and the divergence law is conditioned on every",
+    "member being an aggregate. No verdict moved: the coordinate leaves never-discharged discharged, and no witness names it.",
   ].join(" "),
   "forget-reference-order": [
     "The census no longer emits an order facet for a name list whose declaration says it is a SET, so the plans that sorted `keep`, `along`,",
