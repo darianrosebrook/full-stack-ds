@@ -2,9 +2,10 @@ id: REL-OPERAND-MIRROR-01
 title: 'Declare operand mirrors: toGrain rebinds to the result grain, keep to the result fields -- the law''s other side is the pool'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: operand-mirror
 created_at: '2026-09-15T17:12:27.604Z'
-updated_at: '2026-09-15T17:12:27.604Z'
+updated_at: '2026-09-15T17:12:28.917Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
