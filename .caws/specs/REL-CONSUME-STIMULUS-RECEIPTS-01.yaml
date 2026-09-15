@@ -1,0 +1,32 @@
+id: REL-CONSUME-STIMULUS-RECEIPTS-01
+title: 'Carry the receipt stimulus pairs into the six closure records that declare none'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T05:06:02.983Z'
+updated_at: '2026-09-15T05:06:02.983Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-contracts/analytical-fixtures/closures-stage2.json (six records gain a/b)'
+    - 'packages/ds-codegen/src/analytical/closure.test.ts (pin that a receipted carrier is not stimulus-less)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'A closure''s obligations 3-6 are evaluable exactly when its record carries controlled stimuli; evidence that exists in the receipt ledger and not in the closure record leaves the obligation unevaluable, which reads as a gap rather than as a state.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given 19 of the 22 closure carriers declare no controlled stimuli so obligations 3-6 report no stimuli constructed, while the stage-2 stimulus receipts already hold occurrence-bound engine-agreeing pairs for six of them; when those pairs are carried into the closure records; then each of the six evaluates obligations 3-6 without a no-stimuli failure, the ledger stays internally consistent, and the gate''s carrier count and promotion are unchanged'
+non_functional: {}
+contracts:
+  - name: 'closures-stage2'
+    type: contract-test
+    path: 'packages/ds-contracts/analytical-fixtures/closures-stage2.json'
