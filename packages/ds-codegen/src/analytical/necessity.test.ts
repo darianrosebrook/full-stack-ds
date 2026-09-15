@@ -1472,7 +1472,11 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
       const s = evidenceStanding(id, support, holds);
       byClass[s.state === "holding" ? s.via : s.state] = (byClass[s.state === "holding" ? s.via : s.state] ?? 0) + 1;
     }
-    expect(byClass).toEqual({ primitive: 44, "closure-accounted": 11, "required-derived-vocabulary": 1, suspended: 2 });
+    // 15, not 11: two closures gained controlled stimuli (their receipt pairs discharge
+    // obligations 3-6), which puts both carriers and the two `#incidence` coordinates their
+    // normalizations forget into the closure-accounted class. Accounted is not ratified, and
+    // the assertion below is what keeps the two apart.
+    expect(byClass).toEqual({ primitive: 44, "closure-accounted": 15, "required-derived-vocabulary": 1, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -1582,14 +1586,21 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
   const holds = codomainHolds();
   const historicalSet = historicallyAccounted();
 
-  it("reconciles: every loss is ledgered, and the one gain is a stage-2 coordinate stage 1 could not have accounted", () => {
+  it("reconciles: every loss is ledgered, and the gains are stage-2 coordinates stage 1 could not have accounted", () => {
     const r = reconcileHistory(accountedBy(support), historicalSet, holds);
     expect(r.unexplainedLoss).toEqual([]);
-    // A gain, and a legitimate one: `field.temporality#present` is a holder fact
-    // the STAGE-2 discriminator normal form discovered, so the recovered stage-1
-    // record could not have accounted for it. Reporting it is the point — the
-    // historical authority is an INPUT, never a function of the present.
-    expect(r.unexplainedGain).toEqual(["field.temporality#present"]);
+    // Legitimate gains, REPORTED rather than absorbed: `field.temporality#present` is a holder
+    // fact the STAGE-2 discriminator normal form discovered, and the other four are what the two
+    // receipt-stimulated closures newly account for -- both carriers, and the two `#incidence`
+    // coordinates their normalizations forget. The historical authority is an INPUT, never a
+    // function of the present, so a gain is exactly what must surface here.
+    expect(r.unexplainedGain).toEqual([
+      "field.temporality#present",
+      "relation.derivedBy.bin.field#incidence",
+      "relation.derivedBy.kind:bin~project",
+      "relation.derivedBy.kind:normalize~project",
+      "relation.derivedBy.normalize.field#incidence",
+    ]);
     expect(r.suspended).toEqual(["assertion.kind", "assertion.kind:aggregate~ratio-comparison"]);
   });
 
@@ -1613,7 +1624,14 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
     const widened = new Set([...accountedBy(support), "field.temporality.grain:day~month"]);
     expect(historicallyAccounted()).toEqual(historicalSet);
     const r = reconcileHistory(widened, historicalSet, holds);
-    expect(r.unexplainedGain).toEqual(["field.temporality#present", "field.temporality.grain:day~month"]);
+    expect(r.unexplainedGain).toEqual([
+      "field.temporality#present",
+      "field.temporality.grain:day~month",
+      "relation.derivedBy.bin.field#incidence",
+      "relation.derivedBy.kind:bin~project",
+      "relation.derivedBy.kind:normalize~project",
+      "relation.derivedBy.normalize.field#incidence",
+    ]);
     // And the historical dispositions are the same numbers as before.
     const ratified = [...historicalDispositions()].filter(([, d]) => d.state === "ratified");
     expect(ratified).toHaveLength(81);

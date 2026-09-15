@@ -48,6 +48,8 @@ import {
 } from "./closure.js";
 import { executeAll, executePlan, wouldChange } from "./erasure-plan.js";
 import { specimens } from "./erasure-audit.js";
+import { findingId, loadReceipts } from "./stimulus.js";
+import type { StimulusPrediction } from "./stimulus.js";
 import { checkWitness, classifyWitness, loadCodomainAdjudications, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
 import { canonical } from "./quotient.js";
 
@@ -1046,6 +1048,69 @@ describe("the ledger carries the authority its claims were verified under", () =
     expect(refused.message).toMatch(/refused -- 1 problem\(s\) are not authority drift/);
     expect(refused.message).toMatch(/recorded promotion "holding"/);
     expect(fs.readFileSync(wrong, "utf-8"), "a refused restamp must not touch the file").toBe(before);
+  });
+});
+
+describe("a receipt's pair enters a closure only when that closure's own obligations accept it", () => {
+  // The receipts are occurrence-bound PREDICTIONS for a carrier. A closure's controlled stimuli
+  // are a different claim about the same bytes: that THIS carrier plus THIS normalization
+  // explains the collision. The two coincided for some carriers and not others, so the carry is
+  // decided by measurement rather than by the receipt's existence.
+  const withPair = (carrier: string, p: StimulusPrediction): SemanticErasureClosure => ({
+    ...ledger.closures.find((c) => c.carrier === carrier)!,
+    a: { fixture: p.base },
+    b: {
+      base: p.base,
+      patch: p.patch,
+      outcome: p.expected,
+      cause: p.target.law ? `${p.target.authority}; ${p.target.law.case} (${findingId(p.target.law)})` : p.target.authority,
+    },
+  });
+  const discharges = (c: SemanticErasureClosure) =>
+    ["3", "4", "5", "6"].every((n) => check(c).obligations.find((o) => o.id.startsWith(`${n}-`))!.held);
+
+  it("carries every receipt pair that discharges obligations 3-6, refuses the four that do not, and the ledger agrees in both directions", () => {
+    // Carrying every receipt across would have recorded four `refuted` promotions on the
+    // strength of pairs no closure was built for. So the ledger's own state is the assertion:
+    // a receipt carrier carries a pair exactly when that pair discharges obligations 3-6.
+    const carried: string[] = [];
+    const refused: string[] = [];
+    for (const rec of loadReceipts().receipts) {
+      const p = rec.prediction;
+      if (p.carrier === CONTROL || p.carrier === AGG_PROJECT) continue; // the control; and its own record carries its own pair
+      const target = ledger.closures.find((c) => c.carrier === p.carrier);
+      if (!target) continue;
+      const fits = discharges(withPair(p.carrier, p));
+      expect(Boolean(target.a && target.b), `${p.carrier}: carried=${Boolean(target.a && target.b)} but closure-fit=${fits}`).toBe(fits);
+      (fits ? carried : refused).push(p.carrier);
+    }
+    expect(carried.sort()).toEqual([
+      "field.additivity.kind:additive~semi-additive",
+      "field.additivity.kind:semi-additive~ratio-measure",
+      "relation.derivedBy.kind:bin~project",
+      "relation.derivedBy.kind:normalize~project",
+    ]);
+    expect(refused.sort()).toEqual([
+      "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "relation.derivedBy.kind:bin~graph",
+      "relation.derivedBy.kind:normalize~graph",
+      "relation.derivedBy.kind:project~graph",
+    ]);
+  });
+
+  it("refuses them on SUFFICIENCY — the clause that would otherwise have read as a refutation", () => {
+    for (const carrier of ["relation.derivedBy.kind:bin~graph", "relation.derivedBy.kind:project~graph"]) {
+      const p = loadReceipts().receipts.find((r) => r.prediction.carrier === carrier)!.prediction;
+      const r = check(withPair(carrier, p));
+      const five = r.obligations.find((o) => o.id.startsWith("5-"))!;
+      expect(five.held, carrier).toBe(false);
+      expect(five.detail, carrier).toContain("INTERACTION remains");
+      // The other three clauses DO hold, so the pair is not simply the wrong evidence --
+      // it is evidence this closure's normalization does not suffice to explain.
+      for (const n of ["3", "4", "6"]) {
+        expect(r.obligations.find((o) => o.id.startsWith(`${n}-`))!.held, `${carrier} obligation ${n}`).toBe(true);
+      }
+    }
   });
 });
 
