@@ -29,3 +29,13 @@ contracts:
   - name: 'specimen-population'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/erasure-audit.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Measured the specimen population: 210 specimens, 106 distinct ids, 25 ids appearing more than once (every one with distinct contents, one with 31). Outcomes bound by id: 175; content-matching: 90; genuinely bound (both): 79; mis-attributed (has an outcome by id that is not about its content): 96. No production module resolves outcomes over the population by id -- all four outcomeOf call sites outside tests are corpus-keyed (resolveSide, groundedVocabulary, final-quotient, stimulus) -- so this was a hazard in ad-hoc sweeps, one of which was mine. Corrected sweep over the 81 unresolved candidates: by id 2 discriminable, by content 1 (evidence.rows.*#present), which then fails the presence test because all six of its content-resolved outcome-differing collided pairs carry rows on BOTH sides. The id-invented candidate was bin.closure:left-closed~right-closed, whose pair was a synthesized specimen inheriting its base's id and therefore its base's 'illegal' outcome; the corpus declares no right-closed fixture and only one case mentions closure. Three tests pin it: the id-sharing counts, the four binding counts, and the corrected sweep asserting both the one-candidate result and its presence failure. Non-claim: no production code was changed and nothing is adjudicated; the 96 mis-attributed specimens are correct members of the population (they exist to give footprint claims something to refute), and the defect was in the measurement, not the data; every one of the 81 remains unresolved and evidence-blocked."
+    recorded_at: "2026-09-15T05:58:28.413Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/erasure-audit.test.ts > the specimen population shares ids, so a sweep must bind outcomes by CONTENT > reduces the discriminating set to ONE, and that one is not a witness for presence either"
+    command: pnpm exec vitest run packages/ds-codegen/src/analytical
+    exit_code: 0
+    artifact_path: packages/ds-codegen/src/analytical/erasure-audit.test.ts
+    commit_sha: "1c1999d4"
