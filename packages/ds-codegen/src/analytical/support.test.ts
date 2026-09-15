@@ -94,7 +94,7 @@ describe("one definition of primitive support, consumed by every surface", () =>
       const audited = report.witnesses.find((a) => a.witness === id);
       if (audited) expect(audited.standing, `${id} audit standing`).toBe("primitive");
     }
-    expect(ratified.size).toBe(58);
+    expect(ratified.size).toBe(59);
   });
 
   it("the classifier names THREE consequences, and each is exercised by a real witness", () => {
@@ -182,9 +182,9 @@ describe("the footprint-class triage over the live basis candidates", () => {
     // does something; a witness still needs two stimuli the oracle SEPARATES
     // that the erasure identifies, and the constructibility triage below
     // measures that separately -- 21 of the 65 have such a shape at all.
-    expect(unresolved.length).toBe(68);
-    expect(ratifiable.length).toBe(65);
-    expect(moving.length).toBe(51);
+    expect(unresolved.length).toBe(67);
+    expect(ratifiable.length).toBe(64);
+    expect(moving.length).toBe(50);
     // And the blocked three are NOT in it.
     expect(ratifiable).not.toContain("relation.derivedBy.nest.levels#incidence");
     expect(ratifiable).not.toContain("structure.peers[]#present");
