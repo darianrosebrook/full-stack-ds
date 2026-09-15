@@ -1,0 +1,36 @@
+id: REL-BINDING-QUOTIENT-LAND-01
+title: 'Land the resolution-preserving incidence erasure for bound references: rebind to the operand''s declared namespace instead of tokenizing'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T08:14:44.406Z'
+updated_at: '2026-09-15T08:14:44.406Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/relation-model.ts + census.ts (the operand namespace, declared and read)'
+    - 'packages/ds-codegen/src/analytical/erasure-plan.ts (the incidence executor rebinds instead of tokenizing)'
+    - 'the emitted schemas and the three re-recorded ledgers'
+    - 'docs (round 25 and 30''s findings restated for the new erasure)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-contracts/quotient-image.schema.json'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the incidence erasure at a derivation operand rewrites names to reserved tokens, which the boundary refuses, so eighteen coordinates can never be witnessed; when the operand namespace is declared on the derivation operands and the executor rebinds the slot to declared names from that namespace; then every image is a legal declaration, the coordinates whose binding is written once stop being refused while the two-sided ones stay refused for the mirror reason, and the analytical suite, every gate and every ledger agree with the new erasure'
+non_functional: {}
+contracts:
+  - name: 'binding-erasure'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/erasure-plan.test.ts'
