@@ -2,9 +2,10 @@ id: REL-BINDING-QUOTIENT-LAND-01
 title: 'Land the resolution-preserving incidence erasure for bound references: rebind to the operand''s declared namespace instead of tokenizing'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: binding-quotient-land
 created_at: '2026-09-15T08:14:44.406Z'
-updated_at: '2026-09-15T08:14:44.406Z'
+updated_at: '2026-09-15T08:14:56.139Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
@@ -23,7 +24,9 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The incidence erasure must leave a legal DECLARATION wherever the boundary must resolve the reference: rewriting a bound reference to reserved tokens abandons resolution, so the quotient is the corruption rather than an ablation and no corpus can repair it.'
+  - 'The namespace a bound reference ranges over is a DECLARATION fact, not something the executor infers from a path: the operands carry it, the walk reads it, and a reference that carries no namespace keeps the tokenizing erasure unchanged.'
+  - 'Replacing an erasure changes what every recorded footprint, freeze entry and legacy comparison was measured over, so all three ledgers are re-recorded under the moved erasure authority and the pins that named the OLD refusal are corrected rather than deleted.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
