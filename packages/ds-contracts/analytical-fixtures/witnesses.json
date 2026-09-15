@@ -997,6 +997,30 @@
     },
     {
       "coordinates": [
+        "relation.derivedBy.aggregate-to-grain.from#incidence"
+      ],
+      "a": {
+        "fixture": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+      },
+      "b": {
+        "base": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+        "patch": [
+          {
+            "set": "structure.relations.subtotals.derivedBy.from",
+            "value": "sales"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "The aggregation is DECLARED over the relation it reads, so rebinding `from` changes whose grain the subtotal is computed from: the committed a-side aggregates `hierarchy` and is illegal under the already-existing cause CASE_NESTED_SUBTOTALS_OFF_GRAIN (REL_GRAIN_SUBTOTAL_MISMATCH -- a subtotal at a grain the nest does not declare), while reading `sales` instead makes the same declaration admissible. One path moves, the derivation boundary is clean on both sides, and nothing else about the fixture differs."
+      },
+      "note": "STAGE-2 necessity for relation.derivedBy.aggregate-to-grain.from#incidence: separates WHICH relation the aggregation is declared over. Authored over a committed fixture because the corpus carries the illegal side and the cause but not the near-neighbour that clears it."
+    },
+    {
+      "coordinates": [
         "relation.derivedBy.aggregate-to-grain.toGrain#order"
       ],
       "a": {

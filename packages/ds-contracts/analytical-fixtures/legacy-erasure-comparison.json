@@ -7,8 +7,8 @@
  },
  "population": {
   "corpus": 90,
-  "stimuli": 34,
-  "synthesized": 88,
+  "stimuli": 35,
+  "synthesized": 87,
   "total": 212,
   "membershipDigest": "e976aafcfa1b4685ff71a18c9fbaebf03f9acb29f0f47d5425b82489581da5d8"
  },
@@ -28,7 +28,7 @@
  "pairs": 34980,
  "agree": {
   "count": 24667,
-  "digest": "335ab60376a099d43b27474826788d28193d051409187e7dd1242ecf651b8155"
+  "digest": "e678d2ab04cf391a865f64cb991fcd6b5f07f12299dc7737cd36f10030b88127"
  },
  "classes": {
   "new-no-plan": {
@@ -1074,6 +1074,13 @@
   ],
   [
    "assertion.aggregate.along",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -1349,13 +1356,6 @@
    "assertion.aggregate.along",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.along",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -2558,6 +2558,13 @@
   ],
   [
    "assertion.aggregate.along#order",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -2833,13 +2840,6 @@
    "assertion.aggregate.along#order",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "assertion.aggregate.along#order",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "only-legacy-coordinate"
   ],
@@ -4042,6 +4042,13 @@
   ],
   [
    "assertion.aggregate.field",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -4317,13 +4324,6 @@
    "assertion.aggregate.field",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.field",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -5708,6 +5708,13 @@
   ],
   [
    "assertion.aggregate.op",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "66e7a801ec04",
+   "aec6f1e4caed",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "3e23ca7c3f0f",
    "7eef5179c177",
@@ -5984,13 +5991,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "098885c42452",
    "a9ea23f215a1",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.aggregate.op",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "bdff21f8a206",
-   "9a2ee97c0c74",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -6688,6 +6688,13 @@
   ],
   [
    "assertion.aggregate.op:count~min",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "7478082a3595",
+   "ee0e5a851307",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:count~min",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "ca846bb3c0d8",
    "886530c60dbc",
@@ -6754,13 +6761,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "a8329bfa7812",
    "3c7e6f426b3c",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:count~min",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "42120aec8883",
-   "385b9d9c63e2",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -7843,6 +7843,13 @@
   ],
   [
    "assertion.aggregate.op:mean~min",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "194bdef47403",
+   "59fc320262dc",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~min",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "7c2f00944a37",
    "69060f13428c",
@@ -8035,13 +8042,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddd066758bf8",
    "f24fd7e3523a",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:mean~min",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "bb4c39bce49c",
-   "01d2160e1ff7",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -10419,6 +10419,13 @@
   ],
   [
    "assertion.aggregate.op:sum~min",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "c9f4bc484c53",
+   "34c906cb985e",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9384326563e6",
    "7ebb3de4d7d2",
@@ -10569,13 +10576,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "8251452145f4",
    "ed1e8e4011cd",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~min",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba136c365de8",
-   "9c81226e8592",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -11637,6 +11637,13 @@
   ],
   [
    "assertion.aggregate.relation",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -11912,13 +11919,6 @@
    "assertion.aggregate.relation",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.relation",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -13121,6 +13121,13 @@
   ],
   [
    "assertion.kind",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "aba4531a6c26",
+   "7a90e77f506f",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "630d66ef8399",
    "8ad2f6202a9c",
@@ -13397,13 +13404,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "49027cfd6880",
    "8b3833f8e0f0",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.kind",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "a6bde129122b",
-   "10306a262ac3",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -14605,6 +14605,13 @@
   ],
   [
    "assertion.kind:aggregate~ratio-comparison",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "b5852f911a52",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "76225fe05da6",
@@ -14881,13 +14888,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
    "c3a0402f0a0d",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.kind:aggregate~ratio-comparison",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "7d41527a760e",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -16089,6 +16089,13 @@
   ],
   [
    "assertion.ratio-comparison.field",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -16364,13 +16371,6 @@
    "assertion.ratio-comparison.field",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.field",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -17573,6 +17573,13 @@
   ],
   [
    "assertion.ratio-comparison.relation",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -17848,13 +17855,6 @@
    "assertion.ratio-comparison.relation",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.relation",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -19057,6 +19057,13 @@
   ],
   [
    "evidence.grainWitness",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -19332,13 +19339,6 @@
    "evidence.grainWitness",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "evidence.grainWitness",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -20541,6 +20541,13 @@
   ],
   [
    "evidence.grainWitness#order",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -20816,13 +20823,6 @@
    "evidence.grainWitness#order",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "evidence.grainWitness#order",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "only-legacy-coordinate"
   ],
@@ -22613,6 +22613,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -22888,13 +22895,6 @@
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -24097,6 +24097,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -24372,13 +24379,6 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong#order",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "only-legacy-coordinate"
   ],
@@ -26211,6 +26211,13 @@
   ],
   [
    "field.transformation",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "17f45ee7c943",
+   "fdc9aab2d1f6",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "e8906af7b572",
    "bf0e8fccb967",
@@ -26487,13 +26494,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "b4e06541643b",
    "d755e2ed9313",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "field.transformation",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "97a00ee1a5ce",
-   "05f05d192b3d",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -27632,6 +27632,13 @@
   ],
   [
    "field.transformation:interval~ratio",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "fb32363772f9",
+   "ecb287c4246f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "c3edd870fdf9",
    "a5593ebe62f4",
@@ -27817,13 +27824,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "db40ad62f92e",
    "4f23e920ab8e",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:interval~ratio",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "e6938cbd0c4f",
-   "cd849126abed",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -28920,6 +28920,13 @@
   ],
   [
    "field.transformation:nominal~interval",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "4786936af22c",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "8fd68c1f9f66",
@@ -29182,13 +29189,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
    "1eeee3fa41b9",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~interval",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "83db5fd2b81b",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -30383,6 +30383,13 @@
   ],
   [
    "field.transformation:nominal~ordinal",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "4cd826de3f2a",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "14ae7d6c8bee",
@@ -30645,13 +30652,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
    "fd5f992bda73",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ordinal",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "ac59f5d2ae63",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -31853,6 +31853,13 @@
   ],
   [
    "field.transformation:nominal~ratio",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "e6872f6cdcc9",
+   "77e595f1cd97",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "353e4d60a4ca",
    "2ccade8cc4b6",
@@ -32115,13 +32122,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "5db361fd5c20",
    "679665a0066d",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ratio",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "92bc8bd2378f",
-   "c77c9a189aaf",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33743,6 +33743,13 @@
   ],
   [
    "field.transformation:ordinal~ratio",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "03cd4e25d75b",
+   "b6530120f929",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "1c8a44ba8037",
    "dcb183df1eb6",
@@ -33984,13 +33991,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "4828bd7a3856",
    "648d37676e9b",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:ordinal~ratio",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "82e4564a4b20",
-   "73327eb81153",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -35171,6 +35171,13 @@
   ],
   [
    "field.whole.perRow",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -35446,13 +35453,6 @@
    "field.whole.perRow",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.whole.perRow",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -36963,6 +36963,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.from",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -37238,13 +37245,6 @@
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.from",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -37705,6 +37705,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.from#incidence",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "cb50d102ebf7",
+   "ab14d40bedcb",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from#incidence",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "cdf5f839fa22",
    "f8ddcb667310",
@@ -37743,13 +37750,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "f3333721f8dd",
    "307fe57486a3",
-   "forget-reference-incidence:scalar>scalar:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.from#incidence",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "f1e44c97910d",
-   "ba76b873b267",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
@@ -38594,6 +38594,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -38869,13 +38876,6 @@
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.toGrain",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -39350,6 +39350,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "4b861a2a92c4",
+   "ab14d40bedcb",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "0d8ff79382cb",
    "45512079b429",
@@ -39388,13 +39395,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "90326fb07a73",
    "0e978e44c688",
-   "forget-reference-incidence:scalar>scalar:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "2371a0ea2455",
-   "ba76b873b267",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
@@ -40267,6 +40267,13 @@
   ],
   [
    "relation.derivedBy.bin.field",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -40542,13 +40549,6 @@
    "relation.derivedBy.bin.field",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.field",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -41814,6 +41814,13 @@
   ],
   [
    "relation.derivedBy.bin.from",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -42089,13 +42096,6 @@
    "relation.derivedBy.bin.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.from",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -43368,6 +43368,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeFrom",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -43643,13 +43650,6 @@
    "relation.derivedBy.graph.edgeFrom",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeFrom",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -44943,6 +44943,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeTo",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -45218,13 +45225,6 @@
    "relation.derivedBy.graph.edgeTo",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeTo",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -46518,6 +46518,13 @@
   ],
   [
    "relation.derivedBy.graph.from",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -46793,13 +46800,6 @@
    "relation.derivedBy.graph.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.from",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -48100,6 +48100,13 @@
   ],
   [
    "relation.derivedBy.graph.value",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -48375,13 +48382,6 @@
    "relation.derivedBy.graph.value",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.value",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -49948,6 +49948,13 @@
   ],
   [
    "relation.derivedBy.join.from",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -50223,13 +50230,6 @@
    "relation.derivedBy.join.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.from",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -51502,6 +51502,13 @@
   ],
   [
    "relation.derivedBy.join.with",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -51777,13 +51784,6 @@
    "relation.derivedBy.join.with",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.with",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -52468,6 +52468,13 @@
   ],
   [
    "relation.derivedBy.kind",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "398d99d275ea",
+   "951e4fd512f6",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "809d5665f8f6",
    "9f7071544fd8",
@@ -52548,13 +52555,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "60a15b591f92",
    "1b19504e04d3",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "2ef838e4b0c4",
-   "4ccbcf6ceaac",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -52853,6 +52853,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~bin",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "8f4700510b92",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~bin",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "67ee132271c7",
@@ -52906,13 +52913,6 @@
    "1c6af6d26bf0",
    "7c44f1a58a9a",
    "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind:aggregate-to-grain~bin",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "1ce0e6591a6d",
-   "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~bin",
@@ -53084,6 +53084,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~graph",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "8433dc1e92b6",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~graph",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "fd1f7876d687",
@@ -53122,13 +53129,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "85b18dfe999f",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:aggregate-to-grain~graph",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "c6b6f5b26f5e",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -53315,6 +53315,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~join",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "27e041b952b5",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~join",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "36e842f2aa14",
@@ -53360,13 +53367,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "150f32dddec8",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:aggregate-to-grain~join",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "f0ee2bc72cb5",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -53525,6 +53525,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~nest",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "db9441cb43f8",
+   "a8b2d419d850",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~nest",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "0b8af4abc7af",
    "a83f96f24156",
@@ -53577,13 +53584,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "e4185fd7e6d9",
    "f07df4671edd",
-   "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind:aggregate-to-grain~nest",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "b7154ac70c7a",
-   "969ce2cbd60d",
    "merge-enum-members:scalar>class:legacy-invalid"
   ],
   [
@@ -53735,6 +53735,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~normalize",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "fea67511f76f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~normalize",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "dbb4c51610ea",
@@ -53795,13 +53802,6 @@
    "73b47d18561b",
    "e850f69091a8",
    "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind:aggregate-to-grain~normalize",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "a2758f6808d2",
-   "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~normalize",
@@ -53952,6 +53952,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~project",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "bc6f5f56e8cb",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~project",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "34ea1bfb5b6f",
@@ -53990,13 +53997,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "2b1dd8f02df1",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:aggregate-to-grain~project",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "b149075bf3cd",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -54890,6 +54890,13 @@
   ],
   [
    "relation.derivedBy.kind:join~nest",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "a6bf30abb497",
+   "6b7ea36efedc",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind:join~nest",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "bc1baec7ea5b",
    "6a6734a56d5d",
@@ -54942,13 +54949,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "c9b8019d5f61",
    "0df79263c4b4",
-   "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind:join~nest",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "095433dcb131",
-   "4a75333dc8cd",
    "merge-enum-members:scalar>class:legacy-invalid"
   ],
   [
@@ -55401,6 +55401,13 @@
   ],
   [
    "relation.derivedBy.kind:nest~bin",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "54f8e9ccefa3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:nest~bin",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "ce2d07cb0f90",
@@ -55454,13 +55461,6 @@
    "e49b3b9343d9",
    "2c73a4800956",
    "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind:nest~bin",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "45f62dbd9b61",
-   "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
    "relation.derivedBy.kind:nest~bin",
@@ -55660,6 +55660,13 @@
   ],
   [
    "relation.derivedBy.kind:nest~graph",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "d0dbb08d0897",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:nest~graph",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "ae43ca188abc",
@@ -55705,13 +55712,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "1a0cde1901ab",
    "d870fa1861dd",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:nest~graph",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "0a6244ead6b0",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -55919,6 +55919,13 @@
   ],
   [
    "relation.derivedBy.kind:nest~normalize",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "71bedc0b2d9d",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:nest~normalize",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "20721a44b521",
@@ -55979,13 +55986,6 @@
    "668c0b58234c",
    "a290b2f5cfad",
    "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind:nest~normalize",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "d78d7bc2fa90",
-   "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
    "relation.derivedBy.kind:nest~normalize",
@@ -56150,6 +56150,13 @@
   ],
   [
    "relation.derivedBy.kind:nest~project",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "a329e501feff",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:nest~project",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "c9ddccaa9d33",
@@ -56195,13 +56202,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "1a0cde1901ab",
    "0b67fc7f82f9",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:nest~project",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
-   "a244e038a32a",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -57508,6 +57508,13 @@
   ],
   [
    "relation.derivedBy.nest.from",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -57783,13 +57790,6 @@
    "relation.derivedBy.nest.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.from",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -58250,6 +58250,13 @@
   ],
   [
    "relation.derivedBy.nest.from#incidence",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "08104de9aa81",
+   "ab14d40bedcb",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.nest.from#incidence",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "910bff905637",
    "45512079b429",
@@ -58295,13 +58302,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "7dbb5494f578",
    "1a0cde1901ab",
-   "forget-reference-incidence:scalar>scalar:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.nest.from#incidence",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "949830c2f411",
-   "ba76b873b267",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
@@ -59174,6 +59174,13 @@
   ],
   [
    "relation.derivedBy.nest.levels",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -59449,13 +59456,6 @@
    "relation.derivedBy.nest.levels",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.levels",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -59916,6 +59916,13 @@
   ],
   [
    "relation.derivedBy.nest.levels#arity",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "a9334e6074fc",
+   "ab14d40bedcb",
+   "forget-reference-arity:absent>scalar:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.nest.levels#arity",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "ddec3c5e9a1d",
    "45512079b429",
@@ -59961,13 +59968,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0d6fc533520c",
    "1a0cde1901ab",
-   "forget-reference-arity:absent>scalar:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.nest.levels#arity",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "5c07e7d01699",
-   "ba76b873b267",
    "forget-reference-arity:absent>scalar:legacy-invalid"
   ],
   [
@@ -60098,6 +60098,13 @@
   ],
   [
    "relation.derivedBy.nest.levels#incidence",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "09b3c8103cb4",
+   "ab14d40bedcb",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.nest.levels#incidence",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "e946e4b31164",
    "45512079b429",
@@ -60143,13 +60150,6 @@
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "4536ebc1b19b",
    "ee83e6345c86",
-   "forget-reference-incidence:scalar>scalar:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.nest.levels#incidence",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "eb4f1594e78b",
-   "ba76b873b267",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
@@ -61015,6 +61015,13 @@
   ],
   [
    "relation.derivedBy.normalize.field",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -61290,13 +61297,6 @@
    "relation.derivedBy.normalize.field",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.field",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -62548,6 +62548,13 @@
   ],
   [
    "relation.derivedBy.normalize.from",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -62823,13 +62830,6 @@
    "relation.derivedBy.normalize.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.from",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -64095,6 +64095,13 @@
   ],
   [
    "relation.derivedBy.project.from",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -64370,13 +64377,6 @@
    "relation.derivedBy.project.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.from",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -65635,6 +65635,13 @@
   ],
   [
    "relation.derivedBy.project.keep",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -65910,13 +65917,6 @@
    "relation.derivedBy.project.keep",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.keep",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -67217,6 +67217,13 @@
   ],
   [
    "relation.derivedBy.project.keep#order",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -67492,13 +67499,6 @@
    "relation.derivedBy.project.keep#order",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "relation.derivedBy.project.keep#order",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "only-legacy-coordinate"
   ],
@@ -68701,6 +68701,13 @@
   ],
   [
    "relation.grain",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "d1e040c91744",
+   "51eb1a45d53a",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d547dec7bb7",
    "0f92f44b5e99",
@@ -68977,13 +68984,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "fc8ec114f200",
    "d19de11b5dff",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "relation.grain",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "f3df3d8385ac",
-   "1b795de06bfe",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -70185,6 +70185,13 @@
   ],
   [
    "structure.peers[]",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -70460,13 +70467,6 @@
    "structure.peers[]",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "structure.peers[]",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "new-no-plan"
   ],
@@ -71781,6 +71781,13 @@
   ],
   [
    "structure.peers[]#order",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
@@ -72056,13 +72063,6 @@
    "structure.peers[]#order",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "structure.peers[]#order",
-   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
-   "ba76b873b267",
    "-",
    "only-legacy-coordinate"
   ],
