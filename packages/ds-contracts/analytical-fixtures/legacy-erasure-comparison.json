@@ -7,10 +7,10 @@
  },
  "population": {
   "corpus": 90,
-  "stimuli": 27,
+  "stimuli": 31,
   "synthesized": 91,
-  "total": 208,
-  "membershipDigest": "735fa99ec5d8749c4f16285c539ca7bc1ae62198026f0951276a0d336bfc069d"
+  "total": 212,
+  "membershipDigest": "b06d9654b1fe538625d7ee664ff42181c0cab4e7c5f1228bfefce880d0f99101"
  },
  "coordinates": {
   "legacy": 165,
@@ -25,14 +25,14 @@
   ],
   "onlyNew": []
  },
- "pairs": 34320,
+ "pairs": 34980,
  "agree": {
-  "count": 24426,
-  "digest": "349a1cb0b26a9a0028a8dc88d0deec027ce91db0c8d8c02c208a473122624777"
+  "count": 24899,
+  "digest": "01ef0ab5074885c06a550e7886c0905b94fd9c691cadf5f3c058250012baf081"
  },
  "classes": {
   "new-no-plan": {
-   "count": 5200,
+   "count": 5300,
    "plans": [
     "assertion.aggregate.along",
     "assertion.aggregate.field",
@@ -69,7 +69,7 @@
    }
   },
   "only-legacy-coordinate": {
-   "count": 1040,
+   "count": 1060,
    "plans": [
     "assertion.aggregate.along#order",
     "evidence.grainWitness#order",
@@ -86,7 +86,7 @@
    }
   },
   "merge-enum-members:scalar>class:legacy-valid": {
-   "count": 2381,
+   "count": 2427,
    "plans": [
     "assertion.aggregate.nulls:as-zero~as-observed",
     "assertion.aggregate.nulls:exclude~as-observed",
@@ -155,7 +155,7 @@
    }
   },
   "forget-value:absent>hole:legacy-invalid": {
-   "count": 923,
+   "count": 941,
    "plans": [
     "assertion.aggregate.op",
     "assertion.kind",
@@ -177,7 +177,7 @@
    }
   },
   "merge-enum-members:scalar>class:legacy-invalid": {
-   "count": 270,
+   "count": 271,
    "plans": [
     "assertion.kind:aggregate~ratio-comparison",
     "field.additivity.kind:additive~semi-additive",
@@ -215,7 +215,7 @@
    }
   },
   "forget-value:absent>hole:legacy-valid": {
-   "count": 47,
+   "count": 48,
    "plans": [
     "field.additivity.kind",
     "field.temporality.kind"
@@ -231,7 +231,7 @@
    }
   },
   "forget-reference-arity:absent>scalar:legacy-invalid": {
-   "count": 33,
+   "count": 34,
    "plans": [
     "relation.derivedBy.nest.levels#arity",
     "structure.peers[]#arity"
@@ -1029,6 +1029,34 @@
    "assertion.aggregate.along",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "new-no-plan"
   ],
@@ -2490,6 +2518,34 @@
   ],
   [
    "assertion.aggregate.along#order",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -3941,6 +3997,34 @@
    "assertion.aggregate.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "new-no-plan"
   ],
@@ -5584,6 +5668,34 @@
   ],
   [
    "assertion.aggregate.op",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "910ccc8203c8",
+   "48508b9751fd",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "8e7ae441b485",
+   "28bee5c8e990",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "7c5544574753",
+   "de0d8522d3d0",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "2cd795290df2",
+   "7a64c4bd11c3",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "e153b7a4f59c",
    "e9d03ce350e8",
@@ -6553,6 +6665,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "e46ef8b2cefa",
    "7ce89f02de63",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:count~min",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "81c68ee9a266",
+   "ab172e8ff8a0",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -7705,6 +7824,13 @@
   ],
   [
    "assertion.aggregate.op:mean~min",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "82d18197c079",
+   "d8102d87efb4",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~min",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "b45f126af788",
    "eb749bd52c10",
@@ -8573,6 +8699,27 @@
   ],
   [
    "assertion.aggregate.op:sum~count",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "8b7246b3d7ca",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~count",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "155057f392de",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~count",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "c82e89564669",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~count",
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "acd6cd8c68da",
    "4791c8439df3",
@@ -9213,6 +9360,27 @@
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "43af6976c91a",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "b236d8412390",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "90c6fbfa7832",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "fd40e0a9f99d",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -10207,6 +10375,34 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "e918d973754e",
    "97c60135563e",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "27a756816d02",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "af25021baf84",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "3519ddc1e5bf",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "dd3b48eaf91f",
+   "848f6e747608",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -11396,6 +11592,34 @@
    "assertion.aggregate.relation",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "new-no-plan"
   ],
@@ -12857,6 +13081,34 @@
   ],
   [
    "assertion.kind",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "0efd805b73d4",
+   "969da81f89da",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "7b196aef13d2",
+   "41f0729fcab9",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "2a1a053385ae",
+   "69b39412c0a1",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "a1b1e18f712e",
+   "73c1c414e557",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "fd1a811faed0",
    "92885966eb7b",
@@ -14309,6 +14561,34 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
    "6e8b5a6cdd11",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "0b18a095d0f2",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "dc80a51f87ef",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "bacc8d5bba05",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "ecba75d6c555",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -15769,6 +16049,34 @@
   ],
   [
    "assertion.ratio-comparison.field",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -17225,6 +17533,34 @@
   ],
   [
    "assertion.ratio-comparison.relation",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -18681,6 +19017,34 @@
   ],
   [
    "evidence.grainWitness",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -20132,6 +20496,34 @@
    "evidence.grainWitness#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "6dc7760b1ca7",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "only-legacy-coordinate"
   ],
@@ -20879,6 +21271,13 @@
   ],
   [
    "field.additivity.kind",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "0c95133b2c4a",
+   "256e45370429",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.additivity.kind",
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "7fb0b8e48682",
    "2bc5f88ce386",
@@ -21096,6 +21495,13 @@
   ],
   [
    "field.additivity.kind:additive~semi-additive",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "c516974005a5",
+   "fca49cf0142a",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "field.additivity.kind:additive~semi-additive",
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "acd6cd8c68da",
    "8cc79b1f4989",
@@ -21229,6 +21635,13 @@
   ],
   [
    "field.additivity.kind:semi-additive~non-additive",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "0fa98f0ace09",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.additivity.kind:semi-additive~non-additive",
    "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
    "fc6b62f532b9",
    "c13958de08a0",
@@ -21337,6 +21750,13 @@
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "7a05f8515792",
    "561a6c12590d",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.additivity.kind:semi-additive~ratio-measure",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "de5eaee907d2",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -22153,6 +22573,34 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -23604,6 +24052,34 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "only-legacy-coordinate"
   ],
@@ -24498,6 +24974,13 @@
   ],
   [
    "field.temporality.kind",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "ad72a6bd6be1",
+   "f0e3c0637d10",
+   "forget-value:absent>hole:legacy-valid"
+  ],
+  [
+   "field.temporality.kind",
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "2020bd0a0225",
    "a15ee7fe0960",
@@ -24781,6 +25264,13 @@
    "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
    "af8d9a112b1a",
    "d7146f46a4cc",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.temporality.kind:instant~interval",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "4f7fcf622c9e",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -25677,6 +26167,34 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "43c945947337",
    "412beec750d8",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "925b9aa9993e",
+   "c909388e5ca6",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "a946bddba862",
+   "a1a93b9ba30f",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "30f934af4297",
+   "51e2eb7ffbb8",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "360434edefe2",
+   "1de821433616",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -27074,6 +27592,34 @@
   ],
   [
    "field.transformation:interval~ratio",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "a97f7f1b09f6",
+   "e51dc74248d1",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "2d3c2fc56f58",
+   "45be0b8614e9",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "ef5e38e274a7",
+   "7df7575fcbc5",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "f8236bdf9d6e",
+   "47e5030fc48c",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0b9838860b33",
    "89f70c9f2794",
@@ -28330,6 +28876,34 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
    "0a84efd32f46",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "ca0f8dab66da",
+   "7927ac9ebe33",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "b793ec4e946a",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "aad5d34bfb55",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "cb1c339afaf5",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -29765,6 +30339,34 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
    "da3802129fb6",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "c164175cdd2b",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "220ec56d140f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "79ad9b1cca46",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "7e1bba4ab198",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -31211,6 +31813,34 @@
   ],
   [
    "field.transformation:nominal~ratio",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "00f57c4a289b",
+   "ed7160080c1f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "ee7eaa635ed2",
+   "f01c3042e81d",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "1671da2dc3ce",
+   "c610c28ed6ba",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "d557ced9cbfe",
+   "95f7348b14c7",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "79ef6aafd931",
    "d43be88ee413",
@@ -32082,6 +32712,13 @@
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "e7cb35a02e5a",
    "c1093270cd27",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~interval",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "f1effc22c400",
+   "9cde5a5e5ab5",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33062,6 +33699,34 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "ce1d72f30db2",
    "1e3be45a68ae",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "339e7b59cf00",
+   "1cedab0a94be",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "416024d35bc9",
+   "6b453adb4cac",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "66ebbf8cf5be",
+   "b21ba11a3cfe",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "899610dbdac5",
+   "b7869e264448",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -34461,6 +35126,34 @@
    "field.whole.perRow",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "new-no-plan"
   ],
@@ -36230,6 +36923,34 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.from",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -37681,6 +38402,34 @@
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "new-no-plan"
   ],
@@ -39170,6 +39919,34 @@
   ],
   [
    "relation.derivedBy.bin.field",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -40626,6 +41403,34 @@
   ],
   [
    "relation.derivedBy.bin.from",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -42082,6 +42887,34 @@
   ],
   [
    "relation.derivedBy.graph.edgeFrom",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -43538,6 +44371,34 @@
   ],
   [
    "relation.derivedBy.graph.edgeTo",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -44994,6 +45855,34 @@
   ],
   [
    "relation.derivedBy.graph.from",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -46445,6 +47334,34 @@
    "relation.derivedBy.graph.value",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "new-no-plan"
   ],
@@ -48186,6 +49103,34 @@
   ],
   [
    "relation.derivedBy.join.from",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -49642,6 +50587,34 @@
   ],
   [
    "relation.derivedBy.join.with",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -50531,6 +51504,13 @@
   ],
   [
    "relation.derivedBy.kind",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "f36f706e7cfb",
+   "0006864947eb",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0dfc28af1ea1",
    "df0c30ca38d9",
@@ -50902,6 +51882,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~bin",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "02b3348b9b52",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~bin",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "de96663e6edb",
@@ -51115,6 +52102,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
    "5d41e4a87551",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~graph",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "921e86437627",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -51336,6 +52330,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~join",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "fbbd17f487f3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~join",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "150f32dddec8",
@@ -51529,6 +52530,13 @@
    "24c0d72f7029",
    "041a05876b84",
    "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~nest",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "f15d5fc5ce21",
+   "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~nest",
@@ -51742,6 +52750,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~normalize",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "ab793d0dbf21",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~normalize",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "83e0437ea272",
@@ -51934,6 +52949,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
    "5f0cb852b698",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~project",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "be34d45d68a4",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -55501,6 +56523,34 @@
   ],
   [
    "relation.derivedBy.nest.from",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -56952,6 +58002,34 @@
    "relation.derivedBy.nest.levels",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "new-no-plan"
   ],
@@ -58595,6 +59673,34 @@
   ],
   [
    "relation.derivedBy.normalize.field",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -60051,6 +61157,34 @@
   ],
   [
    "relation.derivedBy.normalize.from",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -61507,6 +62641,34 @@
   ],
   [
    "relation.derivedBy.project.from",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -62958,6 +64120,34 @@
    "relation.derivedBy.project.keep",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "new-no-plan"
   ],
@@ -64419,6 +65609,34 @@
   ],
   [
    "relation.derivedBy.project.keep#order",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -65871,6 +67089,34 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "1234f399a868",
    "edd41f289aa6",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "9cd9d00d3ae5",
+   "5a664aa3b29c",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "a7d7f9c42411",
+   "244968521f8f",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "1b878e509d68",
+   "68362d885f36",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "1d71561967eb",
+   "b21841e87e6c",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -67331,6 +68577,34 @@
   ],
   [
    "structure.peers[]",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -68027,6 +69301,13 @@
    "FX_N_PEERS_AGGREGATE_TO_ONE_TARGET",
    "1477de0c59aa",
    "128268e0a9fd",
+   "forget-reference-arity:absent>scalar:legacy-invalid"
+  ],
+  [
+   "structure.peers[]#arity",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "b0de4d13a32e",
+   "e57b9258ae3f",
    "forget-reference-arity:absent>scalar:legacy-invalid"
   ],
   [
@@ -68831,6 +70112,34 @@
    "structure.peers[]#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d6b27ee8779",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
    "-",
    "only-legacy-coordinate"
   ],

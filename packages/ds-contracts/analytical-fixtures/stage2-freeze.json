@@ -106,7 +106,6 @@
       "assertion.kind:aggregate~ratio-comparison",
       "assertion.ratio-comparison.field#incidence",
       "assertion.ratio-comparison.relation#incidence",
-      "evidence.grainWitness#arity",
       "evidence.grainWitness#incidence",
       "evidence.rows.*#present",
       "field.additivity#present",
@@ -114,7 +113,6 @@
       "field.additivity.kind:non-additive~ratio-measure",
       "field.additivity.kind:semi-additive~non-additive",
       "field.additivity.kind:semi-additive~ratio-measure",
-      "field.additivity.semi-additive.nonAdditiveAlong#arity",
       "field.temporality.grain:day~<absent>",
       "field.temporality.grain:month~<absent>",
       "observation.null:absent~<absent>",
@@ -173,7 +171,6 @@
       "relation.derivedBy.project.keep#arity",
       "relation.derivedBy.project.keep#incidence",
       "structure.peers#present",
-      "structure.peers[]#arity",
       "structure.peers[]#incidence",
       "structure.peers[]#present"
     ],
@@ -181,7 +178,9 @@
       "assertion.aggregate.along#present",
       "assertion.aggregate.field#incidence",
       "assertion.aggregate.nulls:exclude~<absent>",
+      "evidence.grainWitness#arity",
       "field.additivity.kind:additive~non-additive",
+      "field.additivity.semi-additive.nonAdditiveAlong#arity",
       "field.temporality#present",
       "field.temporality.grain",
       "field.temporality.grain:day~month",
@@ -189,7 +188,8 @@
       "relation.derivedBy.bin.closure",
       "relation.derivedBy.bin.closure:left-closed~<absent>",
       "relation.derivedBy.kind:bin~normalize",
-      "relation.derivedBy.nest.levels#order"
+      "relation.derivedBy.nest.levels#order",
+      "structure.peers[]#arity"
     ],
     "required-derived-vocabulary": [
       "relation.derivedBy.join.cardinality",

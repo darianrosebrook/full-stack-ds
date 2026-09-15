@@ -214,8 +214,9 @@ describe("adopting the closure form confers no standing", () => {
       else expect(s, `${coordinate} must read its own basis verdict, not the closure`).toEqual({ state: "resolved", disposition: verdict });
     }
     const primitiveDeps = r.dependencies.filter((d) => d.standing.state === "primitive");
-    // Three now, all for the same reason: a holding single-coordinate witness ratifies them.
+    // Four now, all for the same reason: a holding single-coordinate witness ratifies them.
     expect(primitiveDeps.map((d) => d.coordinate)).toEqual([
+      "field.additivity.semi-additive.nonAdditiveAlong#arity",
       "field.additivity.semi-additive.nonAdditiveAlong#incidence",
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.nest.levels#order",
@@ -806,6 +807,7 @@ describe("the unresolved dependencies are blocked by EVIDENCE, not by an undecid
     // carrier's promotion just as firmly as an unsettled one.
     const primitive = openDeps().filter((d) => d.standing.state === "primitive").map((d) => d.coordinate);
     expect(primitive).toEqual([
+      "field.additivity.semi-additive.nonAdditiveAlong#arity",
       "field.additivity.semi-additive.nonAdditiveAlong#incidence",
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.nest.levels#order",
@@ -1195,8 +1197,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(72);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 28, "member-absence": 8, leaf: 5, "member-pair": 31 });
+    expect(unresolved.length).toBe(69);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 25, "member-absence": 8, leaf: 5, "member-pair": 31 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
@@ -1218,7 +1220,7 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // Five topology facets left the kernel with the sequence declaration, so the
     // unresolved topology set is 28 rather than 33.
     const topology = unresolved.filter((id) => kindOf(id) === "reference-topology");
-    expect(topology.length).toBe(28);
+    expect(topology.length).toBe(25);
     // Fourteen, not sixteen: two of the sixteen were witnessed -- `relation.derivedBy.nest.levels#order`
     // by REL-TOPOLOGY-AUTHORED-STIMULUS-01 and `relation.derivedBy.aggregate-to-grain.toGrain#order` by
     // REL-ORDER-FACET-SEMANTICS-01 -- so neither is unresolved and neither is counted here, while the
@@ -1226,11 +1228,11 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // Twelve: two of the sixteen were witnessed (see above), and two more -- `keep#order` and
     // `nonAdditiveAlong#order` -- left the kernel with the sequence declaration, so they are
     // neither unresolved nor in a footprint any more.
-    expect(topology.filter((id) => dependents.has(id)).length).toBe(12);
+    expect(topology.filter((id) => dependents.has(id)).length).toBe(11);
     // 54, not 57: three coordinates that blocked nothing are gone from the kernel -- `along#order`,
     // `peers[]#order` and `grainWitness#order` -- and two that blocked a carrier are gone with a
     // verdict, so the non-blocking unresolved count falls by three.
-    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(54);
+    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(52);
   });
 });
 
