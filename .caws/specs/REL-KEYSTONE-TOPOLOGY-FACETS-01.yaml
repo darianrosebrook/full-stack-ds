@@ -1,0 +1,31 @@
+id: REL-KEYSTONE-TOPOLOGY-FACETS-01
+title: 'Decompose the unresolved candidates and identify the reference-topology facets as the closures'' keystone'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T06:11:14.181Z'
+updated_at: '2026-09-15T06:11:14.181Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/closure.test.ts (pin the decomposition and the blockage shape)'
+    - 'docs/current-implementation-snapshot.md (the targeted corpus obligation)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'A blocked closure''s footprint is the thing to decompose, not the candidate list: the unresolved coordinates that block nothing are a different obligation from the ones that settle a carrier.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given 79 unresolved stage-2 candidates and 22 blocked closures; when the candidates are decomposed by coordinate kind and each blocked closure''s unsettled footprint is decomposed the same way; then every blocked closure depends on at least one reference-topology facet, sixteen depend on nothing else, thirty-five candidates are reference-topology and only sixteen of those block any closure, and the snapshot records the targeted obligation'
+non_functional: {}
+contracts:
+  - name: 'closure-blockage'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/closure.test.ts'
