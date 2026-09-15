@@ -243,7 +243,7 @@ describe("the constructibility triage: what EVIDENCE each ratifiable candidate h
       // stimulus — so each of these still needs a committed fixture or an
       // authored {base, patch} whose judgment follows from an existing cause
       // before a witness can be filed.
-      expect(bySpecimenShape.length).toBe(21);
+      expect(bySpecimenShape.length).toBe(20);
       expect(bySpecimenShape).toContain("relation.derivedBy.graph.value#incidence");
       expect(bySpecimenShape).toContain("relation.derivedBy.aggregate-to-grain.from#incidence");
       // And the remainder have no separating shape at all, which is a corpus gap
