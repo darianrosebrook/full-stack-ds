@@ -293,6 +293,48 @@ The order is forced by dependencies, which is why it is doctrine rather than sch
 
 Two adversaries are deliberately early. The OHLC relation *looks* like a chart type and is actually a constrained relation; if the substrate expresses it with no `candlestick` concept below L4, that is strong evidence. The graph relation is the opposite case — position is not data, and an isolated node is not an edge — and forces both the relational-structure position and the projection layer's ability to decline a claim.
 
+### Stage-3 precommit (recorded before stage 3 runs)
+
+Stage 3 is the only stage that can answer the thesis, so its success condition is fixed in advance rather than read off whatever the enumerator produces:
+
+> Given one analytical authority, the system independently enumerates at least two structurally different, semantically lawful projections whose shared claims can be mechanically identified, whose losses are explicit, and whose target-specific residue is non-empty — with no form name participating in the derivation.
+
+The experiment is not "projection-space implementation." The enumerator, the task table, channel capacities, the combinators and the generated alias catalogue are mechanisms; the claim is **can analytical realization be derived rather than selected?** Four closures are fixed before stage 3 produces output. The first three close ways that sentence is gameable; the fourth is the control without which a hash-to-template implementation passes the other three.
+
+**1. Distinctness is downstream of a frozen authority.** Different derivation chains do not count: `relation → aggregate → A` against `relation → bin → B` shows that different analyses yield different realizations, which is not the claim. The claim is that *one admitted analytical object inhabits multiple lawful projections*, so the core witness freezes relation, derivation and task and requires distinctness after that.
+
+> Two projections are structurally distinct iff, from the same relation, derivation and task, they differ in projection topology: coordinate-space family, semantic channel assignment for at least one task-bearing variable, or projection family (visual / tabular / textual / navigational). Mere parameter variation within the same assignment does not count.
+
+A cartesian position/length realization and a tabular key/value realization are genuinely distinct; two cartesian variants differing in orientation are one proof, not two.
+
+**2. Residue is bounded by analytical standing, not by meaninglessness.** "Non-claim-bearing" is directionally right and too strong: residue carries real realization semantics — focus affordances, label-placement policy, text wrapping, simulation parameters, collision handling, animation, native interaction mechanics. The boundary is standing:
+
+> The shared substrate owns analytical claims. Projection and realization residue may affect perception, interaction, layout and substrate mechanics, but may neither introduce nor negate analytical standing.
+
+This is what makes the force-layout adversary coherent: its coordinates matter perceptually while remaining analytically non-authoritative, which is a different statement from "they mean nothing."
+
+**3. The anti-lookup falsifier precommits set deltas, not directions.** "Changes in a predicted direction" is satisfiable loosely, so the predictions are recorded as required membership changes before the run:
+
+```text
+ratio -> ordinal
+  MUST remove every projection whose task-bearing assignment requires ratio capacity
+  MUST preserve nominal/ordinal-compatible alternatives
+
+grain declared -> unknown
+  MUST remove every projection whose legality depends on grain
+  MUST preserve projections whose admissibility does not inspect grain
+  MUST carry the grain obligation
+
+non-cyclic -> cyclic
+  MUST add at least one cyclic-capable assignment if target capabilities provide one
+  MUST NOT remove unrelated cartesian/tabular lawful assignments merely because
+      cyclicity became available
+```
+
+**4. Irrelevant-perturbation invariance (the control).** Change a semantic fact no candidate projection and no declared task depends on; the admissible set is byte-identical after normalization. Without this, an implementation that hashes its input into a different template set passes every "relevant perturbation changes something" test.
+
+Together these are a four-part metamorphic test: narrowing semantic standing removes predicted projections; supplying standing adds predicted projections; creating an obligation narrows without fabricating illegality; irrelevant semantic change leaves the enumeration unchanged. The review posture after stage 2 closes is therefore hostile and constructive rather than ontological — **show me this is discovering projections rather than recognizing forms we taught it** — and reviewing stage 3 primarily for ontology quality wastes the only stage that can answer the thesis.
+
 ## Diagnostic catalogue
 
 One row per **cause**. Cases — the observations that exhibit a cause, with their stage and evidence class — live in `packages/ds-contracts/analytical-pack/corpus.jsonl`; several cases may share a row here, and `corpus-integrity.ts` requires the set of diagnostics carried by illegal cases to equal this table in both directions. The cause column is written in the vocabulary appendix's terms only; the colloquial column exists to show the name is downstream of the cause. Stage is the earliest stage at which *some* case for the cause is adjudicable.
