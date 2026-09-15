@@ -453,6 +453,23 @@ describe("obligation 3 — the holder instrument is located from the discriminat
   const locators = loadLocators();
   const ASSERTION = "assertion.kind:aggregate~ratio-comparison";
 
+  /**
+   * The exercised stimulus pair: the recorded illegal ratio reading of an interval
+   * field, against the same declaration asserting that field's mean, which an
+   * interval scale supports. The two differ inside the one assertion and nowhere else.
+   */
+  const ASSERTION_SIDES = {
+    a: { fixture: "FX_TEMP_RATIO_COMPARISON" },
+    b: {
+      base: "FX_TEMP_RATIO_COMPARISON",
+      patch: [{ set: "assertions.0", value: { kind: "aggregate", relation: "readings", field: "temp", op: "mean" } }],
+      outcome: { status: "admissible" as const, codes: [] as string[], terms: [] as string[] },
+      cause: "CASE_TEMPERATURE_LENGTH_FROM_ZERO forbids reading an interval field as a ratio; the mean of the same field is interval-meaningful",
+    },
+  };
+
+  const assertionClosure = () => closureOf({ carrier: ASSERTION, ...ASSERTION_SIDES });
+
   it("agrees with the census wherever the census locates the holder, over every discriminated union", () => {
     const checked: string[] = [];
     for (const leaf of signatures.keys()) {
@@ -504,26 +521,52 @@ describe("obligation 3 — the holder instrument is located from the discriminat
   });
 
   it("evaluates every obligation for an assertion-branch carrier instead of throwing, and obligation 3 can hold", () => {
-    // The recorded illegal ratio reading of an interval field, against the same
-    // declaration asserting the field's mean, which an interval scale supports.
-    // The two differ inside the one assertion and nowhere else.
-    const c = closureOf({
-      carrier: ASSERTION,
-      a: { fixture: "FX_TEMP_RATIO_COMPARISON" },
-      b: {
-        base: "FX_TEMP_RATIO_COMPARISON",
-        patch: [{ set: "assertions.0", value: { kind: "aggregate", relation: "readings", field: "temp", op: "mean" } }],
-        outcome: { status: "admissible", codes: [], terms: [] },
-        cause: "CASE_TEMPERATURE_LENGTH_FROM_ZERO forbids reading an interval field as a ratio; the mean of the same field is interval-meaningful",
-      },
-    });
-    const r = check(c);
+    const r = check(assertionClosure());
     expect(r.obligations.map((o) => o.id.split("-")[0])).toEqual(["1", "2", "3", "4", "5", "6", "7", "8"]);
     const o = r.obligations.find((x) => x.id.startsWith("3-"))!;
     expect(o.unevaluable).toBeUndefined();
     expect(o.held).toBe(true);
     expect(o.detail).toContain("identical outside assertion");
     expect(r.problems.filter((p) => p.includes("schema-invalid"))).toEqual([]);
+  });
+
+  it("leaves the assertion residue blocked by the FORM, not by a tooling limit: 1-6 hold, 7 cannot be satisfied by construction, 8 fails on a primitive footprint", () => {
+    // The recorded state of this carrier, measured rather than argued. `codomain-adjudications.json`
+    // used to carry a checker limit here -- that obligation 3 could not be evaluated for an assertion
+    // holder -- and that limit is gone; what remains is a property of the proof form and a property
+    // of the encoding. Pinned so neither can quietly become a repair again.
+    const r = check(assertionClosure());
+    // Every obligation up to the two that cannot be discharged.
+    for (const id of ["1", "2", "3", "4", "5", "6"]) {
+      expect(r.obligations.find((o) => o.id.startsWith(`${id}-`))!.held, `obligation ${id}`).toBe(true);
+    }
+    // 7 is not false, it is UNSATISFIABLE: assertion.kind has two members, so its only member
+    // pair is this carrier and no payload-compatible sibling exists to serve as the control.
+    expect(r.classification).toBe("indeterminate");
+    const seven = r.obligations.find((o) => o.id.startsWith("7-"))!;
+    expect(seven.held).toBe(false);
+    expect(seven.detail).toContain("no sibling pair on assertion.kind has a compatible branch payload signature");
+    // 8 fails on the ENCODING: constructor and payload are both primitive under it.
+    const eight = r.obligations.find((o) => o.id.startsWith("8-"))!;
+    expect(eight.held).toBe(false);
+    expect(eight.detail).toContain("7 PRIMITIVE");
+    expect(eight.detail).toContain("composite under this encoding");
+    // A form that cannot be discharged is not a refutation of the residue.
+    expect(r.promotion).toBe("provisional");
+    expect(r.problems).toEqual([]);
+    // And the footprint that would have to be re-decided is exactly the seven measured coordinates.
+    expect(r.standing.map((s) => s.coordinate).sort()).toEqual(
+      [
+        "assertion.aggregate.op",
+        "assertion.aggregate.op:count~min",
+        "assertion.aggregate.op:mean~count",
+        "assertion.aggregate.op:mean~min",
+        "assertion.aggregate.op:sum~count",
+        "assertion.aggregate.op:sum~mean",
+        "assertion.aggregate.op:sum~min",
+      ].sort(),
+    );
+    expect(r.standing.every((s) => s.standing.state === "primitive")).toBe(true);
   });
 
   it("still rejects assertion stimuli that differ outside the assertion", () => {
