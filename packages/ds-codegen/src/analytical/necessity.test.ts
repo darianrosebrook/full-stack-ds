@@ -1665,6 +1665,168 @@ describe("C1g — the ORDER facet is emitted only where the DECLARATION says the
   });
 });
 
+describe("C1h — the incidence erasure at a BOUND reference has a resolution-preserving candidate, measured", () => {
+  /**
+   * C1f established the problem: the census's incidence erasure rewrites a
+   * reference's names to reserved tokens, which is a legal QUOTIENT image but not
+   * a legal DECLARATION, so for a reference the derivation boundary must RESOLVE
+   * the boundary refuses it and no witness naming the coordinate can be admitted.
+   * Eighteen coordinates are in that position, and every route to closing the
+   * closure gate passes through them.
+   *
+   * This pins a CANDIDATE and measures what it reaches. Canonical rebinding
+   * replaces the slot's names with the operand's OWN first k declared names: the
+   * image resolves because they are declared, arity is preserved, and every pair
+   * of stimuli that differ only in WHICH declared things the slot binds is
+   * identified. It is a measurement, not a landed erasure -- the census and the
+   * plan compiler are untouched.
+   *
+   * What it measures is a DIVISION, and the division is the finding. It reaches
+   * thirteen of the twenty-one bound reference-topology coordinates, including
+   * the pair C1f used to show the distincton is real. The eight it does not reach
+   * are named with the code the refusal introduces, and the dominant cause is
+   * structural rather than incidental: for `toGrain`, `keep`, `bin.field` and
+   * `edgeTo` the boundary's law writes the SAME binding a second time in the
+   * result's own declaration (`sameSet(out.grain, d.toGrain)`,
+   * `sameSet(fieldNames(out), d.keep)`, the retained binned field), so rebinding
+   * the operand alone leaves a declaration that no longer agrees with itself.
+   * The coordinate's extent is wider than its locator, and a quotient for those
+   * has to name both sides.
+   */
+  const wellFormedness = new Set<string>(Object.values(DERIVATION_DIAG));
+  const rebindingPlans = loadPlans();
+  const boundCoords = kernel.filter(
+    (c) =>
+      c.kind === "reference-topology" &&
+      c.leaf.startsWith("relation.derivedBy.") &&
+      c.leaf !== "relation.derivedBy.kind" &&
+      c.leaf !== "relation.derivedBy.join.cardinality",
+  );
+
+  /** The holder relation carrying this derivedBy, and the relation its `from` names. */
+  const holderOf = (f: Fixture, leaf: string): { holder: string; input: string } | undefined => {
+    const m = /^relation\.derivedBy\.([^.]+)\./.exec(leaf);
+    if (!m) return undefined;
+    for (const [rn, rel] of Object.entries(f.structure.relations)) {
+      const d = (rel as { derivedBy?: { kind: string; from: string } }).derivedBy;
+      if (d && d.kind === m[1]) return { holder: rn, input: d.from };
+    }
+    return undefined;
+  };
+
+  /**
+   * The candidate: replace each name at the slot with the operand's own first
+   * declared name. A relation-valued operand ranges over the structure's
+   * relations; a field-valued one over the input relation's fields.
+   */
+  const rebind = (f: Fixture, c: Coordinate): { image: Fixture; note: string } => {
+    const plan = rebindingPlans.get(c.id);
+    const image = JSON.parse(JSON.stringify(f)) as Fixture;
+    if (!plan) return { image, note: "no plan" };
+    const operand = c.leaf.slice(c.leaf.lastIndexOf(".") + 1);
+    const h = holderOf(f, c.leaf);
+    if (!h) return { image, note: "no holder" };
+    const relationValued = operand === "from" || operand === "with";
+    const input = (f.structure.relations as Record<string, { fields: Record<string, unknown> }>)[h.input];
+    if (!relationValued && !input) return { image, note: "no input relation" };
+    const pool = relationValued ? Object.keys(f.structure.relations) : Object.keys(input.fields);
+    for (const s of resolveSlots(image, plan.locator)) {
+      const v = (s.parent as Record<string, unknown>)[String(s.key)];
+      const count = Array.isArray(v) ? v.length : 1;
+      if (pool.length < count) return { image, note: `operand declares ${pool.length} name(s), slot holds ${count}` };
+      (s.parent as Record<string, unknown>)[String(s.key)] = Array.isArray(v) ? pool.slice(0, count) : pool[0];
+    }
+    return { image, note: "" };
+  };
+
+  const findingsOf = (f: Fixture) => new Set(checkDerivations(f.structure).map((d) => `${d.code ?? d.term}@${d.subject}`));
+
+  const measured = () => {
+    const reached: string[] = [];
+    const refused: string[] = [];
+    const invalid: string[] = [];
+    const introducedCodes = new Set<string>();
+    for (const c of boundCoords) {
+      const plan = rebindingPlans.get(c.id)!;
+      let built = 0;
+      let bad = 0;
+      for (const f of oracle.fixtures.values()) {
+        if (resolveSlots(f, plan.locator).length === 0) continue;
+        const r = rebind(f, c);
+        if (r.note) continue;
+        built += 1;
+        if (oracle.validate(r.image).length > 0) {
+          bad += 1;
+          continue;
+        }
+        for (const k of findingsOf(r.image)) {
+          if (!findingsOf(f).has(k)) {
+            bad += 1;
+            const diag = [...wellFormedness].find((w) => k.includes(w));
+            if (diag) introducedCodes.add(diag);
+            break;
+          }
+        }
+      }
+      if (built === 0) continue;
+      (bad > 0 ? refused : reached).push(c.id);
+    }
+    return { reached: reached.sort(), refused: refused.sort(), invalid, introducedCodes: [...introducedCodes].sort() };
+  };
+
+  it("reaches exactly the thirteen bound coordinates whose operand binding is written ONCE", () => {
+    expect(measured().reached).toEqual([
+      "relation.derivedBy.aggregate-to-grain.from#incidence",
+      "relation.derivedBy.bin.from#incidence",
+      "relation.derivedBy.graph.edgeFrom#incidence",
+      "relation.derivedBy.graph.from#incidence",
+      "relation.derivedBy.graph.value#incidence",
+      "relation.derivedBy.join.from#incidence",
+      "relation.derivedBy.nest.from#incidence",
+      "relation.derivedBy.nest.levels#arity",
+      "relation.derivedBy.nest.levels#incidence",
+      "relation.derivedBy.nest.levels#order",
+      "relation.derivedBy.normalize.field#incidence",
+      "relation.derivedBy.normalize.from#incidence",
+      "relation.derivedBy.project.from#incidence",
+    ]);
+  });
+
+  it("and leaves exactly eight, each refused by a boundary well-formedness code", () => {
+    const m = measured();
+    expect(m.refused).toEqual([
+      "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+      "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.bin.field#incidence",
+      "relation.derivedBy.graph.edgeTo#incidence",
+      "relation.derivedBy.join.with#incidence",
+      "relation.derivedBy.project.keep#arity",
+      "relation.derivedBy.project.keep#incidence",
+    ]);
+    // The refusal is the boundary's own line, never a schema-invalid image: the
+    // candidate is a legal quotient throughout, which is what makes the remaining
+    // division a fact about the LAWS and not about the image language.
+    expect(m.invalid).toEqual([]);
+    expect(m.introducedCodes).toEqual(["REL_DERIVATION_RESULT_NOT_DERIVABLE"]);
+  });
+
+  it("identifies the pair C1f used to show the distinction is real, without touching either side", () => {
+    // The same stimulus pair C1f refuses: `[country, state]` against `[revenue, state]`.
+    const incidence = boundCoords.find((c) => c.id === "relation.derivedBy.nest.levels#incidence")!;
+    const base = oracle.fixtures.get("FX_N_NESTED_SUBTOTAL_AT_PREFIX")!;
+    const patched = applyPatch(base, [{ set: "structure.relations.hierarchy.derivedBy.levels", value: ["revenue", "state"] }]);
+    const ea = rebind(base, incidence).image;
+    const eb = rebind(patched, incidence).image;
+    expect(canonical(ea)).toBe(canonical(eb));
+    // The a-side is UNCHANGED by the candidate, which is why its isolation closes
+    // on `unchanged` rather than on a comparison the engine could not make.
+    expect(JSON.stringify(ea)).toBe(JSON.stringify(base));
+    expect(findingsOf(ea).size).toBe(findingsOf(base).size);
+    expect([...findingsOf(eb)].filter((k) => !findingsOf(patched).has(k))).toEqual([]);
+  });
+});
+
 describe("C1d — cleanup cardinality bounds which pairs a <=2-coordinate witness can even express", () => {
   /**
    * Erasing a discriminator rewrites one member's tag to the other's. Required
