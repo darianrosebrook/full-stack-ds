@@ -516,16 +516,17 @@ describe("a PRESENCE witness needs a pair the erasure is a no-op on one side of"
     return found.sort();
   };
 
-  it("finds exactly two, both bin.closure spellings — and the pair is IDEAL, which is the point", () => {
-    // The corpus supplies a pair whose two sides differ in nothing but the declaration, with
-    // outcomes illegal-against-admissible. checkWitness refuses both anyway, on
-    // ERASURE_NOT_ISOLATED, because deleting the declaration produces the very configuration
-    // the corpus diagnoses. That refusal is the doctrine's named instrument limit: the ideal
-    // pair exists and the isolation clause is what refuses it.
-    expect(presencePairs()).toEqual([
-      "relation.derivedBy.bin.closure",
-      "relation.derivedBy.bin.closure:left-closed~<absent>",
-    ]);
+  it("now finds NONE, because the two it did find are adjudicated — and neither emptiness is vacuous", () => {
+    // The sweep returned exactly two before REL-ISOLATION-SLOT-LOCAL-01: both bin.closure
+    // spellings, whose pair is ideal and was refused on ERASURE_NOT_ISOLATED. The exemption's
+    // scope was corrected rather than its principle, so both are now `witnessed` and a sweep
+    // over the UNRESOLVED set legitimately finds nothing. The assertion below is what keeps
+    // that from being a silent vacuity: if the pair were ever un-adjudicated, the sweep would
+    // have to find it again.
+    expect(presencePairs()).toEqual([]);
+    for (const id of ["relation.derivedBy.bin.closure", "relation.derivedBy.bin.closure:left-closed~<absent>"]) {
+      expect(live.verdicts[id]?.disposition, `${id} must be adjudicated, or the empty sweep is vacuous`).toBe("witnessed");
+    }
   });
 
   it("and evidence.rows.*#present has none, so its refusal is a MISSING FIXTURE SHAPE and not a mis-chosen pair", () => {

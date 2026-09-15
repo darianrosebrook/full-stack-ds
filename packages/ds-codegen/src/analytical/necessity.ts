@@ -850,7 +850,28 @@ export function checkIsolation(
   const engineApplicable = inDomain(sBefore) && inDomain(sAfter);
   if (engineApplicable) {
     const wellFormedness = new Set<string>(Object.values(DERIVATION_DIAG));
-    const semanticIsThePoint = c.kind === "member-pair" && c.leaf.endsWith(".kind");
+    // A SEMANTIC finding that appears when the erasure is confined to the coordinate's own slot
+    // IS the distinction under test, not collateral damage. That was already the rule for a
+    // member pair on a discriminator, stated for the class; it is the rule for every class,
+    // because what makes a finding collateral is the erasure having reached something ELSE, and
+    // slot-locality is the measurement of exactly that. A coordinate whose absence the corpus
+    // diagnoses is the case the narrow scoping got wrong: deleting an undeclared-able
+    // declaration produces the diagnostic that names its absence, which is the witness's
+    // CONTENT rather than a substitution that exchanged another slot.
+    //
+    // Well-formedness refusals stay collateral for every class, slot-local or not: a dangling
+    // input or an underivable result means the erasure broke the structure, and a collision
+    // would be that break. That is the line `codes.ts` draws, and this does not move it.
+    const isolationPlan = lookup(c);
+    const isolationSlots = isolationPlan ? slotPaths(fixture, isolationPlan.locator) : [];
+    const withinSlot = (p: string) => isolationSlots.some((sl) => p === sl || p.startsWith(`${sl}.`) || p.startsWith(`${sl}[`));
+    // A CONTAINER that holds the slot counts as the slot: `changedPaths` reports the parent
+    // object alongside the leaf it lost, and the parent is an ancestor of the slot rather than
+    // something outside it. Same rule `checkCombinedIsolation` applies as `impliedBy`.
+    const changedInside = changed.filter(withinSlot);
+    const impliedBySlot = (p: string) => changedInside.some((q) => q !== p && (q.startsWith(`${p}.`) || q.startsWith(`${p}[`)));
+    const slotLocal = isolationSlots.length > 0 && changed.every((p) => withinSlot(p) || impliedBySlot(p));
+    const semanticIsThePoint = (c.kind === "member-pair" && c.leaf.endsWith(".kind")) || slotLocal;
     const relevant = (d: { code?: string }) => !semanticIsThePoint || (d.code !== undefined && wellFormedness.has(d.code));
     // No try/catch: an exception here is an instrument failure and must
     // propagate. Both arguments have already been shown to be in the checker's

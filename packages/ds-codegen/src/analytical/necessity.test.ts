@@ -1478,7 +1478,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // obligations 3-6), which puts both carriers and the two `#incidence` coordinates their
     // normalizations forget into the closure-accounted class. Accounted is not ratified, and
     // the assertion below is what keeps the two apart.
-    expect(byClass).toEqual({ primitive: 50, "closure-accounted": 15, "required-derived-vocabulary": 1, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 52, "closure-accounted": 15, "required-derived-vocabulary": 1, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -1604,6 +1604,8 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "field.temporality#present",
       "field.temporality.grain",
       "field.temporality.grain:day~month",
+      "relation.derivedBy.bin.closure",
+      "relation.derivedBy.bin.closure:left-closed~<absent>",
       "relation.derivedBy.bin.field#incidence",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
@@ -1640,6 +1642,8 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "field.temporality#present",
       "field.temporality.grain",
       "field.temporality.grain:day~month",
+      "relation.derivedBy.bin.closure",
+      "relation.derivedBy.bin.closure:left-closed~<absent>",
       "relation.derivedBy.bin.field#incidence",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
@@ -2148,10 +2152,12 @@ describe("an oracle-separated pair is NECESSARY for a witness and not sufficient
     expect(a).not.toEqual(b);
   });
 
-  it("refuses an erasure that INTRODUCES a defect instead of forgetting one", () => {
-    // The three `relation.derivedBy.bin.closure` coordinates have oracle-separated collided
-    // pairs too, but erasing the declaration does not merely forget it: the fixture becomes
-    // ill-formed, and checkWitness reports ERASURE_NOT_ISOLATED rather than a collision.
+  it("accepts a slot-local erasure whose introduced finding is the CORPUS's semantic rule, and still refuses a well-formedness break", () => {
+    // This pair was refused before REL-ISOLATION-SLOT-LOCAL-01, and the refusal was the
+    // exemption's SCOPE and not its principle: the exemption was written for "a member pair on
+    // a discriminator" and this is the declaration's leaf and its member-absence cross-term. It
+    // is now stated for what it measures -- an erasure confined to the coordinate's own slot
+    // that produces a SEMANTIC finding has produced the distinction under test.
     const c = checkWitness(
       {
         coordinates: ["relation.derivedBy.bin.closure"],
@@ -2161,9 +2167,25 @@ describe("an oracle-separated pair is NECESSARY for a witness and not sufficient
       kernel,
       oracle,
     );
-    expect(c.ok).toBe(false);
-    expect(c.failures.map((f) => f.code)).toEqual(["ERASURE_NOT_ISOLATED"]);
-    expect(String(c.failures[0]!.detail)).toContain("REL_BIN_CLOSURE_UNDECLARED");
+    expect(c.ok, "the pair IS the ideal one: one fixture is the other minus the declaration").toBe(true);
+
+    // And the guard is live, not vacuous: a slot-local erasure that introduces a WELL-FORMEDNESS
+    // refusal is still refused, because that means the erasure broke the structure and a
+    // collision would be that break. `REL_DERIVATION_*` are the boundary's own refusals, kept
+    // out of the doctrine catalogue for exactly this reason.
+    const binField = kernel.find((x) => x.id === "relation.derivedBy.bin.field#incidence")!;
+    const broken = checkIsolation(oracle.fixtures.get("FX_READINGS_BINNED_NO_CLOSURE")!, binField);
+    expect(broken.state).toBe("violated");
+    expect(String(broken.state === "violated" ? broken.detail : "")).toContain("REL_DERIVATION_");
+    expect(checkWitness(
+      {
+        coordinates: ["relation.derivedBy.bin.field#incidence"],
+        a: { fixture: "FX_READINGS_BINNED_NO_CLOSURE" },
+        b: { fixture: "FX_N_READINGS_BINNED_LEFT_CLOSED" },
+      },
+      kernel,
+      oracle,
+    ).ok).toBe(false);
   });
 
   it("and the DIAGNOSTIC decides it, not the operation: the same erasure is witnessable where absence is lawful", () => {
