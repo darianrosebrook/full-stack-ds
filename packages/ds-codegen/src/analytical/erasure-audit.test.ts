@@ -264,9 +264,9 @@ describe("containment is structural, never a string prefix", () => {
 describe("the witness audit", () => {
   const byVerdict = (v: string) => live.witnesses.filter((w) => w.verdict === v);
 
-  it("classifies all 61 witnesses and leaves none with an unresolved plan", () => {
+  it("classifies all 62 witnesses and leaves none with an unresolved plan", () => {
     // 47 at stage 1.5, plus fourteen stage-2 necessities added by later adjudications.
-    expect(live.witnesses.length).toBe(61);
+    expect(live.witnesses.length).toBe(62);
     expect(byVerdict("unresolved-plan")).toEqual([]);
   });
 
@@ -308,6 +308,7 @@ describe("the witness audit", () => {
       "field.transformation",
       "observation.null",
       "relation.derivedBy.bin.closure",
+    "relation.derivedBy.nest.levels#incidence",
     ]);
   });
 
@@ -400,7 +401,7 @@ describe("the terminal invariant is measured over the population the report name
       };
       // A scope admitting it saw fewer than the population it names.
       expect(bend((x) => { x.scopes.quotientLanguageInvalid.specimens = 112; }), `${side}: wrong scope count`).toEqual([
-        expect.stringContaining("measured over 112 of 211 specimens"),
+        expect.stringContaining("measured over 112 of 212 specimens"),
       ]);
       // No named population at all: coverage could only be compared by count.
       expect(bend((x) => { delete (x.specimens as unknown as Record<string, unknown>).populationDigest; }), `${side}: no named population`).toEqual([
@@ -565,7 +566,7 @@ describe("the terminal invariant is measured over the population the report name
     // A null recorded scope must not suppress detection of a changed current one.
     const suppressed = run((r, l) => { r.scopes.sourceLanguageDeparture = null; l.scopes.sourceLanguageDeparture.populationDigest = "0".repeat(64); });
     expectProblem(suppressed, "RECORDED", "sourceLanguageDeparture scope is not a scope", "null scope beside a changed current digest");
-    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 122 authored", "source count 999");
+    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 123 authored", "source count 999");
     expectProblem(run((r) => { r.specimens.total = 0; r.scopes.quotientLanguageInvalid.specimens = 0; }), "RECORDED", "specimens.total 0 is not corpus + stimuli + synthesized", "total 0 beside unchanged components");
 
     // BOTH-SIDES corruptions of the fields that only had equality comparisons.
@@ -804,7 +805,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
       byId.set(f.id, set);
     }
     const shared = [...byId].filter(([, cs]) => cs.size > 1);
-    expect(s.fixtures.length).toBe(211);
+    expect(s.fixtures.length).toBe(212);
     expect(byId.size).toBe(110);
     expect(shared.length).toBe(27);
     // Not one of them is a benign repeat: every shared id carries two or more DIFFERENT fixtures.
@@ -829,7 +830,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     // the corrected reading rather than a narrower window. The id-resolving version reported two.
     const doc = loadSubtraction();
     const unresolved = doc.basis.candidates.filter((id) => (doc.verdicts[id]?.disposition ?? "unresolved") === "unresolved");
-    expect(unresolved.length).toBe(68);
+    expect(unresolved.length).toBe(67);
 
     const s = specimens();
     const oracle = loadOracle();
