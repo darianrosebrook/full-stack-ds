@@ -3,7 +3,6 @@ title: 'Record the stage-3 precommit on the durable surface'
 risk_tier: 3
 mode: doc
 lifecycle_state: active
-worktree: stage3-precommit
 created_at: '2026-09-15T04:36:30.868Z'
 updated_at: '2026-09-15T04:36:35.639Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
