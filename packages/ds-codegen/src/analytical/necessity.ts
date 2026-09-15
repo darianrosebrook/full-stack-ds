@@ -270,7 +270,20 @@ export type WitnessFailure =
    * the caller's spelling. Merges on one leaf are NOT this — saturation makes
    * their listings agree — so the refusal is genuine non-confluence only.
    */
-  | "ERASURE_NOT_CONFLUENT";
+  | "ERASURE_NOT_CONFLUENT"
+  /**
+   * The collision is over a difference the witness does not name.
+   *
+   * The measured instance: a bound incidence erasure lands on ONE arrangement
+   * of declared names, so it destroys the arrangement collaterally — and a
+   * pair whose sides hold the SAME occupant multiset at one list slot differs
+   * in nothing but the arrangement, which is `#order`'s degree of freedom. A
+   * witness citing incidence over such a pair would "hold" while the entire
+   * distinction belongs to a sibling facet. The same pair stays admissible
+   * for `#order` alone and for the joint set with incidence, because the
+   * owner of the difference is then named.
+   */
+  | "DIFFERENCE_MISATTRIBUTED";
 
 export interface WitnessCheck {
   ok: boolean;
@@ -295,6 +308,27 @@ export interface WitnessCheck {
  * differ, erasing the named coordinate(s) makes them collide, and for a 2-set
  * neither single coordinate suffices (invariant 7).
  */
+/**
+ * True when the two stimuli differ ONLY in the arrangement of the lists the
+ * owner coordinate locates: every changed path sits inside one of the owner's
+ * slots, and each slot holds the SAME multiset of names on both sides — so
+ * nothing moved except the positions.
+ */
+function arrangementOnlyDifference(aF: Fixture, bF: Fixture, owner: Coordinate): boolean {
+  const plan = planFor(owner);
+  if (!plan) return false;
+  const inside = slotPaths(aF, plan.locator);
+  const paths = changedPaths(aF, bF).filter((p) => p !== ".id");
+  if (paths.length === 0 || inside.length === 0) return false;
+  if (!paths.every((p) => inside.some((sl) => p === sl || p.startsWith(`${sl}[`) || p.startsWith(`${sl}.`)))) return false;
+  const listsOf = (f: Fixture) => resolveSlots(f, plan.locator).map((s) => (s.parent as Record<string, unknown>)[s.key as string]);
+  const la = listsOf(aF);
+  const lb = listsOf(bF);
+  if (la.length !== lb.length) return false;
+  const spellings = (v: unknown) => (Array.isArray(v) ? [...v].map(String).sort() : [String(v)]);
+  return la.every((v, i) => JSON.stringify(spellings(v)) === JSON.stringify(spellings(lb[i])));
+}
+
 export function checkWitness(
   w: Witness,
   census: Coordinate[],
@@ -354,6 +388,30 @@ export function checkWitness(
       if (collides(a.fixture, b.fixture, c)) failures.push({ code: "NOT_MINIMAL", detail: `${c.id} alone already identifies the stimuli` });
     }
   }
+  // AND THE DIFFERENCE THE COLLISION IS OVER must be one the witness names.
+  // A collision is necessary evidence only for the degree of freedom that
+  // produced it. A bound incidence erasure lands on ONE arrangement of
+  // declared names, so it destroys the arrangement collaterally — and a pair
+  // whose entire difference is the ARRANGEMENT (the same occupant multiset at
+  // one list slot) is separated by order's degree of freedom, not incidence's.
+  // Citing incidence over such a pair credits the coordinate with a
+  // distinction its own erasure produced by collateral. Scoped to the
+  // measured instance: an `#incidence` facet at a slot that also carries an
+  // `#order` facet the witness does not name. Arity is not at risk — the
+  // incidence erasure preserves arity, so it cannot identify a length
+  // difference at all — and a set-valued list's arrangement is a
+  // representation artifact the oracle already reads as `SAME_OUTCOME`.
+  for (const c of coords) {
+    if (c.kind !== "reference-topology" || c.facet !== "incidence") continue;
+    const owner = census.find((d) => d.kind === "reference-topology" && d.facet === "order" && d.leaf === c.leaf);
+    if (!owner || coords.includes(owner)) continue;
+    if (arrangementOnlyDifference(a.fixture, b.fixture, owner)) {
+      failures.push({
+        code: "DIFFERENCE_MISATTRIBUTED",
+        detail: `${c.id}: the stimuli differ only in the ARRANGEMENT of one list — ${owner.id}'s degree of freedom, which ${c.id}'s canonical rebinding also destroys — so the collision is over a difference the witness does not name; cite ${owner.id} alone or beside ${c.id}`,
+      });
+    }
+  }
   for (const [label, side] of [["a", a], ["b", b]] as const) {
     for (const c of coords) {
       const result = isolate(side.fixture, c);
@@ -398,15 +456,17 @@ export function checkWitness(
  *   - an image with no change at all is discharged without asking the engine,
  *     because it has nothing to have damaged.
  *
- * WHAT IS NOT ENFORCED, and the bound incidence erasure now reaches it: that the
- * erasure leaves the OTHER facets of the same slot alone. A bound incidence slot
- * can only be forgotten by landing on ONE arrangement of declared names, so
- * forgetting incidence also forgets order -- and a witness naming `#incidence`
- * can therefore be earned on a pair that differs only in the ARRANGEMENT. The
- * facets are separate coordinates with separate plans, but nothing attributes a
- * collision's difference to the coordinate it names. `necessity.test.ts` records
- * that case (`nest.levels#incidence` over the committed `#order` witness's
- * stimuli) rather than arguing it away.
+ * WHAT THE ISOLATION CHECK ITSELF DOES NOT ENFORCE: that the erasure leaves
+ * the OTHER facets of the same slot alone. A bound incidence slot can only be
+ * forgotten by landing on ONE arrangement of declared names, so forgetting
+ * incidence also forgets order. That collateral is policed at ADMISSION, not
+ * here — `DIFFERENCE_MISATTRIBUTED` refuses a witness whose stimuli differ
+ * only in the arrangement of one list, because that difference is `#order`'s
+ * degree of freedom — while the erasure itself stays lawful, since one that
+ * PRESERVED the arrangement could not identify the fixtures that differ in
+ * WHICH declared names are bound. The rule is scoped to the measured instance;
+ * an erasure whose collateral reaches some other sibling facet would need its
+ * own measured rule, and none is known today.
  *
  * The specific trap the boundary rule closes: replacing a resolvable reference
  * with a token can create a dangling reference, and a witness would then "hold"
