@@ -25,7 +25,7 @@ scope:
 invariants:
   - "Distinctness is a LAW fact declared on the operand map and read where every other namespace fact is read: the executor never hardcodes an operator's constraint, and the pick -- first declared name that differs from the sibling's CURRENT value -- is a function of the declarations alone, never of the slot's own value, so two stimuli differing only in the slot still reach one image."
   - 'The constraint is declared only where the law states it (join.with differs from from, graph.edgeTo from edgeFrom); nothing else changes its pool.'
-  - 'Both authorities moving means the freeze is superseded with an authored effect for this record's cause, and the pins that named the old refusal are corrected rather than deleted.'
+  - 'Both authorities moving means the freeze is superseded with an authored effect for this record''s cause, and the pins that named the old refusal are corrected rather than deleted.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
