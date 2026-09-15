@@ -3,7 +3,6 @@ title: 'Sweep the unresolved candidates for clean presence pairs and name the cl
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: presence-sweep
 created_at: '2026-09-15T05:35:47.959Z'
 updated_at: '2026-09-15T05:35:49.063Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
