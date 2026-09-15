@@ -86,9 +86,12 @@ export const CONFLUENCE_BOUND = 7;
  * reason. A refusal on one of these is a declared fact, not an anomaly; a
  * refusal on any other pair is a finding.
  *
- * Measured over the footprint population after the absence-spelling learned to
- * see classes: this is the only non-confluent same-slot family left (5 pairs,
- * all arity × order on one reference list, all on synthesized specimens).
+ * Measured over the footprint population: two same-slot families are
+ * non-confluent, both pitting an order-forgetting plan against a plan that
+ * lands on a different arrangement of the same list. The arity family is
+ * exercised by synthesized specimens; the incidence family is exercised by a
+ * committed one, because binding the erasure to declared names made it reach
+ * slots a reserved token never could.
  */
 export const DECLARED_NON_COMMUTING: readonly { kinds: readonly [ForgetOperation["kind"], ForgetOperation["kind"]]; reason: string }[] = [
   {
@@ -96,6 +99,12 @@ export const DECLARED_NON_COMMUTING: readonly { kinds: readonly [ForgetOperation
     reason:
       "arity is forgotten by cutting the list to its declared floor, and any cut either reads the order (keep the first k) or destroys it (keep a canonical k); " +
       "the two are individually erasable and not composable, so the composite is refused rather than normalized through one order",
+  },
+  {
+    kinds: ["forget-reference-incidence", "forget-reference-order"],
+    reason:
+      "incidence is forgotten by rebinding a BOUND slot to the operand's declared names in DECLARATION order -- the operand's own listing, which is also the order a name-blind canonicalisation renumbers by -- while forgetting the order sorts those same names; " +
+      "rebinding then sorting and sorting then rebinding land on different arrangements of one list, so the composite is refused rather than normalized through one order",
   },
 ];
 

@@ -37,6 +37,7 @@
  */
 import type { Coordinate, ReferenceFacet } from "./census.js";
 import { absorb, forgotten, isMarker, isMemberClass, memberClass, type QuotientImage, type QuotientMarker } from "./quotient-image.js";
+import type { OperandNamespace } from "./relation-model.js";
 import type { Fixture } from "./structure.js";
 
 export type CoordinateId = string;
@@ -70,6 +71,19 @@ export interface StructuralLocator {
    * cannot express.
    */
   arityFloor?: number;
+  /**
+   * The DECLARED namespace a bound reference ranges over, when it is one.
+   *
+   * `incidence` at a reference the derivation boundary must resolve cannot be
+   * erased by rewriting the names to reserved tokens: the image stops resolving,
+   * the boundary refuses it as a declaration, and no witness naming the
+   * coordinate can be admitted. Where the walk knows the namespace it rebinds
+   * the slot to DECLARED names from it instead -- a legal declaration that still
+   * identifies every pair differing only in WHICH declared things the slot
+   * binds. Absent means the reference is not bound, and the tokenizing erasure
+   * is unchanged.
+   */
+  operand?: OperandNamespace;
 }
 
 /**
@@ -226,6 +240,32 @@ function affects(s: Slot, op: ForgetOperation, floor = 1): boolean {
 }
 
 /**
+ * The DECLARED names a bound slot may rebind to, or undefined where it is unbound.
+ *
+ * Read off the fixture rather than reconstructed from the locator's path: the
+ * slot's PARENT is the `derivedBy` object, so the input relation is one property
+ * away and no path is parsed. A relation-valued operand ranges over the
+ * structure's relations; a field-valued one over the input relation's fields.
+ */
+function bindingPool(fixture: Fixture | QuotientImage, slot: Slot, operand?: OperandNamespace): string[] | undefined {
+  if (!operand) return undefined;
+  const rels = (fixture as unknown as Json).structure as Json | undefined;
+  const relations = rels?.relations as Json | undefined;
+  if (!obj(relations)) return undefined;
+  if (operand === "relation") {
+    const names = Object.keys(relations);
+    return names.length > 0 ? names : undefined;
+  }
+  const from = obj(slot.parent) ? slot.parent.from : undefined;
+  if (typeof from !== "string") return undefined;
+  const holder = relations[from];
+  const fields = obj(holder) ? holder.fields : undefined;
+  if (!obj(fields)) return undefined;
+  const names = Object.keys(fields);
+  return names.length > 0 ? names : undefined;
+}
+
+/**
  * Drop duplicates by VALUE, not by reference.
  *
  * `new Set` was enough while a merge wrote a string; a merged class is an
@@ -276,6 +316,15 @@ function mergesHere(v: unknown, op: { from: string; into: string }): boolean {
  * answer must compare canonical forms; this is for pruning.
  */
 export function wouldChange(fixture: Fixture | QuotientImage, plan: ErasurePlan): boolean {
+  // A BOUND incidence slot rebinds to names the FIXTURE supplies, so whether it
+  // changes anything is not decidable from the slot alone: the token test below
+  // would answer `true` wherever the operand is not already a reserved token,
+  // and the executor would sometimes write the value it found. That is the one
+  // plan whose predicate cannot be a local read, and it answers by COMPARISON
+  // rather than by a second, disagreeing definition of the operation.
+  if (plan.locator.operand && plan.operation.kind === "forget-reference-incidence") {
+    return JSON.stringify(executePlan(fixture, plan)) !== JSON.stringify(fixture);
+  }
   return resolveSlots(fixture, plan.locator).some((s) => affects(s, plan.operation, plan.locator.arityFloor));
 }
 
@@ -375,15 +424,25 @@ export function executePlan(fixture: Fixture | QuotientImage, plan: ErasurePlan)
       case "forget-reference-order":
         if (Array.isArray(v)) write(s, [...v].sort());
         break;
-      case "forget-reference-incidence":
+      case "forget-reference-incidence": {
         // Incidence is CO-REFERENCE: which positions name the same thing. Each
-        // position gets its own token, so no position co-refers with any other
-        // while arity and order survive. Collapsing to a single token would
-        // erase three coordinates at once, and a quotient that destroys three
-        // cannot support a claim that any one of them is necessary.
-        if (Array.isArray(v)) write(s, v.map((_, i) => `${INCIDENCE_TOKEN}_${i}`));
-        else if (!obj(v)) write(s, `${INCIDENCE_TOKEN}_0`);
+        // position gets its own name, so no position co-refers with any other
+        // while arity and order survive. Collapsing to a single name would erase
+        // three coordinates at once, and a quotient that destroys three cannot
+        // support a claim that any one of them is necessary.
+        //
+        // WHERE the reference is BOUND, the names have to stay DECLARED or the
+        // image is not a declaration: the boundary reports the operand missing or
+        // the result underivable, and the erasure is the corruption rather than
+        // an ablation. So a bound slot rebinds to the operand's OWN declared
+        // names -- the collision is then between two bindings, which is exactly
+        // what the coordinate names. A slot with no namespace is not bound, and
+        // keeps the reserved token.
+        const pool = bindingPool(copy, s, plan.locator.operand);
+        if (Array.isArray(v)) write(s, v.map((_, i) => pool?.[i] ?? `${INCIDENCE_TOKEN}_${i}`));
+        else if (!obj(v)) write(s, pool?.[0] ?? `${INCIDENCE_TOKEN}_0`);
         break;
+      }
     }
   }
 
