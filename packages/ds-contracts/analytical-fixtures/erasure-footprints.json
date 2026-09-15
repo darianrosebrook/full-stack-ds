@@ -3,12 +3,12 @@
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
     "witnesses.json": "25e99dc9d6a077a736de6c566484991f12984e96f7ed9de29122c11da7bca75a",
-    "closures-stage2.json": "0e0d293b0f688f708ff92b75ee638bc429ae3a0394bf717ad1cf9c64aa0f25ab"
+    "closures-stage2.json": "5f71c52a9b48cd12dce273777bd7009591e9172e88209cee3e989f3c80d5f16a"
   },
   "authority": {
     "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
     "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
-    "witnessAuthorityDigest": "86d17e4eac5229a306ddf91c37a850aba260340e46d136369c5475aa8b16f092",
+    "witnessAuthorityDigest": "043ea2b170f79be085290bc219e4d1d80e1756e390858be8853cdb807dd09dff",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
@@ -1159,6 +1159,7 @@
         "assertion.aggregate.along#incidence"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1178,6 +1179,7 @@
         "assertion.aggregate.along#arity",
         "assertion.aggregate.along#incidence"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": true,
@@ -1192,6 +1194,7 @@
         "assertion.aggregate.field#incidence"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1219,6 +1222,7 @@
         "assertion.aggregate.nulls:exclude~as-observed",
         "assertion.aggregate.nulls:exclude~as-zero"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": true,
@@ -1246,6 +1250,7 @@
         "assertion.aggregate.nulls:exclude~as-observed",
         "assertion.aggregate.nulls:exclude~as-zero"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": true,
@@ -1260,6 +1265,7 @@
         "assertion.aggregate.nulls:as-zero~as-observed"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1274,6 +1280,7 @@
         "assertion.aggregate.nulls:exclude~<absent>"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1288,6 +1295,7 @@
         "assertion.aggregate.nulls:exclude~as-observed"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1302,6 +1310,7 @@
         "assertion.aggregate.nulls:exclude~as-zero"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1329,6 +1338,7 @@
         "assertion.aggregate.op:sum~mean",
         "assertion.aggregate.op:sum~min"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": true,
@@ -1343,6 +1353,7 @@
         "assertion.aggregate.op:count~min"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1357,6 +1368,7 @@
         "assertion.aggregate.op:mean~count"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1371,6 +1383,7 @@
         "assertion.aggregate.op:mean~min"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1385,6 +1398,7 @@
         "assertion.aggregate.op:sum~count"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1399,6 +1413,7 @@
         "assertion.aggregate.op:sum~mean"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1413,6 +1428,7 @@
         "assertion.aggregate.op:sum~min"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1427,6 +1443,7 @@
         "assertion.aggregate.uncertainty"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1458,6 +1475,7 @@
         "assertion.aggregate.op:sum~min",
         "assertion.kind:aggregate~ratio-comparison"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": false,
@@ -1487,6 +1505,7 @@
         "assertion.aggregate.op:sum~mean",
         "assertion.aggregate.op:sum~min"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": false,
@@ -1501,6 +1520,7 @@
         "evidence.grainWitness#arity"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1520,6 +1540,7 @@
         "evidence.grainWitness#arity",
         "evidence.grainWitness#incidence"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": true,
@@ -1547,6 +1568,7 @@
         "field.additivity.kind:semi-additive~non-additive",
         "field.additivity.kind:semi-additive~ratio-measure"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": true,
@@ -1561,6 +1583,7 @@
         "field.additivity.kind:additive~non-additive"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1575,6 +1598,7 @@
         "field.additivity.kind:additive~ratio-measure"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1589,6 +1613,7 @@
         "field.additivity.semi-additive.nonAdditiveAlong#arity"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1603,6 +1628,7 @@
         "field.additivity.semi-additive.nonAdditiveAlong#incidence"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1617,6 +1643,7 @@
         "field.base"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1631,6 +1658,7 @@
         "field.cyclic"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1645,6 +1673,7 @@
         "field.index"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1659,6 +1688,7 @@
         "field.key"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1673,6 +1703,7 @@
         "field.permits.null"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1687,6 +1718,7 @@
         "field.permits.uncertainty"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1701,6 +1733,7 @@
         "field.proportion"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1722,6 +1755,7 @@
         "field.temporality.grain:day~month",
         "field.temporality.grain:month~<absent>"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": true,
@@ -1736,6 +1770,7 @@
         "field.temporality.grain:day~month"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1750,6 +1785,7 @@
         "field.temporality.kind:instant~interval"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1777,15 +1813,9 @@
         "field.temporality.kind",
         "field.temporality.kind:instant~interval"
       ],
-      "outside": [
-        "field.temporality.grain",
-        "field.temporality.grain:day~<absent>",
-        "field.temporality.grain:day~month",
-        "field.temporality.grain:month~<absent>",
-        "field.temporality.kind",
-        "field.temporality.kind:instant~interval"
-      ],
-      "verdict": "over-erasing",
+      "sibling": [],
+      "outside": [],
+      "verdict": "subsumes-refinements",
       "holds": true,
       "standing": "primitive"
     },
@@ -1811,6 +1841,7 @@
         "field.transformation:ordinal~interval",
         "field.transformation:ordinal~ratio"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": true,
@@ -1825,6 +1856,7 @@
         "field.transformation:interval~ratio"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1839,6 +1871,7 @@
         "field.transformation:nominal~interval"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1853,6 +1886,7 @@
         "field.transformation:nominal~ordinal"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1867,6 +1901,7 @@
         "field.transformation:nominal~ratio"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1881,6 +1916,7 @@
         "field.transformation:ordinal~interval"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1895,6 +1931,7 @@
         "field.transformation:ordinal~ratio"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1909,6 +1946,7 @@
         "field.unit.conversions"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1923,6 +1961,7 @@
         "field.unit.perRow"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1937,6 +1976,7 @@
         "field.unit.units"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1951,6 +1991,7 @@
         "field.whole"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1965,6 +2006,7 @@
         "field.whole.perRow#incidence"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -1992,6 +2034,7 @@
         "observation.null:censored~suppressed",
         "observation.null:suppressed~<absent>"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": true,
@@ -2006,6 +2049,7 @@
         "observation.null:absent~censored"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -2020,6 +2064,7 @@
         "observation.unit"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -2034,6 +2079,7 @@
         "observation.value"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -2048,6 +2094,7 @@
         "relation.derivedBy.aggregate-to-grain.toGrain#order"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -2069,6 +2116,7 @@
         "relation.derivedBy.bin.closure:left-closed~right-closed",
         "relation.derivedBy.bin.closure:right-closed~<absent>"
       ],
+      "sibling": [],
       "outside": [],
       "verdict": "subsumes-refinements",
       "holds": true,
@@ -2083,6 +2131,7 @@
         "relation.derivedBy.bin.closure:left-closed~<absent>"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -2097,6 +2146,7 @@
         "relation.derivedBy.join.cardinality:one-to-many~many-to-many"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -2111,6 +2161,7 @@
         "relation.derivedBy.kind:bin~normalize"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -2128,10 +2179,13 @@
       "collateral": [
         "relation.derivedBy.nest.levels#order"
       ],
+      "sibling": [
+        "relation.derivedBy.nest.levels#order"
+      ],
       "outside": [],
-      "verdict": "subsumes-refinements",
+      "verdict": "sibling-facet",
       "holds": true,
-      "standing": "primitive"
+      "standing": "composite"
     },
     {
       "witness": "relation.derivedBy.nest.levels#order",
@@ -2142,6 +2196,7 @@
         "relation.derivedBy.nest.levels#order"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -2156,6 +2211,7 @@
         "relation.grain"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,
@@ -2170,6 +2226,7 @@
         "structure.peers[]#arity"
       ],
       "collateral": [],
+      "sibling": [],
       "outside": [],
       "verdict": "atomic",
       "holds": true,

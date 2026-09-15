@@ -690,8 +690,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.nest.levels#incidence": {
-      "disposition": "witnessed",
-      "reason": "The bound-incidence quotient (rounds 31-37) admitted the round-25 pair: rebinding level 0 from `country` to `revenue` moves exactly one path, leaves both sides a legal declaration, and flips the verdict under the already-existing cause -- which declared names the slot binds is necessary, exactly what the coordinate names."
+      "disposition": "unresolved",
+      "reason": "RE-ADJUDICATED from `witnessed` when standing became footprint-aware. The filed witness still HOLDS -- the round-25 pair (`levels` [country,state] admissible against [revenue,state] illegal under CASE_NESTED_SUBTOTALS_OFF_GRAIN) is an occupant difference that `DIFFERENCE_MISATTRIBUTED` does not fire on -- but it is not a primitive ratification, and `witnessed` in this vocabulary means exactly that. Forgetting incidence is a canonical REBINDING, so it lands on one arrangement and takes `relation.derivedBy.nest.levels#order` with it while the list itself survives: the destroyed arrangement is a sibling facet of a surviving slot, not a sub-distinction of incidence. Round 31 measured the same fact as `DECLARED_NON_COMMUTING` (incidence and order on one list are individually erasable and not composable) and round 34 built `DIFFERENCE_MISATTRIBUTED` so a witness PAIR could not be credited across it; standing now reads it too, through the one classifier in `support.ts`. What is missing is not corpus coverage but a factorization: no erasure can forget incidence at a bound ordered slot without destroying the arrangement, so a witness whose collateral is entirely this coordinate's own refinements cannot exist, and the coordinate is owned by the interaction family rather than by a primitive claim. The witness stays filed as evidence and is classified `sibling-facet` in `erasure-footprints.json`."
     },
     "relation.derivedBy.nest.levels#order": {
       "disposition": "witnessed",
