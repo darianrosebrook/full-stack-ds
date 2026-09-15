@@ -2165,4 +2165,32 @@ describe("an oracle-separated pair is NECESSARY for a witness and not sufficient
     expect(c.failures.map((f) => f.code)).toEqual(["ERASURE_NOT_ISOLATED"]);
     expect(String(c.failures[0]!.detail)).toContain("REL_BIN_CLOSURE_UNDECLARED");
   });
+
+  it("and the DIAGNOSTIC decides it, not the operation: the same erasure is witnessable where absence is lawful", () => {
+    // The erased declaration is schema-VALID, so the deletion is the correct erasure and not a
+    // plan defect. The illegality is semantic, which is exactly why an erasure can never be
+    // neutral here: erasing == asserting the very thing CASE_WHICH_BIN_GETS_TEN calls illegal
+    // ("bin with no declared closure", `invariant:declared-closure`).
+    const neighbour = JSON.parse(JSON.stringify(oracle.fixtures.get("FX_N_READINGS_BINNED_LEFT_CLOSED"))) as {
+      structure: { relations: Record<string, { derivedBy?: Record<string, unknown> }> };
+    };
+    expect(neighbour.structure.relations.bucketed!.derivedBy!.closure, "the control must carry it, or there is nothing to erase").toBe("left-closed");
+    delete neighbour.structure.relations.bucketed!.derivedBy!.closure;
+    expect(oracle.validate(neighbour), "optional in the schema: the erasure is legal, the ABSENCE is what is diagnosed").toEqual([]);
+
+    // Same operation kind on both, opposite outcomes -- so the operation is not what decides it.
+    const plans = loadPlans();
+    expect(plans.get("relation.derivedBy.bin.closure:left-closed~<absent>")!.operation.kind).toBe("spell-member-as-absent");
+    expect(plans.get("assertion.aggregate.nulls:exclude~<absent>")!.operation.kind).toBe("spell-member-as-absent");
+    const lawfulAbsence = checkWitness(
+      {
+        coordinates: ["assertion.aggregate.nulls:exclude~<absent>"],
+        a: { fixture: "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS" },
+        b: { fixture: "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED" },
+      },
+      kernel,
+      oracle,
+    );
+    expect(lawfulAbsence.ok, "an absent null policy is a legal default, so here a witness exists").toBe(true);
+  });
 });
