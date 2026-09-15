@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: cardinality-pair-triage
 created_at: '2026-09-15T07:55:48.873Z'
-updated_at: '2026-09-15T07:55:57.639Z'
+updated_at: '2026-09-15T08:01:24.059Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
@@ -19,6 +19,7 @@ scope:
     - 'packages/ds-codegen/src/analytical'
     - 'packages/ds-contracts/analytical-fixtures'
     - 'docs/current-implementation-snapshot.md'
+    - docs/architecture/analytical-relation-doctrine.md
   out: []
 invariants:
   - 'A witness side''s required outcome must be a judgment the frozen corpus supplies. A boundary WELL-FORMEDNESS refusal carries no corpus case by the doctrine''s own statement, so a pair whose only distinguishing outcome is one does not follow from an already-existing cause and is refused as evidence rather than landed.'
