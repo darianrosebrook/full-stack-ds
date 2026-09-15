@@ -9,7 +9,8 @@ updated_at: '2026-09-15T17:54:20.269Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'witnesses.json + subtraction-stage2.json (one witness filed, one verdict moved) and the re-recorded freeze'
+  data_migration: false
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -20,7 +21,9 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - "The witness is the round-25 pair already measured ADMITTED by checkWitness -- an OCCUPANT difference (country -> revenue), not an arrangement-only pair, so the attribution rule does not fire and the collision is about which declared names the slot binds."
+  - "Exactly one verdict moves: unresolved -> witnessed for nest.levels#incidence, with a recorded reason. No other verdict, no erasure fact, and no authority digest moves -- no production module changes."
+  - "The freeze accepts the verdict divergence through the per-key adjudicated map with an authored reason, not through a supersession: the erasure authority is unmoved and there is no new erasure behaviour to state."
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
