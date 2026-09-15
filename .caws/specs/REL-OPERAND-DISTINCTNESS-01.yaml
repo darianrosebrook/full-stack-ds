@@ -9,7 +9,8 @@ updated_at: '2026-09-15T16:49:36.371Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/relation-model.ts + census.ts + erasure-plan.ts (the declared constraint, its threading, the pool skip)'
+    - 'the emitted schemas and the re-recorded ledgers (both the coordinate and erasure authorities move)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -22,7 +23,9 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - "Distinctness is a LAW fact declared on the operand map and read where every other namespace fact is read: the executor never hardcodes an operator's constraint, and the pick -- first declared name that differs from the sibling's CURRENT value -- is a function of the declarations alone, never of the slot's own value, so two stimuli differing only in the slot still reach one image."
+  - 'The constraint is declared only where the law states it (join.with differs from from, graph.edgeTo from edgeFrom); nothing else changes its pool.'
+  - 'Both authorities moving means the freeze is superseded with an authored effect for this record's cause, and the pins that named the old refusal are corrected rather than deleted.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
