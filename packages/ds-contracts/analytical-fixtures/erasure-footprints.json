@@ -2,13 +2,13 @@
   "$comment": "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
-    "witnesses.json": "9001b6f5c5c44999bf0a01400afb62d7da754b44cab4ae2fa1aa1f4cbe720b65",
-    "closures-stage2.json": "c59e2d7b086bf1ca32dd060cd949b68dd5f4dc83aef192fda7b1a28017039f88"
+    "witnesses.json": "33bb30685dcab051ba67f375ddbeafa6c550cb7cc3b82e0e1890c0f63870a966",
+    "closures-stage2.json": "4ed77e124877210f0dcb9bdb3b32c8198febaf63712edad0dc432ddb9f23a9a6"
   },
   "authority": {
     "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
     "erasureAuthorityDigest": "0b59717c7b3ae6e44de15915ac4010220f4ac149c03168288d1df5289f93358f",
-    "witnessAuthorityDigest": "e5e50e612d4e1b1549c5446e17bbc9a231068c2e59950c438f4119d877b2b069",
+    "witnessAuthorityDigest": "ee275a354d4bdd4537b45e04875e0eee5f87ca6373727f883d6f689b352d2a71",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
@@ -1639,23 +1639,6 @@
       "standing": "primitive"
     },
     {
-      "witness": "field.temporality.kind",
-      "declared": [
-        "field.temporality.kind"
-      ],
-      "actual": [
-        "field.temporality.kind",
-        "field.temporality.kind:instant~interval"
-      ],
-      "collateral": [
-        "field.temporality.kind:instant~interval"
-      ],
-      "outside": [],
-      "verdict": "subsumes-refinements",
-      "holds": false,
-      "standing": "none"
-    },
-    {
       "witness": "field.temporality.kind:instant~interval",
       "declared": [
         "field.temporality.kind:instant~interval"
@@ -1666,6 +1649,40 @@
       "collateral": [],
       "outside": [],
       "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.temporality#present",
+      "declared": [
+        "field.temporality#present"
+      ],
+      "actual": [
+        "field.temporality#present",
+        "field.temporality.grain",
+        "field.temporality.grain:day~<absent>",
+        "field.temporality.grain:day~month",
+        "field.temporality.grain:month~<absent>",
+        "field.temporality.kind",
+        "field.temporality.kind:instant~interval"
+      ],
+      "collateral": [
+        "field.temporality.grain",
+        "field.temporality.grain:day~<absent>",
+        "field.temporality.grain:day~month",
+        "field.temporality.grain:month~<absent>",
+        "field.temporality.kind",
+        "field.temporality.kind:instant~interval"
+      ],
+      "outside": [
+        "field.temporality.grain",
+        "field.temporality.grain:day~<absent>",
+        "field.temporality.grain:day~month",
+        "field.temporality.grain:month~<absent>",
+        "field.temporality.kind",
+        "field.temporality.kind:instant~interval"
+      ],
+      "verdict": "over-erasing",
       "holds": true,
       "standing": "primitive"
     },

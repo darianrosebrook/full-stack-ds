@@ -102,9 +102,15 @@ describe("no live coordinate is an orphaned claim", () => {
   it("the live ledger owns every candidate it has not yet decided", () => {
     // Guards the wiring rather than the rule: if `loadBases` stopped reading
     // verdicts, this would silently become the membership reading again.
-    const [stage2] = loadBases();
-    expect(stage2.unresolved.length).toBeGreaterThan(0);
-    expect(stage2.unresolved.every((id) => stage2.candidates.includes(id))).toBe(true);
+    //
+    // Named, not taken by position: `loadBases` sorts by FILENAME, so a basis
+    // whose name sorts earlier would silently make this assert about a different
+    // experiment. Which basis it is does not matter; that it has undecided
+    // candidates does.
+    const stage2 = loadBases().find((b) => b.file === "subtraction-stage2.json");
+    expect(stage2, "the frozen 118 basis is registered").toBeDefined();
+    expect(stage2!.unresolved.length).toBeGreaterThan(0);
+    expect(stage2!.unresolved.every((id) => stage2!.candidates.includes(id))).toBe(true);
   });
 
   it("registers a basis by its existence, and every registered basis names its owning spec", () => {

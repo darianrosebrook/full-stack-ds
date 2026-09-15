@@ -258,7 +258,7 @@
     },
     {
       "coordinates": [
-        "field.temporality.kind"
+        "field.temporality#present"
       ],
       "a": {
         "fixture": "FX_TEMP_SUM"
@@ -266,7 +266,7 @@
       "b": {
         "fixture": "FX_EVENT_AT_SUM"
       },
-      "note": "interval scale summed (INTERVAL_SUM) vs instant summed (TEMPORAL_INSTANT_SUM)"
+      "note": "FX_TEMP_SUM declares NO temporality at all and FX_EVENT_AT_SUM declares {kind: instant}, so this pair separates whether the holder EXISTS, not which kind it carries. Filed under the leaf until the codomain change made the misattribution measurable; re-pointed at the holder, where checkWitness holds. The leaf's own distinction is carried by the member-pair witness, and the leaf is retained as required-derived-vocabulary rather than ratified — see subtraction-stage2-enum-leaf.json."
     },
     {
       "coordinates": [
