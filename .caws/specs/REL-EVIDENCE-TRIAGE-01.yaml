@@ -9,7 +9,8 @@ updated_at: '2026-09-15T22:45:42.887Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/support.test.ts (the pinned constructibility triage)'
+    - 'docs (the correction: the bottleneck is evidence, not the instrument)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -19,7 +20,9 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - "Outcomes are judged from CONTENT, never resolved by id: the specimen population deliberately repeats ids, so an id-resolving sweep would report pairs that are not about their content."
+  - "The specimen route is stated as a SHAPE and not as citable stimuli: a synthesized pair is a search device, and a witness still has to cite a committed fixture or an authored patch whose judgment follows from an already-existing cause."
+  - "The pin separates three populations, and a change in any of them fails rather than being absorbed: one committed-pair candidate (which the footprint audit refuses as evidence for its coordinate), the measured specimen-separable backlog, and the candidates with no separating shape at all."
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
