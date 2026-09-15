@@ -1,0 +1,32 @@
+id: REL-ENUM-FACTORING-01
+title: 'Enum factoring: the kernel carries one coordinate per distinction a value space actually has'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T04:08:17.050Z'
+updated_at: '2026-09-15T04:08:17.050Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/census.ts (which coordinate kinds a k-member enum emits)'
+    - 'packages/ds-contracts/analytical-fixtures (witnesses, bases, suspension ledger, freeze)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the census decomposes a k-member enum into a leaf plus C(k,2) member pairs and at k=2 the leaf and its only pair are one distinction; when the factoring is decided; then the kernel carries one coordinate for that distinction and every evidence-machinery invariant holds for the survivor'
+non_functional: {}
+contracts:
+  - name: 'enum-factoring'
+    type: contract-test
+    path: 'packages/ds-contracts/analytical-fixtures/witnesses.json'
