@@ -3,7 +3,6 @@ title: 'Bind sweep outcomes by content, and record that the specimen population 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: content-bound
 created_at: '2026-09-15T05:55:10.114Z'
 updated_at: '2026-09-15T05:55:11.253Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
