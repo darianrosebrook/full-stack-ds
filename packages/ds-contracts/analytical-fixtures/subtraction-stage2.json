@@ -119,7 +119,7 @@
     {
       "id": "closure-dependency-discharge",
       "condition": "No closure in closures-stage2.json may remain `provisional` at close, and none may be `refuted` without its carrier carrying a verdict that accounts for the refutation.",
-      "why": "A provisional closure is an open conditional: it says the mechanism holds subject to dependencies nobody has adjudicated. Closing the slice with twenty of them outstanding would record a proof form as though it were a result. The dependencies collapse to nine distinct payload coordinates across the twenty carriers, so the discharge is nine adjudications, not twenty."
+      "why": "A provisional closure records a proof form as though it were a result: it says the mechanism holds subject to dependencies nobody has adjudicated. The dependencies are derived rather than named by hand — `closure.ts` expands each carrier's operations to their footprints over the census — so the discharge is counted in coordinates: `toGrain` costs three (arity, incidence, order) and `join.cardinality` costs seven (the leaf plus its six member pairs), which is 21 across the 20 derivation carriers plus 3 on the two additivity carriers. Obligation 8 admits only non-primitive, non-interaction, adjudicated dependencies (`open === 0 && primitive === 0 && interaction === 0`), so no necessity witness discharges one: a holding single-coordinate witness makes a dependency primitive and a minimal multi-coordinate set makes it interaction-only, and either fails the condition. Every discharge is therefore a non-primitive verdict — `required-derived-vocabulary` while the kernel keeps the coordinate, or removal from the kernel with `representation-artifact` / `not-yet-admitted`."
     }
   ],
   "basis": {
