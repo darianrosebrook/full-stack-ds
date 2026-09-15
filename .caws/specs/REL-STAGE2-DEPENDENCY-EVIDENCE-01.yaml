@@ -1,0 +1,31 @@
+id: REL-STAGE2-DEPENDENCY-EVIDENCE-01
+title: 'Pin the measured reason the closure dependencies are unresolved: no discriminating pair exists'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T04:58:45.950Z'
+updated_at: '2026-09-15T04:58:45.950Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/closure.test.ts (pin the witnessability measurement)'
+    - 'docs/current-implementation-snapshot.md (the analytical row''s forward plan)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'A coordinate is adjudicated from evidence; where no specimen pair separates the outcomes an erasure collides, the absence of a verdict is the correct state and must not be converted into a disposition the corpus cannot support.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given 24 closure-dependency coordinates stand unsettled and the gate reports them as the reason the 22 carriers are provisional; when each coordinate''s erasure is measured against the committed specimen population; then the measurement shows every collided pair the oracle binds has the same outcome, one coordinate is primitive by stage-1 re-earning and structurally blocks its closures, and a test pins both so the state cannot be read as a backlog of undecided verdicts'
+non_functional: {}
+contracts:
+  - name: 'closure-dependencies'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/closure.test.ts'
