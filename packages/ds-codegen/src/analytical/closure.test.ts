@@ -154,7 +154,6 @@ describe("the committed closure ledger", () => {
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.join.cardinality",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
-      "relation.derivedBy.nest.levels#incidence",
       "relation.derivedBy.nest.levels#order",
     ]);
     // And two ARE primitive, each because a single-coordinate witness ratifies it:
@@ -165,7 +164,6 @@ describe("the committed closure ledger", () => {
     expect(derivation.filter((d) => d.standing.state === "primitive").map((d) => d.coordinate)).toEqual([
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
-      "relation.derivedBy.nest.levels#incidence",
       "relation.derivedBy.nest.levels#order",
     ]);
   });
@@ -218,13 +216,12 @@ describe("adopting the closure form confers no standing", () => {
       else expect(s, `${coordinate} must read its own basis verdict, not the closure`).toEqual({ state: "resolved", disposition: verdict });
     }
     const primitiveDeps = r.dependencies.filter((d) => d.standing.state === "primitive");
-    // Four now, all for the same reason: a holding single-coordinate witness ratifies them.
+    // Five now, all for the same reason: a holding single-coordinate witness ratifies them.
     expect(primitiveDeps.map((d) => d.coordinate)).toEqual([
       "field.additivity.semi-additive.nonAdditiveAlong#arity",
       "field.additivity.semi-additive.nonAdditiveAlong#incidence",
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
-      "relation.derivedBy.nest.levels#incidence",
       "relation.derivedBy.nest.levels#order",
     ]);
     const affected = r.checks.filter((c) => c.obligations.find((o) => o.id.startsWith("8-"))!.detail.includes("PRIMITIVE"));
@@ -821,7 +818,6 @@ describe("the unresolved dependencies are blocked by EVIDENCE, not by an undecid
       "field.additivity.semi-additive.nonAdditiveAlong#incidence",
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
-      "relation.derivedBy.nest.levels#incidence",
       "relation.derivedBy.nest.levels#order",
     ]);
   });
@@ -1216,8 +1212,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(67);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 24, "member-absence": 8, leaf: 5, "member-pair": 30 });
+    expect(unresolved.length).toBe(68);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 25, "member-absence": 8, leaf: 5, "member-pair": 30 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
@@ -1239,9 +1235,11 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // Five topology facets left the kernel with the sequence declaration, so the
     // unresolved topology set is 28 rather than 33.
     const topology = unresolved.filter((id) => kindOf(id) === "reference-topology");
-    // 24: 25 until the FIRST bound-incidence witness (nest.levels#incidence,
-    // rounds 31-37) moved it out of unresolved.
-    expect(topology.length).toBe(24);
+    // 25: the FIRST bound-incidence witness (nest.levels#incidence, rounds
+    // 31-37) moved it out of unresolved for one round; the footprint-aware
+    // classifier put it back, because its erasure takes the sibling ORDER facet
+    // of a surviving list and so does not ratify primitive standing.
+    expect(topology.length).toBe(25);
     // Fourteen, not sixteen: two of the sixteen were witnessed -- `relation.derivedBy.nest.levels#order`
     // by REL-TOPOLOGY-AUTHORED-STIMULUS-01 and `relation.derivedBy.aggregate-to-grain.toGrain#order` by
     // REL-ORDER-FACET-SEMANTICS-01 -- so neither is unresolved and neither is counted here, while the
@@ -1249,7 +1247,9 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // Twelve: two of the sixteen were witnessed (see above), and two more -- `keep#order` and
     // `nonAdditiveAlong#order` -- left the kernel with the sequence declaration, so they are
     // neither unresolved nor in a footprint any more.
-    expect(topology.filter((id) => dependents.has(id)).length).toBe(10);
+    // Eleven: `nest.levels#incidence` is unresolved again after the footprint-aware classifier
+    // demoted it, so it blocks its carriers once more rather than being counted settled.
+    expect(topology.filter((id) => dependents.has(id)).length).toBe(11);
     // 54, not 57: three coordinates that blocked nothing are gone from the kernel -- `along#order`,
     // `peers[]#order` and `grainWitness#order` -- and two that blocked a carrier are gone with a
     // verdict, so the non-blocking unresolved count falls by three.

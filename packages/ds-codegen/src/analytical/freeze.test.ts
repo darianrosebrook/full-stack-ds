@@ -102,8 +102,8 @@ describe("stage-2 erasure freeze", () => {
     // quotient (nest.levels#incidence over the round-25 pair, rounds 31-37
     // built the erasure it rides on) moved exactly one verdict.
     expect(Object.fromEntries(Object.entries(frozen.verdicts).map(([d, ids]) => [d, ids.length]))).toEqual({
-      unresolved: 73,
-      witnessed: 17,
+      unresolved: 74,
+      witnessed: 16,
       "required-derived-vocabulary": 2,
       "representation-artifact": 34,
       "not-yet-admitted": 0,

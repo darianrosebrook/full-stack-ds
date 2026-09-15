@@ -280,21 +280,26 @@ describe("the witness audit", () => {
     // and their pairs. Those are neighbouring declarations, not refinements of
     // the one it names.
     //
-    // That is not an audit defect and not a witness filed badly: erasing a
-    // holder's existence necessarily takes everything inside it, so a presence
-    // witness is COMPOSITE by construction — the case the verdict vocabulary
-    // says a closure or an explicitly composite proposition is for. Whether the
-    // presence family should be carried by closures rather than by primitive
-    // witnesses is the open question this leaves.
-    expect(byVerdict("over-erasing").map((w) => w.witness)).toEqual(["field.temporality#present"]);
-    expect(live.witnesses.filter((w) => w.outside.length > 0).map((w) => w.witness)).toEqual(["field.temporality#present"]);
+    // THE CARRIER TEST ANSWERED THIS, and the answer moved the pin. Erasing a
+    // holder's existence deletes the holder, so the declarations inside it are
+    // CONDITIONAL on the erased proposition — sub-declarations of it, exactly as
+    // a leaf's member pairs are sub-distinctions of the leaf. The earlier
+    // reading classified by LEAF, which put a deleted holder's contents in the
+    // `over-erasing` bucket and left "should the presence family be carried by
+    // closures?" open. It is not open: the collateral is inside what the
+    // erasure removes, so nothing was destroyed OUTSIDE the witness's own
+    // proposition, and the bucket is empty.
+    expect(byVerdict("over-erasing").map((w) => w.witness)).toEqual([]);
+    expect(live.witnesses.filter((w) => w.outside.length > 0).map((w) => w.witness)).toEqual([]);
   });
 
-  it("still records the twelve, because 'declares one, destroys seven' is a weaker claim than primitive", () => {
-    // Twelve, not fourteen: `assertion.aggregate.along#incidence` and
-    // `field.additivity.semi-additive.nonAdditiveAlong#incidence` lose their
-    // `#order` neighbours when those lists are declared sets, so their declared
-    // set no longer swallows a refinement and they classify as atomic.
+  it("records the thirteen whose excess is a sub-declaration, which is a weaker claim than primitive but not a foreign one", () => {
+    // Thirteen: the member-refinement family, plus `field.temporality#present`,
+    // whose holder-deletion takes the declarations inside the holder it names.
+    // (`assertion.aggregate.along#incidence` and
+    // `field.additivity.semi-additive.nonAdditiveAlong#incidence` are NOT here:
+    // they lose their `#order` neighbours when those lists are declared sets,
+    // so they classify as atomic.)
     expect(byVerdict("subsumes-refinements").map((w) => w.witness).sort()).toEqual([
       "assertion.aggregate.along#present",
       "assertion.aggregate.nulls",
@@ -304,12 +309,52 @@ describe("the witness audit", () => {
       "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
       "evidence.grainWitness#present",
       "field.additivity.kind",
+      "field.temporality#present",
       "field.temporality.grain",
       "field.transformation",
       "observation.null",
       "relation.derivedBy.bin.closure",
-    "relation.derivedBy.nest.levels#incidence",
     ]);
+  });
+
+  it("names the SIBLING-FACET class separately: a facet destroyed in place is not a refinement", () => {
+    // The class the syntactic rule could not see. These three witnesses declare
+    // ONE coordinate and destroy a reference-topology facet of the SAME slot
+    // while its carrier survives: forgetting incidence lands on one canonical
+    // arrangement and takes the order with it, and erasing a list's presence
+    // takes its arity and incidence. Unlike a member pair -- which is a
+    // sub-distinction of the leaf the witness names -- these are independent
+    // degrees of freedom of a slot that still exists, which is exactly what
+    // round 31 declared non-composing and round 34 built
+    // `DIFFERENCE_MISATTRIBUTED` against for witness pairs.
+    // ONE case, and the narrowness is the finding. `along#present` and
+    // `grainWitness#present` destroy their lists' facets too, but a PRESENCE
+    // erasure deletes the list: the facets are conditional on the existence it
+    // denies, so they are sub-declarations, not siblings. Only an erasure that
+    // leaves the slot ALIVE can destroy a sibling facet in place.
+    expect(byVerdict("sibling-facet").map((w) => w.witness).sort()).toEqual(["relation.derivedBy.nest.levels#incidence"]);
+    // The real case, end to end: the standing the ledger recorded is NOT the
+    // standing this classifier confers, and the audit says so in one object.
+    const real = live.witnesses.find((w) => w.witness === "relation.derivedBy.nest.levels#incidence")!;
+    expect(real.verdict).toBe("sibling-facet");
+    expect(real.sibling).toEqual(["relation.derivedBy.nest.levels#order"]);
+    expect(real.declared).toEqual(["relation.derivedBy.nest.levels#incidence"]);
+    expect(real.standing, "one coordinate is not enough when a sibling facet goes with it").toBe("composite");
+    expect(real.holds).toBe(true);
+  });
+
+  it("the refinement class still confers primitive standing, so the repair is not a blanket demotion", () => {
+    // The opposite error, guarded: a leaf subsuming its OWN member pairs is the
+    // intended reading (round 30: those pairs are sub-distinctions of the
+    // leaf's proposition), so those witnesses keep primitive standing.
+    const refinement = live.witnesses.find((w) => w.witness === "relation.derivedBy.bin.closure")!;
+    expect(refinement.verdict).toBe("subsumes-refinements");
+    expect(refinement.standing).toBe("primitive");
+    expect(refinement.sibling).toEqual([]);
+    // And the primitive set is exactly the holding atomic + refinement witnesses.
+    const primitive = live.witnesses.filter((w) => w.standing === "primitive");
+    expect(primitive.every((w) => w.declared.length === 1 && w.sibling.length === 0 && w.outside.length === 0)).toBe(true);
+    expect(primitive.length).toBeGreaterThan(30);
   });
 
   it("names the assertion cluster's real excess: six member pairs of the very leaf it declares", () => {
@@ -830,7 +875,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     // the corrected reading rather than a narrower window. The id-resolving version reported two.
     const doc = loadSubtraction();
     const unresolved = doc.basis.candidates.filter((id) => (doc.verdicts[id]?.disposition ?? "unresolved") === "unresolved");
-    expect(unresolved.length).toBe(67);
+    expect(unresolved.length).toBe(68);
 
     const s = specimens();
     const oracle = loadOracle();
