@@ -30,3 +30,13 @@ contracts:
   - name: 'witnesses'
     type: contract-test
     path: 'packages/ds-contracts/analytical-fixtures/witnesses.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Ten unresolved stage-2 candidates had an oracle-separated collided pair. Run through checkWitness: seven accepted, three refused -- relation.derivedBy.bin.closure and :left-closed~<absent> with ERASURE_NOT_ISOLATED (erasing the declaration makes the fixture ill-formed, so it manufactures REL_BIN_CLOSURE_UNDECLARED rather than forgetting a distinction) and :left-closed~right-closed with NO_COLLISION. Of the seven, evidence.rows.*#present was then refused by the footprint audit: both fixtures of its pair carry three evidence.rows, so the pair does not vary the coordinate and erasing presence collides them only by destroying the rows' content (the adjudication policy's isolation rule); the audit independently classifies it over-erasing into observation.*. The remaining six carry single-coordinate witnesses whose pairs are an existing illegal case against its near-neighbour, none authored to reach a verdict, and each records a witnessed verdict the subtraction validator accepts because a holding witness ratifies it (89 -> 83 unadjudicated). Non-claim: the other 82 unresolved candidates are not addressed; the three bin.closure coordinates and evidence.rows.*#present remain unresolved and are recorded with their refusal reasons; and a witnessed verdict establishes that the distinction is necessary to separate those two cases, not that the coordinate is a primitive analytical axis."
+    recorded_at: "2026-09-15T05:25:05.620Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/necessity.test.ts > an oracle-separated pair is NECESSARY for a witness and not sufficient > refuses an erasure that INTRODUCES a defect instead of forgetting one"
+    command: pnpm exec vitest run packages/ds-codegen/src/analytical
+    exit_code: 0
+    artifact_path: packages/ds-contracts/analytical-fixtures/subtraction-stage2.json
+    commit_sha: "629c03c9"
