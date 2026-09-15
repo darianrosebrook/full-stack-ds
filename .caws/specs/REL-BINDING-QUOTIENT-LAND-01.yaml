@@ -37,3 +37,8 @@ contracts:
   - name: 'binding-erasure'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/erasure-plan.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical (19 files / 838 tests green) and pnpm run analytical:check-schemas check-baseline closures:check footprints:check freeze:check final-quotient stimuli fixtures:check, all green in worktree binding-quotient-land before merge b489f514. Measured outcome: every bound incidence image is a legal declaration (footprints 0 illegal over 212 specimens); never-discharged fell 18 -> 6 (toGrain/edgeTo/join.with/keep#arity/keep#incidence refused by the boundary with a named reason, peers[] unbound because the operand map is branch-read), 6 discharged, 6 corpus-dead (canonical bind is the binding: the slot holds the first-declared relation). NON-CLAIM: no verdict moved -- witnesses.json unchanged, freeze records the same 126 verdicts (16 witnessed / 2 required-derived-vocabulary / 34 representation-artifact / 74 unresolved), the forget-reference-incidence=16 supersession is over images not verdicts, and no witness naming a bound #incidence has been filed; the round-25 pair being ADMITTED is a capability, not a filed verdict. DEVIATION from the AC wording: the refused six are not all 'the two-sided ones for the mirror reason' -- join.with is refused for rebinding to its own left input and peers[] for the original tokenizing cause; the full root suite (301 files / 4059 tests), typecheck, governed:rail and test:frameworks are green, so the ledgers, gates and suite agree with the new erasure."
+    recorded_at: "2026-09-15T16:00:01.061Z"
