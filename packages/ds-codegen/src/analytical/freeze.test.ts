@@ -56,6 +56,10 @@ const CORPUS_DEAD = [
   "evidence.grainWitness#arity",
   "field.additivity.semi-additive.nonAdditiveAlong#arity",
   "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+  // The MIRRORED toGrain incidence: the result's own grain is the pool, and
+  // every corpus declaration satisfies the law's equation, so the rebind is
+  // the identity throughout (see the mirror block below for keep's two).
+  "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
   "relation.derivedBy.aggregate-to-grain.toGrain#order",
   "relation.derivedBy.bin.closure:right-closed~<absent>",
   "relation.derivedBy.bin.from#incidence",
@@ -74,6 +78,13 @@ const CORPUS_DEAD = [
   "relation.derivedBy.nest.levels#arity",
   "relation.derivedBy.nest.levels#order",
   "relation.derivedBy.normalize.from#incidence",
+  // The MIRRORED keep facets: the result's own field names are the pool (and
+  // the arity floor), and every corpus keep already equals fieldNames(out),
+  // so both erasures are the identity throughout. A stronger corpus fact than
+  // the reach-zero ones above: the equation holds in EVERY corpus declaration,
+  // so the operand-side spelling carries no independent information here.
+  "relation.derivedBy.project.keep#arity",
+  "relation.derivedBy.project.keep#incidence",
   "structure.peers[]#arity",
 ];
 
@@ -313,18 +324,18 @@ describe("stage-2 erasure freeze", () => {
     // statement is indistinguishable from a re-record that absorbed a defect.
     const s = frozen.supersedes;
     expect(s, "the record was re-taken under a new erasure authority and says nothing about it").toBeDefined();
-    // This record supersedes the DECLARED DISTINCTNESS: the law now rides on
-    // the operand map (`distinctFrom` beside the namespace), the census carries
-    // it onto the locator, and the canonical rebind SKIPS the sibling operand's
-    // own binding -- where the unconstrained pick used to land, producing a
-    // self-join and a degenerate edge the boundary refused as underivable. Both
-    // coordinates (`join.with#incidence`, `graph.edgeTo#incidence`) leave
-    // never-discharged corpus-dead: the sibling-skipping pick is the next
-    // declared name, exactly the binding the corpus writes. The earlier
-    // statements -- round 27's census/verdict pair, round 31's =16 for the
-    // binding quotient, round 32's =1 for the peers declaration -- are what
+    // This record supersedes the DECLARED MIRRORS, in two classes because two
+    // erasure behaviours moved: the incidence pool became the result-side
+    // spelling the law says the operand EQUALS (toGrain -> out.grain, keep ->
+    // fieldNames(out)), and the arity floor became the mirror's runtime
+    // length. The measurement that dissolved the planned census change: the
+    // equation holds in EVERY corpus declaration, unlawful ones included, so
+    // all three coordinates are corpus-dead and the never-discharged list is
+    // EMPTY -- the round-25 eighteen fully resolved. The earlier statements
+    // (rounds 27, 31, 32, 35 -- the sequence-declaration, the binding
+    // quotient, the peers declaration, the distinctness constraint) are what
     // this one replaced, and they are in git.
-    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["forget-reference-incidence=2"]);
+    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["forget-reference-arity=1", "forget-reference-incidence=2"]);
     for (const d of s!.divergences) expect(d.effect.length, `${d.operation} is superseded with no authored effect`).toBeGreaterThan(120);
   });
 

@@ -110,12 +110,15 @@ describe("structural claims survive falsification", () => {
   });
 
   it("reports what it could not test at all, instead of counting it as agreement", () => {
-    // Synthesis moved this a long way. Every one of the 140 erasures now acts
-    // on some specimen — `dead` is empty where the corpus alone left 16 — and
-    // 25 still identify no two distinct ones, where the corpus alone left 79.
-    // Those 25 carry claimed footprints that are unfalsified, not confirmed.
-    expect(live.dead).toEqual([]);
-    expect(live.unseparated.length).toBe(25);
+    // Synthesis moved this a long way. Every one of the 140 erasures used to
+    // act on some specimen — `dead` was empty where the corpus alone left 16 —
+    // and the unseparated carry claimed footprints that are unfalsified, not
+    // confirmed (26 now: keep#arity joined them). The MIRROR put one back: `keep#arity` acts on NO specimen
+    // either, because every specimen's keep already equals fieldNames(out) —
+    // its claimed footprint is unfalsified by the instrument's own erasure
+    // being the identity, which is recorded rather than counted as agreement.
+    expect(live.dead).toEqual(["relation.derivedBy.project.keep#arity"]);
+    expect(live.unseparated.length).toBe(26);
   });
 });
 
@@ -397,7 +400,7 @@ describe("the terminal invariant is measured over the population the report name
       };
       // A scope admitting it saw fewer than the population it names.
       expect(bend((x) => { x.scopes.quotientLanguageInvalid.specimens = 112; }), `${side}: wrong scope count`).toEqual([
-        expect.stringContaining("measured over 112 of 212 specimens"),
+        expect.stringContaining("measured over 112 of 211 specimens"),
       ]);
       // No named population at all: coverage could only be compared by count.
       expect(bend((x) => { delete (x.specimens as unknown as Record<string, unknown>).populationDigest; }), `${side}: no named population`).toEqual([
@@ -801,7 +804,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
       byId.set(f.id, set);
     }
     const shared = [...byId].filter(([, cs]) => cs.size > 1);
-    expect(s.fixtures.length).toBe(212);
+    expect(s.fixtures.length).toBe(211);
     expect(byId.size).toBe(110);
     expect(shared.length).toBe(27);
     // Not one of them is a benign repeat: every shared id carries two or more DIFFERENT fixtures.
@@ -810,15 +813,15 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     expect(shared.map(([id]) => id)).toContain("FX_SURVEY_MEAN_SATISFACTION");
   });
 
-  it("and an id-resolving sweep claims 169 bound specimens where content says 79", () => {
+  it("and an id-resolving sweep claims 168 bound specimens where content says 79", () => {
     const s = specimens();
     const oracle = loadOracle();
-    expect(s.fixtures.filter((f) => hasOutcome(f, oracle)).length).toBe(169);
+    expect(s.fixtures.filter((f) => hasOutcome(f, oracle)).length).toBe(168);
     expect(s.fixtures.filter((f) => contentMatches(f, oracle)).length).toBe(90);
     expect(s.fixtures.filter((f) => isBound(f, oracle)).length).toBe(79);
     // The difference is the mis-attribution: 90 specimens have an outcome BY ID that is not
     // about their content, and a witnessability sweep counts those as discriminating pairs.
-    expect(s.fixtures.filter((f) => hasOutcome(f, oracle) && !contentMatches(f, oracle)).length).toBe(90);
+    expect(s.fixtures.filter((f) => hasOutcome(f, oracle) && !contentMatches(f, oracle)).length).toBe(89);
   });
 
   it("reduces the discriminating set to ONE, and that one is not a witness for presence either", () => {

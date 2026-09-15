@@ -758,6 +758,76 @@ describe("declared distinctness — with differs from from, edgeTo from edgeFrom
   });
 });
 
+describe("declared mirrors — toGrain rebinds to the result grain, keep to the result fields", () => {
+  const oracle = loadOracle();
+
+  it("the mirror rides on the locator for exactly the operands whose law writes the binding twice", () => {
+    // The locator is shared by the slot's facets, so the mirror reaches the
+    // arity and order facets of toGrain too -- the arity floor becomes the
+    // mirror's length there, and the order erasure never consults a pool.
+    expect(plans.get("relation.derivedBy.aggregate-to-grain.toGrain#incidence")!.locator.operandMirror).toBe("result.grain");
+    expect(plans.get("relation.derivedBy.project.keep#incidence")!.locator.operandMirror).toBe("result.fields");
+    expect(plans.get("relation.derivedBy.project.keep#arity")!.locator.operandMirror).toBe("result.fields");
+    const mirrored = [...plans.values()].filter((p) => !!p.locator.operandMirror).map((p) => p.id);
+    expect(mirrored.sort()).toEqual([
+      "relation.derivedBy.aggregate-to-grain.toGrain#arity",
+      "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.project.keep#arity",
+      "relation.derivedBy.project.keep#incidence",
+    ]);
+  });
+
+  it("the mirror is the identity on every corpus declaration, and a broken equation is REPAIRED", () => {
+    // The equation (sameSet(out.grain, d.toGrain), sameSet(fieldNames(out),
+    // d.keep)) holds in every corpus declaration -- unlawful ones included --
+    // so the mirror rebind moves nothing there.
+    for (const id of ["relation.derivedBy.aggregate-to-grain.toGrain#incidence", "relation.derivedBy.project.keep#incidence", "relation.derivedBy.project.keep#arity"]) {
+      const plan = plans.get(id)!;
+      const carries = [...oracle.fixtures.values()].filter((f) => wouldChange(f, plan));
+      expect(carries.map((f) => f.id), `${id} moves somewhere in the corpus`).toEqual([]);
+    }
+    // An authored equation break is the moving case. The rebind is POSITIONAL
+    // -- it cannot extend a list -- so the break it repairs is the ARRANGED
+    // one: keep holds the result's own names in a different order, and the
+    // mirror writes the declaration order back. (A SHORT keep cannot be
+    // repaired by an incidence erasure at all, and an arity cut only ever
+    // shortens: both limits are stated, not hidden.)
+    const base = oracle.fixtures.get("FX_N_PROJECT_KEEPS_NEST_LEVELS")!;
+    const broken = JSON.parse(JSON.stringify(base)) as typeof base;
+    const flat = broken.structure.relations.flat as unknown as { fields: Record<string, unknown>; derivedBy: Record<string, unknown> };
+    const declared = Object.keys(flat.fields);
+    expect(declared.length).toBeGreaterThan(1);
+    flat.derivedBy.keep = [...declared].reverse();
+    const plan = plans.get("relation.derivedBy.project.keep#incidence")!;
+    expect(wouldChange(broken, plan)).toBe(true);
+    const image = executePlan(broken, plan) as unknown as typeof base;
+    expect((image.structure.relations.flat.derivedBy as unknown as { keep: string[] }).keep).toEqual(declared);
+    // And the repaired image is a lawful declaration the boundary accepts.
+    const c = census.find((x) => x.id === "relation.derivedBy.project.keep#incidence")!;
+    expect(checkIsolation(broken, c)).toMatchObject({ state: "discharged" });
+  });
+
+  it("a mirrored arity truncates to the mirror's length and preserves the surviving names", () => {
+    // A keep LONGER than the result's fields breaks the equation by length.
+    // The extra name is schema-valid (a Name is a patterned string; the
+    // cross-reference is law-level, not schema-level) and the arity cut takes
+    // keep back to the mirror's length, keeping the FIRST names -- so an
+    // arity erasure never rewrites occupants.
+    const base = oracle.fixtures.get("FX_N_PROJECT_KEEPS_NEST_LEVELS")!;
+    const overlong = JSON.parse(JSON.stringify(base)) as typeof base;
+    const flat = overlong.structure.relations.flat as unknown as { fields: Record<string, unknown>; derivedBy: Record<string, unknown> };
+    const declared = Object.keys(flat.fields);
+    flat.derivedBy.keep = [...declared, "zz_extra"];
+    const plan = plans.get("relation.derivedBy.project.keep#arity")!;
+    expect(wouldChange(overlong, plan)).toBe(true);
+    const image = executePlan(overlong, plan) as unknown as typeof base;
+    const keep = (image.structure.relations.flat.derivedBy as unknown as { keep: string[] }).keep;
+    expect(keep).toEqual(declared);
+    expect(keep).not.toContain("zz_extra");
+  });
+});
+
 describe("composition — derived ordering and confluence over the bound registry", () => {
   const fx = (id: string): Fixture => {
     const f = fixtures.find((x) => x.id === id);

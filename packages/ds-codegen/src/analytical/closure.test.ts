@@ -854,7 +854,14 @@ describe("the unresolved dependencies are blocked by EVIDENCE, not by an undecid
     }
     // Each of their erasures collides at least one pair: the block is not that the
     // instrument cannot see them, it is that nothing in the corpus turns on what it sees.
-    expect(collidesSomething).toEqual(unresolved.map((d) => d.coordinate));
+    // ONE exception, and it is the mirror's consequence for this gate:
+    // `project.keep#arity` no longer collides ANY pair -- the mirror makes its
+    // erasure the identity on the specimen population too (every specimen's
+    // keep already equals fieldNames(out)), so its blocker moved from "the
+    // corpus does not turn on what the instrument sees" to "the instrument's
+    // own erasure is the identity". An equation-breaking specimen would make
+    // it collide; none is synthesized today.
+    expect(collidesSomething).toEqual(unresolved.map((d) => d.coordinate).filter((id) => id !== "relation.derivedBy.project.keep#arity"));
     expect(witnessable).toEqual([]);
   });
 });
