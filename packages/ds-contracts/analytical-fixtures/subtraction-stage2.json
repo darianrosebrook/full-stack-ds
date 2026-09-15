@@ -552,7 +552,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.join.cardinality:one-to-many~many-to-many": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED. One of the six member pairs, and the only one whose TWO SIDES are both corpus-licensed. The a-side is the corpus case CASE_REVENUE_DOUBLE_COUNTED_AFTER_JOIN (REL_GRAIN_FANOUT) and the b-side is the same declaration at `many-to-many`, whose required outcome adds the corpus's `grain:declared` obligation: a join that multiplies on both sides determines no result grain, so the sum owes a witness -- which the `one-to-many` reading does not. The merge erasure folds the two members into one class, the join then has no resolvable cardinality, and checkIsolation discharges on both sides. NON-CLAIM: this establishes that the tag decides whether the result grain is determined at all, and nothing about the five sibling pairs. The other five are refused as EVIDENCE and stay unresolved: `one-to-one~many-to-one` because the authority determines the same grain for both members, so no corpus cause separates them; and the four that involve `one-to-one` or `many-to-one` against `one-to-many` or `many-to-many` because the only distinguishing outcome on one side is REL_DERIVATION_RESULT_NOT_DERIVABLE, which the doctrine states carries no corpus case and is the boundary's own well-formedness refusal -- so those pairs do not follow from an already-existing Stage-2 cause. Whether such a pair should nonetheless count as evidence is the policy question this triage opens; it is recorded, not settled by landing."
     },
     "relation.derivedBy.join.cardinality:one-to-many~many-to-one": {
       "disposition": "unresolved"

@@ -2,7 +2,7 @@
   "$comment": "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
-    "witnesses.json": "784e169a0581eb37e3329a0faeab917077a379d5141ff7cf0a9db6b61cd8e309",
+    "witnesses.json": "b8690bd0a25a1327bb18569ea606486e29439128b29c1f6f08939e198413aa81",
     "closures-stage2.json": "9bcd2ab69f6f66d3b64ec5f40146304721039b4b5c7681537d4078ebbcb5f56d"
   },
   "authority": {
@@ -16,10 +16,10 @@
   "quotientSchemaVersion": 1,
   "specimens": {
     "corpus": 90,
-    "stimuli": 31,
-    "synthesized": 91,
+    "stimuli": 32,
+    "synthesized": 90,
     "total": 212,
-    "populationDigest": "8d67d18aabb082fbbef3f9f2ff1f51cecbee6b0fc67ee27bb09d6d838979f2f7"
+    "populationDigest": "5c76edbe7503095392888c1defff7bfe3de13b3a3b926a10a00063f4219ca5df"
   },
   "unbuilt": [
     {
@@ -150,73 +150,73 @@
   "sourceLanguageDeparture": [
     {
       "coordinate": "assertion.kind",
-      "specimens": 121,
+      "specimens": 122,
       "error": "/assertions/0/kind must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.kind:aggregate~ratio-comparison",
-      "specimens": 121,
+      "specimens": 122,
       "error": "/assertions/0/kind must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation",
-      "specimens": 121,
+      "specimens": 122,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~ratio",
-      "specimens": 121,
+      "specimens": 122,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "relation.grain",
-      "specimens": 121,
+      "specimens": 122,
       "error": "/structure/relations/survey/grain must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~interval",
-      "specimens": 120,
+      "specimens": 121,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~ordinal",
-      "specimens": 120,
+      "specimens": 121,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.aggregate.op",
-      "specimens": 119,
+      "specimens": 120,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:interval~ratio",
-      "specimens": 112,
+      "specimens": 113,
       "error": "/structure/relations/readings/fields/temp/transformation must be string",
       "specimen": "FX_TEMP_RATIO_COMPARISON"
     },
     {
       "coordinate": "field.transformation:ordinal~ratio",
-      "specimens": 111,
+      "specimens": 112,
       "error": "/structure/relations/survey/fields/satisfaction/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.aggregate.op:sum~min",
-      "specimens": 94,
+      "specimens": 95,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_TEMP_SUM"
     },
     {
       "coordinate": "assertion.aggregate.op:sum~mean",
-      "specimens": 74,
+      "specimens": 75,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
@@ -228,7 +228,7 @@
     },
     {
       "coordinate": "assertion.aggregate.op:sum~count",
-      "specimens": 58,
+      "specimens": 59,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_TEMP_SUM"
     },
@@ -240,7 +240,7 @@
     },
     {
       "coordinate": "relation.derivedBy.kind",
-      "specimens": 35,
+      "specimens": 36,
       "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'",
       "specimen": "FX_SHARE_OF_AVERAGE_SCORE"
     },
@@ -281,10 +281,22 @@
       "specimen": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
     },
     {
+      "coordinate": "relation.derivedBy.kind:join~nest",
+      "specimens": 16,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
+      "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+    },
+    {
       "coordinate": "relation.derivedBy.kind:aggregate-to-grain~bin",
       "specimens": 15,
       "error": "/structure/relations/subtotals/derivedBy/kind must be string",
       "specimen": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~join",
+      "specimens": 15,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
+      "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
     },
     {
       "coordinate": "relation.derivedBy.kind:aggregate-to-grain~nest",
@@ -299,12 +311,6 @@
       "specimen": "FX_SHARE_OF_AVERAGE_SCORE"
     },
     {
-      "coordinate": "relation.derivedBy.kind:join~nest",
-      "specimens": 15,
-      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
-      "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
-    },
-    {
       "coordinate": "relation.derivedBy.kind:nest~bin",
       "specimens": 15,
       "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'",
@@ -315,12 +321,6 @@
       "specimens": 15,
       "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'",
       "specimen": "FX_SHARE_OF_AVERAGE_SCORE"
-    },
-    {
-      "coordinate": "relation.derivedBy.kind:aggregate-to-grain~join",
-      "specimens": 14,
-      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
-      "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
     },
     {
       "coordinate": "relation.derivedBy.kind:aggregate-to-grain~project",
@@ -353,6 +353,12 @@
       "specimen": "FX_READINGS_BINNED_NO_CLOSURE"
     },
     {
+      "coordinate": "relation.derivedBy.kind:join~graph",
+      "specimens": 11,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
+      "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+    },
+    {
       "coordinate": "relation.derivedBy.kind:normalize~graph",
       "specimens": 11,
       "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'",
@@ -365,10 +371,16 @@
       "specimen": "FX_SHARE_OF_AVERAGE_SCORE"
     },
     {
-      "coordinate": "relation.derivedBy.kind:join~graph",
+      "coordinate": "relation.derivedBy.kind:join~bin",
       "specimens": 10,
       "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
       "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+    },
+    {
+      "coordinate": "relation.derivedBy.kind:join~normalize",
+      "specimens": 10,
+      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'",
+      "specimen": "FX_SHARE_OF_AVERAGE_SCORE"
     },
     {
       "coordinate": "relation.derivedBy.kind:project~graph",
@@ -395,16 +407,10 @@
       "specimen": "FX_READINGS_BINNED_NO_CLOSURE"
     },
     {
-      "coordinate": "relation.derivedBy.kind:join~bin",
+      "coordinate": "relation.derivedBy.kind:join~project",
       "specimens": 9,
       "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
       "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
-    },
-    {
-      "coordinate": "relation.derivedBy.kind:join~normalize",
-      "specimens": 9,
-      "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'",
-      "specimen": "FX_SHARE_OF_AVERAGE_SCORE"
     },
     {
       "coordinate": "relation.derivedBy.kind:normalize~project",
@@ -437,12 +443,6 @@
       "specimen": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
     },
     {
-      "coordinate": "relation.derivedBy.kind:join~project",
-      "specimens": 8,
-      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
-      "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
-    },
-    {
       "coordinate": "field.additivity.kind:semi-additive~non-additive",
       "specimens": 7,
       "error": "/structure/relations/stock/fields/on_hand/additivity must NOT have additional properties",
@@ -461,6 +461,12 @@
       "specimen": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
     },
     {
+      "coordinate": "relation.derivedBy.join.cardinality",
+      "specimens": 5,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
+      "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+    },
+    {
       "coordinate": "field.additivity.kind:additive~non-additive",
       "specimens": 4,
       "error": "/structure/relations/regions/fields/avg_score/additivity/kind must be string",
@@ -473,7 +479,7 @@
       "specimen": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
     },
     {
-      "coordinate": "relation.derivedBy.join.cardinality",
+      "coordinate": "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "specimens": 4,
       "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
       "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
@@ -491,12 +497,6 @@
       "specimen": "FX_N_READINGS_BINNED_LEFT_CLOSED"
     },
     {
-      "coordinate": "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
-      "specimens": 3,
-      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
-      "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
-    },
-    {
       "coordinate": "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
       "specimens": 3,
       "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
@@ -510,9 +510,15 @@
     },
     {
       "coordinate": "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
-      "specimens": 1,
+      "specimens": 2,
       "error": "/structure/relations/enriched/derivedBy must have required property 'toGrain'",
       "specimen": "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT"
+    },
+    {
+      "coordinate": "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
+      "specimens": 1,
+      "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
+      "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED"
     },
     {
       "coordinate": "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
@@ -524,12 +530,12 @@
   "quotientLanguageInvalid": [],
   "scopes": {
     "sourceLanguageDeparture": {
-      "specimens": 121,
-      "populationDigest": "bcb259e0f457606959a70a8692fed076288e287f8a10d1b0b8c08e6440d8602d"
+      "specimens": 122,
+      "populationDigest": "135fb17899593b17ee5d7500f21fee7620c35bb7f570e1907b48b47101a5fd8a"
     },
     "quotientLanguageInvalid": {
       "specimens": 212,
-      "populationDigest": "8d67d18aabb082fbbef3f9f2ff1f51cecbee6b0fc67ee27bb09d6d838979f2f7"
+      "populationDigest": "5c76edbe7503095392888c1defff7bfe3de13b3a3b926a10a00063f4219ca5df"
     }
   },
   "footprints": {
@@ -2068,6 +2074,20 @@
       ],
       "actual": [
         "relation.derivedBy.bin.closure:left-closed~<absent>"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+      "declared": [
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-many"
+      ],
+      "actual": [
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-many"
       ],
       "collateral": [],
       "outside": [],
