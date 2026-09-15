@@ -517,7 +517,12 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
         }
       }
       // An element owns its own existence, so nothing above owns it for it.
-      return walk(items, `${rawPath}[]`, { self: false, holder: optional.self || optional.holder }, [...steps, { kind: "elements" }]);
+      // The elements INHERIT the array's operand namespace and nothing deeper
+      // does: `structure.peers` binds relation names, but the names live one
+      // array lower, in the peer sets — so the namespace travels the ELEMENTS
+      // step and no further. An object's properties read their OWN map, so an
+      // annotated array of composites cannot leak its namespace sideways.
+      return walk(items, `${rawPath}[]`, { self: false, holder: optional.self || optional.holder }, [...steps, { kind: "elements" }], undefined, operand);
     }
     if (n.type === "object") {
       if (n.properties) {
@@ -527,8 +532,9 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
         const kindProp = (n.properties as Record<string, Node>).kind;
         const tagged = kindProp !== undefined && Array.isArray(resolve(kindProp).enum);
         const owner = tagged && addHolderPresence(rawPath, optional, steps) ? { path: rawPath } : optional.owner;
-        // A branch may DECLARE which of its names are bound operands. Read here,
-        // at the one place that walks a branch's properties, so the fact travels
+        // An object node may DECLARE which of its names are bound operands —
+        // a derivation branch or the structure itself (`peers`). Read here, at
+        // the one place that walks an object's properties, so the fact travels
         // with the property rather than being reconstructed from its path.
         const operands = operandsOf(n);
         for (const [k, v] of Object.entries(n.properties as Record<string, Node>)) {

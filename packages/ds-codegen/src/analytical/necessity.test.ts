@@ -1409,18 +1409,29 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
    * (`x-fsds-operands`) -- so twelve of the eighteen left this list: six are
    * DISCHARGED, and six are corpus-dead instead, which C1e enumerates and
    * explains (their canonical rebinding is the binding the corpus already
-   * writes). The six below are what is left.
+   * writes). Six were left after that landing, and the peers DECLARATION took
+   * one of them, so five are what is left.
    *
-   * Each of the six names the boundary line it is refused by. `toGrain` and
+   * Each of the five names the boundary line it is refused by. `toGrain` and
    * `graph.edgeTo` are rebound to a field the derivation cannot reach that way,
    * `join.with` to the relation that is already its left input, and
    * `project.keep` (both facets) to a selection that drops a field the result
    * still declares -- `REL_DERIVATION_RESULT_NOT_DERIVABLE` in every case.
-   * `structure.peers[]#incidence` is the odd one out and is refused for the
-   * ORIGINAL reason: its names ARE relation names, but `peers` sits on the
-   * STRUCTURE rather than on a derivation branch, and the operand map is read off
-   * a branch, so the walk declares no namespace for it and the tokenizing
-   * erasure is unchanged. That one is mended by a DECLARATION, not by an erasure.
+   *
+   * `structure.peers[]#incidence` USED to be the sixth, refused for the
+   * ORIGINAL tokenizing reason: `peers` sits on the STRUCTURE rather than on a
+   * derivation branch, and the operand map was read off a branch only, so the
+   * walk declared no namespace for it. That one was mended by exactly the
+   * DECLARATION this record called for -- the structure now carries the same
+   * `x-fsds-operands` map the branches carry, and an array's ELEMENTS inherit
+   * their annotated property's namespace -- so the peer sets rebind to declared
+   * relation names and the coordinate is DISCHARGED on every fixture where it
+   * moves. The rebind is lawful for a measured reason: the canonical bind lands
+   * on the structure's FIRST declared relation, which the corpus declares as a
+   * base relation, and the divergence law is conditioned on every member being
+   * an aggregate -- so the rebound set is a lawful (vacuous) peer claim, not a
+   * conserved one. That is the operand-typing question in miniature, and here
+   * the corpus answers it.
    *
    * The refusals stay collateral for EVERY class by design, because a collision
    * found under one might be the break rather than the coordinate. The refusal is
@@ -1440,7 +1451,7 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
    * WHICH declared names a bound slot may legally rebind to is a fact about the
    * operand's own typing rules (`toGrain` must name a declared grain prefix,
    * `keep` must retain the result's grain), and the erasure reads the namespace
-   * and not those rules. Until an erasure that respects them exists, the six
+   * and not those rules. Until an erasure that respects them exists, the five
    * below have no verdict this instrument can produce, and filing one to clear
    * the subtraction gate is exactly the move the standing index exists to prevent.
    */
@@ -1462,7 +1473,6 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
     "relation.derivedBy.join.with#incidence",
     "relation.derivedBy.project.keep#arity",
     "relation.derivedBy.project.keep#incidence",
-    "structure.peers[]#incidence",
   ];
 
   it("the reference-topology coordinates whose own erasure is never discharged are exactly these", () => {

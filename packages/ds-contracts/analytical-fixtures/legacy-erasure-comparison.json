@@ -27,8 +27,8 @@
  },
  "pairs": 34980,
  "agree": {
-  "count": 24685,
-  "digest": "791779129b9394f5a08b7249e801972303c13361e986229030274ec37ddec66c"
+  "count": 24677,
+  "digest": "2102f484194c6e6345bb47723aaa489b8ab2dd8d69ec2e207d89828916f5ee8e"
  },
  "classes": {
   "new-no-plan": {
@@ -231,7 +231,7 @@
    }
   },
   "forget-reference-incidence:scalar>scalar:legacy-valid": {
-   "count": 214,
+   "count": 222,
    "plans": [
     "relation.derivedBy.aggregate-to-grain.from#incidence",
     "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
@@ -248,7 +248,8 @@
     "relation.derivedBy.normalize.field#incidence",
     "relation.derivedBy.normalize.from#incidence",
     "relation.derivedBy.project.from#incidence",
-    "relation.derivedBy.project.keep#incidence"
+    "relation.derivedBy.project.keep#incidence",
+    "structure.peers[]#incidence"
    ],
    "law": "which referent a slot names is forgotten; that a referent is named is kept",
    "disposition": "the legacy walker wrote a reserved token, which is a legal `name` but not a DECLARED one, so the image stops resolving: the boundary reports the operand missing or the result underivable and refuses it as a declaration, and no witness naming the coordinate can be admitted. The new plan REBINDS a bound slot to the operand's own declared names, so the collision is between two bindings -- which is what the coordinate names -- and the image stays a declaration. The legacy image is source-valid and says LESS than the coordinate forgets: it claims a referent that does not exist.",
@@ -70858,6 +70859,62 @@
    "946d15c208d8",
    "3a59d22d6aee",
    "forget-reference-arity:absent>scalar:legacy-invalid"
+  ],
+  [
+   "structure.peers[]#incidence",
+   "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
+   "46e1da252de9",
+   "9d9333065a01",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "structure.peers[]#incidence",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS",
+   "a3e42da3ec30",
+   "a16114aaf47d",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "structure.peers[]#incidence",
+   "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN",
+   "80a38aec7325",
+   "c206013458ab",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "structure.peers[]#incidence",
+   "FX_N_PEERS_AGGREGATE_TO_ONE_TARGET",
+   "395ff2fb5565",
+   "79286038e27a",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "structure.peers[]#incidence",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "a41e8a316be8",
+   "8f48dd444372",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "structure.peers[]#incidence",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "dc1f967e71ce",
+   "486dc7fdb74f",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "structure.peers[]#incidence",
+   "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
+   "46e1da252de9",
+   "9d9333065a01",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "structure.peers[]#incidence",
+   "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
+   "4c0a62a1a14a",
+   "164779a04d49",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
    "structure.peers[]#order",
