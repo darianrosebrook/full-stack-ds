@@ -343,8 +343,9 @@ describe("the witness audit", () => {
 /**
  * THE POPULATION THE TERMINAL INVARIANT IS MEASURED OVER.
  *
- * `computeReport` reported a `specimens` block naming 208 while validating
- * `fixtures.slice(0, corpus + stimuli)` -- 112 of them. The 96 synthesized
+ * `computeReport` reported a `specimens` block naming the whole population
+ * while validating `fixtures.slice(0, corpus + stimuli)` -- the authored prefix
+ * alone. The 96 synthesized
  * specimens, which exist precisely to reach shapes the corpus does not, never
  * reached the invariant the whole codomain slice is about.
  *
@@ -384,7 +385,7 @@ describe("the terminal invariant is measured over the population the report name
       };
       // A scope admitting it saw fewer than the population it names.
       expect(bend((x) => { x.scopes.quotientLanguageInvalid.specimens = 112; }), `${side}: wrong scope count`).toEqual([
-        expect.stringContaining("measured over 112 of 208 specimens"),
+        expect.stringContaining("measured over 112 of 210 specimens"),
       ]);
       // No named population at all: coverage could only be compared by count.
       expect(bend((x) => { delete (x.specimens as unknown as Record<string, unknown>).populationDigest; }), `${side}: no named population`).toEqual([
@@ -549,7 +550,7 @@ describe("the terminal invariant is measured over the population the report name
     // A null recorded scope must not suppress detection of a changed current one.
     const suppressed = run((r, l) => { r.scopes.sourceLanguageDeparture = null; l.scopes.sourceLanguageDeparture.populationDigest = "0".repeat(64); });
     expectProblem(suppressed, "RECORDED", "sourceLanguageDeparture scope is not a scope", "null scope beside a changed current digest");
-    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 112 authored", "source count 999");
+    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 114 authored", "source count 999");
     expectProblem(run((r) => { r.specimens.total = 0; r.scopes.quotientLanguageInvalid.specimens = 0; }), "RECORDED", "specimens.total 0 is not corpus + stimuli + synthesized", "total 0 beside unchanged components");
 
     // BOTH-SIDES corruptions of the fields that only had equality comparisons.

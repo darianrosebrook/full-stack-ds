@@ -460,7 +460,9 @@ describe("evidence earned under one erasure definition is refused under another"
       }
       // Without the edge, EVERY closure that has stimuli is refused, so no
       // closure's collision evidence is admitted through an accidental order.
-      expect(withStimuli.length).toBe(3);
+      // Five carriers carry stimuli: the additivity pair, `aggregate-to-grain~project`,
+      // and the two whose receipt pairs discharge obligations 3-6.
+      expect(withStimuli.length).toBe(5);
       const refusedCarriers = [...new Set(refusals.map((p) => p.split(": ")[0]))].sort();
       expect(refusedCarriers).toEqual(withStimuli.map((c) => c.carrier).sort());
       for (const p of refusals) expect(p).toMatch(/ \(2 distinct images across its listings\); refused as evidence rather than normalized through one order$/);

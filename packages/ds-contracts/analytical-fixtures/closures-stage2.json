@@ -767,7 +767,31 @@
         "relation.derivedBy.project.keep#order"
       ],
       "minRawEdit": 3,
-      "promotion": "provisional"
+      "promotion": "provisional",
+      "a": {
+        "fixture": "FX_PROJECT_DROPS_NEST_LEVEL"
+      },
+      "b": {
+        "base": "FX_PROJECT_DROPS_NEST_LEVEL",
+        "patch": [
+          {
+            "set": "structure.relations.flat.derivedBy",
+            "value": {
+              "kind": "bin",
+              "from": "hierarchy",
+              "field": "revenue"
+            }
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_BIN_CLOSURE_UNDECLARED"
+          ],
+          "terms": []
+        },
+        "cause": "binning revenue without declaring which side of each boundary is closed leaves a value on a boundary in two bins or none; CASE_WHICH_BIN_GETS_TEN (REL_BIN_CLOSURE_UNDECLARED)"
+      }
     },
     {
       "carrier": "relation.derivedBy.kind:bin~graph",
@@ -845,7 +869,29 @@
         "relation.derivedBy.project.keep#order"
       ],
       "minRawEdit": 3,
-      "promotion": "provisional"
+      "promotion": "provisional",
+      "a": {
+        "fixture": "FX_PROJECT_DROPS_NEST_LEVEL"
+      },
+      "b": {
+        "base": "FX_PROJECT_DROPS_NEST_LEVEL",
+        "patch": [
+          {
+            "set": "structure.relations.flat.derivedBy",
+            "value": {
+              "kind": "normalize",
+              "from": "hierarchy",
+              "field": "revenue"
+            }
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "the near-neighbour reading of REL_ADDITIVITY_NORMALIZE_NONADDITIVE: normalizing an ADDITIVE measure has a whole to normalize against, so the share has a referent and the derivation is admissible"
+      }
     },
     {
       "carrier": "relation.derivedBy.kind:normalize~graph",
@@ -978,7 +1024,7 @@
           "codes": [],
           "terms": []
         },
-        "cause": "REL_ADDITIVITY_SUM_SEMIADDITIVE requires the measure to be declared non-additive along the dimension; an additive measure sums along any"
+        "cause": "declaring the measure additive removes the non-additive dimension the sum was restricted by, so REL_ADDITIVITY_SUM_SEMIADDITIVE does not fire and a sum along date is lawful"
       },
       "note": "Migrated from witnesses.json, where it was a 2-set naming a coordinate the required-child presence rule removes. a semi-additive declaration is kind plus its dimension set; neither alone separates it from additive"
     },
@@ -1028,7 +1074,7 @@
           "codes": [],
           "terms": []
         },
-        "cause": "REL_ADDITIVITY_SUM_SEMIADDITIVE names a sum along the dimension (doctrine L2: inventory averages over time); REL_RATIO_MEASURE_AVERAGED names a rate; a semi-additive measure combined by mean exhibits neither"
+        "cause": "declaring the measure semi-additive non-additive along year removes the rate reading the mean violated, so REL_RATIO_MEASURE_AVERAGED does not fire and REL_ADDITIVITY_SUM_SEMIADDITIVE does not apply to a mean"
       },
       "note": "Migrated from witnesses.json, where it was a 2-set naming a coordinate the required-child presence rule removes."
     }
