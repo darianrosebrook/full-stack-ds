@@ -72,6 +72,26 @@ export const OPERANDS_KEY = "x-fsds-operands" as const;
 export type OperandNamespace = "field" | "relation";
 
 /**
+ * An operand's namespace plus the LAW facts its binding must satisfy.
+ *
+ * `distinctFrom` names the SIBLING operand this one's binding must differ from
+ * — a join takes two distinct relations, an edge two distinct endpoint fields
+ * — so the canonical rebinding skips the sibling's own binding instead of
+ * landing on it (a self-join, a degenerate edge are not declarations the law
+ * admits). The pick stays a function of the DECLARATIONS alone: it reads the
+ * sibling's current value, never the slot's own, so two stimuli differing only
+ * in the slot still reach one image.
+ */
+export interface OperandBinding {
+  namespace: OperandNamespace;
+  distinctFrom?: string;
+}
+
+/** The shorthand a plain namespace still admits, normalized by one reader. */
+export type OperandDecl = OperandNamespace | OperandBinding;
+export const operandOf = (decl: OperandDecl): OperandBinding => (typeof decl === "string" ? { namespace: decl } : decl);
+
+/**
  * The operands each derivation branch binds, and the namespace each ranges over.
  *
  * Stated ONCE on the branch rather than wrapping each `Name`: a reader that only
@@ -79,14 +99,14 @@ export type OperandNamespace = "field" | "relation";
  * still sees the branch it always saw, so adding this fact cannot make a
  * historical reader unable to parse the current schema.
  */
-export const DERIVATION_OPERANDS: Record<string, Record<string, OperandNamespace>> = {
+export const DERIVATION_OPERANDS: Record<string, Record<string, OperandDecl>> = {
   "aggregate-to-grain": { from: "relation", toGrain: "field" },
-  join: { from: "relation", with: "relation" },
+  join: { from: "relation", with: { namespace: "relation", distinctFrom: "from" } },
   nest: { from: "relation", levels: "field" },
   bin: { from: "relation", field: "field" },
   normalize: { from: "relation", field: "field" },
   project: { from: "relation", keep: "field" },
-  graph: { from: "relation", edgeFrom: "field", edgeTo: "field", value: "field" },
+  graph: { from: "relation", edgeFrom: "field", edgeTo: { namespace: "field", distinctFrom: "edgeFrom" }, value: "field" },
 };
 
 /**
@@ -103,7 +123,7 @@ export const DERIVATION_OPERANDS: Record<string, Record<string, OperandNamespace
  * the structure rather than on a derivation branch because that is where the
  * property lives; nothing about the reader changes.
  */
-export const STRUCTURE_OPERANDS: Record<string, OperandNamespace> = {
+export const STRUCTURE_OPERANDS: Record<string, OperandDecl> = {
   peers: "relation",
 };
 export type SequenceFact = "set" | "ordered";

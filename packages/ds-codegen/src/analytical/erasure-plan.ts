@@ -84,6 +84,17 @@ export interface StructuralLocator {
    * is unchanged.
    */
   operand?: OperandNamespace;
+  /**
+   * The SIBLING operand this one's binding must differ from, when the law says
+   * so (a join takes two distinct relations; an edge two distinct endpoints).
+   *
+   * The canonical rebinding skips the sibling's CURRENT value -- read off the
+   * same declaration, never off the slot's own value -- so the image is a
+   * binding the law admits (not a self-join, not a degenerate edge) while
+   * remaining a function of the declarations alone: two stimuli differing only
+   * in this slot still reach one image.
+   */
+  operandDistinctFrom?: string;
 }
 
 /**
@@ -246,23 +257,41 @@ function affects(s: Slot, op: ForgetOperation, floor = 1): boolean {
  * slot's PARENT is the `derivedBy` object, so the input relation is one property
  * away and no path is parsed. A relation-valued operand ranges over the
  * structure's relations; a field-valued one over the input relation's fields.
+ *
+ * WHERE THE LAW SAYS this binding must differ from a sibling operand's, the
+ * sibling's CURRENT value is skipped -- a law fact declared on the operand map,
+ * carried on the locator, never inferred from the operator here. The skip reads
+ * the sibling's value off the same declaration, never the slot's own value, so
+ * the pool stays a function of the declarations and the collision property
+ * survives. A pool that would be emptied by the skip keeps its last name rather
+ * than becoming empty: a declaration this thin has no lawful rebinding at all,
+ * and the boundary says so.
  */
-function bindingPool(fixture: Fixture | QuotientImage, slot: Slot, operand?: OperandNamespace): string[] | undefined {
+function bindingPool(fixture: Fixture | QuotientImage, slot: Slot, operand?: OperandNamespace, distinctFrom?: string): string[] | undefined {
   if (!operand) return undefined;
   const rels = (fixture as unknown as Json).structure as Json | undefined;
   const relations = rels?.relations as Json | undefined;
   if (!obj(relations)) return undefined;
+  let names: string[];
   if (operand === "relation") {
-    const names = Object.keys(relations);
-    return names.length > 0 ? names : undefined;
+    names = Object.keys(relations);
+  } else {
+    const from = obj(slot.parent) ? slot.parent.from : undefined;
+    if (typeof from !== "string") return undefined;
+    const holder = relations[from];
+    const fields = obj(holder) ? holder.fields : undefined;
+    if (!obj(fields)) return undefined;
+    names = Object.keys(fields);
   }
-  const from = obj(slot.parent) ? slot.parent.from : undefined;
-  if (typeof from !== "string") return undefined;
-  const holder = relations[from];
-  const fields = obj(holder) ? holder.fields : undefined;
-  if (!obj(fields)) return undefined;
-  const names = Object.keys(fields);
-  return names.length > 0 ? names : undefined;
+  if (names.length === 0) return undefined;
+  if (distinctFrom && obj(slot.parent)) {
+    const sibling = slot.parent[distinctFrom];
+    if (typeof sibling === "string") {
+      const distinct = names.filter((n) => n !== sibling);
+      if (distinct.length > 0) names = distinct;
+    }
+  }
+  return names;
 }
 
 /**
@@ -438,7 +467,7 @@ export function executePlan(fixture: Fixture | QuotientImage, plan: ErasurePlan)
         // names -- the collision is then between two bindings, which is exactly
         // what the coordinate names. A slot with no namespace is not bound, and
         // keeps the reserved token.
-        const pool = bindingPool(copy, s, plan.locator.operand);
+        const pool = bindingPool(copy, s, plan.locator.operand, plan.locator.operandDistinctFrom);
         if (Array.isArray(v)) write(s, v.map((_, i) => pool?.[i] ?? `${INCIDENCE_TOKEN}_${i}`));
         else if (!obj(v)) write(s, pool?.[0] ?? `${INCIDENCE_TOKEN}_0`);
         break;

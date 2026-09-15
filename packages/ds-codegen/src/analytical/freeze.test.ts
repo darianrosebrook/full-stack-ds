@@ -59,12 +59,17 @@ const CORPUS_DEAD = [
   "relation.derivedBy.aggregate-to-grain.toGrain#order",
   "relation.derivedBy.bin.closure:right-closed~<absent>",
   "relation.derivedBy.bin.from#incidence",
+  // The two distinctness-constrained operands: the law (`distinctFrom` on the
+  // operand map) makes the canonical rebind skip the sibling's binding, and the
+  // next declared name is what the corpus already writes -- reach is zero.
   "relation.derivedBy.graph.edgeFrom#incidence",
+  "relation.derivedBy.graph.edgeTo#incidence",
   "relation.derivedBy.graph.from#incidence",
   "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
   "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
   "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
   "relation.derivedBy.join.from#incidence",
+  "relation.derivedBy.join.with#incidence",
   "relation.derivedBy.nest.from#incidence",
   "relation.derivedBy.nest.levels#arity",
   "relation.derivedBy.nest.levels#order",
@@ -308,18 +313,18 @@ describe("stage-2 erasure freeze", () => {
     // statement is indistinguishable from a re-record that absorbed a defect.
     const s = frozen.supersedes;
     expect(s, "the record was re-taken under a new erasure authority and says nothing about it").toBeDefined();
-    // This record supersedes the PEERS DECLARATION: the binding quotient
-    // reached the one name list the branch map could not -- `structure.peers`
-    // carries the same `x-fsds-operands` map the branches carry, and an
-    // array's ELEMENTS inherit their annotated property's namespace -- so one
-    // peer-set coordinate's erasure moved (its reach fell 4 -> 2 because the
-    // canonical bind is the identity on two committed fixtures), with the
-    // executor untouched and the authority moving through its emitted schema
-    // artifact alone. The earlier statements -- round 27's `census=5`,
-    // `verdict=5` and round 31's `forget-reference-incidence=16` for the
-    // binding quotient itself -- are what this one replaced, and they are in
-    // git.
-    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["forget-reference-incidence=1"]);
+    // This record supersedes the DECLARED DISTINCTNESS: the law now rides on
+    // the operand map (`distinctFrom` beside the namespace), the census carries
+    // it onto the locator, and the canonical rebind SKIPS the sibling operand's
+    // own binding -- where the unconstrained pick used to land, producing a
+    // self-join and a degenerate edge the boundary refused as underivable. Both
+    // coordinates (`join.with#incidence`, `graph.edgeTo#incidence`) leave
+    // never-discharged corpus-dead: the sibling-skipping pick is the next
+    // declared name, exactly the binding the corpus writes. The earlier
+    // statements -- round 27's census/verdict pair, round 31's =16 for the
+    // binding quotient, round 32's =1 for the peers declaration -- are what
+    // this one replaced, and they are in git.
+    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["forget-reference-incidence=2"]);
     for (const d of s!.divergences) expect(d.effect.length, `${d.operation} is superseded with no authored effect`).toBeGreaterThan(120);
   });
 

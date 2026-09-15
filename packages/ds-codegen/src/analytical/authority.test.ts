@@ -369,8 +369,8 @@ describe("evidence earned under one erasure definition is refused under another"
       mutate: {
         file: "census.ts",
         from:
-          "const locator: StructuralLocator = { path: rawPath, steps, ...(arityFloor !== undefined ? { arityFloor } : {}), ...(operand ? { operand } : {}) };",
-        to: "const locator: StructuralLocator = { path: rawPath, steps, ...(operand ? { operand } : {}) };",
+          "const locator: StructuralLocator = {\n      path: rawPath,\n      steps,\n      ...(arityFloor !== undefined ? { arityFloor } : {}),\n      ...(operand ? { operand: operand.namespace, ...(operand.distinctFrom ? { operandDistinctFrom: operand.distinctFrom } : {}) } : {}),\n    };",
+        to: "const locator: StructuralLocator = {\n      path: rawPath,\n      steps,\n      ...(operand ? { operand: operand.namespace, ...(operand.distinctFrom ? { operandDistinctFrom: operand.distinctFrom } : {}) } : {}),\n    };",
       },
       moves: ["coordinateBasisDigest"],
     },

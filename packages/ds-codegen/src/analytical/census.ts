@@ -36,7 +36,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { operationFor, type ErasurePlan, type LocatorStep, type StructuralLocator } from "./erasure-plan.js";
-import { OPERANDS_KEY, SEQUENCE_KEY, type OperandNamespace, type SequenceFact } from "./relation-model.js";
+import { OPERANDS_KEY, SEQUENCE_KEY, operandOf, type OperandBinding, type OperandDecl, type SequenceFact } from "./relation-model.js";
 
 export type CoordinateKind = "leaf" | "member-pair" | "member-absence" | "reference-topology" | "reference";
 
@@ -159,10 +159,13 @@ function nameRefOf(raw: Node): boolean {
   return false;
 }
 
-/** The operand namespaces a derivation BRANCH declares, if it declares any. */
-function operandsOf(branch: Node): Record<string, OperandNamespace> | undefined {
+/** The operand bindings an object node declares, if it declares any, NORMALIZED. */
+function operandsOf(branch: Node): Record<string, OperandBinding> | undefined {
   const map = branch[OPERANDS_KEY];
-  return map && typeof map === "object" ? (map as Record<string, OperandNamespace>) : undefined;
+  if (!map || typeof map !== "object") return undefined;
+  const out: Record<string, OperandBinding> = {};
+  for (const [k, v] of Object.entries(map as Record<string, OperandDecl>)) out[k] = operandOf(v);
+  return out;
 }
 
 const PRIMITIVE_TYPES = new Set(["string", "number", "integer", "boolean"]);
@@ -306,7 +309,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
    * point: a coordinate whose location is reconstructed elsewhere is a
    * coordinate two modules can disagree about, and they did.
    */
-  const emit = (c: Coordinate, rawPath: string, steps: LocatorStep[], arityFloor?: number, operand?: OperandNamespace) => {
+  const emit = (c: Coordinate, rawPath: string, steps: LocatorStep[], arityFloor?: number, operand?: OperandBinding) => {
     out.push(c);
     // Recorded here as well as in `walk`, because the discriminator leaf is
     // emitted directly rather than walked into: without it,
@@ -318,7 +321,12 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     // list is allowed to be" is a fact about the slot's declaration, which the
     // walk is the single reader of. An arity erasure that truncated past it
     // produced images the representation cannot express.
-    const locator: StructuralLocator = { path: rawPath, steps, ...(arityFloor !== undefined ? { arityFloor } : {}), ...(operand ? { operand } : {}) };
+    const locator: StructuralLocator = {
+      path: rawPath,
+      steps,
+      ...(arityFloor !== undefined ? { arityFloor } : {}),
+      ...(operand ? { operand: operand.namespace, ...(operand.distinctFrom ? { operandDistinctFrom: operand.distinctFrom } : {}) } : {}),
+    };
     locators.set(c.id, locator);
     if (!locators.has(c.leaf)) locators.set(c.leaf, locator);
     const operation = operationFor(c, requiredLeaves);
@@ -386,7 +394,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
    * `facets` decides what applies: a single slot has no arity or order to vary,
    * only which sibling slot binds it.
    */
-  const addReference = (rawPath: string, facets: readonly ReferenceFacet[], optional: Opt, steps: LocatorStep[], arityFloor?: number, operand?: OperandNamespace) => {
+  const addReference = (rawPath: string, facets: readonly ReferenceFacet[], optional: Opt, steps: LocatorStep[], arityFloor?: number, operand?: OperandBinding) => {
     const id = label(rawPath);
     if (id === "id" || seen.has(id)) return;
     seen.add(id);
@@ -480,7 +488,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     optional: Opt = OPT_REQUIRED,
     steps: LocatorStep[] = [],
     sugarFor?: string,
-    operand?: OperandNamespace,
+    operand?: OperandBinding,
   ): void => {
     visited.add(rawPath);
     // Detected BEFORE resolution: after it a name is just a patterned string.

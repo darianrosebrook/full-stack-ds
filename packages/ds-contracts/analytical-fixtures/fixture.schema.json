@@ -394,7 +394,10 @@
           "additionalProperties": false,
           "x-fsds-operands": {
             "from": "relation",
-            "with": "relation"
+            "with": {
+              "namespace": "relation",
+              "distinctFrom": "from"
+            }
           }
         },
         {
@@ -552,7 +555,10 @@
           "x-fsds-operands": {
             "from": "relation",
             "edgeFrom": "field",
-            "edgeTo": "field",
+            "edgeTo": {
+              "namespace": "field",
+              "distinctFrom": "edgeFrom"
+            },
             "value": "field"
           }
         }

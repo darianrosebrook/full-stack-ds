@@ -1064,8 +1064,8 @@
     }
   ],
   "authority": {
-    "coordinateBasisDigest": "08e136ff684caa7f1c8b88fd74f287fa7cdcddc0081f464f538cd6a7ab0af4b2",
-    "erasureAuthorityDigest": "a30fcdfa496ec2c29d8c4ff849d4d8c375edebe2ddc4befdac06fc36dc433f7b",
+    "coordinateBasisDigest": "931cd30cf5d64f4a22b0859999bf8e2b08085472759ce140fa4eaf8c449b4f3b",
+    "erasureAuthorityDigest": "a4c8464653836b7b5f3e979ce3404b412d1e14baa6344c42a22213e2cf9573ad",
     "witnessAuthorityDigest": "86d17e4eac5229a306ddf91c37a850aba260340e46d136369c5475aa8b16f092",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
