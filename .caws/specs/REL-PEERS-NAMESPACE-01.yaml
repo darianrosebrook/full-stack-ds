@@ -9,7 +9,8 @@ updated_at: '2026-09-15T16:06:12.483Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/relation-model.ts + census.ts (the structure-level operand map and the array-elements threading)'
+    - 'the emitted schemas and the re-recorded ledgers (the executor is unchanged: the relation pool already reads the fixture)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -22,7 +23,9 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - "The namespace a name list ranges over is a DECLARATION fact read where the walk reads every other namespace fact: the walk does not infer a namespace from a path, and only an array's ELEMENTS inherit their annotated property's namespace -- nothing deeper does."
+  - 'Only peers gains a namespace this round: the map is authored per property, and a name list with no namespace keeps the tokenizing erasure unchanged.'
+  - 'Replacing an erasure moves the erasure authority, so every ledger is re-recorded and the pins that named the old refusal are corrected rather than deleted.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
