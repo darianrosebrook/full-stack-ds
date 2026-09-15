@@ -1503,6 +1503,155 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
   });
 });
 
+describe("C1g — the ORDER facet is a degree of freedom only where an authority reads the sequence", () => {
+  /**
+   * The census emits `#arity`, `#order` and `#incidence` on every name LIST, and
+   * only `#incidence` on a single name slot. `list` is read from the emitted
+   * schema, and the emitted schema says nothing about whether the SEQUENCE
+   * matters: the five plain name-list declarations are shape-identical
+   * (`{minItems, type: array, items: {$ref: name}}`). The set-versus-sequence
+   * fact lives in the operator and engine laws, out of the census's reach --
+   * `project.keep` is compared with `sameSet(fieldNames(out), d.keep)`, while
+   * `nest.levels` is compared POSITIONALLY by `isDeclaredNestGrain` and
+   * `toGrain` inherits that comparison.
+   *
+   * So this measures the fact the declaration cannot state: PERMUTE the list at
+   * its own slot -- a different value, not an erasure -- and ask whether the
+   * judgment moves. Where it never does, `#order` measures the encoding (a JSON
+   * array standing in for a set), no witness for it can exist and no corpus can
+   * supply one; where it does, the facet is a real distinction. The measurement
+   * is bounded by the corpus and says so: four lists have no committed instance
+   * long enough to permute, so the corpus cannot decide them, and the class is
+   * not a verdict -- `toGrain` sits in it while C6's sibling pin showed its
+   * order is semantic through an AUTHORED stimulus, which is exactly why
+   * "untested" must not be read as "inert".
+   */
+  const plans = loadPlans();
+  const fixtures = [...oracle.fixtures.values()];
+  /** Judgement identity: status plus every occurrence, order-independent. */
+  const judgmentOf = (f: Fixture) => {
+    const j = judge(f.structure, f.assertions, f.evidence);
+    const part = (xs: readonly string[]) => [...xs].sort().join(",");
+    return [
+      j.status,
+      part(j.diagnostics.map((d) => `${d.code}@${d.subject}`)),
+      part(j.obligations.map((o) => `${o.term}@${o.subject}`)),
+      part(j.derivations.map((d) => `${d.kind}:${d.code ?? d.term}@${d.subject}`)),
+    ].join("|");
+  };
+  const writeAt = (f: Fixture, locator: NonNullable<ReturnType<typeof planFor>>["locator"], value: unknown) => {
+    const copy = JSON.parse(JSON.stringify(f)) as Fixture;
+    for (const s of resolveSlots(copy, locator)) (s.parent as Record<string, unknown>)[String(s.key)] = JSON.parse(JSON.stringify(value));
+    return copy;
+  };
+  /** How many committed instances are long enough to permute, and how many judgments move. */
+  const sensitivity = (id: string) => {
+    const plan = plans.get(id)!;
+    let permutable = 0;
+    let moved = 0;
+    for (const f of fixtures) {
+      const slots = resolveSlots(f, plan.locator);
+      if (slots.length === 0) continue;
+      const v = (slots[0].parent as Record<string, unknown>)[String(slots[0].key)];
+      if (!Array.isArray(v) || v.length < 2) continue;
+      permutable += 1;
+      if (judgmentOf(f) !== judgmentOf(writeAt(f, plan.locator, [...v].reverse()))) moved += 1;
+    }
+    return { permutable, moved };
+  };
+
+  const orderLeaves = kernel.filter((c) => c.kind === "reference-topology" && c.facet === "order").map((c) => c.leaf);
+  /** The plain name-list slots the census walks as list references. */
+  const LIST_SLOTS = new Set(["along", "keep", "levels", "nonAdditiveAlong", "toGrain"]);
+  const semantic = orderLeaves.filter((l) => sensitivity(`${l}#order`).moved > 0).sort();
+  const inert = orderLeaves.filter((l) => sensitivity(`${l}#order`).permutable > 0 && sensitivity(`${l}#order`).moved === 0).sort();
+  const untested = orderLeaves.filter((l) => sensitivity(`${l}#order`).permutable === 0).sort();
+
+  it("partitions every order-bearing list into semantic, inert-on-this-corpus and untested-by-this-corpus", () => {
+    expect(semantic).toEqual(["relation.derivedBy.nest.levels"]);
+    expect(inert).toEqual(["relation.derivedBy.project.keep", "structure.peers[]"]);
+    expect(untested).toEqual([
+      "assertion.aggregate.along",
+      "evidence.grainWitness",
+      "field.additivity.semi-additive.nonAdditiveAlong",
+      "relation.derivedBy.aggregate-to-grain.toGrain",
+    ]);
+    expect([...semantic, ...inert, ...untested].sort()).toEqual([...orderLeaves].sort());
+  });
+
+  it("the inert class is measured, not vacuous: each had instances long enough to permute", () => {
+    for (const l of inert) expect(sensitivity(`${l}#order`).permutable, `${l} now has nothing to permute`).toBeGreaterThan(1);
+    expect(sensitivity("relation.derivedBy.nest.levels#order").moved).toBeGreaterThan(0);
+  });
+
+  it("the declaration cannot state the difference: the plain name-list declarations are shape-identical", () => {
+    const schema = JSON.parse(fs.readFileSync(FIXTURE_SCHEMA, "utf-8")) as unknown;
+    const found = new Map<string, unknown[]>();
+    const walk = (node: unknown, path: string): void => {
+      if (Array.isArray(node)) return node.forEach((x, i) => walk(x, `${path}[${i}]`));
+      if (node === null || typeof node !== "object") return;
+      for (const [k, v] of Object.entries(node as Record<string, unknown>)) {
+        if (LIST_SLOTS.has(k)) found.set(k, [...(found.get(k) ?? []), v]);
+        walk(v, `${path}.${k}`);
+      }
+    };
+    walk(schema, "");
+    const strip = (decl: unknown) => JSON.stringify({ ...(decl as Record<string, unknown>), minItems: undefined });
+    for (const name of LIST_SLOTS) {
+      expect(found.get(name), `${name} is not declared in the fixture schema`).toBeDefined();
+      expect(found.get(name)!.length, `${name} is declared more than once`).toBe(1);
+    }
+    // Five plain name lists, one declaration shape: nothing here says whether the
+    // sequence is semantic, which is why the census cannot decide `#order` from it.
+    const reference = strip(found.get("keep")![0]);
+    for (const name of ["along", "nonAdditiveAlong", "levels", "toGrain"]) {
+      expect(strip(found.get(name)![0]), `${name} now differs from keep`).toBe(reference);
+    }
+  });
+
+  it("relation.grain is a name list the census gives no facet at all, and its order is inert too", () => {
+    // The facet rule is not even uniform across name lists: `grain` is declared
+    // as a union (`unknown` | name[]), so the walk emits the leaf and no
+    // reference-topology coordinates. That is a second way the census's `#order`
+    // coverage is decided by the declaration's SHAPE rather than by authority.
+    expect(kernel.filter((c) => c.leaf === "relation.grain").map((c) => c.kind)).toEqual(["leaf"]);
+    let permutable = 0;
+    let moved = 0;
+    for (const f of fixtures) {
+      for (const [rn, rel] of Object.entries(f.structure.relations)) {
+        const g = (rel as { grain: unknown }).grain;
+        if (!Array.isArray(g) || g.length < 2) continue;
+        permutable += 1;
+        const copy = JSON.parse(JSON.stringify(f)) as Fixture;
+        (copy.structure.relations[rn] as { grain: unknown }).grain = [...g].reverse();
+        if (judgmentOf(f) !== judgmentOf(copy)) moved += 1;
+      }
+    }
+    expect(permutable).toBeGreaterThan(1);
+    expect(moved, "reversing a declared grain now moves the judgment").toBe(0);
+  });
+
+  it("an authored stimulus reaches the order of a list the corpus cannot permute", () => {
+    // `toGrain` is UNTESTED by the corpus and semantic anyway: C6's sibling pin
+    // in this file holds a witness whose two sides differ only at the target
+    // grain, admissible against REL_GRAIN_SUBTOTAL_MISMATCH. Re-measured here on
+    // the pair itself, so "untested by the corpus" cannot be read as "inert".
+    const base = oracle.fixtures.get("FX_N_NESTED_SUBTOTAL_AT_PREFIX")!;
+    const fields = { country: { transformation: "nominal", key: true }, state: { transformation: "nominal", key: true }, revenue: { transformation: "ratio" } };
+    const side = (order: string[]) =>
+      applyPatch(base, [
+        { set: "structure.relations.subtotals.derivedBy.toGrain", value: order },
+        { set: "structure.relations.subtotals.grain", value: ["country", "state"] },
+        { set: "structure.relations.subtotals.fields", value: fields },
+      ] as never);
+    const a = side(["country", "state"]);
+    const b = side(["state", "country"]);
+    expect({ status: judge(a.structure, a.assertions, a.evidence).status, codes: codesOf(judge(a.structure, a.assertions, a.evidence)) }).toEqual({ status: "admissible", codes: [] });
+    expect({ status: judge(b.structure, b.assertions, b.evidence).status, codes: codesOf(judge(b.structure, b.assertions, b.evidence)) }).toEqual({ status: "illegal", codes: ["REL_GRAIN_SUBTOTAL_MISMATCH"] });
+    expect(changedPaths(a, b)).toEqual([".structure.relations.subtotals.derivedBy.toGrain[0]", ".structure.relations.subtotals.derivedBy.toGrain[1]"]);
+  });
+});
+
 describe("C1d — cleanup cardinality bounds which pairs a <=2-coordinate witness can even express", () => {
   /**
    * Erasing a discriminator rewrites one member's tag to the other's. Required
