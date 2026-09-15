@@ -16,7 +16,7 @@ import { loadCensus, loadDerivation, loadLocators, loadPlans, type Coordinate } 
 import { derivedRunAfter, executeAll, executePlan, orderPlans, wouldChange, type ErasurePlan, type ForgetOperation } from "./erasure-plan.js";
 import { forgetBranchField, loadClosures } from "./closure.js";
 import { specimens } from "./erasure-audit.js";
-import { FIXTURES_DIR, loadOracle, resolveSide } from "./necessity.js";
+import { FIXTURES_DIR, checkIsolation, loadOracle, resolveSide } from "./necessity.js";
 import { canonical, CONFLUENCE_BOUND, declaredNonCommuting, distinctListingImages, erase, planFor } from "./quotient.js";
 import { isMarker } from "./quotient-image.js";
 import { parseFixtures, type Fixture } from "./structure.js";
@@ -660,6 +660,48 @@ describe("lawful forgetting — each operation identifies exactly what its coord
     expect(wrong(["a", "b"])).toHaveLength(2);                        // and arity survives
     // And yet it identifies two lists that name different things.
     expect(JSON.stringify(fx(levels(["a", "b"])))).toBe(JSON.stringify(fx(levels(["a", "c"]))));
+  });
+});
+
+describe("the structure-level namespace — peers binds relations, declared where the walk reads every namespace fact", () => {
+  const peersPlan = () => plans.get("structure.peers[]#incidence");
+  const oracle = loadOracle();
+
+  it("the annotation reaches the locator through the ELEMENTS step, so the executor never infers it", () => {
+    const plan = peersPlan();
+    expect(plan, "the peers incidence plan exists").toBeDefined();
+    expect(plan!.locator.operand, "the structure's x-fsds-operands map reached the inner peer lists").toBe("relation");
+  });
+
+  it("a peer set rebinds to the operand's own declared relation names, in declaration order", () => {
+    const plan = peersPlan()!;
+    const f = oracle.fixtures.get("FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS")!;
+    const before = (f.structure as unknown as { peers: string[][] }).peers;
+    expect(before).toEqual([["by_day", "by_other"]]);
+    const image = executePlan(f, plan) as unknown as { structure: { peers: string[][] } };
+    // relations are declared [events, by_day, by_other]: the canonical bind is
+    // the FIRST TWO, exactly as the branch operands' pool is.
+    expect(image.structure.peers).toEqual([["events", "by_day"]]);
+  });
+
+  it("the rebound set is a LAWFUL peer claim, and the coordinate is discharged wherever it moves", () => {
+    const c = census.find((x) => x.id === "structure.peers[]#incidence")!;
+    const moving = oracle.fixtures.get("FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS")!;
+    const r = checkIsolation(moving, c);
+    expect(r.state, String((r as { detail?: string }).detail)).toBe("discharged");
+    // WHY it is lawful, from the corpus rather than by fiat: the canonical bind
+    // lands on the structure's first declared relation, which this corpus
+    // declares as a BASE relation, and the divergence law is conditioned on
+    // every member being an aggregate -- so the rebound set is a vacuous peer
+    // claim the boundary has no obligation about, not a conserved one. A
+    // fixture declaring two aggregates first would put that to the test.
+    const image = executePlan(moving, peersPlan()!) as unknown as { structure: { peers: string[][]; relations: Record<string, { derivedBy?: unknown }> } };
+    expect(image.structure.peers[0].includes("events")).toBe(true);
+    expect(image.structure.relations.events.derivedBy, "events is a base relation").toBeUndefined();
+    // And the identity case discharges by `unchanged`: two corpus peer sets
+    // already name the first two relations their structure declares.
+    const identity = oracle.fixtures.get("FX_PEERS_AT_DAY_AND_MONTH_GRAIN")!;
+    expect(checkIsolation(identity, c)).toEqual({ state: "discharged", by: ["unchanged"] });
   });
 });
 

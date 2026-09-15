@@ -308,14 +308,18 @@ describe("stage-2 erasure freeze", () => {
     // statement is indistinguishable from a re-record that absorbed a defect.
     const s = frozen.supersedes;
     expect(s, "the record was re-taken under a new erasure authority and says nothing about it").toBeDefined();
-    // This record supersedes the BINDING QUOTIENT: the incidence erasure at a
-    // derivation operand now rebinds the slot to the operand's own declared
-    // names instead of rewriting them to reserved tokens, because a token image
-    // stops resolving and the boundary refuses it as a declaration. Sixteen
-    // bound slots' images moved, and the class carries its authored effect below.
-    // The earlier statement -- round 27's `census=5`, `verdict=5` for the
-    // sequence declaration -- is what this one replaced, and it is in git.
-    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["forget-reference-incidence=16"]);
+    // This record supersedes the PEERS DECLARATION: the binding quotient
+    // reached the one name list the branch map could not -- `structure.peers`
+    // carries the same `x-fsds-operands` map the branches carry, and an
+    // array's ELEMENTS inherit their annotated property's namespace -- so one
+    // peer-set coordinate's erasure moved (its reach fell 4 -> 2 because the
+    // canonical bind is the identity on two committed fixtures), with the
+    // executor untouched and the authority moving through its emitted schema
+    // artifact alone. The earlier statements -- round 27's `census=5`,
+    // `verdict=5` and round 31's `forget-reference-incidence=16` for the
+    // binding quotient itself -- are what this one replaced, and they are in
+    // git.
+    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["forget-reference-incidence=1"]);
     for (const d of s!.divergences) expect(d.effect.length, `${d.operation} is superseded with no authored effect`).toBeGreaterThan(120);
   });
 
