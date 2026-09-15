@@ -114,7 +114,7 @@
     {
       "id": "ruledigest-boundary",
       "condition": "The `holdout.ruleDigest` claim boundary is explicitly settled in words.",
-      "why": "Excluding relation-model.ts is correct if the digest means 'judgment law over already-admitted structures'. If the holdout claim is end-to-end — fixture bytes through structural admission through judgment — then a well-formedness change can alter the holdout without moving the digest, and relation-model.ts is material despite not deciding the semantic result. Settle the wording rather than reflexively digesting the file."
+      "why": "Settled, and the identity partition is what settles it. The digest means judgment law over already-admitted structures: `relation-model.ts` decides which structures are well-formed, not what any of them yields, so it is not a judgment source and its exclusion is correct. The end-to-end reading is not the claim, because the admission boundary is not thereby unguarded — `relation-model.ts` is owned by `coordinateBasis` in the `authority.ts` partition, whose artifacts are the three emitted schemas, so a well-formedness change moves `coordinateBasisDigest` and invalidates every verdict that names a coordinate id, and `checkFixtureLedger` separately validates each fixture against the emitted fixture schema. `authority.test.ts` enforces that every module is owned by exactly one identity, which is what makes the boundary explicit rather than assumed: no module is covered by nobody, and none needs two digests."
     },
     {
       "id": "closure-dependency-discharge",
