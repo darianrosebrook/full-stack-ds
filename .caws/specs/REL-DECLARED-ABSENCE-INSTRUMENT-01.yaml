@@ -2,9 +2,11 @@ id: REL-DECLARED-ABSENCE-INSTRUMENT-01
 title: 'State and pin the rule that an erasure cannot witness a coordinate whose absence is itself diagnosed'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Stated and pinned the rule that an erasure cannot witness a coordinate whose absence is itself diagnosed, with the operation-kind contrast proving the diagnostic decides it, and opened the disposition-vocabulary question a declared necessity creates.'
 created_at: '2026-09-15T05:29:00.324Z'
-updated_at: '2026-09-15T05:31:03.183Z'
+updated_at: '2026-09-15T05:32:03.192Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
