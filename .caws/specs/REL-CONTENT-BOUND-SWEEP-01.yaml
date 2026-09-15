@@ -1,0 +1,31 @@
+id: REL-CONTENT-BOUND-SWEEP-01
+title: 'Bind sweep outcomes by content, and record that the specimen population shares ids'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T05:55:10.114Z'
+updated_at: '2026-09-15T05:55:10.114Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/erasure-audit.test.ts (pin the id hazard and the corrected sweep)'
+    - 'docs/current-implementation-snapshot.md (the corrected decomposition of the unresolved candidates)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'An oracle outcome is bound to a fixture''s CONTENT, not to its id: the specimen population deliberately shares ids between a base and the variants synthesized from it, so an outcome resolved by id is the base''s answer applied to content that answer was never about.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the specimen population contains id-sharing specimens whose content differs from the bound fixture; when a witnessability sweep binds outcomes by content instead of by id; then the unresolved candidates with an oracle-separated collided pair fall from two to zero, the id-sharing and the number of mis-attributed specimens are pinned by test, and the snapshot records that no unresolved candidate is blocked by the instrument or by pair choice'
+non_functional: {}
+contracts:
+  - name: 'specimen-population'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/erasure-audit.test.ts'
