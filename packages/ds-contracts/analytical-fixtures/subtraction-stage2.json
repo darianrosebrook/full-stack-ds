@@ -406,7 +406,8 @@
       "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated \u2014 and that is the problem: the quotient is extensionally the same as field.additivity#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
     },
     "field.additivity.kind:non-additive~ratio-measure": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness. The stimulus is AUTHORED over a committed fixture and follows from an already-existing cause: `gdp_per_capita` is a ratio measure averaged to a region grain, so the committed fixture is illegal REL_RATIO_MEASURE_AVERAGED, and declaring the same field non-additive makes the judgment admissible, so erasing exactly this coordinate (which merges the two member classes) identifies the two stimuli while their verdicts differ. PRIMITIVE standing is checked rather than assumed: the footprint classifier classes this coordinate atomic -- its erasure destroys nothing but itself -- so the witness declares one coordinate and ratifies."
     },
     "field.additivity.kind:ratio-measure~<absent>": {
       "disposition": "representation-artifact",

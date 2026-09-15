@@ -7,8 +7,8 @@
  },
  "population": {
   "corpus": 90,
-  "stimuli": 35,
-  "synthesized": 87,
+  "stimuli": 36,
+  "synthesized": 86,
   "total": 212,
   "membershipDigest": "e976aafcfa1b4685ff71a18c9fbaebf03f9acb29f0f47d5425b82489581da5d8"
  },
@@ -28,7 +28,7 @@
  "pairs": 34980,
  "agree": {
   "count": 24667,
-  "digest": "e678d2ab04cf391a865f64cb991fcd6b5f07f12299dc7737cd36f10030b88127"
+  "digest": "8de19f91772722a027d961763d0c004b260722f80a3dae9cfa65786c69e38411"
  },
  "classes": {
   "new-no-plan": {
@@ -1004,6 +1004,13 @@
   ],
   [
    "assertion.aggregate.along",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -1307,13 +1314,6 @@
    "assertion.aggregate.along",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.along",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -2488,6 +2488,13 @@
   ],
   [
    "assertion.aggregate.along#order",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -2791,13 +2798,6 @@
    "assertion.aggregate.along#order",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "assertion.aggregate.along#order",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "only-legacy-coordinate"
   ],
@@ -3972,6 +3972,13 @@
   ],
   [
    "assertion.aggregate.field",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -4275,13 +4282,6 @@
    "assertion.aggregate.field",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.field",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -5638,6 +5638,13 @@
   ],
   [
    "assertion.aggregate.op",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "8cf5906b57a5",
+   "690f81890346",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "910ccc8203c8",
    "48508b9751fd",
@@ -5942,13 +5949,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "d453fd9f220e",
    "c67c07476a3a",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.aggregate.op",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "59874b10f1f6",
-   "350e52eaf5a0",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -7178,6 +7178,13 @@
   ],
   [
    "assertion.aggregate.op:mean~count",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "df6f767c2d4e",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~count",
    "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
    "c79f374c4471",
    "98f5c5fea11c",
@@ -7293,13 +7300,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
    "6b1724e23b20",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:mean~count",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
-   "3fe724d32ded",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -7822,6 +7822,13 @@
   ],
   [
    "assertion.aggregate.op:mean~min",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "255c9ac5bad9",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~min",
    "FX_REGION_MAX_PATCHED",
    "b42cfe3b4267",
    "464acacb9b4a",
@@ -8014,13 +8021,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
    "fdbf8bf6be5c",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:mean~min",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
-   "4e008ad98191",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -9369,6 +9369,13 @@
   ],
   [
    "assertion.aggregate.op:sum~mean",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "59a5a33d26a3",
+   "dfde38eaaf83",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "b236d8412390",
@@ -9596,13 +9603,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "fa12895ec67b",
    "4f71c08c9175",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~mean",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "feaea75fbb35",
-   "d3fd4425cf30",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -11567,6 +11567,13 @@
   ],
   [
    "assertion.aggregate.relation",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -11870,13 +11877,6 @@
    "assertion.aggregate.relation",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.relation",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -13051,6 +13051,13 @@
   ],
   [
    "assertion.kind",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "2ee87aa9d5ed",
+   "2b7326ffdaf3",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "0efd805b73d4",
    "969da81f89da",
@@ -13355,13 +13362,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "80e5b5f4a34e",
    "f8a40fd21e7d",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.kind",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "34e26c56a488",
-   "e6e1b57595da",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -14535,6 +14535,13 @@
   ],
   [
    "assertion.kind:aggregate~ratio-comparison",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "00c91748dcf4",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "0b18a095d0f2",
@@ -14839,13 +14846,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
    "5ea4117594ad",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.kind:aggregate~ratio-comparison",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
-   "675619514f54",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -16019,6 +16019,13 @@
   ],
   [
    "assertion.ratio-comparison.field",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -16322,13 +16329,6 @@
    "assertion.ratio-comparison.field",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.field",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -17503,6 +17503,13 @@
   ],
   [
    "assertion.ratio-comparison.relation",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -17806,13 +17813,6 @@
    "assertion.ratio-comparison.relation",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.relation",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -18987,6 +18987,13 @@
   ],
   [
    "evidence.grainWitness",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -19290,13 +19297,6 @@
    "evidence.grainWitness",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "evidence.grainWitness",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -20471,6 +20471,13 @@
   ],
   [
    "evidence.grainWitness#order",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -20774,13 +20781,6 @@
    "evidence.grainWitness#order",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "evidence.grainWitness#order",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "only-legacy-coordinate"
   ],
@@ -21311,6 +21311,13 @@
   ],
   [
    "field.additivity.kind",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "1334dd82fcec",
+   "baee54abbe97",
+   "forget-value:absent>hole:legacy-valid"
+  ],
+  [
+   "field.additivity.kind",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "0c95133b2c4a",
    "256e45370429",
@@ -21343,13 +21350,6 @@
    "8ae5f231f5ae",
    "3e08985c2e26",
    "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "field.additivity.kind",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "bf8cd138bfdf",
-   "aaad42456e4d",
-   "forget-value:absent>hole:legacy-valid"
   ],
   [
    "field.additivity.kind",
@@ -21416,16 +21416,16 @@
   ],
   [
    "field.additivity.kind:additive~non-additive",
-   "FX_STOCK_SUM_ALONG_DATE_PATCHED",
-   "acd6cd8c68da",
-   "a00a9680bfcd",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "ab3fe73867b0",
+   "7d5edcb04fb5",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
    "field.additivity.kind:additive~non-additive",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "011ee97caea7",
-   "b375bf644ab1",
+   "FX_STOCK_SUM_ALONG_DATE_PATCHED",
+   "acd6cd8c68da",
+   "a00a9680bfcd",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -21612,9 +21612,9 @@
   ],
   [
    "field.additivity.kind:non-additive~ratio-measure",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
-   "7c228e2174f7",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "da85e2aeba41",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -21675,6 +21675,13 @@
   ],
   [
    "field.additivity.kind:semi-additive~non-additive",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "9fc88a50e198",
+   "34f25896118a",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "field.additivity.kind:semi-additive~non-additive",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "0fa98f0ace09",
@@ -21700,13 +21707,6 @@
    "3f5664adb509",
    "fecba62a4fd8",
    "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.additivity.kind:semi-additive~non-additive",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "e6a338a38b0a",
-   "cffe975b1576",
-   "merge-enum-members:scalar>class:legacy-invalid"
   ],
   [
    "field.additivity.kind:semi-additive~non-additive",
@@ -22543,6 +22543,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -22846,13 +22853,6 @@
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -24027,6 +24027,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -24330,13 +24337,6 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong#order",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "only-legacy-coordinate"
   ],
@@ -24993,6 +24993,13 @@
   ],
   [
    "field.temporality.kind",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7abc728853ba",
+   "ac0e13ea66db",
+   "forget-value:absent>hole:legacy-valid"
+  ],
+  [
+   "field.temporality.kind",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "ad72a6bd6be1",
    "f0e3c0637d10",
@@ -25067,13 +25074,6 @@
    "a0cd9cf59a05",
    "ea8ca1ab4bc3",
    "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "field.temporality.kind",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "dc88b7f8c1a4",
-   "5863e5a85894",
-   "forget-value:absent>hole:legacy-valid"
   ],
   [
    "field.temporality.kind",
@@ -25287,6 +25287,13 @@
   ],
   [
    "field.temporality.kind:instant~interval",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "27ccc0054dee",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.temporality.kind:instant~interval",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "4f7fcf622c9e",
@@ -25360,13 +25367,6 @@
    "FX_EVENT_AT_SUM",
    "0ec4e86f0db2",
    "7d0dff4992f5",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.temporality.kind:instant~interval",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
-   "a0811f6dcf81",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -26141,6 +26141,13 @@
   ],
   [
    "field.transformation",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "df24d5af8eca",
+   "e97371b9ec7e",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "925b9aa9993e",
    "c909388e5ca6",
@@ -26445,13 +26452,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "c9d1af6e2281",
    "9213dbd80372",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "field.transformation",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "ad348a0eaf11",
-   "94095f1ffb3e",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -27562,6 +27562,13 @@
   ],
   [
    "field.transformation:interval~ratio",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "40ce41be684f",
+   "a78af6605b60",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "a97f7f1b09f6",
    "e51dc74248d1",
@@ -27782,13 +27789,6 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f6fecb5e0925",
    "93b163563fda",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:interval~ratio",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "7fa73e220e82",
-   "c4bde13b92de",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -28850,6 +28850,13 @@
   ],
   [
    "field.transformation:nominal~interval",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "581a9357f38a",
+   "bd90313d1035",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "ca0f8dab66da",
    "7927ac9ebe33",
@@ -29140,13 +29147,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
    "80dbc4ac963c",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~interval",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "42c2587f534c",
-   "509d403196ab",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -30313,6 +30313,13 @@
   ],
   [
    "field.transformation:nominal~ordinal",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "831b26181ab5",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "c164175cdd2b",
@@ -30603,13 +30610,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "5f29aa487961",
    "137e40c18af6",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ordinal",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
-   "20e074183602",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -31783,6 +31783,13 @@
   ],
   [
    "field.transformation:nominal~ratio",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "105259930e05",
+   "0cc88297b062",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "00f57c4a289b",
    "ed7160080c1f",
@@ -32073,13 +32080,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
    "f17e2d1e3716",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ratio",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "6b24da4a9156",
-   "8aab0deb3cdd",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -32756,6 +32756,13 @@
   ],
   [
    "field.transformation:ordinal~interval",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7ecbbdc8be75",
+   "38a75cd10413",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~interval",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "f1effc22c400",
    "9cde5a5e5ab5",
@@ -32885,13 +32892,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
    "d3854acf5e1f",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:ordinal~interval",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "fd12c309c2b8",
-   "c1b74d68c18d",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33673,6 +33673,13 @@
   ],
   [
    "field.transformation:ordinal~ratio",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "8a09ac5c8b83",
+   "69d83a7033c0",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "339e7b59cf00",
    "1cedab0a94be",
@@ -33942,13 +33949,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
    "1d00b7c9cc4e",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:ordinal~ratio",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "133493d0d9f2",
-   "3461b9dc8bf6",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -35101,6 +35101,13 @@
   ],
   [
    "field.whole.perRow",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -35404,13 +35411,6 @@
    "field.whole.perRow",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.whole.perRow",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -36893,6 +36893,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.from",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -37196,13 +37203,6 @@
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.from",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -38524,6 +38524,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -38827,13 +38834,6 @@
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.toGrain",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -40197,6 +40197,13 @@
   ],
   [
    "relation.derivedBy.bin.field",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -40500,13 +40507,6 @@
    "relation.derivedBy.bin.field",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.field",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -41744,6 +41744,13 @@
   ],
   [
    "relation.derivedBy.bin.from",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -42047,13 +42054,6 @@
    "relation.derivedBy.bin.from",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.from",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -43298,6 +43298,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeFrom",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -43601,13 +43608,6 @@
    "relation.derivedBy.graph.edgeFrom",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeFrom",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -44873,6 +44873,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeTo",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -45176,13 +45183,6 @@
    "relation.derivedBy.graph.edgeTo",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeTo",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -46448,6 +46448,13 @@
   ],
   [
    "relation.derivedBy.graph.from",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -46751,13 +46758,6 @@
    "relation.derivedBy.graph.from",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.from",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -48030,6 +48030,13 @@
   ],
   [
    "relation.derivedBy.graph.value",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -48333,13 +48340,6 @@
    "relation.derivedBy.graph.value",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.value",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -49878,6 +49878,13 @@
   ],
   [
    "relation.derivedBy.join.from",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -50181,13 +50188,6 @@
    "relation.derivedBy.join.from",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.from",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -51432,6 +51432,13 @@
   ],
   [
    "relation.derivedBy.join.with",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -51735,13 +51742,6 @@
    "relation.derivedBy.join.with",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.with",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -57438,6 +57438,13 @@
   ],
   [
    "relation.derivedBy.nest.from",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -57741,13 +57748,6 @@
    "relation.derivedBy.nest.from",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.from",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -59104,6 +59104,13 @@
   ],
   [
    "relation.derivedBy.nest.levels",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -59407,13 +59414,6 @@
    "relation.derivedBy.nest.levels",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.levels",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -60945,6 +60945,13 @@
   ],
   [
    "relation.derivedBy.normalize.field",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -61248,13 +61255,6 @@
    "relation.derivedBy.normalize.field",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.field",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -62478,6 +62478,13 @@
   ],
   [
    "relation.derivedBy.normalize.from",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -62781,13 +62788,6 @@
    "relation.derivedBy.normalize.from",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.from",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -64025,6 +64025,13 @@
   ],
   [
    "relation.derivedBy.project.from",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -64328,13 +64335,6 @@
    "relation.derivedBy.project.from",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.from",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -65565,6 +65565,13 @@
   ],
   [
    "relation.derivedBy.project.keep",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -65868,13 +65875,6 @@
    "relation.derivedBy.project.keep",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.keep",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -67147,6 +67147,13 @@
   ],
   [
    "relation.derivedBy.project.keep#order",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -67450,13 +67457,6 @@
    "relation.derivedBy.project.keep#order",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "relation.derivedBy.project.keep#order",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "only-legacy-coordinate"
   ],
@@ -68631,6 +68631,13 @@
   ],
   [
    "relation.grain",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "41037c2fcc39",
+   "daf3aff5004d",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "9cd9d00d3ae5",
    "5a664aa3b29c",
@@ -68935,13 +68942,6 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "80925a5f71a8",
    "a3e1362f56d3",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "relation.grain",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "5726d9f81b5a",
-   "532641ec50dd",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -70115,6 +70115,13 @@
   ],
   [
    "structure.peers[]",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -70418,13 +70425,6 @@
    "structure.peers[]",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "structure.peers[]",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "new-no-plan"
   ],
@@ -71711,6 +71711,13 @@
   ],
   [
    "structure.peers[]#order",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
    "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
    "2b76d0f7fc89",
    "-",
@@ -72014,13 +72021,6 @@
    "structure.peers[]#order",
    "FX_SURVEY_MEAN_SATISFACTION",
    "3f5664adb509",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "structure.peers[]#order",
-   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-   "8b0d62cd546d",
    "-",
    "only-legacy-coordinate"
   ],
