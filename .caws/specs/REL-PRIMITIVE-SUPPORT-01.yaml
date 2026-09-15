@@ -1,0 +1,32 @@
+id: REL-PRIMITIVE-SUPPORT-01
+title: 'One footprint-aware support classifier: a sibling facet destroyed in place is not primitive standing'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T22:10:20.454Z'
+updated_at: '2026-09-15T22:10:20.454Z'
+created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given primitive standing is conferred by coordinates.length === 1 while the audit classifies the same witness as subsumes-refinements and the ledger prose for along#present already denies primitive-axis standing; when one support classifier reads the footprint and separates collateral INSIDE the erased proposition (member refinements, carrier deletions -- subsumption correct) from a sibling reference-topology facet destroyed in place (nest.levels#incidence -> #order, along#present -> along#arity); then the sibling-facet class does not ratify, the refinement class still does, both the standing function and the audit consume the one classifier, the drift check is wired into the gate so the disagreement is inadmissible, a regression on the real case fails when the rule reverts to length === 1, and the analytical suite, every gate and every ledger agree'
+non_functional: {}
+contracts:
+  - name: 'witness-standing'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/erasure-audit.test.ts'
