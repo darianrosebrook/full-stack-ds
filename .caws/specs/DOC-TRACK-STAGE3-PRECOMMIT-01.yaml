@@ -2,9 +2,11 @@ id: DOC-TRACK-STAGE3-PRECOMMIT-01
 title: 'Record the stage-3 precommit on the durable surface'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'The stage-3 success condition and its four gameability closures moved from the untracked roadmap to the doctrine, and the snapshot reference now resolves inside the tracked tree.'
 created_at: '2026-09-15T04:36:30.868Z'
-updated_at: '2026-09-15T04:36:35.639Z'
+updated_at: '2026-09-15T04:38:06.136Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
