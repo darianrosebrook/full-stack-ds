@@ -140,7 +140,6 @@
       "relation.derivedBy.graph.requiresConservation",
       "relation.derivedBy.graph.value#incidence",
       "relation.derivedBy.graph.value#present",
-      "relation.derivedBy.join.cardinality",
       "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
@@ -149,7 +148,6 @@
       "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
       "relation.derivedBy.join.from#incidence",
       "relation.derivedBy.join.with#incidence",
-      "relation.derivedBy.kind",
       "relation.derivedBy.kind:aggregate-to-grain~bin",
       "relation.derivedBy.kind:aggregate-to-grain~graph",
       "relation.derivedBy.kind:aggregate-to-grain~join",
@@ -198,7 +196,10 @@
       "relation.derivedBy.bin.closure:left-closed~<absent>",
       "relation.derivedBy.kind:bin~normalize"
     ],
-    "required-derived-vocabulary": [],
+    "required-derived-vocabulary": [
+      "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.kind"
+    ],
     "representation-artifact": [
       "field.additivity.kind:additive~<absent>",
       "field.additivity.kind:non-additive~<absent>",

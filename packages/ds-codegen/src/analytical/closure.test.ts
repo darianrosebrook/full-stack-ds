@@ -52,6 +52,7 @@ import { findingId, loadReceipts } from "./stimulus.js";
 import type { StimulusPrediction } from "./stimulus.js";
 import { checkWitness, classifyWitness, loadCodomainAdjudications, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
 import { canonical } from "./quotient.js";
+import { basesForSpec } from "./subtraction.js";
 
 const census = loadCensus();
 const oracle = loadOracle();
@@ -143,7 +144,12 @@ describe("the committed closure ledger", () => {
     expect(derivation.filter((d) => d.coordinate.endsWith("#present"))).toEqual([]);
     const cardinality = derivation.filter((d) => d.coordinate.startsWith("relation.derivedBy.join.cardinality"));
     expect(cardinality).toHaveLength(7);
-    expect(derivation.every((d) => d.standing.state === "unresolved")).toBe(true);
+    // Standing here tracks the SUBTRACTION's verdicts and nothing else: the cardinality leaf is
+    // settled because REL-OPERATOR-LEAF-FACTORING-01 retained it as required derived vocabulary,
+    // and the other twenty are unresolved. None is primitive -- which is the standing the closure
+    // form is forbidden to confer.
+    expect(derivation.filter((d) => d.standing.state !== "unresolved").map((d) => d.coordinate)).toEqual(["relation.derivedBy.join.cardinality"]);
+    expect(derivation.filter((d) => d.standing.state === "primitive")).toEqual([]);
   });
 
   it("has no dependency cycle, so no carrier's normalization depends back on it", () => {
@@ -169,15 +175,24 @@ describe("adopting the closure form confers no standing", () => {
     for (const c of ledger.closures) expect(primitive.has(c.carrier), `${c.carrier} must not be ratified by a closure`).toBe(false);
   });
 
-  it("no coordinate gains standing by appearing in a closure, and one that already had it is reported", () => {
-    // The derivation footprints are all unresolved. The additivity footprint is
-    // not: `nonAdditiveAlong#incidence` is PRIMITIVELY ratified, which is the
-    // fact the handle model hid — under the handle the dependency looked merely
-    // unadjudicated, and obligation 8 would have read as "not yet" rather than
-    // as the composite-constructor finding it actually is.
+  it("no coordinate gains standing by appearing in a closure: standing tracks the subtraction's verdicts and nothing else", () => {
+    // The derivation footprints are unresolved except one. That one is settled by the SUBTRACTION
+    // (`relation.derivedBy.join.cardinality`, retained as required derived vocabulary by
+    // REL-OPERATOR-LEAF-FACTORING-01), not by the closure that depends on it -- which is what this
+    // asserts: standing agrees with the basis verdicts for every dependency, and none is primitive.
+    // The additivity footprint is the other kind of decided: `nonAdditiveAlong#incidence` is
+    // PRIMITIVELY ratified, which is the fact the handle model hid -- under the handle the
+    // dependency looked merely unadjudicated, and obligation 8 would have read as "not yet"
+    // rather than as the composite-constructor finding it actually is.
+    const recorded = new Map<string, string>();
+    for (const { ledger: l } of basesForSpec("REL-VIEW-ALGEBRA-01")) {
+      for (const id of l.basis.candidates) recorded.set(id, l.verdicts[id]?.disposition ?? "unresolved");
+    }
     const r = checkClosures();
     for (const { coordinate, standing: s } of r.dependencies.filter((d) => d.coordinate.startsWith("relation.derivedBy."))) {
-      expect(s.state, `${coordinate} must not gain standing by appearing in a closure`).toBe("unresolved");
+      const verdict = recorded.get(coordinate) ?? "unresolved";
+      if (verdict === "unresolved") expect(s.state, `${coordinate} must not gain standing by appearing in a closure`).toBe("unresolved");
+      else expect(s, `${coordinate} must read its own basis verdict, not the closure`).toEqual({ state: "resolved", disposition: verdict });
     }
     const primitiveDeps = r.dependencies.filter((d) => d.standing.state === "primitive");
     expect(primitiveDeps.map((d) => d.coordinate)).toEqual(["field.additivity.semi-additive.nonAdditiveAlong#incidence"]);
@@ -850,7 +865,9 @@ describe("the consistency check and the terminal gate are different questions", 
     const g = closureGate(r);
     expect(g.ok).toBe(false);
     expect(g.message).toContain("22 of 22 carrier(s) still provisional");
-    expect(g.message).toContain("24 dependency coordinate(s) without a settled standing");
+    // 23, not 24: `relation.derivedBy.join.cardinality` is one of the footprint dependencies, and
+    // the subtraction now records a `required-derived-vocabulary` verdict for it, so it is settled.
+    expect(g.message).toContain("23 dependency coordinate(s) without a settled standing");
   });
 
   it("gate passes only when every carrier holds and every dependency is settled", () => {
