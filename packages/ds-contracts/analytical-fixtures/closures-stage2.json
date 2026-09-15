@@ -195,8 +195,7 @@
           "operation": "forget-branch-field",
           "footprint": [
             "relation.derivedBy.project.keep#arity",
-            "relation.derivedBy.project.keep#incidence",
-            "relation.derivedBy.project.keep#order"
+            "relation.derivedBy.project.keep#incidence"
           ]
         }
       ],
@@ -208,8 +207,7 @@
         "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
         "relation.derivedBy.aggregate-to-grain.toGrain#order",
         "relation.derivedBy.project.keep#arity",
-        "relation.derivedBy.project.keep#incidence",
-        "relation.derivedBy.project.keep#order"
+        "relation.derivedBy.project.keep#incidence"
       ],
       "minRawEdit": 3,
       "promotion": "provisional",
@@ -487,8 +485,7 @@
           "operation": "forget-branch-field",
           "footprint": [
             "relation.derivedBy.project.keep#arity",
-            "relation.derivedBy.project.keep#incidence",
-            "relation.derivedBy.project.keep#order"
+            "relation.derivedBy.project.keep#incidence"
           ]
         }
       ],
@@ -505,8 +502,7 @@
         "relation.derivedBy.join.cardinality:one-to-one~one-to-many",
         "relation.derivedBy.join.with#incidence",
         "relation.derivedBy.project.keep#arity",
-        "relation.derivedBy.project.keep#incidence",
-        "relation.derivedBy.project.keep#order"
+        "relation.derivedBy.project.keep#incidence"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -668,8 +664,7 @@
           "operation": "forget-branch-field",
           "footprint": [
             "relation.derivedBy.project.keep#arity",
-            "relation.derivedBy.project.keep#incidence",
-            "relation.derivedBy.project.keep#order"
+            "relation.derivedBy.project.keep#incidence"
           ]
         }
       ],
@@ -681,8 +676,7 @@
         "relation.derivedBy.nest.levels#incidence",
         "relation.derivedBy.nest.levels#order",
         "relation.derivedBy.project.keep#arity",
-        "relation.derivedBy.project.keep#incidence",
-        "relation.derivedBy.project.keep#order"
+        "relation.derivedBy.project.keep#incidence"
       ],
       "minRawEdit": 3,
       "promotion": "provisional"
@@ -752,8 +746,7 @@
           "operation": "forget-branch-field",
           "footprint": [
             "relation.derivedBy.project.keep#arity",
-            "relation.derivedBy.project.keep#incidence",
-            "relation.derivedBy.project.keep#order"
+            "relation.derivedBy.project.keep#incidence"
           ]
         }
       ],
@@ -763,8 +756,7 @@
       "dependencies": [
         "relation.derivedBy.bin.field#incidence",
         "relation.derivedBy.project.keep#arity",
-        "relation.derivedBy.project.keep#incidence",
-        "relation.derivedBy.project.keep#order"
+        "relation.derivedBy.project.keep#incidence"
       ],
       "minRawEdit": 3,
       "promotion": "provisional",
@@ -854,8 +846,7 @@
           "operation": "forget-branch-field",
           "footprint": [
             "relation.derivedBy.project.keep#arity",
-            "relation.derivedBy.project.keep#incidence",
-            "relation.derivedBy.project.keep#order"
+            "relation.derivedBy.project.keep#incidence"
           ]
         }
       ],
@@ -865,8 +856,7 @@
       "dependencies": [
         "relation.derivedBy.normalize.field#incidence",
         "relation.derivedBy.project.keep#arity",
-        "relation.derivedBy.project.keep#incidence",
-        "relation.derivedBy.project.keep#order"
+        "relation.derivedBy.project.keep#incidence"
       ],
       "minRawEdit": 3,
       "promotion": "provisional",
@@ -963,8 +953,7 @@
           "operation": "forget-branch-field",
           "footprint": [
             "relation.derivedBy.project.keep#arity",
-            "relation.derivedBy.project.keep#incidence",
-            "relation.derivedBy.project.keep#order"
+            "relation.derivedBy.project.keep#incidence"
           ]
         }
       ],
@@ -975,8 +964,7 @@
         "relation.derivedBy.graph.edgeFrom#incidence",
         "relation.derivedBy.graph.edgeTo#incidence",
         "relation.derivedBy.project.keep#arity",
-        "relation.derivedBy.project.keep#incidence",
-        "relation.derivedBy.project.keep#order"
+        "relation.derivedBy.project.keep#incidence"
       ],
       "minRawEdit": 4,
       "promotion": "provisional"
@@ -991,8 +979,7 @@
           "operation": "forget-branch-field",
           "footprint": [
             "field.additivity.semi-additive.nonAdditiveAlong#arity",
-            "field.additivity.semi-additive.nonAdditiveAlong#incidence",
-            "field.additivity.semi-additive.nonAdditiveAlong#order"
+            "field.additivity.semi-additive.nonAdditiveAlong#incidence"
           ]
         }
       ],
@@ -1001,8 +988,7 @@
       },
       "dependencies": [
         "field.additivity.semi-additive.nonAdditiveAlong#arity",
-        "field.additivity.semi-additive.nonAdditiveAlong#incidence",
-        "field.additivity.semi-additive.nonAdditiveAlong#order"
+        "field.additivity.semi-additive.nonAdditiveAlong#incidence"
       ],
       "minRawEdit": 2,
       "promotion": "provisional",
@@ -1038,8 +1024,7 @@
           "operation": "forget-branch-field",
           "footprint": [
             "field.additivity.semi-additive.nonAdditiveAlong#arity",
-            "field.additivity.semi-additive.nonAdditiveAlong#incidence",
-            "field.additivity.semi-additive.nonAdditiveAlong#order"
+            "field.additivity.semi-additive.nonAdditiveAlong#incidence"
           ]
         }
       ],
@@ -1048,8 +1033,7 @@
       },
       "dependencies": [
         "field.additivity.semi-additive.nonAdditiveAlong#arity",
-        "field.additivity.semi-additive.nonAdditiveAlong#incidence",
-        "field.additivity.semi-additive.nonAdditiveAlong#order"
+        "field.additivity.semi-additive.nonAdditiveAlong#incidence"
       ],
       "minRawEdit": 2,
       "promotion": "provisional",
@@ -1080,9 +1064,9 @@
     }
   ],
   "authority": {
-    "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
-    "erasureAuthorityDigest": "0b59717c7b3ae6e44de15915ac4010220f4ac149c03168288d1df5289f93358f",
-    "witnessAuthorityDigest": "c88876233a368c59969f4ec7907399e8ad7f4bdfb99590048a4bc2e9e13461b0",
+    "coordinateBasisDigest": "50298ce5fc9caff620957976c5dc5aee61ac3f6a3502ee0d7484bc3e4212e936",
+    "erasureAuthorityDigest": "dc31f8efb88abf5945530e0fef52227c417d5084a52fce7b330d8d68b31b478e",
+    "witnessAuthorityDigest": "7afed991414a3c33e3df344c2a9767922c036a48a0184dcd67ddc8704b9963ed",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   }

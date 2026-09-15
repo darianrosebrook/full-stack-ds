@@ -244,13 +244,17 @@ describe("containment is structural, never a string prefix", () => {
     expect(f).toContain("relation.derivedBy.kind");
     expect(f).toContain("relation.derivedBy.join.cardinality");
     expect(f).toContain("relation.derivedBy.graph.edgeTo#incidence");
-    expect(f.length).toBe(58);
+    expect(f.length).toBe(57);
   });
 
   it("gives incidence the order at its own slot, and not the reverse", () => {
-    expect(claimed.get("assertion.aggregate.along#incidence")).toContain("assertion.aggregate.along#order");
-    expect(claimed.get("assertion.aggregate.along#order")).toEqual(["assertion.aggregate.along#order"]);
-    expect(claimed.get("assertion.aggregate.along#arity")).toEqual(["assertion.aggregate.along#arity"]);
+    // `along` used to be the example. It is a declared SET now, so it has no order
+    // facet to be inside anything; `nest.levels` is an ORDERED list and carries the
+    // same containment, which is a fact about the two erasures and not about the
+    // list they are performed on.
+    expect(claimed.get("relation.derivedBy.nest.levels#incidence")).toContain("relation.derivedBy.nest.levels#order");
+    expect(claimed.get("relation.derivedBy.nest.levels#order")).toEqual(["relation.derivedBy.nest.levels#order"]);
+    expect(claimed.get("relation.derivedBy.nest.levels#arity")).toEqual(["relation.derivedBy.nest.levels#arity"]);
   });
 });
 
@@ -283,9 +287,12 @@ describe("the witness audit", () => {
     expect(live.witnesses.filter((w) => w.outside.length > 0).map((w) => w.witness)).toEqual(["field.temporality#present"]);
   });
 
-  it("still records the fourteen, because 'declares one, destroys seven' is a weaker claim than primitive", () => {
+  it("still records the twelve, because 'declares one, destroys seven' is a weaker claim than primitive", () => {
+    // Twelve, not fourteen: `assertion.aggregate.along#incidence` and
+    // `field.additivity.semi-additive.nonAdditiveAlong#incidence` lose their
+    // `#order` neighbours when those lists are declared sets, so their declared
+    // set no longer swallows a refinement and they classify as atomic.
     expect(byVerdict("subsumes-refinements").map((w) => w.witness).sort()).toEqual([
-      "assertion.aggregate.along#incidence",
       "assertion.aggregate.along#present",
       "assertion.aggregate.nulls",
       "assertion.aggregate.nulls",
@@ -294,7 +301,6 @@ describe("the witness audit", () => {
       "assertion.kind:aggregate~ratio-comparison + assertion.aggregate.op",
       "evidence.grainWitness#present",
       "field.additivity.kind",
-      "field.additivity.semi-additive.nonAdditiveAlong#incidence",
       "field.temporality.grain",
       "field.transformation",
       "observation.null",
@@ -325,8 +331,8 @@ describe("the witness audit", () => {
     for (const id of two.declared) expect(ledgeredCoordinates.has(id), `${id} is named by a lapsed witness that no adjudication covers`).toBe(true);
   });
 
-  it("leaves the remaining forty-two atomic, so the correction is bounded", () => {
-    expect(byVerdict("atomic").length).toBe(42);
+  it("leaves the remaining forty-four atomic, so the correction is bounded", () => {
+    expect(byVerdict("atomic").length).toBe(44);
     for (const w of byVerdict("atomic")) {
       expect(w.declared.length).toBe(1);
       expect(w.actual).toEqual(w.declared);
@@ -391,7 +397,7 @@ describe("the terminal invariant is measured over the population the report name
       };
       // A scope admitting it saw fewer than the population it names.
       expect(bend((x) => { x.scopes.quotientLanguageInvalid.specimens = 112; }), `${side}: wrong scope count`).toEqual([
-        expect.stringContaining("measured over 112 of 213 specimens"),
+        expect.stringContaining("measured over 112 of 208 specimens"),
       ]);
       // No named population at all: coverage could only be compared by count.
       expect(bend((x) => { delete (x.specimens as unknown as Record<string, unknown>).populationDigest; }), `${side}: no named population`).toEqual([
@@ -795,24 +801,24 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
       byId.set(f.id, set);
     }
     const shared = [...byId].filter(([, cs]) => cs.size > 1);
-    expect(s.fixtures.length).toBe(213);
+    expect(s.fixtures.length).toBe(208);
     expect(byId.size).toBe(107);
     expect(shared.length).toBe(26);
     // Not one of them is a benign repeat: every shared id carries two or more DIFFERENT fixtures.
     expect(shared.every(([, cs]) => cs.size > 1)).toBe(true);
-    expect(Math.max(...shared.map(([, cs]) => cs.size))).toBe(31);
+    expect(Math.max(...shared.map(([, cs]) => cs.size))).toBe(30);
     expect(shared.map(([id]) => id)).toContain("FX_SURVEY_MEAN_SATISFACTION");
   });
 
-  it("and an id-resolving sweep claims 175 bound specimens where content says 79", () => {
+  it("and an id-resolving sweep claims 170 bound specimens where content says 79", () => {
     const s = specimens();
     const oracle = loadOracle();
-    expect(s.fixtures.filter((f) => hasOutcome(f, oracle)).length).toBe(175);
+    expect(s.fixtures.filter((f) => hasOutcome(f, oracle)).length).toBe(170);
     expect(s.fixtures.filter((f) => contentMatches(f, oracle)).length).toBe(90);
     expect(s.fixtures.filter((f) => isBound(f, oracle)).length).toBe(79);
-    // The difference is the mis-attribution: 96 specimens have an outcome BY ID that is not
+    // The difference is the mis-attribution: 91 specimens have an outcome BY ID that is not
     // about their content, and a witnessability sweep counts those as discriminating pairs.
-    expect(s.fixtures.filter((f) => hasOutcome(f, oracle) && !contentMatches(f, oracle)).length).toBe(96);
+    expect(s.fixtures.filter((f) => hasOutcome(f, oracle) && !contentMatches(f, oracle)).length).toBe(91);
   });
 
   it("reduces the discriminating set to ONE, and that one is not a witness for presence either", () => {
@@ -820,7 +826,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     // the corrected reading rather than a narrower window. The id-resolving version reported two.
     const doc = loadSubtraction();
     const unresolved = doc.basis.candidates.filter((id) => (doc.verdicts[id]?.disposition ?? "unresolved") === "unresolved");
-    expect(unresolved.length).toBe(77);
+    expect(unresolved.length).toBe(72);
 
     const s = specimens();
     const oracle = loadOracle();

@@ -351,7 +351,8 @@
       "disposition": "unresolved"
     },
     "assertion.aggregate.along#order": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REPRESENTATION ARTIFACT. The two places `along` is consulted are membership tests — `along.some((d) => blocked.includes(d))` against the measure's non-additive dimensions, and `along.includes(wholeField)` against the field a proportion is taken of. No rule reads the position of a dimension in the list. The emitted schema could not say whether this name list is a SET or a SEQUENCE — a JSON array is the only way the model spells a collection — so the census emitted an `#order` facet for a collection no rule reads positionally. The declaration now carries `x-fsds-sequence` and the walk emits an order facet only where it says `ordered`, so the coordinate has left the kernel and this disposition records the reason rather than performing the removal. NON-CLAIM: this is a verdict on the ENCODING, not on the collection — every name the list carries is still carried, and its `#arity` and `#incidence` coordinates remain and are adjudicated on their own merits."
     },
     "assertion.aggregate.along#present": {
       "disposition": "witnessed",
@@ -387,7 +388,8 @@
       "disposition": "unresolved"
     },
     "evidence.grainWitness#order": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REPRESENTATION ARTIFACT. The witness is consumed by one call — `hasDuplicates(ctx.rows, witness)` — a duplicate check over a SET of columns that decides whether an undeclared-grain relation fans out. The order of the columns it names is read nowhere. The emitted schema could not say whether this name list is a SET or a SEQUENCE — a JSON array is the only way the model spells a collection — so the census emitted an `#order` facet for a collection no rule reads positionally. The declaration now carries `x-fsds-sequence` and the walk emits an order facet only where it says `ordered`, so the coordinate has left the kernel and this disposition records the reason rather than performing the removal. NON-CLAIM: this is a verdict on the ENCODING, not on the collection — every name the list carries is still carried, and its `#arity` and `#incidence` coordinates remain and are adjudicated on their own merits."
     },
     "field.additivity.kind:additive~<absent>": {
       "disposition": "representation-artifact",
@@ -419,7 +421,8 @@
       "disposition": "unresolved"
     },
     "field.additivity.semi-additive.nonAdditiveAlong#order": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REPRESENTATION ARTIFACT. `nonAdditiveAlong` is the BLOCKED set: the additivity engine asks whether the assertion's `along` meets it (`along.some((d) => blocked.includes(d))`), a membership test. The order of the dimensions a measure is non-additive along is read nowhere. The emitted schema could not say whether this name list is a SET or a SEQUENCE — a JSON array is the only way the model spells a collection — so the census emitted an `#order` facet for a collection no rule reads positionally. The declaration now carries `x-fsds-sequence` and the walk emits an order facet only where it says `ordered`, so the coordinate has left the kernel and this disposition records the reason rather than performing the removal. NON-CLAIM: this is a verdict on the ENCODING, not on the collection — every name the list carries is still carried, and its `#arity` and `#incidence` coordinates remain and are adjudicated on their own merits."
     },
     "field.temporality.grain": {
       "disposition": "witnessed",
@@ -722,7 +725,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.project.keep#order": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REPRESENTATION ARTIFACT, and the one the corpus could MEASURE. The projection law compares `sameSet(fieldNames(out), d.keep)` — a set comparison — and the retention and invention clauses filter `d.keep`; nothing reads position. Permuting `keep` at its own slot over the four committed instances long enough to permute changes no judgment on any of them, so `#order` measured the encoding. By contrast the same probe moves the judgment for `nest.levels` and `toGrain`, which is why those two keep their facet. The emitted schema could not say whether this name list is a SET or a SEQUENCE — a JSON array is the only way the model spells a collection — so the census emitted an `#order` facet for a collection no rule reads positionally. The declaration now carries `x-fsds-sequence` and the walk emits an order facet only where it says `ordered`, so the coordinate has left the kernel and this disposition records the reason rather than performing the removal. NON-CLAIM: this is a verdict on the ENCODING, not on the collection — every name the list carries is still carried, and its `#arity` and `#incidence` coordinates remain and are adjudicated on their own merits."
     },
     "relation.derivedBy.project.keep#present": {
       "disposition": "representation-artifact",
@@ -738,7 +742,8 @@
       "disposition": "unresolved"
     },
     "structure.peers[]#order": {
-      "disposition": "unresolved"
+      "disposition": "representation-artifact",
+      "reason": "REPRESENTATION ARTIFACT, and measured the same way. `peerFindings` sorts the members for its subject (`[...members].sort().join('+')`), filters them for existence, maps them to their declarations and accumulates their grains and target grains into Sets; no clause reads the order of a peer set. Permuting the members over the four committed instances long enough to permute changes no judgment. The emitted schema could not say whether this name list is a SET or a SEQUENCE — a JSON array is the only way the model spells a collection — so the census emitted an `#order` facet for a collection no rule reads positionally. The declaration now carries `x-fsds-sequence` and the walk emits an order facet only where it says `ordered`, so the coordinate has left the kernel and this disposition records the reason rather than performing the removal. NON-CLAIM: this is a verdict on the ENCODING, not on the collection — every name the list carries is still carried, and its `#arity` and `#incidence` coordinates remain and are adjudicated on their own merits."
     },
     "structure.peers[]#present": {
       "disposition": "unresolved"

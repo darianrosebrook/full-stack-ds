@@ -32,7 +32,8 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/name"
-              }
+              },
+              "x-fsds-sequence": "set"
             },
             "nulls": {
               "type": "string",

@@ -4,9 +4,9 @@
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766"
   },
   "authority": {
-    "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
-    "erasureAuthorityDigest": "0b59717c7b3ae6e44de15915ac4010220f4ac149c03168288d1df5289f93358f",
-    "witnessAuthorityDigest": "c88876233a368c59969f4ec7907399e8ad7f4bdfb99590048a4bc2e9e13461b0",
+    "coordinateBasisDigest": "50298ce5fc9caff620957976c5dc5aee61ac3f6a3502ee0d7484bc3e4212e936",
+    "erasureAuthorityDigest": "dc31f8efb88abf5945530e0fef52227c417d5084a52fce7b330d8d68b31b478e",
+    "witnessAuthorityDigest": "7afed991414a3c33e3df344c2a9767922c036a48a0184dcd67ddc8704b9963ed",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
@@ -99,7 +99,6 @@
   "verdicts": {
     "unresolved": [
       "assertion.aggregate.along#arity",
-      "assertion.aggregate.along#order",
       "assertion.aggregate.nulls:as-observed~<absent>",
       "assertion.aggregate.nulls:as-zero~<absent>",
       "assertion.aggregate.relation#incidence",
@@ -109,7 +108,6 @@
       "assertion.ratio-comparison.relation#incidence",
       "evidence.grainWitness#arity",
       "evidence.grainWitness#incidence",
-      "evidence.grainWitness#order",
       "evidence.rows.*#present",
       "field.additivity#present",
       "field.additivity.kind:additive~semi-additive",
@@ -117,7 +115,6 @@
       "field.additivity.kind:semi-additive~non-additive",
       "field.additivity.kind:semi-additive~ratio-measure",
       "field.additivity.semi-additive.nonAdditiveAlong#arity",
-      "field.additivity.semi-additive.nonAdditiveAlong#order",
       "field.temporality.grain:day~<absent>",
       "field.temporality.grain:month~<absent>",
       "observation.null:absent~<absent>",
@@ -175,11 +172,9 @@
       "relation.derivedBy.project.from#incidence",
       "relation.derivedBy.project.keep#arity",
       "relation.derivedBy.project.keep#incidence",
-      "relation.derivedBy.project.keep#order",
       "structure.peers#present",
       "structure.peers[]#arity",
       "structure.peers[]#incidence",
-      "structure.peers[]#order",
       "structure.peers[]#present"
     ],
     "witnessed": [
@@ -201,10 +196,13 @@
       "relation.derivedBy.kind"
     ],
     "representation-artifact": [
+      "assertion.aggregate.along#order",
+      "evidence.grainWitness#order",
       "field.additivity.kind:additive~<absent>",
       "field.additivity.kind:non-additive~<absent>",
       "field.additivity.kind:ratio-measure~<absent>",
       "field.additivity.kind:semi-additive~<absent>",
+      "field.additivity.semi-additive.nonAdditiveAlong#order",
       "field.additivity.semi-additive.nonAdditiveAlong#present",
       "field.temporality.kind:instant~<absent>",
       "field.temporality.kind:interval~<absent>",
@@ -229,7 +227,9 @@
       "relation.derivedBy.normalize.field#present",
       "relation.derivedBy.normalize.from#present",
       "relation.derivedBy.project.from#present",
-      "relation.derivedBy.project.keep#present"
+      "relation.derivedBy.project.keep#order",
+      "relation.derivedBy.project.keep#present",
+      "structure.peers[]#order"
     ],
     "not-yet-admitted": []
   },
@@ -375,10 +375,6 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "field.additivity.semi-additive.nonAdditiveAlong#arity": {
-      "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
-    },
-    "field.additivity.semi-additive.nonAdditiveAlong#order": {
       "reach": 0,
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
@@ -642,10 +638,6 @@
       "reach": 4,
       "digest": "f99da0f539c7e66982579ae42f77b7987977c125095cb991e0e0df76f0fb858f"
     },
-    "relation.derivedBy.project.keep#order": {
-      "reach": 4,
-      "digest": "ad2dcaf322b6d2e0399bdcdcfc9aa17665f279d4341c780c555bfe50a4cd4f28"
-    },
     "relation.derivedBy.project.keep#incidence": {
       "reach": 4,
       "digest": "41c422ab83d7e4ab80e0e94dbcc134d85885399a4c303afd671ee20d1b46aaf0"
@@ -703,10 +695,6 @@
       "digest": "7f5e8e48f4f026ed22d241fd735e604f908d57cfdc43eb2a49823cec145db4fe"
     },
     "structure.peers[]#arity": {
-      "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
-    },
-    "structure.peers[]#order": {
       "reach": 0,
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
@@ -777,10 +765,6 @@
     "assertion.aggregate.along#arity": {
       "reach": 1,
       "digest": "97c2b817223d046539ddc834bef2fc46764fafbb467718fc53fdec6595a27f0f"
-    },
-    "assertion.aggregate.along#order": {
-      "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "assertion.aggregate.along#incidence": {
       "reach": 6,
@@ -886,10 +870,6 @@
       "reach": 0,
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
-    "evidence.grainWitness#order": {
-      "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
-    },
     "evidence.grainWitness#incidence": {
       "reach": 3,
       "digest": "8480529aa7d9acd895107f26caee42523671fa63165896e875ae0a68161fca91"
@@ -897,22 +877,17 @@
   },
   "adjudicated": {},
   "supersedes": {
-    "erasureAuthorityDigest": null,
+    "erasureAuthorityDigest": "0b59717c7b3ae6e44de15915ac4010220f4ac149c03168288d1df5289f93358f",
     "divergences": [
       {
-        "operation": "forget-reference-arity",
-        "coordinates": 2,
-        "effect": "Arity truncates to the declaration's own minItems rather than to one element. The short side of the old pair was schema-invalid wherever the floor exceeded one. Corpus reach falls to zero because every corpus occurrence of these two lists is already AT its floor — a fact about the corpus, not about the coordinate, and the synthesized separating pairs do exercise it."
+        "operation": "census",
+        "coordinates": 5,
+        "effect": "Five order facets left the census — the ones whose list declarations now say `set` — and nothing else entered or left it. `final-quotient` checks that each removal is a factorization the census performs, and the third form (`declared-set-order`) was added there for this rule."
       },
       {
-        "operation": "forget-value",
-        "coordinates": 8,
-        "effect": "A required leaf becomes a typed hole instead of being deleted. Reach is unchanged — the same fixtures are touched — and the erased representation differs at every one, because the slot now exists and says `forgotten` where it used to be absent. Deleting it produced images the representation cannot express, and identified `forgotten` with `absent`, which are different facts."
-      },
-      {
-        "operation": "merge-enum-members",
-        "coordinates": 52,
-        "effect": "A merge now writes a member CLASS at every occurrence of either member, and saturates: merging a~b and b~c leaves all three in one class. The old rewrite of `from` to `into` touched only the fixtures carrying `from`, which is why reach was small and why two merges of overlapping pairs did not compose. Reach grows to every fixture carrying any member of the saturated class."
+        "operation": "verdict",
+        "coordinates": 5,
+        "effect": "The same five coordinates were adjudicated `representation-artifact` as they left, so their verdicts moved off `unresolved`. No surviving coordinate's verdict changed, and the subtraction reports 72 of 118 unadjudicated rather than 77."
       }
     ]
   }

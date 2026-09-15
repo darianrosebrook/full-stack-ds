@@ -44,11 +44,8 @@ const live = computeFreeze({}, frozen.fixtures);
  * produced images the representation cannot express.
  */
 const CORPUS_DEAD = [
-  "assertion.aggregate.along#order",
   "evidence.grainWitness#arity",
-  "evidence.grainWitness#order",
   "field.additivity.semi-additive.nonAdditiveAlong#arity",
-  "field.additivity.semi-additive.nonAdditiveAlong#order",
   "relation.derivedBy.aggregate-to-grain.toGrain#arity",
   "relation.derivedBy.aggregate-to-grain.toGrain#order",
   "relation.derivedBy.bin.closure:right-closed~<absent>",
@@ -58,7 +55,6 @@ const CORPUS_DEAD = [
   "relation.derivedBy.nest.levels#arity",
   "relation.derivedBy.nest.levels#order",
   "structure.peers[]#arity",
-  "structure.peers[]#order",
 ];
 
 describe("stage-2 erasure freeze", () => {
@@ -70,12 +66,12 @@ describe("stage-2 erasure freeze", () => {
     expect(r.ok).toBe(true);
   });
 
-  it("freezes the population the erasure-plan refactor must not move: 12 witnessed / 2 required-derived-vocabulary / 29 representation-artifact / 83 unresolved", () => {
+  it("freezes the population the erasure-plan refactor must not move: 12 witnessed / 2 required-derived-vocabulary / 34 representation-artifact / 78 unresolved", () => {
     expect(Object.fromEntries(Object.entries(frozen.verdicts).map(([d, ids]) => [d, ids.length]))).toEqual({
-      unresolved: 83,
+      unresolved: 78,
       witnessed: 12,
       "required-derived-vocabulary": 2,
-      "representation-artifact": 29,
+      "representation-artifact": 34,
       "not-yet-admitted": 0,
     });
   });
@@ -297,11 +293,11 @@ describe("stage-2 erasure freeze", () => {
     // statement is indistinguishable from a re-record that absorbed a defect.
     const s = frozen.supersedes;
     expect(s, "the record was re-taken under a new erasure authority and says nothing about it").toBeDefined();
-    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual([
-      "forget-reference-arity=2",
-      "forget-value=8",
-      "merge-enum-members=52",
-    ]);
+    // This record supersedes the SEQUENCE DECLARATION: five order facets left
+    // the census because their list declarations now say `set`, and each was
+    // adjudicated as it left. Both classes are consequences of that one cause,
+    // and each carries its own authored effect below.
+    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["census=5", "verdict=5"]);
     for (const d of s!.divergences) expect(d.effect.length, `${d.operation} is superseded with no authored effect`).toBeGreaterThan(120);
   });
 

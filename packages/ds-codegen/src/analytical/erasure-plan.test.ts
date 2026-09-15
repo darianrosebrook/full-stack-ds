@@ -750,15 +750,24 @@ describe("composition — derived ordering and confluence over the bound registr
   });
 
   it("arity against order on one list is the DECLARED non-commuting pair: two images, refused, with its reason on record", () => {
-    const [arity, order] = ["relation.derivedBy.project.keep#arity", "relation.derivedBy.project.keep#order"].map((id) => planFor(byId.get(id)!)!);
-    expect(distinctListingImages(fx("FX_PROJECT_DROPS_NEST_LEVEL"), [arity, order])).toHaveLength(2);
+    const [arity, order] = ["relation.derivedBy.nest.levels#arity", "relation.derivedBy.nest.levels#order"].map((id) => planFor(byId.get(id)!)!);
+    // `project.keep` used to be the example; it is a declared SET now, so it has no
+    // order plan. `nest.levels` keeps its facet and needs a THREE-element list to
+    // show the disagreement, which no committed fixture has -- cut-then-sort keeps
+    // the first two and sorts them, sort-then-cut sorts first and cuts a different
+    // pair. The stimuli are built here rather than read from the corpus because the
+    // claim is about the two KINDS on one slot, not about these names.
+    const base = fx("FX_N_NESTED_SUBTOTAL_AT_PREFIX");
+    const three = JSON.parse(JSON.stringify(base)) as Fixture;
+    (three.structure.relations.hierarchy as { derivedBy: { levels: string[] } }).derivedBy.levels = ["state", "country", "revenue"];
+    expect(distinctListingImages(three, [arity, order])).toHaveLength(2);
     expect(declaredNonCommuting(arity, order)).toMatch(/not composable/);
     expect(declaredNonCommuting(order, arity)).toBe(declaredNonCommuting(arity, order));
     // The declaration is about KINDS on ONE slot: the same kinds on different lists are
     // not a declared pair, and other kinds on the same list are not either.
-    const otherOrder = planFor(byId.get("relation.derivedBy.nest.levels#order")!)!;
+    const otherOrder = planFor(byId.get("relation.derivedBy.aggregate-to-grain.toGrain#order")!)!;
     expect(declaredNonCommuting(arity, otherOrder)).toBeUndefined();
-    const sameListIncidence = planFor(byId.get("relation.derivedBy.project.keep#incidence")!)!;
+    const sameListIncidence = planFor(byId.get("relation.derivedBy.nest.levels#incidence")!)!;
     expect(declaredNonCommuting(arity, sameListIncidence)).toBeUndefined();
   });
 

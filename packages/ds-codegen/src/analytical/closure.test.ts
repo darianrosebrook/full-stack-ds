@@ -130,15 +130,17 @@ describe("the committed closure ledger", () => {
   });
 
   it("reports what the operations DESTROY, not the handles that implement them", () => {
-    // The handle model said nine coordinates. Forgetting `toGrain` costs four —
+    // The handle model said nine coordinates. Forgetting `toGrain` costs three —
     // the reference's arity, order and incidence go with it — and forgetting
     // `join.cardinality` costs seven, since every cardinality member pair is
     // inside the field. Naming the dependency after the eraser under-reported it
     // by more than half, and obligation 8 could have gone green over the gap.
+    // `project.keep` costs two rather than three: its order facet left the kernel
+    // when the declaration was made to say `keep` is a set.
     const r = checkClosures();
     const derivation = r.dependencies.filter((d) => d.coordinate.startsWith("relation.derivedBy."));
-    expect(derivation).toHaveLength(21);
-    expect(r.dependencies.length).toBeGreaterThan(21);
+    expect(derivation).toHaveLength(20);
+    expect(r.dependencies.length).toBeGreaterThan(20);
     // Every one is a topology facet or a member pair — never a presence facet,
     // because those were the derived conjunctions the census no longer emits.
     expect(derivation.filter((d) => d.coordinate.endsWith("#present"))).toEqual([]);
@@ -385,7 +387,9 @@ describe("obligation 2 — the normalization set is derived, not chosen", () => 
 
   it("the footprint is what the operation destroys, which is more than the edit count", () => {
     // minRawEdit counts EDITS; the footprint counts semantic coordinates. Two
-    // edits, six coordinates: the topology of both references goes with them.
+    // edits, five coordinates: the topology of both references goes with them —
+    // and `keep` contributes two, not three, because a declared set carries no
+    // order facet to destroy.
     const d = deriveNormalization(AGG_PROJECT, signatures);
     if ("error" in d) throw new Error(d.error);
     expect(d.minRawEdit).toBe(3);
@@ -395,7 +399,6 @@ describe("obligation 2 — the normalization set is derived, not chosen", () => 
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.project.keep#arity",
       "relation.derivedBy.project.keep#incidence",
-      "relation.derivedBy.project.keep#order",
     ]);
   });
 
@@ -909,9 +912,11 @@ describe("the consistency check and the terminal gate are different questions", 
     const g = closureGate(r);
     expect(g.ok).toBe(false);
     expect(g.message).toContain("22 of 22 carrier(s) still provisional");
-    // 23, not 24: `relation.derivedBy.join.cardinality` is one of the footprint dependencies, and
-    // the subtraction now records a `required-derived-vocabulary` verdict for it, so it is settled.
-    expect(g.message).toContain("23 dependency coordinate(s) without a settled standing");
+    // 21, not 24: `relation.derivedBy.join.cardinality` is one of the footprint dependencies and
+    // the subtraction records a `required-derived-vocabulary` verdict for it, and the two declared
+    // SET order facets (`keep`, `nonAdditiveAlong`) left every footprint when the census stopped
+    // emitting them, taking their dependency rows with them.
+    expect(g.message).toContain("21 dependency coordinate(s) without a settled standing");
   });
 
   it("gate passes only when every carrier holds and every dependency is settled", () => {
@@ -1190,8 +1195,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(77);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 33, "member-absence": 8, leaf: 5, "member-pair": 31 });
+    expect(unresolved.length).toBe(72);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 28, "member-absence": 8, leaf: 5, "member-pair": 31 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
@@ -1208,16 +1213,24 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     }
     expect(shape).toEqual({ "reference-topology": 16, "member-pair+reference-topology": 6 });
 
-    // And only 16 of the 35 topology facets block anything at all: the other 19, and all 38
-    // non-topology candidates, are a separate obligation that no carrier is waiting on.
+    // And only part of the topology facets block anything at all: the rest, and every
+    // non-topology candidate, are a separate obligation that no carrier is waiting on.
+    // Five topology facets left the kernel with the sequence declaration, so the
+    // unresolved topology set is 28 rather than 33.
     const topology = unresolved.filter((id) => kindOf(id) === "reference-topology");
-    expect(topology.length).toBe(33);
+    expect(topology.length).toBe(28);
     // Fourteen, not sixteen: two of the sixteen were witnessed -- `relation.derivedBy.nest.levels#order`
     // by REL-TOPOLOGY-AUTHORED-STIMULUS-01 and `relation.derivedBy.aggregate-to-grain.toGrain#order` by
     // REL-ORDER-FACET-SEMANTICS-01 -- so neither is unresolved and neither is counted here, while the
     // closures that depended on them still depend on a PRIMITIVE coordinate and stay blocked.
-    expect(topology.filter((id) => dependents.has(id)).length).toBe(14);
-    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(57);
+    // Twelve: two of the sixteen were witnessed (see above), and two more -- `keep#order` and
+    // `nonAdditiveAlong#order` -- left the kernel with the sequence declaration, so they are
+    // neither unresolved nor in a footprint any more.
+    expect(topology.filter((id) => dependents.has(id)).length).toBe(12);
+    // 54, not 57: three coordinates that blocked nothing are gone from the kernel -- `along#order`,
+    // `peers[]#order` and `grainWitness#order` -- and two that blocked a carrier are gone with a
+    // verdict, so the non-blocking unresolved count falls by three.
+    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(54);
   });
 });
 

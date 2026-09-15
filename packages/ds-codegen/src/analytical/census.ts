@@ -36,6 +36,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { operationFor, type ErasurePlan, type LocatorStep, type StructuralLocator } from "./erasure-plan.js";
+import { SEQUENCE_KEY, type SequenceFact } from "./relation-model.js";
 
 export type CoordinateKind = "leaf" | "member-pair" | "member-absence" | "reference-topology" | "reference";
 
@@ -224,6 +225,17 @@ export interface CensusDerivation {
    */
   requiredLeaves: Set<string>;
   derivedPresence: DerivedPresence[];
+  /**
+   * The SEQUENCE fact each name-list leaf declares, keyed by leaf id.
+   *
+   * This is the one census input the schema's SHAPE cannot carry: a JSON array
+   * spells a set and a sequence identically, so the declaration states which it
+   * means and `listFacets` refuses a list that states neither. It is collected
+   * here rather than re-walked, so the fact a coordinate was emitted under and
+   * the fact `final-quotient.ts` reads when it recognizes that coordinate's
+   * removal come from the SAME walk.
+   */
+  sequenceFacts: Map<string, SequenceFact>;
 }
 
 export function deriveCensus(schema: Node): Coordinate[] {
@@ -233,6 +245,7 @@ export function deriveCensus(schema: Node): Coordinate[] {
 export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
   const defs = (schema.definitions ?? {}) as Record<string, Node>;
   const signatures = new Map<string, BranchSignatures>();
+  const sequenceFacts = new Map<string, SequenceFact>();
   const resolve = (n: Node): Node => {
     let cur = n;
     for (let i = 0; i < 8; i++) {
@@ -320,11 +333,34 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
   };
 
   /**
-   * A Name-valued property. Its spelling is not a coordinate; its structure is.
-   * `list` decides which facets apply: a single slot has no arity or order to
-   * vary, only which sibling slot binds it.
+   * Which facets a name-list slot carries.
+   *
+   * `arity` and `incidence` are SHAPE facts: how many names, and which other
+   * references they co-refer with. `order` is a MEANING fact the shape cannot
+   * express — a JSON array is the only way this model spells a collection, so a
+   * set and a sequence look identical in the emitted schema. It is therefore
+   * emitted only where the declaration says a rule reads the positions, and a
+   * list that says neither is a DEFECT rather than a coordinate: the alternative
+   * is a proposition nothing can adjudicate, which is what an `#order` facet on
+   * a set-valued list is.
    */
-  const addReference = (rawPath: string, list: boolean, optional: Opt, steps: LocatorStep[], arityFloor?: number) => {
+  const listFacets = (n: Node, rawPath: string): ReferenceFacet[] => {
+    const fact = n[SEQUENCE_KEY];
+    if (fact !== "set" && fact !== "ordered") {
+      throw new Error(
+        `census: the name list at ${rawPath} declares no ${SEQUENCE_KEY} fact (found ${JSON.stringify(fact)}). ` +
+          `Mark it "set" or "ordered" in relation-model.ts: the census reads the emitted schema, which cannot tell a set from a sequence.`,
+      );
+    }
+    return fact === "ordered" ? ["arity", "order", "incidence"] : ["arity", "incidence"];
+  };
+
+  /**
+   * A Name-valued property. Its spelling is not a coordinate; its structure is.
+   * `facets` decides what applies: a single slot has no arity or order to vary,
+   * only which sibling slot binds it.
+   */
+  const addReference = (rawPath: string, facets: readonly ReferenceFacet[], optional: Opt, steps: LocatorStep[], arityFloor?: number) => {
     const id = label(rawPath);
     if (id === "id" || seen.has(id)) return;
     seen.add(id);
@@ -353,7 +389,6 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     } else if (optional.holder && optional.owner) {
       derive(id, optional.owner);
     }
-    const facets: ReferenceFacet[] = list ? ["arity", "order", "incidence"] : ["incidence"];
     for (const facet of facets) {
       emit({ id: `${id}#${facet}`, kind: "reference-topology", leaf: id, role: r, facet }, rawPath, steps, arityFloor);
     }
@@ -416,10 +451,12 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
   const walk = (raw: Node, rawPath: string, optional: Opt = OPT_REQUIRED, steps: LocatorStep[] = [], sugarFor?: string): void => {
     visited.add(rawPath);
     // Detected BEFORE resolution: after it a name is just a patterned string.
-    if (nameRefOf(raw)) return addReference(rawPath, false, optional, steps);
+    if (nameRefOf(raw)) return addReference(rawPath, ["incidence"], optional, steps);
     const n = resolve(raw);
     if (n.type === "array" && nameRefOf((n.items ?? {}) as Node)) {
-      return addReference(rawPath, true, optional, steps, typeof n.minItems === "number" ? n.minItems : 1);
+      const facets = listFacets(n, rawPath);
+      sequenceFacts.set(label(rawPath), n[SEQUENCE_KEY] as SequenceFact);
+      return addReference(rawPath, facets, optional, steps, typeof n.minItems === "number" ? n.minItems : 1);
     }
     if (Array.isArray(n.enum)) return addLeaf(rawPath, steps, n.enum as string[], optional);
     if (n.const !== undefined) return addLeaf(rawPath, steps, [String(n.const)], optional);
@@ -477,7 +514,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
         const entry: LocatorStep[] = [...steps, { kind: "entries" }];
         const v = resolve(n.additionalProperties as Node);
         if (isPrimitive(v)) return addLeaf(rawPath, entry, undefined, inner);
-        if (nameRefOf(n.additionalProperties as Node)) return addReference(rawPath, false, inner, entry);
+        if (nameRefOf(n.additionalProperties as Node)) return addReference(rawPath, ["incidence"], inner, entry);
         return walk(v, `${rawPath}.*`, inner, entry);
       }
       return addLeaf(rawPath, steps, undefined, optional);
@@ -586,7 +623,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     plan.representationEffects = [...visited].filter((v) => under(plan.locator.path, v)).sort();
   }
 
-  return { coordinates: out, signatures, plans, locators, requiredLeaves, derivedPresence };
+  return { coordinates: out, signatures, plans, locators, requiredLeaves, derivedPresence, sequenceFacts };
 }
 
 export function loadCensus(schemaPath = FIXTURE_SCHEMA): Coordinate[] {
@@ -623,6 +660,11 @@ export function loadPlans(schemaPath = FIXTURE_SCHEMA): Map<string, ErasurePlan>
 /** Presence propositions the schema entails rather than varies. */
 export function loadDerivedPresence(schemaPath = FIXTURE_SCHEMA): DerivedPresence[] {
   return loadDerivation(schemaPath).derivedPresence;
+}
+
+/** The SEQUENCE fact each name-list leaf declares, keyed by leaf id. */
+export function loadSequenceFacts(schemaPath = FIXTURE_SCHEMA): Map<string, SequenceFact> {
+  return loadDerivation(schemaPath).sequenceFacts;
 }
 
 /** Where every coordinate lives, keyed by coordinate id and by leaf path. */

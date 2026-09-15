@@ -3,23 +3,23 @@
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
     "witnesses.json": "3ada0d04e0fbdc5ba24c7d52861bb63757f27d8422f8a881878af5dbbff0e953",
-    "closures-stage2.json": "f162b9f71bf4aa99490fde6398b61e9a4907bca683f4b40d3a5c658afdfcb438"
+    "closures-stage2.json": "9bcd2ab69f6f66d3b64ec5f40146304721039b4b5c7681537d4078ebbcb5f56d"
   },
   "authority": {
-    "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
-    "erasureAuthorityDigest": "0b59717c7b3ae6e44de15915ac4010220f4ac149c03168288d1df5289f93358f",
-    "witnessAuthorityDigest": "c88876233a368c59969f4ec7907399e8ad7f4bdfb99590048a4bc2e9e13461b0",
+    "coordinateBasisDigest": "50298ce5fc9caff620957976c5dc5aee61ac3f6a3502ee0d7484bc3e4212e936",
+    "erasureAuthorityDigest": "dc31f8efb88abf5945530e0fef52227c417d5084a52fce7b330d8d68b31b478e",
+    "witnessAuthorityDigest": "7afed991414a3c33e3df344c2a9767922c036a48a0184dcd67ddc8704b9963ed",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
-  "footprintBasisDigest": "88e275737ae1304a91b08f3d0bb01b2f97a0b6a4f4b92a84b6c4d5b63a391783",
+  "footprintBasisDigest": "735fa99ec5d8749c4f16285c539ca7bc1ae62198026f0951276a0d336bfc069d",
   "quotientSchemaVersion": 1,
   "specimens": {
     "corpus": 90,
     "stimuli": 27,
-    "synthesized": 96,
-    "total": 213,
-    "populationDigest": "8f24b61a873de47705be10339b49b33bcf85c53478367dfe15e00134b3be3251"
+    "synthesized": 91,
+    "total": 208,
+    "populationDigest": "d03829f1feb260fe20bb209876b958417fed6630e50e1946bbb0fef6ead6ce53"
   },
   "unbuilt": [
     {
@@ -528,8 +528,8 @@
       "populationDigest": "6a419864dd386230a44d67cf25df80c8a20e3ce60f027df1e93f53cdae2f815f"
     },
     "quotientLanguageInvalid": {
-      "specimens": 213,
-      "populationDigest": "8f24b61a873de47705be10339b49b33bcf85c53478367dfe15e00134b3be3251"
+      "specimens": 208,
+      "populationDigest": "d03829f1feb260fe20bb209876b958417fed6630e50e1946bbb0fef6ead6ce53"
     }
   },
   "footprints": {
@@ -537,16 +537,11 @@
       "assertion.aggregate.along#arity"
     ],
     "assertion.aggregate.along#incidence": [
-      "assertion.aggregate.along#incidence",
-      "assertion.aggregate.along#order"
-    ],
-    "assertion.aggregate.along#order": [
-      "assertion.aggregate.along#order"
+      "assertion.aggregate.along#incidence"
     ],
     "assertion.aggregate.along#present": [
       "assertion.aggregate.along#arity",
       "assertion.aggregate.along#incidence",
-      "assertion.aggregate.along#order",
       "assertion.aggregate.along#present"
     ],
     "assertion.aggregate.field#incidence": [
@@ -629,16 +624,11 @@
       "evidence.grainWitness#arity"
     ],
     "evidence.grainWitness#incidence": [
-      "evidence.grainWitness#incidence",
-      "evidence.grainWitness#order"
-    ],
-    "evidence.grainWitness#order": [
-      "evidence.grainWitness#order"
+      "evidence.grainWitness#incidence"
     ],
     "evidence.grainWitness#present": [
       "evidence.grainWitness#arity",
       "evidence.grainWitness#incidence",
-      "evidence.grainWitness#order",
       "evidence.grainWitness#present"
     ],
     "evidence.rows.*#present": [
@@ -684,11 +674,7 @@
       "field.additivity.semi-additive.nonAdditiveAlong#arity"
     ],
     "field.additivity.semi-additive.nonAdditiveAlong#incidence": [
-      "field.additivity.semi-additive.nonAdditiveAlong#incidence",
-      "field.additivity.semi-additive.nonAdditiveAlong#order"
-    ],
-    "field.additivity.semi-additive.nonAdditiveAlong#order": [
-      "field.additivity.semi-additive.nonAdditiveAlong#order"
+      "field.additivity.semi-additive.nonAdditiveAlong#incidence"
     ],
     "field.additivity#present": [
       "field.additivity#present",
@@ -700,8 +686,7 @@
       "field.additivity.kind:semi-additive~non-additive",
       "field.additivity.kind:semi-additive~ratio-measure",
       "field.additivity.semi-additive.nonAdditiveAlong#arity",
-      "field.additivity.semi-additive.nonAdditiveAlong#incidence",
-      "field.additivity.semi-additive.nonAdditiveAlong#order"
+      "field.additivity.semi-additive.nonAdditiveAlong#incidence"
     ],
     "field.base": [
       "field.base"
@@ -1029,11 +1014,7 @@
       "relation.derivedBy.project.keep#arity"
     ],
     "relation.derivedBy.project.keep#incidence": [
-      "relation.derivedBy.project.keep#incidence",
-      "relation.derivedBy.project.keep#order"
-    ],
-    "relation.derivedBy.project.keep#order": [
-      "relation.derivedBy.project.keep#order"
+      "relation.derivedBy.project.keep#incidence"
     ],
     "relation.derivedBy#present": [
       "relation.derivedBy#present",
@@ -1092,8 +1073,7 @@
       "relation.derivedBy.normalize.from#incidence",
       "relation.derivedBy.project.from#incidence",
       "relation.derivedBy.project.keep#arity",
-      "relation.derivedBy.project.keep#incidence",
-      "relation.derivedBy.project.keep#order"
+      "relation.derivedBy.project.keep#incidence"
     ],
     "relation.grain": [
       "relation.grain"
@@ -1102,24 +1082,18 @@
       "structure.peers[]#arity"
     ],
     "structure.peers[]#incidence": [
-      "structure.peers[]#incidence",
-      "structure.peers[]#order"
-    ],
-    "structure.peers[]#order": [
-      "structure.peers[]#order"
+      "structure.peers[]#incidence"
     ],
     "structure.peers[]#present": [
       "structure.peers#present",
       "structure.peers[]#arity",
       "structure.peers[]#incidence",
-      "structure.peers[]#order",
       "structure.peers[]#present"
     ],
     "structure.peers#present": [
       "structure.peers#present",
       "structure.peers[]#arity",
       "structure.peers[]#incidence",
-      "structure.peers[]#order",
       "structure.peers[]#present"
     ]
   },
@@ -1169,14 +1143,11 @@
         "assertion.aggregate.along#incidence"
       ],
       "actual": [
-        "assertion.aggregate.along#incidence",
-        "assertion.aggregate.along#order"
+        "assertion.aggregate.along#incidence"
       ],
-      "collateral": [
-        "assertion.aggregate.along#order"
-      ],
+      "collateral": [],
       "outside": [],
-      "verdict": "subsumes-refinements",
+      "verdict": "atomic",
       "holds": true,
       "standing": "primitive"
     },
@@ -1188,13 +1159,11 @@
       "actual": [
         "assertion.aggregate.along#arity",
         "assertion.aggregate.along#incidence",
-        "assertion.aggregate.along#order",
         "assertion.aggregate.along#present"
       ],
       "collateral": [
         "assertion.aggregate.along#arity",
-        "assertion.aggregate.along#incidence",
-        "assertion.aggregate.along#order"
+        "assertion.aggregate.along#incidence"
       ],
       "outside": [],
       "verdict": "subsumes-refinements",
@@ -1518,13 +1487,11 @@
       "actual": [
         "evidence.grainWitness#arity",
         "evidence.grainWitness#incidence",
-        "evidence.grainWitness#order",
         "evidence.grainWitness#present"
       ],
       "collateral": [
         "evidence.grainWitness#arity",
-        "evidence.grainWitness#incidence",
-        "evidence.grainWitness#order"
+        "evidence.grainWitness#incidence"
       ],
       "outside": [],
       "verdict": "subsumes-refinements",
@@ -1592,14 +1559,11 @@
         "field.additivity.semi-additive.nonAdditiveAlong#incidence"
       ],
       "actual": [
-        "field.additivity.semi-additive.nonAdditiveAlong#incidence",
-        "field.additivity.semi-additive.nonAdditiveAlong#order"
+        "field.additivity.semi-additive.nonAdditiveAlong#incidence"
       ],
-      "collateral": [
-        "field.additivity.semi-additive.nonAdditiveAlong#order"
-      ],
+      "collateral": [],
       "outside": [],
-      "verdict": "subsumes-refinements",
+      "verdict": "atomic",
       "holds": true,
       "standing": "primitive"
     },
