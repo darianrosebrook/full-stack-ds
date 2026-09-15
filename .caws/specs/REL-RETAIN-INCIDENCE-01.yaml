@@ -1,0 +1,32 @@
+id: REL-RETAIN-INCIDENCE-01
+title: 'Retain nest.levels#incidence: an irreducible distinction whose encoding coordinate is reducible'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T22:55:46.306Z'
+updated_at: '2026-09-15T22:55:46.306Z'
+created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given nest.levels#incidence holds a filed witness but cannot ratify primitive standing because its erasure takes the sibling #order facet, so it sat unresolved and blocked every closure that depends on it; when the retention rule is applied to it -- an independently grounded cause (CASE_NESTED_SUBTOTALS_OFF_GRAIN, a committed corpus case) requires a distinction that becomes unexpressible when exactly that coordinate is erased (the round-25 pair, measured) -- then the verdict is required-derived-vocabulary, the coordinate is retained with no primitive claim, obligation 8 discharges on it as the non-primitive adjudicated verdict the close condition admits, the closure gate''s unsettled dependency count falls, and the analytical suite, every gate and every ledger agree'
+non_functional: {}
+contracts:
+  - name: 'witness-standing'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/closure.test.ts'
