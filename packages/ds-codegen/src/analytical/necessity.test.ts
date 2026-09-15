@@ -25,6 +25,7 @@ import { type Coordinate, deriveCensus, FIXTURE_SCHEMA, loadBranchSignatures, lo
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
 import {
+  applyPatch,
   checkWitness,
   disposition,
   FIXTURES_DIR,
@@ -56,8 +57,10 @@ import {
   type Witness,
 } from "./necessity.js";
 import { checkDerivations, type BoundaryFinding } from "./derivation.js";
+import { DERIVATION_DIAG } from "./codes.js";
 import { markersIn } from "./quotient-image.js";
-import { canonical, collides, erase } from "./quotient.js";
+import { canonical, collides, erase, planFor } from "./quotient.js";
+import { executePlan, resolveSlots } from "./erasure-plan.js";
 import { loadClosures } from "./closure.js";
 import { loadBases, orphanedCoordinates } from "./experiments.js";
 import { basesForSpec, loadSubtraction, verdictDrift } from "./subtraction.js";
@@ -1332,6 +1335,171 @@ describe("C1e — no coordinate is un-erasable for a WALK reason", () => {
     const grain = kernel.find((c) => c.id === "field.temporality.grain")!;
     const altered = fixtures.filter((f) => canonical(erase(f, grain)) !== canonical(f));
     expect(altered.length).toBeGreaterThan(0);
+  });
+});
+
+describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corpus case can mend it", () => {
+  /**
+   * C1e separates CORPUS-dead (the erasure is defined but this corpus gives it
+   * nothing to do) from WALK-dead (the quotient never visits the label). There
+   * is a THIRD way a coordinate can be unwitnessable, and it is neither: the
+   * erasure is defined, the corpus gives it plenty to do, and the image it
+   * produces is not a declaration — so `checkIsolation` refuses it on every
+   * stimulus it touches, and no witness naming the coordinate can be admitted
+   * however much the corpus grows.
+   *
+   * Sixteen of the eighteen are `relation.derivedBy.*` OPERAND references, and
+   * the cause has one shape for all of them. A reference is a reference because
+   * it RESOLVES; forgetting its co-reference rewrites its names to reserved
+   * tokens, and the boundary then reports the structure it can no longer type —
+   * `REL_DERIVATION_INPUT_MISSING`, or `REL_DERIVATION_RESULT_NOT_DERIVABLE`
+   * when the forgotten names were the result's own fields. Those are the
+   * boundary's well-formedness refusals, which stay collateral for EVERY class
+   * by design, because a collision found under one might be the break rather
+   * than the coordinate. The refusal is therefore correct — and it is a fact
+   * about the QUOTIENT, not about the coordinate's necessity.
+   *
+   * That distinction is measured here, not asserted. On
+   * FX_N_NESTED_SUBTOTAL_AT_PREFIX, rebinding the FIRST level from `country` to
+   * `revenue` moves exactly one path, leaves both sides with a clean derivation
+   * boundary, and flips the verdict admissible -> illegal under the
+   * already-existing cause CASE_NESTED_SUBTOTALS_OFF_GRAIN. So the coordinate is
+   * not one the corpus is silent about, and it is not a representation artifact
+   * either: erasing it DOES identify two representations the oracle separates,
+   * so the COLLISION obligation holds and isolation alone fails. That is why the
+   * committed `#order` witness over the same pair is accepted while the same
+   * stimulus pair re-cited for `#incidence` is refused.
+   *
+   * The open question this leaves is a quotient rather than a corpus case: an
+   * erasure that forgets which declared names a bound reference shares WITHOUT
+   * leaving it unresolvable. Until one exists these coordinates have no verdict
+   * this instrument can produce, and filing one to clear the subtraction gate is
+   * exactly the move the standing index exists to prevent.
+   */
+  const plans = loadPlans();
+  const fixtures = [...oracle.fixtures.values()];
+  const wellFormedness = new Set<string>(Object.values(DERIVATION_DIAG));
+  const detailOf = (r: IsolationResult) => (r as { detail?: string }).detail ?? "";
+
+  /** The fixtures where this coordinate's own erasure alters the canonical bytes. */
+  const movedBy = (c: Coordinate) => {
+    const plan = plans.get(c.id);
+    if (!plan) return [];
+    return fixtures.filter((f) => resolveSlots(f, plan.locator).length > 0 && canonical(executePlan(f, plan)) !== canonical(f));
+  };
+
+  const NEVER_DISCHARGED = [
+    "relation.derivedBy.aggregate-to-grain.from#incidence",
+    "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+    "relation.derivedBy.bin.field#incidence",
+    "relation.derivedBy.bin.from#incidence",
+    "relation.derivedBy.graph.edgeFrom#incidence",
+    "relation.derivedBy.graph.edgeTo#incidence",
+    "relation.derivedBy.graph.from#incidence",
+    "relation.derivedBy.graph.value#incidence",
+    "relation.derivedBy.join.from#incidence",
+    "relation.derivedBy.join.with#incidence",
+    "relation.derivedBy.nest.from#incidence",
+    "relation.derivedBy.nest.levels#incidence",
+    "relation.derivedBy.normalize.field#incidence",
+    "relation.derivedBy.normalize.from#incidence",
+    "relation.derivedBy.project.from#incidence",
+    "relation.derivedBy.project.keep#arity",
+    "relation.derivedBy.project.keep#incidence",
+    "structure.peers[]#incidence",
+  ];
+
+  it("the reference-topology coordinates whose own erasure is never discharged are exactly these", () => {
+    const measured = kernel
+      .filter((c) => c.kind === "reference-topology")
+      .filter((c) => {
+        const moving = movedBy(c);
+        return moving.length > 0 && moving.every((f) => checkIsolation(f, c).state !== "discharged");
+      })
+      .map((c) => c.id)
+      .sort();
+    expect(measured).toEqual(NEVER_DISCHARGED);
+  });
+
+  it("the enumeration is not vacuous, and every refusal is the boundary's own well-formedness line", () => {
+    for (const id of NEVER_DISCHARGED) {
+      const c = kernel.find((x) => x.id === id);
+      expect(c, `${id} is no longer in the kernel`).toBeDefined();
+      const states = movedBy(c!).map((f) => checkIsolation(f, c!));
+      expect(states.length, `${id} now erases nothing anywhere`).toBeGreaterThan(0);
+      // Nothing is discharged, and nothing is refused for a reason outside the
+      // boundary's list: this is not a semantic finding the erasure produced,
+      // it is the structure ceasing to be typable.
+      expect(states.every((r) => r.state !== "discharged"), `${id} is discharged somewhere`).toBe(true);
+      const violated = states.filter((r) => r.state === "violated");
+      expect(violated.length, `${id} is never actually refuted`).toBeGreaterThan(0);
+      for (const r of violated) {
+        expect(
+          [...wellFormedness].some((w) => detailOf(r).includes(w)),
+          `${id}: ${detailOf(r).slice(0, 140)}`,
+        ).toBe(true);
+      }
+    }
+  });
+
+  it("the nest-levels incidence distinction is real and oracle-separated, and the collision under its erasure HOLDS", () => {
+    const base = oracle.fixtures.get("FX_N_NESTED_SUBTOTAL_AT_PREFIX")!;
+    const levelPath = "structure.relations.hierarchy.derivedBy.levels";
+    const patched = applyPatch(base, [{ set: levelPath, value: ["revenue", "state"] }]);
+    // Exactly one path moves, and it is position 0 of the levels. Arity is
+    // unchanged, and `#order`'s erasure (sorting) is identity on both sides,
+    // so what separates them is neither arity nor order.
+    expect(changedPaths(base, patched)).toEqual([".structure.relations.hierarchy.derivedBy.levels[0]"]);
+    const ja = judge(base.structure, base.assertions, base.evidence);
+    const jb = judge(patched.structure, patched.assertions, patched.evidence);
+    expect({ status: ja.status, codes: codesOf(ja), terms: termsOf(ja) }).toEqual({ status: "admissible", codes: [], terms: [] });
+    expect({ status: jb.status, codes: codesOf(jb), terms: termsOf(jb) }).toEqual({
+      status: "illegal",
+      codes: ["REL_GRAIN_SUBTOTAL_MISMATCH"],
+      terms: [],
+    });
+    // Neither side is refused by the derivation boundary: the pair is legal.
+    for (const j of [ja, jb]) {
+      expect(j.derivations.some((d) => wellFormedness.has(d.code ?? d.term ?? ""))).toBe(false);
+    }
+    const incidence = kernel.find((c) => c.id === "relation.derivedBy.nest.levels#incidence")!;
+    expect(canonical(erase(base, incidence))).toBe(canonical(erase(patched, incidence)));
+  });
+
+  it("the SAME stimulus pair is refused for incidence and accepted for order, so order is not evidence for incidence", () => {
+    const order = witnesses.find((w) => w.coordinates.join(" + ") === "relation.derivedBy.nest.levels#order");
+    expect(order, "the committed nest-levels order witness is gone").toBeDefined();
+    expect(checkWitness(order!, kernel, oracle).ok).toBe(true);
+    const recast: Witness = { ...order!, coordinates: ["relation.derivedBy.nest.levels#incidence"] };
+    const r = checkWitness(recast, kernel, oracle);
+    expect(r.ok).toBe(false);
+    expect([...new Set(r.failures.map((f) => f.code))]).toEqual(["ERASURE_NOT_ISOLATED"]);
+    // Isolation and NOT collision: the incidence erasure does identify the two
+    // stimuli, so the distinction is expressible and only the quotient is
+    // illegal.
+    expect(r.failures.some((f) => f.code === "NO_COLLISION")).toBe(false);
+  });
+
+  it("an authored incidence stimulus is refused for the same reason, so authoring cannot mend it", () => {
+    const authored: Witness = {
+      coordinates: ["relation.derivedBy.nest.levels#incidence"],
+      a: { fixture: "FX_N_NESTED_SUBTOTAL_AT_PREFIX" },
+      b: {
+        base: "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+        patch: [{ set: "structure.relations.hierarchy.derivedBy.levels", value: ["revenue", "state"] }],
+        outcome: outcomeFrom("illegal", ["REL_GRAIN_SUBTOTAL_MISMATCH"]),
+        cause:
+          "CASE_NESTED_SUBTOTALS_OFF_GRAIN: rebinding position 0 of the declared levels removes `country` from the declared prefixes, so the existing toGrain: [country] subtotal is off-grain",
+      },
+    };
+    const r = checkWitness(authored, kernel, oracle);
+    expect(r.ok).toBe(false);
+    expect([...new Set(r.failures.map((f) => f.code))]).toEqual(["ERASURE_NOT_ISOLATED"]);
+  });
+
+  it("the incidence coordinate has a plan, so the refusal is the erasure's image and not a walk gap", () => {
+    const incidence = kernel.find((c) => c.id === "relation.derivedBy.nest.levels#incidence")!;
+    expect(planFor(incidence)).toBeDefined();
   });
 });
 
