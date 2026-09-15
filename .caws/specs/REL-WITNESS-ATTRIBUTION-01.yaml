@@ -1,0 +1,31 @@
+id: REL-WITNESS-ATTRIBUTION-01
+title: 'Refuse a witness whose collision is over a sibling facet''s difference: the arrangement belongs to order, not incidence'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T16:35:32.164Z'
+updated_at: '2026-09-15T16:35:32.164Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a bound incidence erasure necessarily lands on one arrangement, so a pair differing only in arrangement (same occupant multiset at one list slot) is identified by erasing incidence while the difference is order''s degree of freedom; when checkWitness evaluates a witness naming incidence at such a slot over an arrangement-only pair; then the witness is refused with a named cause while the same pair is admitted for order and for the joint set {incidence, order} because the owner of the difference is then named, no committed witness is refused by the rule, and the analytical suite, every gate and every ledger agree'
+non_functional: {}
+contracts:
+  - name: 'witness-admission'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
