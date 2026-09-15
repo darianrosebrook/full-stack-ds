@@ -705,6 +705,59 @@ describe("the structure-level namespace — peers binds relations, declared wher
   });
 });
 
+describe("declared distinctness — with differs from from, edgeTo from edgeFrom", () => {
+  const oracle = loadOracle();
+
+  it("the constraint rides on the locator for exactly the two operands the law states", () => {
+    expect(plans.get("relation.derivedBy.join.with#incidence")!.locator.operandDistinctFrom).toBe("from");
+    expect(plans.get("relation.derivedBy.graph.edgeTo#incidence")!.locator.operandDistinctFrom).toBe("edgeFrom");
+    // And nothing else: the constraint is a declared LAW fact, not a default.
+    const others = [...plans.values()].filter(
+      (p) => p.operation.kind === "forget-reference-incidence" && p.locator.operand && p.id !== "relation.derivedBy.join.with#incidence" && p.id !== "relation.derivedBy.graph.edgeTo#incidence",
+    );
+    expect(others.every((p) => p.locator.operandDistinctFrom === undefined)).toBe(true);
+  });
+
+  it("the pick skips the sibling's binding and MOVES where the corpus does not already write it", () => {
+    // FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN declares [orders, lines,
+    // order_lines] and joins orders with lines, so the sibling-skipping pick
+    // ("lines") is the identity -- that is the corpus-dead fact C1e records.
+    // Rebinding `with` to the THIRD relation and erasing takes it back to the
+    // pick, which proves the erasure is not vacuously the identity and that the
+    // pick never collides with `from`.
+    const base = oracle.fixtures.get("FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN")!;
+    const plan = plans.get("relation.derivedBy.join.with#incidence")!;
+    expect(wouldChange(base, plan)).toBe(false);
+    const rebound = JSON.parse(JSON.stringify(base)) as typeof base;
+    (rebound.structure.relations.order_lines.derivedBy as unknown as Record<string, unknown>).with = "order_lines";
+    expect(wouldChange(rebound, plan)).toBe(true);
+    const image = executePlan(rebound, plan) as unknown as typeof base;
+    const d = image.structure.relations.order_lines.derivedBy as unknown as Record<string, unknown>;
+    expect(d.with).toBe("lines");
+    expect(d.with).not.toBe(d.from);
+  });
+
+  it("on every corpus join and graph fixture the pick differs from the sibling binding", () => {
+    // The law holds after erasure everywhere the corpus carries the operator:
+    // the images are declarations the boundary can type, and none is a
+    // self-join or a degenerate edge.
+    for (const [planId, sibling] of [
+      ["relation.derivedBy.join.with#incidence", "from"],
+      ["relation.derivedBy.graph.edgeTo#incidence", "edgeFrom"],
+    ] as const) {
+      const plan = plans.get(planId)!;
+      for (const f of oracle.fixtures.values()) {
+        const image = executePlan(f, plan) as unknown as { structure: { relations: Record<string, { derivedBy?: Record<string, unknown> }> } };
+        for (const rel of Object.values(image.structure.relations)) {
+          const d = rel.derivedBy;
+          if (!d || !(planId.includes("join") ? d.kind === "join" : d.kind === "graph")) continue;
+          expect(d[planId.split(".").at(-1)!.replace("#incidence", "")], `${planId} on ${f.id}`).not.toBe(d[sibling]);
+        }
+      }
+    }
+  });
+});
+
 describe("composition — derived ordering and confluence over the bound registry", () => {
   const fx = (id: string): Fixture => {
     const f = fixtures.find((x) => x.id === id);

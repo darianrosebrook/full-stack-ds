@@ -1336,16 +1336,25 @@ describe("C1e — no coordinate is un-erasable for a WALK reason", () => {
     "relation.derivedBy.nest.levels#arity": "every corpus nest declares exactly two levels, which is the declared minimum, so truncating to it is identity",
     "structure.peers[]#arity": "every corpus peer set names exactly two peers, which is the declared minimum, so truncating to it is identity",
     // The six relation-valued operands whose canonical rebinding IS the binding
-    // the corpus writes. `join.with` is absent because the corpus joins a
-    // relation the structure declares second, and `graph.edgeTo` because it is
-    // FIELD-valued and holds a field the namespace does not list first; both
-    // move, and are then refused by the boundary instead, which C1f enumerates.
+    // the corpus writes.
     "relation.derivedBy.bin.from#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
     "relation.derivedBy.graph.edgeFrom#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
     "relation.derivedBy.graph.from#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
     "relation.derivedBy.join.from#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
     "relation.derivedBy.nest.from#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
     "relation.derivedBy.normalize.from#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
+    // The two DISTINCTNESS-CONSTRAINED operands. `join.with` and `graph.edgeTo`
+    // used to move and be refused by the boundary (C1f) because their canonical
+    // bind landed on the SIBLING's own binding -- a self-join, a degenerate
+    // edge. The law now rides on the operand map (`distinctFrom`), the pool
+    // skips the sibling's value, and the next declared name -- which is exactly
+    // what the corpus writes (the second relation is the joined one, the second
+    // field the edge's far endpoint) -- makes the erasure the identity on every
+    // fixture. Same corpus fact as the six above, one law deeper: a fixture
+    // joining a THIRD-declared relation, or binding a later endpoint field,
+    // makes it move immediately.
+    "relation.derivedBy.graph.edgeTo#incidence": "the canonical rebind skips the sibling edgeFrom binding and lands on the next declared field, which every corpus edge already names, so the erasure is the identity on every fixture",
+    "relation.derivedBy.join.with#incidence": "the canonical rebind skips the sibling from binding and lands on the next declared relation, which every corpus join already names, so the erasure is the identity on every fixture",
   };
 
   const fixtures = [...oracle.fixtures.values()];
@@ -1409,14 +1418,25 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
    * (`x-fsds-operands`) -- so twelve of the eighteen left this list: six are
    * DISCHARGED, and six are corpus-dead instead, which C1e enumerates and
    * explains (their canonical rebinding is the binding the corpus already
-   * writes). Six were left after that landing, and the peers DECLARATION took
-   * one of them, so five are what is left.
+   * writes). Six were left after that landing, the peers DECLARATION took one,
+   * and the DISTINCTNESS constraint took two more -- `join.with` and
+   * `graph.edgeTo`, whose canonical bind used to land on the SIBLING operand's
+   * own binding (a self-join, a degenerate edge) until the law's distinctness
+   * requirement rode on the operand map and the pool learned to skip the
+   * sibling's value. They are corpus-dead now, for the measured reason C1e
+   * records: the next declared name after the sibling IS the binding the
+   * corpus writes. Three are what is left.
    *
-   * Each of the five names the boundary line it is refused by. `toGrain` and
-   * `graph.edgeTo` are rebound to a field the derivation cannot reach that way,
-   * `join.with` to the relation that is already its left input, and
+   * Each of the three names the boundary line it is refused by. `toGrain` is
+   * rebound to a field the derivation cannot reach that way, and
    * `project.keep` (both facets) to a selection that drops a field the result
-   * still declares -- `REL_DERIVATION_RESULT_NOT_DERIVABLE` in every case.
+   * still declares -- `REL_DERIVATION_RESULT_NOT_DERIVABLE` in every case, and
+   * for `toGrain` and `keep` the deeper cause is structural: the law writes the
+   * SAME binding a second time in the result's own declaration
+   * (`sameSet(out.grain, d.toGrain)`, `sameSet(fieldNames(out), d.keep)`), so
+   * rebinding the operand alone leaves a declaration that disagrees with
+   * itself. Their coordinate's extent is wider than their locator, and a
+   * quotient for them is a CENSUS change, not an erasure change.
    *
    * `structure.peers[]#incidence` USED to be the sixth, refused for the
    * ORIGINAL tokenizing reason: `peers` sits on the STRUCTURE rather than on a
@@ -1451,7 +1471,7 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
    * WHICH declared names a bound slot may legally rebind to is a fact about the
    * operand's own typing rules (`toGrain` must name a declared grain prefix,
    * `keep` must retain the result's grain), and the erasure reads the namespace
-   * and not those rules. Until an erasure that respects them exists, the five
+   * and not those rules. Until an erasure that respects them exists, the three
    * below have no verdict this instrument can produce, and filing one to clear
    * the subtraction gate is exactly the move the standing index exists to prevent.
    */
@@ -1469,8 +1489,6 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
 
   const NEVER_DISCHARGED = [
     "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
-    "relation.derivedBy.graph.edgeTo#incidence",
-    "relation.derivedBy.join.with#incidence",
     "relation.derivedBy.project.keep#arity",
     "relation.derivedBy.project.keep#incidence",
   ];
@@ -1933,8 +1951,16 @@ describe("C1h — the incidence erasure at a BOUND reference is the LANDED resol
     // a different pool, a different order, a different fallback — fails here
     // rather than turning the prototype into a second reading of the erasure
     // that quietly disagrees with the executor the ledgers were recorded under.
+    //
+    // ONE deliberate exception: the prototype measured the UNCONSTRAINED pool,
+    // and `join.with`/`graph.edgeTo` later gained the distinctness skip (their
+    // unconstrained bind landed on the sibling's own binding). They are
+    // excluded by reading the constraint off the LANDED plan -- not by name --
+    // so a future constrained operand is excluded the same way.
+    const plans = loadPlans();
     let compared = 0;
     for (const c of boundCoords.filter((x) => x.id.endsWith("#incidence"))) {
+      if (plans.get(c.id)?.locator.operandDistinctFrom) continue;
       for (const f of oracle.fixtures.values()) {
         const proto = rebind(f, c);
         if (proto.note) continue;
