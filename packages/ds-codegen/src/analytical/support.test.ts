@@ -13,7 +13,9 @@
  * support clause must agree witness by witness.
  */
 import { describe, expect, it } from "vitest";
-import { computeReport } from "./erasure-audit.js";
+import { computeReport, specimens } from "./erasure-audit.js";
+import { judge } from "./engines.js";
+import type { Fixture } from "./structure.js";
 import { canonical, erase } from "./quotient.js";
 import { loadCensus } from "./census.js";
 import { checkWitness, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
@@ -27,6 +29,29 @@ const holding = witnesses.filter((w) => checkWitness(w, census, oracle).ok);
 const ratified = primitiveRatified(holding);
 const report = computeReport();
 const oracleFixtures = () => [...oracle.fixtures.values()];
+const judged = (f: Fixture) => {
+  try {
+    const j = judge(f.structure, f.assertions, f.evidence);
+    return `${j.status}|${[...j.diagnostics.map((d) => d.code)].sort().join(",")}|${[...j.obligations.map((o) => o.term)].sort().join(",")}`;
+  } catch (e) {
+    return `THROWS|${(e as Error).message.slice(0, 40)}`;
+  }
+};
+/** Committed or synthesized fixtures the coordinate's erasure identifies while the oracle separates them. */
+const separatingPairsIn = (pool: Fixture[], id: string): [string, string][] => {
+  const c = censusById().get(id);
+  if (!c) return [];
+  const groups = new Map<string, Fixture[]>();
+  for (const f of pool) {
+    const img = canonical(erase(f, c));
+    groups.set(img, [...(groups.get(img) ?? []), f]);
+  }
+  const out: [string, string][] = [];
+  for (const g of groups.values())
+    for (let i = 0; i < g.length; i++)
+      for (let j = i + 1; j < g.length; j++) if (judged(g[i]) !== judged(g[j])) out.push([g[i].id, g[j].id]);
+  return out;
+};
 
 describe("one definition of primitive support, consumed by every surface", () => {
   it("the audit's standing IS the classifier's answer, witness by witness", () => {
@@ -150,9 +175,13 @@ describe("the footprint-class triage over the live basis candidates", () => {
     const moving = ratifiable.filter(movesOnCorpus);
     // 65 of the 68 unresolved candidates could in principle be ratified (the
     // other three are the blocked set above). 51 of those 65 actually change a
-    // fixture, so a witness is conceivable for them; the remaining 14 are
-    // corpus-dead -- their erasure IS the binding the corpus writes, a corpus
-    // fact and not a defect, which C1e enumerates.
+    // fixture; the remaining 14 are corpus-dead -- their erasure IS the binding
+    // the corpus writes, a corpus fact and not a defect, which C1e enumerates.
+    //
+    // NON-IDENTITY IS NOT EVIDENCE. Changing a fixture only says the erasure
+    // does something; a witness still needs two stimuli the oracle SEPARATES
+    // that the erasure identifies, and the constructibility triage below
+    // measures that separately -- 21 of the 65 have such a shape at all.
     expect(unresolved.length).toBe(68);
     expect(ratifiable.length).toBe(65);
     expect(moving.length).toBe(51);
@@ -160,4 +189,67 @@ describe("the footprint-class triage over the live basis candidates", () => {
     expect(ratifiable).not.toContain("relation.derivedBy.nest.levels#incidence");
     expect(ratifiable).not.toContain("structure.peers[]#present");
   });
+});
+
+describe("the constructibility triage: what EVIDENCE each ratifiable candidate has", () => {
+  /**
+   * The instrument can now produce a legal image for every candidate (round 37),
+   * standing is coherent (round 38) and the candidates are classed (round 39).
+   * What remains is EVIDENCE, and this measures it: a witness needs two stimuli
+   * the oracle separates that the erasure identifies.
+   *
+   * Outcomes are JUDGED FROM CONTENT here, never resolved by id — the specimen
+   * population repeats ids deliberately, so an id-resolving sweep reports pairs
+   * that are not about their content (the pinned hazard from round 24).
+   */
+  const ledger = loadSubtraction();
+  const footprint = claimedFootprints();
+  const byId = censusById();
+  const unresolved = ledger.basis.candidates.filter((id) => (ledger.verdicts[id]?.disposition ?? "unresolved") === "unresolved" && byId.has(id));
+  const ratifiable = unresolved.filter((id) => readSupport([id], footprint, byId).ratifies);
+
+  /** The candidates whose erasure identifies two COMMITTED fixtures the oracle separates. */
+  const byCommittedPair = ratifiable.filter((id) => separatingPairsIn([...oracle.fixtures.values()], id).length > 0);
+  /** The candidates with such a SHAPE among the synthesized specimens — authoring backlog, not citable stimuli. */
+  const bySpecimenShape = ratifiable.filter((id) =>
+    separatingPairsIn(specimens().fixtures.filter((f) => oracle.validate(f).length === 0 && !judged(f).startsWith("THROWS")), id).length > 0,
+  );
+
+  it(
+    "exactly one ratifiable candidate is separable by committed fixtures, and its pair is about content rather than the coordinate",
+    () => {
+      expect(byCommittedPair).toEqual(["evidence.rows.*#present"]);
+      // WHY it was never filed, as a property of the pair rather than a note:
+      // BOTH sides carry rows, so erasing the holder's presence destroys content
+      // on both sides and the collision is about that content, not about
+      // presence. A presence witness needs a pair where one side IS the other
+      // minus the holder, and the corpus has no such pair.
+      for (const id of ["FX_T_GRAIN_WITNESS_UNIQUE_ROWS", "FX_T_GRAIN_WITNESS_DUPLICATE_ROWS"]) {
+        const f = oracle.fixtures.get(id)!;
+        expect((f.evidence as { rows?: unknown }).rows, `${id} carries rows`).toBeDefined();
+      }
+    },
+    600_000,
+  );
+
+  it(
+    "names the authoring backlog: the candidates whose SHAPE separates, which is raw material and not yet evidence",
+    () => {
+      // 21 of the 65 have a synthesized near-miss pair that separates. (A
+      // looser probe reported 24 by counting a specimen whose judgment THROWS
+      // as a differing outcome; a throw is not a judgment, so the pool here
+      // excludes those specimens and 21 is the honest number.) A
+      // specimen is a SEARCH DEVICE — its ids repeat and it is not a citable
+      // stimulus — so each of these still needs a committed fixture or an
+      // authored {base, patch} whose judgment follows from an existing cause
+      // before a witness can be filed.
+      expect(bySpecimenShape.length).toBe(21);
+      expect(bySpecimenShape).toContain("relation.derivedBy.graph.value#incidence");
+      expect(bySpecimenShape).toContain("relation.derivedBy.aggregate-to-grain.from#incidence");
+      // And the remainder have no separating shape at all, which is a corpus gap
+      // and not an instrument one.
+      expect(ratifiable.length - bySpecimenShape.length).toBe(44);
+    },
+    600_000,
+  );
 });
