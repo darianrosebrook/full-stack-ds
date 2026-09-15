@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: declared-absence
 created_at: '2026-09-15T05:29:00.324Z'
-updated_at: '2026-09-15T05:29:01.332Z'
+updated_at: '2026-09-15T05:31:03.183Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
@@ -17,6 +17,7 @@ scope:
   in:
     - 'docs/architecture/analytical-relation-doctrine.md'
     - 'packages/ds-codegen/src/analytical'
+    - docs/current-implementation-snapshot.md
   out: []
 invariants:
   - 'A witness requires an erasure that leaves the surrounding representation well-formed; where the engine diagnoses a coordinate''s ABSENCE, the erasure is the violation itself and the coordinate''s necessity is stated by that diagnostic rather than by a discriminating pair.'
