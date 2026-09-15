@@ -531,7 +531,7 @@ describe("a PRESENCE witness needs a pair the erasure is a no-op on one side of"
 
   it("and evidence.rows.*#present has none, so its refusal is a MISSING FIXTURE SHAPE and not a mis-chosen pair", () => {
     // The population varies rows presence widely -- 162 of 212 specimens carry no `evidence.rows`
-    // at all, and 134 of those are oracle-bound -- so the earlier record's implication that a
+    // at all, and 133 of those are oracle-bound -- so the earlier record's implication that a
     // better pair could simply be picked is wrong. What the corpus lacks is a fixture that IS
     // another fixture plus rows, which is the shape collision requires: erasing presence leaves
     // a row-less fixture unchanged, so colliding with one means the other must equal it exactly
@@ -540,7 +540,7 @@ describe("a PRESENCE witness needs a pair the erasure is a no-op on one side of"
     const oracle = loadOracle();
     const rowless = s.fixtures.filter((f) => (f as unknown as { evidence?: { rows?: unknown } }).evidence?.rows === undefined);
     expect(rowless.length).toBe(162);
-    expect(rowless.filter((f) => oracle.outcomeOf(f.id)).length).toBe(134);
+    expect(rowless.filter((f) => oracle.outcomeOf(f.id)).length).toBe(133);
     expect(presencePairs()).not.toContain("evidence.rows.*#present");
   });
 });

@@ -7,8 +7,8 @@
  },
  "population": {
   "corpus": 90,
-  "stimuli": 31,
-  "synthesized": 91,
+  "stimuli": 32,
+  "synthesized": 90,
   "total": 212,
   "membershipDigest": "b06d9654b1fe538625d7ee664ff42181c0cab4e7c5f1228bfefce880d0f99101"
  },
@@ -28,7 +28,7 @@
  "pairs": 34980,
  "agree": {
   "count": 24899,
-  "digest": "01ef0ab5074885c06a550e7886c0905b94fd9c691cadf5f3c058250012baf081"
+  "digest": "d81e07bdadd9da93b841b3b3b0ca12cea893e146b28e1256a4cf85066d805670"
  },
  "classes": {
   "new-no-plan": {
@@ -1062,6 +1062,13 @@
   ],
   [
    "assertion.aggregate.along",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -1358,13 +1365,6 @@
    "assertion.aggregate.along",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.along",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -2546,6 +2546,13 @@
   ],
   [
    "assertion.aggregate.along#order",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -2842,13 +2849,6 @@
    "assertion.aggregate.along#order",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "assertion.aggregate.along#order",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "only-legacy-coordinate"
   ],
@@ -4030,6 +4030,13 @@
   ],
   [
    "assertion.aggregate.field",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -4326,13 +4333,6 @@
    "assertion.aggregate.field",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.field",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -5696,6 +5696,13 @@
   ],
   [
    "assertion.aggregate.op",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "940d76eea5e5",
+   "2083303502ea",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "e153b7a4f59c",
    "e9d03ce350e8",
@@ -5993,13 +6000,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "eeca8d95a683",
    "d65df02d0006",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.aggregate.op",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "167ca8db96b8",
-   "d9593a8b9aec",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -8720,6 +8720,13 @@
   ],
   [
    "assertion.aggregate.op:sum~count",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "acb0e88a8f51",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~count",
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "acd6cd8c68da",
    "4791c8439df3",
@@ -8821,13 +8828,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "3266c785ce43",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~count",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "a3d4a9ba313e",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -9385,6 +9385,13 @@
   ],
   [
    "assertion.aggregate.op:sum~mean",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "5688aa3c89c6",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "acd6cd8c68da",
    "7dc119a75edc",
@@ -9612,13 +9619,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "7b9f50d2d5a7",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~mean",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "3978cbc51908",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -10407,6 +10407,13 @@
   ],
   [
    "assertion.aggregate.op:sum~min",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "68a47b6c2bad",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "4936044dacd7",
    "64f170ce3c2c",
@@ -10578,13 +10585,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "56625f9b9e48",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~min",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "c46c98450b49",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -11625,6 +11625,13 @@
   ],
   [
    "assertion.aggregate.relation",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -11921,13 +11928,6 @@
    "assertion.aggregate.relation",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.relation",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -13109,6 +13109,13 @@
   ],
   [
    "assertion.kind",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "91163cb24629",
+   "03099b9ce744",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "fd1a811faed0",
    "92885966eb7b",
@@ -13406,13 +13413,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "1d0b357a54fc",
    "456cf259a64e",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.kind",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "54af0cc6a69b",
-   "59d92537c79c",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -14593,6 +14593,13 @@
   ],
   [
    "assertion.kind:aggregate~ratio-comparison",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "f90813620e6e",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "42e8d77919ed",
@@ -14890,13 +14897,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "910bdc1aca78",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.kind:aggregate~ratio-comparison",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "aae96bfec159",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -16077,6 +16077,13 @@
   ],
   [
    "assertion.ratio-comparison.field",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -16373,13 +16380,6 @@
    "assertion.ratio-comparison.field",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.field",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -17561,6 +17561,13 @@
   ],
   [
    "assertion.ratio-comparison.relation",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -17857,13 +17864,6 @@
    "assertion.ratio-comparison.relation",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.relation",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -19045,6 +19045,13 @@
   ],
   [
    "evidence.grainWitness",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -19341,13 +19348,6 @@
    "evidence.grainWitness",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "evidence.grainWitness",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -20529,6 +20529,13 @@
   ],
   [
    "evidence.grainWitness#order",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -20825,13 +20832,6 @@
    "evidence.grainWitness#order",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "evidence.grainWitness#order",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "only-legacy-coordinate"
   ],
@@ -22601,6 +22601,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -22897,13 +22904,6 @@
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -24085,6 +24085,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -24381,13 +24388,6 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong#order",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "only-legacy-coordinate"
   ],
@@ -26199,6 +26199,13 @@
   ],
   [
    "field.transformation",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "aaa2979402a3",
+   "b6f1e5d5c271",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "7826187f9750",
    "c7c252435033",
@@ -26496,13 +26503,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "342d822353cc",
    "69bdf78b511d",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "field.transformation",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "1c9812bf713f",
-   "b8856b5e60f7",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -27620,6 +27620,13 @@
   ],
   [
    "field.transformation:interval~ratio",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "8fd3e9f78d6f",
+   "e87d7ebde40f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0b9838860b33",
    "89f70c9f2794",
@@ -27826,13 +27833,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "b8e5f731d71b",
    "00db7fabe315",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:interval~ratio",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "6efc8702d607",
-   "8857a4f6c8c6",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -28908,6 +28908,13 @@
   ],
   [
    "field.transformation:nominal~interval",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "dcb862eaa04e",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "c9a92e128348",
@@ -29191,13 +29198,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "e6d161df728a",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~interval",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "d5f9cb6019ed",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -30371,6 +30371,13 @@
   ],
   [
    "field.transformation:nominal~ordinal",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "3672f1fa03b4",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "6717bfa1bca4",
@@ -30654,13 +30661,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "ad3c7a8474ad",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ordinal",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "f1c530d9b634",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -31841,6 +31841,13 @@
   ],
   [
    "field.transformation:nominal~ratio",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "9f9212a95c99",
+   "4d00836d6318",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "79ef6aafd931",
    "d43be88ee413",
@@ -32124,13 +32131,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "831daa198b13",
    "2fe33c089bf0",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ratio",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "7580e3aa603b",
-   "a9466c06fe6a",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33731,6 +33731,13 @@
   ],
   [
    "field.transformation:ordinal~ratio",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "492beb2823ce",
+   "a465a44d758b",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "2b89d531ec3c",
    "6c7839e25688",
@@ -33993,13 +34000,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "6e8293f356e3",
    "04f285dfd93e",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:ordinal~ratio",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "9e5603493dd8",
-   "804c8a0e17b8",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -35159,6 +35159,13 @@
   ],
   [
    "field.whole.perRow",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -35455,13 +35462,6 @@
    "field.whole.perRow",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.whole.perRow",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -36951,6 +36951,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.from",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -37247,13 +37254,6 @@
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.from",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -38435,6 +38435,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -38731,13 +38738,6 @@
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.toGrain",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -39947,6 +39947,13 @@
   ],
   [
    "relation.derivedBy.bin.field",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -40243,13 +40250,6 @@
    "relation.derivedBy.bin.field",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.field",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -41431,6 +41431,13 @@
   ],
   [
    "relation.derivedBy.bin.from",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -41727,13 +41734,6 @@
    "relation.derivedBy.bin.from",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.from",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -42915,6 +42915,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeFrom",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -43211,13 +43218,6 @@
    "relation.derivedBy.graph.edgeFrom",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeFrom",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -44399,6 +44399,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeTo",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -44695,13 +44702,6 @@
    "relation.derivedBy.graph.edgeTo",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeTo",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -45883,6 +45883,13 @@
   ],
   [
    "relation.derivedBy.graph.from",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -46179,13 +46186,6 @@
    "relation.derivedBy.graph.from",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.from",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -47367,6 +47367,13 @@
   ],
   [
    "relation.derivedBy.graph.value",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -47663,13 +47670,6 @@
    "relation.derivedBy.graph.value",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.value",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -48067,6 +48067,13 @@
   ],
   [
    "relation.derivedBy.join.cardinality",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "3e2b92d61749",
+   "e976363b0e5f",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.join.cardinality",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "074448ef7212",
    "a7470288e9ae",
@@ -48101,13 +48108,6 @@
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
-   "relation.derivedBy.join.cardinality",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "57592d11801d",
-   "30efb35e2d48",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
    "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
    "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT",
    "a1dc193cfb74",
@@ -48116,9 +48116,9 @@
   ],
   [
    "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "3f93c2ed2062",
-   "b8ddd2f3a406",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "7849eb140af5",
+   "f43993968347",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -48151,6 +48151,13 @@
   ],
   [
    "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "9bdc3b9ef7b7",
+   "8417392404b2",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "f7d93d2c3af9",
    "2dd98678f4cf",
@@ -48168,13 +48175,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "282dce926d64",
    "9f55e59964c9",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "bb60e07225ee",
-   "8bf0173e068a",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -48235,9 +48235,9 @@
   ],
   [
    "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "4c6125a89284",
-   "2274a852635f",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "014a743e6ce6",
+   "309b850135be",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -49131,6 +49131,13 @@
   ],
   [
    "relation.derivedBy.join.from",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -49427,13 +49434,6 @@
    "relation.derivedBy.join.from",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.from",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -50615,6 +50615,13 @@
   ],
   [
    "relation.derivedBy.join.with",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -50911,13 +50918,6 @@
    "relation.derivedBy.join.with",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.with",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -51511,6 +51511,13 @@
   ],
   [
    "relation.derivedBy.kind",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "1503414593c8",
+   "c411bb00ce13",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0dfc28af1ea1",
    "df0c30ca38d9",
@@ -51619,13 +51626,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "14ad61e6aa8a",
    "7ed76ad224c3",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "722e456b39f9",
-   "f30b7277a58b",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -52337,6 +52337,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~join",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "bf625017a8a4",
+   "d7e225a562c9",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~join",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "150f32dddec8",
@@ -52417,13 +52424,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "a1329c7e547f",
    "8d12e66e1499",
-   "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind:aggregate-to-grain~join",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "90d3eca54433",
-   "c4eee6ba12ec",
    "merge-enum-members:scalar>class:legacy-invalid"
   ],
   [
@@ -53562,6 +53562,13 @@
   ],
   [
    "relation.derivedBy.kind:join~bin",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "8bf9ddbb9d80",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:join~bin",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "320e1f95c06c",
    "bc9462e0321f",
@@ -53607,13 +53614,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "a4abb1ae8a4e",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:join~bin",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "508c3d44bf0d",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -53716,6 +53716,13 @@
   ],
   [
    "relation.derivedBy.kind:join~graph",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "78949101a5c1",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:join~graph",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "f7d93d2c3af9",
    "705d0423277b",
@@ -53747,13 +53754,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "f9e59637e868",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:join~graph",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "0020b6d0fab0",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -53898,6 +53898,13 @@
   ],
   [
    "relation.derivedBy.kind:join~nest",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "248895edffb1",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:join~nest",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "e8f5006b887f",
    "3a5e17dc6d0d",
@@ -53992,13 +53999,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "95939a176374",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:join~nest",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "82ac11b03297",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -54122,6 +54122,13 @@
   ],
   [
    "relation.derivedBy.kind:join~normalize",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "3550eaf31a1b",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:join~normalize",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "320e1f95c06c",
    "7c1b19fbf344",
@@ -54167,13 +54174,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "a4b6f0a0ba58",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:join~normalize",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "88a38ace9e51",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -54255,6 +54255,13 @@
   ],
   [
    "relation.derivedBy.kind:join~project",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "9b099a530e76",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:join~project",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "f7d93d2c3af9",
    "b165c784c8b4",
@@ -54286,13 +54293,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
    "a352cd6f7bd9",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:join~project",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
-   "4b50110887f9",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -56551,6 +56551,13 @@
   ],
   [
    "relation.derivedBy.nest.from",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -56847,13 +56854,6 @@
    "relation.derivedBy.nest.from",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.from",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -58035,6 +58035,13 @@
   ],
   [
    "relation.derivedBy.nest.levels",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -58331,13 +58338,6 @@
    "relation.derivedBy.nest.levels",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.levels",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -59701,6 +59701,13 @@
   ],
   [
    "relation.derivedBy.normalize.field",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -59997,13 +60004,6 @@
    "relation.derivedBy.normalize.field",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.field",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -61185,6 +61185,13 @@
   ],
   [
    "relation.derivedBy.normalize.from",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -61481,13 +61488,6 @@
    "relation.derivedBy.normalize.from",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.from",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -62669,6 +62669,13 @@
   ],
   [
    "relation.derivedBy.project.from",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -62965,13 +62972,6 @@
    "relation.derivedBy.project.from",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.from",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -64153,6 +64153,13 @@
   ],
   [
    "relation.derivedBy.project.keep",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -64449,13 +64456,6 @@
    "relation.derivedBy.project.keep",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.keep",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -65637,6 +65637,13 @@
   ],
   [
    "relation.derivedBy.project.keep#order",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -65933,13 +65940,6 @@
    "relation.derivedBy.project.keep#order",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "relation.derivedBy.project.keep#order",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "only-legacy-coordinate"
   ],
@@ -67121,6 +67121,13 @@
   ],
   [
    "relation.grain",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "06de38363cb7",
+   "f0512dd6963b",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "8a3bb5c227f0",
    "ab2614332136",
@@ -67418,13 +67425,6 @@
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "5fd193ace215",
    "9ebb33e71fc9",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "relation.grain",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "e61f9325cb94",
-   "aca14f55dd4a",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -68605,6 +68605,13 @@
   ],
   [
    "structure.peers[]",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -68901,13 +68908,6 @@
    "structure.peers[]",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "structure.peers[]",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "new-no-plan"
   ],
@@ -70145,6 +70145,13 @@
   ],
   [
    "structure.peers[]#order",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "0e978e44c688",
    "-",
@@ -70441,13 +70448,6 @@
    "structure.peers[]#order",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
    "4c6125a89284",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "structure.peers[]#order",
-   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-   "a12b1fa0aa2e",
    "-",
    "only-legacy-coordinate"
   ],

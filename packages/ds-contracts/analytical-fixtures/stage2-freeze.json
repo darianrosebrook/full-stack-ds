@@ -135,7 +135,6 @@
       "relation.derivedBy.graph.value#incidence",
       "relation.derivedBy.graph.value#present",
       "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
-      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-one",
       "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
       "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
@@ -187,6 +186,7 @@
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.bin.closure",
       "relation.derivedBy.bin.closure:left-closed~<absent>",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.kind:bin~normalize",
       "relation.derivedBy.nest.levels#order",
       "structure.peers[]#arity"

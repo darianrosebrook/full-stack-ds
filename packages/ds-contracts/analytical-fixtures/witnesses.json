@@ -1186,6 +1186,34 @@
         "cause": "CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN states its claim about a peer set EVERY member of which is an aggregate-to-grain of one relation -- the law's own condition is `aggs.length === decls.length` -- so a three-member set containing the un-derived source relation is a different proposition and the divergence rule does not apply to it. Only the peer set's arity moves; the two aggregations and their disagreeing targets are untouched."
       },
       "note": "STAGE-2 necessity for structure.peers[]#arity: separates how many relations a peer set claims to co-register. The a-side is the corpus case CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN and the b-side adds the source relation to the same set, so the pair differs at exactly that array; the arity erasure truncates the inner list to its declared floor of two and returns the b-side to the a-side shape, and checkIsolation discharges on both sides. NON-CLAIM: the b-side is admissible because the divergence law is conditioned on every member being an aggregation, which this pair reaches by adding a non-aggregation -- so the witness establishes that the COUNT of members decides whether that law applies, and not that a larger all-aggregation peer set would be admissible. If the law tightens to compare its aggregation members among themselves, the engine disagrees with this hand adjudication and C7 fails, which is the designed invalidation."
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-many"
+      ],
+      "a": {
+        "fixture": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+      },
+      "b": {
+        "base": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+        "patch": [
+          {
+            "set": "structure.relations.order_lines.derivedBy.cardinality",
+            "value": "many-to-many"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_GRAIN_FANOUT"
+          ],
+          "terms": [
+            "grain:declared"
+          ]
+        },
+        "cause": "CASE_REVENUE_DOUBLE_COUNTED_AFTER_JOIN decides the diagnostic and does not depend on which way the join multiplies: order_lines still fans out over lines, so the summed revenue is still inflated. What changes is the GRAIN: a join that multiplies on both sides determines no result grain at all, so the sum owes the corpus's `grain:declared` obligation -- the triad whose absent side is FX_ORDERS_ROLLUP_UNKNOWN_GRAIN -- which the one-to-many reading does not. Both findings are corpus-licensed and the pair differs at exactly the tag."
+      },
+      "note": "STAGE-2 necessity for relation.derivedBy.join.cardinality:one-to-many~many-to-many: separates a join that multiplies on the `with` side from one that multiplies on both. The a-side is the corpus case for REL_GRAIN_FANOUT and the b-side is the same declaration at many-to-many, whose required outcome adds the corpus's `grain:declared` obligation because the operator then determines no grain. The merge erasure folds both members into one class, which leaves the join without a resolvable cardinality: determinedGrain returns undefined, the grain comparison is skipped, and the erasure introduces no boundary finding -- so checkIsolation discharges on both sides. NON-CLAIM: the distinction this witness establishes is that the tag decides whether the result grain is DETERMINED at all; it does not establish that one-to-many and many-to-many differ in what they multiply, and it says nothing about the five sibling pairs, four of which are refused for the reason recorded in the ledger rather than witnessed."
     }
   ]
 }

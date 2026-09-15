@@ -153,6 +153,7 @@ describe("the committed closure ledger", () => {
     expect(derivation.filter((d) => d.standing.state !== "unresolved").map((d) => d.coordinate)).toEqual([
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.nest.levels#order",
     ]);
     // And two ARE primitive, each because a single-coordinate witness ratifies it:
@@ -162,6 +163,7 @@ describe("the committed closure ledger", () => {
     // asserting it here keeps it visible.
     expect(derivation.filter((d) => d.standing.state === "primitive").map((d) => d.coordinate)).toEqual([
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.nest.levels#order",
     ]);
   });
@@ -219,6 +221,7 @@ describe("adopting the closure form confers no standing", () => {
       "field.additivity.semi-additive.nonAdditiveAlong#arity",
       "field.additivity.semi-additive.nonAdditiveAlong#incidence",
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.nest.levels#order",
     ]);
     const affected = r.checks.filter((c) => c.obligations.find((o) => o.id.startsWith("8-"))!.detail.includes("PRIMITIVE"));
@@ -235,7 +238,11 @@ describe("adopting the closure form confers no standing", () => {
       "relation.derivedBy.kind:aggregate-to-grain~nest",
       "relation.derivedBy.kind:aggregate-to-grain~normalize",
       "relation.derivedBy.kind:aggregate-to-grain~project",
+      "relation.derivedBy.kind:join~bin",
+      "relation.derivedBy.kind:join~graph",
       "relation.derivedBy.kind:join~nest",
+      "relation.derivedBy.kind:join~normalize",
+      "relation.derivedBy.kind:join~project",
       "relation.derivedBy.kind:nest~bin",
       "relation.derivedBy.kind:nest~graph",
       "relation.derivedBy.kind:nest~normalize",
@@ -810,6 +817,7 @@ describe("the unresolved dependencies are blocked by EVIDENCE, not by an undecid
       "field.additivity.semi-additive.nonAdditiveAlong#arity",
       "field.additivity.semi-additive.nonAdditiveAlong#incidence",
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.nest.levels#order",
     ]);
   });
@@ -1197,8 +1205,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(69);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 25, "member-absence": 8, leaf: 5, "member-pair": 31 });
+    expect(unresolved.length).toBe(68);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 25, "member-absence": 8, leaf: 5, "member-pair": 30 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8

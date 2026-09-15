@@ -1810,7 +1810,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // closure form was accounting for earned a witness of its own and moved to `primitive` -- the
     // classes are a partition, so a coordinate cannot be in both. Accounted is not ratified, and
     // the assertion below is what keeps the two apart.
-    expect(byClass).toEqual({ primitive: 57, "closure-accounted": 11, "required-derived-vocabulary": 3, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 58, "closure-accounted": 11, "required-derived-vocabulary": 3, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -1961,6 +1961,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "relation.derivedBy.bin.closure:left-closed~<absent>",
       "relation.derivedBy.bin.field#incidence",
       "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.kind",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
@@ -2004,6 +2005,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "relation.derivedBy.bin.closure:left-closed~<absent>",
       "relation.derivedBy.bin.field#incidence",
       "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.kind",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
