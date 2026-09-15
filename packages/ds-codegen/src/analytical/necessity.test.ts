@@ -2846,6 +2846,51 @@ describe("an oracle-separated pair is NECESSARY for a witness and not sufficient
     // masking witness, which reaches the isolation loop and is refused there.
   });
 
+  it("the peers incidence erasure is lawful in BOTH binding regimes, and the difference is what the erasure is for", () => {
+    // Round 32's open edge, settled by measurement rather than asserted away:
+    // the lawful-image claim leaned on the corpus declaring its first relation
+    // as a BASE relation, so the canonical peer bind [first two] never landed
+    // on two aggregates. Reorder FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS so it
+    // does, and the two regimes separate cleanly:
+    //
+    //   base+aggregate bind -- the divergence law is conditioned on EVERY member
+    //     being an aggregate, so the image carries no finding at all and the
+    //     discharge rests on nothing but legality and locality;
+    //   aggregate+aggregate bind -- the law FIRES on the rebound set and the
+    //     image is judged illegal REL_PEER_GRAIN_DIVERGENCE, which is not a
+    //     boundary refusal but the semantic distinction under test: the same
+    //     principle that admits the bin.closure pair above, where a slot-local
+    //     erasure producing the CORPUS's own rule IS the finding the coordinate
+    //     names. The coordinate is lawful in both regimes for different
+    //     reasons, and neither depends on the corpus's declaration order.
+    const base = oracle.fixtures.get("FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS")!;
+    const peers = kernel.find((c) => c.id === "structure.peers[]#incidence")!;
+    const plan = loadPlans().get("structure.peers[]#incidence")!;
+    // The committed corpus IS the base+aggregate regime, and its image is clean.
+    expect(checkIsolation(base, peers)).toMatchObject({ state: "discharged" });
+    const clean = executePlan(base, plan) as unknown as Fixture;
+    expect(codesOf(judge(clean.structure, clean.assertions, clean.evidence))).toEqual([]);
+    // The aggregate+aggregate regime is one declaration order away: schema-valid,
+    // moving, and discharged with the full conjunction -- the derivation boundary
+    // itself reports nothing on the rebound set.
+    const aggregates = JSON.parse(JSON.stringify(base)) as Fixture;
+    {
+      const s = aggregates.structure as unknown as { relations: Record<string, unknown>; peers?: string[][] };
+      const { events, ...rest } = s.relations;
+      s.relations = { ...rest, events };
+      s.peers = [["by_day", "events"]];
+    }
+    expect(oracle.validate(aggregates), "the reorder is a legal declaration").toEqual([]);
+    expect(checkIsolation(aggregates, peers)).toEqual({ state: "discharged", by: ["no-introduced-finding", "quotient-legal", "slot-local"] });
+    const divergent = executePlan(aggregates, plan) as unknown as Fixture;
+    const j = judge(divergent.structure, divergent.assertions, divergent.evidence);
+    expect(j.status).toBe("illegal");
+    expect(codesOf(j)).toEqual(["REL_PEER_GRAIN_DIVERGENCE"]);
+    // The firing finding is SEMANTIC, not the boundary's own well-formedness
+    // line -- the one class the isolation guard refuses a collision over.
+    expect(Object.values(DERIVATION_DIAG)).not.toContain("REL_PEER_GRAIN_DIVERGENCE");
+  });
+
   it("and the DIAGNOSTIC decides it, not the operation: the same erasure is witnessable where absence is lawful", () => {
     // The erased declaration is schema-VALID, so the deletion is the correct erasure and not a
     // plan defect. The illegality is semantic, which is exactly why an erasure can never be
