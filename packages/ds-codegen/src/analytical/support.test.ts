@@ -14,6 +14,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { computeReport } from "./erasure-audit.js";
+import { canonical, erase } from "./quotient.js";
 import { loadCensus } from "./census.js";
 import { checkWitness, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
 import { claimedFootprints, censusById, readSupport } from "./support.js";
@@ -25,6 +26,7 @@ const witnesses = loadWitnesses().witnesses;
 const holding = witnesses.filter((w) => checkWitness(w, census, oracle).ok);
 const ratified = primitiveRatified(holding);
 const report = computeReport();
+const oracleFixtures = () => [...oracle.fixtures.values()];
 
 describe("one definition of primitive support, consumed by every surface", () => {
   it("the audit's standing IS the classifier's answer, witness by witness", () => {
@@ -92,5 +94,70 @@ describe("one definition of primitive support, consumed by every surface", () =>
     expect(real.ratifies, "a declared length of one must not be sufficient").toBe(false);
     // The syntactic rule would have accepted it:
     expect(real.declared.length === 1).toBe(true);
+  });
+});
+
+describe("the footprint-class triage over the live basis candidates", () => {
+  /**
+   * WHAT CAN EVER EARN PRIMITIVE STANDING, measured before any witness is
+   * filed. The round-38 mistake was filing first and discovering the standing
+   * question afterwards; this sweep is the ordering the successor ledger now
+   * prescribes — classify the candidates, then file.
+   *
+   * A candidate's class is what a SINGLE-coordinate witness on it would do, so
+   * it is read through the same classifier every consumer uses. "Ratifiable" is
+   * necessary and not sufficient: an atomic candidate whose erasure changes no
+   * fixture is corpus-dead, and one whose erasure changes fixtures but
+   * identifies no oracle-separated pair is evidence-blocked.
+   */
+  const ledger = loadSubtraction();
+  const footprint = claimedFootprints();
+  const byId = censusById();
+  const candidates = ledger.basis.candidates.filter((id) => byId.has(id));
+  const classOf = (id: string) => readSupport([id], footprint, byId).cls;
+  const movesOnCorpus = (id: string) => {
+    const c = byId.get(id)!;
+    return oracleFixtures().some((f) => canonical(erase(f, c)) !== canonical(f));
+  };
+  const unresolved = candidates.filter((id) => (ledger.verdicts[id]?.disposition ?? "unresolved") === "unresolved");
+
+  it("partitions every candidate, and a future erasure change that widens the unwitnessable set fails here", () => {
+    const tally: Record<string, number> = {};
+    for (const id of candidates) tally[classOf(id)] = (tally[classOf(id)] ?? 0) + 1;
+    expect(tally).toEqual({ atomic: 74, "own-refinements": 8, "sibling-facet": 2, outside: 1 });
+  });
+
+  it("names the three that can NEVER be ratified by a primitive claim, and why", () => {
+    const blocked = candidates.filter((id) => !readSupport([id], footprint, byId).ratifies).sort();
+    expect(blocked).toEqual([
+      "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+      "relation.derivedBy.nest.levels#incidence",
+      "structure.peers[]#present",
+    ]);
+    // Two take a sibling facet with them; one reaches outside its own
+    // proposition. Neither shape is a sub-distinction, so no witness on them
+    // can claim that erasing "exactly this coordinate" destroyed the
+    // distinction -- which is what `witnessStrength.single` requires.
+    expect(readSupport(["relation.derivedBy.nest.levels#incidence"], footprint, byId).sibling).toEqual(["relation.derivedBy.nest.levels#order"]);
+    expect(readSupport(["relation.derivedBy.aggregate-to-grain.toGrain#incidence"], footprint, byId).sibling).toEqual([
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
+    ]);
+    expect(readSupport(["structure.peers[]#present"], footprint, byId).outside.length).toBeGreaterThan(0);
+  });
+
+  it("counts the ratifiable unresolved set and its corpus-moving subset, which is what filing may draw on", () => {
+    const ratifiable = unresolved.filter((id) => readSupport([id], footprint, byId).ratifies);
+    const moving = ratifiable.filter(movesOnCorpus);
+    // 65 of the 68 unresolved candidates could in principle be ratified (the
+    // other three are the blocked set above). 51 of those 65 actually change a
+    // fixture, so a witness is conceivable for them; the remaining 14 are
+    // corpus-dead -- their erasure IS the binding the corpus writes, a corpus
+    // fact and not a defect, which C1e enumerates.
+    expect(unresolved.length).toBe(68);
+    expect(ratifiable.length).toBe(65);
+    expect(moving.length).toBe(51);
+    // And the blocked three are NOT in it.
+    expect(ratifiable).not.toContain("relation.derivedBy.nest.levels#incidence");
+    expect(ratifiable).not.toContain("structure.peers[]#present");
   });
 });
