@@ -836,6 +836,78 @@
         },
         "cause": "CASE_WHICH_BIN_GETS_TEN makes an undeclared-closure BIN illegal, and that rule is keyed to the bin constructor: partitioning a range into intervals is what raises the question of which side owns a boundary. Rescaling a field against a whole raises no such question, so the same {from, field} payload under `normalize` is admissible; the normalize rule of CASE_NORMALIZED_AVERAGES fires only when the normalized measure is subsequently aggregated non-additively, and the only assertion here is `min` over the SOURCE relation. Both readings are mechanical over existing stage-2 causes. Because bin and normalize share the required key-set {from, field} — the only such pair among the seven constructors — the substitution alters nothing but the discriminant, so the outcome difference is attributable to it alone."
       }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.along#present"
+      ],
+      "a": {
+        "fixture": "FX_STOCK_SUM_ALONG_DATE"
+      },
+      "b": {
+        "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT"
+      },
+      "note": "STAGE-2 necessity for assertion.aggregate.along#present: separates whether the aggregate names a dimension at all. Both sides are already-existing fixtures -- CASE_INVENTORY_SUMMED_OVER_TIME against its near-neighbour FX_N_STOCK_SUM_ALONG_PRODUCT -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.field#incidence"
+      ],
+      "a": {
+        "fixture": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+      },
+      "b": {
+        "fixture": "FX_N_LINE_QTY_SUMMED_AFTER_JOIN"
+      },
+      "note": "STAGE-2 necessity for assertion.aggregate.field#incidence: separates whether the summed field co-refers with the joined key. Both sides are already-existing fixtures -- CASE_REVENUE_DOUBLE_COUNTED_AFTER_JOIN against its near-neighbour FX_N_LINE_QTY_SUMMED_AFTER_JOIN -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls:exclude~<absent>"
+      ],
+      "a": {
+        "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+      },
+      "b": {
+        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+      },
+      "note": "STAGE-2 necessity for assertion.aggregate.nulls:exclude~<absent>: separates whether a null policy is declared versus absent. Both sides are already-existing fixtures -- CASE_CENSORED_VALUES_IN_A_MEAN against its near-neighbour FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "field.additivity.kind:additive~non-additive"
+      ],
+      "a": {
+        "fixture": "FX_SHARE_OF_AVERAGE_SCORE"
+      },
+      "b": {
+        "fixture": "FX_N_SHARE_OF_ADDITIVE_TOTAL"
+      },
+      "note": "STAGE-2 necessity for field.additivity.kind:additive~non-additive: separates additive against non-additive. Both sides are already-existing fixtures -- CASE_NORMALIZED_AVERAGES against its near-neighbour FX_N_SHARE_OF_ADDITIVE_TOTAL -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "field.temporality.grain"
+      ],
+      "a": {
+        "fixture": "FX_PEERS_AT_DAY_AND_MONTH_GRAIN"
+      },
+      "b": {
+        "fixture": "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN"
+      },
+      "note": "STAGE-2 necessity for field.temporality.grain: separates whether the temporal grain is declared. Both sides are already-existing fixtures -- CASE_DAILY_AND_MONTHLY_ON_ONE_AXIS against its near-neighbour FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "field.temporality.grain:day~month"
+      ],
+      "a": {
+        "fixture": "FX_PEERS_AT_DAY_AND_MONTH_GRAIN"
+      },
+      "b": {
+        "fixture": "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN"
+      },
+      "note": "STAGE-2 necessity for field.temporality.grain:day~month: separates day against month. Both sides are already-existing fixtures -- CASE_DAILY_AND_MONTHLY_ON_ONE_AXIS against its near-neighbour FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
     }
   ]
 }
