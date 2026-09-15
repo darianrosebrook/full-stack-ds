@@ -2,9 +2,11 @@ id: REL-BINDING-QUOTIENT-01
 title: 'Prototype a resolution-preserving incidence quotient for bound references, and measure which operand kinds it reaches'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Measured a resolution-preserving incidence quotient: canonical rebinding reaches thirteen of the twenty-one bound reference-topology coordinates including nest.levels, and leaves eight whose laws write the same binding twice in the result declaration, so the residue is a locator question rather than a corpus one.'
 created_at: '2026-09-15T08:05:09.251Z'
-updated_at: '2026-09-15T08:05:16.987Z'
+updated_at: '2026-09-15T08:11:14.737Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
