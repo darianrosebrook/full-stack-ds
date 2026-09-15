@@ -165,6 +165,8 @@ const DISPOSITION: Record<string, string> = {
     "legacy rewrote one member as the other, asserting a member definitively where the law asks for the class; the legacy image is source-valid but says something different; the member class is the lawful image",
   "merge-enum-members:scalar>class:legacy-invalid":
     "legacy rewrote a discriminator member under a payload that belongs to the other branch, leaving a source-invalid image; the member class keeps the payload and is lawful -- the branch residue the closure form exists to normalize",
+  "forget-reference-incidence:scalar>scalar:legacy-valid":
+    "the legacy walker wrote a reserved token, which is a legal `name` but not a DECLARED one, so the image stops resolving: the boundary reports the operand missing or the result underivable and refuses it as a declaration, and no witness naming the coordinate can be admitted. The new plan REBINDS a bound slot to the operand's own declared names, so the collision is between two bindings -- which is what the coordinate names -- and the image stays a declaration. The legacy image is source-valid and says LESS than the coordinate forgets: it claims a referent that does not exist.",
   "forget-reference-arity:absent>scalar:legacy-invalid":
     "legacy truncated a reference list below its declared floor, leaving a source-invalid image; the new plan truncates to the floor and never below it",
 };
