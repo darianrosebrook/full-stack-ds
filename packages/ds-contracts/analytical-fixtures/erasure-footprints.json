@@ -3,11 +3,11 @@
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
     "witnesses.json": "b8690bd0a25a1327bb18569ea606486e29439128b29c1f6f08939e198413aa81",
-    "closures-stage2.json": "0866d58ef0353122588f73b3875d9b4bd7e0ab1a9bb8d301cae8001c1fecee92"
+    "closures-stage2.json": "07fb87be60e381607cfc256e31e3b2517205c32b90c5bd3aef0c5d64ffe87ed8"
   },
   "authority": {
-    "coordinateBasisDigest": "08e136ff684caa7f1c8b88fd74f287fa7cdcddc0081f464f538cd6a7ab0af4b2",
-    "erasureAuthorityDigest": "a30fcdfa496ec2c29d8c4ff849d4d8c375edebe2ddc4befdac06fc36dc433f7b",
+    "coordinateBasisDigest": "931cd30cf5d64f4a22b0859999bf8e2b08085472759ce140fa4eaf8c449b4f3b",
+    "erasureAuthorityDigest": "a4c8464653836b7b5f3e979ce3404b412d1e14baa6344c42a22213e2cf9573ad",
     "witnessAuthorityDigest": "86d17e4eac5229a306ddf91c37a850aba260340e46d136369c5475aa8b16f092",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"

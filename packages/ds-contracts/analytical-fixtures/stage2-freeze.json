@@ -4,8 +4,8 @@
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766"
   },
   "authority": {
-    "coordinateBasisDigest": "08e136ff684caa7f1c8b88fd74f287fa7cdcddc0081f464f538cd6a7ab0af4b2",
-    "erasureAuthorityDigest": "a30fcdfa496ec2c29d8c4ff849d4d8c375edebe2ddc4befdac06fc36dc433f7b",
+    "coordinateBasisDigest": "931cd30cf5d64f4a22b0859999bf8e2b08085472759ce140fa4eaf8c449b4f3b",
+    "erasureAuthorityDigest": "a4c8464653836b7b5f3e979ce3404b412d1e14baa6344c42a22213e2cf9573ad",
     "witnessAuthorityDigest": "86d17e4eac5229a306ddf91c37a850aba260340e46d136369c5475aa8b16f092",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
@@ -519,8 +519,8 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.join.with#incidence": {
-      "reach": 3,
-      "digest": "28ecad2a640f6dfdfd3752cfb8d8a785b147ba2197fb9d55663ea0fc1ddf4460"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.join.cardinality": {
       "reach": 3,
@@ -663,8 +663,8 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.graph.edgeTo#incidence": {
-      "reach": 6,
-      "digest": "415b9d2f822289ab1884ce7f8b078c0cb31587bd7c58cd17f6f342162d8c1048"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.graph.value": {
       "reach": 0,
@@ -877,12 +877,12 @@
   },
   "adjudicated": {},
   "supersedes": {
-    "erasureAuthorityDigest": "210aab90a54b5ee6dd667c19171b6ea1196b95db1c8db2a47429c94b2387a332",
+    "erasureAuthorityDigest": "a30fcdfa496ec2c29d8c4ff849d4d8c375edebe2ddc4befdac06fc36dc433f7b",
     "divergences": [
       {
         "operation": "forget-reference-incidence",
-        "coordinates": 1,
-        "effect": "The binding quotient reached the one name list the branch map could not: `structure.peers` now carries the same `x-fsds-operands` map the derivation branches carry, and an array's ELEMENTS inherit their annotated property's namespace, so a peer set rebinds to declared RELATION names instead of reserved tokens -- the executor is untouched, and the erasure authority moved through its emitted SCHEMA artifact alone. Reach falls 4 -> 2 because the canonical bind is the IDENTITY on a peer set that already names the structure's first two relations, which two committed fixtures do; where it moves, the image is a lawful peer claim for a measured reason -- the bind lands on the first-declared relation, a BASE relation in this corpus, and the divergence law is conditioned on every member being an aggregate. No verdict moved: the coordinate leaves never-discharged discharged, and no witness names it."
+        "coordinates": 2,
+        "effect": "Declared DISTINCTNESS: the law says `join.with` differs from `from` and `graph.edgeTo` from `edgeFrom`, so the operand map now carries `distinctFrom` beside the namespace, the census carries it onto the locator, and the canonical rebind SKIPS the sibling operand's own binding -- which is where the unconstrained pick used to land, producing a self-join and a degenerate edge the boundary refused as underivable. Both coordinates leave never-discharged for a measured reason: the sibling-skipping pick is the next declared name, which is exactly the binding the corpus writes, so reach falls to zero on both and they are corpus-dead rather than refused -- a fixture joining a third-declared relation, or binding a later endpoint field, makes the erasure move immediately. The pick reads the sibling's CURRENT value and never the slot's own, so two stimuli differing only in the slot still reach one image. No verdict moved: no witness names either coordinate."
       }
     ]
   }
