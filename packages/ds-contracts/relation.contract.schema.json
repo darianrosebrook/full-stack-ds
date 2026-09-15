@@ -23,7 +23,8 @@
             "type": "array",
             "items": {
               "$ref": "#/definitions/name"
-            }
+            },
+            "x-fsds-sequence": "set"
           }
         }
       },
@@ -52,7 +53,8 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/name"
-              }
+              },
+              "x-fsds-sequence": "set"
             }
           ]
         },
@@ -239,7 +241,8 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/name"
-              }
+              },
+              "x-fsds-sequence": "set"
             }
           },
           "required": [
@@ -307,7 +310,8 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/name"
-              }
+              },
+              "x-fsds-sequence": "ordered"
             }
           },
           "required": [
@@ -363,7 +367,8 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/name"
-              }
+              },
+              "x-fsds-sequence": "ordered"
             }
           },
           "required": [
@@ -437,7 +442,8 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/name"
-              }
+              },
+              "x-fsds-sequence": "set"
             }
           },
           "required": [

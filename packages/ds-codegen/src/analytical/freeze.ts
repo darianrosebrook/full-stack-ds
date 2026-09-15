@@ -221,6 +221,24 @@ const SUPERSESSION_EFFECT: Record<string, string> = {
     "differs at every one, because the slot now exists and says `forgotten` where it used to be absent. Deleting it produced images the representation",
     "cannot express, and identified `forgotten` with `absent`, which are different facts.",
   ].join(" "),
+  // The two CONSEQUENCES of the same declaration change. They are separate
+  // classes because that is what moved, and not separate causes: the order
+  // facets left the census because the declaration says those lists are sets,
+  // and each one was adjudicated as it left.
+  census: [
+    "Five order facets left the census — the ones whose list declarations now say `set` — and nothing else entered or left it. `final-quotient`",
+    "checks that each removal is a factorization the census performs, and the third form (`declared-set-order`) was added there for this rule.",
+  ].join(" "),
+  verdict: [
+    "The same five coordinates were adjudicated `representation-artifact` as they left, so their verdicts moved off `unresolved`. No surviving",
+    "coordinate's verdict changed, and the subtraction reports 72 of 118 unadjudicated rather than 77.",
+  ].join(" "),
+  "forget-reference-order": [
+    "The census no longer emits an order facet for a name list whose declaration says it is a SET, so the plans that sorted `keep`, `along`,",
+    "`nonAdditiveAlong`, `peers` and `grainWitness` are gone and their divergences with them. The erasure itself is untouched, so no image",
+    "changed for a list that still carries the facet; what moved is which slots carry one. The five coordinates left the kernel with",
+    "representation-artifact verdicts, because no rule reads the position of a member in a collection it compares by membership or set-equality.",
+  ].join(" "),
   "forget-reference-arity": [
     "Arity truncates to the declaration's own minItems rather than to one element. The short side of the old pair was schema-invalid wherever the floor",
     "exceeded one. Corpus reach falls to zero because every corpus occurrence of these two lists is already AT its floor — a fact about the corpus, not",

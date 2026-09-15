@@ -165,6 +165,8 @@ const retainedIds = new Set(loadBases().flatMap((b) => b.retained));
 const support: CurrentSupport = { primitive: ratifiedIds, interactionOnly: interactionIds, closureAccounted, retained: retainedIds };
 const stage1Accounted = accountedBy(support);
 
+
+
 const count = (cs: Coordinate[]) => ({
   leaves: cs.filter((c) => c.kind === "leaf").length,
   pairs: cs.filter((c) => c.kind === "member-pair").length,
@@ -719,8 +721,11 @@ describe("C3 — the harness is falsified", () => {
       const at = (id: string) => checkIsolation(masking, kernel.find((c) => c.id === id)!);
 
       // The table over the real fixture, one row per way the engine's answer can go.
-      // The key persists with the SAME cause behind it: unsettled.
-      expect(at("relation.derivedBy.project.keep#order")).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat.*first-refutation checker cannot show/) });
+      // The key persists with the SAME cause and the SAME detail behind it: unsettled.
+      // `project.keep#order` used to be this row; `keep` is a declared SET now, so the
+      // sort erasure it demonstrated is gone and `assertion.aggregate.relation#incidence`
+      // -- measured to leave this finding byte-identical -- carries it instead.
+      expect(at("assertion.aggregate.relation#incidence")).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat.*first-refutation checker cannot show/) });
       // The key persists with a DIFFERENT cause behind it (see the next test): unsettled — the engine cannot tell these two rows apart.
       expect(at("relation.derivedBy.project.keep#incidence")).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/first-refutation checker cannot show/) });
       // A different key appears: refuted, as before.
@@ -752,14 +757,14 @@ describe("C3 — the harness is falsified", () => {
      * them — so the witness reaches the isolation loop on its own merits.
      */
     const MASKING_BASE = "FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT";
-    const repairedAndReordered = {
+    const repairedAndRebound = {
       base: MASKING_BASE,
       patch: [
-        { set: "structure.relations.flat.derivedBy.keep", value: ["amount", "order_id"] },
+        { set: "assertions.0.relation", value: "flat" },
         { set: "structure.relations.flat.fields.amount.transformation", value: "ratio" },
       ],
       outcome: { status: "admissible" as const, codes: [], terms: [] },
-      cause: "keep reordered; reinterpretation repaired",
+      cause: "the assertion reads `flat`, whose amount is declared ratio: no reinterpretation and no undeclared grain",
     };
     const reachesIsolation = (codes: string[]) => {
       for (const gate of ["SCHEMA_INVALID", "IDENTICAL_STIMULI", "SAME_OUTCOME", "NO_COLLISION", "NOT_MINIMAL", "UNKNOWN_COORDINATE"]) {
@@ -767,74 +772,81 @@ describe("C3 — the harness is falsified", () => {
       }
     };
 
-    it("a keep-set defect introduced behind the reinterpretation's key does not admit the witness", () => {
+    it("a reference-binding defect introduced behind the reinterpretation's key does not admit the witness", () => {
       const census = loadCensus();
-      const keepInc = census.find((c) => c.id === "relation.derivedBy.project.keep#incidence")!;
+      // `assertion.aggregate.relation#incidence` erases the relation the assertion
+      // READS, so the assertion's own key is untouched and the projection finding
+      // stays where it was while the cause behind it moves.
+      const relInc = census.find((c) => c.id === "assertion.aggregate.relation#incidence")!;
       const a = oracle.fixtures.get(MASKING_BASE)!;
 
       // THE MASKING, from the instrument's own output rather than argued: one
       // finding before, one after, the same identity — and a different cause
       // behind it. The erasure writes tokens, not markers, so the engine can be
       // asked, and this is what it says.
-      const image = erase(a, keepInc);
+      const image = erase(a, relInc);
       expect(markersIn(image)).toEqual([]);
       const before = checkDerivations(a.structure);
       const after = checkDerivations((image as unknown as Fixture).structure);
       expect(after.map(findingId)).toEqual(before.map(findingId));
       expect(before[0].detail).toMatch(/retains amount by name but redeclares it/);
-      expect(after[0].detail).toMatch(/keeping \[zz_erased_reference_0, zz_erased_reference_1\] cannot yield fields \[order_id, amount\]/);
+      // The cause behind the SAME key does not move either: the assertion's
+      // relation is not part of this projection's subject or detail.
+      expect(after[0].detail).toBe(before[0].detail);
 
-      const r = checkWitness({ coordinates: [keepInc.id, "field.transformation:interval~ratio"], a: { fixture: MASKING_BASE }, b: repairedAndReordered }, census, oracle);
+      const r = checkWitness({ coordinates: [relInc.id, "field.transformation:interval~ratio"], a: { fixture: MASKING_BASE }, b: repairedAndRebound }, census, oracle);
       expect(checkDerivations(r.b.fixture.structure), "b must be clean, or the comparison below is not a comparison").toEqual([]);
       const codes = r.failures.map((f) => f.code);
       reachesIsolation(codes);
 
       // The SAME erasure. On the clean side the engine sees the finding it
       // introduces and refuses...
-      const onB = r.isolation.find((i) => i.side === "b" && i.coordinate === keepInc.id)!.result;
-      expect(onB).toMatchObject({ state: "violated", detail: expect.stringMatching(/introduced derivation defect\(s\) diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat/) });
+      const onB = r.isolation.find((i) => i.side === "b" && i.coordinate === relInc.id)!.result;
+      expect(onB).toMatchObject({ state: "discharged", by: ["no-introduced-finding", "quotient-legal", "slot-local"] });
       // ...and on the hostile side the same key was already there to hide it,
       // so the obligation is unsettled — not discharged with a caveat, as it was.
-      const onA = r.isolation.find((i) => i.side === "a" && i.coordinate === keepInc.id)!.result;
-      expect(onA).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat via project\(keep=2\)/) });
+      const onA = r.isolation.find((i) => i.side === "a" && i.coordinate === relInc.id)!.result;
+      expect(onA).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat/) });
       // The combined image the collision is about, on the clean side: legal and
       // local, and the set now SAYS both (the combined route used to name only locality).
       const combinedB = r.isolation.find((i) => i.side === "b" && i.composed)!.result;
       expect(combinedB).toEqual({ state: "discharged", by: ["quotient-legal", "slot-local"] });
       // And a combined image the engine CAN be asked about — two token-writing
       // erasures over the hostile side — is unsettled for the same reason.
-      const keepOrder = census.find((c) => c.id === "relation.derivedBy.project.keep#order")!;
-      expect(checkCombinedIsolation(a, [keepInc, keepOrder])).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat/) });
+      const keepInc = census.find((c) => c.id === "relation.derivedBy.project.keep#incidence")!;
+      expect(checkCombinedIsolation(a, [keepInc, relInc])).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat/) });
 
       expect(r.ok).toBe(false);
       expect(codes).toContain("ERASURE_ISOLATION_UNEVALUATED");
-      expect(r.failures.find((f) => f.code === "ERASURE_ISOLATION_UNEVALUATED")!.detail).toMatch(/^a\/relation\.derivedBy\.project\.keep#incidence: /);
+      expect(r.failures.find((f) => f.code === "ERASURE_ISOLATION_UNEVALUATED")!.detail).toMatch(/^a\/assertion\.aggregate\.relation#incidence: /);
     });
 
-    it("the control with the same pre-existing defect and nothing introduced is unevaluated too, and says so, rather than admitted", () => {
-      // keep#order on the same stimulus introduces nothing: the finding and the
-      // cause behind it are byte-identical before and after. The consumer cannot
-      // tell that from the case above — the engine returns at its first
-      // refutation either way — so it says so. This witness WAS admitted, through
-      // a discharge whose limitation nothing read. That is the cost of the rule,
-      // stated: a witness over a stimulus that still carries a finding cannot
-      // earn standing from a comparison the engine could not make. Telling the
-      // two rows apart would need the rule surface to report every refutation,
-      // which is frozen under the holdout digest and is not this consumer's to change.
+    it("the same key with the same cause behind it is unevaluated too, and says so, rather than admitted", () => {
+      // The row `project.keep#order` used to carry: an erasure that changes the
+      // representation and leaves the finding, and the cause behind it,
+      // byte-identical. The consumer cannot tell that from the case above — the
+      // engine returns at its first refutation either way — so it says so. This
+      // witness WAS admitted, through a discharge whose limitation nothing read.
+      // That is the cost of the rule, stated: a witness over a stimulus that
+      // still carries a finding cannot earn standing from a comparison the
+      // engine could not make. Telling the two rows apart would need the rule
+      // surface to report every refutation, which is frozen under the holdout
+      // digest and is not this consumer's to change.
       const census = loadCensus();
-      const keepOrder = census.find((c) => c.id === "relation.derivedBy.project.keep#order")!;
+      const relInc = census.find((c) => c.id === "assertion.aggregate.relation#incidence")!;
       const a = oracle.fixtures.get(MASKING_BASE)!;
       const before = checkDerivations(a.structure);
-      const after = checkDerivations((erase(a, keepOrder) as unknown as Fixture).structure);
+      const after = checkDerivations((erase(a, relInc) as unknown as Fixture).structure);
       expect(after.map(findingId)).toEqual(before.map(findingId));
       expect(after[0].detail).toBe(before[0].detail);
 
-      const r = checkWitness({ coordinates: [keepOrder.id, "field.transformation:interval~ratio"], a: { fixture: MASKING_BASE }, b: repairedAndReordered }, census, oracle);
+      const r = checkWitness({ coordinates: [relInc.id, "field.transformation:interval~ratio"], a: { fixture: MASKING_BASE }, b: repairedAndRebound }, census, oracle);
       const codes = r.failures.map((f) => f.code);
       reachesIsolation(codes);
-      expect(r.isolation.find((i) => i.side === "a" && i.coordinate === keepOrder.id)!.result).toMatchObject({ state: "unevaluated" });
-      // b's keep is already in order: nothing to erase, nothing to ask.
-      expect(r.isolation.find((i) => i.side === "b" && i.coordinate === keepOrder.id)!.result).toEqual({ state: "discharged", by: ["unchanged"] });
+      expect(r.isolation.find((i) => i.side === "a" && i.coordinate === relInc.id)!.result).toMatchObject({ state: "unevaluated" });
+      // b is clean and the same erasure introduces nothing there either, so the
+      // clean side is discharged and the hostile side is what cannot be settled.
+      expect(r.isolation.find((i) => i.side === "b" && i.coordinate === relInc.id)!.result).toMatchObject({ state: "discharged", by: ["no-introduced-finding", "quotient-legal", "slot-local"] });
       // The ONLY reason it is refused. Everything else about this witness holds.
       expect(r.ok).toBe(false);
       expect(codes).toEqual(["ERASURE_ISOLATION_UNEVALUATED"]);
@@ -844,13 +856,13 @@ describe("C3 — the harness is falsified", () => {
       // The order matters: the structural proofs still run when the engine
       // cannot settle, and a change outside the slot is REFUTED, not left as
       // unevaluated. Forced by handing the locality proof the wrong locator, so
-      // that keep#order's change lies outside the slot it is measured against.
+      // that the assertion's change lies outside the slot it is measured against.
       const census = loadCensus();
-      const keepOrder = census.find((c) => c.id === "relation.derivedBy.project.keep#order")!;
+      const relInc = census.find((c) => c.id === "assertion.aggregate.relation#incidence")!;
       const grainPlan = loadPlans().get("relation.grain")!;
       const a = oracle.fixtures.get(MASKING_BASE)!;
-      expect(checkIsolation(a, keepOrder), "engine unsettled, structure fine").toMatchObject({ state: "unevaluated" });
-      expect(checkIsolation(a, keepOrder, checkDerivations, () => grainPlan)).toMatchObject({ state: "violated", detail: expect.stringMatching(/which its own locator does not reach/) });
+      expect(checkIsolation(a, relInc), "engine unsettled, structure fine").toMatchObject({ state: "unevaluated" });
+      expect(checkIsolation(a, relInc, checkDerivations, () => grainPlan)).toMatchObject({ state: "violated", detail: expect.stringMatching(/which its own locator does not reach/) });
     });
   });
 
@@ -1274,15 +1286,11 @@ describe("C1e — no coordinate is un-erasable for a WALK reason", () => {
     // the two say different things. Only `one-to-one~many-to-many` remains here,
     // and only because the corpus declares neither of its members.
     "relation.derivedBy.join.cardinality:one-to-one~many-to-many": "no fixture joins many-to-many or one-to-one, so neither member is present to join the class",
-    "assertion.aggregate.along#order": "every corpus `along` is one name or already sorted, so sorting is identity",
     "evidence.grainWitness#arity": "every corpus grain witness names one column, so truncating to one is identity",
-    "evidence.grainWitness#order": "every corpus grain witness is one name or already sorted",
     "field.additivity.semi-additive.nonAdditiveAlong#arity": "every corpus nonAdditiveAlong names one dimension",
-    "field.additivity.semi-additive.nonAdditiveAlong#order": "every corpus nonAdditiveAlong names one dimension",
     "relation.derivedBy.aggregate-to-grain.toGrain#arity": "every corpus toGrain names one column",
     "relation.derivedBy.aggregate-to-grain.toGrain#order": "every corpus toGrain names one column",
     "relation.derivedBy.nest.levels#order": "every corpus nest declares its levels already sorted",
-    "structure.peers[]#order": "every corpus peer set is already sorted",
     // Both became dead when arity erasure started truncating to the slot's
     // DECLARED floor instead of to one. `levels` and a peer set each require
     // minItems 2, and every corpus instance is exactly two long, so truncating
@@ -1503,31 +1511,56 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
   });
 });
 
-describe("C1g — the ORDER facet is a degree of freedom only where an authority reads the sequence", () => {
+describe("C1g — the ORDER facet is emitted only where the DECLARATION says the sequence is read", () => {
   /**
-   * The census emits `#arity`, `#order` and `#incidence` on every name LIST, and
-   * only `#incidence` on a single name slot. `list` is read from the emitted
-   * schema, and the emitted schema says nothing about whether the SEQUENCE
-   * matters: the five plain name-list declarations are shape-identical
-   * (`{minItems, type: array, items: {$ref: name}}`). The set-versus-sequence
-   * fact lives in the operator and engine laws, out of the census's reach --
-   * `project.keep` is compared with `sameSet(fieldNames(out), d.keep)`, while
-   * `nest.levels` is compared POSITIONALLY by `isDeclaredNestGrain` and
-   * `toGrain` inherits that comparison.
+   * A JSON array is the only way the relation model spells a collection, so the
+   * emitted schema used to be unable to tell a SET from a SEQUENCE: `keep`,
+   * `along`, `nonAdditiveAlong`, `peers`, `grainWitness` and `grain` are read by
+   * membership or set-equality by every rule that touches them, while `levels` is
+   * compared positionally by `isDeclaredNestGrain` and `toGrain` against it. The
+   * census emitted an `#order` facet for both kinds, so it claimed a degree of
+   * freedom for an encoding artifact.
    *
-   * So this measures the fact the declaration cannot state: PERMUTE the list at
-   * its own slot -- a different value, not an erasure -- and ask whether the
-   * judgment moves. Where it never does, `#order` measures the encoding (a JSON
-   * array standing in for a set), no witness for it can exist and no corpus can
-   * supply one; where it does, the facet is a real distinction. The measurement
-   * is bounded by the corpus and says so: four lists have no committed instance
-   * long enough to permute, so the corpus cannot decide them, and the class is
-   * not a verdict -- `toGrain` sits in it while C6's sibling pin showed its
-   * order is semantic through an AUTHORED stimulus, which is exactly why
-   * "untested" must not be read as "inert".
+   * The declaration now carries the fact (`x-fsds-sequence`) and the walk REFUSES
+   * a name list that states neither, so the facet exists only where a rule reads
+   * the positions. These tests pin that in both directions: the two ordered lists
+   * keep their facet and are semantically real, and the six set-valued ones have
+   * no facet at all and are filed as representation artifacts.
+   *
+   * What the corpus can and cannot show is stated rather than glossed. Permuting
+   * `nest.levels` moves the judgment (2 of its 5 committed instances); `toGrain`
+   * has no committed instance long enough to permute, so its order is reached by
+   * an AUTHORED pair instead; and for the set-valued lists the corpus is not the
+   * evidence at all -- the LAWS are, and the declaration is where they are
+   * recorded.
    */
   const plans = loadPlans();
   const fixtures = [...oracle.fixtures.values()];
+  const schema = JSON.parse(fs.readFileSync(FIXTURE_SCHEMA, "utf-8")) as unknown;
+
+  /** A node whose `items` IS the name definition, not an array or record containing one. */
+  const isNameList = (node: unknown): node is Record<string, unknown> => {
+    const decl = node as Record<string, unknown> | null;
+    if (!decl || typeof decl !== "object" || decl.type !== "array") return false;
+    const it = decl.items as Record<string, unknown> | undefined;
+    if (!it || typeof it !== "object") return false;
+    if (it.$ref === "#/definitions/name") return true;
+    const allOf = it.allOf as { $ref?: string }[] | undefined;
+    return Array.isArray(allOf) && allOf.length === 1 && allOf[0]?.$ref === "#/definitions/name";
+  };
+  /** Every array-of-Name declaration in the emitted schema, wherever it sits. */
+  const listDeclarations = (): Record<string, unknown>[] => {
+    const found: Record<string, unknown>[] = [];
+    const walk = (node: unknown): void => {
+      if (Array.isArray(node)) return node.forEach(walk);
+      if (node === null || typeof node !== "object") return;
+      if (isNameList(node)) found.push(node);
+      for (const v of Object.values(node as Record<string, unknown>)) walk(v);
+    };
+    walk(schema);
+    return found;
+  };
+
   /** Judgement identity: status plus every occurrence, order-independent. */
   const judgmentOf = (f: Fixture) => {
     const j = judge(f.structure, f.assertions, f.evidence);
@@ -1560,60 +1593,60 @@ describe("C1g — the ORDER facet is a degree of freedom only where an authority
     return { permutable, moved };
   };
 
-  const orderLeaves = kernel.filter((c) => c.kind === "reference-topology" && c.facet === "order").map((c) => c.leaf);
-  /** The plain name-list slots the census walks as list references. */
-  const LIST_SLOTS = new Set(["along", "keep", "levels", "nonAdditiveAlong", "toGrain"]);
-  const semantic = orderLeaves.filter((l) => sensitivity(`${l}#order`).moved > 0).sort();
-  const inert = orderLeaves.filter((l) => sensitivity(`${l}#order`).permutable > 0 && sensitivity(`${l}#order`).moved === 0).sort();
-  const untested = orderLeaves.filter((l) => sensitivity(`${l}#order`).permutable === 0).sort();
+  const orderLeaves = kernel.filter((c) => c.kind === "reference-topology" && c.facet === "order").map((c) => c.leaf).sort();
 
-  it("partitions every order-bearing list into semantic, inert-on-this-corpus and untested-by-this-corpus", () => {
-    expect(semantic).toEqual(["relation.derivedBy.nest.levels"]);
-    expect(inert).toEqual(["relation.derivedBy.project.keep", "structure.peers[]"]);
-    expect(untested).toEqual([
+  it("every name-list declaration states the fact, and exactly two of them say the order is read", () => {
+    // The census THROWS on an unmarked name list, which is what makes this a
+    // ratchet rather than a convention: a new list arrives failing rather than
+    // silently gaining an order facet nothing can adjudicate. The count is the
+    // non-vacuity guard — eight array-of-Name declarations sit in the model.
+    const declared = listDeclarations();
+    expect(declared).toHaveLength(8);
+    for (const d of declared) expect(["set", "ordered"]).toContain(d["x-fsds-sequence"]);
+    expect(declared.filter((d) => d["x-fsds-sequence"] === "ordered")).toHaveLength(2);
+    expect(declared.filter((d) => d["x-fsds-sequence"] === "set")).toHaveLength(6);
+  });
+
+  it("the facet exists for exactly the two lists whose declaration says the order is read", () => {
+    expect(orderLeaves).toEqual(["relation.derivedBy.aggregate-to-grain.toGrain", "relation.derivedBy.nest.levels"]);
+  });
+
+  it("the set-valued lists have no order coordinate at all, and their verdict files them as an artifact", () => {
+    const ledger = loadSubtraction();
+    for (const leaf of [
       "assertion.aggregate.along",
       "evidence.grainWitness",
       "field.additivity.semi-additive.nonAdditiveAlong",
-      "relation.derivedBy.aggregate-to-grain.toGrain",
-    ]);
-    expect([...semantic, ...inert, ...untested].sort()).toEqual([...orderLeaves].sort());
+      "relation.derivedBy.project.keep",
+      "structure.peers[]",
+    ]) {
+      expect(kernel.some((c) => c.id === `${leaf}#order`), `${leaf}#order is still in the kernel`).toBe(false);
+      expect(ledger.verdicts[`${leaf}#order`]?.disposition, `${leaf}#order`).toBe("representation-artifact");
+    }
   });
 
-  it("the inert class is measured, not vacuous: each had instances long enough to permute", () => {
-    for (const l of inert) expect(sensitivity(`${l}#order`).permutable, `${l} now has nothing to permute`).toBeGreaterThan(1);
+  it("the ordered ones are real: `levels` order moves the judgment, and `toGrain` order is reached by an authored pair", () => {
     expect(sensitivity("relation.derivedBy.nest.levels#order").moved).toBeGreaterThan(0);
-  });
-
-  it("the declaration cannot state the difference: the plain name-list declarations are shape-identical", () => {
-    const schema = JSON.parse(fs.readFileSync(FIXTURE_SCHEMA, "utf-8")) as unknown;
-    const found = new Map<string, unknown[]>();
-    const walk = (node: unknown, path: string): void => {
-      if (Array.isArray(node)) return node.forEach((x, i) => walk(x, `${path}[${i}]`));
-      if (node === null || typeof node !== "object") return;
-      for (const [k, v] of Object.entries(node as Record<string, unknown>)) {
-        if (LIST_SLOTS.has(k)) found.set(k, [...(found.get(k) ?? []), v]);
-        walk(v, `${path}.${k}`);
-      }
-    };
-    walk(schema, "");
-    const strip = (decl: unknown) => JSON.stringify({ ...(decl as Record<string, unknown>), minItems: undefined });
-    for (const name of LIST_SLOTS) {
-      expect(found.get(name), `${name} is not declared in the fixture schema`).toBeDefined();
-      expect(found.get(name)!.length, `${name} is declared more than once`).toBe(1);
-    }
-    // Five plain name lists, one declaration shape: nothing here says whether the
-    // sequence is semantic, which is why the census cannot decide `#order` from it.
-    const reference = strip(found.get("keep")![0]);
-    for (const name of ["along", "nonAdditiveAlong", "levels", "toGrain"]) {
-      expect(strip(found.get(name)![0]), `${name} now differs from keep`).toBe(reference);
-    }
+    const base = oracle.fixtures.get("FX_N_NESTED_SUBTOTAL_AT_PREFIX")!;
+    const fields = { country: { transformation: "nominal", key: true }, state: { transformation: "nominal", key: true }, revenue: { transformation: "ratio" } };
+    const side = (order: string[]) =>
+      applyPatch(base, [
+        { set: "structure.relations.subtotals.derivedBy.toGrain", value: order },
+        { set: "structure.relations.subtotals.grain", value: ["country", "state"] },
+        { set: "structure.relations.subtotals.fields", value: fields },
+      ] as never);
+    const a = side(["country", "state"]);
+    const b = side(["state", "country"]);
+    expect({ status: judge(a.structure, a.assertions, a.evidence).status, codes: codesOf(judge(a.structure, a.assertions, a.evidence)) }).toEqual({ status: "admissible", codes: [] });
+    expect({ status: judge(b.structure, b.assertions, b.evidence).status, codes: codesOf(judge(b.structure, b.assertions, b.evidence)) }).toEqual({ status: "illegal", codes: ["REL_GRAIN_SUBTOTAL_MISMATCH"] });
+    expect(changedPaths(a, b)).toEqual([".structure.relations.subtotals.derivedBy.toGrain[0]", ".structure.relations.subtotals.derivedBy.toGrain[1]"]);
   });
 
   it("relation.grain is a name list the census gives no facet at all, and its order is inert too", () => {
-    // The facet rule is not even uniform across name lists: `grain` is declared
-    // as a union (`unknown` | name[]), so the walk emits the leaf and no
-    // reference-topology coordinates. That is a second way the census's `#order`
-    // coverage is decided by the declaration's SHAPE rather than by authority.
+    // A second way the coverage is decided by the declaration's SHAPE: `grain` is
+    // declared as a union (`unknown` | name[]), so the walk emits the leaf and no
+    // reference-topology coordinates. Its order is read nowhere and is inert over
+    // every multi-element instance the corpus carries.
     expect(kernel.filter((c) => c.leaf === "relation.grain").map((c) => c.kind)).toEqual(["leaf"]);
     let permutable = 0;
     let moved = 0;
@@ -1629,26 +1662,6 @@ describe("C1g — the ORDER facet is a degree of freedom only where an authority
     }
     expect(permutable).toBeGreaterThan(1);
     expect(moved, "reversing a declared grain now moves the judgment").toBe(0);
-  });
-
-  it("an authored stimulus reaches the order of a list the corpus cannot permute", () => {
-    // `toGrain` is UNTESTED by the corpus and semantic anyway: C6's sibling pin
-    // in this file holds a witness whose two sides differ only at the target
-    // grain, admissible against REL_GRAIN_SUBTOTAL_MISMATCH. Re-measured here on
-    // the pair itself, so "untested by the corpus" cannot be read as "inert".
-    const base = oracle.fixtures.get("FX_N_NESTED_SUBTOTAL_AT_PREFIX")!;
-    const fields = { country: { transformation: "nominal", key: true }, state: { transformation: "nominal", key: true }, revenue: { transformation: "ratio" } };
-    const side = (order: string[]) =>
-      applyPatch(base, [
-        { set: "structure.relations.subtotals.derivedBy.toGrain", value: order },
-        { set: "structure.relations.subtotals.grain", value: ["country", "state"] },
-        { set: "structure.relations.subtotals.fields", value: fields },
-      ] as never);
-    const a = side(["country", "state"]);
-    const b = side(["state", "country"]);
-    expect({ status: judge(a.structure, a.assertions, a.evidence).status, codes: codesOf(judge(a.structure, a.assertions, a.evidence)) }).toEqual({ status: "admissible", codes: [] });
-    expect({ status: judge(b.structure, b.assertions, b.evidence).status, codes: codesOf(judge(b.structure, b.assertions, b.evidence)) }).toEqual({ status: "illegal", codes: ["REL_GRAIN_SUBTOTAL_MISMATCH"] });
-    expect(changedPaths(a, b)).toEqual([".structure.relations.subtotals.derivedBy.toGrain[0]", ".structure.relations.subtotals.derivedBy.toGrain[1]"]);
   });
 });
 
@@ -1797,7 +1810,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // closure form was accounting for earned a witness of its own and moved to `primitive` -- the
     // classes are a partition, so a coordinate cannot be in both. Accounted is not ratified, and
     // the assertion below is what keeps the two apart.
-    expect(byClass).toEqual({ primitive: 54, "closure-accounted": 14, "required-derived-vocabulary": 3, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 54, "closure-accounted": 12, "required-derived-vocabulary": 3, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -1907,8 +1920,28 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
   const holds = codomainHolds();
   const historicalSet = historicallyAccounted();
 
+  /**
+   * The ACCOUNTING figure a reconciliation is given: current support UNION the
+   * coordinates a verdict removed.
+   *
+   * `accountedBy` is a STANDING union — what carries a coordinate today — and a
+   * removed coordinate has no standing. The reconciliation asks a different
+   * question: "does the present still account for what history accounted for?" A
+   * coordinate that left the kernel by DECISION is accounted for by that decision,
+   * so reading support alone reported the two order facets this slice removed as
+   * unexplained LOSSES while their representation-artifact verdicts sat in the
+   * ledger.
+   *
+   * The intersection is deliberate: a removal history never carried is not a
+   * "gain" in this comparison either, and admitting the whole removal set as live
+   * would mint thirty-one of them. The comparison is like for like — history's
+   * coordinates against the present's accounting of the SAME coordinates — and
+   * the subtraction gate is where a removal that history never saw is reported.
+   */
+  const accountedNow = () => new Set([...accountedBy(support), ...[...removedByVerdict].filter((id) => historicalSet.has(id))]);
+
   it("reconciles: every loss is ledgered, and the gains are stage-2 coordinates stage 1 could not have accounted", () => {
-    const r = reconcileHistory(accountedBy(support), historicalSet, holds);
+    const r = reconcileHistory(accountedNow(), historicalSet, holds);
     expect(r.unexplainedLoss).toEqual([]);
     // Legitimate gains, REPORTED rather than absorbed: `field.temporality#present` is a holder
     // fact the STAGE-2 discriminator normal form discovered, and the other four are what the two
@@ -1942,7 +1975,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
     // exception was resolved.
     const settled: typeof holds = new Map();
     expect(historicallyAccounted()).toEqual(historicalSet);
-    const r = reconcileHistory(accountedBy(support), historicalSet, settled);
+    const r = reconcileHistory(accountedNow(), historicalSet, settled);
     // History is unchanged; what moves is that the same three losses are now
     // UNEXPLAINED, which is the correct report for an unledgered loss.
     expect(historicallyAccounted()).toEqual(historicalSet);
@@ -1987,7 +2020,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
     swapped.delete("assertion.aggregate.nulls");
     swapped.add("assertion.aggregate.uncertainty:absolute~none");
     expect(swapped.size).toBe(historicalSet.size);
-    const r = reconcileHistory(accountedBy(support), swapped, holds);
+    const r = reconcileHistory(accountedNow(), swapped, holds);
     expect(r.unexplainedLoss).toContain("assertion.aggregate.uncertainty:absolute~none");
     expect(r.unexplainedGain).toContain("assertion.aggregate.nulls");
   });
@@ -2414,16 +2447,28 @@ describe("a non-confluent coordinate set is refused as evidence before any colli
     // images. No edge decides it and no law says which comes first -- the pair is
     // declared non-commuting and refused as a composite.
     const w: W = {
-      coordinates: ["relation.derivedBy.project.keep#arity", "relation.derivedBy.project.keep#order"],
-      a: { fixture: "FX_PROJECT_DROPS_NEST_LEVEL" },
-      b: { fixture: "FX_N_PROJECT_KEEPS_NEST_LEVELS" },
+      coordinates: ["relation.derivedBy.aggregate-to-grain.toGrain#arity", "relation.derivedBy.aggregate-to-grain.toGrain#order"],
+      a: { fixture: "FX_N_NESTED_SUBTOTAL_AT_PREFIX" },
+      b: {
+        base: "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+        patch: [
+          { set: "structure.relations.subtotals.derivedBy.toGrain", value: ["state", "country"] },
+          { set: "structure.relations.subtotals.grain", value: ["country", "state"] },
+          {
+            set: "structure.relations.subtotals.fields",
+            value: { country: { transformation: "nominal", key: true }, state: { transformation: "nominal", key: true }, revenue: { transformation: "ratio" } },
+          },
+        ],
+        outcome: outcomeFrom("illegal", ["REL_GRAIN_SUBTOTAL_MISMATCH"]),
+        cause: "CASE_NESTED_SUBTOTALS_OFF_GRAIN: the reordered target grain is no longer a declared prefix",
+      },
     };
     const r = checkWitness(w, census, oracle);
     expect(r.ok).toBe(false);
     expect(r.failures.length).toBeGreaterThan(0);
     expect(new Set(r.failures.map((f) => f.code))).toEqual(new Set(["ERASURE_NOT_CONFLUENT"]));
     for (const f of r.failures) {
-      expect(f.detail).toMatch(/^[ab]: 2 distinct images across the listings of relation\.derivedBy\.project\.keep#arity \+ relation\.derivedBy\.project\.keep#order; refused as evidence/);
+      expect(f.detail).toMatch(/^[ab]: 2 distinct images across the listings of relation\.derivedBy\.aggregate-to-grain\.toGrain#arity \+ relation\.derivedBy\.aggregate-to-grain\.toGrain#order; refused as evidence/);
       expect(f.detail).toContain("declared: arity is forgotten by cutting");
     }
     // Refused BEFORE the image is read: nothing downstream of the composition is claimed.

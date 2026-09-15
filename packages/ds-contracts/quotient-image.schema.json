@@ -118,7 +118,8 @@
                           "$ref": "#/definitions/quotientMarker"
                         }
                       ]
-                    }
+                    },
+                    "x-fsds-sequence": "set"
                   },
                   {
                     "$ref": "#/definitions/quotientMarker"
@@ -166,7 +167,8 @@
                         "$ref": "#/definitions/quotientMarker"
                       }
                     ]
-                  }
+                  },
+                  "x-fsds-sequence": "set"
                 }
               ]
             },
@@ -535,7 +537,8 @@
                         "$ref": "#/definitions/quotientMarker"
                       }
                     ]
-                  }
+                  },
+                  "x-fsds-sequence": "set"
                 },
                 {
                   "$ref": "#/definitions/quotientMarker"
@@ -659,7 +662,8 @@
                         "$ref": "#/definitions/quotientMarker"
                       }
                     ]
-                  }
+                  },
+                  "x-fsds-sequence": "ordered"
                 },
                 {
                   "$ref": "#/definitions/quotientMarker"
@@ -771,7 +775,8 @@
                         "$ref": "#/definitions/quotientMarker"
                       }
                     ]
-                  }
+                  },
+                  "x-fsds-sequence": "ordered"
                 },
                 {
                   "$ref": "#/definitions/quotientMarker"
@@ -922,7 +927,8 @@
                         "$ref": "#/definitions/quotientMarker"
                       }
                     ]
-                  }
+                  },
+                  "x-fsds-sequence": "set"
                 },
                 {
                   "$ref": "#/definitions/quotientMarker"
@@ -1083,7 +1089,8 @@
                         "$ref": "#/definitions/quotientMarker"
                       }
                     ]
-                  }
+                  },
+                  "x-fsds-sequence": "set"
                 },
                 {
                   "$ref": "#/definitions/quotientMarker"
@@ -1241,7 +1248,8 @@
                           "$ref": "#/definitions/quotientMarker"
                         }
                       ]
-                    }
+                    },
+                    "x-fsds-sequence": "set"
                   },
                   {
                     "$ref": "#/definitions/quotientMarker"

@@ -46,12 +46,28 @@ const withVerdict = (id: string, disposition: "representation-artifact" | "not-y
 });
 
 describe("the recorded artifacts are factorizations the census performs, not reason strings", () => {
-  it("recognizes every artifact verdict across every basis, in exactly the two forms", () => {
-    expect(artifacts.length).toBe(29);
+  it("recognizes every artifact verdict across every basis, in exactly the three forms", () => {
+    // A THIRD form arrived with the sequence declaration: a name list whose
+    // declaration says `set` loses its `#order` facet because no rule reads the
+    // positions. `FactorizationForm`'s own comment requires a new census rule to
+    // be added here on purpose, and this is where that is noticed.
+    expect(artifacts.length).toBe(34);
     const forms = artifacts.map((id) => factorizationOf(id, ctx.derived, ctx.signatures, ctx.census)?.form);
     expect(forms.filter((f) => f === "required-child-presence")).toHaveLength(16);
     expect(forms.filter((f) => f === "member-absence-cross-term")).toHaveLength(13);
+    expect(forms.filter((f) => f === "declared-set-order")).toHaveLength(5);
     expect(forms.includes(undefined)).toBe(false);
+  });
+
+  it("recognizes a declared set from the DECLARATION, so an ordered list can never be filed this way", () => {
+    expect(factorizationOf("relation.derivedBy.project.keep#order", ctx.derived, ctx.signatures, ctx.census)?.form).toBe("declared-set-order");
+    expect(factorizationOf("relation.derivedBy.project.keep#order", ctx.derived, ctx.signatures, ctx.census)?.carriers).toEqual([
+      "relation.derivedBy.project.keep#arity",
+      "relation.derivedBy.project.keep#incidence",
+    ]);
+    // `nest.levels` IS ordered, so the same shape is not a factorization for it:
+    // recognition reads the emitted declaration, which says `ordered`.
+    expect(factorizationOf("relation.derivedBy.nest.levels#order", ctx.derived, ctx.signatures, ctx.census)).toBeUndefined();
   });
 
   it("reads a required-child factorization off the census record: holder, branch, property, carriers", () => {
@@ -93,7 +109,13 @@ describe("the factorization is held against the FINAL retained set", () => {
     expect(live.artifacts.every((a) => a.held)).toBe(true);
     for (const a of live.artifacts) {
       expect(a.exercised.entailed).toBeGreaterThan(0);
-      expect(a.exercised.holderAbsent).toBeGreaterThan(0);
+      // "Exercised on both sides" is a claim about a CROSS-TERM — a presence that
+      // occurs with and without its holder. A declared-set order facet has no
+      // holder to be absent, so its second side is how often the list occurred
+      // with more than one member, which is the only shape a permutation could
+      // have moved.
+      if (a.form === "declared-set-order") expect(a.exercised.entailed).toBeGreaterThan(0);
+      else expect(a.exercised.holderAbsent).toBeGreaterThan(0);
       expect(a.violations).toEqual([]);
     }
   });
@@ -226,7 +248,7 @@ describe("the whole check on the live ledgers", () => {
     expect(live.executableRemovals.ids).toEqual([]);
     expect(live.primitives.checked).toBeGreaterThan(40);
     expect(live.primitives.problems).toEqual([]);
-    expect(summarizeFinalQuotient(live)).toContain("29/29 held");
+    expect(summarizeFinalQuotient(live)).toContain("34/34 held");
   });
 
   it("fails the whole check when a carrier is adjudicated out, and says so in the summary", () => {

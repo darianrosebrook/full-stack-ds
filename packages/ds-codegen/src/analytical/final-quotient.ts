@@ -65,6 +65,7 @@ import {
   loadDerivedPresence,
   loadLocators,
   loadPlans,
+  loadSequenceFacts,
   type BranchSignatures,
   type Coordinate,
   type DerivedPresence,
@@ -80,6 +81,7 @@ import {
   type Outcome,
 } from "./necessity.js";
 import type { QuotientImage } from "./quotient-image.js";
+import type { SequenceFact } from "./relation-model.js";
 import { distinctListingImages, nameBlindMap } from "./quotient.js";
 import type { Fixture } from "./structure.js";
 import { basesForSpec, type SubtractionDisposition } from "./subtraction.js";
@@ -87,8 +89,14 @@ import { basesForSpec, type SubtractionDisposition } from "./subtraction.js";
 type Json = Record<string, unknown>;
 const obj = (v: unknown): v is Json => typeof v === "object" && v !== null && !Array.isArray(v);
 
-/** The two factorization forms the census performs. A third would be a new census rule, and must be added here on purpose. */
-export type FactorizationForm = "required-child-presence" | "member-absence-cross-term";
+/**
+ * The factorization forms the census performs. A new one is a new census rule
+ * and must be added here on purpose.
+ *
+ * `declared-set-order` is the third: a name list whose declaration says `set`
+ * loses its `#order` facet, because no rule reads the position of its members.
+ */
+export type FactorizationForm = "required-child-presence" | "member-absence-cross-term" | "declared-set-order";
 
 export interface Factorization {
   artifact: string;
@@ -102,6 +110,8 @@ export interface Factorization {
   property?: string;
   /** member-absence-cross-term: the member m. */
   member?: string;
+  /** declared-set-order: the name-list leaf whose declaration says `set`. */
+  leaf?: string;
 }
 
 /**
@@ -117,7 +127,20 @@ export function factorizationOf(
   derived: DerivedPresence[] = loadDerivedPresence(),
   signatures: Map<string, BranchSignatures> = loadBranchSignatures(),
   census: Coordinate[] = loadCensus(),
+  facts: Map<string, SequenceFact> = loadSequenceFacts(),
 ): Factorization | undefined {
+  // A declared set: the facet is gone because the emission refused to invent it,
+  // and what carries its distinction is the leaf's own `#incidence` (whose
+  // erasure already identifies every permutation the order erasure did) together
+  // with `#arity` (how many members there were). Recognition reads the SAME
+  // declaration the walk read, so a list that ever declares `ordered` cannot be
+  // filed this way.
+  const order = /^(.+)#order$/.exec(artifact);
+  if (order) {
+    const leaf = order[1];
+    if (facts.get(leaf) !== "set") return undefined;
+    return { artifact, form: "declared-set-order", carriers: [`${leaf}#arity`, `${leaf}#incidence`], holder: `${leaf}#incidence`, leaf };
+  }
   if (artifact.endsWith("#present")) {
     const d = derived.find((x) => x.proposition === artifact);
     if (!d) return undefined;
@@ -210,6 +233,30 @@ export function checkArtifact(artifact: string, ctx: QuotientContext): ArtifactC
     else if (OUT.has(ctx.verdicts.get(c) ?? "unresolved")) {
       problems.push(`${artifact}: carrier ${c} is itself adjudicated out (${ctx.verdicts.get(c)}); removed together they would erase the distinction collectively`);
     }
+  }
+  if (f.form === "declared-set-order") {
+    const loc = ctx.locators.get(f.holder);
+    if (!loc) {
+      problems.push(`${artifact}: no locator for ${f.holder}, so the list's occurrence cannot be measured`);
+      return { artifact, form: f.form, carriers: f.carriers, problems, exercised, violations, held: false };
+    }
+    // What the specimen population can show for this form: that the list OCCURS
+    // (non-vacuity) and how often it occurs with more than one member, which is
+    // the only shape a permutation could have moved. `entailed` counts the
+    // first and `otherBranch` the second; neither is a violation, because
+    // whether the order MATTERS is a fact about the laws, stated in the
+    // declaration the walk refused to guess around. The empirical half is C1g
+    // in necessity.test.ts, which permutes the list on every committed fixture
+    // and requires the judgment not to move.
+    for (const s of ctx.specimens) {
+      const slots = resolveSlots(s.renamed, loc) as Slot[];
+      if (slots.length === 0) continue;
+      exercised.entailed++;
+      const v = read(slots[0]);
+      if (Array.isArray(v) && v.length > 1) exercised.otherBranch++;
+    }
+    if (exercised.entailed === 0) problems.push(`${artifact}: unexercised — no specimen carries ${f.leaf}`);
+    return { artifact, form: f.form, carriers: f.carriers, problems, exercised, violations, held: problems.length === 0 };
   }
   const holderLoc = ctx.locators.get(f.holder);
   if (!holderLoc) {

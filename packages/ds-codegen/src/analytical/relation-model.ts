@@ -34,6 +34,32 @@ export const Name = z
   .regex(/^[a-z][a-z0-9_]*$/)
   .meta({ id: "name" });
 
+/**
+ * Whether the ORDER of a name list is part of its meaning.
+ *
+ * A JSON array is the only way this model can spell a collection of names, so
+ * the emitted schema cannot tell a SET from a SEQUENCE: `keep`, `along`,
+ * `nonAdditiveAlong`, `peers`, `grainWitness` and `grain` are compared by
+ * membership or set-equality by every rule that reads them, while `levels` is
+ * compared positionally by `isDeclaredNestGrain` and `toGrain` is compared
+ * against `levels` the same way. The necessity census derives its coordinates
+ * from the emitted schema alone, so without this fact it emits an `#order`
+ * facet for both kinds — a degree of freedom for one, an artifact of the
+ * encoding for the other.
+ *
+ * The keyword is carried through `z.toJSONSchema` like any other `.meta()`
+ * field and is ignored by every validator this repo runs (all use
+ * `strict: false`). `census.ts` REFUSES a name list that declares neither
+ * value, so a new list arrives failing rather than silently gaining an order
+ * facet that nothing can adjudicate.
+ */
+export const SEQUENCE_KEY = "x-fsds-sequence" as const;
+export type SequenceFact = "set" | "ordered";
+/** A collection whose order no rule reads: erasing `#order` destroys nothing. */
+const Set_ = { [SEQUENCE_KEY]: "set" } as const;
+/** A collection whose order a rule reads positionally. */
+const Ordered = { [SEQUENCE_KEY]: "ordered" } as const;
+
 /** Admissible-transformation class (Stevens): what arithmetic the values license. */
 export const Transformation = z.enum(["nominal", "ordinal", "interval", "ratio"]);
 
@@ -67,7 +93,7 @@ export const Temporality = z
 export const Additivity = z
   .discriminatedUnion("kind", [
     z.strictObject({ kind: z.literal("additive") }),
-    z.strictObject({ kind: z.literal("semi-additive"), nonAdditiveAlong: z.array(Name).min(1) }),
+    z.strictObject({ kind: z.literal("semi-additive"), nonAdditiveAlong: z.array(Name).min(1).meta(Set_) }),
     /** Admits no summation along any dimension; re-earned by the normalize case. */
     z.strictObject({ kind: z.literal("non-additive") }),
     z.strictObject({ kind: z.literal("ratio-measure") }),
@@ -121,7 +147,7 @@ export const JoinCardinality = z.enum(["one-to-one", "one-to-many", "many-to-one
 export const Derivation = z
   .discriminatedUnion("kind", [
     /** Combine rows to a named coarser grain. `toGrain` is the re-earned target. */
-    z.strictObject({ kind: z.literal("aggregate-to-grain"), from: Name, toGrain: z.array(Name).min(1) }),
+    z.strictObject({ kind: z.literal("aggregate-to-grain"), from: Name, toGrain: z.array(Name).min(1).meta(Ordered) }),
     /**
      * Declared relationship between two relations. The cardinality is the
      * re-earned coordinate: it makes fan-out decidable from the declaration
@@ -129,13 +155,13 @@ export const Derivation = z
      */
     z.strictObject({ kind: z.literal("join"), from: Name, with: Name, cardinality: JoinCardinality }),
     /** Impose a hierarchy. `levels` is the membership every later projection needs. */
-    z.strictObject({ kind: z.literal("nest"), from: Name, levels: z.array(Name).min(2) }),
+    z.strictObject({ kind: z.literal("nest"), from: Name, levels: z.array(Name).min(2).meta(Ordered) }),
     /** Partition a field's range into intervals. Closure says which side each interval owns. */
     z.strictObject({ kind: z.literal("bin"), from: Name, field: Name, closure: z.enum(["left-closed", "right-closed"]).optional() }),
     /** Rescale a field against a whole. */
     z.strictObject({ kind: z.literal("normalize"), from: Name, field: Name }),
     /** Relational projection: keep these fields. What is dropped is derived, not declared. */
-    z.strictObject({ kind: z.literal("project"), from: Name, keep: z.array(Name).min(1) }),
+    z.strictObject({ kind: z.literal("project"), from: Name, keep: z.array(Name).min(1).meta(Set_) }),
     /**
      * Read a relation as edges.
      *
@@ -157,7 +183,7 @@ export const Derivation = z
 
 export const Relation = z
   .strictObject({
-    grain: z.union([z.literal("unknown"), z.array(Name).min(1)]),
+    grain: z.union([z.literal("unknown"), z.array(Name).min(1).meta(Set_)]),
     fields: z.record(Name, Field),
     /** Present iff this relation is the result of a derivation. */
     derivedBy: Derivation.optional(),
@@ -178,7 +204,7 @@ export const RelationalStructure = z
      * that two derivations claim to speak for the same thing — which is exactly
      * what makes a divergence between them a defect rather than a choice.
      */
-    peers: z.array(z.array(Name).min(2)).min(1).optional(),
+    peers: z.array(z.array(Name).min(2).meta(Set_)).min(1).optional(),
   })
   .meta({
     id: "relationalStructure",
@@ -199,7 +225,7 @@ export const AggregateAssertion = z.strictObject({
   field: Name,
   /** `min` stands for any order statistic (max is its alias at stage 1). */
   op: z.enum(["sum", "mean", "count", "min"]),
-  along: z.array(Name).min(1).optional(),
+  along: z.array(Name).min(1).meta(Set_).optional(),
   nulls: z.enum(["exclude", "as-zero", "as-observed"]).optional(),
   /** Uncertainty handling is declared (propagate); dropping is its alias at stage 1. */
   uncertainty: z.literal("propagate").optional(),
@@ -240,7 +266,7 @@ export const ObservationInput = z.union([Scalar, ObservationRecord]).meta({ id: 
 export const Evidence = z
   .strictObject({
     rows: z.record(Name, z.array(z.record(Name, ObservationInput))).optional(),
-    grainWitness: z.record(Name, z.array(Name).min(1)).optional(),
+    grainWitness: z.record(Name, z.array(Name).min(1).meta(Set_)).optional(),
   })
   .meta({ id: "evidence" });
 
