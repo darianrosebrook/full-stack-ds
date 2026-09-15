@@ -61,8 +61,11 @@ import { authorityIdentities, footprintBasisDigest, type AuthorityIdentities } f
 import { loadCensus, loadPlans } from "./census.js";
 import { ruleSurfaceDigest } from "./corpus-integrity.js";
 import { loadClosures } from "./closure.js";
-import { deletionFootprint, executePlan, wouldChange, type ErasurePlan } from "./erasure-plan.js";
+import { executePlan, wouldChange, type ErasurePlan } from "./erasure-plan.js";
 import { separatingPairs, type PairFailure } from "./erasure-specimens.js";
+import { claimedFootprints, readSupport } from "./support.js";
+
+export { claimedFootprints };
 import {
   checkWitness,
   FIXTURES_DIR,
@@ -145,7 +148,6 @@ export function specimens(): { fixtures: Fixture[]; corpus: number; stimuli: num
 }
 
 /** Two plans act on the same occurrence when their step lists agree exactly. */
-const stepsOf = (p: ErasurePlan) => JSON.stringify(p.locator.steps);
 
 /**
  * The claimed footprint of every plan.
@@ -170,35 +172,6 @@ const stepsOf = (p: ErasurePlan) => JSON.stringify(p.locator.steps);
  * conservative the falsification pass reports the omission rather than the
  * claim being widened by hand.
  */
-export function claimedFootprints(plans: Map<string, ErasurePlan> = loadPlans()): Map<string, string[]> {
-  const all = [...plans.values()];
-  const out = new Map<string, string[]>();
-  for (const p of all) {
-    const f = new Set<string>([p.id, ...deletionFootprint(p, all)]);
-    if (p.operation.kind === "forget-reference-incidence") {
-      for (const q of all) if (q.operation.kind === "forget-reference-order" && stepsOf(q) === stepsOf(p)) f.add(q.id);
-    }
-    out.set(p.id, [...f].sort());
-  }
-  // Containment is transitive on its own, but the incidence/order rule is not
-  // reachable by it, so close the relation rather than assume it is closed.
-  for (const p of all) {
-    const f = new Set(out.get(p.id));
-    for (let grew = true; grew; ) {
-      grew = false;
-      for (const id of [...f]) {
-        for (const r of out.get(id) ?? []) {
-          if (f.has(r)) continue;
-          f.add(r);
-          grew = true;
-        }
-      }
-    }
-    out.set(p.id, [...f].sort());
-  }
-  return out;
-}
-
 export interface Measurement {
   /** Coordinate id -> every coordinate its erasure makes unobservable, including itself. */
   footprints: Map<string, string[]>;
@@ -278,7 +251,7 @@ export function measure(
  * `over-erasing` is reserved for collateral on a leaf the witness never names.
  * That is the case a closure or an explicitly composite proposition is for.
  */
-export type WitnessVerdict = "atomic" | "interaction" | "subsumes-refinements" | "over-erasing" | "unresolved-plan";
+export type WitnessVerdict = "atomic" | "interaction" | "subsumes-refinements" | "sibling-facet" | "over-erasing" | "unresolved-plan";
 
 export interface WitnessAudit {
   /** Witnesses carry no ids; the stable handle is the coordinate set itself. */
@@ -290,10 +263,17 @@ export interface WitnessAudit {
   collateral: string[];
   /** Collateral on a leaf the witness never names: the serious half of the finding. */
   outside: string[];
+  /** Collateral that is a reference-topology facet of a SURVIVING slot the witness names. */
+  sibling: string[];
   verdict: WitnessVerdict;
   holds: boolean;
   /** What the witness supports today, so a reclassification's cost is visible. */
-  standing: "primitive" | "interaction-only" | "none";
+  /**
+   * `composite` is the class the syntactic rule could not see: one declared
+   * coordinate whose erasure destroys a SIBLING facet (or reaches outside its
+   * leaf), so the witness establishes a coarser fact than primitive standing.
+   */
+  standing: "primitive" | "composite" | "interaction-only" | "none";
 }
 
 export function auditWitnesses(m: Measurement, witnesses: Witness[] = loadWitnesses().witnesses): WitnessAudit[] {
@@ -306,29 +286,33 @@ export function auditWitnesses(m: Measurement, witnesses: Witness[] = loadWitnes
       const declared = [...w.coordinates].sort();
       const holds = checkWitness(w, census, oracle).ok;
       const unplanned = declared.filter((id) => !plans.has(id));
-      const actual = [...new Set(declared.flatMap((id) => m.footprints.get(id) ?? []))].sort();
-      const collateral = actual.filter((id) => !declared.includes(id));
-      const leaves = new Set(declared.map((id) => byId.get(id)?.leaf).filter((x): x is string => x !== undefined));
-      const outside = collateral.filter((id) => !leaves.has(byId.get(id)?.leaf ?? ""));
+      // THE ONE CLASSIFIER. The audit no longer infers standing from
+      // `declared.length` while separately inferring a verdict from the
+      // footprint: both come from `readSupport`, so the two cannot disagree.
+      const reading = readSupport(declared, m.footprints, byId);
+      const actual = [...new Set([...reading.declared, ...reading.collateral])].sort();
       const verdict: WitnessVerdict =
         unplanned.length > 0
           ? "unresolved-plan"
-          : outside.length > 0
+          : reading.outside.length > 0
             ? "over-erasing"
-            : collateral.length > 0
-              ? "subsumes-refinements"
-              : declared.length === 1
-                ? "atomic"
-                : "interaction";
+            : reading.sibling.length > 0
+              ? "sibling-facet"
+              : reading.refinements.length > 0
+                ? "subsumes-refinements"
+                : declared.length === 1
+                  ? "atomic"
+                  : "interaction";
       return {
         witness: w.coordinates.join(" + "),
         declared,
         actual,
-        collateral,
-        outside,
+        collateral: reading.collateral,
+        sibling: reading.sibling,
+        outside: reading.outside,
         verdict,
         holds,
-        standing: !holds ? "none" : declared.length === 1 ? "primitive" : "interaction-only",
+        standing: !holds ? "none" : reading.ratifies ? "primitive" : declared.length === 1 ? "composite" : "interaction-only",
       };
     })
     .sort((x, y) => x.witness.localeCompare(y.witness));

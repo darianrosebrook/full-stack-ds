@@ -38,7 +38,8 @@ import { createHash } from "node:crypto";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { orphanedCoordinates } from "./experiments.js";
-import { FIXTURES_DIR } from "./necessity.js";
+import { checkWitness, FIXTURES_DIR, interactionOnly, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
+import { loadCensus } from "./census.js";
 
 export type SubtractionDisposition =
   | "unresolved"
@@ -302,6 +303,24 @@ if (invokedDirectly) {
   }
   if (process.argv.includes("--gate")) {
     for (const { file, r } of results) console.log(`${file}: ${r.ok ? "OK" : r.message}`);
+    // THE DRIFT CHECK IS PART OF THE GATE, not only of a test. A recorded
+    // verdict is a claim about the live tree, and the classifier that decides
+    // primitive standing is the arbiter of the `witnessed` half: until this
+    // ran here, a `witnessed` coordinate could contradict the very witness the
+    // audit had already classified as destroying a sibling facet, and every
+    // count-based gate stayed green around it.
+    const census = loadCensus();
+    const kernelIds = new Set(census.map((c) => c.id));
+    const holding = loadWitnesses().witnesses.filter((w) => checkWitness(w, census, loadOracle()).ok);
+    const ratified = primitiveRatified(holding);
+    const onlyInteraction = new Set(interactionOnly(holding));
+    let driftFailed = false;
+    for (const { file, ledger } of results) {
+      const drift = verdictDrift(ledger, kernelIds, ratified, onlyInteraction);
+      console.log(`drift ${file}: ${drift.length === 0 ? "OK — every recorded verdict is true of the live tree" : `${drift.length} problem(s)`}`);
+      for (const d of drift) console.log(`  ${d}`);
+      if (drift.length > 0) driftFailed = true;
+    }
     // The close condition `final-quotient` is part of the gate: every basis can
     // carry a verdict while the verdicts collectively erase a distinction.
     // final-quotient imports this module for the bases, so the import here is
@@ -312,7 +331,7 @@ if (invokedDirectly) {
     void import("./final-quotient.js").then(({ checkFinalQuotient, summarizeFinalQuotient }) => {
       const fq = checkFinalQuotient(SPEC);
       console.log(summarizeFinalQuotient(fq));
-      if (basesFailed || !fq.ok) process.exit(1);
+      if (basesFailed || driftFailed || !fq.ok) process.exit(1);
     });
   } else {
     console.log(`subtraction: ${all.length} basis file(s) opened by ${SPEC}`);

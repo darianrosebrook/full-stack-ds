@@ -29,6 +29,7 @@ import { canonical, collides, declaredNonCommuting, distinctListingImages, erase
 import { loadQuotientValidator, markersIn } from "./quotient-image.js";
 import type { RelationalStructure } from "./relation-model.js";
 import { type Fixture, loadFixtureValidator, parseFixtures } from "./structure.js";
+import { censusById, claimedFootprints, primitiveSupport } from "./support.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const CONTRACTS_DIR = path.resolve(HERE, "../../../ds-contracts");
@@ -1372,10 +1373,13 @@ export function loadCensusSnapshot(file = CENSUS_STAGE1_FILE): { derivedFrom: st
  * erasing exactly this coordinate destroys a distinction an independently
  * grounded cause requires. Nothing else confers primitive standing.
  */
-export function primitiveRatified(witnesses: Witness[]): Set<string> {
-  const out = new Set<string>();
-  for (const w of witnesses) if (w.coordinates.length === 1) out.add(w.coordinates[0]);
-  return out;
+export function primitiveRatified(
+  witnesses: Witness[],
+  /** The claimed footprints; structural, so standing needs no specimen run. */
+  footprint: Map<string, string[]> = claimedFootprints(),
+  byId: Map<string, Coordinate> = censusById(),
+): Set<string> {
+  return primitiveSupport(witnesses, footprint, byId);
 }
 
 /**

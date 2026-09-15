@@ -76,6 +76,7 @@ import {
   checkWitness,
   loadOracle,
   loadWitnesses,
+  primitiveRatified,
   resolveSide,
   type Oracle,
   type Outcome,
@@ -472,9 +473,13 @@ export function checkFinalQuotient(spec = "REL-VIEW-ALGEBRA-01", oracle: Oracle 
 
   // 3. Primitive evidence survives.
   const primitiveProblems: string[] = [];
-  const holding = loadWitnesses().witnesses.filter((w) => checkWitness(w, ctx.census, oracle).ok && w.coordinates.length === 1);
-  for (const w of holding) {
-    const c = w.coordinates[0];
+  // The primitive set comes from the ONE classifier, not from a third copy of
+  // `coordinates.length === 1`: a witness that destroys a sibling facet of a
+  // surviving slot does not ratify, and this check must not disagree with the
+  // audit about which coordinates those are.
+  const holding = loadWitnesses().witnesses.filter((w) => checkWitness(w, ctx.census, oracle).ok);
+  const primitive = primitiveRatified(holding);
+  for (const c of primitive) {
     if (!ctx.live.has(c)) primitiveProblems.push(`${c}: ratified by a holding witness but not in the kernel`);
     else if (OUT.has(ctx.verdicts.get(c) ?? "unresolved")) primitiveProblems.push(`${c}: ratified by a holding witness and adjudicated out (${ctx.verdicts.get(c)})`);
   }
@@ -501,7 +506,7 @@ export function checkFinalQuotient(spec = "REL-VIEW-ALGEBRA-01", oracle: Oracle 
     separation,
     executableRemovals: { ids: executable, confluent: nonConfluentPairs.length === 0, nonConfluentPairs },
     derivedVocabulary: { checked: rdvChecked, problems: rdvProblems },
-    primitives: { checked: holding.length, problems: primitiveProblems },
+    primitives: { checked: primitive.size, problems: primitiveProblems },
   };
 }
 

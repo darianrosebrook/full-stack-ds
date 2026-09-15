@@ -2143,7 +2143,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // the assertion below is what keeps the two apart. Then 59: the FIRST witness filed under
     // the bound-incidence quotient (nest.levels#incidence, the round-25 pair the instrument
     // refused while the erasure tokenized) moved it to primitive standing.
-    expect(byClass).toEqual({ primitive: 59, "closure-accounted": 11, "required-derived-vocabulary": 3, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 58, "closure-accounted": 11, "required-derived-vocabulary": 3, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -2298,7 +2298,6 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "relation.derivedBy.kind",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
-      "relation.derivedBy.nest.levels#incidence",
       "relation.derivedBy.nest.levels#order",
       "relation.derivedBy.normalize.field#incidence",
       "structure.peers[]#arity",
@@ -2343,7 +2342,6 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "relation.derivedBy.kind",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
-      "relation.derivedBy.nest.levels#incidence",
       "relation.derivedBy.nest.levels#order",
       "relation.derivedBy.normalize.field#incidence",
       "structure.peers[]#arity",

@@ -1066,7 +1066,7 @@
   "authority": {
     "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
     "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
-    "witnessAuthorityDigest": "86d17e4eac5229a306ddf91c37a850aba260340e46d136369c5475aa8b16f092",
+    "witnessAuthorityDigest": "043ea2b170f79be085290bc219e4d1d80e1756e390858be8853cdb807dd09dff",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   }

@@ -151,7 +151,7 @@ export const WITNESS_AUTHORITY: AuthorityIdentity = {
   name: "witnessAuthority",
   invalidates: "every witness and closure verdict, since what counts as holding may have changed",
   entryPoints: ["necessity.ts", "closure.ts", "stimulus.ts", "final-quotient.ts"],
-  owns: ["capabilities.ts", "closure.ts", "corpus-integrity.ts", "experiments.ts", "final-quotient.ts", "necessity.ts", "stimulus.ts", "subtraction.ts"],
+  owns: ["capabilities.ts", "closure.ts", "corpus-integrity.ts", "experiments.ts", "final-quotient.ts", "necessity.ts", "stimulus.ts", "subtraction.ts", "support.ts"],
   excluded: {
     "census.ts": "owned by coordinateBasis",
     "relation-model.ts": "owned by coordinateBasis",
