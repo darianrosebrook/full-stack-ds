@@ -20,9 +20,12 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadCensus } from "./census.js";
+import { loadCensus, loadPlans } from "./census.js";
+import { specimens } from "./erasure-audit.js";
+import { executePlan, wouldChange } from "./erasure-plan.js";
+import { canonical } from "./quotient.js";
 import { loadBases, orphanedCoordinates, type ExperimentBasis } from "./experiments.js";
-import { FIXTURES_DIR } from "./necessity.js";
+import { FIXTURES_DIR, loadOracle } from "./necessity.js";
 import { Derivation } from "./relation-model.js";
 import {
   basesForSpec,
@@ -474,5 +477,69 @@ describe("the gate is a slice obligation, not repo admission", () => {
     fs.writeFileSync(file, JSON.stringify(ledgerOf({})));
     expect(checkSubtraction(file).unresolved).toEqual(["a.b", "c.d"]);
     fs.rmSync(dir, { recursive: true, force: true });
+  });
+});
+
+describe("a PRESENCE witness needs a pair the erasure is a no-op on one side of", () => {
+  // Collision alone is not enough to make a pair evidence for a presence coordinate:
+  // `evidence.rows.*#present`'s pair collides because erasing presence destroys the rows'
+  // CONTENT, and both sides carry rows. The shape that makes the measurement about presence is
+  // a pair where the erasure changes one side and not the other -- collision then says that
+  // side IS the other minus the holder.
+  const presencePairs = (): string[] => {
+    const s = specimens();
+    const plans = loadPlans();
+    const oracle = loadOracle();
+    const baseline = s.fixtures.map(canonical);
+    const outcomeOf = (id: string) => oracle.outcomeOf(id)?.outcome;
+    const outcomeDiffers = (a: ReturnType<typeof outcomeOf>, b: ReturnType<typeof outcomeOf>) =>
+      a !== undefined && b !== undefined && (a.status !== b.status || JSON.stringify(a.codes) !== JSON.stringify(b.codes) || JSON.stringify(a.terms) !== JSON.stringify(b.terms));
+    const unresolved = live.basis.candidates.filter((id) => (live.verdicts[id]?.disposition ?? "unresolved") === "unresolved");
+    expect(unresolved.length, "an empty sweep would prove nothing").toBeGreaterThan(0);
+
+    const found: string[] = [];
+    for (const id of unresolved) {
+      const plan = plans.get(id);
+      if (!plan) continue;
+      const changes = s.fixtures.map((f) => wouldChange(f, plan));
+      if (!changes.some(Boolean) || changes.every(Boolean)) continue; // no no-op side to pair against
+      const sig = s.fixtures.map((f, i) => (changes[i] ? canonical(executePlan(f, plan)) : baseline[i]));
+      const blocks = new Map<string, number[]>();
+      sig.forEach((x, i) => blocks.set(x, [...(blocks.get(x) ?? []), i]));
+      let hit = false;
+      for (const idx of blocks.values())
+        for (let x = 0; x < idx.length && !hit; x++)
+          for (let y = x + 1; y < idx.length && !hit; y++)
+            if (baseline[idx[x]] !== baseline[idx[y]] && changes[idx[x]] !== changes[idx[y]] && outcomeDiffers(outcomeOf(s.fixtures[idx[x]].id), outcomeOf(s.fixtures[idx[y]].id))) hit = true;
+      if (hit) found.push(id);
+    }
+    return found.sort();
+  };
+
+  it("finds exactly two, both bin.closure spellings — and the pair is IDEAL, which is the point", () => {
+    // The corpus supplies a pair whose two sides differ in nothing but the declaration, with
+    // outcomes illegal-against-admissible. checkWitness refuses both anyway, on
+    // ERASURE_NOT_ISOLATED, because deleting the declaration produces the very configuration
+    // the corpus diagnoses. That refusal is the doctrine's named instrument limit: the ideal
+    // pair exists and the isolation clause is what refuses it.
+    expect(presencePairs()).toEqual([
+      "relation.derivedBy.bin.closure",
+      "relation.derivedBy.bin.closure:left-closed~<absent>",
+    ]);
+  });
+
+  it("and evidence.rows.*#present has none, so its refusal is a MISSING FIXTURE SHAPE and not a mis-chosen pair", () => {
+    // The population varies rows presence widely -- 161 of 210 specimens carry no `evidence.rows`
+    // at all, and 138 of those are oracle-bound -- so the earlier record's implication that a
+    // better pair could simply be picked is wrong. What the corpus lacks is a fixture that IS
+    // another fixture plus rows, which is the shape collision requires: erasing presence leaves
+    // a row-less fixture unchanged, so colliding with one means the other must equal it exactly
+    // once its rows are gone.
+    const s = specimens();
+    const oracle = loadOracle();
+    const rowless = s.fixtures.filter((f) => (f as unknown as { evidence?: { rows?: unknown } }).evidence?.rows === undefined);
+    expect(rowless.length).toBe(161);
+    expect(rowless.filter((f) => oracle.outcomeOf(f.id)).length).toBe(138);
+    expect(presencePairs()).not.toContain("evidence.rows.*#present");
   });
 });
