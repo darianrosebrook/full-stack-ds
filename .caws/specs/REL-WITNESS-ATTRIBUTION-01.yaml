@@ -12,7 +12,6 @@ blast_radius:
     - 'packages/ds-codegen/src/analytical/necessity.ts (the admission rule; witness authority)'
     - 'the re-recorded ledgers (a moved witness authority invalidates every witness and closure verdict by record)'
   data_migration: false
-  data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
