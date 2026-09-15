@@ -9,7 +9,8 @@ updated_at: '2026-09-15T17:12:28.917Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/relation-model.ts + census.ts + erasure-plan.ts (the declared mirror, its threading, the pool and the arity floor)'
+    - 'the emitted schemas and the re-recorded ledgers (both authorities move; the supersession carries two classes)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -22,7 +23,10 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - "The mirror is a LAW fact declared on the operand map and read where every other operand fact is read: the executor never hardcodes which result slot an operand mirrors, and the pool is the mirror list itself -- so the image satisfies the law's equation by construction rather than by searching the input's namespace."
+  - "The mirror rebind is the identity on every declaration that already satisfies the equation, which the corpus proves holds throughout: the three coordinates leave never-discharged as corpus-dead, and the structural fact is recorded -- no two admissible fixtures can differ only in the mirrored operand, because the law slaves it to the other side."
+  - "The arity facet of a mirrored slot truncates to the mirror's length (a runtime fact) instead of the static minItems floor, and wouldChange answers by comparison there; names are preserved when truncating, so an arity erasure never rewrites occupants."
+  - "Both authorities moving means the freeze is superseded with authored effects for both classes, and the pins that named the old refusals are corrected rather than deleted."
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
