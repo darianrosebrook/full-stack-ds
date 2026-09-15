@@ -325,7 +325,13 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
       path: rawPath,
       steps,
       ...(arityFloor !== undefined ? { arityFloor } : {}),
-      ...(operand ? { operand: operand.namespace, ...(operand.distinctFrom ? { operandDistinctFrom: operand.distinctFrom } : {}) } : {}),
+      ...(operand
+        ? {
+            operand: operand.namespace,
+            ...(operand.distinctFrom ? { operandDistinctFrom: operand.distinctFrom } : {}),
+            ...(operand.mirrors ? { operandMirror: operand.mirrors } : {}),
+          }
+        : {}),
     };
     locators.set(c.id, locator);
     if (!locators.has(c.leaf)) locators.set(c.leaf, locator);

@@ -81,10 +81,25 @@ export type OperandNamespace = "field" | "relation";
  * admits). The pick stays a function of the DECLARATIONS alone: it reads the
  * sibling's current value, never the slot's own, so two stimuli differing only
  * in the slot still reach one image.
+ *
+ * `mirrors` names the RESULT-side spelling the law says this operand equals
+ * (`sameSet(out.grain, d.toGrain)`, `sameSet(fieldNames(out), d.keep)`) — one
+ * degree of freedom written TWICE. The canonical rebinding takes the mirror
+ * itself as the pool, so the image satisfies the equation by construction
+ * instead of searching the input's namespace for a name the law would accept.
+ * The mirror is the identity on every declaration that already agrees with
+ * itself (the corpus's do, unlawful ones included — their illegality lives in
+ * other rules), and a REPAIR on one that does not: no two admissible fixtures
+ * can differ only in a mirrored operand, because the law slaves it to the
+ * other side. The arity facet truncates to the mirror's length — a runtime
+ * fact — instead of the static minItems floor.
  */
+export type OperandMirror = "result.grain" | "result.fields";
+
 export interface OperandBinding {
   namespace: OperandNamespace;
   distinctFrom?: string;
+  mirrors?: OperandMirror;
 }
 
 /** The shorthand a plain namespace still admits, normalized by one reader. */
@@ -100,12 +115,12 @@ export const operandOf = (decl: OperandDecl): OperandBinding => (typeof decl ===
  * historical reader unable to parse the current schema.
  */
 export const DERIVATION_OPERANDS: Record<string, Record<string, OperandDecl>> = {
-  "aggregate-to-grain": { from: "relation", toGrain: "field" },
+  "aggregate-to-grain": { from: "relation", toGrain: { namespace: "field", mirrors: "result.grain" } },
   join: { from: "relation", with: { namespace: "relation", distinctFrom: "from" } },
   nest: { from: "relation", levels: "field" },
   bin: { from: "relation", field: "field" },
   normalize: { from: "relation", field: "field" },
-  project: { from: "relation", keep: "field" },
+  project: { from: "relation", keep: { namespace: "field", mirrors: "result.fields" } },
   graph: { from: "relation", edgeFrom: "field", edgeTo: { namespace: "field", distinctFrom: "edgeFrom" }, value: "field" },
 };
 
