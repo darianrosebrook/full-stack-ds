@@ -2,9 +2,10 @@ id: REL-PEERS-NAMESPACE-01
 title: 'Declare the peers namespace so its incidence erasure rebinds instead of tokenizing'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: peers-namespace-land
 created_at: '2026-09-15T16:06:01.759Z'
-updated_at: '2026-09-15T16:06:01.759Z'
+updated_at: '2026-09-15T16:06:12.483Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
