@@ -1,0 +1,36 @@
+id: REL-SEQUENCE-DECLARATION-01
+title: 'Make the declaration carry whether a name list''s order is semantic, and emit the order facet only where it is'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T07:16:49.898Z'
+updated_at: '2026-09-15T07:16:49.898Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/relation-model.ts + census.ts (the sequence fact and the facet rule it drives)'
+    - 'the emitted schemas: relation.contract.schema.json, analytical-fixtures/{fixture,assertion,quotient-image}.schema.json'
+    - 'packages/ds-contracts/analytical-fixtures/subtraction-stage2.json (five representation-artifact verdicts) and the three re-recorded ledgers'
+    - 'docs/architecture/analytical-relation-doctrine.md + docs/current-implementation-snapshot.md (invariant 18 landed)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-contracts/relation.contract.schema.json'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the census emits an order facet on every name list while the emitted schema cannot say whether a sequence is semantic, and project.keep and structure.peers[] order is measured inert; when the declaration is made to carry the fact and the walk refuses to guess; then every name-list declaration states set or ordered, the order facet is emitted only for the ordered ones, the five set-valued order coordinates leave the kernel with representation-artifact verdicts, and a test makes an unmarked list arrive failing rather than silent'
+non_functional: {}
+contracts:
+  - name: 'sequence-fact'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
