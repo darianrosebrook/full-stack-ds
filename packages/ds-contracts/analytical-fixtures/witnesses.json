@@ -1050,6 +1050,142 @@
         "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: reordering the target grain to [state, country] makes it no longer a declared prefix of the nest levels [country, state], so REL_GRAIN_SUBTOTAL_MISMATCH is the corpus's own cause for a subtotal to a grain the nest does not declare. The declared result grain still equals the target grain as a SET, so the pair is a legal declaration on both sides and nothing but the order moves. No committed fixture carries a two-element target grain, so the surrounding shape (the result relation's declared grain and its fields) is written IDENTICALLY on both sides: the pair itself differs at exactly the two `toGrain` positions, and `changedPaths` measures that."
       },
       "note": "STAGE-2 necessity for relation.derivedBy.aggregate-to-grain.toGrain#order: separates the declared SEQUENCE of the target grain. Both sides are AUTHORED stimuli over one corpus base -- this is the first witness whose a-side is a patch, and it is forced by the corpus: every committed toGrain is one name long, so no fixture or fixture-pair can express a target grain whose order varies. What makes it a witness rather than a manufactured pair is measured, not asserted: the two sides differ at exactly [.structure.relations.subtotals.derivedBy.toGrain[0], ...[1]], each side is separately justified from the frozen corpus and doctrine, the ordering erasure identifies them, and checkIsolation discharges on both sides (the a-side is unchanged by sorting; the b-side sorts into the admissible shape with no introduced boundary finding). NON-CLAIM: this establishes that the target grain's declared SEQUENCE is necessary for the grain relation it participates in. It does not establish that the coordinate is a primitive analytical axis, and by construction it does not license any pair whose sides need DIFFERENT adjustments -- that would be evidence about two constructors rather than about this coordinate."
+    },
+    {
+      "coordinates": [
+        "field.additivity.semi-additive.nonAdditiveAlong#arity"
+      ],
+      "a": {
+        "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT"
+      },
+      "b": {
+        "base": "FX_N_STOCK_SUM_ALONG_PRODUCT",
+        "patch": [
+          {
+            "set": "structure.relations.stock.fields.on_hand.additivity.nonAdditiveAlong",
+            "value": [
+              "date",
+              "product"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_ADDITIVITY_SUM_SEMIADDITIVE"
+          ],
+          "terms": []
+        },
+        "cause": "CASE_INVENTORY_SUMMED_OVER_TIME: the measure is declared non-additive along a dimension the sum runs along. Adding `product` to the declaration makes the assertion's `along` meet the blocked set -- `along.some((d) => blocked.includes(d))` -- so the corpus's own semi-additive rule fires. Only the arity of the declaration moves: the first member stays `date`, so nothing about WHICH dimension is blocked first changes."
+      },
+      "note": "STAGE-2 necessity for field.additivity.semi-additive.nonAdditiveAlong#arity: separates how many dimensions the measure is declared non-additive along. The a-side is the corpus's own near-neighbour for REL_ADDITIVITY_SUM_SEMIADDITIVE -- admissible, because it blocks only `date` while the assertion sums along `product` -- and the b-side adds `product` to that declaration. The arity erasure truncates the list to its declared floor of one, which returns the b-side to the c-side shape, and checkIsolation discharges on both sides. NON-CLAIM: this establishes that the COUNT of blocked dimensions is a necessary distinction here; it does not establish that the set of blocked dimensions is primitive, which is `#incidence`'s question and is answered elsewhere."
+    },
+    {
+      "coordinates": [
+        "evidence.grainWitness#arity"
+      ],
+      "a": {
+        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+        "patch": [
+          {
+            "set": "evidence.rows.orders",
+            "value": [
+              {
+                "order_id": "o1",
+                "amount": 10
+              },
+              {
+                "order_id": "o1",
+                "amount": 25
+              },
+              {
+                "order_id": "o2",
+                "amount": 7
+              }
+            ]
+          },
+          {
+            "set": "evidence.grainWitness.orders",
+            "value": [
+              "order_id"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_GRAIN_FANOUT"
+          ],
+          "terms": []
+        },
+        "cause": "The corpus's own hostile side for `grain:declared` (REL_GRAIN_FANOUT): an undeclared-grain relation whose rows repeat on the columns its witness names does not hold one row per unit, so the sum is taken at the wrong grain. The witness names one column and the rows repeat on it."
+      },
+      "b": {
+        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+        "patch": [
+          {
+            "set": "evidence.rows.orders",
+            "value": [
+              {
+                "order_id": "o1",
+                "amount": 10
+              },
+              {
+                "order_id": "o1",
+                "amount": 25
+              },
+              {
+                "order_id": "o2",
+                "amount": 7
+              }
+            ]
+          },
+          {
+            "set": "evidence.grainWitness.orders",
+            "value": [
+              "order_id",
+              "amount"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "The corpus's own satisfying side for `grain:declared`: the witness names both columns and no row repeats on the PAIR, so the relation does hold one row per unit and the aggregate has the grain its witness declares."
+      },
+      "note": "STAGE-2 necessity for evidence.grainWitness#arity: separates how many columns the witness names. Both sides write the same instance rows (three orders, one of them repeated on `order_id` alone) and differ at exactly the witness array, so the pair's whole difference is its arity; the arity erasure truncates to the declared floor of one and returns the b-side to the a-side shape. NON-CLAIM: the rows are WRITTEN IDENTICALLY ON BOTH SIDES because the committed rows cannot express the distinction -- FX_T_GRAIN_WITNESS_DUPLICATE_ROWS repeats rows that are identical on every column, and FX_T_GRAIN_WITNESS_UNIQUE_ROWS repeats nothing -- so this pair carries a shared setup rather than a shared shape. A pair whose sides needed DIFFERENT rows would be evidence about two datasets, not about this coordinate."
+    },
+    {
+      "coordinates": [
+        "structure.peers[]#arity"
+      ],
+      "a": {
+        "fixture": "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS"
+      },
+      "b": {
+        "base": "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS",
+        "patch": [
+          {
+            "set": "structure.peers",
+            "value": [
+              [
+                "by_day",
+                "by_other",
+                "events"
+              ]
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN states its claim about a peer set EVERY member of which is an aggregate-to-grain of one relation -- the law's own condition is `aggs.length === decls.length` -- so a three-member set containing the un-derived source relation is a different proposition and the divergence rule does not apply to it. Only the peer set's arity moves; the two aggregations and their disagreeing targets are untouched."
+      },
+      "note": "STAGE-2 necessity for structure.peers[]#arity: separates how many relations a peer set claims to co-register. The a-side is the corpus case CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN and the b-side adds the source relation to the same set, so the pair differs at exactly that array; the arity erasure truncates the inner list to its declared floor of two and returns the b-side to the a-side shape, and checkIsolation discharges on both sides. NON-CLAIM: the b-side is admissible because the divergence law is conditioned on every member being an aggregation, which this pair reaches by adding a non-aggregation -- so the witness establishes that the COUNT of members decides whether that law applies, and not that a larger all-aggregation peer set would be admissible. If the law tightens to compare its aggregation members among themselves, the engine disagrees with this hand adjudication and C7 fails, which is the designed invalidation."
     }
   ]
 }

@@ -382,7 +382,8 @@
       "disposition": "unresolved"
     },
     "evidence.grainWitness#arity": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED. The witness's ARITY is a necessary distinction: naming one column on which the relation's rows repeat makes the aggregate fan out (REL_GRAIN_FANOUT, the corpus triad's hostile side for `grain:declared`), while naming the pair that no row repeats on is the triad's satisfying side. The arity erasure truncates to the declared floor of one, restoring the a-side shape; isolation discharges on both sides. NON-CLAIM: the instance rows are written identically on both sides because no committed fixture can express the distinction, so this pair carries a shared SETUP and not a shared declaration shape -- recorded in the witness note, because a pair whose sides needed different rows would be evidence about two datasets."
     },
     "evidence.grainWitness#incidence": {
       "disposition": "unresolved"
@@ -418,7 +419,8 @@
       "disposition": "unresolved"
     },
     "field.additivity.semi-additive.nonAdditiveAlong#arity": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED. The declaration's ARITY is a necessary distinction: the corpus near-neighbour FX_N_STOCK_SUM_ALONG_PRODUCT is admissible because it blocks only `date` while the assertion sums along `product`, and adding `product` to that declaration makes the assertion's `along` meet the blocked set, so CASE_INVENTORY_SUMMED_OVER_TIME -- an already-existing cause -- decides it. The arity erasure truncates the list to its declared floor of one, which restores the a-side shape, and isolation discharges on both sides. Establishes that how MANY dimensions are blocked is necessary; it does NOT establish which ones, which is `#incidence`'s question."
     },
     "field.additivity.semi-additive.nonAdditiveAlong#order": {
       "disposition": "representation-artifact",
@@ -736,7 +738,8 @@
       "disposition": "unresolved"
     },
     "structure.peers[]#arity": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED. A peer set's ARITY decides whether the divergence law applies at all: CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN is stated for a set every member of which is an aggregate-to-grain of one relation, so adding the un-derived source relation makes the claim a different proposition and the rule does not fire. The arity erasure truncates the inner list to its declared floor of two, restoring the a-side shape; isolation discharges on both sides. NON-CLAIM: the b-side's admissibility follows from that condition -- the witness establishes that the COUNT of members decides whether the law applies, NOT that a larger all-aggregation peer set would be admissible. If the law tightens, C7 fails and the witness is invalidated, which is the designed outcome."
     },
     "structure.peers[]#incidence": {
       "disposition": "unresolved"

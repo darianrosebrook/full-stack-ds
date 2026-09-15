@@ -1810,7 +1810,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // closure form was accounting for earned a witness of its own and moved to `primitive` -- the
     // classes are a partition, so a coordinate cannot be in both. Accounted is not ratified, and
     // the assertion below is what keeps the two apart.
-    expect(byClass).toEqual({ primitive: 54, "closure-accounted": 12, "required-derived-vocabulary": 3, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 57, "closure-accounted": 11, "required-derived-vocabulary": 3, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -1952,6 +1952,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "assertion.aggregate.along#present",
       "assertion.aggregate.field#incidence",
       "assertion.aggregate.nulls:exclude~<absent>",
+      "evidence.grainWitness#arity",
       "field.additivity.kind:additive~non-additive",
       "field.temporality#present",
       "field.temporality.grain",
@@ -1965,6 +1966,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "relation.derivedBy.kind:normalize~project",
       "relation.derivedBy.nest.levels#order",
       "relation.derivedBy.normalize.field#incidence",
+      "structure.peers[]#arity",
     ]);
     expect(r.suspended).toEqual(["assertion.kind", "assertion.kind:aggregate~ratio-comparison"]);
   });
@@ -1993,6 +1995,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "assertion.aggregate.along#present",
       "assertion.aggregate.field#incidence",
       "assertion.aggregate.nulls:exclude~<absent>",
+      "evidence.grainWitness#arity",
       "field.additivity.kind:additive~non-additive",
       "field.temporality#present",
       "field.temporality.grain",
@@ -2006,6 +2009,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "relation.derivedBy.kind:normalize~project",
       "relation.derivedBy.nest.levels#order",
       "relation.derivedBy.normalize.field#incidence",
+      "structure.peers[]#arity",
     ]);
     // And the historical dispositions are the same numbers as before.
     const ratified = [...historicalDispositions()].filter(([, d]) => d.state === "ratified");
