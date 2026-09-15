@@ -1,0 +1,33 @@
+id: REL-INCIDENCE-QUOTIENT-LIMIT-01
+title: 'Measure and pin why the derivation-operand topology facets cannot be witnessed: their erasure is not a legal quotient'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T06:36:43.706Z'
+updated_at: '2026-09-15T06:36:43.706Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/necessity.test.ts (pin the quotient-limit partition)'
+    - 'docs/architecture/analytical-relation-doctrine.md (the incidence-erasure limit as a cost)'
+    - 'docs/current-implementation-snapshot.md (the analytical row''s forward plan)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the derivation-operand topology facets stand unresolved and the keystone was recorded as a per-facet authored-stimulus obligation; when each coordinate''s own erasure is run over every committed fixture where it moves bytes; then no derivation-operand erasure is ever discharged, the partition is measured exactly and pinned by test, and the distinction the coordinates name is shown to be oracle-separated so the absence of a verdict is a limit of the quotient rather than missing corpus coverage'
+non_functional: {}
+contracts:
+  - name: 'derivation-operand-quotient'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
