@@ -1,0 +1,32 @@
+id: REL-FILE-ADDITIVITY-01
+title: 'File the additivity ratio-measure member-pair witness'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T23:46:20.725Z'
+updated_at: '2026-09-15T23:46:20.725Z'
+created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given field.additivity.kind:non-additive~ratio-measure is unresolved and ratifiable with a single-path separating shape; when the authored stimulus is filed (FX_GDP_PER_CAPITA_ROLLUP_MEAN as committed, illegal REL_RATIO_MEASURE_AVERAGED, against the same fixture with the field additivity kind moved to non-additive, admissible) and checkWitness admits it; then the verdict moves unresolved to witnessed, the coordinate classes atomic so the witness ratifies primitive standing, the drift check stays green on all three bases, and the analytical suite, every gate and every ledger agree'
+non_functional: {}
+contracts:
+  - name: 'witness-admission'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
