@@ -325,7 +325,10 @@
           "additionalProperties": false,
           "x-fsds-operands": {
             "from": "relation",
-            "toGrain": "field"
+            "toGrain": {
+              "namespace": "field",
+              "mirrors": "result.grain"
+            }
           }
         },
         {
@@ -480,7 +483,10 @@
           "additionalProperties": false,
           "x-fsds-operands": {
             "from": "relation",
-            "keep": "field"
+            "keep": {
+              "namespace": "field",
+              "mirrors": "result.fields"
+            }
           }
         },
         {

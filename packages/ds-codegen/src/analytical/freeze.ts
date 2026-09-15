@@ -234,13 +234,13 @@ const SUPERSESSION_EFFECT: Record<string, string> = {
     "coordinate's verdict changed, and the subtraction reports 72 of 118 unadjudicated rather than 77.",
   ].join(" "),
   "forget-reference-incidence": [
-    "Declared DISTINCTNESS: the law says `join.with` differs from `from` and `graph.edgeTo` from `edgeFrom`, so the operand map now carries",
-    "`distinctFrom` beside the namespace, the census carries it onto the locator, and the canonical rebind SKIPS the sibling operand's own binding --",
-    "which is where the unconstrained pick used to land, producing a self-join and a degenerate edge the boundary refused as underivable. Both",
-    "coordinates leave never-discharged for a measured reason: the sibling-skipping pick is the next declared name, which is exactly the binding",
-    "the corpus writes, so reach falls to zero on both and they are corpus-dead rather than refused -- a fixture joining a third-declared relation,",
-    "or binding a later endpoint field, makes the erasure move immediately. The pick reads the sibling's CURRENT value and never the slot's own,",
-    "so two stimuli differing only in the slot still reach one image. No verdict moved: no witness names either coordinate.",
+    "Declared MIRRORS: where the law writes one binding TWICE (sameSet(out.grain, d.toGrain), sameSet(fieldNames(out), d.keep)), the operand map",
+    "now declares the result-side spelling, the census carries it onto the locator, and the canonical rebind takes the MIRROR as the pool -- so the",
+    "image satisfies the law's equation by construction instead of searching the input's namespace for a name the law would accept. The measurement",
+    "that dissolved the planned census change: the equation holds in EVERY corpus declaration, unlawful ones included, so the mirror rebind is the",
+    "identity throughout and `toGrain#incidence` and `keep#incidence` are corpus-dead -- no two admissible fixtures can differ only in a mirrored",
+    "operand, because the law slaves it to the other side. An authored equation break is the moving case, and the mirror REPAIRS it, which is the",
+    "collision the witness machinery needs. No verdict moved: no witness names either coordinate.",
   ].join(" "),
   "forget-reference-order": [
     "The census no longer emits an order facet for a name list whose declaration says it is a SET, so the plans that sorted `keep`, `along`,",
@@ -249,9 +249,11 @@ const SUPERSESSION_EFFECT: Record<string, string> = {
     "representation-artifact verdicts, because no rule reads the position of a member in a collection it compares by membership or set-equality.",
   ].join(" "),
   "forget-reference-arity": [
-    "Arity truncates to the declaration's own minItems rather than to one element. The short side of the old pair was schema-invalid wherever the floor",
-    "exceeded one. Corpus reach falls to zero because every corpus occurrence of these two lists is already AT its floor — a fact about the corpus, not",
-    "about the coordinate, and the synthesized separating pairs do exercise it.",
+    "A MIRRORED slot truncates to the mirror's length, a fact read at execution time, rather than the static minItems floor: the law says this list",
+    "equals the result-side spelling, so how long it may be is a fact about the other side of the equation. `keep#arity` is the case, and it is",
+    "corpus-dead for the mirror's own reason -- every corpus keep already equals fieldNames(out), so the cut is the identity throughout. The cut",
+    "keeps the FIRST names, so an arity erasure never rewrites occupants; and it only ever shortens, which is stated rather than hidden: a short",
+    "break of the equation cannot be repaired by cutting.",
   ].join(" "),
 };
 

@@ -275,7 +275,7 @@ describe("evidence earned under one erasure definition is refused under another"
   /** Arity truncates to ONE whatever the floor. In-slot, idempotent, schema-shaped; wrong. */
   const TRUNCATE_TO_ONE = {
     file: "erasure-plan.ts",
-    from: "if (Array.isArray(v)) write(s, v.slice(0, floor));",
+    from: "if (Array.isArray(v)) write(s, v.slice(0, plan.locator.operandMirror ? (mirrorFloor(copy, s, plan.locator.operandMirror) ?? floor) : floor));",
     to: "if (Array.isArray(v)) write(s, v.slice(0, 1));",
   };
   const nest = (levels: string[]): Fixture =>
@@ -369,8 +369,8 @@ describe("evidence earned under one erasure definition is refused under another"
       mutate: {
         file: "census.ts",
         from:
-          "const locator: StructuralLocator = {\n      path: rawPath,\n      steps,\n      ...(arityFloor !== undefined ? { arityFloor } : {}),\n      ...(operand ? { operand: operand.namespace, ...(operand.distinctFrom ? { operandDistinctFrom: operand.distinctFrom } : {}) } : {}),\n    };",
-        to: "const locator: StructuralLocator = {\n      path: rawPath,\n      steps,\n      ...(operand ? { operand: operand.namespace, ...(operand.distinctFrom ? { operandDistinctFrom: operand.distinctFrom } : {}) } : {}),\n    };",
+          "const locator: StructuralLocator = {\n      path: rawPath,\n      steps,\n      ...(arityFloor !== undefined ? { arityFloor } : {}),\n      ...(operand\n        ? {\n            operand: operand.namespace,\n            ...(operand.distinctFrom ? { operandDistinctFrom: operand.distinctFrom } : {}),\n            ...(operand.mirrors ? { operandMirror: operand.mirrors } : {}),\n          }\n        : {}),\n    };",
+        to: "const locator: StructuralLocator = {\n      path: rawPath,\n      steps,\n      ...(operand\n        ? {\n            operand: operand.namespace,\n            ...(operand.distinctFrom ? { operandDistinctFrom: operand.distinctFrom } : {}),\n            ...(operand.mirrors ? { operandMirror: operand.mirrors } : {}),\n          }\n        : {}),\n    };",
       },
       moves: ["coordinateBasisDigest"],
     },

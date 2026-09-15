@@ -460,29 +460,27 @@ describe("C3 — the harness is falsified", () => {
     expect(codes(w)).toContain("SCHEMA_INVALID");
   });
   it("rejects an erasure that manufactures a derivation defect instead of isolating its coordinate", () => {
-    // A structure whose derived relation is lawful. Truncating `project.keep` to
-    // its declared floor drops a field the result still DECLARES, so the boundary
-    // reports the result underivable — any collision would be that defect rather
-    // than the selection the coordinate is about.
-    //
-    // `derivedBy.project.from#incidence` used to be this example: forgetting a
-    // resolvable relation name rewrote it to a reserved token, which dangles, so
-    // the boundary reported the input missing. A bound slot now rebinds to a
-    // DECLARED name, so that image resolves and the example no longer exists —
-    // which is what the plan changed, and why this one is taken from the facet
-    // the boundary still refuses.
+    // A structure whose derived relation is lawful. Forgetting the bin's
+    // CLOSURE declaration leaves the binned result underivable — the boundary
+    // cannot type which side each interval owns — so any collision would be
+    // that defect rather than the declaration the coordinate is about. This
+    // is the last manufactured-defect subject left anywhere: the bound-
+    // incidence rebind (round 31), the distinctness skip (round 35) and the
+    // mirror (round 36) retired every operand-side subject, measured over the
+    // whole population — the only remaining violated pairs in the corpus are
+    // this coordinate on FX_H_READINGS_BINNED_DROPS_TEMP.
     const structure = {
       relations: {
         src: { grain: ["k"], fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } } },
         out: {
-          grain: ["k"],
-          fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } },
-          derivedBy: { kind: "project", from: "src", keep: ["k", "v"] },
+          grain: ["k", "v_bin"],
+          fields: { k: { transformation: "nominal", key: true }, v_bin: { transformation: "ordinal" } },
+          derivedBy: { kind: "bin", from: "src", field: "v", closure: "left-closed" },
         },
       },
     } as unknown as RelationalStructure;
     const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
-    const coord = loadCensus().find((c) => c.id === "relation.derivedBy.project.keep#arity")!;
+    const coord = loadCensus().find((c) => c.id === "relation.derivedBy.bin.closure")!;
     expect(coord).toBeDefined();
     // The diagnostic is NAMED, not merely counted. `REL_DERIVATION_RESULT_NOT_DERIVABLE`
     // is the specific collateral this guard exists to catch; a message that only
@@ -506,24 +504,24 @@ describe("C3 — the harness is falsified", () => {
       relations: {
         src: { grain: ["k"], fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } } },
         out: {
-          grain: ["k"],
-          fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } },
-          derivedBy: { kind: "project", from: "src", keep: ["k", "v"] },
+          grain: ["k", "v_bin"],
+          fields: { k: { transformation: "nominal", key: true }, v_bin: { transformation: "ordinal" } },
+          derivedBy: { kind: "bin", from: "src", field: "v", closure: "left-closed" },
         },
       },
     } as unknown as RelationalStructure;
     const wrap = (assertions: unknown[]) => ({ id: "fx_probe", structure, assertions }) as unknown as Fixture;
     const bare = wrap([]);
-    const wrapped = wrap([{ kind: "aggregate", relation: "out", field: "v", op: "sum", along: ["k"] }]);
+    const wrapped = wrap([{ kind: "aggregate", relation: "out", field: "v_bin", op: "count", along: ["k"] }]);
     // The coordinate the probe below is measured with. It reaches the boundary
-    // and is refused there (`project.keep#arity` truncates the projection to its
-    // declared floor and drops a field the result declares), which is what makes
-    // the isolation result a real verdict rather than a no-op. The incidence of
-    // `project.from` was this probe's coordinate until a bound slot began
-    // rebinding to DECLARED names: its image now resolves, the erasure is the
-    // identity on this structure, and a discharged-by-`unchanged` result would
-    // have made the three tests below vacuous.
-    const keepArity = loadCensus().find((c) => c.id === "relation.derivedBy.project.keep#arity")!;
+    // and is refused there (forgetting the bin's closure leaves the binned
+    // result underivable), which is what makes the isolation result a real
+    // verdict rather than a no-op. It is the LAST such coordinate: the bound-
+    // incidence rebind, the distinctness skip and the mirror retired every
+    // operand-side subject, and `project.keep#arity` -- this probe's
+    // coordinate until the mirror -- is now the identity on every corpus
+    // declaration, which would have made the three tests below vacuous.
+    const binClosure = loadCensus().find((c) => c.id === "relation.derivedBy.bin.closure")!;
 
     it("the envelope rejects both probes, on grounds that say nothing about the structure", () => {
       // Stated first because it is what makes the next test a falsifier rather
@@ -540,10 +538,10 @@ describe("C3 — the harness is falsified", () => {
       const expected: IsolationResult = {
         state: "violated",
         detail:
-          "erasure introduced derivation defect(s) diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@out via project(keep=1) [derivation-typing/schema], so any collision may be that defect rather than the coordinate",
+          "erasure introduced derivation defect(s) diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@out via bin [derivation-typing/schema], so any collision may be that defect rather than the coordinate",
       };
-      expect(checkIsolation(bare, keepArity)).toEqual(expected);
-      expect(checkIsolation(wrapped, keepArity)).toEqual(expected);
+      expect(checkIsolation(bare, binClosure)).toEqual(expected);
+      expect(checkIsolation(wrapped, binClosure)).toEqual(expected);
     });
 
     it("a forgotten discriminator is out of the ENGINE's domain, and no operator lookup is executed", () => {
@@ -576,7 +574,10 @@ describe("C3 — the harness is falsified", () => {
       // reads only `structure`. Legality and locality are required of every
       // discharge; the engine contributes one more proposition on top.
       const kindLeaf = loadCensus().find((c) => c.id === "relation.derivedBy.kind")!;
-      const byEngine = checkIsolation(bare, loadCensus().find((c) => c.id === "field.key")!);
+      // (`field.key` carried this row on the project probe; the bin probe makes
+      // its erasure introduce a finding, so the row moved to the bin's field
+      // operand -- measured to discharge with the engine's contribution.)
+      const byEngine = checkIsolation(bare, loadCensus().find((c) => c.id === "relation.derivedBy.bin.field#incidence")!);
       expect(byEngine.state === "discharged" && byEngine.by).toEqual(["no-introduced-finding", "quotient-legal", "slot-local"]);
       const byStructure = checkIsolation(bare, kindLeaf);
       expect(byStructure.state === "discharged" && byStructure.by).toEqual(["quotient-legal", "slot-local"]);
@@ -618,7 +619,7 @@ describe("C3 — the harness is falsified", () => {
       const boom = () => {
         throw new TypeError("injected instrument failure");
       };
-      expect(() => checkIsolation(bare, keepArity, boom)).toThrow(/injected instrument failure/);
+      expect(() => checkIsolation(bare, binClosure, boom)).toThrow(/injected instrument failure/);
     });
 
     it("is a pure function of its arguments: no accumulated state orders the results", () => {
@@ -626,8 +627,8 @@ describe("C3 — the harness is falsified", () => {
       // Two coordinates over the same stimulus — one the engine can read, one it
       // cannot — must give the same pair of results in either evaluation order.
       const kindLeaf = loadCensus().find((c) => c.id === "relation.derivedBy.kind")!;
-      const forward = [checkIsolation(bare, keepArity), checkIsolation(bare, kindLeaf)];
-      const backward = [checkIsolation(bare, kindLeaf), checkIsolation(bare, keepArity)];
+      const forward = [checkIsolation(bare, binClosure), checkIsolation(bare, kindLeaf)];
+      const backward = [checkIsolation(bare, kindLeaf), checkIsolation(bare, binClosure)];
       expect(forward).toEqual([backward[1], backward[0]]);
       expect(forward[0].state).toBe("violated");
       expect(forward[1].state).toBe("discharged");
@@ -741,18 +742,22 @@ describe("C3 — the harness is falsified", () => {
       // sort erasure it demonstrated is gone and `assertion.aggregate.relation#incidence`
       // -- measured to leave this finding byte-identical -- carries it instead.
       expect(at("assertion.aggregate.relation#incidence")).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat.*first-refutation checker cannot show/) });
-      // The key persists with a DIFFERENT cause behind it (see the next test): unsettled — the engine cannot tell these two rows apart.
-      expect(at("relation.derivedBy.project.keep#incidence")).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/first-refutation checker cannot show/) });
-      // A different key appears: refuted, as before. The identity is
-      // `code@subject` PLUS the derivation it was found under, and the erasure
-      // truncates `keep` to its floor, so the same code reappears under
-      // `project(keep=1)` -- a different finding, not the one that was there.
-      // (`project.from#incidence` used to be this row: forgetting the input's
-      // name left the boundary with nothing to resolve, INPUT_MISSING@flat. A
-      // bound slot now rebinds to a DECLARED name, so that image resolves and
-      // the row is discharged instead -- the erasure change moved this row, not
-      // the rule.)
-      expect(at("relation.derivedBy.project.keep#arity")).toMatchObject({ state: "violated", detail: expect.stringMatching(/introduced derivation defect\(s\) diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat via project\(keep=1\)/) });
+      // The key persists and the engine cannot say what moved behind it: a
+      // second coordinate measured to leave the fixture carrying the finding.
+      // (`project.keep#incidence` used to be this row; the MIRROR made it the
+      // identity -- every corpus keep already equals fieldNames(out) -- so the
+      // row moved to the assertion side, the one family the mirror cannot
+      // touch because assertions are not operands.)
+      expect(at("assertion.aggregate.field#incidence")).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/first-refutation checker cannot show/) });
+      // A different key appears: refuted. This row now lives on the ONLY
+      // fixture that still carries a manufactured defect anywhere -- the
+      // mirror, the distinctness skip and the bound rebind retired every
+      // operand-side subject, measured over the whole population (see the
+      // violated-pairs pin in C3). Forgetting the bin's closure leaves the
+      // binned result underivable: an INTRODUCED finding, not the standing
+      // one, and the guard refuses the collision over it.
+      const dropsTemp = corpus.find((f2) => f2.id === "FX_H_READINGS_BINNED_DROPS_TEMP")!;
+      expect(checkIsolation(dropsTemp, kernel.find((c) => c.id === "relation.derivedBy.bin.closure")!)).toMatchObject({ state: "violated", detail: expect.stringMatching(/introduced derivation defect\(s\) diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@bucketed via bin/) });
       // The defective derivation itself is deleted and the finding goes with it:
       // the after-structure carries nothing, so there is nothing to hide behind,
       // and the engine HAS answered. Not a blanket withdrawal.
@@ -1355,6 +1360,20 @@ describe("C1e — no coordinate is un-erasable for a WALK reason", () => {
     // makes it move immediately.
     "relation.derivedBy.graph.edgeTo#incidence": "the canonical rebind skips the sibling edgeFrom binding and lands on the next declared field, which every corpus edge already names, so the erasure is the identity on every fixture",
     "relation.derivedBy.join.with#incidence": "the canonical rebind skips the sibling from binding and lands on the next declared relation, which every corpus join already names, so the erasure is the identity on every fixture",
+    // The three MIRRORED operands. The law writes the binding TWICE
+    // (sameSet(out.grain, d.toGrain), sameSet(fieldNames(out), d.keep)), and
+    // every corpus declaration satisfies the equation -- unlawful ones
+    // included, whose illegality lives in other rules -- so the mirror rebind
+    // (the other side of the equation IS the pool) is the identity on every
+    // fixture. That is a stronger corpus fact than the eight above: it says
+    // the operand-side spelling carries NO independent information in this
+    // corpus, because no two admissible fixtures can differ only in a
+    // mirrored operand. An authored stimulus that breaks the equation makes
+    // the erasure move -- and the mirror REPAIRS the break, which is the
+    // collision the witness machinery needs.
+    "relation.derivedBy.aggregate-to-grain.toGrain#incidence": "the mirror (the result's own declared grain) is the pool, and every corpus declaration satisfies the law's equation, so the rebind is the identity on every fixture",
+    "relation.derivedBy.project.keep#arity": "the mirror (the result's own declared fields) supplies the truncation length, and every corpus keep already equals fieldNames(out), so the cut is the identity on every fixture",
+    "relation.derivedBy.project.keep#incidence": "the mirror (the result's own declared fields) is the pool, and every corpus keep already equals fieldNames(out), so the rebind is the identity on every fixture",
   };
 
   const fixtures = [...oracle.fixtures.values()];
@@ -1425,18 +1444,19 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
    * requirement rode on the operand map and the pool learned to skip the
    * sibling's value. They are corpus-dead now, for the measured reason C1e
    * records: the next declared name after the sibling IS the binding the
-   * corpus writes. Three are what is left.
+   * corpus writes. Three were left, and the MIRROR took all of them.
    *
-   * Each of the three names the boundary line it is refused by. `toGrain` is
-   * rebound to a field the derivation cannot reach that way, and
-   * `project.keep` (both facets) to a selection that drops a field the result
-   * still declares -- `REL_DERIVATION_RESULT_NOT_DERIVABLE` in every case, and
-   * for `toGrain` and `keep` the deeper cause is structural: the law writes the
-   * SAME binding a second time in the result's own declaration
-   * (`sameSet(out.grain, d.toGrain)`, `sameSet(fieldNames(out), d.keep)`), so
-   * rebinding the operand alone leaves a declaration that disagrees with
-   * itself. Their coordinate's extent is wider than their locator, and a
-   * quotient for them is a CENSUS change, not an erasure change.
+   * The three were `toGrain#incidence` and `project.keep` (both facets),
+   * refused because the law writes the SAME binding a second time in the
+   * result's own declaration (`sameSet(out.grain, d.toGrain)`,
+   * `sameSet(fieldNames(out), d.keep)`), so a one-sided rebind from the
+   * input's namespace left a declaration that disagreed with itself -- which
+   * round 30 read as "the coordinate's extent is wider than its locator, a
+   * census change". The MIRROR measurement dissolved that: the equation
+   * holds in EVERY corpus declaration, unlawful ones included, so taking the
+   * OTHER SIDE of the equation as the pool satisfies it by construction with
+   * a one-sided locator, and the rebind is the identity throughout. The
+   * census change was never needed; the law itself was the pool.
    *
    * `structure.peers[]#incidence` USED to be the sixth, refused for the
    * ORIGINAL tokenizing reason: `peers` sits on the STRUCTURE rather than on a
@@ -1467,13 +1487,12 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
    * record was waiting for -- and the test beside it records what the discharge
    * COSTS: the same erasure also identifies the ORDER pair.
    *
-   * The residual question is narrower than the one this describe was opened with:
-   * WHICH declared names a bound slot may legally rebind to is a fact about the
-   * operand's own typing rules (`toGrain` must name a declared grain prefix,
-   * `keep` must retain the result's grain), and the erasure reads the namespace
-   * and not those rules. Until an erasure that respects them exists, the three
-   * below have no verdict this instrument can produce, and filing one to clear
-   * the subtraction gate is exactly the move the standing index exists to prevent.
+   * The residual question this describe was opened with is CLOSED: the
+   * never-discharged list is empty, the eighteen are resolved -- discharged,
+   * corpus-dead for a measured reason, or refused no longer -- and the ratchet
+   * stays armed: any coordinate whose erasure again refuses on every stimulus
+   * it moves reappears below, and filing a verdict to clear the subtraction
+   * gate remains exactly the move the standing index exists to prevent.
    */
   const plans = loadPlans();
   const fixtures = [...oracle.fixtures.values()];
@@ -1487,11 +1506,10 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
     return fixtures.filter((f) => resolveSlots(f, plan.locator).length > 0 && canonical(executePlan(f, plan)) !== canonical(f));
   };
 
-  const NEVER_DISCHARGED = [
-    "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
-    "relation.derivedBy.project.keep#arity",
-    "relation.derivedBy.project.keep#incidence",
-  ];
+  // EMPTY since the mirror landed, and the ratchet still bites: any coordinate
+  // whose erasure again refuses on every stimulus it moves reappears here and
+  // fails the exactness test below. The list is kept as the pin of that fact.
+  const NEVER_DISCHARGED: string[] = [];
 
   it("the reference-topology coordinates whose own erasure is never discharged are exactly these", () => {
     const measured = kernel
@@ -1952,15 +1970,19 @@ describe("C1h — the incidence erasure at a BOUND reference is the LANDED resol
     // rather than turning the prototype into a second reading of the erasure
     // that quietly disagrees with the executor the ledgers were recorded under.
     //
-    // ONE deliberate exception: the prototype measured the UNCONSTRAINED pool,
-    // and `join.with`/`graph.edgeTo` later gained the distinctness skip (their
-    // unconstrained bind landed on the sibling's own binding). They are
+    // ONE deliberate exception: the prototype measured the UNCONSTRAINED,
+    // UNMIRRORED pool, and `join.with`/`graph.edgeTo` later gained the
+    // distinctness skip while `toGrain`/`keep` gained the mirror. They are
     // excluded by reading the constraint off the LANDED plan -- not by name --
     // so a future constrained operand is excluded the same way.
     const plans = loadPlans();
     let compared = 0;
     for (const c of boundCoords.filter((x) => x.id.endsWith("#incidence"))) {
-      if (plans.get(c.id)?.locator.operandDistinctFrom) continue;
+      const p = plans.get(c.id);
+      // The prototype measured the UNCONSTRAINED, UNMIRRORED pool: constrained
+      // and mirrored operands are excluded by reading the LANDED plan, not by
+      // name, so a future one is excluded the same way.
+      if (p?.locator.operandDistinctFrom || p?.locator.operandMirror) continue;
       for (const f of oracle.fixtures.values()) {
         const proto = rebind(f, c);
         if (proto.note) continue;
@@ -2757,33 +2779,33 @@ describe("a non-confluent coordinate set is refused as evidence before any colli
   type W = Parameters<typeof checkWitness>[0];
 
   it("arity and order on one list: refused on each stimulus where the listings disagree, with no collision, minimality or isolation claim", () => {
-    // relation.derivedBy.project.keep#arity cuts the list to its floor, keeping the
-    // FIRST elements; #order sorts it. Cut-then-sort and sort-then-cut are two
-    // images. No edge decides it and no law says which comes first -- the pair is
-    // declared non-commuting and refused as a composite.
+    // relation.derivedBy.nest.levels#arity cuts the list to its declared floor,
+    // keeping the FIRST elements; #order sorts it. Cut-then-sort and
+    // sort-then-cut are two images. No edge decides it and no law says which
+    // comes first -- the pair is declared non-commuting and refused as a
+    // composite. (`toGrain` carried this example until the MIRROR: its arity
+    // floor is now the result grain's own length, which made the cut the
+    // identity on both sides and the pair stop colliding at all. `levels`
+    // keeps the static floor, so the cut still reads the order.)
     const w: W = {
-      coordinates: ["relation.derivedBy.aggregate-to-grain.toGrain#arity", "relation.derivedBy.aggregate-to-grain.toGrain#order"],
+      coordinates: ["relation.derivedBy.nest.levels#arity", "relation.derivedBy.nest.levels#order"],
       a: { fixture: "FX_N_NESTED_SUBTOTAL_AT_PREFIX" },
       b: {
         base: "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
-        patch: [
-          { set: "structure.relations.subtotals.derivedBy.toGrain", value: ["state", "country"] },
-          { set: "structure.relations.subtotals.grain", value: ["country", "state"] },
-          {
-            set: "structure.relations.subtotals.fields",
-            value: { country: { transformation: "nominal", key: true }, state: { transformation: "nominal", key: true }, revenue: { transformation: "ratio" } },
-          },
-        ],
+        patch: [{ set: "structure.relations.hierarchy.derivedBy.levels", value: ["state", "country", "revenue"] }],
         outcome: outcomeFrom("illegal", ["REL_GRAIN_SUBTOTAL_MISMATCH"]),
-        cause: "CASE_NESTED_SUBTOTALS_OFF_GRAIN: the reordered target grain is no longer a declared prefix",
+        cause: "CASE_NESTED_SUBTOTALS_OFF_GRAIN: the reordered levels no longer declare country as a prefix, so the existing toGrain: [country] subtotal is off-grain",
       },
     };
     const r = checkWitness(w, census, oracle);
     expect(r.ok).toBe(false);
     expect(r.failures.length).toBeGreaterThan(0);
     expect(new Set(r.failures.map((f) => f.code))).toEqual(new Set(["ERASURE_NOT_CONFLUENT"]));
+    // Only the b-side listings disagree: the a-side's two levels are already at
+    // the floor and sorted, so it composes to one image and is not accused.
+    expect(r.failures.map((f) => f.detail).filter((d) => d.startsWith("b: "))).toHaveLength(r.failures.length);
     for (const f of r.failures) {
-      expect(f.detail).toMatch(/^[ab]: 2 distinct images across the listings of relation\.derivedBy\.aggregate-to-grain\.toGrain#arity \+ relation\.derivedBy\.aggregate-to-grain\.toGrain#order; refused as evidence/);
+      expect(f.detail).toMatch(/^b: 2 distinct images across the listings of relation\.derivedBy\.nest\.levels#arity \+ relation\.derivedBy\.nest\.levels#order; refused as evidence/);
       expect(f.detail).toContain("declared: arity is forgotten by cutting");
     }
     // Refused BEFORE the image is read: nothing downstream of the composition is claimed.
@@ -2861,13 +2883,14 @@ describe("an oracle-separated pair is NECESSARY for a witness and not sufficient
     // And the guard is live, not vacuous: a slot-local erasure that introduces a WELL-FORMEDNESS
     // refusal is still refused, because that means the erasure broke the structure and a
     // collision would be that break. `REL_DERIVATION_*` are the boundary's own refusals, kept
-    // out of the doctrine catalogue for exactly this reason. `bin.field#incidence` over this
-    // very pair used to be the demonstration; a bound slot now rebinds to a DECLARED name, so
-    // its image resolves and the isolation discharges. The boundary-refused facet that remains
-    // is `project.keep#arity`: truncating the keep set to its declared floor drops a field the
-    // result still declares, which is a break the rebinding cannot mend.
-    const keepArity = kernel.find((x) => x.id === "relation.derivedBy.project.keep#arity")!;
-    const broken = checkIsolation(oracle.fixtures.get("FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT")!, keepArity);
+    // out of the doctrine catalogue for exactly this reason. The subject is now measured
+    // scarcity: `bin.field#incidence` (retired by the bound rebind), then
+    // `project.keep#arity` (retired by the mirror) carried this demonstration, and
+    // the ONLY remaining violated pairs in the corpus are `bin.closure` on
+    // FX_H_READINGS_BINNED_DROPS_TEMP -- forgetting the closure leaves the
+    // binned result underivable, a break nothing rebinds around.
+    const binClosure = kernel.find((x) => x.id === "relation.derivedBy.bin.closure")!;
+    const broken = checkIsolation(oracle.fixtures.get("FX_H_READINGS_BINNED_DROPS_TEMP")!, binClosure);
     expect(broken.state).toBe("violated");
     expect(String(broken.state === "violated" ? broken.detail : "")).toContain("REL_DERIVATION_");
     // No corpus pair can carry the witness-level half any further: over the whole

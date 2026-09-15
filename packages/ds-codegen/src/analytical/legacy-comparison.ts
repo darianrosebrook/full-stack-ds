@@ -169,6 +169,8 @@ const DISPOSITION: Record<string, string> = {
     "the legacy walker wrote a reserved token, which is a legal `name` but not a DECLARED one, so the image stops resolving: the boundary reports the operand missing or the result underivable and refuses it as a declaration, and no witness naming the coordinate can be admitted. The new plan REBINDS a bound slot to the operand's own declared names, so the collision is between two bindings -- which is what the coordinate names -- and the image stays a declaration. The legacy image is source-valid and says LESS than the coordinate forgets: it claims a referent that does not exist.",
   "forget-reference-arity:absent>scalar:legacy-invalid":
     "legacy truncated a reference list below its declared floor, leaving a source-invalid image; the new plan truncates to the floor and never below it",
+  "forget-reference-arity:absent>scalar:legacy-valid":
+    "legacy truncated a MIRRORED keep below the mirror's length -- schema-valid, because keep's own floor is one, but the image breaks the law's equation (sameSet(fieldNames(out), d.keep)) and the boundary reports the result underivable. The new plan truncates to the mirror's runtime length, which is the other side of that equation, so the cut is the identity wherever the declaration already agrees with itself and a repair where it does not. The legacy image is source-valid and asserts a length the result's own declaration contradicts.",
 };
 
 export function classifyDivergence(input: ClassInput): Classification {

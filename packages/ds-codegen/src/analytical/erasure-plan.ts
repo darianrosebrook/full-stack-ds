@@ -37,7 +37,7 @@
  */
 import type { Coordinate, ReferenceFacet } from "./census.js";
 import { absorb, forgotten, isMarker, isMemberClass, memberClass, type QuotientImage, type QuotientMarker } from "./quotient-image.js";
-import type { OperandNamespace } from "./relation-model.js";
+import type { OperandMirror, OperandNamespace } from "./relation-model.js";
 import type { Fixture } from "./structure.js";
 
 export type CoordinateId = string;
@@ -95,6 +95,15 @@ export interface StructuralLocator {
    * in this slot still reach one image.
    */
   operandDistinctFrom?: string;
+  /**
+   * The RESULT-side spelling the law says this operand EQUALS, when it says so
+   * (`sameSet(out.grain, d.toGrain)`, `sameSet(fieldNames(out), d.keep)`) --
+   * one degree of freedom written twice. The canonical rebinding takes the
+   * mirror as the pool (the image satisfies the equation by construction), and
+   * the arity erasure truncates to the mirror's length, a fact read at
+   * execution time rather than a static floor.
+   */
+  operandMirror?: OperandMirror;
 }
 
 /**
@@ -266,20 +275,39 @@ function affects(s: Slot, op: ForgetOperation, floor = 1): boolean {
  * survives. A pool that would be emptied by the skip keeps its last name rather
  * than becoming empty: a declaration this thin has no lawful rebinding at all,
  * and the boundary says so.
+ *
+ * WHERE THE LAW SAYS this operand EQUALS a spelling in the result's own
+ * declaration (the mirror), the mirror IS the pool: the image satisfies the
+ * law's equation by construction rather than by searching the input's
+ * namespace for a name the law would accept. The holder relation is found by
+ * identity -- its `derivedBy` is the slot's own parent -- so no path is parsed
+ * here either. A result grain spelled `unknown` declares no names, and the
+ * mirror is simply absent for it: the namespace pool stands.
  */
-function bindingPool(fixture: Fixture | QuotientImage, slot: Slot, operand?: OperandNamespace, distinctFrom?: string): string[] | undefined {
+function bindingPool(fixture: Fixture | QuotientImage, slot: Slot, operand?: OperandNamespace, distinctFrom?: string, mirror?: OperandMirror): string[] | undefined {
   if (!operand) return undefined;
   const rels = (fixture as unknown as Json).structure as Json | undefined;
   const relations = rels?.relations as Json | undefined;
   if (!obj(relations)) return undefined;
   let names: string[];
-  if (operand === "relation") {
+  const holder = mirror && obj(slot.parent) ? Object.values(relations).find((r) => obj(r) && (r as Json).derivedBy === (slot.parent as unknown as Json)) as Json | undefined : undefined;
+  if (mirror && holder) {
+    if (mirror === "result.grain") {
+      const grain = holder.grain;
+      if (Array.isArray(grain)) names = [...grain.map(String)];
+      else return undefined;
+    } else {
+      const fields = holder.fields;
+      if (!obj(fields)) return undefined;
+      names = Object.keys(fields);
+    }
+  } else if (operand === "relation") {
     names = Object.keys(relations);
   } else {
     const from = obj(slot.parent) ? slot.parent.from : undefined;
     if (typeof from !== "string") return undefined;
-    const holder = relations[from];
-    const fields = obj(holder) ? holder.fields : undefined;
+    const input = relations[from];
+    const fields = obj(input) ? input.fields : undefined;
     if (!obj(fields)) return undefined;
     names = Object.keys(fields);
   }
@@ -292,6 +320,12 @@ function bindingPool(fixture: Fixture | QuotientImage, slot: Slot, operand?: Ope
     }
   }
   return names;
+}
+
+/** The length the arity erasure truncates a mirrored slot to: the mirror's own. */
+function mirrorFloor(fixture: Fixture | QuotientImage, slot: Slot, mirror?: OperandMirror): number | undefined {
+  const pool = bindingPool(fixture, slot, "field", undefined, mirror);
+  return pool === undefined ? undefined : Math.max(pool.length, 1);
 }
 
 /**
@@ -350,8 +384,13 @@ export function wouldChange(fixture: Fixture | QuotientImage, plan: ErasurePlan)
   // would answer `true` wherever the operand is not already a reserved token,
   // and the executor would sometimes write the value it found. That is the one
   // plan whose predicate cannot be a local read, and it answers by COMPARISON
-  // rather than by a second, disagreeing definition of the operation.
+  // rather than by a second, disagreeing definition of the operation. A
+  // MIRRORED arity plan is the second such case: its floor is the mirror's
+  // runtime length, which no static locator fact can name.
   if (plan.locator.operand && plan.operation.kind === "forget-reference-incidence") {
+    return JSON.stringify(executePlan(fixture, plan)) !== JSON.stringify(fixture);
+  }
+  if (plan.locator.operandMirror && plan.operation.kind === "forget-reference-arity") {
     return JSON.stringify(executePlan(fixture, plan)) !== JSON.stringify(fixture);
   }
   return resolveSlots(fixture, plan.locator).some((s) => affects(s, plan.operation, plan.locator.arityFloor));
@@ -448,7 +487,15 @@ export function executePlan(fixture: Fixture | QuotientImage, plan: ErasurePlan)
         // composable under cutting; the pair is DECLARED non-commuting
         // (`DECLARED_NON_COMMUTING` in quotient.ts) and refused as a composite,
         // never normalized through one order.
-        if (Array.isArray(v)) write(s, v.slice(0, floor));
+        //
+        // A MIRRORED slot truncates to the MIRROR's length, not the static
+        // floor: the law says this list equals the result-side spelling, so
+        // "how long it may be" is a fact about the other side of the equation,
+        // read at execution time. On a declaration that already agrees with
+        // itself the two agree and the cut is the identity; on one that does
+        // not, the cut repairs the length while keeping the surviving names,
+        // so an arity erasure never rewrites occupants.
+        if (Array.isArray(v)) write(s, v.slice(0, plan.locator.operandMirror ? (mirrorFloor(copy, s, plan.locator.operandMirror) ?? floor) : floor));
         break;
       case "forget-reference-order":
         if (Array.isArray(v)) write(s, [...v].sort());
@@ -467,7 +514,7 @@ export function executePlan(fixture: Fixture | QuotientImage, plan: ErasurePlan)
         // names -- the collision is then between two bindings, which is exactly
         // what the coordinate names. A slot with no namespace is not bound, and
         // keeps the reserved token.
-        const pool = bindingPool(copy, s, plan.locator.operand, plan.locator.operandDistinctFrom);
+        const pool = bindingPool(copy, s, plan.locator.operand, plan.locator.operandDistinctFrom, plan.locator.operandMirror);
         if (Array.isArray(v)) write(s, v.map((_, i) => pool?.[i] ?? `${INCIDENCE_TOKEN}_${i}`));
         else if (!obj(v)) write(s, pool?.[0] ?? `${INCIDENCE_TOKEN}_0`);
         break;
