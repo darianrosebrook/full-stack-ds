@@ -46,7 +46,8 @@ import {
   type Standing,
   type StandingIndex,
 } from "./closure.js";
-import { executeAll } from "./erasure-plan.js";
+import { executeAll, executePlan, wouldChange } from "./erasure-plan.js";
+import { specimens } from "./erasure-audit.js";
 import { checkWitness, classifyWitness, loadCodomainAdjudications, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
 import { canonical } from "./quotient.js";
 
@@ -724,6 +725,63 @@ describe("obligation 8 — dependency and fixed-point discharge", () => {
     expect(r.promotion).toBe("holding");
     // And the live tree is NOT in that state.
     expect(check(live).promotion).toBe("provisional");
+  });
+});
+
+describe("the unresolved dependencies are blocked by EVIDENCE, not by an undecided verdict", () => {
+  // The gate reports how many footprint coordinates lack a settled standing, and that reads
+  // as a backlog of verdicts nobody has got round to writing. It is not one. Measured against
+  // the committed specimen population, every one of these coordinates has an erasure that DOES
+  // collide specimens -- so none is `unseparated`, the instrument reaches them -- and every
+  // collided pair the oracle binds carries the SAME outcome on both sides. There is therefore
+  // no pair from which a witness could be built, and no verdict the corpus would support.
+  // Filing them as `not-yet-admitted` or `representation-artifact` to unblock the gate would be
+  // deciding them by convenience, which is the one thing the standing index exists to prevent.
+  const openDeps = () => checkClosures().dependencies.filter((d) => d.standing.state !== "resolved");
+
+  it("names the one dependency that IS decided, and it is decided AGAINST the closure", () => {
+    // A stage-1 re-earning ratified this one (`removals.json` leafMap maps the removed
+    // `nonAdditiveAlong` leaf onto `nonAdditiveAlong#incidence`), so the two additivity
+    // closures cannot prove their carrier primitive at all: constructor and payload are
+    // composite under this encoding. That is a verdict, not an outstanding adjudication.
+    const primitive = openDeps().filter((d) => d.standing.state === "primitive").map((d) => d.coordinate);
+    expect(primitive).toEqual(["field.additivity.semi-additive.nonAdditiveAlong#incidence"]);
+  });
+
+  it("finds no oracle-separated pair for any other dependency, so no witness is constructible", () => {
+    const s = specimens();
+    const plans = loadPlans();
+    const oracle = loadOracle();
+    const baseline = s.fixtures.map(canonical);
+    const outcomeOf = (id: string) => oracle.outcomeOf(id)?.outcome;
+    const outcomeDiffers = (a: ReturnType<typeof outcomeOf>, b: ReturnType<typeof outcomeOf>) =>
+      a !== undefined &&
+      b !== undefined &&
+      (a.status !== b.status || JSON.stringify(a.codes) !== JSON.stringify(b.codes) || JSON.stringify(a.terms) !== JSON.stringify(b.terms));
+
+    const unresolved = openDeps().filter((d) => d.standing.state === "unresolved");
+    // Keeps the claim below from going vacuous if the set is ever emptied by other means.
+    expect(unresolved.length).toBeGreaterThan(0);
+
+    const collidesSomething: string[] = [];
+    const witnessable: string[] = [];
+    for (const { coordinate } of unresolved) {
+      const plan = plans.get(coordinate);
+      expect(plan, `${coordinate} has no erasure plan to measure`).toBeDefined();
+      const sig = s.fixtures.map((f, i) => (wouldChange(f, plan!) ? canonical(executePlan(f, plan!)) : baseline[i]));
+      const blocks = new Map<string, number[]>();
+      sig.forEach((x, i) => blocks.set(x, [...(blocks.get(x) ?? []), i]));
+      const pairs: [number, number][] = [];
+      for (const idx of blocks.values())
+        for (let x = 0; x < idx.length; x++)
+          for (let y = x + 1; y < idx.length; y++) if (baseline[idx[x]] !== baseline[idx[y]]) pairs.push([idx[x], idx[y]]);
+      if (pairs.length > 0) collidesSomething.push(coordinate);
+      if (pairs.some(([i, j]) => outcomeDiffers(outcomeOf(s.fixtures[i].id), outcomeOf(s.fixtures[j].id)))) witnessable.push(coordinate);
+    }
+    // Each of their erasures collides at least one pair: the block is not that the
+    // instrument cannot see them, it is that nothing in the corpus turns on what it sees.
+    expect(collidesSomething).toEqual(unresolved.map((d) => d.coordinate));
+    expect(witnessable).toEqual([]);
   });
 });
 
