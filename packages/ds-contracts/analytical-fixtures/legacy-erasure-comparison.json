@@ -7,10 +7,10 @@
  },
  "population": {
   "corpus": 90,
-  "stimuli": 32,
+  "stimuli": 33,
   "synthesized": 89,
-  "total": 211,
-  "membershipDigest": "37ae3c49822328f89e0eca7eb52708b30e988e90ff9285f97228bc4ca9c00e93"
+  "total": 212,
+  "membershipDigest": "e976aafcfa1b4685ff71a18c9fbaebf03f9acb29f0f47d5425b82489581da5d8"
  },
  "coordinates": {
   "legacy": 165,
@@ -25,14 +25,14 @@
   ],
   "onlyNew": []
  },
- "pairs": 34815,
+ "pairs": 34980,
  "agree": {
-  "count": 24562,
-  "digest": "a12552de3204b077d48fa05325f20d85be676308b44f163684ede344d6bdfa83"
+  "count": 24667,
+  "digest": "3fe15752d55b37a4acd91f0df0905aa3bcdb7bcd8b039cbc8147e573fcd7fba0"
  },
  "classes": {
   "new-no-plan": {
-   "count": 5275,
+   "count": 5300,
    "plans": [
     "assertion.aggregate.along",
     "assertion.aggregate.field",
@@ -69,7 +69,7 @@
    }
   },
   "only-legacy-coordinate": {
-   "count": 1055,
+   "count": 1060,
    "plans": [
     "assertion.aggregate.along#order",
     "evidence.grainWitness#order",
@@ -86,7 +86,7 @@
    }
   },
   "merge-enum-members:scalar>class:legacy-valid": {
-   "count": 2414,
+   "count": 2432,
    "plans": [
     "assertion.aggregate.nulls:as-zero~as-observed",
     "assertion.aggregate.nulls:exclude~as-observed",
@@ -155,7 +155,7 @@
    }
   },
   "forget-value:absent>hole:legacy-invalid": {
-   "count": 936,
+   "count": 941,
    "plans": [
     "assertion.aggregate.op",
     "assertion.kind",
@@ -177,7 +177,7 @@
    }
   },
   "merge-enum-members:scalar>class:legacy-invalid": {
-   "count": 264,
+   "count": 266,
    "plans": [
     "assertion.kind:aggregate~ratio-comparison",
     "field.additivity.kind:additive~semi-additive",
@@ -231,7 +231,7 @@
    }
   },
   "forget-reference-incidence:scalar>scalar:legacy-valid": {
-   "count": 220,
+   "count": 224,
    "plans": [
     "relation.derivedBy.aggregate-to-grain.from#incidence",
     "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
@@ -278,7 +278,7 @@
    }
   },
   "forget-reference-arity:absent>scalar:legacy-invalid": {
-   "count": 33,
+   "count": 34,
    "plans": [
     "relation.derivedBy.nest.levels#arity",
     "structure.peers[]#arity"
@@ -1062,6 +1062,13 @@
    "assertion.aggregate.along",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -2545,6 +2552,13 @@
   [
    "assertion.aggregate.along#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "only-legacy-coordinate"
@@ -4016,6 +4030,13 @@
    "assertion.aggregate.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -5681,6 +5702,13 @@
   [
    "assertion.aggregate.op",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "5f3485fb46e3",
+   "cce48f7e0ba3",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "3e23ca7c3f0f",
    "7eef5179c177",
    "forget-value:absent>hole:legacy-invalid"
@@ -6670,6 +6698,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "18d3cd385676",
    "86b9bd1520d1",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:count~min",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "322c3bc15970",
+   "4420241be75d",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -7818,6 +7853,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "8c2cfe70fda9",
    "e2c5a43ef333",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~min",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "8b4f6b1b5517",
+   "a1e1e2d63396",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -10371,6 +10413,13 @@
   [
    "assertion.aggregate.op:sum~min",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "05d06b1d2538",
+   "2784a3710fdc",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9384326563e6",
    "7ebb3de4d7d2",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -11576,6 +11625,13 @@
    "assertion.aggregate.relation",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -13059,6 +13115,13 @@
   [
    "assertion.kind",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "ac7526b3994b",
+   "bf75187c7e4e",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "630d66ef8399",
    "8ad2f6202a9c",
    "forget-value:absent>hole:legacy-invalid"
@@ -14531,6 +14594,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
    "81081c4cbb29",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "e040c528373c",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -16013,6 +16083,13 @@
   [
    "assertion.ratio-comparison.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -17490,6 +17567,13 @@
   [
    "assertion.ratio-comparison.relation",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -18967,6 +19051,13 @@
   [
    "evidence.grainWitness",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -20438,6 +20529,13 @@
    "evidence.grainWitness#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "only-legacy-coordinate"
   ],
@@ -22509,6 +22607,13 @@
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -23980,6 +24085,13 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "only-legacy-coordinate"
   ],
@@ -26093,6 +26205,13 @@
   [
    "field.transformation",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "73f7c5c1fb74",
+   "cf73a4a49483",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "e8906af7b572",
    "bf0e8fccb967",
    "forget-value:absent>hole:legacy-invalid"
@@ -27507,6 +27626,13 @@
   [
    "field.transformation:interval~ratio",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "7d5bade119ca",
+   "6848789b6c90",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "c3edd870fdf9",
    "a5593ebe62f4",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -28783,6 +28909,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
    "5b3d6afc78ae",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "cd5575694f13",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -30239,6 +30372,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
    "834a1db53ec9",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "b9e74f634a14",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -31702,6 +31842,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "0f24525e85dd",
    "9344fe722b6f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "e810a9b4454a",
+   "c7714144c878",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33590,6 +33737,13 @@
   [
    "field.transformation:ordinal~ratio",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "21c687a71001",
+   "fad3b5660ef3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "1c8a44ba8037",
    "dcb183df1eb6",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -35005,6 +35159,13 @@
    "field.whole.perRow",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -36796,6 +36957,13 @@
   [
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -37540,6 +37708,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "8fd7ce4f8bcb",
    "3f58cc1c4596",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from#incidence",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "86c9d1a66e9c",
+   "d6503cda2fdf",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
@@ -38413,6 +38588,13 @@
   [
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -39171,6 +39353,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "39a9982182ed",
    "46e0eac08163",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "ca507b1d240c",
+   "168bff7d68ca",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
@@ -40066,6 +40255,13 @@
    "relation.derivedBy.bin.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -41606,6 +41802,13 @@
    "relation.derivedBy.bin.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -43153,6 +43356,13 @@
    "relation.derivedBy.graph.edgeFrom",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -44727,6 +44937,13 @@
   [
    "relation.derivedBy.graph.edgeTo",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -46289,6 +46506,13 @@
    "relation.derivedBy.graph.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -47864,6 +48088,13 @@
    "relation.derivedBy.graph.value",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -49711,6 +49942,13 @@
   [
    "relation.derivedBy.join.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -51258,6 +51496,13 @@
   [
    "relation.derivedBy.join.with",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -52238,6 +52483,13 @@
   [
    "relation.derivedBy.kind",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "7cbd0e7ffc9e",
+   "a0d2afba3e24",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "809d5665f8f6",
    "9f7071544fd8",
    "forget-value:absent>hole:legacy-invalid"
@@ -52609,6 +52861,13 @@
   [
    "relation.derivedBy.kind:aggregate-to-grain~bin",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "ec3362bfce16",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~bin",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "67ee132271c7",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -52828,6 +53087,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
    "71624bd72d9f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~graph",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "1e7d278eaae7",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -53057,6 +53323,13 @@
   [
    "relation.derivedBy.kind:aggregate-to-grain~join",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "cef9755d8692",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~join",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "36e842f2aa14",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -53255,6 +53528,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "8055b55ac4ae",
    "a594038ae658",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~nest",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "c1cafbc0d4a9",
+   "6e7c0d690e9b",
    "merge-enum-members:scalar>class:legacy-invalid"
   ],
   [
@@ -53470,6 +53750,13 @@
   [
    "relation.derivedBy.kind:aggregate-to-grain~normalize",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "be866395d5ab",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~normalize",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "dbb4c51610ea",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -53668,6 +53955,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
    "c2081b1924d6",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~project",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "554da6f8fe46",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -54604,6 +54898,13 @@
   [
    "relation.derivedBy.kind:join~nest",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "e48b6d5f9c46",
+   "7c3cf2ac7594",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind:join~nest",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "bc1baec7ea5b",
    "6a6734a56d5d",
    "merge-enum-members:scalar>class:legacy-invalid"
@@ -55108,6 +55409,13 @@
   [
    "relation.derivedBy.kind:nest~bin",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "184482096854",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:nest~bin",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "ce2d07cb0f90",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -55355,6 +55663,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
    "b7055b0ed7fb",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:nest~graph",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "1318657afd71",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -55619,6 +55934,13 @@
   [
    "relation.derivedBy.kind:nest~normalize",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "1b0d294dd79e",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:nest~normalize",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "20721a44b521",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -55831,6 +56153,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
    "471fb980a20f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:nest~project",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "9d28cd275c72",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -57173,6 +57502,13 @@
   [
    "relation.derivedBy.nest.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -57917,6 +58253,13 @@
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "416acb08d979",
    "46e0eac08163",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.nest.from#incidence",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "4d93c9ba85cd",
+   "168bff7d68ca",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
@@ -58825,6 +59168,13 @@
   [
    "relation.derivedBy.nest.levels",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -59574,6 +59924,13 @@
   [
    "relation.derivedBy.nest.levels#arity",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "ee3df774f5fa",
+   "168bff7d68ca",
+   "forget-reference-arity:absent>scalar:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.nest.levels#arity",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "ddec3c5e9a1d",
    "45512079b429",
    "forget-reference-arity:absent>scalar:legacy-invalid"
@@ -59737,6 +60094,13 @@
    "FX_H_SALES_NESTED_DROPS_STATE",
    "06a240e9d706",
    "74067daa3fbf",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.nest.levels#incidence",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "e2060f5de39d",
+   "49cf52b8b732",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
@@ -60639,6 +61003,13 @@
    "relation.derivedBy.normalize.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -62165,6 +62536,13 @@
    "relation.derivedBy.normalize.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -63711,6 +64089,13 @@
   [
    "relation.derivedBy.project.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "new-no-plan"
@@ -65238,6 +65623,13 @@
    "relation.derivedBy.project.keep",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -66819,6 +67211,13 @@
   [
    "relation.derivedBy.project.keep#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "45512079b429",
    "-",
    "only-legacy-coordinate"
@@ -68296,6 +68695,13 @@
   [
    "relation.grain",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "6af556488053",
+   "c1e1db5f0b4d",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "9d547dec7bb7",
    "0f92f44b5e99",
    "forget-value:absent>hole:legacy-invalid"
@@ -69767,6 +70173,13 @@
    "structure.peers[]",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "new-no-plan"
   ],
@@ -71356,6 +71769,13 @@
    "structure.peers[]#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "46e0eac08163",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
    "-",
    "only-legacy-coordinate"
   ],

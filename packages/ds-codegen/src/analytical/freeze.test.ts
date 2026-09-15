@@ -97,10 +97,13 @@ describe("stage-2 erasure freeze", () => {
     expect(r.ok).toBe(true);
   });
 
-  it("freezes the population the erasure-plan refactor must not move: 16 witnessed / 2 required-derived-vocabulary / 34 representation-artifact / 74 unresolved", () => {
+  it("freezes the population the erasure-plan refactor must not move: 17 witnessed / 2 required-derived-vocabulary / 34 representation-artifact / 73 unresolved", () => {
+    // 17 witnessed, not 16: the FIRST witness filed under the bound-incidence
+    // quotient (nest.levels#incidence over the round-25 pair, rounds 31-37
+    // built the erasure it rides on) moved exactly one verdict.
     expect(Object.fromEntries(Object.entries(frozen.verdicts).map(([d, ids]) => [d, ids.length]))).toEqual({
-      unresolved: 74,
-      witnessed: 16,
+      unresolved: 73,
+      witnessed: 17,
       "required-derived-vocabulary": 2,
       "representation-artifact": 34,
       "not-yet-admitted": 0,
