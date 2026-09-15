@@ -478,6 +478,103 @@
           "terms": []
         }
       }
+    },
+    {
+      "prediction": {
+        "carrier": "field.additivity.kind:additive~semi-additive",
+        "base": "FX_STOCK_SUM_ALONG_DATE",
+        "targetOccurrence": "structure.relations.stock.fields.on_hand.additivity",
+        "source": {
+          "member": "semi-additive",
+          "authority": "on_hand is declared semi-additive with date as its non-additive dimension, and the assertion sums it along exactly that dimension",
+          "law": {
+            "case": "CASE_INVENTORY_SUMMED_OVER_TIME",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_ADDITIVITY_SUM_SEMIADDITIVE"
+            }
+          }
+        },
+        "target": {
+          "member": "additive",
+          "authority": "declaring the measure additive removes the non-additive dimension the sum was restricted by, so REL_ADDITIVITY_SUM_SEMIADDITIVE does not fire and a sum along date is lawful",
+          "preconditions": []
+        },
+        "patch": [
+          {
+            "set": "structure.relations.stock.fields.on_hand.additivity",
+            "value": {
+              "kind": "additive"
+            }
+          }
+        ],
+        "expected": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "provenance": "authored-before-engine",
+        "authoredAt": "2026-09-15",
+        "digest": "08d066b701e4ec9f632401a6dd9346a455d88d64e96fbc6159586720ed8397ca"
+      },
+      "engine": {
+        "ranAt": "2026-09-15",
+        "observed": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        }
+      }
+    },
+    {
+      "prediction": {
+        "carrier": "field.additivity.kind:semi-additive~ratio-measure",
+        "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
+        "targetOccurrence": "structure.relations.regions.fields.gdp_per_capita.additivity",
+        "source": {
+          "member": "ratio-measure",
+          "authority": "gdp_per_capita is declared a rate measure and the assertion takes its aggregate:mean on rollup, where the rate requires re-derivation from numerator and denominator instead",
+          "law": {
+            "case": "CASE_AVERAGE_OF_PER_CAPITA_RATES",
+            "finding": {
+              "kind": "diagnostic",
+              "code": "REL_RATIO_MEASURE_AVERAGED"
+            }
+          }
+        },
+        "target": {
+          "member": "semi-additive",
+          "authority": "declaring the measure semi-additive non-additive along year removes the rate reading the mean violated, so REL_RATIO_MEASURE_AVERAGED does not fire and REL_ADDITIVITY_SUM_SEMIADDITIVE does not apply to a mean",
+          "preconditions": []
+        },
+        "patch": [
+          {
+            "set": "structure.relations.regions.fields.gdp_per_capita.additivity",
+            "value": {
+              "kind": "semi-additive",
+              "nonAdditiveAlong": [
+                "year"
+              ]
+            }
+          }
+        ],
+        "expected": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "provenance": "authored-before-engine",
+        "authoredAt": "2026-09-15",
+        "digest": "8c8e64549908db55fae1f119f7843be321964fe97d09f60ce6dbfec2eaf97a9e"
+      },
+      "engine": {
+        "ranAt": "2026-09-15",
+        "observed": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        }
+      }
     }
   ]
 }
