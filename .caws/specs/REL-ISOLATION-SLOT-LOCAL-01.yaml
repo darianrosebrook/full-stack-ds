@@ -31,3 +31,13 @@ contracts:
   - name: 'isolation'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "The exemption in checkIsolation was scoped to c.kind === 'member-pair' && c.leaf.endsWith('.kind') while its own comment stated the principle generally. It is now slotLocal: changed paths within the coordinate's slots, or an ancestor CONTAINER of one (changedPaths reports the parent alongside the leaf it lost -- the same impliedBy rule checkCombinedIsolation already applies). Result: relation.derivedBy.bin.closure and relation.derivedBy.bin.closure:left-closed~<absent> now ACCEPT a holding single-coordinate witness built from FX_READINGS_BINNED_NO_CLOSURE (illegal, REL_BIN_CLOSURE_UNDECLARED) against FX_N_READINGS_BINNED_LEFT_CLOSED (admissible) -- a pair that is literally one fixture minus the declaration, with nothing authored to reach the verdict -- and both record witnessed verdicts; unadjudicated 83 -> 81. The third spelling still fails NO_COLLISION because the corpus has no pair varying only which side is closed. The guard is pinned rather than assumed: relation.derivedBy.bin.field#incidence is slot-local and STILL refused, because the finding it introduces is REL_DERIVATION_RESULT_NOT_DERIVABLE, one of the boundary's own well-formedness refusals, and the test asserts both the checkIsolation violation and the checkWitness refusal. Non-claim: this corrects one clause's scope, not the isolation principle; well-formedness refusals remain collateral for every class; no disposition was added to the vocabulary (the declared case turned out to need none, because witnessed was already the right verdict); and the remaining 81 unresolved candidates are untouched."
+    recorded_at: "2026-09-15T05:49:14.654Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/necessity.test.ts > an oracle-separated pair is NECESSARY for a witness and not sufficient > accepts a slot-local erasure whose introduced finding is the CORPUS's semantic rule, and still refuses a well-formedness break"
+    command: pnpm exec vitest run packages/ds-codegen/src/analytical
+    exit_code: 0
+    artifact_path: packages/ds-codegen/src/analytical/necessity.ts
+    commit_sha: "6c13e550"
