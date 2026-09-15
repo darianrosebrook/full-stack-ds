@@ -40,7 +40,8 @@
       "disposition": "unresolved"
     },
     "field.temporality#present": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "The FX_TEMP_SUM / FX_EVENT_AT_SUM pair separates whether a temporality is declared at all, which is this coordinate's question and not the leaf's. The witness was filed under `field.temporality.kind` until the codomain change made the misattribution measurable; re-pointed here, checkWitness holds with no failure, and the leaf it was taken from is accounted as required derived vocabulary by subtraction-stage2-enum-leaf.json."
     },
     "relation.derivedBy#present": {
       "disposition": "unresolved"

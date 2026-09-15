@@ -260,18 +260,27 @@ describe("the witness audit", () => {
     expect(byVerdict("unresolved-plan")).toEqual([]);
   });
 
-  it("finds no witness that destroys a coordinate outside the leaves it names", () => {
-    // The headline result, and it contradicts the expectation this audit was
-    // built to test. Twelve witnesses destroy more than they declare, but every
-    // excess is a REFINEMENT of a leaf they already name — the aggregate-op
-    // member pairs under `assertion.aggregate.op`, the transformation pairs
-    // under `field.transformation`. None reaches a neighbouring declaration, so
-    // none is the shape a closure or an explicitly composite proposition is for.
-    expect(byVerdict("over-erasing")).toEqual([]);
-    expect(live.witnesses.filter((w) => w.outside.length > 0)).toEqual([]);
+  it("finds exactly one witness reaching outside the leaves it names, and it is the holder-presence family", () => {
+    // The headline result used to be that there were NONE: twelve witnesses
+    // destroy more than they declare, but every excess was a REFINEMENT of a leaf
+    // they already name. Re-pointing the misattributed temporality witness at
+    // `field.temporality#present` — the coordinate it actually measures — puts a
+    // holder-presence witness into the population, and its erasure takes the
+    // WHOLE holder subtree: `field.temporality.grain`, `field.temporality.kind`
+    // and their pairs. Those are neighbouring declarations, not refinements of
+    // the one it names.
+    //
+    // That is not an audit defect and not a witness filed badly: erasing a
+    // holder's existence necessarily takes everything inside it, so a presence
+    // witness is COMPOSITE by construction — the case the verdict vocabulary
+    // says a closure or an explicitly composite proposition is for. Whether the
+    // presence family should be carried by closures rather than by primitive
+    // witnesses is the open question this leaves.
+    expect(byVerdict("over-erasing").map((w) => w.witness)).toEqual(["field.temporality#present"]);
+    expect(live.witnesses.filter((w) => w.outside.length > 0).map((w) => w.witness)).toEqual(["field.temporality#present"]);
   });
 
-  it("still records the twelve, because 'declares one, destroys seven' is a weaker claim than primitive", () => {
+  it("still records the eleven, because 'declares one, destroys seven' is a weaker claim than primitive", () => {
     expect(byVerdict("subsumes-refinements").map((w) => w.witness).sort()).toEqual([
       "assertion.aggregate.along#incidence",
       "assertion.aggregate.nulls",
@@ -282,7 +291,6 @@ describe("the witness audit", () => {
       "evidence.grainWitness#present",
       "field.additivity.kind",
       "field.additivity.semi-additive.nonAdditiveAlong#incidence",
-      "field.temporality.kind",
       "field.transformation",
       "observation.null",
     ]);

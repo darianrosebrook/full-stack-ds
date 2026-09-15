@@ -143,7 +143,7 @@ export type Disposition =
  * nobody decided.
  */
 export type EvidenceStanding =
-  | { state: "holding"; via: "primitive" | "interaction-only" | "closure-accounted"; evidence: string[] }
+  | { state: "holding"; via: "primitive" | "interaction-only" | "closure-accounted" | "required-derived-vocabulary"; evidence: string[] }
   | { state: "suspended"; experiment: string; reason: string; invalidatedEvidence: string[] }
   | { state: "unsupported" };
 
@@ -1192,11 +1192,25 @@ export interface CurrentSupport {
   interactionOnly: ReadonlySet<string>;
   /** Carried by a not-refuted closure. Provisional; confers no standing. */
   closureAccounted: ReadonlySet<string>;
+  /**
+   * Adjudicated `required-derived-vocabulary`: no independent semantic degree of
+   * freedom, but external authority governs the name, so it stays in the kernel.
+   *
+   * This is the THIRD accounting mode `experiments.ts` names — "ratified by a
+   * witness, owed a decision, or decided as required derived vocabulary" — and
+   * it was missing here while the disposition vocabulary already carried it.
+   * Without the class a retained coordinate reads as unsupported: coverage
+   * reports its suspension as redundant once a basis owns it, while the
+   * historical comparison refuses to call it accounted and files the loss as
+   * unexplained. Accounted, and NOT ratified — the distinction `closureAccounted`
+   * already draws.
+   */
+  retained: ReadonlySet<string>;
 }
 
 /** The accounting union, which is what the stage-1 dispositioner is given. */
 export function accountedBy(s: CurrentSupport): Set<string> {
-  return new Set([...s.primitive, ...s.interactionOnly, ...s.closureAccounted]);
+  return new Set([...s.primitive, ...s.interactionOnly, ...s.closureAccounted, ...s.retained]);
 }
 
 /**
@@ -1229,6 +1243,10 @@ export function evidenceStanding(
   if (support.primitive.has(id)) return { state: "holding", via: "primitive", evidence: [id] };
   if (support.interactionOnly.has(id)) return { state: "holding", via: "interaction-only", evidence: [id] };
   if (support.closureAccounted.has(id)) return { state: "holding", via: "closure-accounted", evidence: [id] };
+  // Accounted and NOT ratified — the same shape `closure-accounted` has. The
+  // coordinate stays in the kernel and owes no further proof of its own; the
+  // class name is what stops a reader taking that for a necessity claim.
+  if (support.retained.has(id)) return { state: "holding", via: "required-derived-vocabulary", evidence: [id] };
   const open = holds.get(id);
   if (open) {
     return {

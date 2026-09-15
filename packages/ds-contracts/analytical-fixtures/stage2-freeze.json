@@ -6,7 +6,7 @@
   "authority": {
     "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
     "erasureAuthorityDigest": "0b59717c7b3ae6e44de15915ac4010220f4ac149c03168288d1df5289f93358f",
-    "witnessAuthorityDigest": "e5e50e612d4e1b1549c5446e17bbc9a231068c2e59950c438f4119d877b2b069",
+    "witnessAuthorityDigest": "ee275a354d4bdd4537b45e04875e0eee5f87ca6373727f883d6f689b352d2a71",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
@@ -122,7 +122,6 @@
       "field.additivity.kind:semi-additive~ratio-measure",
       "field.additivity.semi-additive.nonAdditiveAlong#arity",
       "field.additivity.semi-additive.nonAdditiveAlong#order",
-      "field.temporality#present",
       "field.temporality.grain",
       "field.temporality.grain:day~<absent>",
       "field.temporality.grain:day~month",
@@ -196,6 +195,7 @@
       "structure.peers[]#present"
     ],
     "witnessed": [
+      "field.temporality#present",
       "relation.derivedBy.kind:bin~normalize"
     ],
     "required-derived-vocabulary": [],

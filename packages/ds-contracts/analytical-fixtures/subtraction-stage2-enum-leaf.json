@@ -1,0 +1,28 @@
+{
+  "$comment": "The bare enum leaves, decided by doctrine invariant 17 as required-derived-vocabulary. The measurement over all eleven enum leaves: footprint(leaf) is exactly {leaf} together with every one of its member pairs, and each pair's footprint is only itself — so erasing the leaf destroys everything erasing any pair destroys, while no pair subsumes the leaf. Every pair therefore IMPLIES the leaf and the leaf implies no pair: the leaf carries no independent semantic degree of freedom, only the name for 'this value is determined at all'. It stays in the kernel because external authority governs that name — the emitted fixture schema declares the property and the contract vocabulary refers to it. This basis opens for the leaf whose standing is already unsettled, field.temporality.kind, which no frozen basis owns; assertion.kind is the same shape but is already a candidate of the frozen 118, and the other nine enum leaves are still primitively ratified, so re-reading their leaf-level witnesses under this decision is the next step and not this one.",
+  "spec": "REL-ENUM-FACTORING-01",
+  "dispositions": {
+    "unresolved": "not yet adjudicated; the close condition is zero of these",
+    "witnessed": "a holding witness in witnesses.json ratifies it against the frozen oracle",
+    "representation-artifact": "erasing it cannot collapse two representations, because another coordinate already carries the distinction; the census measured the encoding rather than a degree of freedom",
+    "not-yet-admitted": "no active authority requires the distinction it names; it leaves the kernel with the earliest stage allowed to re-earn it",
+    "required-derived-vocabulary": "no independent semantic degree of freedom — it is wholly derivable from other semantic facts — but external authority governs the NAME, so the coordinate legitimately stays in the kernel. The only decided verdict that does not expect the coordinate to disappear."
+  },
+  "policyRef": "subtraction-stage2.json#adjudicationPolicy",
+  "basis": {
+    "frozenAt": "b0ca7e9a",
+    "reason": "the commit at which doctrine invariant 17 decided the direction, so the bare enum leaf the decision settles first acquires a verdict under the policy subtraction-stage2.json records",
+    "count": 1,
+    "candidates": [
+      "field.temporality.kind"
+    ]
+  },
+  "constructors": {},
+  "verdicts": {
+    "field.temporality.kind": {
+      "disposition": "required-derived-vocabulary",
+      "derivableFrom": "field.temporality.kind:instant~interval — the member pair's necessity implies the leaf's at every stimulus pair, because footprint(leaf) strictly contains footprint(pair): erasing the leaf destroys the pair's distinction too, while erasing the pair leaves the leaf's other distinctions intact, so the leaf asserts nothing the pair does not.",
+      "requiredBy": "the emitted fixture schema declares the property and the relation contract vocabulary names it, so the leaf may not simply disappear from the representation even though it confers no independent standing."
+    }
+  }
+}

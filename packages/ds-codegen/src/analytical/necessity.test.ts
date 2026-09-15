@@ -143,15 +143,23 @@ const closureAccounted = new Set(
     .flatMap((c) => [c.carrier, ...c.dependencies]),
 );
 /**
- * The three classes, kept apart.
+ * The THIRD accounting mode, and not a fourth evidence class: adjudicated
+ * `required-derived-vocabulary` — in the kernel, owed no proof of its own, and
+ * NOT ratified. Read from the bases, because the verdict lives there, and
+ * carrying it here is what stops a retained coordinate reading as unsupported.
+ */
+const retainedIds = new Set(loadBases().flatMap((b) => b.retained));
+/**
+ * The classes, kept apart.
  *
  * `stage1Accounted` below is their union and is an ACCOUNTING figure: it
  * answers whether the experiment carries a coordinate at all, which is what the
- * stage-1 dispositioner asks. It is not a standing figure — 4 of the 77 it
- * yields rest on a not-refuted closure and nothing stronger — so anything that
- * reports standing takes `support` and names the class.
+ * stage-1 dispositioner asks. It is not a standing figure — some of what it
+ * yields rests on a not-refuted closure or on a retained name and nothing
+ * stronger — so anything that reports standing takes `support` and names the
+ * class.
  */
-const support: CurrentSupport = { primitive: ratifiedIds, interactionOnly: interactionIds, closureAccounted };
+const support: CurrentSupport = { primitive: ratifiedIds, interactionOnly: interactionIds, closureAccounted, retained: retainedIds };
 const stage1Accounted = accountedBy(support);
 
 const count = (cs: Coordinate[]) => ({
@@ -241,15 +249,36 @@ describe("C2 — every witness holds, or is held open for adjudication", () => {
     });
   }
 
-  it("holds open exactly three witnesses, all of them one defect: a hole is observable where an absence was not", () => {
+  it("holds open exactly two witnesses, one defect: a hole is observable where an absence was not", () => {
     // The ratchet, in the direction a list of names cannot see. Every witness
     // that fails must be listed, so a NEW failure cannot hide behind the
     // ledger's existence; and the count is pinned, so the ledger cannot grow
     // quietly.
     const failing = witnesses.filter((w) => !checkWitness(w, kernel, oracle).ok).map((w) => w.coordinates.join(" + "));
     expect([...new Set(failing)].sort()).toEqual([...awaiting.keys()].sort());
-    expect(awaiting.size).toBe(3);
-    expect([...awaiting.values()].map((a) => a.reason).sort()).toEqual(["branch-residue", "branch-residue", "holder-presence"]);
+    // TWO, not three. The holder-presence entry left this ledger because its
+    // witness was re-pointed at the coordinate it actually measures
+    // (`field.temporality#present`, where it holds), and the leaf it was filed
+    // under is now ACCOUNTED as required derived vocabulary rather than
+    // suspended. The pair of branch-residue entries is what remains.
+    expect(awaiting.size).toBe(2);
+    expect([...awaiting.values()].map((a) => a.reason).sort()).toEqual(["branch-residue", "branch-residue"]);
+  });
+
+  it("accounts a retained coordinate without ratifying it", () => {
+    // The THIRD accounting mode. The disposition vocabulary carried it —
+    // `required-derived-vocabulary` — while `CurrentSupport` had only the three
+    // evidence classes, so a retained coordinate read as unsupported and its
+    // loss filed as unexplained. Accounted and NOT ratified are both required:
+    // accounted, or it is an orphan; not ratified, or a name external authority
+    // governs reads as a necessity claim.
+    const holds = codomainHolds();
+    expect(retainedIds.size, "a basis must retain something, or this proves nothing").toBeGreaterThan(0);
+    for (const id of retainedIds) {
+      expect(evidenceStanding(id, support, holds).state, id).toBe("holding");
+      expect(evidenceStanding(id, support, holds), id).toMatchObject({ via: "required-derived-vocabulary" });
+      expect(ratifiedIds.has(id), `${id} is retained and must not also be a primitive ratification`).toBe(false);
+    }
   });
 
   it("every suspension points from a recorded historical standing to a measured current failure", () => {
@@ -1406,25 +1435,31 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     expect([...historicalSet].sort()).toEqual([...new Set([...primitive, ...interactionOnly, ...closureAccounted])].sort());
   });
 
-  it("81 ratified historically, 77 still accounted, 4 suspended — the same 268 coordinates counted twice", () => {
+  it("81 ratified historically, 78 still accounted, 3 suspended — the same 268 coordinates counted twice", () => {
     // Counted in the SAME units as C4, by running the same dispositioner over
     // the same stage-1 coordinates against the two different accounted sets.
     // Comparing `stage1Accounted.size` to 81 would be comparing kernel ids to
     // stage-1 dispositions, which are not the same population.
     //
-    // ACCOUNTED, not holding. 77 is the union of three evidence classes — see
-    // the standing tally below, where 4 of those 77 rest on a provisional
-    // closure and nothing stronger. Calling the figure "holding" would report
-    // the weakest class with the authority of the strongest.
+    // ACCOUNTED, not holding. 78 is the union of the accounting classes — see
+    // the standing tally below, where some of those 78 rest on a provisional
+    // closure or on a retained name and nothing stronger. Calling the figure
+    // "holding" would report the weakest class with the authority of the
+    // strongest.
+    //
+    // 78/3, not 77/4: `field.temporality.kind` is ACCOUNTED as required derived
+    // vocabulary (subtraction-stage2-enum-leaf.json) instead of suspended, and
+    // the member pair's stimulus pair ratifies `field.temporality#present`,
+    // which enters the accounted set with it.
     const historical = ratifiedThen;
     const current = ratifiedUnder(stage1Accounted);
     expect(historical).toHaveLength(81);
-    expect(current).toHaveLength(77);
+    expect(current).toHaveLength(78);
 
-    // Nothing appeared and nothing vanished: exactly four moved from accounted
+    // Nothing appeared and nothing vanished: exactly three moved from accounted
     // to suspended, and each is named in the ledger.
     const lost = historical.filter((id) => !current.includes(id));
-    expect(lost).toHaveLength(4);
+    expect(lost).toHaveLength(3);
     for (const id of lost) expect(holds.has(id) || holds.has(id.split(":")[0]), `${id} lost standing but is not in the ledger`).toBe(true);
   });
 
@@ -1437,7 +1472,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
       const s = evidenceStanding(id, support, holds);
       byClass[s.state === "holding" ? s.via : s.state] = (byClass[s.state === "holding" ? s.via : s.state] ?? 0) + 1;
     }
-    expect(byClass).toEqual({ primitive: 43, "closure-accounted": 11, suspended: 3 });
+    expect(byClass).toEqual({ primitive: 44, "closure-accounted": 11, "required-derived-vocabulary": 1, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -1467,10 +1502,13 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // witnesses feed `primitiveRatified` and `interactionOnly`.
     const admits = (accept: (r: ReturnType<typeof checkWitness>) => boolean) => {
       const held = witnesses.filter((w) => accept(checkWitness(w, kernel, oracle)));
-      return { primitive: primitiveRatified(held), interactionOnly: new Set(interactionOnly(held)), closureAccounted } satisfies CurrentSupport;
+      // `retained` is CONSTANT across acceptance boundaries on purpose: a
+      // retained coordinate's accounting comes from a basis verdict, not from
+      // any witness this boundary admits or refuses.
+      return { primitive: primitiveRatified(held), interactionOnly: new Set(interactionOnly(held)), closureAccounted, retained: retainedIds } satisfies CurrentSupport;
     };
     const asRecorded = admits((r) => r.ok);
-    // The weaker boundary: the three held-open witnesses fail on NO_COLLISION
+    // The weaker boundary: the held-open witnesses fail on NO_COLLISION
     // alone, so admitting that code is exactly the change that would make the
     // stored ledger obsolete.
     const weakened = admits((r) => r.ok || r.failures.every((f) => f.code === "NO_COLLISION"));
@@ -1491,11 +1529,14 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     const suspended = [...new Set([...accountedBy(support), ...holds.keys()])]
       .map((id) => [id, evidenceStanding(id, support, holds)] as const)
       .filter(([, s]) => s.state === "suspended");
-    // Three, not four. `assertion.aggregate.op` is DECLARED by the 2-set
-    // witness that lapsed, and holds a primitive witness of its own that the
-    // lapse did not touch — so it lost nothing. Coverage by a failed witness is
-    // not a standing loss, and the ledger keeps the two apart: it appears under
-    // `declares`, and under neither loss field.
+    // Two, not three. `assertion.aggregate.op` is DECLARED by the 2-set witness
+    // that lapsed, and holds a primitive witness of its own that the lapse did
+    // not touch — so it lost nothing. Coverage by a failed witness is not a
+    // standing loss, and the ledger keeps the two apart: it appears under
+    // `declares`, and under neither loss field. `field.temporality.kind` is not
+    // suspended either: its witness was re-pointed at the coordinate it actually
+    // measures, and the leaf is ACCOUNTED as required derived vocabulary, so it
+    // holds via that class instead of sitting in the ledger.
     const covering = loadCodomainAdjudications().awaiting.filter((a) => a.declares.includes("assertion.aggregate.op"));
     expect(covering).toHaveLength(2);
     for (const a of covering) {
@@ -1507,7 +1548,6 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     expect(suspended.map(([id]) => id).sort()).toEqual([
       "assertion.kind",
       "assertion.kind:aggregate~ratio-comparison",
-      "field.temporality.kind",
     ]);
     for (const [id, s] of suspended) {
       if (s.state !== "suspended") throw new Error("unreachable");
@@ -1542,11 +1582,15 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
   const holds = codomainHolds();
   const historicalSet = historicallyAccounted();
 
-  it("reconciles clean today: every loss is ledgered and nothing appeared from nowhere", () => {
+  it("reconciles: every loss is ledgered, and the one gain is a stage-2 coordinate stage 1 could not have accounted", () => {
     const r = reconcileHistory(accountedBy(support), historicalSet, holds);
     expect(r.unexplainedLoss).toEqual([]);
-    expect(r.unexplainedGain).toEqual([]);
-    expect(r.suspended).toEqual(["assertion.kind", "assertion.kind:aggregate~ratio-comparison", "field.temporality.kind"]);
+    // A gain, and a legitimate one: `field.temporality#present` is a holder fact
+    // the STAGE-2 discriminator normal form discovered, so the recovered stage-1
+    // record could not have accounted for it. Reporting it is the point — the
+    // historical authority is an INPUT, never a function of the present.
+    expect(r.unexplainedGain).toEqual(["field.temporality#present"]);
+    expect(r.suspended).toEqual(["assertion.kind", "assertion.kind:aggregate~ratio-comparison"]);
   });
 
   it("SETTLING a suspension leaves the historical record untouched", () => {
@@ -1559,7 +1603,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
     // History is unchanged; what moves is that the same three losses are now
     // UNEXPLAINED, which is the correct report for an unledgered loss.
     expect(historicallyAccounted()).toEqual(historicalSet);
-    expect(r.unexplainedLoss).toEqual(["assertion.kind", "assertion.kind:aggregate~ratio-comparison", "field.temporality.kind"]);
+    expect(r.unexplainedLoss).toEqual(["assertion.kind", "assertion.kind:aggregate~ratio-comparison"]);
     expect(r.suspended).toEqual([]);
   });
 
@@ -1569,7 +1613,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
     const widened = new Set([...accountedBy(support), "field.temporality.grain:day~month"]);
     expect(historicallyAccounted()).toEqual(historicalSet);
     const r = reconcileHistory(widened, historicalSet, holds);
-    expect(r.unexplainedGain).toEqual(["field.temporality.grain:day~month"]);
+    expect(r.unexplainedGain).toEqual(["field.temporality#present", "field.temporality.grain:day~month"]);
     // And the historical dispositions are the same numbers as before.
     const ratified = [...historicalDispositions()].filter(([, d]) => d.state === "ratified");
     expect(ratified).toHaveLength(81);
