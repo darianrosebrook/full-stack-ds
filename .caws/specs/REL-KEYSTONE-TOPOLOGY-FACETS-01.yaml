@@ -29,3 +29,13 @@ contracts:
   - name: 'closure-blockage'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/closure.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Decomposed the 79 unresolved candidates by coordinate kind: 35 reference-topology facets, 31 member pairs, 8 member absences, 5 leaves. Decomposed each blocked closure's unsettled footprint the same way: 16 closures blocked by reference-topology facets alone and 6 by a member pair plus a reference-topology facet -- so all 22 blocked closures depend on at least one topology facet and none is blocked without one. Only 16 of the 35 topology facets block any closure, and 57 of the 79 block none at all. The test asserts all four numbers (the four-way tally, both blockage shapes, and both halves of the narrowing), so a coordinate that starts blocking a closure fails it rather than silently enlarging the obligation. Non-claim: this sizes and targets the obligation, it does not reduce it -- the 79 are unchanged, no verdict moved, and the keystone facets remain evidence-blocked and awaiting corpus cases."
+    recorded_at: "2026-09-15T06:13:17.216Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/closure.test.ts > what actually blocks the closures, decomposed by coordinate kind > names the reference-topology facets as the keystone, and separates them from the candidates that block nothing"
+    command: pnpm exec vitest run packages/ds-codegen/src/analytical
+    exit_code: 0
+    artifact_path: packages/ds-codegen/src/analytical/closure.test.ts
+    commit_sha: "4dbcd056"
