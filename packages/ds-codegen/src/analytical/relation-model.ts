@@ -88,6 +88,24 @@ export const DERIVATION_OPERANDS: Record<string, Record<string, OperandNamespace
   project: { from: "relation", keep: "field" },
   graph: { from: "relation", edgeFrom: "field", edgeTo: "field", value: "field" },
 };
+
+/**
+ * The name-bearing properties the STRUCTURE itself binds, and the namespace
+ * each ranges over. The same key and the same rule as the branch map: the
+ * holder states which of its properties name declared things, the walk reads
+ * it where it reads every other namespace fact, and a name list with no
+ * namespace keeps the tokenizing erasure unchanged.
+ *
+ * `peers` is the case: its elements name RELATIONS — the peer-projection
+ * conservation law reads them as relations — so forgetting which relations a
+ * peer set binds has to rebind to declared relation names or the image stops
+ * resolving and the boundary reports inputs it cannot find. The map sits on
+ * the structure rather than on a derivation branch because that is where the
+ * property lives; nothing about the reader changes.
+ */
+export const STRUCTURE_OPERANDS: Record<string, OperandNamespace> = {
+  peers: "relation",
+};
 export type SequenceFact = "set" | "ordered";
 /** A collection whose order no rule reads: erasing `#order` destroys nothing. */
 const Set_ = { [SEQUENCE_KEY]: "set" } as const;
@@ -243,6 +261,7 @@ export const RelationalStructure = z
   .meta({
     id: "relationalStructure",
     title: "Relational structure (L0-L2 kernel)",
+    [OPERANDS_KEY]: STRUCTURE_OPERANDS,
     description:
       "The authoritative analytical object of ARCH-ANALYTICAL-RELATION-001 at stage 1.5: one or more named relations, each with a declared grain and typed fields. Every coordinate carries a necessity witness. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand.",
   });

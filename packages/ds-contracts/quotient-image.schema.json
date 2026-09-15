@@ -138,6 +138,9 @@
       ],
       "additionalProperties": false,
       "title": "Relational structure (L0-L2 kernel)",
+      "x-fsds-operands": {
+        "peers": "relation"
+      },
       "description": "The authoritative analytical object of ARCH-ANALYTICAL-RELATION-001 at stage 1.5: one or more named relations, each with a declared grain and typed fields. Every coordinate carries a necessity witness. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
     },
     "name": {
