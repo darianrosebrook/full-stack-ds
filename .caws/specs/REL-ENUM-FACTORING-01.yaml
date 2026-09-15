@@ -2,9 +2,10 @@ id: REL-ENUM-FACTORING-01
 title: 'Enum factoring: the kernel carries one coordinate per distinction a value space actually has'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: enum-factoring
 created_at: '2026-09-15T04:08:17.050Z'
-updated_at: '2026-09-15T04:08:17.050Z'
+updated_at: '2026-09-15T04:08:24.716Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
