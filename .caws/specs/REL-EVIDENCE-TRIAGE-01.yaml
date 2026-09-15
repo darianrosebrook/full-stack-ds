@@ -2,9 +2,11 @@ id: REL-EVIDENCE-TRIAGE-01
 title: 'Pin the constructibility triage: which candidates have a separating shape and which wait on evidence'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Constructibility pinned: 1 committed-pair candidate (about content, unfilable), 21 with a specimen shape (authoring backlog), 44 with none; the bottleneck is evidence, not the instrument.'
 created_at: '2026-09-15T22:45:40.594Z'
-updated_at: '2026-09-15T22:45:42.887Z'
+updated_at: '2026-09-15T22:51:05.030Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
