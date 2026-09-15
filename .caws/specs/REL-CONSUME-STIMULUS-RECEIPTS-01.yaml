@@ -3,7 +3,6 @@ title: 'Carry the receipt stimulus pairs into the six closure records that decla
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: consume-receipts
 created_at: '2026-09-15T05:06:02.983Z'
 updated_at: '2026-09-15T05:06:09.303Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
