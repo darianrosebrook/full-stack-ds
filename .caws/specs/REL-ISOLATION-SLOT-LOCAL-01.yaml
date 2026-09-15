@@ -2,9 +2,11 @@ id: REL-ISOLATION-SLOT-LOCAL-01
 title: 'Extend the isolation exemption to any erasure confined to the coordinate''s own slot'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'The isolation exemption is stated for what it measures (slot locality) instead of one class, which admits the ideal bin.closure pair and adjudicates both coordinates as witnessed; the well-formedness guard is pinned and no disposition was needed.'
 created_at: '2026-09-15T05:42:27.619Z'
-updated_at: '2026-09-15T05:42:28.669Z'
+updated_at: '2026-09-15T05:49:21.607Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
