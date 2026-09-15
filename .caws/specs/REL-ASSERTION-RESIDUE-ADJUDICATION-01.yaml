@@ -32,3 +32,13 @@ contracts:
   - name: 'codomain-adjudications'
     type: contract-test
     path: 'packages/ds-contracts/analytical-fixtures/codomain-adjudications.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "The carrier assertion.kind:aggregate~ratio-comparison was evaluated by checkClosure rather than argued about, with its derived normalization (aggregate:[op], unilateral, minRawEdit 2, footprint 7) and its own stimulus pair. Measured: obligations 1-6 HELD (including obligation 3, reporting 'identical outside assertion'), obligation 7 FAILED with classification indeterminate because no sibling pair on assertion.kind has a compatible branch payload signature, obligation 8 FAILED on '7 PRIMITIVE' (constructor and payload composite under this encoding), promotion provisional, problems none. The stale blocker -- that the checker could not evaluate obligation 3 for an assertion holder because no locator keyed that path -- is removed from both ledger entries, which now record the measurement; a probe plus closure.test.ts confirm the holder is located from the leaf and a positional holder is holed rather than deleted (fix 79279322). The doctrine names the resulting instrument limit as a cost under 'Cost to the existing architecture', including the failure mode it invites. closure.test.ts pins the whole state. Non-claim: this does NOT discharge the residue -- both codomain-adjudications coordinates keep their present evidence, no carrier was ledgered into closures-stage2.json, and no standing moved; the measurement is about the applicability of the closure FORM, not a verdict on whether assertion.kind or assertion.aggregate.op is primitive, which 'composite constructor versus derived discriminator must be re-decided' still leaves open."
+    recorded_at: "2026-09-15T04:52:51.414Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/closure.test.ts > obligation 3 — the holder instrument is located from the discriminator leaf, not from a presence coordinate > leaves the assertion residue blocked by the FORM, not by a tooling limit: 1-6 hold, 7 cannot be satisfied by construction, 8 fails on a primitive footprint"
+    command: pnpm exec vitest run packages/ds-codegen/src/analytical
+    exit_code: 0
+    artifact_path: packages/ds-contracts/analytical-fixtures/codomain-adjudications.json
+    commit_sha: c0d91c23
