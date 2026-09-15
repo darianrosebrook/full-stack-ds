@@ -52,7 +52,7 @@ import { findingId, loadReceipts } from "./stimulus.js";
 import type { StimulusPrediction } from "./stimulus.js";
 import { checkWitness, classifyWitness, loadCodomainAdjudications, loadOracle, loadWitnesses, primitiveRatified } from "./necessity.js";
 import { canonical } from "./quotient.js";
-import { basesForSpec } from "./subtraction.js";
+import { basesForSpec, loadSubtraction } from "./subtraction.js";
 
 const census = loadCensus();
 const oracle = loadOracle();
@@ -1128,6 +1128,48 @@ describe("a receipt's pair enters a closure only when that closure's own obligat
         expect(r.obligations.find((o) => o.id.startsWith(`${n}-`))!.held, `${carrier} obligation ${n}`).toBe(true);
       }
     }
+  });
+});
+
+describe("what actually blocks the closures, decomposed by coordinate kind", () => {
+  it("names the reference-topology facets as the keystone, and separates them from the candidates that block nothing", () => {
+    // The candidate list is not the obligation. Decomposed, the 79 unresolved split four ways,
+    // and the closures' unsettled footprints split the same way -- which is what turns an
+    // undifferentiated backlog into a targeted one.
+    const byId = new Map(census.map((c) => [c.id, c]));
+    const kindOf = (id: string) => byId.get(id)?.kind ?? "not-in-census";
+    const doc = loadSubtraction();
+    const unresolved = doc.basis.candidates.filter((id) => (doc.verdicts[id]?.disposition ?? "unresolved") === "unresolved");
+    const tally = (ids: readonly string[]) => {
+      const out: Record<string, number> = {};
+      for (const id of ids) out[kindOf(id)] = (out[kindOf(id)] ?? 0) + 1;
+      return out;
+    };
+
+    expect(unresolved.length).toBe(79);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 35, "member-absence": 8, leaf: 5, "member-pair": 31 });
+
+    // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
+    // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
+    // can hold for sixteen carriers that today cannot promote at all.
+    const r = checkClosures();
+    const shape: Record<string, number> = {};
+    const dependents = new Set<string>();
+    for (const c of r.checks) {
+      const unsettled = c.standing.filter((s) => s.standing.state !== "resolved").map((s) => s.coordinate);
+      if (unsettled.length === 0) continue;
+      for (const id of unsettled) dependents.add(id);
+      const kinds = [...new Set(unsettled.map(kindOf))].sort().join("+");
+      shape[kinds] = (shape[kinds] ?? 0) + 1;
+    }
+    expect(shape).toEqual({ "reference-topology": 16, "member-pair+reference-topology": 6 });
+
+    // And only 16 of the 35 topology facets block anything at all: the other 19, and all 38
+    // non-topology candidates, are a separate obligation that no carrier is waiting on.
+    const topology = unresolved.filter((id) => kindOf(id) === "reference-topology");
+    expect(topology.length).toBe(35);
+    expect(topology.filter((id) => dependents.has(id)).length).toBe(16);
+    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(57);
   });
 });
 
