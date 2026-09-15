@@ -686,7 +686,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.nest.levels#order": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness built from an AUTHORED stimulus the adjudication policy admits: FX_N_NESTED_SUBTOTAL_AT_PREFIX against the same fixture with `hierarchy.derivedBy.levels` reordered to [state, country]. Only the order moves, the declared `toGrain: [country]` subtotal stops being a declared prefix, and REL_GRAIN_SUBTOTAL_MISMATCH -- an already-existing cause, CASE_NESTED_SUBTOTALS_OFF_GRAIN -- decides it. Erasing this coordinate sorts the list back and identifies them. Establishes that the declared SEQUENCE of nest levels is a necessary distinction; it does NOT establish that the field is a primitive analytical axis."
     },
     "relation.derivedBy.nest.levels#present": {
       "disposition": "representation-artifact",

@@ -932,6 +932,34 @@
         "fixture": "FX_N_READINGS_BINNED_LEFT_CLOSED"
       },
       "note": "STAGE-2 necessity for relation.derivedBy.bin.closure:left-closed~<absent>: separates left-closed against undeclared. One fixture IS the other minus the declaration -- FX_READINGS_BINNED_NO_CLOSURE is illegal with REL_BIN_CLOSURE_UNDECLARED (CASE_WHICH_BIN_GETS_TEN, \"bin with no declared closure\") and FX_N_READINGS_BINNED_LEFT_CLOSED is admissible -- so the pair varies exactly this coordinate and nothing else. The erasure is confined to the declaration's slot and the finding it produces is the CORPUS's own semantic rule, not the boundary's well-formedness refusal."
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.nest.levels#order"
+      ],
+      "a": {
+        "fixture": "FX_N_NESTED_SUBTOTAL_AT_PREFIX"
+      },
+      "b": {
+        "base": "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+        "patch": [
+          {
+            "set": "structure.relations.hierarchy.derivedBy.levels",
+            "value": [
+              "state",
+              "country"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_GRAIN_SUBTOTAL_MISMATCH"
+          ],
+          "terms": []
+        },
+        "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: a subtotal to a grain the nest does not declare. Reordering the declared levels to [state, country] removes `country` from the declared prefixes, so the existing `toGrain: [country]` subtotal is off-grain -- the judgment follows from an already-existing cause, and NOTHING else about the fixture moves."
+      }
     }
   ]
 }

@@ -171,7 +171,6 @@
       "relation.derivedBy.nest.from#incidence",
       "relation.derivedBy.nest.levels#arity",
       "relation.derivedBy.nest.levels#incidence",
-      "relation.derivedBy.nest.levels#order",
       "relation.derivedBy.normalize.field#incidence",
       "relation.derivedBy.normalize.from#incidence",
       "relation.derivedBy.project.from#incidence",
@@ -194,7 +193,8 @@
       "field.temporality.grain:day~month",
       "relation.derivedBy.bin.closure",
       "relation.derivedBy.bin.closure:left-closed~<absent>",
-      "relation.derivedBy.kind:bin~normalize"
+      "relation.derivedBy.kind:bin~normalize",
+      "relation.derivedBy.nest.levels#order"
     ],
     "required-derived-vocabulary": [
       "relation.derivedBy.join.cardinality",
