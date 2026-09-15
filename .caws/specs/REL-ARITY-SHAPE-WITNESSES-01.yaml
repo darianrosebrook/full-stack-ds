@@ -2,9 +2,11 @@ id: REL-ARITY-SHAPE-WITNESSES-01
 title: 'Settle the remaining arity facets: which shape gaps an authored stimulus can reach, and which are not independently erasable'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Witnessed the three reachable arity facets (nonAdditiveAlong, grainWitness, peers) from authored pairs differing at exactly the coordinate, taking the subtraction to 69 of 118, and recorded the two that are not: toGrain#arity is not independently erasable and nest.levels#arity is evidence-blocked.'
 created_at: '2026-09-15T07:43:57.658Z'
-updated_at: '2026-09-15T07:50:27.925Z'
+updated_at: '2026-09-15T07:51:17.454Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
