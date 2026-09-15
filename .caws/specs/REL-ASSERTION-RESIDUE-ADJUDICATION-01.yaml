@@ -3,7 +3,6 @@ title: 'Discharge the assertion branch-residue: measure it, correct the ledger, 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: assertion-residue
 created_at: '2026-09-15T04:50:01.571Z'
 updated_at: '2026-09-15T04:52:05.983Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
