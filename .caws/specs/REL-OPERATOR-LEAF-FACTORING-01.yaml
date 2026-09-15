@@ -1,0 +1,32 @@
+id: REL-OPERATOR-LEAF-FACTORING-01
+title: 'Adjudicate the operator and cardinality enum leaves as required derived vocabulary'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T06:03:09.866Z'
+updated_at: '2026-09-15T06:03:09.866Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-contracts/analytical-fixtures/subtraction-stage2.json (two required-derived-vocabulary verdicts)'
+    - 'packages/ds-codegen/src/analytical/necessity.test.ts (the retained-class pins)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'A bare enum leaf carries no independent degree of freedom when its footprint is exactly itself plus its member pairs and every pair''s footprint is itself: its necessity is implied by any single pair, so it is retained as derived vocabulary and deliberately NOT ratified.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given invariant 17 fixes the enum-leaf factoring and the doctrine left relation.derivedBy.kind as its open question; when the footprint relation is measured for relation.derivedBy.kind and relation.derivedBy.join.cardinality; then each leaf''s footprint is exactly itself plus its member pairs and each pair''s footprint is exactly itself, both record required-derived-vocabulary naming what they are derivable from and what requires the name, the unadjudicated count falls by two, and no member pair''s standing moves'
+non_functional: {}
+contracts:
+  - name: 'enum-leaf'
+    type: contract-test
+    path: 'packages/ds-contracts/analytical-fixtures/subtraction-stage2.json'
