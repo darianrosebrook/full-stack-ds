@@ -2,9 +2,11 @@ id: REL-CONTENT-BOUND-SWEEP-01
 title: 'Bind sweep outcomes by content, and record that the specimen population shares ids'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Sweeps now bind outcomes by content, exposing 96 mis-attributed specimens and reducing the discriminable set from two to one; with that one failing the presence test, all 81 unresolved candidates are evidence-blocked.'
 created_at: '2026-09-15T05:55:10.114Z'
-updated_at: '2026-09-15T05:55:11.253Z'
+updated_at: '2026-09-15T05:58:36.217Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
