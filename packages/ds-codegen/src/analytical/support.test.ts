@@ -94,7 +94,7 @@ describe("one definition of primitive support, consumed by every surface", () =>
       const audited = report.witnesses.find((a) => a.witness === id);
       if (audited) expect(audited.standing, `${id} audit standing`).toBe("primitive");
     }
-    expect(ratified.size).toBe(59);
+    expect(ratified.size).toBe(60);
   });
 
   it("the classifier names THREE consequences, and each is exercised by a real witness", () => {
@@ -182,9 +182,9 @@ describe("the footprint-class triage over the live basis candidates", () => {
     // does something; a witness still needs two stimuli the oracle SEPARATES
     // that the erasure identifies, and the constructibility triage below
     // measures that separately -- 21 of the 65 have such a shape at all.
-    expect(unresolved.length).toBe(67);
-    expect(ratifiable.length).toBe(64);
-    expect(moving.length).toBe(50);
+    expect(unresolved.length).toBe(66);
+    expect(ratifiable.length).toBe(63);
+    expect(moving.length).toBe(49);
     // And the blocked three are NOT in it.
     expect(ratifiable).not.toContain("relation.derivedBy.nest.levels#incidence");
     expect(ratifiable).not.toContain("structure.peers[]#present");
@@ -235,17 +235,22 @@ describe("the constructibility triage: what EVIDENCE each ratifiable candidate h
   it(
     "names the authoring backlog: the candidates whose SHAPE separates, which is raw material and not yet evidence",
     () => {
-      // 21 of the 65 have a synthesized near-miss pair that separates. (A
+      // 19 of the 63 have a synthesized near-miss pair that separates. (A
       // looser probe reported 24 by counting a specimen whose judgment THROWS
       // as a differing outcome; a throw is not a judgment, so the pool here
-      // excludes those specimens and 21 is the honest number.) A
-      // specimen is a SEARCH DEVICE — its ids repeat and it is not a citable
-      // stimulus — so each of these still needs a committed fixture or an
+      // excludes those specimens and the smaller number is the honest one.)
+      // Two of the original 21 were FILED and left this list, and that is the
+      // move this triage is for: the shape was a specimen, and the citable
+      // stimulus that replaced it is a committed fixture plus an authored
+      // patch. `relation.derivedBy.aggregate-to-grain.from#incidence` is the
+      // latest, filed as `FX_NESTED_SUBTOTAL_OFF_HIERARCHY` against the same
+      // fixture with `subtotals.derivedBy.from` moved to `sales`. A specimen
+      // is a SEARCH DEVICE — its ids repeat and it is not a citable stimulus —
+      // so each of the remaining ones still needs a committed fixture or an
       // authored {base, patch} whose judgment follows from an existing cause
       // before a witness can be filed.
-      expect(bySpecimenShape.length).toBe(20);
+      expect(bySpecimenShape.length).toBe(19);
       expect(bySpecimenShape).toContain("relation.derivedBy.graph.value#incidence");
-      expect(bySpecimenShape).toContain("relation.derivedBy.aggregate-to-grain.from#incidence");
       // And the remainder have no separating shape at all, which is a corpus gap
       // and not an instrument one.
       expect(ratifiable.length - bySpecimenShape.length).toBe(44);

@@ -465,7 +465,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.aggregate-to-grain.from#incidence": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness. The stimulus is AUTHORED over a committed fixture and follows from an already-existing cause: with `subtotals.derivedBy.from` reading `hierarchy` the declaration is illegal under CASE_NESTED_SUBTOTALS_OFF_GRAIN, and reading `sales` instead makes it admissible, so erasing exactly this coordinate (which rebinds the input relation) identifies the two stimuli while their verdicts differ. PRIMITIVE standing is checked rather than assumed: the footprint classifier classes this coordinate atomic -- its erasure destroys nothing but itself -- so the witness declares one coordinate and ratifies."
     },
     "relation.derivedBy.aggregate-to-grain.from#present": {
       "disposition": "representation-artifact",

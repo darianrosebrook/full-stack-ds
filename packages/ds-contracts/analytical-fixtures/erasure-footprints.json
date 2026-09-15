@@ -2,7 +2,7 @@
   "$comment": "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
-    "witnesses.json": "885139f3f1634319fad1f31406da8d9bdd19a8b6ff4942c4a5ded4bd825c25f4",
+    "witnesses.json": "e6bf87b8cdc839a3c30efe9924b327ff990c2e8397d7d0c1f7f5f090c749f8ce",
     "closures-stage2.json": "5f71c52a9b48cd12dce273777bd7009591e9172e88209cee3e989f3c80d5f16a"
   },
   "authority": {
@@ -16,10 +16,10 @@
   "quotientSchemaVersion": 1,
   "specimens": {
     "corpus": 90,
-    "stimuli": 34,
-    "synthesized": 88,
+    "stimuli": 35,
+    "synthesized": 87,
     "total": 212,
-    "populationDigest": "3e9614cc73d35f4d6df2f29a3841fddd32d44be264d7a2493c248a824a86a438"
+    "populationDigest": "45d63359b90ea5d75d36a4ec462f01451b936f6b76d0d940715e8af9c867790e"
   },
   "unbuilt": [
     {
@@ -154,67 +154,67 @@
   "sourceLanguageDeparture": [
     {
       "coordinate": "assertion.kind",
-      "specimens": 124,
+      "specimens": 125,
       "error": "/assertions/0/kind must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.kind:aggregate~ratio-comparison",
-      "specimens": 124,
+      "specimens": 125,
       "error": "/assertions/0/kind must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation",
-      "specimens": 124,
+      "specimens": 125,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~ratio",
-      "specimens": 124,
+      "specimens": 125,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "relation.grain",
-      "specimens": 124,
+      "specimens": 125,
       "error": "/structure/relations/survey/grain must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~interval",
-      "specimens": 123,
+      "specimens": 124,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~ordinal",
-      "specimens": 123,
+      "specimens": 124,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.aggregate.op",
-      "specimens": 122,
+      "specimens": 123,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:interval~ratio",
-      "specimens": 115,
+      "specimens": 116,
       "error": "/structure/relations/readings/fields/temp/transformation must be string",
       "specimen": "FX_TEMP_RATIO_COMPARISON"
     },
     {
       "coordinate": "field.transformation:ordinal~ratio",
-      "specimens": 114,
+      "specimens": 115,
       "error": "/structure/relations/survey/fields/satisfaction/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.aggregate.op:sum~min",
-      "specimens": 97,
+      "specimens": 98,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_TEMP_SUM"
     },
@@ -226,7 +226,7 @@
     },
     {
       "coordinate": "assertion.aggregate.op:mean~min",
-      "specimens": 68,
+      "specimens": 69,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
@@ -238,13 +238,13 @@
     },
     {
       "coordinate": "assertion.aggregate.op:count~min",
-      "specimens": 51,
+      "specimens": 52,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_REGION_MAX"
     },
     {
       "coordinate": "relation.derivedBy.kind",
-      "specimens": 37,
+      "specimens": 38,
       "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'",
       "specimen": "FX_SHARE_OF_AVERAGE_SCORE"
     },
@@ -274,67 +274,67 @@
     },
     {
       "coordinate": "relation.derivedBy.kind:nest~graph",
-      "specimens": 18,
+      "specimens": 19,
       "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'",
       "specimen": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
     },
     {
       "coordinate": "relation.derivedBy.kind:aggregate-to-grain~graph",
-      "specimens": 17,
+      "specimens": 18,
       "error": "/structure/relations/subtotals/derivedBy/kind must be string",
       "specimen": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
     },
     {
       "coordinate": "relation.derivedBy.kind:join~nest",
-      "specimens": 17,
+      "specimens": 18,
       "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
       "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
     },
     {
       "coordinate": "relation.derivedBy.kind:aggregate-to-grain~bin",
-      "specimens": 16,
+      "specimens": 17,
       "error": "/structure/relations/subtotals/derivedBy/kind must be string",
       "specimen": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
     },
     {
       "coordinate": "relation.derivedBy.kind:aggregate-to-grain~join",
-      "specimens": 16,
+      "specimens": 17,
       "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
       "specimen": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
     },
     {
       "coordinate": "relation.derivedBy.kind:aggregate-to-grain~nest",
-      "specimens": 16,
+      "specimens": 17,
       "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'",
       "specimen": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
     },
     {
       "coordinate": "relation.derivedBy.kind:aggregate-to-grain~normalize",
-      "specimens": 16,
+      "specimens": 17,
       "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'",
       "specimen": "FX_SHARE_OF_AVERAGE_SCORE"
     },
     {
       "coordinate": "relation.derivedBy.kind:nest~bin",
-      "specimens": 16,
+      "specimens": 17,
       "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'",
       "specimen": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
     },
     {
       "coordinate": "relation.derivedBy.kind:nest~normalize",
-      "specimens": 16,
+      "specimens": 17,
       "error": "/structure/relations/shares/derivedBy must have required property 'toGrain'",
       "specimen": "FX_SHARE_OF_AVERAGE_SCORE"
     },
     {
       "coordinate": "relation.derivedBy.kind:aggregate-to-grain~project",
-      "specimens": 15,
+      "specimens": 16,
       "error": "/structure/relations/subtotals/derivedBy/kind must be string",
       "specimen": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
     },
     {
       "coordinate": "relation.derivedBy.kind:nest~project",
-      "specimens": 14,
+      "specimens": 15,
       "error": "/structure/relations/hierarchy/derivedBy must have required property 'toGrain'",
       "specimen": "FX_NESTED_SUBTOTAL_OFF_HIERARCHY"
     },
@@ -534,12 +534,12 @@
   "quotientLanguageInvalid": [],
   "scopes": {
     "sourceLanguageDeparture": {
-      "specimens": 124,
-      "populationDigest": "430735856bb1d1221ad045c1458bdd97587abd48e092ae0dfa727e7768445cb8"
+      "specimens": 125,
+      "populationDigest": "49d2cfed56aee0bc2db975668e23f927d4c2956d61b7b22bc62c9b7ebbab90d9"
     },
     "quotientLanguageInvalid": {
       "specimens": 212,
-      "populationDigest": "3e9614cc73d35f4d6df2f29a3841fddd32d44be264d7a2493c248a824a86a438"
+      "populationDigest": "45d63359b90ea5d75d36a4ec462f01451b936f6b76d0d940715e8af9c867790e"
     }
   },
   "footprints": {
@@ -2092,6 +2092,21 @@
       ],
       "actual": [
         "observation.value"
+      ],
+      "collateral": [],
+      "sibling": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "relation.derivedBy.aggregate-to-grain.from#incidence",
+      "declared": [
+        "relation.derivedBy.aggregate-to-grain.from#incidence"
+      ],
+      "actual": [
+        "relation.derivedBy.aggregate-to-grain.from#incidence"
       ],
       "collateral": [],
       "sibling": [],
