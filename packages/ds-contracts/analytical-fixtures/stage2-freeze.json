@@ -6,7 +6,7 @@
   "authority": {
     "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
     "erasureAuthorityDigest": "0b59717c7b3ae6e44de15915ac4010220f4ac149c03168288d1df5289f93358f",
-    "witnessAuthorityDigest": "ee275a354d4bdd4537b45e04875e0eee5f87ca6373727f883d6f689b352d2a71",
+    "witnessAuthorityDigest": "c88876233a368c59969f4ec7907399e8ad7f4bdfb99590048a4bc2e9e13461b0",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
@@ -130,8 +130,6 @@
       "relation.derivedBy.aggregate-to-grain.toGrain#arity",
       "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
-      "relation.derivedBy.bin.closure",
-      "relation.derivedBy.bin.closure:left-closed~<absent>",
       "relation.derivedBy.bin.closure:left-closed~right-closed",
       "relation.derivedBy.bin.closure:right-closed~<absent>",
       "relation.derivedBy.bin.field#incidence",
@@ -196,6 +194,8 @@
       "field.temporality#present",
       "field.temporality.grain",
       "field.temporality.grain:day~month",
+      "relation.derivedBy.bin.closure",
+      "relation.derivedBy.bin.closure:left-closed~<absent>",
       "relation.derivedBy.kind:bin~normalize"
     ],
     "required-derived-vocabulary": [],

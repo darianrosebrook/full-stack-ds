@@ -908,6 +908,30 @@
         "fixture": "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN"
       },
       "note": "STAGE-2 necessity for field.temporality.grain:day~month: separates day against month. Both sides are already-existing fixtures -- CASE_DAILY_AND_MONTHLY_ON_ONE_AXIS against its near-neighbour FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.bin.closure"
+      ],
+      "a": {
+        "fixture": "FX_READINGS_BINNED_NO_CLOSURE"
+      },
+      "b": {
+        "fixture": "FX_N_READINGS_BINNED_LEFT_CLOSED"
+      },
+      "note": "STAGE-2 necessity for relation.derivedBy.bin.closure: separates whether a bin declares which side of each boundary is closed. One fixture IS the other minus the declaration -- FX_READINGS_BINNED_NO_CLOSURE is illegal with REL_BIN_CLOSURE_UNDECLARED (CASE_WHICH_BIN_GETS_TEN, \"bin with no declared closure\") and FX_N_READINGS_BINNED_LEFT_CLOSED is admissible -- so the pair varies exactly this coordinate and nothing else. The erasure is confined to the declaration's slot and the finding it produces is the CORPUS's own semantic rule, not the boundary's well-formedness refusal."
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.bin.closure:left-closed~<absent>"
+      ],
+      "a": {
+        "fixture": "FX_READINGS_BINNED_NO_CLOSURE"
+      },
+      "b": {
+        "fixture": "FX_N_READINGS_BINNED_LEFT_CLOSED"
+      },
+      "note": "STAGE-2 necessity for relation.derivedBy.bin.closure:left-closed~<absent>: separates left-closed against undeclared. One fixture IS the other minus the declaration -- FX_READINGS_BINNED_NO_CLOSURE is illegal with REL_BIN_CLOSURE_UNDECLARED (CASE_WHICH_BIN_GETS_TEN, \"bin with no declared closure\") and FX_N_READINGS_BINNED_LEFT_CLOSED is admissible -- so the pair varies exactly this coordinate and nothing else. The erasure is confined to the declaration's slot and the finding it produces is the CORPUS's own semantic rule, not the boundary's well-formedness refusal."
     }
   ]
 }

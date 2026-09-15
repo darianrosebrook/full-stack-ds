@@ -2,13 +2,13 @@
   "$comment": "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
-    "witnesses.json": "cc0c8aa55ccfeeddfd00dc201c92bd0ccb33378cf5fd76ab3a233ae8f330648e",
-    "closures-stage2.json": "f31bad18f9700fa22602f459a24d49474fbfa53fef856092fdd010a7a5dba024"
+    "witnesses.json": "340db1cd4b0b94cb9afd2b6286166723e81f67bed9fe73bb0f931e2815346dbe",
+    "closures-stage2.json": "f162b9f71bf4aa99490fde6398b61e9a4907bca683f4b40d3a5c658afdfcb438"
   },
   "authority": {
     "coordinateBasisDigest": "2c8ac3ad440bde3666c0392219d9925d0e341a966b245f89f7ccb1b703b7d763",
     "erasureAuthorityDigest": "0b59717c7b3ae6e44de15915ac4010220f4ac149c03168288d1df5289f93358f",
-    "witnessAuthorityDigest": "ee275a354d4bdd4537b45e04875e0eee5f87ca6373727f883d6f689b352d2a71",
+    "witnessAuthorityDigest": "c88876233a368c59969f4ec7907399e8ad7f4bdfb99590048a4bc2e9e13461b0",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
@@ -2027,6 +2027,41 @@
       ],
       "actual": [
         "observation.value"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "relation.derivedBy.bin.closure",
+      "declared": [
+        "relation.derivedBy.bin.closure"
+      ],
+      "actual": [
+        "relation.derivedBy.bin.closure",
+        "relation.derivedBy.bin.closure:left-closed~<absent>",
+        "relation.derivedBy.bin.closure:left-closed~right-closed",
+        "relation.derivedBy.bin.closure:right-closed~<absent>"
+      ],
+      "collateral": [
+        "relation.derivedBy.bin.closure:left-closed~<absent>",
+        "relation.derivedBy.bin.closure:left-closed~right-closed",
+        "relation.derivedBy.bin.closure:right-closed~<absent>"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "relation.derivedBy.bin.closure:left-closed~<absent>",
+      "declared": [
+        "relation.derivedBy.bin.closure:left-closed~<absent>"
+      ],
+      "actual": [
+        "relation.derivedBy.bin.closure:left-closed~<absent>"
       ],
       "collateral": [],
       "outside": [],

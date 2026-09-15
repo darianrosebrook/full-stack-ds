@@ -255,9 +255,9 @@ describe("containment is structural, never a string prefix", () => {
 describe("the witness audit", () => {
   const byVerdict = (v: string) => live.witnesses.filter((w) => w.verdict === v);
 
-  it("classifies all 53 witnesses and leaves none with an unresolved plan", () => {
+  it("classifies all 55 witnesses and leaves none with an unresolved plan", () => {
     // 47 + the six stage-2 necessities the corpus already discriminates (REL-STAGE2-WITNESS-ADJUDICATION-01).
-    expect(live.witnesses.length).toBe(53);
+    expect(live.witnesses.length).toBe(55);
     expect(byVerdict("unresolved-plan")).toEqual([]);
   });
 
@@ -281,7 +281,7 @@ describe("the witness audit", () => {
     expect(live.witnesses.filter((w) => w.outside.length > 0).map((w) => w.witness)).toEqual(["field.temporality#present"]);
   });
 
-  it("still records the thirteen, because 'declares one, destroys seven' is a weaker claim than primitive", () => {
+  it("still records the fourteen, because 'declares one, destroys seven' is a weaker claim than primitive", () => {
     expect(byVerdict("subsumes-refinements").map((w) => w.witness).sort()).toEqual([
       "assertion.aggregate.along#incidence",
       "assertion.aggregate.along#present",
@@ -296,6 +296,7 @@ describe("the witness audit", () => {
       "field.temporality.grain",
       "field.transformation",
       "observation.null",
+      "relation.derivedBy.bin.closure",
     ]);
   });
 
@@ -322,8 +323,8 @@ describe("the witness audit", () => {
     for (const id of two.declared) expect(ledgeredCoordinates.has(id), `${id} is named by a lapsed witness that no adjudication covers`).toBe(true);
   });
 
-  it("leaves the remaining thirty-nine atomic, so the correction is bounded", () => {
-    expect(byVerdict("atomic").length).toBe(39);
+  it("leaves the remaining forty atomic, so the correction is bounded", () => {
+    expect(byVerdict("atomic").length).toBe(40);
     for (const w of byVerdict("atomic")) {
       expect(w.declared.length).toBe(1);
       expect(w.actual).toEqual(w.declared);

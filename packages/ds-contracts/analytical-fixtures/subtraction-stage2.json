@@ -479,10 +479,12 @@
       "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.bin.closure": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness whose two sides differ in NOTHING but the declaration: FX_READINGS_BINNED_NO_CLOSURE (REL_BIN_CLOSURE_UNDECLARED, CASE_WHICH_BIN_GETS_TEN) against FX_N_READINGS_BINNED_LEFT_CLOSED (admissible). The erasure is confined to the declaration's slot and the finding it produces is the corpus's own rule for a missing declaration -- the distinction under test, not the boundary's well-formedness refusal. Establishes the declaration is necessary; it does NOT establish that the FIELD is a primitive analytical axis."
     },
     "relation.derivedBy.bin.closure:left-closed~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness whose two sides differ in NOTHING but the declaration: FX_READINGS_BINNED_NO_CLOSURE (REL_BIN_CLOSURE_UNDECLARED, CASE_WHICH_BIN_GETS_TEN) against FX_N_READINGS_BINNED_LEFT_CLOSED (admissible). The erasure is confined to the declaration's slot and the finding it produces is the corpus's own rule for a missing declaration -- the distinction under test, not the boundary's well-formedness refusal. Establishes the declaration is necessary; it does NOT establish that the FIELD is a primitive analytical axis."
     },
     "relation.derivedBy.bin.closure:left-closed~right-closed": {
       "disposition": "unresolved"
