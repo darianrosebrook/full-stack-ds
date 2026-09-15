@@ -30,3 +30,13 @@ contracts:
   - name: 'authored-stimulus'
     type: contract-test
     path: 'packages/ds-contracts/analytical-fixtures/witnesses.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Authored a {base, patch} stimulus for relation.derivedBy.nest.levels#order: a = FX_N_NESTED_SUBTOTAL_AT_PREFIX (admissible), b = the same fixture with structure.relations.hierarchy.derivedBy.levels reordered to [state, country], outcome illegal with REL_GRAIN_SUBTOTAL_MISMATCH. Only the order moves and the declared toGrain: [country] subtotal stops being a declared prefix, so the judgment follows mechanically from CASE_NESTED_SUBTOTALS_OFF_GRAIN -- an existing cause -- and nothing was authored to reach a verdict. checkWitness ACCEPTS the single-coordinate witness; a variant predicting admissible is refused SAME_OUTCOME, which is the control that the acceptance is about the cause and not the shape. The verdict is witnessed, the unadjudicated count falls 79 -> 78, and because the coordinate is now PRIMITIVE, eight closures carry obligation 8's composite diagnosis instead of an outstanding one (the two additivity plus aggregate-to-grain~nest, join~nest, nest~bin, nest~graph, nest~normalize, nest~project). Non-claim: a witnessed verdict establishes that the declared SEQUENCE of nest levels is necessary, not that the field is a primitive analytical axis; and the remaining fifteen keystone facets are untouched -- each needs the same per-facet treatment or a corpus case."
+    recorded_at: "2026-09-15T06:22:18.624Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/closure.test.ts > what actually blocks the closures, decomposed by coordinate kind > names the reference-topology facets as the keystone, and separates them from the candidates that block nothing"
+    command: pnpm exec vitest run packages/ds-codegen/src/analytical
+    exit_code: 0
+    artifact_path: packages/ds-contracts/analytical-fixtures/witnesses.json
+    commit_sha: "2cc24a7e"
