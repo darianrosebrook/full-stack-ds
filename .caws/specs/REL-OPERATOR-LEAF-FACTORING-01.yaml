@@ -2,9 +2,11 @@ id: REL-OPERATOR-LEAF-FACTORING-01
 title: 'Adjudicate the operator and cardinality enum leaves as required derived vocabulary'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Invariant 17''s factoring measured and recorded for relation.derivedBy.kind and relation.derivedBy.join.cardinality as required-derived-vocabulary, answering the operator discriminator''s open question and moving the closure gate to 23 unsettled dependencies.'
 created_at: '2026-09-15T06:03:09.866Z'
-updated_at: '2026-09-15T06:03:10.787Z'
+updated_at: '2026-09-15T06:07:28.452Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
