@@ -30,3 +30,13 @@ contracts:
   - name: 'enum-factoring'
     type: contract-test
     path: 'packages/ds-contracts/analytical-fixtures/witnesses.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Factoring recorded in packages/ds-contracts/analytical-fixtures/subtraction-stage2-enum-leaf.json: field.temporality.kind is required-derived-vocabulary, derivable from its k=2 member pair, which is the ONE primitive coordinate carrying that distinction; necessity.ts accounts it via the retained mode without ratifying it. Every evidence-machinery invariant holds for the survivor: pnpm exec vitest run packages/ds-codegen/src/analytical = 786/786 (19 files), including C2 (awaiting == failing witnesses, now 2), C4b, C4c and coverage. Non-claim: stage-2's own ledger (subtraction-stage2.json) still records the leaf unresolved -- the factoring is carried by this spec's basis, not by amending a ledger another spec owns, and no stage-2 verdict moved."
+    recorded_at: "2026-09-15T04:28:06.936Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/necessity.test.ts > C2 — every witness holds, or is held open for adjudication > accounts a retained coordinate without ratifying it"
+    command: pnpm exec vitest run packages/ds-codegen/src/analytical
+    exit_code: 0
+    artifact_path: packages/ds-contracts/analytical-fixtures/subtraction-stage2-enum-leaf.json
+    commit_sha: "515896c0"
