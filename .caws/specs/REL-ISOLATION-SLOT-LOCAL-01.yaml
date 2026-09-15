@@ -3,7 +3,6 @@ title: 'Extend the isolation exemption to any erasure confined to the coordinate
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: slot-local
 created_at: '2026-09-15T05:42:27.619Z'
 updated_at: '2026-09-15T05:42:28.669Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
