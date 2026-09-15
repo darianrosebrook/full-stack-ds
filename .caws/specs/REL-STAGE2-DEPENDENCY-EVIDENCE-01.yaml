@@ -2,9 +2,10 @@ id: REL-STAGE2-DEPENDENCY-EVIDENCE-01
 title: 'Pin the measured reason the closure dependencies are unresolved: no discriminating pair exists'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: dependency-evidence
 created_at: '2026-09-15T04:58:45.950Z'
-updated_at: '2026-09-15T04:58:45.950Z'
+updated_at: '2026-09-15T04:58:52.217Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
