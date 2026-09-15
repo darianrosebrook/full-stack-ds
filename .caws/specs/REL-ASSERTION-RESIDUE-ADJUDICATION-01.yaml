@@ -1,0 +1,33 @@
+id: REL-ASSERTION-RESIDUE-ADJUDICATION-01
+title: 'Discharge the assertion branch-residue: measure it, correct the ledger, name the instrument limit'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T04:50:01.571Z'
+updated_at: '2026-09-15T04:50:01.571Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-contracts/analytical-fixtures/codomain-adjudications.json (the two assertion branch-residue entries)'
+    - 'packages/ds-codegen/src/analytical/closure.test.ts (pin the measured obligation state)'
+    - 'docs/architecture/analytical-relation-doctrine.md (the proof-instrument cost)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+  out: []
+invariants:
+  - 'A governed ledger records the state the instrument currently measures; a blocker that is a limit of the checker is corrected when the checker stops having it, and a limit that is structural is named as such rather than left as a blocker.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the codomain adjudication ledger records two blockers on promoting assertion.kind:aggregate~ratio-comparison, one being that the checker cannot evaluate obligation 3 for an assertion holder; when the carrier is evaluated by the current checker; then the ledger records the measured obligation state instead of that stale limit, the doctrine names the proof-instrument cost that remains, and a test pins obligations 1-6 held, obligation 7 unsatisfiable by construction and obligation 8 failing on a primitive footprint'
+non_functional: {}
+contracts:
+  - name: 'codomain-adjudications'
+    type: contract-test
+    path: 'packages/ds-contracts/analytical-fixtures/codomain-adjudications.json'
