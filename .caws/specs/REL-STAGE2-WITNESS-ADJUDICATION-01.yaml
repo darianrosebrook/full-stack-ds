@@ -2,9 +2,11 @@ id: REL-STAGE2-WITNESS-ADJUDICATION-01
 title: 'Adjudicate the ten stage-2 candidates the corpus already discriminates'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Six stage-2 candidates adjudicated witnessed from pairs the corpus already licenses, after checkWitness and the footprint audit refused the four whose pairs are not witnesses for the coordinate they name; unadjudicated 89 to 83.'
 created_at: '2026-09-15T05:18:09.904Z'
-updated_at: '2026-09-15T05:18:10.992Z'
+updated_at: '2026-09-15T05:25:11.773Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
