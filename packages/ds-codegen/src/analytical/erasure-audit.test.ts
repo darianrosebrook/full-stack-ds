@@ -15,6 +15,8 @@ import { CONTRACTS_DIR } from "./emit-schemas.js";
 import { checkReport, claimedFootprints, computeReport, gateProblems, languageReports, loadReport, measure, REPORT_AUTHORITIES, REPORT_INPUTS, specimens, type FootprintReport } from "./erasure-audit.js";
 import { executePlan, planAt, wouldChange } from "./erasure-plan.js";
 import { loadCodomainAdjudications, loadOracle } from "./necessity.js";
+import { canonical } from "./quotient.js";
+import { loadSubtraction } from "./subtraction.js";
 import { forgotten, loadQuotientValidator } from "./quotient-image.js";
 
 const recorded = loadReport();
@@ -767,4 +769,95 @@ describe("the terminal invariant is measured over the population the report name
     // ...and only the image is not.
     expect(quotient(executePlan(valid, plan)).length, "the faulty plan must actually damage this specimen").toBeGreaterThan(0);
   });
+});
+
+describe("the specimen population shares ids, so a sweep must bind outcomes by CONTENT", () => {
+  // `separatingPairs` clones a base fixture and keeps ITS id, and `specimens()` then dedupes by
+  // CONTENT -- so the population deliberately holds several fixtures per id. An outcome resolved
+  // by id is therefore the BASE's answer applied to content that answer was never about. No
+  // production module does that: all four `outcomeOf` call sites outside tests are corpus-keyed
+  // (`resolveSide`, `groundedVocabulary`, `final-quotient`, `stimulus`). An ad-hoc sweep that
+  // iterates the population and resolves by id will over-report, which one did.
+  const hasOutcome = (f: { id: string }, oracle: ReturnType<typeof loadOracle>) => oracle.outcomeOf(f.id) !== undefined;
+  const contentMatches = (f: { id: string }, oracle: ReturnType<typeof loadOracle>) => {
+    const base = oracle.fixtures.get(f.id);
+    return base !== undefined && canonical(base) === canonical(f as never);
+  };
+  /** An outcome that is genuinely about THIS fixture's content: both halves are required. */
+  const isBound = (f: { id: string }, oracle: ReturnType<typeof loadOracle>) => hasOutcome(f, oracle) && contentMatches(f, oracle);
+
+  it("holds 25 ids more than once, every one of them with distinct contents", () => {
+    const s = specimens();
+    const byId = new Map<string, Set<string>>();
+    for (const f of s.fixtures) {
+      const set = byId.get(f.id) ?? new Set<string>();
+      set.add(canonical(f));
+      byId.set(f.id, set);
+    }
+    const shared = [...byId].filter(([, cs]) => cs.size > 1);
+    expect(s.fixtures.length).toBe(210);
+    expect(byId.size).toBe(106);
+    expect(shared.length).toBe(25);
+    // Not one of them is a benign repeat: every shared id carries two or more DIFFERENT fixtures.
+    expect(shared.every(([, cs]) => cs.size > 1)).toBe(true);
+    expect(Math.max(...shared.map(([, cs]) => cs.size))).toBe(31);
+    expect(shared.map(([id]) => id)).toContain("FX_SURVEY_MEAN_SATISFACTION");
+  });
+
+  it("and an id-resolving sweep claims 175 bound specimens where content says 79", () => {
+    const s = specimens();
+    const oracle = loadOracle();
+    expect(s.fixtures.filter((f) => hasOutcome(f, oracle)).length).toBe(175);
+    expect(s.fixtures.filter((f) => contentMatches(f, oracle)).length).toBe(90);
+    expect(s.fixtures.filter((f) => isBound(f, oracle)).length).toBe(79);
+    // The difference is the mis-attribution: 96 specimens have an outcome BY ID that is not
+    // about their content, and a witnessability sweep counts those as discriminating pairs.
+    expect(s.fixtures.filter((f) => hasOutcome(f, oracle) && !contentMatches(f, oracle)).length).toBe(96);
+  });
+
+  it("reduces the discriminating set to ONE, and that one is not a witness for presence either", () => {
+    // Restricting to content-bound specimens can only REMOVE pairs, never add one, so this is
+    // the corrected reading rather than a narrower window. The id-resolving version reported two.
+    const doc = loadSubtraction();
+    const unresolved = doc.basis.candidates.filter((id) => (doc.verdicts[id]?.disposition ?? "unresolved") === "unresolved");
+    expect(unresolved.length).toBe(81);
+
+    const s = specimens();
+    const oracle = loadOracle();
+    const plans = loadPlans();
+    const boundIdx = s.fixtures.map((f, i) => (isBound(f, oracle) ? i : -1)).filter((i) => i >= 0);
+    const baseline = s.fixtures.map(canonical);
+    const outcomeOf = (i: number) => oracle.outcomeOf(s.fixtures[i]!.id)?.outcome;
+    const outcomeDiffers = (a: ReturnType<typeof outcomeOf>, b: ReturnType<typeof outcomeOf>) =>
+      a !== undefined && b !== undefined && (a.status !== b.status || JSON.stringify(a.codes) !== JSON.stringify(b.codes) || JSON.stringify(a.terms) !== JSON.stringify(b.terms));
+
+    const witnessable: string[] = [];
+    const varying: string[] = [];
+    for (const id of unresolved) {
+      const plan = plans.get(id);
+      if (!plan) continue;
+      const sig = new Map<number, string>();
+      for (const i of boundIdx) sig.set(i, wouldChange(s.fixtures[i]!, plan) ? canonical(executePlan(s.fixtures[i]!, plan)) : baseline[i]!);
+      const blocks = new Map<string, number[]>();
+      for (const [i, x] of sig) blocks.set(x, [...(blocks.get(x) ?? []), i]);
+      const hits: [number, number][] = [];
+      for (const idx of blocks.values())
+        for (let x = 0; x < idx.length; x++)
+          for (let y = x + 1; y < idx.length; y++)
+            if (baseline[idx[x]!] !== baseline[idx[y]!] && outcomeDiffers(outcomeOf(idx[x]!), outcomeOf(idx[y]!))) hits.push([idx[x]!, idx[y]!]);
+      if (hits.length > 0) witnessable.push(id);
+      // The extra question a `#present` coordinate needs: does any discriminating pair actually
+      // VARY the holder? Erasing presence leaves a holder-less fixture untouched, so a pair that
+      // collides on it must be one fixture plus the holder -- and if both sides carry it, the
+      // collision came from the content the erasure destroyed, not from presence.
+      const holder = plan.locator.path.split(".").pop();
+      const carries = (i: number) => JSON.stringify(s.fixtures[i]).includes(`"${holder}"`);
+      if (hits.some(([i, j]) => carries(i) !== carries(j))) varying.push(id);
+    }
+    expect(witnessable).toEqual(["evidence.rows.*#present"]);
+    // ...and it fails the presence test, so NO unresolved candidate is blocked by the instrument
+    // or by a badly chosen pair. The remaining work is corpus coverage, and a new case that makes
+    // one of these discriminating will fail this assertion rather than pass quietly.
+    expect(varying).toEqual([]);
+  }, 120_000);
 });
