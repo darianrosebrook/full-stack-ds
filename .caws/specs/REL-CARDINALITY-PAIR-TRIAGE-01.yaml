@@ -1,0 +1,33 @@
+id: REL-CARDINALITY-PAIR-TRIAGE-01
+title: 'Triage the six join-cardinality member pairs: one authored witness, five measured refusals, and the policy question the refusals raise'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T07:55:48.873Z'
+updated_at: '2026-09-15T07:55:48.873Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-contracts/analytical-fixtures/witnesses.json + subtraction-stage2.json (the cardinality witness and its verdict)'
+    - 'the three re-recorded ledgers'
+    - 'docs/current-implementation-snapshot.md (the cardinality family triage and the policy question)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the six join-cardinality member pairs stand unresolved with no separating corpus pair; when each is tested against an authored {base, patch} pair differing at exactly the cardinality tag; then the pair whose two sides are both corpus-licensed carries a holding witness, and each refused pair is recorded with the measured reason it is refused so the family is triaged rather than left as a backlog'
+non_functional: {}
+contracts:
+  - name: 'cardinality-pairs'
+    type: contract-test
+    path: 'packages/ds-contracts/analytical-fixtures/witnesses.json'
