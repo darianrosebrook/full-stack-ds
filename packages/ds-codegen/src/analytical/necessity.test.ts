@@ -1478,7 +1478,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // obligations 3-6), which puts both carriers and the two `#incidence` coordinates their
     // normalizations forget into the closure-accounted class. Accounted is not ratified, and
     // the assertion below is what keeps the two apart.
-    expect(byClass).toEqual({ primitive: 52, "closure-accounted": 15, "required-derived-vocabulary": 3, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 53, "closure-accounted": 15, "required-derived-vocabulary": 3, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -1611,6 +1611,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "relation.derivedBy.kind",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
+      "relation.derivedBy.nest.levels#order",
       "relation.derivedBy.normalize.field#incidence",
     ]);
     expect(r.suspended).toEqual(["assertion.kind", "assertion.kind:aggregate~ratio-comparison"]);
@@ -1651,6 +1652,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "relation.derivedBy.kind",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
+      "relation.derivedBy.nest.levels#order",
       "relation.derivedBy.normalize.field#incidence",
     ]);
     // And the historical dispositions are the same numbers as before.

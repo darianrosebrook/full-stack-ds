@@ -148,8 +148,14 @@ describe("the committed closure ledger", () => {
     // settled because REL-OPERATOR-LEAF-FACTORING-01 retained it as required derived vocabulary,
     // and the other twenty are unresolved. None is primitive -- which is the standing the closure
     // form is forbidden to confer.
-    expect(derivation.filter((d) => d.standing.state !== "unresolved").map((d) => d.coordinate)).toEqual(["relation.derivedBy.join.cardinality"]);
-    expect(derivation.filter((d) => d.standing.state === "primitive")).toEqual([]);
+    expect(derivation.filter((d) => d.standing.state !== "unresolved").map((d) => d.coordinate)).toEqual([
+      "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.nest.levels#order",
+    ]);
+    // And one IS primitive: REL-TOPOLOGY-AUTHORED-STIMULUS-01 witnessed the nest-levels ORDER, so
+    // the closures whose footprints contain it now carry the composite diagnosis rather than an
+    // outstanding one. That reading is obligation 8's, and asserting it here keeps it visible.
+    expect(derivation.filter((d) => d.standing.state === "primitive").map((d) => d.coordinate)).toEqual(["relation.derivedBy.nest.levels#order"]);
   });
 
   it("has no dependency cycle, so no carrier's normalization depends back on it", () => {
@@ -188,18 +194,36 @@ describe("adopting the closure form confers no standing", () => {
     for (const { ledger: l } of basesForSpec("REL-VIEW-ALGEBRA-01")) {
       for (const id of l.basis.candidates) recorded.set(id, l.verdicts[id]?.disposition ?? "unresolved");
     }
+    const holdingWitnesses = loadWitnesses().witnesses.filter((w) => checkWitness(w, census, oracle).ok);
     const r = checkClosures();
     for (const { coordinate, standing: s } of r.dependencies.filter((d) => d.coordinate.startsWith("relation.derivedBy."))) {
       const verdict = recorded.get(coordinate) ?? "unresolved";
-      if (verdict === "unresolved") expect(s.state, `${coordinate} must not gain standing by appearing in a closure`).toBe("unresolved");
+      // Standing tracks the WITNESSES and the BASIS VERDICTS, in that order, and never the
+      // closure: a holding single-coordinate witness ratifies, a recorded verdict resolves, and
+      // nothing else reaches this index.
+      if (primitiveRatified(holdingWitnesses).has(coordinate)) expect(s.state, `${coordinate} must read its witness, not the closure`).toBe("primitive");
+      else if (verdict === "unresolved") expect(s.state, `${coordinate} must not gain standing by appearing in a closure`).toBe("unresolved");
       else expect(s, `${coordinate} must read its own basis verdict, not the closure`).toEqual({ state: "resolved", disposition: verdict });
     }
     const primitiveDeps = r.dependencies.filter((d) => d.standing.state === "primitive");
-    expect(primitiveDeps.map((d) => d.coordinate)).toEqual(["field.additivity.semi-additive.nonAdditiveAlong#incidence"]);
+    // Two now, and both for the same reason: a holding single-coordinate witness ratifies them.
+    expect(primitiveDeps.map((d) => d.coordinate)).toEqual([
+      "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+      "relation.derivedBy.nest.levels#order",
+    ]);
     const affected = r.checks.filter((c) => c.obligations.find((o) => o.id.startsWith("8-"))!.detail.includes("PRIMITIVE"));
+    // Eight, not two: witnessing the nest-levels ORDER puts it in six more footprints, so those
+    // closures now carry obligation 8's composite diagnosis instead of an outstanding one. The
+    // additivity pair was already there for the same reason.
     expect(affected.map((c) => c.carrier).sort()).toEqual([
       "field.additivity.kind:additive~semi-additive",
       "field.additivity.kind:semi-additive~ratio-measure",
+      "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "relation.derivedBy.kind:join~nest",
+      "relation.derivedBy.kind:nest~bin",
+      "relation.derivedBy.kind:nest~graph",
+      "relation.derivedBy.kind:nest~normalize",
+      "relation.derivedBy.kind:nest~project",
     ]);
     for (const c of affected) expect(c.rereadIf).toContain("COMPOSITE CONSTRUCTOR");
   });
@@ -756,13 +780,16 @@ describe("the unresolved dependencies are blocked by EVIDENCE, not by an undecid
   // deciding them by convenience, which is the one thing the standing index exists to prevent.
   const openDeps = () => checkClosures().dependencies.filter((d) => d.standing.state !== "resolved");
 
-  it("names the one dependency that IS decided, and it is decided AGAINST the closure", () => {
+  it("names the dependencies that ARE decided, and both are decided AGAINST their closures", () => {
     // A stage-1 re-earning ratified this one (`removals.json` leafMap maps the removed
     // `nonAdditiveAlong` leaf onto `nonAdditiveAlong#incidence`), so the two additivity
     // closures cannot prove their carrier primitive at all: constructor and payload are
     // composite under this encoding. That is a verdict, not an outstanding adjudication.
     const primitive = openDeps().filter((d) => d.standing.state === "primitive").map((d) => d.coordinate);
-    expect(primitive).toEqual(["field.additivity.semi-additive.nonAdditiveAlong#incidence"]);
+    expect(primitive).toEqual([
+      "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+      "relation.derivedBy.nest.levels#order",
+    ]);
   });
 
   it("finds no oracle-separated pair for any other dependency, so no witness is constructible", () => {
@@ -1146,8 +1173,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(79);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 35, "member-absence": 8, leaf: 5, "member-pair": 31 });
+    expect(unresolved.length).toBe(78);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 34, "member-absence": 8, leaf: 5, "member-pair": 31 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
@@ -1167,8 +1194,11 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // And only 16 of the 35 topology facets block anything at all: the other 19, and all 38
     // non-topology candidates, are a separate obligation that no carrier is waiting on.
     const topology = unresolved.filter((id) => kindOf(id) === "reference-topology");
-    expect(topology.length).toBe(35);
-    expect(topology.filter((id) => dependents.has(id)).length).toBe(16);
+    expect(topology.length).toBe(34);
+    // Fifteen, not sixteen: the sixteenth is `relation.derivedBy.nest.levels#order`, which this
+    // slice witnessed, so it is no longer unresolved and no longer counted here -- while the
+    // closures that depended on it still depend on a PRIMITIVE coordinate and stay blocked.
+    expect(topology.filter((id) => dependents.has(id)).length).toBe(15);
     expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(57);
   });
 });
