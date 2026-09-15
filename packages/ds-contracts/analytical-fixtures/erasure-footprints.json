@@ -2,7 +2,7 @@
   "$comment": "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
-    "witnesses.json": "25e99dc9d6a077a736de6c566484991f12984e96f7ed9de29122c11da7bca75a",
+    "witnesses.json": "885139f3f1634319fad1f31406da8d9bdd19a8b6ff4942c4a5ded4bd825c25f4",
     "closures-stage2.json": "5f71c52a9b48cd12dce273777bd7009591e9172e88209cee3e989f3c80d5f16a"
   },
   "authority": {
@@ -16,10 +16,10 @@
   "quotientSchemaVersion": 1,
   "specimens": {
     "corpus": 90,
-    "stimuli": 33,
-    "synthesized": 89,
+    "stimuli": 34,
+    "synthesized": 88,
     "total": 212,
-    "populationDigest": "5e867801c68201aebb7cc989994b3d9bee2b1d5d84cc1d8586c4596644673626"
+    "populationDigest": "3e9614cc73d35f4d6df2f29a3841fddd32d44be264d7a2493c248a824a86a438"
   },
   "unbuilt": [
     {
@@ -154,73 +154,73 @@
   "sourceLanguageDeparture": [
     {
       "coordinate": "assertion.kind",
-      "specimens": 123,
+      "specimens": 124,
       "error": "/assertions/0/kind must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.kind:aggregate~ratio-comparison",
-      "specimens": 123,
+      "specimens": 124,
       "error": "/assertions/0/kind must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation",
-      "specimens": 123,
+      "specimens": 124,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~ratio",
-      "specimens": 123,
+      "specimens": 124,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "relation.grain",
-      "specimens": 123,
+      "specimens": 124,
       "error": "/structure/relations/survey/grain must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~interval",
-      "specimens": 122,
+      "specimens": 123,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~ordinal",
-      "specimens": 122,
+      "specimens": 123,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.aggregate.op",
-      "specimens": 121,
+      "specimens": 122,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:interval~ratio",
-      "specimens": 114,
+      "specimens": 115,
       "error": "/structure/relations/readings/fields/temp/transformation must be string",
       "specimen": "FX_TEMP_RATIO_COMPARISON"
     },
     {
       "coordinate": "field.transformation:ordinal~ratio",
-      "specimens": 113,
+      "specimens": 114,
       "error": "/structure/relations/survey/fields/satisfaction/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.aggregate.op:sum~min",
-      "specimens": 96,
+      "specimens": 97,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_TEMP_SUM"
     },
     {
       "coordinate": "assertion.aggregate.op:sum~mean",
-      "specimens": 75,
+      "specimens": 76,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
@@ -232,7 +232,7 @@
     },
     {
       "coordinate": "assertion.aggregate.op:sum~count",
-      "specimens": 59,
+      "specimens": 60,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_TEMP_SUM"
     },
@@ -534,12 +534,12 @@
   "quotientLanguageInvalid": [],
   "scopes": {
     "sourceLanguageDeparture": {
-      "specimens": 123,
-      "populationDigest": "568cfeefc110608923e58482b12101385db5859901e4563fc200703ce3ec9353"
+      "specimens": 124,
+      "populationDigest": "430735856bb1d1221ad045c1458bdd97587abd48e092ae0dfa727e7768445cb8"
     },
     "quotientLanguageInvalid": {
       "specimens": 212,
-      "populationDigest": "5e867801c68201aebb7cc989994b3d9bee2b1d5d84cc1d8586c4596644673626"
+      "populationDigest": "3e9614cc73d35f4d6df2f29a3841fddd32d44be264d7a2493c248a824a86a438"
     }
   },
   "footprints": {
@@ -1518,6 +1518,21 @@
       ],
       "actual": [
         "evidence.grainWitness#arity"
+      ],
+      "collateral": [],
+      "sibling": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "evidence.grainWitness#incidence",
+      "declared": [
+        "evidence.grainWitness#incidence"
+      ],
+      "actual": [
+        "evidence.grainWitness#incidence"
       ],
       "collateral": [],
       "sibling": [],

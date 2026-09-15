@@ -3,18 +3,366 @@
   "witnesses": [
     {
       "coordinates": [
-        "relation.grain"
+        "assertion.aggregate.along#incidence"
       ],
       "a": {
-        "fixture": "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN"
+        "fixture": "FX_STOCK_SUM_ALONG_DATE"
       },
       "b": {
-        "base": "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN",
+        "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT"
+      },
+      "note": "same arity, same order, different MEETING with the measure's nonAdditiveAlong set: no renaming makes these equal"
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.along#present"
+      ],
+      "a": {
+        "fixture": "FX_STOCK_SUM_ALONG_DATE"
+      },
+      "b": {
+        "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT"
+      },
+      "note": "STAGE-2 necessity for assertion.aggregate.along#present: separates whether the aggregate names a dimension at all. Both sides are already-existing fixtures -- CASE_INVENTORY_SUMMED_OVER_TIME against its near-neighbour FX_N_STOCK_SUM_ALONG_PRODUCT -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.field#incidence"
+      ],
+      "a": {
+        "fixture": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+      },
+      "b": {
+        "fixture": "FX_N_LINE_QTY_SUMMED_AFTER_JOIN"
+      },
+      "note": "STAGE-2 necessity for assertion.aggregate.field#incidence: separates whether the summed field co-refers with the joined key. Both sides are already-existing fixtures -- CASE_REVENUE_DOUBLE_COUNTED_AFTER_JOIN against its near-neighbour FX_N_LINE_QTY_SUMMED_AFTER_JOIN -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls"
+      ],
+      "a": {
+        "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+      },
+      "b": {
+        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls"
+      ],
+      "a": {
+        "fixture": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS"
+      },
+      "b": {
+        "base": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS",
         "patch": [
           {
-            "set": "structure.relations.orders.grain",
+            "set": "assertions.0.nulls",
+            "value": "exclude"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "null:missing-mechanism is the obligation to declare a handling for permitted missing values; exclusion declares one and coerces nothing (schema-class twin of the rows witness above)"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls:as-zero~as-observed"
+      ],
+      "a": {
+        "fixture": "FX_T_SUPPRESSED_ROWS_AS_ZERO"
+      },
+      "b": {
+        "base": "FX_T_SUPPRESSED_ROWS_AS_ZERO",
+        "patch": [
+          {
+            "set": "assertions.0.nulls",
+            "value": "as-observed"
+          }
+        ],
+        "outcome": {
+          "status": "unproven",
+          "codes": [],
+          "terms": [
+            "null:missing-mechanism"
+          ]
+        },
+        "cause": "an absent value has nothing to observe; the mechanism that produced the gap is still undeclared, so null:missing-mechanism stands (REL_NULL_SUPPRESSED_AS_ZERO names the collapse to zero specifically)"
+      },
+      "note": "instance-class witness: the distinction is visible only with rows (invariant 9)"
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls:exclude~<absent>"
+      ],
+      "a": {
+        "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+      },
+      "b": {
+        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+      },
+      "note": "STAGE-2 necessity for assertion.aggregate.nulls:exclude~<absent>: separates whether a null policy is declared versus absent. Both sides are already-existing fixtures -- CASE_CENSORED_VALUES_IN_A_MEAN against its near-neighbour FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls:exclude~as-observed"
+      ],
+      "a": {
+        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+      },
+      "b": {
+        "base": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED",
+        "patch": [
+          {
+            "set": "assertions.0.nulls",
+            "value": "as-observed"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_NULL_CENSORED_AS_OBSERVED"
+          ],
+          "terms": []
+        },
+        "cause": "REL_NULL_CENSORED_AS_OBSERVED: a censored value is a bound, not a measurement"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.nulls:exclude~as-zero"
+      ],
+      "a": {
+        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+      },
+      "b": {
+        "base": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED",
+        "patch": [
+          {
+            "set": "assertions.0.nulls",
+            "value": "as-zero"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_NULL_CENSORED_AS_OBSERVED"
+          ],
+          "terms": []
+        },
+        "cause": "REL_NULL_CENSORED_AS_OBSERVED: a censored value is a bound, not a measurement; coercing it to zero measures it"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op"
+      ],
+      "a": {
+        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+      },
+      "b": {
+        "fixture": "FX_N_ORDINAL_MAX"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:count~min"
+      ],
+      "a": {
+        "fixture": "FX_N_USER_ID_COUNT"
+      },
+      "b": {
+        "base": "FX_N_USER_ID_COUNT",
+        "patch": [
+          {
+            "set": "assertions.0.op",
+            "value": "min"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_IDENTITY_AGGREGATED"
+          ],
+          "terms": []
+        },
+        "cause": "REL_IDENTITY_AGGREGATED: a key is not a quantity; counting rows by key is the one aggregate that reads no key value (neighbour of the cause)"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:mean~count"
+      ],
+      "a": {
+        "fixture": "FX_LOGIN_HOUR_MEAN"
+      },
+      "b": {
+        "fixture": "FX_N_LOGIN_HOUR_COUNT"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:mean~min"
+      ],
+      "a": {
+        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+      },
+      "b": {
+        "fixture": "FX_N_ORDINAL_MAX"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:sum~count"
+      ],
+      "a": {
+        "fixture": "FX_USER_ID_SUM"
+      },
+      "b": {
+        "fixture": "FX_N_USER_ID_COUNT"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:sum~mean"
+      ],
+      "a": {
+        "fixture": "FX_TEMP_SUM"
+      },
+      "b": {
+        "fixture": "FX_N_TEMP_MEAN"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.op:sum~min"
+      ],
+      "a": {
+        "fixture": "FX_TEMP_SUM"
+      },
+      "b": {
+        "base": "FX_TEMP_SUM",
+        "patch": [
+          {
+            "set": "assertions.0.op",
+            "value": "min"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_MEANINGFULNESS_INTERVAL_SUM names the sum; an order statistic is invariant under the affine transformations an interval scale admits"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.aggregate.uncertainty"
+      ],
+      "a": {
+        "fixture": "FX_MASS_SUM_UNHANDLED_ERROR"
+      },
+      "b": {
+        "fixture": "FX_N_MASS_SUM_PROPAGATE"
+      }
+    },
+    {
+      "coordinates": [
+        "assertion.kind",
+        "assertion.aggregate.op"
+      ],
+      "a": {
+        "fixture": "FX_TEMP_RATIO_COMPARISON"
+      },
+      "b": {
+        "fixture": "FX_N_TEMP_MEAN"
+      },
+      "note": "a ratio comparison carries no op; kind and op together separate it from an aggregate mean"
+    },
+    {
+      "coordinates": [
+        "assertion.kind:aggregate~ratio-comparison",
+        "assertion.aggregate.op"
+      ],
+      "a": {
+        "fixture": "FX_TEMP_RATIO_COMPARISON"
+      },
+      "b": {
+        "fixture": "FX_N_TEMP_MEAN"
+      }
+    },
+    {
+      "coordinates": [
+        "evidence.grainWitness#arity"
+      ],
+      "a": {
+        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+        "patch": [
+          {
+            "set": "evidence.rows.orders",
+            "value": [
+              {
+                "order_id": "o1",
+                "amount": 10
+              },
+              {
+                "order_id": "o1",
+                "amount": 25
+              },
+              {
+                "order_id": "o2",
+                "amount": 7
+              }
+            ]
+          },
+          {
+            "set": "evidence.grainWitness.orders",
             "value": [
               "order_id"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_GRAIN_FANOUT"
+          ],
+          "terms": []
+        },
+        "cause": "The corpus's own hostile side for `grain:declared` (REL_GRAIN_FANOUT): an undeclared-grain relation whose rows repeat on the columns its witness names does not hold one row per unit, so the sum is taken at the wrong grain. The witness names one column and the rows repeat on it."
+      },
+      "b": {
+        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+        "patch": [
+          {
+            "set": "evidence.rows.orders",
+            "value": [
+              {
+                "order_id": "o1",
+                "amount": 10
+              },
+              {
+                "order_id": "o1",
+                "amount": 25
+              },
+              {
+                "order_id": "o2",
+                "amount": 7
+              }
+            ]
+          },
+          {
+            "set": "evidence.grainWitness.orders",
+            "value": [
+              "order_id",
+              "amount"
             ]
           }
         ],
@@ -23,44 +371,77 @@
           "codes": [],
           "terms": []
         },
-        "cause": "doctrine L1: grain unknown makes grain-dependent judgments unproven with grain:declared; a declared grain discharges it (triad grain:declared)"
-      }
+        "cause": "The corpus's own satisfying side for `grain:declared`: the witness names both columns and no row repeats on the PAIR, so the relation does hold one row per unit and the aggregate has the grain its witness declares."
+      },
+      "note": "STAGE-2 necessity for evidence.grainWitness#arity: separates how many columns the witness names. Both sides write the same instance rows (three orders, one of them repeated on `order_id` alone) and differ at exactly the witness array, so the pair's whole difference is its arity; the arity erasure truncates to the declared floor of one and returns the b-side to the a-side shape. NON-CLAIM: the rows are WRITTEN IDENTICALLY ON BOTH SIDES because the committed rows cannot express the distinction -- FX_T_GRAIN_WITNESS_DUPLICATE_ROWS repeats rows that are identical on every column, and FX_T_GRAIN_WITNESS_UNIQUE_ROWS repeats nothing -- so this pair carries a shared setup rather than a shared shape. A pair whose sides needed DIFFERENT rows would be evidence about two datasets, not about this coordinate."
     },
     {
       "coordinates": [
-        "field.transformation"
+        "evidence.grainWitness#incidence"
       ],
       "a": {
-        "fixture": "FX_REGION_MAX"
+        "fixture": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS"
       },
       "b": {
-        "fixture": "FX_N_ORDINAL_MAX"
-      }
-    },
-    {
-      "coordinates": [
-        "field.transformation:nominal~ordinal"
-      ],
-      "a": {
-        "fixture": "FX_REGION_MAX"
-      },
-      "b": {
-        "fixture": "FX_N_ORDINAL_MAX"
-      }
-    },
-    {
-      "coordinates": [
-        "field.transformation:nominal~interval"
-      ],
-      "a": {
-        "fixture": "FX_REGION_MAX"
-      },
-      "b": {
-        "base": "FX_REGION_MAX",
+        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
         "patch": [
           {
-            "set": "structure.relations.sites.fields.region.transformation",
-            "value": "interval"
+            "set": "evidence.grainWitness.orders",
+            "value": [
+              "orders"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_GRAIN_FANOUT"
+          ],
+          "terms": []
+        },
+        "cause": "The declared witness column stops being unique: the corpus cause `REL_GRAIN_FANOUT` is raised with INSTANCE evidence when the aggregate's witness column repeats across rows (engines.ts:189, `hasDuplicates(rows, witness)`), so the fixture that was admissible with a unique witness becomes illegal with a fanning one. The judgment follows from an already-existing cause and from instance evidence the fixture already carries -- nothing about the structure moves."
+      },
+      "note": "STAGE-2 necessity for evidence.grainWitness#incidence: separates WHICH column is declared as the grain witness at all. The a-side is the committed fixture with a unique witness column; the b-side is the same declaration whose witness column repeats across rows, so the corpus's fan-out cause (REL_GRAIN_FANOUT, instance evidence, engines.ts:189) turns an admissible judgment illegal. One authored path, because the corpus carries the near-neighbour shape but not the pair."
+    },
+    {
+      "coordinates": [
+        "evidence.grainWitness#present"
+      ],
+      "a": {
+        "fixture": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS"
+      },
+      "b": {
+        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+        "patch": [
+          {
+            "delete": "evidence.grainWitness"
+          }
+        ],
+        "outcome": {
+          "status": "unproven",
+          "codes": [],
+          "terms": [
+            "grain:declared"
+          ]
+        },
+        "cause": "rows without a declared witness declare no grain; grain:declared stands (triad grain:declared, absent)"
+      }
+    },
+    {
+      "coordinates": [
+        "field.additivity.kind"
+      ],
+      "a": {
+        "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
+      },
+      "b": {
+        "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
+        "patch": [
+          {
+            "set": "structure.relations.regions.fields.gdp_per_capita.additivity",
+            "value": {
+              "kind": "additive"
+            }
           }
         ],
         "outcome": {
@@ -68,22 +449,36 @@
           "codes": [],
           "terms": []
         },
-        "cause": "REL_MEANINGFULNESS_NOMINAL_ORDER_STAT: an order statistic needs an order the scale does not have; an interval scale has one"
+        "cause": "REL_RATIO_MEASURE_AVERAGED names a rate; an additive measure combined by mean exhibits no catalogue cause"
       }
     },
     {
       "coordinates": [
-        "field.transformation:nominal~ratio"
+        "field.additivity.kind:additive~non-additive"
       ],
       "a": {
-        "fixture": "FX_REGION_MAX"
+        "fixture": "FX_SHARE_OF_AVERAGE_SCORE"
       },
       "b": {
-        "base": "FX_REGION_MAX",
+        "fixture": "FX_N_SHARE_OF_ADDITIVE_TOTAL"
+      },
+      "note": "STAGE-2 necessity for field.additivity.kind:additive~non-additive: separates additive against non-additive. Both sides are already-existing fixtures -- CASE_NORMALIZED_AVERAGES against its near-neighbour FX_N_SHARE_OF_ADDITIVE_TOTAL -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "field.additivity.kind:additive~ratio-measure"
+      ],
+      "a": {
+        "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
+      },
+      "b": {
+        "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
         "patch": [
           {
-            "set": "structure.relations.sites.fields.region.transformation",
-            "value": "ratio"
+            "set": "structure.relations.regions.fields.gdp_per_capita.additivity",
+            "value": {
+              "kind": "additive"
+            }
           }
         ],
         "outcome": {
@@ -91,40 +486,72 @@
           "codes": [],
           "terms": []
         },
-        "cause": "REL_MEANINGFULNESS_NOMINAL_ORDER_STAT: an order statistic needs an order the scale does not have; a ratio scale has one"
+        "cause": "REL_RATIO_MEASURE_AVERAGED names a rate; an additive measure combined by mean exhibits no catalogue cause"
       }
     },
     {
       "coordinates": [
-        "field.transformation:ordinal~interval"
+        "field.additivity.semi-additive.nonAdditiveAlong#arity"
       ],
       "a": {
-        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+        "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT"
       },
       "b": {
-        "fixture": "FX_N_TEMP_MEAN"
+        "base": "FX_N_STOCK_SUM_ALONG_PRODUCT",
+        "patch": [
+          {
+            "set": "structure.relations.stock.fields.on_hand.additivity.nonAdditiveAlong",
+            "value": [
+              "date",
+              "product"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_ADDITIVITY_SUM_SEMIADDITIVE"
+          ],
+          "terms": []
+        },
+        "cause": "CASE_INVENTORY_SUMMED_OVER_TIME: the measure is declared non-additive along a dimension the sum runs along. Adding `product` to the declaration makes the assertion's `along` meet the blocked set -- `along.some((d) => blocked.includes(d))` -- so the corpus's own semi-additive rule fires. Only the arity of the declaration moves: the first member stays `date`, so nothing about WHICH dimension is blocked first changes."
+      },
+      "note": "STAGE-2 necessity for field.additivity.semi-additive.nonAdditiveAlong#arity: separates how many dimensions the measure is declared non-additive along. The a-side is the corpus's own near-neighbour for REL_ADDITIVITY_SUM_SEMIADDITIVE -- admissible, because it blocks only `date` while the assertion sums along `product` -- and the b-side adds `product` to that declaration. The arity erasure truncates the list to its declared floor of one, which returns the b-side to the c-side shape, and checkIsolation discharges on both sides. NON-CLAIM: this establishes that the COUNT of blocked dimensions is a necessary distinction here; it does not establish that the set of blocked dimensions is primitive, which is `#incidence`'s question and is answered elsewhere."
+    },
+    {
+      "coordinates": [
+        "field.additivity.semi-additive.nonAdditiveAlong#incidence"
+      ],
+      "a": {
+        "fixture": "FX_STOCK_SUM_ALONG_DATE"
+      },
+      "b": {
+        "base": "FX_STOCK_SUM_ALONG_DATE",
+        "patch": [
+          {
+            "set": "structure.relations.stock.fields.on_hand.additivity.nonAdditiveAlong",
+            "value": [
+              "product"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_ADDITIVITY_SUM_SEMIADDITIVE: the measure is declared non-additive along THAT dimension; summing along another is admissible"
       }
     },
     {
       "coordinates": [
-        "field.transformation:ordinal~ratio"
+        "field.base"
       ],
       "a": {
-        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+        "fixture": "FX_INDEX_MEAN_NO_BASE"
       },
       "b": {
-        "fixture": "FX_N_SURVEY_MEAN_RATIO_SCORE"
-      }
-    },
-    {
-      "coordinates": [
-        "field.transformation:interval~ratio"
-      ],
-      "a": {
-        "fixture": "FX_TEMP_RATIO_COMPARISON"
-      },
-      "b": {
-        "fixture": "FX_N_TEMP_KELVIN_RATIO_COMPARISON"
+        "fixture": "FX_N_INDEX_MEAN_WITH_BASE"
       }
     },
     {
@@ -138,17 +565,6 @@
         "fixture": "FX_LOGIN_HOUR_MEAN"
       },
       "note": "ordinal mean vs ordinal+cyclic mean: different causes (ORDINAL_MEAN vs CYCLIC_LINEAR_MEAN)"
-    },
-    {
-      "coordinates": [
-        "field.proportion"
-      ],
-      "a": {
-        "fixture": "FX_PCT_MEAN_NO_WHOLE"
-      },
-      "b": {
-        "fixture": "FX_N_SURVEY_MEAN_RATIO_SCORE"
-      }
     },
     {
       "coordinates": [
@@ -203,220 +619,6 @@
     },
     {
       "coordinates": [
-        "field.unit.units"
-      ],
-      "a": {
-        "fixture": "FX_SALES_SUM_MIXED_UNITS_DECLARED"
-      },
-      "b": {
-        "base": "FX_SALES_SUM_MIXED_UNITS_DECLARED",
-        "patch": [
-          {
-            "delete": "structure.relations.sales.fields.amount.unit"
-          }
-        ],
-        "outcome": {
-          "status": "admissible",
-          "codes": [],
-          "terms": []
-        },
-        "cause": "REL_UNIT_SUM_INCOMMENSURABLE names values in different declared units; with no unit declared there is nothing incommensurable"
-      }
-    },
-    {
-      "coordinates": [
-        "field.unit.perRow"
-      ],
-      "a": {
-        "fixture": "FX_SALES_SUM_PERROW_UNIT_NO_ROWS"
-      },
-      "b": {
-        "base": "FX_SALES_SUM_PERROW_UNIT_NO_ROWS",
-        "patch": [
-          {
-            "delete": "structure.relations.sales.fields.amount.unit"
-          }
-        ],
-        "outcome": {
-          "status": "admissible",
-          "codes": [],
-          "terms": []
-        },
-        "cause": "unit:commensurable is owed only when each observation carries its own unit; with no unit declared the obligation does not arise"
-      }
-    },
-    {
-      "coordinates": [
-        "field.unit.conversions"
-      ],
-      "a": {
-        "fixture": "FX_SALES_SUM_MIXED_UNITS_DECLARED"
-      },
-      "b": {
-        "fixture": "FX_N_SALES_SUM_WITH_CONVERSIONS"
-      }
-    },
-    {
-      "coordinates": [
-        "field.temporality#present"
-      ],
-      "a": {
-        "fixture": "FX_TEMP_SUM"
-      },
-      "b": {
-        "fixture": "FX_EVENT_AT_SUM"
-      },
-      "note": "FX_TEMP_SUM declares NO temporality at all and FX_EVENT_AT_SUM declares {kind: instant}, so this pair separates whether the holder EXISTS, not which kind it carries. Filed under the leaf until the codomain change made the misattribution measurable; re-pointed at the holder, where checkWitness holds. The leaf's own distinction is carried by the member-pair witness, and the leaf is retained as required-derived-vocabulary rather than ratified \u2014 see subtraction-stage2-enum-leaf.json."
-    },
-    {
-      "coordinates": [
-        "field.temporality.kind:instant~interval"
-      ],
-      "a": {
-        "fixture": "FX_N_DURATION_SUM"
-      },
-      "b": {
-        "base": "FX_N_DURATION_SUM",
-        "patch": [
-          {
-            "set": "structure.relations.sessions.fields.length.temporality.kind",
-            "value": "instant"
-          }
-        ],
-        "outcome": {
-          "status": "illegal",
-          "codes": [
-            "REL_TEMPORAL_INSTANT_SUM"
-          ],
-          "terms": []
-        },
-        "cause": "REL_TEMPORAL_INSTANT_SUM: instants are interval-scaled in time; only their differences, which are durations, are meaningful"
-      }
-    },
-    {
-      "coordinates": [
-        "field.whole"
-      ],
-      "a": {
-        "fixture": "FX_PCT_MEAN_NO_WHOLE"
-      },
-      "b": {
-        "fixture": "FX_N_PCT_MEAN_WITH_WHOLE"
-      }
-    },
-    {
-      "coordinates": [
-        "field.whole.perRow#incidence"
-      ],
-      "a": {
-        "fixture": "FX_N_SHARE_SUM_WITHIN_MARKET"
-      },
-      "b": {
-        "base": "FX_N_SHARE_SUM_WITHIN_MARKET",
-        "patch": [
-          {
-            "set": "structure.relations.shares.fields.share.whole.perRow",
-            "value": "company"
-          }
-        ],
-        "outcome": {
-          "status": "illegal",
-          "codes": [
-            "REL_PROPORTION_SUM_ACROSS_WHOLES"
-          ],
-          "terms": []
-        },
-        "cause": "REL_PROPORTION_SUM_ACROSS_WHOLES: proportions of different wholes are not additive; summing along the field that names the whole crosses wholes"
-      }
-    },
-    {
-      "coordinates": [
-        "field.base"
-      ],
-      "a": {
-        "fixture": "FX_INDEX_MEAN_NO_BASE"
-      },
-      "b": {
-        "fixture": "FX_N_INDEX_MEAN_WITH_BASE"
-      }
-    },
-    {
-      "coordinates": [
-        "field.additivity.kind"
-      ],
-      "a": {
-        "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
-      },
-      "b": {
-        "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-        "patch": [
-          {
-            "set": "structure.relations.regions.fields.gdp_per_capita.additivity",
-            "value": {
-              "kind": "additive"
-            }
-          }
-        ],
-        "outcome": {
-          "status": "admissible",
-          "codes": [],
-          "terms": []
-        },
-        "cause": "REL_RATIO_MEASURE_AVERAGED names a rate; an additive measure combined by mean exhibits no catalogue cause"
-      }
-    },
-    {
-      "coordinates": [
-        "field.additivity.kind:additive~ratio-measure"
-      ],
-      "a": {
-        "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
-      },
-      "b": {
-        "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
-        "patch": [
-          {
-            "set": "structure.relations.regions.fields.gdp_per_capita.additivity",
-            "value": {
-              "kind": "additive"
-            }
-          }
-        ],
-        "outcome": {
-          "status": "admissible",
-          "codes": [],
-          "terms": []
-        },
-        "cause": "REL_RATIO_MEASURE_AVERAGED names a rate; an additive measure combined by mean exhibits no catalogue cause"
-      }
-    },
-    {
-      "coordinates": [
-        "field.additivity.semi-additive.nonAdditiveAlong#incidence"
-      ],
-      "a": {
-        "fixture": "FX_STOCK_SUM_ALONG_DATE"
-      },
-      "b": {
-        "base": "FX_STOCK_SUM_ALONG_DATE",
-        "patch": [
-          {
-            "set": "structure.relations.stock.fields.on_hand.additivity.nonAdditiveAlong",
-            "value": [
-              "product"
-            ]
-          }
-        ],
-        "outcome": {
-          "status": "admissible",
-          "codes": [],
-          "terms": []
-        },
-        "cause": "REL_ADDITIVITY_SUM_SEMIADDITIVE: the measure is declared non-additive along THAT dimension; summing along another is admissible"
-      }
-    },
-    {
-      "coordinates": [
         "field.permits.null"
       ],
       "a": {
@@ -461,35 +663,82 @@
     },
     {
       "coordinates": [
-        "assertion.kind",
-        "assertion.aggregate.op"
+        "field.proportion"
       ],
       "a": {
-        "fixture": "FX_TEMP_RATIO_COMPARISON"
+        "fixture": "FX_PCT_MEAN_NO_WHOLE"
       },
       "b": {
-        "fixture": "FX_N_TEMP_MEAN"
-      },
-      "note": "a ratio comparison carries no op; kind and op together separate it from an aggregate mean"
-    },
-    {
-      "coordinates": [
-        "assertion.kind:aggregate~ratio-comparison",
-        "assertion.aggregate.op"
-      ],
-      "a": {
-        "fixture": "FX_TEMP_RATIO_COMPARISON"
-      },
-      "b": {
-        "fixture": "FX_N_TEMP_MEAN"
+        "fixture": "FX_N_SURVEY_MEAN_RATIO_SCORE"
       }
     },
     {
       "coordinates": [
-        "assertion.aggregate.op"
+        "field.temporality#present"
       ],
       "a": {
-        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+        "fixture": "FX_TEMP_SUM"
+      },
+      "b": {
+        "fixture": "FX_EVENT_AT_SUM"
+      },
+      "note": "FX_TEMP_SUM declares NO temporality at all and FX_EVENT_AT_SUM declares {kind: instant}, so this pair separates whether the holder EXISTS, not which kind it carries. Filed under the leaf until the codomain change made the misattribution measurable; re-pointed at the holder, where checkWitness holds. The leaf's own distinction is carried by the member-pair witness, and the leaf is retained as required-derived-vocabulary rather than ratified \u2014 see subtraction-stage2-enum-leaf.json."
+    },
+    {
+      "coordinates": [
+        "field.temporality.grain"
+      ],
+      "a": {
+        "fixture": "FX_PEERS_AT_DAY_AND_MONTH_GRAIN"
+      },
+      "b": {
+        "fixture": "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN"
+      },
+      "note": "STAGE-2 necessity for field.temporality.grain: separates whether the temporal grain is declared. Both sides are already-existing fixtures -- CASE_DAILY_AND_MONTHLY_ON_ONE_AXIS against its near-neighbour FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "field.temporality.grain:day~month"
+      ],
+      "a": {
+        "fixture": "FX_PEERS_AT_DAY_AND_MONTH_GRAIN"
+      },
+      "b": {
+        "fixture": "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN"
+      },
+      "note": "STAGE-2 necessity for field.temporality.grain:day~month: separates day against month. Both sides are already-existing fixtures -- CASE_DAILY_AND_MONTHLY_ON_ONE_AXIS against its near-neighbour FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
+    },
+    {
+      "coordinates": [
+        "field.temporality.kind:instant~interval"
+      ],
+      "a": {
+        "fixture": "FX_N_DURATION_SUM"
+      },
+      "b": {
+        "base": "FX_N_DURATION_SUM",
+        "patch": [
+          {
+            "set": "structure.relations.sessions.fields.length.temporality.kind",
+            "value": "instant"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_TEMPORAL_INSTANT_SUM"
+          ],
+          "terms": []
+        },
+        "cause": "REL_TEMPORAL_INSTANT_SUM: instants are interval-scaled in time; only their differences, which are durations, are meaningful"
+      }
+    },
+    {
+      "coordinates": [
+        "field.transformation"
+      ],
+      "a": {
+        "fixture": "FX_REGION_MAX"
       },
       "b": {
         "fixture": "FX_N_ORDINAL_MAX"
@@ -497,39 +746,28 @@
     },
     {
       "coordinates": [
-        "assertion.aggregate.op:sum~mean"
+        "field.transformation:interval~ratio"
       ],
       "a": {
-        "fixture": "FX_TEMP_SUM"
+        "fixture": "FX_TEMP_RATIO_COMPARISON"
       },
       "b": {
-        "fixture": "FX_N_TEMP_MEAN"
+        "fixture": "FX_N_TEMP_KELVIN_RATIO_COMPARISON"
       }
     },
     {
       "coordinates": [
-        "assertion.aggregate.op:sum~count"
+        "field.transformation:nominal~interval"
       ],
       "a": {
-        "fixture": "FX_USER_ID_SUM"
+        "fixture": "FX_REGION_MAX"
       },
       "b": {
-        "fixture": "FX_N_USER_ID_COUNT"
-      }
-    },
-    {
-      "coordinates": [
-        "assertion.aggregate.op:sum~min"
-      ],
-      "a": {
-        "fixture": "FX_TEMP_SUM"
-      },
-      "b": {
-        "base": "FX_TEMP_SUM",
+        "base": "FX_REGION_MAX",
         "patch": [
           {
-            "set": "assertions.0.op",
-            "value": "min"
+            "set": "structure.relations.sites.fields.region.transformation",
+            "value": "interval"
           }
         ],
         "outcome": {
@@ -537,26 +775,15 @@
           "codes": [],
           "terms": []
         },
-        "cause": "REL_MEANINGFULNESS_INTERVAL_SUM names the sum; an order statistic is invariant under the affine transformations an interval scale admits"
+        "cause": "REL_MEANINGFULNESS_NOMINAL_ORDER_STAT: an order statistic needs an order the scale does not have; an interval scale has one"
       }
     },
     {
       "coordinates": [
-        "assertion.aggregate.op:mean~count"
+        "field.transformation:nominal~ordinal"
       ],
       "a": {
-        "fixture": "FX_LOGIN_HOUR_MEAN"
-      },
-      "b": {
-        "fixture": "FX_N_LOGIN_HOUR_COUNT"
-      }
-    },
-    {
-      "coordinates": [
-        "assertion.aggregate.op:mean~min"
-      ],
-      "a": {
-        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
+        "fixture": "FX_REGION_MAX"
       },
       "b": {
         "fixture": "FX_N_ORDINAL_MAX"
@@ -564,65 +791,17 @@
     },
     {
       "coordinates": [
-        "assertion.aggregate.op:count~min"
+        "field.transformation:nominal~ratio"
       ],
       "a": {
-        "fixture": "FX_N_USER_ID_COUNT"
+        "fixture": "FX_REGION_MAX"
       },
       "b": {
-        "base": "FX_N_USER_ID_COUNT",
+        "base": "FX_REGION_MAX",
         "patch": [
           {
-            "set": "assertions.0.op",
-            "value": "min"
-          }
-        ],
-        "outcome": {
-          "status": "illegal",
-          "codes": [
-            "REL_IDENTITY_AGGREGATED"
-          ],
-          "terms": []
-        },
-        "cause": "REL_IDENTITY_AGGREGATED: a key is not a quantity; counting rows by key is the one aggregate that reads no key value (neighbour of the cause)"
-      }
-    },
-    {
-      "coordinates": [
-        "assertion.aggregate.along#incidence"
-      ],
-      "a": {
-        "fixture": "FX_STOCK_SUM_ALONG_DATE"
-      },
-      "b": {
-        "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT"
-      },
-      "note": "same arity, same order, different MEETING with the measure's nonAdditiveAlong set: no renaming makes these equal"
-    },
-    {
-      "coordinates": [
-        "assertion.aggregate.nulls"
-      ],
-      "a": {
-        "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
-      },
-      "b": {
-        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
-      }
-    },
-    {
-      "coordinates": [
-        "assertion.aggregate.nulls"
-      ],
-      "a": {
-        "fixture": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS"
-      },
-      "b": {
-        "base": "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS",
-        "patch": [
-          {
-            "set": "assertions.0.nulls",
-            "value": "exclude"
+            "set": "structure.relations.sites.fields.region.transformation",
+            "value": "ratio"
           }
         ],
         "outcome": {
@@ -630,117 +809,120 @@
           "codes": [],
           "terms": []
         },
-        "cause": "null:missing-mechanism is the obligation to declare a handling for permitted missing values; exclusion declares one and coerces nothing (schema-class twin of the rows witness above)"
+        "cause": "REL_MEANINGFULNESS_NOMINAL_ORDER_STAT: an order statistic needs an order the scale does not have; a ratio scale has one"
       }
     },
     {
       "coordinates": [
-        "assertion.aggregate.nulls:exclude~as-zero"
+        "field.transformation:ordinal~interval"
       ],
       "a": {
-        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
       },
       "b": {
-        "base": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED",
-        "patch": [
-          {
-            "set": "assertions.0.nulls",
-            "value": "as-zero"
-          }
-        ],
-        "outcome": {
-          "status": "illegal",
-          "codes": [
-            "REL_NULL_CENSORED_AS_OBSERVED"
-          ],
-          "terms": []
-        },
-        "cause": "REL_NULL_CENSORED_AS_OBSERVED: a censored value is a bound, not a measurement; coercing it to zero measures it"
+        "fixture": "FX_N_TEMP_MEAN"
       }
     },
     {
       "coordinates": [
-        "assertion.aggregate.nulls:exclude~as-observed"
+        "field.transformation:ordinal~ratio"
       ],
       "a": {
-        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
+        "fixture": "FX_SURVEY_MEAN_SATISFACTION"
       },
       "b": {
-        "base": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED",
-        "patch": [
-          {
-            "set": "assertions.0.nulls",
-            "value": "as-observed"
-          }
-        ],
-        "outcome": {
-          "status": "illegal",
-          "codes": [
-            "REL_NULL_CENSORED_AS_OBSERVED"
-          ],
-          "terms": []
-        },
-        "cause": "REL_NULL_CENSORED_AS_OBSERVED: a censored value is a bound, not a measurement"
+        "fixture": "FX_N_SURVEY_MEAN_RATIO_SCORE"
       }
     },
     {
       "coordinates": [
-        "assertion.aggregate.nulls:as-zero~as-observed"
+        "field.unit.conversions"
       ],
       "a": {
-        "fixture": "FX_T_SUPPRESSED_ROWS_AS_ZERO"
+        "fixture": "FX_SALES_SUM_MIXED_UNITS_DECLARED"
       },
       "b": {
-        "base": "FX_T_SUPPRESSED_ROWS_AS_ZERO",
+        "fixture": "FX_N_SALES_SUM_WITH_CONVERSIONS"
+      }
+    },
+    {
+      "coordinates": [
+        "field.unit.perRow"
+      ],
+      "a": {
+        "fixture": "FX_SALES_SUM_PERROW_UNIT_NO_ROWS"
+      },
+      "b": {
+        "base": "FX_SALES_SUM_PERROW_UNIT_NO_ROWS",
         "patch": [
           {
-            "set": "assertions.0.nulls",
-            "value": "as-observed"
+            "delete": "structure.relations.sales.fields.amount.unit"
           }
         ],
         "outcome": {
-          "status": "unproven",
+          "status": "admissible",
           "codes": [],
-          "terms": [
-            "null:missing-mechanism"
-          ]
+          "terms": []
         },
-        "cause": "an absent value has nothing to observe; the mechanism that produced the gap is still undeclared, so null:missing-mechanism stands (REL_NULL_SUPPRESSED_AS_ZERO names the collapse to zero specifically)"
-      },
-      "note": "instance-class witness: the distinction is visible only with rows (invariant 9)"
-    },
-    {
-      "coordinates": [
-        "assertion.aggregate.uncertainty"
-      ],
-      "a": {
-        "fixture": "FX_MASS_SUM_UNHANDLED_ERROR"
-      },
-      "b": {
-        "fixture": "FX_N_MASS_SUM_PROPAGATE"
+        "cause": "unit:commensurable is owed only when each observation carries its own unit; with no unit declared the obligation does not arise"
       }
     },
     {
       "coordinates": [
-        "observation.value"
+        "field.unit.units"
       ],
       "a": {
-        "fixture": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS"
+        "fixture": "FX_SALES_SUM_MIXED_UNITS_DECLARED"
       },
       "b": {
-        "fixture": "FX_T_GRAIN_WITNESS_DUPLICATE_ROWS"
-      },
-      "note": "instance-class witness through the stage-2 fan-out branch (invariant 9)"
+        "base": "FX_SALES_SUM_MIXED_UNITS_DECLARED",
+        "patch": [
+          {
+            "delete": "structure.relations.sales.fields.amount.unit"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "REL_UNIT_SUM_INCOMMENSURABLE names values in different declared units; with no unit declared there is nothing incommensurable"
+      }
     },
     {
       "coordinates": [
-        "observation.unit"
+        "field.whole"
       ],
       "a": {
-        "fixture": "FX_T_CURRENCY_ROWS_ONE_UNIT"
+        "fixture": "FX_PCT_MEAN_NO_WHOLE"
       },
       "b": {
-        "fixture": "FX_T_CURRENCY_ROWS_MIXED"
+        "fixture": "FX_N_PCT_MEAN_WITH_WHOLE"
+      }
+    },
+    {
+      "coordinates": [
+        "field.whole.perRow#incidence"
+      ],
+      "a": {
+        "fixture": "FX_N_SHARE_SUM_WITHIN_MARKET"
+      },
+      "b": {
+        "base": "FX_N_SHARE_SUM_WITHIN_MARKET",
+        "patch": [
+          {
+            "set": "structure.relations.shares.fields.share.whole.perRow",
+            "value": "company"
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_PROPORTION_SUM_ACROSS_WHOLES"
+          ],
+          "terms": []
+        },
+        "cause": "REL_PROPORTION_SUM_ACROSS_WHOLES: proportions of different wholes are not additive; summing along the field that names the whole crosses wholes"
       }
     },
     {
@@ -792,202 +974,26 @@
     },
     {
       "coordinates": [
-        "evidence.grainWitness#present"
+        "observation.unit"
+      ],
+      "a": {
+        "fixture": "FX_T_CURRENCY_ROWS_ONE_UNIT"
+      },
+      "b": {
+        "fixture": "FX_T_CURRENCY_ROWS_MIXED"
+      }
+    },
+    {
+      "coordinates": [
+        "observation.value"
       ],
       "a": {
         "fixture": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS"
       },
       "b": {
-        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
-        "patch": [
-          {
-            "delete": "evidence.grainWitness"
-          }
-        ],
-        "outcome": {
-          "status": "unproven",
-          "codes": [],
-          "terms": [
-            "grain:declared"
-          ]
-        },
-        "cause": "rows without a declared witness declare no grain; grain:declared stands (triad grain:declared, absent)"
-      }
-    },
-    {
-      "coordinates": [
-        "relation.derivedBy.kind:bin~normalize"
-      ],
-      "a": {
-        "fixture": "FX_READINGS_BINNED_NO_CLOSURE"
+        "fixture": "FX_T_GRAIN_WITNESS_DUPLICATE_ROWS"
       },
-      "b": {
-        "base": "FX_READINGS_BINNED_NO_CLOSURE",
-        "patch": [
-          {
-            "set": "structure.relations.bucketed.derivedBy.kind",
-            "value": "normalize"
-          }
-        ],
-        "outcome": {
-          "status": "admissible",
-          "codes": [],
-          "terms": []
-        },
-        "cause": "CASE_WHICH_BIN_GETS_TEN makes an undeclared-closure BIN illegal, and that rule is keyed to the bin constructor: partitioning a range into intervals is what raises the question of which side owns a boundary. Rescaling a field against a whole raises no such question, so the same {from, field} payload under `normalize` is admissible; the normalize rule of CASE_NORMALIZED_AVERAGES fires only when the normalized measure is subsequently aggregated non-additively, and the only assertion here is `min` over the SOURCE relation. Both readings are mechanical over existing stage-2 causes. Because bin and normalize share the required key-set {from, field} \u2014 the only such pair among the seven constructors \u2014 the substitution alters nothing but the discriminant, so the outcome difference is attributable to it alone."
-      }
-    },
-    {
-      "coordinates": [
-        "assertion.aggregate.along#present"
-      ],
-      "a": {
-        "fixture": "FX_STOCK_SUM_ALONG_DATE"
-      },
-      "b": {
-        "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT"
-      },
-      "note": "STAGE-2 necessity for assertion.aggregate.along#present: separates whether the aggregate names a dimension at all. Both sides are already-existing fixtures -- CASE_INVENTORY_SUMMED_OVER_TIME against its near-neighbour FX_N_STOCK_SUM_ALONG_PRODUCT -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
-    },
-    {
-      "coordinates": [
-        "assertion.aggregate.field#incidence"
-      ],
-      "a": {
-        "fixture": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
-      },
-      "b": {
-        "fixture": "FX_N_LINE_QTY_SUMMED_AFTER_JOIN"
-      },
-      "note": "STAGE-2 necessity for assertion.aggregate.field#incidence: separates whether the summed field co-refers with the joined key. Both sides are already-existing fixtures -- CASE_REVENUE_DOUBLE_COUNTED_AFTER_JOIN against its near-neighbour FX_N_LINE_QTY_SUMMED_AFTER_JOIN -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
-    },
-    {
-      "coordinates": [
-        "assertion.aggregate.nulls:exclude~<absent>"
-      ],
-      "a": {
-        "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
-      },
-      "b": {
-        "fixture": "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED"
-      },
-      "note": "STAGE-2 necessity for assertion.aggregate.nulls:exclude~<absent>: separates whether a null policy is declared versus absent. Both sides are already-existing fixtures -- CASE_CENSORED_VALUES_IN_A_MEAN against its near-neighbour FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
-    },
-    {
-      "coordinates": [
-        "field.additivity.kind:additive~non-additive"
-      ],
-      "a": {
-        "fixture": "FX_SHARE_OF_AVERAGE_SCORE"
-      },
-      "b": {
-        "fixture": "FX_N_SHARE_OF_ADDITIVE_TOTAL"
-      },
-      "note": "STAGE-2 necessity for field.additivity.kind:additive~non-additive: separates additive against non-additive. Both sides are already-existing fixtures -- CASE_NORMALIZED_AVERAGES against its near-neighbour FX_N_SHARE_OF_ADDITIVE_TOTAL -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
-    },
-    {
-      "coordinates": [
-        "field.temporality.grain"
-      ],
-      "a": {
-        "fixture": "FX_PEERS_AT_DAY_AND_MONTH_GRAIN"
-      },
-      "b": {
-        "fixture": "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN"
-      },
-      "note": "STAGE-2 necessity for field.temporality.grain: separates whether the temporal grain is declared. Both sides are already-existing fixtures -- CASE_DAILY_AND_MONTHLY_ON_ONE_AXIS against its near-neighbour FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
-    },
-    {
-      "coordinates": [
-        "field.temporality.grain:day~month"
-      ],
-      "a": {
-        "fixture": "FX_PEERS_AT_DAY_AND_MONTH_GRAIN"
-      },
-      "b": {
-        "fixture": "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN"
-      },
-      "note": "STAGE-2 necessity for field.temporality.grain:day~month: separates day against month. Both sides are already-existing fixtures -- CASE_DAILY_AND_MONTHLY_ON_ONE_AXIS against its near-neighbour FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN -- so the judgment follows from a cause the corpus already licenses rather than from a stimulus authored to reach it."
-    },
-    {
-      "coordinates": [
-        "relation.derivedBy.bin.closure"
-      ],
-      "a": {
-        "fixture": "FX_READINGS_BINNED_NO_CLOSURE"
-      },
-      "b": {
-        "fixture": "FX_N_READINGS_BINNED_LEFT_CLOSED"
-      },
-      "note": "STAGE-2 necessity for relation.derivedBy.bin.closure: separates whether a bin declares which side of each boundary is closed. One fixture IS the other minus the declaration -- FX_READINGS_BINNED_NO_CLOSURE is illegal with REL_BIN_CLOSURE_UNDECLARED (CASE_WHICH_BIN_GETS_TEN, \"bin with no declared closure\") and FX_N_READINGS_BINNED_LEFT_CLOSED is admissible -- so the pair varies exactly this coordinate and nothing else. The erasure is confined to the declaration's slot and the finding it produces is the CORPUS's own semantic rule, not the boundary's well-formedness refusal."
-    },
-    {
-      "coordinates": [
-        "relation.derivedBy.bin.closure:left-closed~<absent>"
-      ],
-      "a": {
-        "fixture": "FX_READINGS_BINNED_NO_CLOSURE"
-      },
-      "b": {
-        "fixture": "FX_N_READINGS_BINNED_LEFT_CLOSED"
-      },
-      "note": "STAGE-2 necessity for relation.derivedBy.bin.closure:left-closed~<absent>: separates left-closed against undeclared. One fixture IS the other minus the declaration -- FX_READINGS_BINNED_NO_CLOSURE is illegal with REL_BIN_CLOSURE_UNDECLARED (CASE_WHICH_BIN_GETS_TEN, \"bin with no declared closure\") and FX_N_READINGS_BINNED_LEFT_CLOSED is admissible -- so the pair varies exactly this coordinate and nothing else. The erasure is confined to the declaration's slot and the finding it produces is the CORPUS's own semantic rule, not the boundary's well-formedness refusal."
-    },
-    {
-      "coordinates": [
-        "relation.derivedBy.nest.levels#order"
-      ],
-      "a": {
-        "fixture": "FX_N_NESTED_SUBTOTAL_AT_PREFIX"
-      },
-      "b": {
-        "base": "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
-        "patch": [
-          {
-            "set": "structure.relations.hierarchy.derivedBy.levels",
-            "value": [
-              "state",
-              "country"
-            ]
-          }
-        ],
-        "outcome": {
-          "status": "illegal",
-          "codes": [
-            "REL_GRAIN_SUBTOTAL_MISMATCH"
-          ],
-          "terms": []
-        },
-        "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: a subtotal to a grain the nest does not declare. Reordering the declared levels to [state, country] removes `country` from the declared prefixes, so the existing `toGrain: [country]` subtotal is off-grain -- the judgment follows from an already-existing cause, and NOTHING else about the fixture moves."
-      }
-    },
-    {
-      "coordinates": [
-        "relation.derivedBy.nest.levels#incidence"
-      ],
-      "a": {
-        "fixture": "FX_N_NESTED_SUBTOTAL_AT_PREFIX"
-      },
-      "b": {
-        "base": "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
-        "patch": [
-          {
-            "set": "structure.relations.hierarchy.derivedBy.levels",
-            "value": [
-              "revenue",
-              "state"
-            ]
-          }
-        ],
-        "outcome": {
-          "status": "illegal",
-          "codes": [
-            "REL_GRAIN_SUBTOTAL_MISMATCH"
-          ],
-          "terms": []
-        },
-        "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: rebinding position 0 of the declared levels from `country` to `revenue` removes `country` from the declared prefixes, so the existing toGrain: [country] subtotal is off-grain -- the first witness filed under the bound-incidence quotient (the same pair the instrument refused while the erasure tokenized), and an OCCUPANT difference, so the attribution rule does not fire"
-      }
+      "note": "instance-class witness through the stage-2 fan-out branch (invariant 9)"
     },
     {
       "coordinates": [
@@ -1081,62 +1087,41 @@
     },
     {
       "coordinates": [
-        "field.additivity.semi-additive.nonAdditiveAlong#arity"
+        "relation.derivedBy.bin.closure"
       ],
       "a": {
-        "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT"
+        "fixture": "FX_READINGS_BINNED_NO_CLOSURE"
       },
       "b": {
-        "base": "FX_N_STOCK_SUM_ALONG_PRODUCT",
-        "patch": [
-          {
-            "set": "structure.relations.stock.fields.on_hand.additivity.nonAdditiveAlong",
-            "value": [
-              "date",
-              "product"
-            ]
-          }
-        ],
-        "outcome": {
-          "status": "illegal",
-          "codes": [
-            "REL_ADDITIVITY_SUM_SEMIADDITIVE"
-          ],
-          "terms": []
-        },
-        "cause": "CASE_INVENTORY_SUMMED_OVER_TIME: the measure is declared non-additive along a dimension the sum runs along. Adding `product` to the declaration makes the assertion's `along` meet the blocked set -- `along.some((d) => blocked.includes(d))` -- so the corpus's own semi-additive rule fires. Only the arity of the declaration moves: the first member stays `date`, so nothing about WHICH dimension is blocked first changes."
+        "fixture": "FX_N_READINGS_BINNED_LEFT_CLOSED"
       },
-      "note": "STAGE-2 necessity for field.additivity.semi-additive.nonAdditiveAlong#arity: separates how many dimensions the measure is declared non-additive along. The a-side is the corpus's own near-neighbour for REL_ADDITIVITY_SUM_SEMIADDITIVE -- admissible, because it blocks only `date` while the assertion sums along `product` -- and the b-side adds `product` to that declaration. The arity erasure truncates the list to its declared floor of one, which returns the b-side to the c-side shape, and checkIsolation discharges on both sides. NON-CLAIM: this establishes that the COUNT of blocked dimensions is a necessary distinction here; it does not establish that the set of blocked dimensions is primitive, which is `#incidence`'s question and is answered elsewhere."
+      "note": "STAGE-2 necessity for relation.derivedBy.bin.closure: separates whether a bin declares which side of each boundary is closed. One fixture IS the other minus the declaration -- FX_READINGS_BINNED_NO_CLOSURE is illegal with REL_BIN_CLOSURE_UNDECLARED (CASE_WHICH_BIN_GETS_TEN, \"bin with no declared closure\") and FX_N_READINGS_BINNED_LEFT_CLOSED is admissible -- so the pair varies exactly this coordinate and nothing else. The erasure is confined to the declaration's slot and the finding it produces is the CORPUS's own semantic rule, not the boundary's well-formedness refusal."
     },
     {
       "coordinates": [
-        "evidence.grainWitness#arity"
+        "relation.derivedBy.bin.closure:left-closed~<absent>"
       ],
       "a": {
-        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+        "fixture": "FX_READINGS_BINNED_NO_CLOSURE"
+      },
+      "b": {
+        "fixture": "FX_N_READINGS_BINNED_LEFT_CLOSED"
+      },
+      "note": "STAGE-2 necessity for relation.derivedBy.bin.closure:left-closed~<absent>: separates left-closed against undeclared. One fixture IS the other minus the declaration -- FX_READINGS_BINNED_NO_CLOSURE is illegal with REL_BIN_CLOSURE_UNDECLARED (CASE_WHICH_BIN_GETS_TEN, \"bin with no declared closure\") and FX_N_READINGS_BINNED_LEFT_CLOSED is admissible -- so the pair varies exactly this coordinate and nothing else. The erasure is confined to the declaration's slot and the finding it produces is the CORPUS's own semantic rule, not the boundary's well-formedness refusal."
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.join.cardinality:one-to-many~many-to-many"
+      ],
+      "a": {
+        "fixture": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
+      },
+      "b": {
+        "base": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
         "patch": [
           {
-            "set": "evidence.rows.orders",
-            "value": [
-              {
-                "order_id": "o1",
-                "amount": 10
-              },
-              {
-                "order_id": "o1",
-                "amount": 25
-              },
-              {
-                "order_id": "o2",
-                "amount": 7
-              }
-            ]
-          },
-          {
-            "set": "evidence.grainWitness.orders",
-            "value": [
-              "order_id"
-            ]
+            "set": "structure.relations.order_lines.derivedBy.cardinality",
+            "value": "many-to-many"
           }
         ],
         "outcome": {
@@ -1144,35 +1129,107 @@
           "codes": [
             "REL_GRAIN_FANOUT"
           ],
-          "terms": []
+          "terms": [
+            "grain:declared"
+          ]
         },
-        "cause": "The corpus's own hostile side for `grain:declared` (REL_GRAIN_FANOUT): an undeclared-grain relation whose rows repeat on the columns its witness names does not hold one row per unit, so the sum is taken at the wrong grain. The witness names one column and the rows repeat on it."
+        "cause": "CASE_REVENUE_DOUBLE_COUNTED_AFTER_JOIN decides the diagnostic and does not depend on which way the join multiplies: order_lines still fans out over lines, so the summed revenue is still inflated. What changes is the GRAIN: a join that multiplies on both sides determines no result grain at all, so the sum owes the corpus's `grain:declared` obligation -- the triad whose absent side is FX_ORDERS_ROLLUP_UNKNOWN_GRAIN -- which the one-to-many reading does not. Both findings are corpus-licensed and the pair differs at exactly the tag."
+      },
+      "note": "STAGE-2 necessity for relation.derivedBy.join.cardinality:one-to-many~many-to-many: separates a join that multiplies on the `with` side from one that multiplies on both. The a-side is the corpus case for REL_GRAIN_FANOUT and the b-side is the same declaration at many-to-many, whose required outcome adds the corpus's `grain:declared` obligation because the operator then determines no grain. The merge erasure folds both members into one class, which leaves the join without a resolvable cardinality: determinedGrain returns undefined, the grain comparison is skipped, and the erasure introduces no boundary finding -- so checkIsolation discharges on both sides. NON-CLAIM: the distinction this witness establishes is that the tag decides whether the result grain is DETERMINED at all; it does not establish that one-to-many and many-to-many differ in what they multiply, and it says nothing about the five sibling pairs, four of which are refused for the reason recorded in the ledger rather than witnessed."
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.kind:bin~normalize"
+      ],
+      "a": {
+        "fixture": "FX_READINGS_BINNED_NO_CLOSURE"
       },
       "b": {
-        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+        "base": "FX_READINGS_BINNED_NO_CLOSURE",
         "patch": [
           {
-            "set": "evidence.rows.orders",
-            "value": [
-              {
-                "order_id": "o1",
-                "amount": 10
-              },
-              {
-                "order_id": "o1",
-                "amount": 25
-              },
-              {
-                "order_id": "o2",
-                "amount": 7
-              }
-            ]
-          },
+            "set": "structure.relations.bucketed.derivedBy.kind",
+            "value": "normalize"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "CASE_WHICH_BIN_GETS_TEN makes an undeclared-closure BIN illegal, and that rule is keyed to the bin constructor: partitioning a range into intervals is what raises the question of which side owns a boundary. Rescaling a field against a whole raises no such question, so the same {from, field} payload under `normalize` is admissible; the normalize rule of CASE_NORMALIZED_AVERAGES fires only when the normalized measure is subsequently aggregated non-additively, and the only assertion here is `min` over the SOURCE relation. Both readings are mechanical over existing stage-2 causes. Because bin and normalize share the required key-set {from, field} \u2014 the only such pair among the seven constructors \u2014 the substitution alters nothing but the discriminant, so the outcome difference is attributable to it alone."
+      }
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.nest.levels#incidence"
+      ],
+      "a": {
+        "fixture": "FX_N_NESTED_SUBTOTAL_AT_PREFIX"
+      },
+      "b": {
+        "base": "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+        "patch": [
           {
-            "set": "evidence.grainWitness.orders",
+            "set": "structure.relations.hierarchy.derivedBy.levels",
             "value": [
-              "order_id",
-              "amount"
+              "revenue",
+              "state"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_GRAIN_SUBTOTAL_MISMATCH"
+          ],
+          "terms": []
+        },
+        "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: rebinding position 0 of the declared levels from `country` to `revenue` removes `country` from the declared prefixes, so the existing toGrain: [country] subtotal is off-grain -- the first witness filed under the bound-incidence quotient (the same pair the instrument refused while the erasure tokenized), and an OCCUPANT difference, so the attribution rule does not fire"
+      }
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.nest.levels#order"
+      ],
+      "a": {
+        "fixture": "FX_N_NESTED_SUBTOTAL_AT_PREFIX"
+      },
+      "b": {
+        "base": "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+        "patch": [
+          {
+            "set": "structure.relations.hierarchy.derivedBy.levels",
+            "value": [
+              "state",
+              "country"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_GRAIN_SUBTOTAL_MISMATCH"
+          ],
+          "terms": []
+        },
+        "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: a subtotal to a grain the nest does not declare. Reordering the declared levels to [state, country] removes `country` from the declared prefixes, so the existing `toGrain: [country]` subtotal is off-grain -- the judgment follows from an already-existing cause, and NOTHING else about the fixture moves."
+      }
+    },
+    {
+      "coordinates": [
+        "relation.grain"
+      ],
+      "a": {
+        "fixture": "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN"
+      },
+      "b": {
+        "base": "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN",
+        "patch": [
+          {
+            "set": "structure.relations.orders.grain",
+            "value": [
+              "order_id"
             ]
           }
         ],
@@ -1181,9 +1238,8 @@
           "codes": [],
           "terms": []
         },
-        "cause": "The corpus's own satisfying side for `grain:declared`: the witness names both columns and no row repeats on the PAIR, so the relation does hold one row per unit and the aggregate has the grain its witness declares."
-      },
-      "note": "STAGE-2 necessity for evidence.grainWitness#arity: separates how many columns the witness names. Both sides write the same instance rows (three orders, one of them repeated on `order_id` alone) and differ at exactly the witness array, so the pair's whole difference is its arity; the arity erasure truncates to the declared floor of one and returns the b-side to the a-side shape. NON-CLAIM: the rows are WRITTEN IDENTICALLY ON BOTH SIDES because the committed rows cannot express the distinction -- FX_T_GRAIN_WITNESS_DUPLICATE_ROWS repeats rows that are identical on every column, and FX_T_GRAIN_WITNESS_UNIQUE_ROWS repeats nothing -- so this pair carries a shared setup rather than a shared shape. A pair whose sides needed DIFFERENT rows would be evidence about two datasets, not about this coordinate."
+        "cause": "doctrine L1: grain unknown makes grain-dependent judgments unproven with grain:declared; a declared grain discharges it (triad grain:declared)"
+      }
     },
     {
       "coordinates": [
@@ -1214,34 +1270,6 @@
         "cause": "CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN states its claim about a peer set EVERY member of which is an aggregate-to-grain of one relation -- the law's own condition is `aggs.length === decls.length` -- so a three-member set containing the un-derived source relation is a different proposition and the divergence rule does not apply to it. Only the peer set's arity moves; the two aggregations and their disagreeing targets are untouched."
       },
       "note": "STAGE-2 necessity for structure.peers[]#arity: separates how many relations a peer set claims to co-register. The a-side is the corpus case CASE_PEER_TOTALS_AT_A_DIFFERENT_GRAIN and the b-side adds the source relation to the same set, so the pair differs at exactly that array; the arity erasure truncates the inner list to its declared floor of two and returns the b-side to the a-side shape, and checkIsolation discharges on both sides. NON-CLAIM: the b-side is admissible because the divergence law is conditioned on every member being an aggregation, which this pair reaches by adding a non-aggregation -- so the witness establishes that the COUNT of members decides whether that law applies, and not that a larger all-aggregation peer set would be admissible. If the law tightens to compare its aggregation members among themselves, the engine disagrees with this hand adjudication and C7 fails, which is the designed invalidation."
-    },
-    {
-      "coordinates": [
-        "relation.derivedBy.join.cardinality:one-to-many~many-to-many"
-      ],
-      "a": {
-        "fixture": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN"
-      },
-      "b": {
-        "base": "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
-        "patch": [
-          {
-            "set": "structure.relations.order_lines.derivedBy.cardinality",
-            "value": "many-to-many"
-          }
-        ],
-        "outcome": {
-          "status": "illegal",
-          "codes": [
-            "REL_GRAIN_FANOUT"
-          ],
-          "terms": [
-            "grain:declared"
-          ]
-        },
-        "cause": "CASE_REVENUE_DOUBLE_COUNTED_AFTER_JOIN decides the diagnostic and does not depend on which way the join multiplies: order_lines still fans out over lines, so the summed revenue is still inflated. What changes is the GRAIN: a join that multiplies on both sides determines no result grain at all, so the sum owes the corpus's `grain:declared` obligation -- the triad whose absent side is FX_ORDERS_ROLLUP_UNKNOWN_GRAIN -- which the one-to-many reading does not. Both findings are corpus-licensed and the pair differs at exactly the tag."
-      },
-      "note": "STAGE-2 necessity for relation.derivedBy.join.cardinality:one-to-many~many-to-many: separates a join that multiplies on the `with` side from one that multiplies on both. The a-side is the corpus case for REL_GRAIN_FANOUT and the b-side is the same declaration at many-to-many, whose required outcome adds the corpus's `grain:declared` obligation because the operator then determines no grain. The merge erasure folds both members into one class, which leaves the join without a resolvable cardinality: determinedGrain returns undefined, the grain comparison is skipped, and the erasure introduces no boundary finding -- so checkIsolation discharges on both sides. NON-CLAIM: the distinction this witness establishes is that the tag decides whether the result grain is DETERMINED at all; it does not establish that one-to-many and many-to-many differ in what they multiply, and it says nothing about the five sibling pairs, four of which are refused for the reason recorded in the ledger rather than witnessed."
     }
   ]
 }
