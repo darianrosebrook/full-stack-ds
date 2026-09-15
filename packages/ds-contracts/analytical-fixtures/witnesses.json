@@ -266,7 +266,7 @@
       "b": {
         "fixture": "FX_EVENT_AT_SUM"
       },
-      "note": "FX_TEMP_SUM declares NO temporality at all and FX_EVENT_AT_SUM declares {kind: instant}, so this pair separates whether the holder EXISTS, not which kind it carries. Filed under the leaf until the codomain change made the misattribution measurable; re-pointed at the holder, where checkWitness holds. The leaf's own distinction is carried by the member-pair witness, and the leaf is retained as required-derived-vocabulary rather than ratified — see subtraction-stage2-enum-leaf.json."
+      "note": "FX_TEMP_SUM declares NO temporality at all and FX_EVENT_AT_SUM declares {kind: instant}, so this pair separates whether the holder EXISTS, not which kind it carries. Filed under the leaf until the codomain change made the misattribution measurable; re-pointed at the holder, where checkWitness holds. The leaf's own distinction is carried by the member-pair witness, and the leaf is retained as required-derived-vocabulary rather than ratified \u2014 see subtraction-stage2-enum-leaf.json."
     },
     {
       "coordinates": [
@@ -834,7 +834,7 @@
           "codes": [],
           "terms": []
         },
-        "cause": "CASE_WHICH_BIN_GETS_TEN makes an undeclared-closure BIN illegal, and that rule is keyed to the bin constructor: partitioning a range into intervals is what raises the question of which side owns a boundary. Rescaling a field against a whole raises no such question, so the same {from, field} payload under `normalize` is admissible; the normalize rule of CASE_NORMALIZED_AVERAGES fires only when the normalized measure is subsequently aggregated non-additively, and the only assertion here is `min` over the SOURCE relation. Both readings are mechanical over existing stage-2 causes. Because bin and normalize share the required key-set {from, field} — the only such pair among the seven constructors — the substitution alters nothing but the discriminant, so the outcome difference is attributable to it alone."
+        "cause": "CASE_WHICH_BIN_GETS_TEN makes an undeclared-closure BIN illegal, and that rule is keyed to the bin constructor: partitioning a range into intervals is what raises the question of which side owns a boundary. Rescaling a field against a whole raises no such question, so the same {from, field} payload under `normalize` is admissible; the normalize rule of CASE_NORMALIZED_AVERAGES fires only when the normalized measure is subsequently aggregated non-additively, and the only assertion here is `min` over the SOURCE relation. Both readings are mechanical over existing stage-2 causes. Because bin and normalize share the required key-set {from, field} \u2014 the only such pair among the seven constructors \u2014 the substitution alters nothing but the discriminant, so the outcome difference is attributable to it alone."
       }
     },
     {
@@ -959,6 +959,34 @@
           "terms": []
         },
         "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: a subtotal to a grain the nest does not declare. Reordering the declared levels to [state, country] removes `country` from the declared prefixes, so the existing `toGrain: [country]` subtotal is off-grain -- the judgment follows from an already-existing cause, and NOTHING else about the fixture moves."
+      }
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.nest.levels#incidence"
+      ],
+      "a": {
+        "fixture": "FX_N_NESTED_SUBTOTAL_AT_PREFIX"
+      },
+      "b": {
+        "base": "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+        "patch": [
+          {
+            "set": "structure.relations.hierarchy.derivedBy.levels",
+            "value": [
+              "revenue",
+              "state"
+            ]
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_GRAIN_SUBTOTAL_MISMATCH"
+          ],
+          "terms": []
+        },
+        "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: rebinding position 0 of the declared levels from `country` to `revenue` removes `country` from the declared prefixes, so the existing toGrain: [country] subtotal is off-grain -- the first witness filed under the bound-incidence quotient (the same pair the instrument refused while the erasure tokenized), and an OCCUPANT difference, so the attribution rule does not fire"
       }
     },
     {
