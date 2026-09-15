@@ -9,7 +9,10 @@ updated_at: '2026-09-15T22:10:21.809Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/support.ts (new: the one classifier)'
+    - 'packages/ds-codegen/src/analytical/necessity.ts + erasure-audit.ts (both consume it; the audit stops computing standing separately)'
+    - 'packages/ds-codegen/src/analytical/subtraction.ts (the drift check enters the gate)'
+    - 'the re-adjudicated verdicts and every re-recorded ledger'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -20,7 +23,10 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - "Standing has ONE definition, consumed by the standing function and the audit: neither infers it independently, and a witness whose erasure destroys a sibling facet is classified by the same code that refuses to ratify it."
+  - "The distinction is the CARRIER, not the leaf: collateral inside what the erasure removes (a member refinement of the declared leaf, or a declaration under a deleted holder) is a sub-distinction, so subsumption stays correct; a reference-topology facet at the SAME locator is destroyed in place while its carrier survives, so it is independent and does not ratify."
+  - "The drift check becomes inadmissible at the gate: a recorded `witnessed` verdict that the live classifier does not ratify fails `analytical:subtraction:gate`, not only a test."
+  - "Re-adjudication follows the classifier mechanically; verdicts it demotes move to `unresolved` with the reason naming the sibling facet, and no verdict is hand-favored."
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
