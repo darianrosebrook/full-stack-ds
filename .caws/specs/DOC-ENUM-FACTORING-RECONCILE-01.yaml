@@ -1,0 +1,28 @@
+id: DOC-ENUM-FACTORING-RECONCILE-01
+title: 'Reconcile the analytical doctrine and snapshot with the landed enum-leaf factoring'
+risk_tier: 3
+mode: doc
+lifecycle_state: draft
+created_at: '2026-09-15T04:31:43.580Z'
+updated_at: '2026-09-15T04:31:43.580Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'docs/architecture/analytical-relation-doctrine.md (invariant 17)'
+    - 'docs/current-implementation-snapshot.md (the analytical relation kernel row)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'The doctrine states present-tense what the code does; a mechanism the machinery refuses is recorded as refused, with the guarantee that refuses it named.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the enum-leaf factoring and the fourth accounting mode landed in 515896c0; when the doctrine and the snapshot are re-derived from that tree; then invariant 17 states the factoring as decided and implemented rather than pending, records the refused misattribution mechanism and the composite presence witness, and the snapshot''s analytical row counts the live tree'
+non_functional: {}
+contracts: []
