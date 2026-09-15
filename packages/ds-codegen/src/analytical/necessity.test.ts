@@ -1532,41 +1532,47 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
     expect(canonical(erase(base, incidence))).toBe(canonical(erase(patched, incidence)));
   });
 
-  it("the incidence erasure identifies the ORDER pair too, so order's evidence is not evidence ABOUT incidence", () => {
-    // WHAT THE DISCHARGE COSTS, measured rather than argued. The order witness
-    // separates two fixtures holding the SAME two declared levels in a different
-    // ARRANGEMENT. A bound incidence slot is forgotten by landing on ONE
-    // arrangement of declared names, so every arrangement of the same occupants
-    // reaches one image and this witness is now admitted for `#incidence` as well.
+  it("the incidence erasure identifies the ORDER pair too, and admission now refuses the misattributed recast", () => {
+    // WHAT THE DISCHARGE COSTS, measured rather than argued -- and now POLICED.
+    // The order witness separates two fixtures holding the SAME two declared
+    // levels in a different ARRANGEMENT. A bound incidence slot is forgotten by
+    // landing on ONE arrangement of declared names, so every arrangement of the
+    // same occupants reaches one image: the collision holds for `#incidence`
+    // too, and before the attribution rule it was ADMITTED.
     //
-    // It cannot be otherwise: an erasure that PRESERVED the arrangement could not
-    // identify the fixtures that differ in WHICH declared names are bound, which
-    // is the distinction the coordinate is for. What is missing is a rule that
-    // attributes a collision's difference to the coordinate it names -- the
-    // isolation module's own docstring states the one-degree-of-freedom
-    // obligation and this case is where it stops being enforced. Recording it
-    // here is the point: the admitted witness is evidence about
-    // {incidence, order} JOINTLY, and reading it as incidence alone would credit
-    // the coordinate with a distinction that survives its erasure.
+    // It cannot be otherwise on the erasure side: one that PRESERVED the
+    // arrangement could not identify the fixtures that differ in WHICH declared
+    // names are bound. So the rule lives at ADMISSION, where the difference the
+    // collision is over can be read: a pair whose entire difference is the
+    // arrangement is order's degree of freedom, and citing incidence alone
+    // credits the coordinate with a distinction that survives its erasure only
+    // as collateral. The same pair stays admissible for `#order` alone -- the
+    // committed witness -- and for the JOINT set, because the owner is then
+    // named.
     const order = witnesses.find((w) => w.coordinates.join(" + ") === "relation.derivedBy.nest.levels#order");
     expect(order, "the committed nest-levels order witness is gone").toBeDefined();
-    expect(checkWitness(order!, kernel, oracle).ok).toBe(true);
+    expect(checkWitness(order!, kernel, oracle).ok, "the owner's own witness is untouched by the rule").toBe(true);
     const recast: Witness = { ...order!, coordinates: ["relation.derivedBy.nest.levels#incidence"] };
     const r = checkWitness(recast, kernel, oracle);
-    expect(r.ok, "the incidence erasure now identifies the order pair too").toBe(true);
-    // And the stimuli differ ONLY in the arrangement (the `.id` the patched side
-    // carries is the harness's own labeling, not a representational difference),
-    // so the erasure is what destroyed the distinction: nothing else about the
-    // pair was in play.
+    expect(r.ok).toBe(false);
+    expect(r.failures.map((f) => f.code)).toEqual(["DIFFERENCE_MISATTRIBUTED"]);
+    expect(r.failures[0].detail).toContain("relation.derivedBy.nest.levels#order");
+    // The refusal is about the difference, not the pair: the stimuli differ ONLY
+    // in the arrangement (the `.id` the patched side carries is the harness's own
+    // labeling), and the collision itself still holds.
     const paths = changedPaths(r.a.fixture, r.b.fixture).filter((p) => p !== ".id");
     expect(paths).toEqual([
       ".structure.relations.hierarchy.derivedBy.levels[0]",
       ".structure.relations.hierarchy.derivedBy.levels[1]",
     ]);
-    expect(canonical(r.a.fixture)).not.toBe(canonical(r.b.fixture));
     expect(canonical(erase(r.a.fixture, kernel.find((c) => c.id === "relation.derivedBy.nest.levels#incidence")!))).toBe(
       canonical(erase(r.b.fixture, kernel.find((c) => c.id === "relation.derivedBy.nest.levels#incidence")!)),
     );
+    // And naming the owner beside the coordinate is admissible again: the joint
+    // set says exactly what the pair is evidence about.
+    const joint: Witness = { ...order!, coordinates: ["relation.derivedBy.nest.levels#incidence", "relation.derivedBy.nest.levels#order"] };
+    const j = checkWitness(joint, kernel, oracle);
+    expect(j.failures.map((f) => f.code)).not.toContain("DIFFERENCE_MISATTRIBUTED");
   });
 
   it("the authored incidence stimulus over the round-25 pair is ADMITTED, which is the discharge this record was waiting for", () => {
