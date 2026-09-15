@@ -1,0 +1,32 @@
+id: REL-STAGE2-WITNESS-ADJUDICATION-01
+title: 'Adjudicate the ten stage-2 candidates the corpus already discriminates'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T05:18:09.904Z'
+updated_at: '2026-09-15T05:18:09.904Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-contracts/analytical-fixtures/witnesses.json (ten single-coordinate witnesses)'
+    - 'packages/ds-contracts/analytical-fixtures/subtraction-stage2.json (ten witnessed verdicts)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'A witness is authored only where an existing stage-2 cause decides the pair mechanically; no new corpus authority is invented to convert a failure to find a witness into a verdict.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given ten unresolved stage-2 candidates each have an oracle-separated pair of already-existing fixtures over the committed population; when a single-coordinate witness is authored for each and verified by checkWitness; then each records a witnessed verdict the subtraction validator accepts because a holding witness ratifies it, the unadjudicated count falls by exactly the number accepted, and no coordinate is adjudicated without one'
+non_functional: {}
+contracts:
+  - name: 'witnesses'
+    type: contract-test
+    path: 'packages/ds-contracts/analytical-fixtures/witnesses.json'
