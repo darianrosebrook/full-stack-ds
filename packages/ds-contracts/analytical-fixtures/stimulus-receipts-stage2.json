@@ -516,6 +516,14 @@
         "provenance": "authored-before-engine",
         "authoredAt": "2026-09-15",
         "digest": "08d066b701e4ec9f632401a6dd9346a455d88d64e96fbc6159586720ed8397ca"
+      },
+      "engine": {
+        "ranAt": "2026-09-15",
+        "observed": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        }
       }
     },
     {
@@ -558,6 +566,14 @@
         "provenance": "authored-before-engine",
         "authoredAt": "2026-09-15",
         "digest": "8c8e64549908db55fae1f119f7843be321964fe97d09f60ce6dbfec2eaf97a9e"
+      },
+      "engine": {
+        "ranAt": "2026-09-15",
+        "observed": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        }
       }
     }
   ]
