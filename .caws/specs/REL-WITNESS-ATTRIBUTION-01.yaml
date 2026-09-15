@@ -33,3 +33,8 @@ contracts:
   - name: 'witness-admission'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical (19 files / 842 tests green) and all nine analytical gates green in worktree witness-attribution before merge 660e065b; full root suite 301 files / 4063 tests, typecheck, docs gates green. Measured outcome: DIFFERENCE_MISATTRIBUTED refuses the arrangement-only recast (nest.levels#incidence over the committed order witness's pair) with the named cause, the pair stays admissible for order alone and for the joint set {incidence, order} (owner named, NOT_MINIMAL apart), and the round-25 authored pair (an occupant difference) remains admitted. NO committed witness is refused -- C2's sweep of all committed witnesses is green, matching the round-33 measurement that the hazard was authored-only. NON-CLAIM: the freeze holds the same 160 erasures and 126 verdicts and the erasure authority is unmoved (the peers supersession statement is carried forward), so no verdict moved and nothing was filed; the rule is scoped to the measured instance (incidence over an arrangement-only difference at a slot carrying an order facet) -- arity is not at risk because the incidence erasure preserves it, and a set-valued list's arrangement already reads as SAME_OUTCOME."
+    recorded_at: "2026-09-15T16:44:20.333Z"
