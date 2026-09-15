@@ -676,7 +676,11 @@
             "from",
             "toGrain"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "toGrain": "field"
+          }
         },
         {
           "type": "object",
@@ -735,7 +739,11 @@
             "with",
             "cardinality"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "with": "relation"
+          }
         },
         {
           "type": "object",
@@ -789,7 +797,11 @@
             "from",
             "levels"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "levels": "field"
+          }
         },
         {
           "type": "object",
@@ -845,7 +857,11 @@
             "from",
             "field"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "field": "field"
+          }
         },
         {
           "type": "object",
@@ -887,7 +903,11 @@
             "from",
             "field"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "field": "field"
+          }
         },
         {
           "type": "object",
@@ -941,7 +961,11 @@
             "from",
             "keep"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "keep": "field"
+          }
         },
         {
           "type": "object",
@@ -1019,7 +1043,13 @@
             "edgeFrom",
             "edgeTo"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "edgeFrom": "field",
+            "edgeTo": "field",
+            "value": "field"
+          }
         }
       ]
     },

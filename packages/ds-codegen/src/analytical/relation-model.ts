@@ -54,6 +54,40 @@ export const Name = z
  * facet that nothing can adjudicate.
  */
 export const SEQUENCE_KEY = "x-fsds-sequence" as const;
+
+/**
+ * Which DECLARED namespace a derivation operand ranges over.
+ *
+ * The incidence facet's erasure has to leave the operand RESOLVABLE, or the
+ * image is not a declaration and the boundary refuses it. To rebind instead of
+ * tokenize, the walk needs to know whether the slot names a relation or a field
+ * — a declaration fact, stated here, read by `census.ts`, and carried onto the
+ * locator so the executor never infers it from a path.
+ *
+ * It is deliberately NOT on `Name` itself: only the derivation operands are
+ * bound, and a reference that carries no namespace keeps the tokenizing erasure
+ * unchanged.
+ */
+export const OPERANDS_KEY = "x-fsds-operands" as const;
+export type OperandNamespace = "field" | "relation";
+
+/**
+ * The operands each derivation branch binds, and the namespace each ranges over.
+ *
+ * Stated ONCE on the branch rather than wrapping each `Name`: a reader that only
+ * looks at `properties` — the pinned legacy erasure walker does exactly that —
+ * still sees the branch it always saw, so adding this fact cannot make a
+ * historical reader unable to parse the current schema.
+ */
+export const DERIVATION_OPERANDS: Record<string, Record<string, OperandNamespace>> = {
+  "aggregate-to-grain": { from: "relation", toGrain: "field" },
+  join: { from: "relation", with: "relation" },
+  nest: { from: "relation", levels: "field" },
+  bin: { from: "relation", field: "field" },
+  normalize: { from: "relation", field: "field" },
+  project: { from: "relation", keep: "field" },
+  graph: { from: "relation", edgeFrom: "field", edgeTo: "field", value: "field" },
+};
 export type SequenceFact = "set" | "ordered";
 /** A collection whose order no rule reads: erasing `#order` destroys nothing. */
 const Set_ = { [SEQUENCE_KEY]: "set" } as const;
@@ -147,21 +181,21 @@ export const JoinCardinality = z.enum(["one-to-one", "one-to-many", "many-to-one
 export const Derivation = z
   .discriminatedUnion("kind", [
     /** Combine rows to a named coarser grain. `toGrain` is the re-earned target. */
-    z.strictObject({ kind: z.literal("aggregate-to-grain"), from: Name, toGrain: z.array(Name).min(1).meta(Ordered) }),
+    z.strictObject({ kind: z.literal("aggregate-to-grain"), from: Name, toGrain: z.array(Name).min(1).meta(Ordered) }).meta({ "x-fsds-operands": DERIVATION_OPERANDS["aggregate-to-grain"] }),
     /**
      * Declared relationship between two relations. The cardinality is the
      * re-earned coordinate: it makes fan-out decidable from the declaration
      * instead of only from rows.
      */
-    z.strictObject({ kind: z.literal("join"), from: Name, with: Name, cardinality: JoinCardinality }),
+    z.strictObject({ kind: z.literal("join"), from: Name, with: Name, cardinality: JoinCardinality }).meta({ "x-fsds-operands": DERIVATION_OPERANDS.join }),
     /** Impose a hierarchy. `levels` is the membership every later projection needs. */
-    z.strictObject({ kind: z.literal("nest"), from: Name, levels: z.array(Name).min(2).meta(Ordered) }),
+    z.strictObject({ kind: z.literal("nest"), from: Name, levels: z.array(Name).min(2).meta(Ordered) }).meta({ "x-fsds-operands": DERIVATION_OPERANDS.nest }),
     /** Partition a field's range into intervals. Closure says which side each interval owns. */
-    z.strictObject({ kind: z.literal("bin"), from: Name, field: Name, closure: z.enum(["left-closed", "right-closed"]).optional() }),
+    z.strictObject({ kind: z.literal("bin"), from: Name, field: Name, closure: z.enum(["left-closed", "right-closed"]).optional() }).meta({ "x-fsds-operands": DERIVATION_OPERANDS.bin }),
     /** Rescale a field against a whole. */
-    z.strictObject({ kind: z.literal("normalize"), from: Name, field: Name }),
+    z.strictObject({ kind: z.literal("normalize"), from: Name, field: Name }).meta({ "x-fsds-operands": DERIVATION_OPERANDS.normalize }),
     /** Relational projection: keep these fields. What is dropped is derived, not declared. */
-    z.strictObject({ kind: z.literal("project"), from: Name, keep: z.array(Name).min(1).meta(Set_) }),
+    z.strictObject({ kind: z.literal("project"), from: Name, keep: z.array(Name).min(1).meta(Set_) }).meta({ "x-fsds-operands": DERIVATION_OPERANDS.project }),
     /**
      * Read a relation as edges.
      *
@@ -177,7 +211,7 @@ export const Derivation = z
      * It is an invariant on the derivation, NOT a perceptual task — the task
      * table is L3.5 and stays out of stage 2.
      */
-    z.strictObject({ kind: z.literal("graph"), from: Name, edgeFrom: Name, edgeTo: Name, value: Name.optional(), requiresConservation: z.literal(true).optional() }),
+    z.strictObject({ kind: z.literal("graph"), from: Name, edgeFrom: Name, edgeTo: Name, value: Name.optional(), requiresConservation: z.literal(true).optional() }).meta({ "x-fsds-operands": DERIVATION_OPERANDS.graph }),
   ])
   .meta({ id: "derivation" });
 

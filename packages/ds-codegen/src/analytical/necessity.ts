@@ -381,18 +381,37 @@ export function checkWitness(
 }
 
 /**
- * A quotient must remove ONE degree of freedom. If erasing a coordinate also
- * changes arity, or reorders, or manufactures a defect that was not there, a
- * collision proves nothing about the coordinate it claims to be about: the
- * stimuli may have been identified by the collateral damage.
+ * THE ISOLATION OBLIGATION: erasing a coordinate must remove ONE degree of
+ * freedom, or a collision proves nothing about the coordinate it names.
  *
- * The specific trap this closes: replacing a resolvable reference with a token
- * can create a dangling reference, and a witness would then "hold" because
- * erasure introduced REL_DERIVATION_INPUT_MISSING, not because the incidence
- * relation was necessary.
+ * That is a DESIGN obligation on the plans. This function and
+ * `checkCombinedIsolation` enforce the part of it that can be decided from the
+ * image:
  *
- * Returns a description of the violation, or undefined when the erasure is
- * isolated.
+ *   - an erasure that manufactures a derivation-BOUNDARY well-formedness defect
+ *     is refused, because a collision would be that break (the one exemption is
+ *     a member pair on a discriminator, where the semantic finding IS the
+ *     distinction under test);
+ *   - an image that is illegal in the QUOTIENT language is refused;
+ *   - a change outside every slot the coordinate's own locator reaches is
+ *     refused, which is what bounds the erasure to the slot it names;
+ *   - an image with no change at all is discharged without asking the engine,
+ *     because it has nothing to have damaged.
+ *
+ * WHAT IS NOT ENFORCED, and the bound incidence erasure now reaches it: that the
+ * erasure leaves the OTHER facets of the same slot alone. A bound incidence slot
+ * can only be forgotten by landing on ONE arrangement of declared names, so
+ * forgetting incidence also forgets order -- and a witness naming `#incidence`
+ * can therefore be earned on a pair that differs only in the ARRANGEMENT. The
+ * facets are separate coordinates with separate plans, but nothing attributes a
+ * collision's difference to the coordinate it names. `necessity.test.ts` records
+ * that case (`nest.levels#incidence` over the committed `#order` witness's
+ * stimuli) rather than arguing it away.
+ *
+ * The specific trap the boundary rule closes: replacing a resolvable reference
+ * with a token can create a dangling reference, and a witness would then "hold"
+ * because the erasure introduced REL_DERIVATION_INPUT_MISSING, not because the
+ * incidence relation was necessary.
  */
 /** Every path in a fixture that holds a non-object value, for set-difference. */
 function terminalPaths(node: unknown, path = "", out: Set<string> = new Set()): Set<string> {

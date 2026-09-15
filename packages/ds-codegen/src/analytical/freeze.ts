@@ -233,6 +233,13 @@ const SUPERSESSION_EFFECT: Record<string, string> = {
     "The same five coordinates were adjudicated `representation-artifact` as they left, so their verdicts moved off `unresolved`. No surviving",
     "coordinate's verdict changed, and the subtraction reports 72 of 118 unadjudicated rather than 77.",
   ].join(" "),
+  "forget-reference-incidence": [
+    "A BOUND reference now rebinds to the operand's own DECLARED names instead of rewriting them to reserved tokens, because a token image stops resolving and the boundary",
+    "refuses it as a declaration -- so the erasure was the corruption rather than an ablation, and no witness naming the coordinate could be admitted. Only the derivation",
+    "operands changed: a reference that declares no namespace (an assertion's field, an additivity dimension, a grain witness) keeps the reserved token and its images are",
+    "unchanged. Reach moves for the bound slots because a canonical rebinding is the IDENTITY wherever the slot already holds the operand's declared prefix, and several",
+    "committed fixtures do -- so a coordinate can stop reaching any fixture while becoming WITNESSABLE, which is why reach is reported and never read as necessity.",
+  ].join(" "),
   "forget-reference-order": [
     "The census no longer emits an order facet for a name list whose declaration says it is a SET, so the plans that sorted `keep`, `along`,",
     "`nonAdditiveAlong`, `peers` and `grainWitness` are gone and their divergences with them. The erasure itself is untouched, so no image",

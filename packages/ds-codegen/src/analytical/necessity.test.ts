@@ -460,10 +460,17 @@ describe("C3 — the harness is falsified", () => {
     expect(codes(w)).toContain("SCHEMA_INVALID");
   });
   it("rejects an erasure that manufactures a derivation defect instead of isolating its coordinate", () => {
-    // A structure whose derived relation is lawful. Erasing the incidence of
-    // `derivedBy.project.from` replaces a resolvable relation name with a
-    // token, which dangles — so any collision would be that dangling reference
-    // rather than the co-reference relation the coordinate is about.
+    // A structure whose derived relation is lawful. Truncating `project.keep` to
+    // its declared floor drops a field the result still DECLARES, so the boundary
+    // reports the result underivable — any collision would be that defect rather
+    // than the selection the coordinate is about.
+    //
+    // `derivedBy.project.from#incidence` used to be this example: forgetting a
+    // resolvable relation name rewrote it to a reserved token, which dangles, so
+    // the boundary reported the input missing. A bound slot now rebinds to a
+    // DECLARED name, so that image resolves and the example no longer exists —
+    // which is what the plan changed, and why this one is taken from the facet
+    // the boundary still refuses.
     const structure = {
       relations: {
         src: { grain: ["k"], fields: { k: { transformation: "nominal", key: true }, v: { transformation: "ratio" } } },
@@ -475,15 +482,15 @@ describe("C3 — the harness is falsified", () => {
       },
     } as unknown as RelationalStructure;
     const fixture = { id: "fx_probe", structure, assertions: [] } as unknown as Fixture;
-    const coord = loadCensus().find((c) => c.id === "relation.derivedBy.project.from#incidence")!;
+    const coord = loadCensus().find((c) => c.id === "relation.derivedBy.project.keep#arity")!;
     expect(coord).toBeDefined();
-    // The diagnostic is NAMED, not merely counted. `REL_DERIVATION_INPUT_MISSING`
+    // The diagnostic is NAMED, not merely counted. `REL_DERIVATION_RESULT_NOT_DERIVABLE`
     // is the specific collateral this guard exists to catch; a message that only
     // says "a defect appeared" would go on passing if the guard started firing
     // on something else entirely.
     const r = checkIsolation(fixture, coord);
     expect(r.state).toBe("violated");
-    expect(r.state === "violated" && r.detail).toContain("REL_DERIVATION_INPUT_MISSING@out");
+    expect(r.state === "violated" && r.detail).toContain("REL_DERIVATION_RESULT_NOT_DERIVABLE@out");
   });
 
   /**
@@ -508,7 +515,15 @@ describe("C3 — the harness is falsified", () => {
     const wrap = (assertions: unknown[]) => ({ id: "fx_probe", structure, assertions }) as unknown as Fixture;
     const bare = wrap([]);
     const wrapped = wrap([{ kind: "aggregate", relation: "out", field: "v", op: "sum", along: ["k"] }]);
-    const incidence = loadCensus().find((c) => c.id === "relation.derivedBy.project.from#incidence")!;
+    // The coordinate the probe below is measured with. It reaches the boundary
+    // and is refused there (`project.keep#arity` truncates the projection to its
+    // declared floor and drops a field the result declares), which is what makes
+    // the isolation result a real verdict rather than a no-op. The incidence of
+    // `project.from` was this probe's coordinate until a bound slot began
+    // rebinding to DECLARED names: its image now resolves, the erasure is the
+    // identity on this structure, and a discharged-by-`unchanged` result would
+    // have made the three tests below vacuous.
+    const keepArity = loadCensus().find((c) => c.id === "relation.derivedBy.project.keep#arity")!;
 
     it("the envelope rejects both probes, on grounds that say nothing about the structure", () => {
       // Stated first because it is what makes the next test a falsifier rather
@@ -525,10 +540,10 @@ describe("C3 — the harness is falsified", () => {
       const expected: IsolationResult = {
         state: "violated",
         detail:
-          "erasure introduced derivation defect(s) diagnostic REL_DERIVATION_INPUT_MISSING@out via project(keep=2) [derivation-typing/schema], so any collision may be that defect rather than the coordinate",
+          "erasure introduced derivation defect(s) diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@out via project(keep=1) [derivation-typing/schema], so any collision may be that defect rather than the coordinate",
       };
-      expect(checkIsolation(bare, incidence)).toEqual(expected);
-      expect(checkIsolation(wrapped, incidence)).toEqual(expected);
+      expect(checkIsolation(bare, keepArity)).toEqual(expected);
+      expect(checkIsolation(wrapped, keepArity)).toEqual(expected);
     });
 
     it("a forgotten discriminator is out of the ENGINE's domain, and no operator lookup is executed", () => {
@@ -603,7 +618,7 @@ describe("C3 — the harness is falsified", () => {
       const boom = () => {
         throw new TypeError("injected instrument failure");
       };
-      expect(() => checkIsolation(bare, incidence, boom)).toThrow(/injected instrument failure/);
+      expect(() => checkIsolation(bare, keepArity, boom)).toThrow(/injected instrument failure/);
     });
 
     it("is a pure function of its arguments: no accumulated state orders the results", () => {
@@ -611,8 +626,8 @@ describe("C3 — the harness is falsified", () => {
       // Two coordinates over the same stimulus — one the engine can read, one it
       // cannot — must give the same pair of results in either evaluation order.
       const kindLeaf = loadCensus().find((c) => c.id === "relation.derivedBy.kind")!;
-      const forward = [checkIsolation(bare, incidence), checkIsolation(bare, kindLeaf)];
-      const backward = [checkIsolation(bare, kindLeaf), checkIsolation(bare, incidence)];
+      const forward = [checkIsolation(bare, keepArity), checkIsolation(bare, kindLeaf)];
+      const backward = [checkIsolation(bare, kindLeaf), checkIsolation(bare, keepArity)];
       expect(forward).toEqual([backward[1], backward[0]]);
       expect(forward[0].state).toBe("violated");
       expect(forward[1].state).toBe("discharged");
@@ -728,8 +743,16 @@ describe("C3 — the harness is falsified", () => {
       expect(at("assertion.aggregate.relation#incidence")).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/still carries diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat.*first-refutation checker cannot show/) });
       // The key persists with a DIFFERENT cause behind it (see the next test): unsettled — the engine cannot tell these two rows apart.
       expect(at("relation.derivedBy.project.keep#incidence")).toMatchObject({ state: "unevaluated", reason: expect.stringMatching(/first-refutation checker cannot show/) });
-      // A different key appears: refuted, as before.
-      expect(at("relation.derivedBy.project.from#incidence")).toMatchObject({ state: "violated", detail: expect.stringMatching(/introduced derivation defect\(s\) diagnostic REL_DERIVATION_INPUT_MISSING@flat/) });
+      // A different key appears: refuted, as before. The identity is
+      // `code@subject` PLUS the derivation it was found under, and the erasure
+      // truncates `keep` to its floor, so the same code reappears under
+      // `project(keep=1)` -- a different finding, not the one that was there.
+      // (`project.from#incidence` used to be this row: forgetting the input's
+      // name left the boundary with nothing to resolve, INPUT_MISSING@flat. A
+      // bound slot now rebinds to a DECLARED name, so that image resolves and
+      // the row is discharged instead -- the erasure change moved this row, not
+      // the rule.)
+      expect(at("relation.derivedBy.project.keep#arity")).toMatchObject({ state: "violated", detail: expect.stringMatching(/introduced derivation defect\(s\) diagnostic REL_DERIVATION_RESULT_NOT_DERIVABLE@flat via project\(keep=1\)/) });
       // The defective derivation itself is deleted and the finding goes with it:
       // the after-structure carries nothing, so there is nothing to hide behind,
       // and the engine HAS answered. Not a blanket withdrawal.
@@ -1273,7 +1296,18 @@ describe("C1e — no coordinate is un-erasable for a WALK reason", () => {
    * grainWitness facets, the five optional HOLDERS whose `#present` had no node
    * to erase, and `field.temporality`, which is tagged but is not a union, so
    * the walk branch-qualified a label the census does not.
+   *
+   * A corpus-dead entry can also be a fact about the ERASURE rather than about
+   * the fixture, and the six at the bottom of this table are: a bound incidence
+   * slot rebinds to the operand namespace's own DECLARATION order, and these
+   * slots already hold the first relation their structure declares, so the
+   * canonical bind writes the binding it found. They are CORPUS-dead by the
+   * definition above — the erasure is defined and this corpus gives it nothing to
+   * do — and each entry says WHICH declaration makes it so, because a fixture
+   * that declared its input relation second would make it live immediately.
    */
+  const FIRST_DECLARED_RELATION_IS_THE_BINDING =
+    "the slot already holds the FIRST relation the structure declares, which is the operand namespace's own declaration order, so the canonical rebinding writes the binding it found and the erasure is the identity on every fixture";
   const CORPUS_DEAD: Record<string, string> = {
     "relation.derivedBy.bin.closure:right-closed~<absent>": "no fixture declares right-closed",
     // THREE ENTRIES LEFT THIS LIST when merging became symmetric. A merge used
@@ -1301,6 +1335,17 @@ describe("C1e — no coordinate is un-erasable for a WALK reason", () => {
     // both became [a]), so what it was erasing was never arity alone.
     "relation.derivedBy.nest.levels#arity": "every corpus nest declares exactly two levels, which is the declared minimum, so truncating to it is identity",
     "structure.peers[]#arity": "every corpus peer set names exactly two peers, which is the declared minimum, so truncating to it is identity",
+    // The six relation-valued operands whose canonical rebinding IS the binding
+    // the corpus writes. `join.with` is absent because the corpus joins a
+    // relation the structure declares second, and `graph.edgeTo` because it is
+    // FIELD-valued and holds a field the namespace does not list first; both
+    // move, and are then refused by the boundary instead, which C1f enumerates.
+    "relation.derivedBy.bin.from#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
+    "relation.derivedBy.graph.edgeFrom#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
+    "relation.derivedBy.graph.from#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
+    "relation.derivedBy.join.from#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
+    "relation.derivedBy.nest.from#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
+    "relation.derivedBy.normalize.from#incidence": FIRST_DECLARED_RELATION_IS_THE_BINDING,
   };
 
   const fixtures = [...oracle.fixtures.values()];
@@ -1356,33 +1401,48 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
    * stimulus it touches, and no witness naming the coordinate can be admitted
    * however much the corpus grows.
    *
-   * Sixteen of the eighteen are `relation.derivedBy.*` OPERAND references, and
-   * the cause has one shape for all of them. A reference is a reference because
-   * it RESOLVES; forgetting its co-reference rewrites its names to reserved
-   * tokens, and the boundary then reports the structure it can no longer type —
-   * `REL_DERIVATION_INPUT_MISSING`, or `REL_DERIVATION_RESULT_NOT_DERIVABLE`
-   * when the forgotten names were the result's own fields. Those are the
-   * boundary's well-formedness refusals, which stay collateral for EVERY class
-   * by design, because a collision found under one might be the break rather
-   * than the coordinate. The refusal is therefore correct — and it is a fact
-   * about the QUOTIENT, not about the coordinate's necessity.
+   * THIS RECORD IS NOW MOSTLY HISTORY, AND IS KEPT AS SUCH. Sixteen of the
+   * eighteen were `relation.derivedBy.*` OPERAND references and the cause had one
+   * shape for all of them. The erasure that forgets a bound slot's names WITHOUT
+   * leaving it unresolvable now exists -- it rebinds the slot to DECLARED names
+   * drawn from the operand namespace the relation model declares
+   * (`x-fsds-operands`) -- so twelve of the eighteen left this list: six are
+   * DISCHARGED, and six are corpus-dead instead, which C1e enumerates and
+   * explains (their canonical rebinding is the binding the corpus already
+   * writes). The six below are what is left.
+   *
+   * Each of the six names the boundary line it is refused by. `toGrain` and
+   * `graph.edgeTo` are rebound to a field the derivation cannot reach that way,
+   * `join.with` to the relation that is already its left input, and
+   * `project.keep` (both facets) to a selection that drops a field the result
+   * still declares -- `REL_DERIVATION_RESULT_NOT_DERIVABLE` in every case.
+   * `structure.peers[]#incidence` is the odd one out and is refused for the
+   * ORIGINAL reason: its names ARE relation names, but `peers` sits on the
+   * STRUCTURE rather than on a derivation branch, and the operand map is read off
+   * a branch, so the walk declares no namespace for it and the tokenizing
+   * erasure is unchanged. That one is mended by a DECLARATION, not by an erasure.
+   *
+   * The refusals stay collateral for EVERY class by design, because a collision
+   * found under one might be the break rather than the coordinate. The refusal is
+   * correct -- and it is a fact about the QUOTIENT, not about the coordinate's
+   * necessity.
    *
    * That distinction is measured here, not asserted. On
    * FX_N_NESTED_SUBTOTAL_AT_PREFIX, rebinding the FIRST level from `country` to
    * `revenue` moves exactly one path, leaves both sides with a clean derivation
    * boundary, and flips the verdict admissible -> illegal under the
-   * already-existing cause CASE_NESTED_SUBTOTALS_OFF_GRAIN. So the coordinate is
-   * not one the corpus is silent about, and it is not a representation artifact
-   * either: erasing it DOES identify two representations the oracle separates,
-   * so the COLLISION obligation holds and isolation alone fails. That is why the
-   * committed `#order` witness over the same pair is accepted while the same
-   * stimulus pair re-cited for `#incidence` is refused.
+   * already-existing cause CASE_NESTED_SUBTOTALS_OFF_GRAIN. That pair is now
+   * ADMITTED as a witness for `nest.levels#incidence` -- the discharge this
+   * record was waiting for -- and the test beside it records what the discharge
+   * COSTS: the same erasure also identifies the ORDER pair.
    *
-   * The open question this leaves is a quotient rather than a corpus case: an
-   * erasure that forgets which declared names a bound reference shares WITHOUT
-   * leaving it unresolvable. Until one exists these coordinates have no verdict
-   * this instrument can produce, and filing one to clear the subtraction gate is
-   * exactly the move the standing index exists to prevent.
+   * The residual question is narrower than the one this describe was opened with:
+   * WHICH declared names a bound slot may legally rebind to is a fact about the
+   * operand's own typing rules (`toGrain` must name a declared grain prefix,
+   * `keep` must retain the result's grain), and the erasure reads the namespace
+   * and not those rules. Until an erasure that respects them exists, the six
+   * below have no verdict this instrument can produce, and filing one to clear
+   * the subtraction gate is exactly the move the standing index exists to prevent.
    */
   const plans = loadPlans();
   const fixtures = [...oracle.fixtures.values()];
@@ -1397,21 +1457,9 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
   };
 
   const NEVER_DISCHARGED = [
-    "relation.derivedBy.aggregate-to-grain.from#incidence",
     "relation.derivedBy.aggregate-to-grain.toGrain#incidence",
-    "relation.derivedBy.bin.field#incidence",
-    "relation.derivedBy.bin.from#incidence",
-    "relation.derivedBy.graph.edgeFrom#incidence",
     "relation.derivedBy.graph.edgeTo#incidence",
-    "relation.derivedBy.graph.from#incidence",
-    "relation.derivedBy.graph.value#incidence",
-    "relation.derivedBy.join.from#incidence",
     "relation.derivedBy.join.with#incidence",
-    "relation.derivedBy.nest.from#incidence",
-    "relation.derivedBy.nest.levels#incidence",
-    "relation.derivedBy.normalize.field#incidence",
-    "relation.derivedBy.normalize.from#incidence",
-    "relation.derivedBy.project.from#incidence",
     "relation.derivedBy.project.keep#arity",
     "relation.derivedBy.project.keep#incidence",
     "structure.peers[]#incidence",
@@ -1474,21 +1522,44 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
     expect(canonical(erase(base, incidence))).toBe(canonical(erase(patched, incidence)));
   });
 
-  it("the SAME stimulus pair is refused for incidence and accepted for order, so order is not evidence for incidence", () => {
+  it("the incidence erasure identifies the ORDER pair too, so order's evidence is not evidence ABOUT incidence", () => {
+    // WHAT THE DISCHARGE COSTS, measured rather than argued. The order witness
+    // separates two fixtures holding the SAME two declared levels in a different
+    // ARRANGEMENT. A bound incidence slot is forgotten by landing on ONE
+    // arrangement of declared names, so every arrangement of the same occupants
+    // reaches one image and this witness is now admitted for `#incidence` as well.
+    //
+    // It cannot be otherwise: an erasure that PRESERVED the arrangement could not
+    // identify the fixtures that differ in WHICH declared names are bound, which
+    // is the distinction the coordinate is for. What is missing is a rule that
+    // attributes a collision's difference to the coordinate it names -- the
+    // isolation module's own docstring states the one-degree-of-freedom
+    // obligation and this case is where it stops being enforced. Recording it
+    // here is the point: the admitted witness is evidence about
+    // {incidence, order} JOINTLY, and reading it as incidence alone would credit
+    // the coordinate with a distinction that survives its erasure.
     const order = witnesses.find((w) => w.coordinates.join(" + ") === "relation.derivedBy.nest.levels#order");
     expect(order, "the committed nest-levels order witness is gone").toBeDefined();
     expect(checkWitness(order!, kernel, oracle).ok).toBe(true);
     const recast: Witness = { ...order!, coordinates: ["relation.derivedBy.nest.levels#incidence"] };
     const r = checkWitness(recast, kernel, oracle);
-    expect(r.ok).toBe(false);
-    expect([...new Set(r.failures.map((f) => f.code))]).toEqual(["ERASURE_NOT_ISOLATED"]);
-    // Isolation and NOT collision: the incidence erasure does identify the two
-    // stimuli, so the distinction is expressible and only the quotient is
-    // illegal.
-    expect(r.failures.some((f) => f.code === "NO_COLLISION")).toBe(false);
+    expect(r.ok, "the incidence erasure now identifies the order pair too").toBe(true);
+    // And the stimuli differ ONLY in the arrangement (the `.id` the patched side
+    // carries is the harness's own labeling, not a representational difference),
+    // so the erasure is what destroyed the distinction: nothing else about the
+    // pair was in play.
+    const paths = changedPaths(r.a.fixture, r.b.fixture).filter((p) => p !== ".id");
+    expect(paths).toEqual([
+      ".structure.relations.hierarchy.derivedBy.levels[0]",
+      ".structure.relations.hierarchy.derivedBy.levels[1]",
+    ]);
+    expect(canonical(r.a.fixture)).not.toBe(canonical(r.b.fixture));
+    expect(canonical(erase(r.a.fixture, kernel.find((c) => c.id === "relation.derivedBy.nest.levels#incidence")!))).toBe(
+      canonical(erase(r.b.fixture, kernel.find((c) => c.id === "relation.derivedBy.nest.levels#incidence")!)),
+    );
   });
 
-  it("an authored incidence stimulus is refused for the same reason, so authoring cannot mend it", () => {
+  it("the authored incidence stimulus over the round-25 pair is ADMITTED, which is the discharge this record was waiting for", () => {
     const authored: Witness = {
       coordinates: ["relation.derivedBy.nest.levels#incidence"],
       a: { fixture: "FX_N_NESTED_SUBTOTAL_AT_PREFIX" },
@@ -1501,8 +1572,10 @@ describe("C1f — an erasure the boundary REFUSES is not a quotient, and no corp
       },
     };
     const r = checkWitness(authored, kernel, oracle);
-    expect(r.ok).toBe(false);
-    expect([...new Set(r.failures.map((f) => f.code))]).toEqual(["ERASURE_NOT_ISOLATED"]);
+    expect(r, JSON.stringify(r.failures)).toMatchObject({ ok: true });
+    // Not a vacuous admission: both sides must leave the boundary clean, which is
+    // what the tokenizing erasure could not do.
+    expect(checkIsolation(r.b.fixture, kernel.find((c) => c.id === "relation.derivedBy.nest.levels#incidence")!).state).toBe("discharged");
   });
 
   it("the incidence coordinate has a plan, so the refusal is the erasure's image and not a walk gap", () => {
@@ -1665,7 +1738,7 @@ describe("C1g — the ORDER facet is emitted only where the DECLARATION says the
   });
 });
 
-describe("C1h — the incidence erasure at a BOUND reference has a resolution-preserving candidate, measured", () => {
+describe("C1h — the incidence erasure at a BOUND reference is the LANDED resolution-preserving rebinding", () => {
   /**
    * C1f established the problem: the census's incidence erasure rewrites a
    * reference's names to reserved tokens, which is a legal QUOTIENT image but not
@@ -1674,14 +1747,18 @@ describe("C1h — the incidence erasure at a BOUND reference has a resolution-pr
    * Eighteen coordinates are in that position, and every route to closing the
    * closure gate passes through them.
    *
-   * This pins a CANDIDATE and measures what it reaches. Canonical rebinding
-   * replaces the slot's names with the operand's OWN first k declared names: the
-   * image resolves because they are declared, arity is preserved, and every pair
-   * of stimuli that differ only in WHICH declared things the slot binds is
-   * identified. It is a measurement, not a landed erasure -- the census and the
-   * plan compiler are untouched.
+   * This describe measured the CANDIDATE that has since LANDED. Canonical
+   * rebinding replaces the slot's names with the operand's OWN first k declared
+   * names: the image resolves because they are declared, arity is preserved, and
+   * every pair of stimuli that differ only in WHICH declared things the slot
+   * binds is identified. The `rebind` below is the prototype's own definition,
+   * kept as the record of what was measured BEFORE the landing; the production
+   * erasure now carries the same behaviour (`x-fsds-operands` on the branch,
+   * `bindingPool` in `erasure-plan.ts`), and the last test in this describe pins
+   * that the two agree on every coordinate both can express, so the prototype
+   * cannot drift into a second, disagreeing definition of the erasure.
    *
-   * What it measures is a DIVISION, and the division is the finding. It reaches
+   * What it measured is a DIVISION, and the division is the finding. It reaches
    * thirteen of the twenty-one bound reference-topology coordinates, including
    * the pair C1f used to show the distincton is real. The eight it does not reach
    * are named with the code the refusal introduces, and the dominant cause is
@@ -1692,6 +1769,14 @@ describe("C1h — the incidence erasure at a BOUND reference has a resolution-pr
    * the operand alone leaves a declaration that no longer agrees with itself.
    * The coordinate's extent is wider than its locator, and a quotient for those
    * has to name both sides.
+   *
+   * The LANDED division is finer than this one, because the census measures
+   * whether an erasure MOVES BYTES separately from whether its image is legal:
+   * six of the thirteen "reached" coordinates are corpus-dead (their canonical
+   * bind is the binding the corpus already writes -- C1e enumerates them), six
+   * are discharged, and six of the eight "refused" remain refused (C1f
+   * enumerates them; `structure.peers[]#incidence` was never in this describe's
+   * population because `peers` sits on the structure, not on a branch).
    */
   const wellFormedness = new Set<string>(Object.values(DERIVATION_DIAG));
   const rebindingPlans = loadPlans();
@@ -1824,6 +1909,26 @@ describe("C1h — the incidence erasure at a BOUND reference has a resolution-pr
     expect(JSON.stringify(ea)).toBe(JSON.stringify(base));
     expect(findingsOf(ea).size).toBe(findingsOf(base).size);
     expect([...findingsOf(eb)].filter((k) => !findingsOf(patched).has(k))).toEqual([]);
+  });
+
+  it("agrees with the prototype on every bound incidence coordinate both can express, so there is one definition", () => {
+    // The prototype above predicted the landed erasure's images before the
+    // landing; this is the pin that keeps them ONE definition. Any divergence —
+    // a different pool, a different order, a different fallback — fails here
+    // rather than turning the prototype into a second reading of the erasure
+    // that quietly disagrees with the executor the ledgers were recorded under.
+    let compared = 0;
+    for (const c of boundCoords.filter((x) => x.id.endsWith("#incidence"))) {
+      for (const f of oracle.fixtures.values()) {
+        const proto = rebind(f, c);
+        if (proto.note) continue;
+        const landed = erase(f, c);
+        expect(canonical(landed), `${c.id} on ${f.id}`).toBe(canonical(proto.image));
+        compared += 1;
+      }
+    }
+    // Not vacuous: the comparison ran over real slots.
+    expect(compared).toBeGreaterThan(0);
   });
 });
 
@@ -2714,20 +2819,21 @@ describe("an oracle-separated pair is NECESSARY for a witness and not sufficient
     // And the guard is live, not vacuous: a slot-local erasure that introduces a WELL-FORMEDNESS
     // refusal is still refused, because that means the erasure broke the structure and a
     // collision would be that break. `REL_DERIVATION_*` are the boundary's own refusals, kept
-    // out of the doctrine catalogue for exactly this reason.
-    const binField = kernel.find((x) => x.id === "relation.derivedBy.bin.field#incidence")!;
-    const broken = checkIsolation(oracle.fixtures.get("FX_READINGS_BINNED_NO_CLOSURE")!, binField);
+    // out of the doctrine catalogue for exactly this reason. `bin.field#incidence` over this
+    // very pair used to be the demonstration; a bound slot now rebinds to a DECLARED name, so
+    // its image resolves and the isolation discharges. The boundary-refused facet that remains
+    // is `project.keep#arity`: truncating the keep set to its declared floor drops a field the
+    // result still declares, which is a break the rebinding cannot mend.
+    const keepArity = kernel.find((x) => x.id === "relation.derivedBy.project.keep#arity")!;
+    const broken = checkIsolation(oracle.fixtures.get("FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT")!, keepArity);
     expect(broken.state).toBe("violated");
     expect(String(broken.state === "violated" ? broken.detail : "")).toContain("REL_DERIVATION_");
-    expect(checkWitness(
-      {
-        coordinates: ["relation.derivedBy.bin.field#incidence"],
-        a: { fixture: "FX_READINGS_BINNED_NO_CLOSURE" },
-        b: { fixture: "FX_N_READINGS_BINNED_LEFT_CLOSED" },
-      },
-      kernel,
-      oracle,
-    ).ok).toBe(false);
+    // No corpus pair can carry the witness-level half any further: over the whole
+    // fixture population the erasures the boundary refuses identify no two fixtures
+    // with different oracle outcomes (measured; see the never-discharged rows in
+    // C1f), so `NO_COLLISION` fires before the isolation clause is reached. The
+    // witness-level plumbing is pinned where a colliding pair DOES exist -- C3d's
+    // masking witness, which reaches the isolation loop and is refused there.
   });
 
   it("and the DIAGNOSTIC decides it, not the operation: the same erasure is witnessable where absence is lawful", () => {

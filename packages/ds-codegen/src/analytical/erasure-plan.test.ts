@@ -245,9 +245,15 @@ describe("composition — the ordering is derived, and the laws hold", () => {
     // facet the same rank, so listing order decided the result. Merging
     // `aggregate-to-grain~join` first relabels the branch out from under the
     // second locator.
-    const merge = plans.get("relation.derivedBy.kind:aggregate-to-grain~join")!;
-    const facet = plans.get("relation.derivedBy.join.from#incidence")!;
-    const target = fixtures.find((f) => f.id === "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN")!;
+    // `join.from#incidence` used to be the example. It is a BOUND reference now,
+    // and on every committed join fixture the operand already IS the structure's
+    // first relation, so rebinding it is the identity and the two listings agree.
+    // `nest.levels#incidence` on the flattening fixture is not the identity --
+    // `sale_id` is declared before `country` -- so the relabelling still moves
+    // the ground out from under the second locator.
+    const merge = plans.get("relation.derivedBy.kind:nest~bin")!;
+    const facet = plans.get("relation.derivedBy.nest.levels#incidence")!;
+    const target = fixtures.find((f) => f.id === "FX_PROJECT_DROPS_NEST_LEVEL")!;
     const derived = canonical(executePlan(executePlan(target, facet), merge));
     const reversed = canonical(executePlan(executePlan(target, merge), facet));
     expect(derived).not.toBe(reversed);
@@ -788,9 +794,13 @@ describe("composition — derived ordering and confluence over the bound registr
       }
     }
     expect(undeclared).toEqual([]);
-    // Not vacuous: the declared family is exercised by the population.
+    // Not vacuous: BOTH declared families are exercised by the population -- the
+    // arity/order cut-and-sort pair, and the incidence/order pair that arrived
+    // when a bound slot started rebinding to names it ignores the current value of.
     expect(declared.length).toBeGreaterThan(0);
-    expect(declared.every((d) => d.includes("#arity") && d.includes("#order"))).toBe(true);
+    expect(declared.every((d) => d.includes("#arity") || d.includes("#incidence"))).toBe(true);
+    expect(declared.some((d) => d.includes("#arity"))).toBe(true);
+    expect(declared.some((d) => d.includes("#incidence"))).toBe(true);
     // Every same-slot plan pair against the whole specimen population, each
     // surviving pair executed in both listings: quadratic in the registry and
     // measured at ~6s, which sat just under the 5s default until it did not.

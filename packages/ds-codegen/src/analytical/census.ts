@@ -36,7 +36,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { operationFor, type ErasurePlan, type LocatorStep, type StructuralLocator } from "./erasure-plan.js";
-import { SEQUENCE_KEY, type SequenceFact } from "./relation-model.js";
+import { OPERANDS_KEY, SEQUENCE_KEY, type OperandNamespace, type SequenceFact } from "./relation-model.js";
 
 export type CoordinateKind = "leaf" | "member-pair" | "member-absence" | "reference-topology" | "reference";
 
@@ -132,16 +132,37 @@ export function label(rawPath: string): string {
  * it is declared at all is a degree of freedom its spelling is not.
  */
 const NAME_REF = "#/definitions/name";
+
+/**
+ * Keys that ANNOTATE a schema without constraining it.
+ *
+ * The walk unwraps a single-element `allOf` to reach the `$ref` beneath it, and
+ * it used to require that `allOf` be the node's ONLY key. That made the walk
+ * blind to any schema carrying a fact of its own — `x-fsds-operand` wraps a Name
+ * exactly that way — so the test is now on the ASSERTIVE keys. Annotations
+ * change what a node SAYS ABOUT ITSELF, not what it accepts, and the walk is the
+ * single reader of both.
+ */
+const ANNOTATION_KEY = /^(\$comment$|description$|title$|examples$|default$|x-)/;
+const assertiveKeys = (n: Node) => Object.keys(n).filter((k) => !ANNOTATION_KEY.test(k));
+
 function nameRefOf(raw: Node): boolean {
   let cur = raw;
   for (let i = 0; i < 4; i++) {
-    if (Array.isArray(cur.allOf) && cur.allOf.length === 1 && Object.keys(cur).length === 1) {
+    const keys = assertiveKeys(cur);
+    if (Array.isArray(cur.allOf) && cur.allOf.length === 1 && keys.length === 1 && keys[0] === "allOf") {
       cur = cur.allOf[0] as Node;
       continue;
     }
     return cur.$ref === NAME_REF;
   }
   return false;
+}
+
+/** The operand namespaces a derivation BRANCH declares, if it declares any. */
+function operandsOf(branch: Node): Record<string, OperandNamespace> | undefined {
+  const map = branch[OPERANDS_KEY];
+  return map && typeof map === "object" ? (map as Record<string, OperandNamespace>) : undefined;
 }
 
 const PRIMITIVE_TYPES = new Set(["string", "number", "integer", "boolean"]);
@@ -249,8 +270,13 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
   const resolve = (n: Node): Node => {
     let cur = n;
     for (let i = 0; i < 8; i++) {
-      // zod wraps an optional $ref in a single-element allOf; unwrap it
-      if (Array.isArray(cur.allOf) && cur.allOf.length === 1 && Object.keys(cur).length === 1) cur = cur.allOf[0] as Node;
+      // zod wraps an optional $ref in a single-element allOf; unwrap it. An
+      // ANNOTATED wrapper is the same wrapper: `x-fsds-operand` rides beside the
+      // `allOf`, so the test is on the assertive keys here too.
+      if (Array.isArray(cur.allOf) && cur.allOf.length === 1) {
+        const keys = assertiveKeys(cur);
+        if (keys.length === 1 && keys[0] === "allOf") cur = cur.allOf[0] as Node;
+      }
       if (typeof cur.$ref !== "string") break;
       const name = (cur.$ref as string).replace("#/definitions/", "");
       const target = defs[name];
@@ -280,7 +306,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
    * point: a coordinate whose location is reconstructed elsewhere is a
    * coordinate two modules can disagree about, and they did.
    */
-  const emit = (c: Coordinate, rawPath: string, steps: LocatorStep[], arityFloor?: number) => {
+  const emit = (c: Coordinate, rawPath: string, steps: LocatorStep[], arityFloor?: number, operand?: OperandNamespace) => {
     out.push(c);
     // Recorded here as well as in `walk`, because the discriminator leaf is
     // emitted directly rather than walked into: without it,
@@ -292,7 +318,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     // list is allowed to be" is a fact about the slot's declaration, which the
     // walk is the single reader of. An arity erasure that truncated past it
     // produced images the representation cannot express.
-    const locator: StructuralLocator = { path: rawPath, steps, ...(arityFloor !== undefined ? { arityFloor } : {}) };
+    const locator: StructuralLocator = { path: rawPath, steps, ...(arityFloor !== undefined ? { arityFloor } : {}), ...(operand ? { operand } : {}) };
     locators.set(c.id, locator);
     if (!locators.has(c.leaf)) locators.set(c.leaf, locator);
     const operation = operationFor(c, requiredLeaves);
@@ -360,12 +386,12 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
    * `facets` decides what applies: a single slot has no arity or order to vary,
    * only which sibling slot binds it.
    */
-  const addReference = (rawPath: string, facets: readonly ReferenceFacet[], optional: Opt, steps: LocatorStep[], arityFloor?: number) => {
+  const addReference = (rawPath: string, facets: readonly ReferenceFacet[], optional: Opt, steps: LocatorStep[], arityFloor?: number, operand?: OperandNamespace) => {
     const id = label(rawPath);
     if (id === "id" || seen.has(id)) return;
     seen.add(id);
     const r = role(rawPath);
-    emit({ id, kind: "reference", leaf: id, role: r }, rawPath, steps, arityFloor);
+    emit({ id, kind: "reference", leaf: id, role: r }, rawPath, steps, arityFloor, operand);
     // Presence is a degree of freedom the spelling is not — but only where it
     // can vary INDEPENDENTLY. For a reference required by its holder,
     //
@@ -390,7 +416,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
       derive(id, optional.owner);
     }
     for (const facet of facets) {
-      emit({ id: `${id}#${facet}`, kind: "reference-topology", leaf: id, role: r, facet }, rawPath, steps, arityFloor);
+      emit({ id: `${id}#${facet}`, kind: "reference-topology", leaf: id, role: r, facet }, rawPath, steps, arityFloor, operand);
     }
   };
 
@@ -448,15 +474,22 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     }
   };
 
-  const walk = (raw: Node, rawPath: string, optional: Opt = OPT_REQUIRED, steps: LocatorStep[] = [], sugarFor?: string): void => {
+  const walk = (
+    raw: Node,
+    rawPath: string,
+    optional: Opt = OPT_REQUIRED,
+    steps: LocatorStep[] = [],
+    sugarFor?: string,
+    operand?: OperandNamespace,
+  ): void => {
     visited.add(rawPath);
     // Detected BEFORE resolution: after it a name is just a patterned string.
-    if (nameRefOf(raw)) return addReference(rawPath, ["incidence"], optional, steps);
+    if (nameRefOf(raw)) return addReference(rawPath, ["incidence"], optional, steps, undefined, operand);
     const n = resolve(raw);
     if (n.type === "array" && nameRefOf((n.items ?? {}) as Node)) {
       const facets = listFacets(n, rawPath);
       sequenceFacts.set(label(rawPath), n[SEQUENCE_KEY] as SequenceFact);
-      return addReference(rawPath, facets, optional, steps, typeof n.minItems === "number" ? n.minItems : 1);
+      return addReference(rawPath, facets, optional, steps, typeof n.minItems === "number" ? n.minItems : 1, operand);
     }
     if (Array.isArray(n.enum)) return addLeaf(rawPath, steps, n.enum as string[], optional);
     if (n.const !== undefined) return addLeaf(rawPath, steps, [String(n.const)], optional);
@@ -494,13 +527,17 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
         const kindProp = (n.properties as Record<string, Node>).kind;
         const tagged = kindProp !== undefined && Array.isArray(resolve(kindProp).enum);
         const owner = tagged && addHolderPresence(rawPath, optional, steps) ? { path: rawPath } : optional.owner;
+        // A branch may DECLARE which of its names are bound operands. Read here,
+        // at the one place that walks a branch's properties, so the fact travels
+        // with the property rather than being reconstructed from its path.
+        const operands = operandsOf(n);
         for (const [k, v] of Object.entries(n.properties as Record<string, Node>)) {
           // A property of an optional holder is itself absent whenever the
           // holder is: `additivity.kind` is absent if `additivity` is. That is
           // exactly why a REQUIRED one gets no presence coordinate of its own
           // once `owner` names the holder that already says so.
           const prop: LocatorStep = k === sugarFor ? { kind: "prop", name: k, sugar: true } : { kind: "prop", name: k };
-          walk(v, rawPath ? `${rawPath}.${k}` : k, { self: !required.has(k), holder: optional.self || optional.holder, owner }, [...steps, prop]);
+          walk(v, rawPath ? `${rawPath}.${k}` : k, { self: !required.has(k), holder: optional.self || optional.holder, owner }, [...steps, prop], undefined, operands?.[k]);
         }
         return;
       }
@@ -567,13 +604,21 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
       objects.forEach((b, i) => {
         const req = new Set((Array.isArray(b.required) ? b.required : []) as string[]);
         const owner = owned ? { path: rawPath, branch: kinds[i] } : optional.owner;
+        // The branch's own operand map travels with each property it names. A
+        // discriminated branch is walked HERE rather than through `walk`'s object
+        // path, so the fact has to be read here too -- a fact one reader sees and
+        // the other does not is a fact two modules can disagree about.
+        const operands = operandsOf(b);
         for (const [k, v] of Object.entries(b.properties as Record<string, Node>)) {
           if (k !== "kind") {
-            walk(v, `${rawPath}.${kinds[i]}.${k}`, { self: !req.has(k), holder: optional.self || optional.holder, owner }, [
-              ...steps,
-              { kind: "branch", member: kinds[i] },
-              { kind: "prop", name: k },
-            ]);
+            walk(
+              v,
+              `${rawPath}.${kinds[i]}.${k}`,
+              { self: !req.has(k), holder: optional.self || optional.holder, owner },
+              [...steps, { kind: "branch", member: kinds[i] }, { kind: "prop", name: k }],
+              undefined,
+              operands?.[k],
+            );
           }
         }
       });

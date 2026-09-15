@@ -4,9 +4,9 @@
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766"
   },
   "authority": {
-    "coordinateBasisDigest": "50298ce5fc9caff620957976c5dc5aee61ac3f6a3502ee0d7484bc3e4212e936",
-    "erasureAuthorityDigest": "dc31f8efb88abf5945530e0fef52227c417d5084a52fce7b330d8d68b31b478e",
-    "witnessAuthorityDigest": "7afed991414a3c33e3df344c2a9767922c036a48a0184dcd67ddc8704b9963ed",
+    "coordinateBasisDigest": "8da151c254ba188ba038ab3c0b08e658cbdce16685f3c1bebfd32cfe077ffb45",
+    "erasureAuthorityDigest": "210aab90a54b5ee6dd667c19171b6ea1196b95db1c8db2a47429c94b2387a332",
+    "witnessAuthorityDigest": "4667e67b50e974fd3185cba930fd34859f5418fc0c63a0a53e9d81f0beee18d9",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
@@ -487,8 +487,8 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.aggregate-to-grain.from#incidence": {
-      "reach": 4,
-      "digest": "43f5a0e5f12356a0829a54920cf9728a27769eca6e3d1b0b63e2baa5db1165b9"
+      "reach": 2,
+      "digest": "86dc69cd9e6ea565e54e313df396a826029db800a7ded2b4761b2440e34179af"
     },
     "relation.derivedBy.aggregate-to-grain.toGrain": {
       "reach": 0,
@@ -503,16 +503,16 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.aggregate-to-grain.toGrain#incidence": {
-      "reach": 4,
-      "digest": "097475af453922f757d72a0fbb1c701bbe011a1c41d5bc66022f0663241ababd"
+      "reach": 2,
+      "digest": "0e8c29bbf47a6187a227ca7997f19a32b679c2d0e5ee84886e936f7ea415255a"
     },
     "relation.derivedBy.join.from": {
       "reach": 0,
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.join.from#incidence": {
-      "reach": 3,
-      "digest": "52007a00703229def7857085938dc12cc8ba4df8db860b845b16ac8396224da4"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.join.with": {
       "reach": 0,
@@ -520,7 +520,7 @@
     },
     "relation.derivedBy.join.with#incidence": {
       "reach": 3,
-      "digest": "47546542c3b02a78b0e63c908fdb7f7c5d4c7e6a73713264d80fc586c3b32d98"
+      "digest": "28ecad2a640f6dfdfd3752cfb8d8a785b147ba2197fb9d55663ea0fc1ddf4460"
     },
     "relation.derivedBy.join.cardinality": {
       "reach": 3,
@@ -555,8 +555,8 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.nest.from#incidence": {
-      "reach": 4,
-      "digest": "782992021c4b71a6e27ce2f3d6e51ae084e66b005dca02cbc5e2160b71c066c0"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.nest.levels": {
       "reach": 0,
@@ -571,16 +571,16 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.nest.levels#incidence": {
-      "reach": 4,
-      "digest": "f716358438157603b5fb3c5f018e6e4174615f5b0f5db2811b9aa3a06d959f4a"
+      "reach": 2,
+      "digest": "d8393bea028f7ad8722a4565c0ae6356ef80e571a9e0120d58e3f46a76c54247"
     },
     "relation.derivedBy.bin.from": {
       "reach": 0,
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.bin.from#incidence": {
-      "reach": 2,
-      "digest": "a2960806c59000f064456eb12b99017f1b71a37fcf80ad0edb3c16576d7d22f5"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.bin.field": {
       "reach": 0,
@@ -588,7 +588,7 @@
     },
     "relation.derivedBy.bin.field#incidence": {
       "reach": 2,
-      "digest": "32e5cf5d50bee9deecdea59b5a65e67d6db81e109c9fd5ae2ca68ab4ce6c7d06"
+      "digest": "9edf609fbccb32956c948c534a8e71df3d93f9691b8199d8b106632fc3d92344"
     },
     "relation.derivedBy.bin.closure": {
       "reach": 1,
@@ -611,8 +611,8 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.normalize.from#incidence": {
-      "reach": 2,
-      "digest": "89a7a02791578abc5f8c1f78accf51a883beaf4cb3fa64690acb155e39b0764e"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.normalize.field": {
       "reach": 0,
@@ -620,15 +620,15 @@
     },
     "relation.derivedBy.normalize.field#incidence": {
       "reach": 2,
-      "digest": "1074ee0f90bdc3f45c540404d03f487772840d769757f80a263fa59c36508856"
+      "digest": "9e4084030ff5fd503df44fae0835f260520248c3e21eb54fabbf8d7637d28cad"
     },
     "relation.derivedBy.project.from": {
       "reach": 0,
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.project.from#incidence": {
-      "reach": 4,
-      "digest": "51df48dc4c917a8e167da2b4f09f359ef1157d3b34be788f63a4c4ad24503a92"
+      "reach": 2,
+      "digest": "4927a43f56d8a9253377ceb73d0a1955ec7cf0a07ad707ca13bb5c28270e2809"
     },
     "relation.derivedBy.project.keep": {
       "reach": 0,
@@ -639,24 +639,24 @@
       "digest": "f99da0f539c7e66982579ae42f77b7987977c125095cb991e0e0df76f0fb858f"
     },
     "relation.derivedBy.project.keep#incidence": {
-      "reach": 4,
-      "digest": "41c422ab83d7e4ab80e0e94dbcc134d85885399a4c303afd671ee20d1b46aaf0"
+      "reach": 3,
+      "digest": "514456534f00ed4dbafb3824fe19180de5dbc51a8148439bebbe3ed0c1b5e101"
     },
     "relation.derivedBy.graph.from": {
       "reach": 0,
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.graph.from#incidence": {
-      "reach": 6,
-      "digest": "bbb7f12566bf16feaa9bf23b1d6f2bb4070244faba84fa43d6c9419c6049df78"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.graph.edgeFrom": {
       "reach": 0,
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.graph.edgeFrom#incidence": {
-      "reach": 6,
-      "digest": "e165be2363cfc9ee224eb690c57467af3384e617bf16eaac3f2fa8459d9961b4"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.graph.edgeTo": {
       "reach": 0,
@@ -664,7 +664,7 @@
     },
     "relation.derivedBy.graph.edgeTo#incidence": {
       "reach": 6,
-      "digest": "f64ca9fe023162574623bd9d10b05c1aad115fe6ca855c95532360b050101459"
+      "digest": "415b9d2f822289ab1884ce7f8b078c0cb31587bd7c58cd17f6f342162d8c1048"
     },
     "relation.derivedBy.graph.value": {
       "reach": 0,
@@ -676,7 +676,7 @@
     },
     "relation.derivedBy.graph.value#incidence": {
       "reach": 6,
-      "digest": "90e05724e5f5b94788e07d602ac25e25cc725ebd38c66fb73b11dc14823148c4"
+      "digest": "e936eff3009c8c08a78427697a8c6d743530790997fd66746b38a0bb8b091a6d"
     },
     "relation.derivedBy.graph.requiresConservation": {
       "reach": 6,
@@ -877,17 +877,12 @@
   },
   "adjudicated": {},
   "supersedes": {
-    "erasureAuthorityDigest": "0b59717c7b3ae6e44de15915ac4010220f4ac149c03168288d1df5289f93358f",
+    "erasureAuthorityDigest": "7d93b5b49c2fdf4af25ff17d76b6c066baa6726034214cee226eeef5f97a22be",
     "divergences": [
       {
-        "operation": "census",
-        "coordinates": 5,
-        "effect": "Five order facets left the census — the ones whose list declarations now say `set` — and nothing else entered or left it. `final-quotient` checks that each removal is a factorization the census performs, and the third form (`declared-set-order`) was added there for this rule."
-      },
-      {
-        "operation": "verdict",
-        "coordinates": 5,
-        "effect": "The same five coordinates were adjudicated `representation-artifact` as they left, so their verdicts moved off `unresolved`. No surviving coordinate's verdict changed, and the subtraction reports 72 of 118 unadjudicated rather than 77."
+        "operation": "forget-reference-incidence",
+        "coordinates": 16,
+        "effect": "A BOUND reference now rebinds to the operand's own DECLARED names instead of rewriting them to reserved tokens, because a token image stops resolving and the boundary refuses it as a declaration -- so the erasure was the corruption rather than an ablation, and no witness naming the coordinate could be admitted. Only the derivation operands changed: a reference that declares no namespace (an assertion's field, an additivity dimension, a grain witness) keeps the reserved token and its images are unchanged. Reach moves for the bound slots because a canonical rebinding is the IDENTITY wherever the slot already holds the operand's declared prefix, and several committed fixtures do -- so a coordinate can stop reaching any fixture while becoming WITNESSABLE, which is why reach is reported and never read as necessity."
       }
     ]
   }
