@@ -9,7 +9,8 @@ updated_at: '2026-09-15T22:34:13.158Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/support.test.ts (the pinned triage)'
+    - 'docs (the candidate triage, so filing is done against a measured partition)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -19,7 +20,9 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - "The triage is measured through the ONE classifier, not hand-listed: a coordinate is unwitnessable-by-primitive-claim exactly when a single-coordinate witness on it would destroy a sibling facet or reach outside its own proposition."
+  - "The pin is two-directional: a future erasure change that moves a candidate into the non-ratifiable classes, or out of them, fails rather than being absorbed as a count update."
+  - "Being ratifiable is stated as necessary and not sufficient: an atomic candidate whose erasure changes no fixture is corpus-dead, not witnessed."
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
