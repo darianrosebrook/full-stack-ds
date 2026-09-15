@@ -2,9 +2,11 @@ id: REL-FILE-AGGFROM-01
 title: 'File the aggregate-to-grain from-incidence witness: rebinding the input relation decides it'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Filed relation.derivedBy.aggregate-to-grain.from#incidence: authored pair over FX_NESTED_SUBTOTAL_OFF_HIERARCHY moving subtotals.derivedBy.from to sales, atomic class so it ratifies primitive standing; subtraction 66/118 unresolved, freeze 18/72, ratified 60.'
 created_at: '2026-09-15T23:23:07.376Z'
-updated_at: '2026-09-15T23:23:08.915Z'
+updated_at: '2026-09-15T23:41:36.264Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
