@@ -35,3 +35,8 @@ contracts:
   - name: 'binding-erasure'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/erasure-plan.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical (19 files / 845 tests green) and all nine analytical gates green in worktree operand-distinctness before merge b8250f3a; full root suite 301 files / 4066 tests, typecheck, docs gates green. Measured outcome: distinctFrom rides on the operand map for exactly the two operands the law states (join.with differs from from, graph.edgeTo from edgeFrom), the census carries it onto the locator, and the canonical rebind skips the sibling's binding -- the self-join and the degenerate edge the unconstrained pick produced are gone (pinned: no corpus image binds the sibling's value, and a patched third-relation join RETURNS to the sibling-skipping pick, so the erasure is not vacuously the identity). Both coordinates leave never-discharged as CORPUS-DEAD for the measured reason: the next declared name after the sibling is exactly the binding the corpus writes, so reach is zero and never-discharged falls 5 -> 3 (toGrain, keep x2 -- the two-sided facts whose coordinate's extent is wider than their locator, now stated as the census change). NON-CLAIM: no verdict moved -- the freeze holds the same 160 erasures and 126 verdicts after superseding forget-reference-incidence=2 (harmonised coordinateBasis first), no witness names either coordinate, and the pick reads the sibling's CURRENT value never the slot's own, so the collision property is preserved by construction but unexercised on this corpus."
+    recorded_at: "2026-09-15T17:06:55.138Z"
