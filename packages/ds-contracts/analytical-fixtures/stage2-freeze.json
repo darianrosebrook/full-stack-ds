@@ -4,8 +4,8 @@
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766"
   },
   "authority": {
-    "coordinateBasisDigest": "931cd30cf5d64f4a22b0859999bf8e2b08085472759ce140fa4eaf8c449b4f3b",
-    "erasureAuthorityDigest": "a4c8464653836b7b5f3e979ce3404b412d1e14baa6344c42a22213e2cf9573ad",
+    "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
+    "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
     "witnessAuthorityDigest": "86d17e4eac5229a306ddf91c37a850aba260340e46d136369c5475aa8b16f092",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
@@ -503,8 +503,8 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.aggregate-to-grain.toGrain#incidence": {
-      "reach": 2,
-      "digest": "0e8c29bbf47a6187a227ca7997f19a32b679c2d0e5ee84886e936f7ea415255a"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.join.from": {
       "reach": 0,
@@ -635,12 +635,12 @@
       "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.project.keep#arity": {
-      "reach": 4,
-      "digest": "f99da0f539c7e66982579ae42f77b7987977c125095cb991e0e0df76f0fb858f"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.project.keep#incidence": {
-      "reach": 3,
-      "digest": "514456534f00ed4dbafb3824fe19180de5dbc51a8148439bebbe3ed0c1b5e101"
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "relation.derivedBy.graph.from": {
       "reach": 0,
@@ -877,12 +877,17 @@
   },
   "adjudicated": {},
   "supersedes": {
-    "erasureAuthorityDigest": "a30fcdfa496ec2c29d8c4ff849d4d8c375edebe2ddc4befdac06fc36dc433f7b",
+    "erasureAuthorityDigest": "a4c8464653836b7b5f3e979ce3404b412d1e14baa6344c42a22213e2cf9573ad",
     "divergences": [
+      {
+        "operation": "forget-reference-arity",
+        "coordinates": 1,
+        "effect": "A MIRRORED slot truncates to the mirror's length, a fact read at execution time, rather than the static minItems floor: the law says this list equals the result-side spelling, so how long it may be is a fact about the other side of the equation. `keep#arity` is the case, and it is corpus-dead for the mirror's own reason -- every corpus keep already equals fieldNames(out), so the cut is the identity throughout. The cut keeps the FIRST names, so an arity erasure never rewrites occupants; and it only ever shortens, which is stated rather than hidden: a short break of the equation cannot be repaired by cutting."
+      },
       {
         "operation": "forget-reference-incidence",
         "coordinates": 2,
-        "effect": "Declared DISTINCTNESS: the law says `join.with` differs from `from` and `graph.edgeTo` from `edgeFrom`, so the operand map now carries `distinctFrom` beside the namespace, the census carries it onto the locator, and the canonical rebind SKIPS the sibling operand's own binding -- which is where the unconstrained pick used to land, producing a self-join and a degenerate edge the boundary refused as underivable. Both coordinates leave never-discharged for a measured reason: the sibling-skipping pick is the next declared name, which is exactly the binding the corpus writes, so reach falls to zero on both and they are corpus-dead rather than refused -- a fixture joining a third-declared relation, or binding a later endpoint field, makes the erasure move immediately. The pick reads the sibling's CURRENT value and never the slot's own, so two stimuli differing only in the slot still reach one image. No verdict moved: no witness names either coordinate."
+        "effect": "Declared MIRRORS: where the law writes one binding TWICE (sameSet(out.grain, d.toGrain), sameSet(fieldNames(out), d.keep)), the operand map now declares the result-side spelling, the census carries it onto the locator, and the canonical rebind takes the MIRROR as the pool -- so the image satisfies the law's equation by construction instead of searching the input's namespace for a name the law would accept. The measurement that dissolved the planned census change: the equation holds in EVERY corpus declaration, unlawful ones included, so the mirror rebind is the identity throughout and `toGrain#incidence` and `keep#incidence` are corpus-dead -- no two admissible fixtures can differ only in a mirrored operand, because the law slaves it to the other side. An authored equation break is the moving case, and the mirror REPAIRS it, which is the collision the witness machinery needs. No verdict moved: no witness names either coordinate."
       }
     ]
   }

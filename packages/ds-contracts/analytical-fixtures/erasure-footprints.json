@@ -3,23 +3,23 @@
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
     "witnesses.json": "b8690bd0a25a1327bb18569ea606486e29439128b29c1f6f08939e198413aa81",
-    "closures-stage2.json": "07fb87be60e381607cfc256e31e3b2517205c32b90c5bd3aef0c5d64ffe87ed8"
+    "closures-stage2.json": "0e0d293b0f688f708ff92b75ee638bc429ae3a0394bf717ad1cf9c64aa0f25ab"
   },
   "authority": {
-    "coordinateBasisDigest": "931cd30cf5d64f4a22b0859999bf8e2b08085472759ce140fa4eaf8c449b4f3b",
-    "erasureAuthorityDigest": "a4c8464653836b7b5f3e979ce3404b412d1e14baa6344c42a22213e2cf9573ad",
+    "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
+    "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
     "witnessAuthorityDigest": "86d17e4eac5229a306ddf91c37a850aba260340e46d136369c5475aa8b16f092",
     "quotientSchemaVersion": 1,
     "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
   },
-  "footprintBasisDigest": "b06d9654b1fe538625d7ee664ff42181c0cab4e7c5f1228bfefce880d0f99101",
+  "footprintBasisDigest": "37ae3c49822328f89e0eca7eb52708b30e988e90ff9285f97228bc4ca9c00e93",
   "quotientSchemaVersion": 1,
   "specimens": {
     "corpus": 90,
     "stimuli": 32,
-    "synthesized": 90,
-    "total": 212,
-    "populationDigest": "5c76edbe7503095392888c1defff7bfe3de13b3a3b926a10a00063f4219ca5df"
+    "synthesized": 89,
+    "total": 211,
+    "populationDigest": "d2033af225e11e1982facb0aede3d5ba03467d6a93dfa5ae3aa4abb207aa7f01"
   },
   "unbuilt": [
     {
@@ -121,6 +121,10 @@
     {
       "coordinate": "relation.derivedBy.nest.levels#incidence",
       "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "relation.derivedBy.project.keep#arity",
+      "reason": "the locator resolves to no slot, or the base binds too few names; the erasure does not identify the two values"
     },
     {
       "coordinate": "structure.peers[]#present",
@@ -534,8 +538,8 @@
       "populationDigest": "135fb17899593b17ee5d7500f21fee7620c35bb7f570e1907b48b47101a5fd8a"
     },
     "quotientLanguageInvalid": {
-      "specimens": 212,
-      "populationDigest": "5c76edbe7503095392888c1defff7bfe3de13b3a3b926a10a00063f4219ca5df"
+      "specimens": 211,
+      "populationDigest": "d2033af225e11e1982facb0aede3d5ba03467d6a93dfa5ae3aa4abb207aa7f01"
     }
   },
   "footprints": {
@@ -1103,7 +1107,9 @@
       "structure.peers[]#present"
     ]
   },
-  "dead": [],
+  "dead": [
+    "relation.derivedBy.project.keep#arity"
+  ],
   "unseparated": [
     "assertion.kind",
     "assertion.kind:aggregate~ratio-comparison",
@@ -1129,7 +1135,8 @@
     "relation.derivedBy.kind:nest~project",
     "relation.derivedBy.kind:normalize~graph",
     "relation.derivedBy.kind:normalize~project",
-    "relation.derivedBy.kind:project~graph"
+    "relation.derivedBy.kind:project~graph",
+    "relation.derivedBy.project.keep#arity"
   ],
   "refuted": [],
   "unclaimed": [
