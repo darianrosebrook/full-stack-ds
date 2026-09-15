@@ -1,0 +1,28 @@
+id: REL-SUPPORT-SWEEP-01
+title: 'Pin the footprint-class triage over the basis candidates: which can earn primitive standing and which cannot'
+risk_tier: 3
+mode: chore
+lifecycle_state: draft
+created_at: '2026-09-15T22:34:10.889Z'
+updated_at: '2026-09-15T22:34:10.889Z'
+created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the standing repair reads each candidate through one classifier, and filing witnesses without knowing which candidates can ever ratify would repeat the round-38 mistake at scale; when the class of a single-coordinate witness on every live basis candidate is measured against the claimed footprint; then the partition is pinned by class with the non-ratifiable coordinates named (sibling-facet: nest.levels#incidence and toGrain#incidence; outside: structure.peers[]#present), the unresolved ratifiable set is counted with its corpus-moving subset, a future erasure change that widens the non-ratifiable set fails the pin, and the analytical suite and gates agree'
+non_functional: {}
+contracts: []
