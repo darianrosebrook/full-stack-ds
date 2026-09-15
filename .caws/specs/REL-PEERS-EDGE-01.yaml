@@ -1,0 +1,28 @@
+id: REL-PEERS-EDGE-01
+title: 'Pin the peers incidence erasure when the canonical bind lands on aggregates: lawful in both regimes'
+risk_tier: 3
+mode: chore
+lifecycle_state: draft
+created_at: '2026-09-15T16:26:15.956Z'
+updated_at: '2026-09-15T16:26:15.956Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given round 32 landed the peers namespace declaration and recorded an open edge -- the lawful-image claim leaned on the corpus declaring its first relation as a base relation; when a synthesized structure declares two aggregates first so the canonical peer bind lands on them, the incidence erasure must be measured rather than asserted; then the isolation discharges in both regimes and the difference is pinned: a base+aggregate bind leaves the image clean while an aggregate+aggregate bind is judged illegal REL_PEER_GRAIN_DIVERGENCE, a semantic finding that is the distinction under test and not a boundary refusal'
+non_functional: {}
+contracts: []
