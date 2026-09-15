@@ -30,3 +30,13 @@ contracts:
   - name: 'necessity-instrument'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Verified the refusal is inherent rather than a plan defect: relation.derivedBy.bin.closure is optional in the fixture schema (bin's required is [kind, from, field]), so delete-slot is the correct erasure and the erased declaration is schema-valid -- the test deletes it from FX_N_READINGS_BINNED_LEFT_CLOSED and oracle.validate returns no errors. Deleting it produces REL_BIN_CLOSURE_UNDECLARED, the diagnostic of CASE_WHICH_BIN_GETS_TEN whose asserted is 'bin with no declared closure' and whose terms carry invariant:declared-closure, so the erasure IS the violation and no pair can be distinguishable before it and identical after. The diagnostic decides this, not the operation: assertion.aggregate.nulls:exclude~<absent> uses the same spell-member-as-absent and IS witnessable (an absent null policy is a legal default the engine does not diagnose), asserted in the same test. The doctrine names the rule among the instrument limits and records the disposal problem -- the disposition vocabulary has no verdict for a DECLARED necessity, since witnessed needs a holding witness and representation-artifact/not-yet-admitted would delete a distinction whose absence the corpus diagnoses, so those coordinates stay unresolved. Non-claim: nothing is adjudicated, removed or moved; no new verdict was added to the vocabulary; and the three bin.closure coordinates and evidence.rows.*#present remain unresolved."
+    recorded_at: "2026-09-15T05:31:55.901Z"
+    test_nodeid: "packages/ds-codegen/src/analytical/necessity.test.ts > an oracle-separated pair is NECESSARY for a witness and not sufficient > and the DIAGNOSTIC decides it, not the operation: the same erasure is witnessable where absence is lawful"
+    command: pnpm exec vitest run packages/ds-codegen/src/analytical
+    exit_code: 0
+    artifact_path: docs/architecture/analytical-relation-doctrine.md
+    commit_sha: b8d6abea
