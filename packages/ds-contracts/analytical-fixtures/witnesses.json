@@ -491,6 +491,30 @@
     },
     {
       "coordinates": [
+        "field.additivity.kind:non-additive~ratio-measure"
+      ],
+      "a": {
+        "fixture": "FX_GDP_PER_CAPITA_ROLLUP_MEAN"
+      },
+      "b": {
+        "base": "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
+        "patch": [
+          {
+            "set": "structure.relations.regions.fields.gdp_per_capita.additivity.kind",
+            "value": "non-additive"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "The field is averaged to a region grain, and REL_RATIO_MEASURE_AVERAGED names exactly the ratio case: the catalogue carries no cause for averaging a non-additive measure, so the same field declared non-additive clears the finding while nothing else about the fixture moves."
+      },
+      "note": "STAGE-2 necessity for field.additivity.kind:non-additive~ratio-measure: separates NON-ADDITIVE from RATIO-MEASURE, the pair the additive-against-ratio-measure witness does not reach. The a-side is the committed fixture, judged illegal REL_RATIO_MEASURE_AVERAGED because the field is a ratio aggregated by mean; the b-side moves one additivity kind. Authored over a committed fixture because the corpus carries the ratio-measure case and its cause but no committed near-neighbour whose only difference is this member."
+    },
+    {
+      "coordinates": [
         "field.additivity.semi-additive.nonAdditiveAlong#arity"
       ],
       "a": {

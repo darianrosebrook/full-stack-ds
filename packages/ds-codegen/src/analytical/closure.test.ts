@@ -1199,7 +1199,7 @@ describe("a receipt's pair enters a closure only when that closure's own obligat
 
 describe("what actually blocks the closures, decomposed by coordinate kind", () => {
   it("names the reference-topology facets as the keystone, and separates them from the candidates that block nothing", () => {
-    // The candidate list is not the obligation. Decomposed, the 79 unresolved split four ways,
+    // The candidate list is not the obligation. Decomposed, the unresolved candidates split four ways,
     // and the closures' unsettled footprints split the same way -- which is what turns an
     // undifferentiated backlog into a targeted one.
     const byId = new Map(census.map((c) => [c.id, c]));
@@ -1212,8 +1212,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(66);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 23, "member-absence": 8, leaf: 5, "member-pair": 30 });
+    expect(unresolved.length).toBe(65);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 23, "member-absence": 8, leaf: 5, "member-pair": 29 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
@@ -1250,13 +1250,13 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // Eleven: `nest.levels#incidence` is unresolved again after the footprint-aware classifier
     // demoted it, so it blocks its carriers once more rather than being counted settled.
     expect(topology.filter((id) => dependents.has(id)).length).toBe(11);
-    // 50, not 57: three coordinates that blocked nothing are gone from the kernel -- `along#order`,
-    // `peers[]#order` and `grainWitness#order` -- and four more left the unresolved set with a
-    // verdict, so the non-blocking unresolved count falls by seven. The last two are
-    // `evidence.grainWitness#incidence` and `relation.derivedBy.aggregate-to-grain.from#incidence`,
-    // the witnesses filed under the repaired standing and the triage: each blocked no carrier, so
-    // filing it moved this count and no other.
-    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(50);
+    // 49, not 57: three coordinates that blocked nothing are gone from the kernel -- `along#order`,
+    // `peers[]#order` and `grainWitness#order` -- and five more left the unresolved set with a
+    // verdict, so the non-blocking unresolved count falls by eight. The last three are
+    // `evidence.grainWitness#incidence`, `relation.derivedBy.aggregate-to-grain.from#incidence` and
+    // `field.additivity.kind:non-additive~ratio-measure`, the witnesses filed under the repaired
+    // standing and the triage: each blocked no carrier, so filing it moved this count and no other.
+    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(49);
   });
 });
 
