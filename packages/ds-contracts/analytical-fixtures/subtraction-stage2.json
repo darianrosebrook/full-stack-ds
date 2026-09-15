@@ -537,7 +537,10 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.join.cardinality": {
-      "disposition": "unresolved"
+      "disposition": "required-derived-vocabulary",
+      "derivableFrom": "the 6 member pairs of relation.derivedBy.join.cardinality — any one of them, e.g. relation.derivedBy.join.cardinality:one-to-one~one-to-many. MEASURED: footprint(relation.derivedBy.join.cardinality) is exactly the leaf together with all 6 pairs and nothing else, and every pair's footprint is exactly itself. So erasing the leaf destroys what erasing any pair destroys, while no pair subsumes the leaf: the leaf asserts nothing a pair does not, and its necessity is implied by any single one.",
+      "requiredBy": "the emitted fixture schema declares the property on every derivation and the doctrine's vocabulary names it, and the engine's per-operator locus (`OPERATOR_LAWS` for `relation.derivedBy.kind`, the join law's cardinality distinctions for `relation.derivedBy.join.cardinality`) is stated in its terms — so the name may not disappear from the representation even though it confers no independent standing.",
+      "reason": "Same factoring at k=4: the leaf's footprint is itself plus its six member pairs and nothing else, and each pair's footprint is itself, so any single cardinality pair implies the leaf's necessity. Retained because the schema declares the property and the join law's cardinality distinctions are stated in its terms."
     },
     "relation.derivedBy.join.cardinality:many-to-one~many-to-many": {
       "disposition": "unresolved"
@@ -572,7 +575,10 @@
       "reason": "REQUIRED-CHILD PRESENCE CROSS-TERM. For a property required by branch k of an optional discriminated holder H, present(p) = present(H) AND branch(H) = k; for one required by every branch, present(p) = present(H). There is no valid state in which the holder exists as branch k while its required property is absent, so this proposition is a derived conjunction of two facts the kernel already carries separately — holder existence in `relation#present`, alternative identity in the `relation.kind:A~B` pairs — and never an independent degree of freedom. It arose because the census propagated holder optionality into required children and emitted a presence facet whenever `optional.self OR optional.holder` held. The census now emits one only when the reference is optional IN its holder, or when nothing else carries that holder's existence. SECOND INSTANCE of the cross-term class the discriminator normal form found: there, 13 member-absence coordinates were 3 holder-presence facts. NOT REMOVED by this verdict: the field's value and topology coordinates (#arity, #order, #incidence), which are what the branch payload actually carries and are adjudicated on their own merits."
     },
     "relation.derivedBy.kind": {
-      "disposition": "unresolved"
+      "disposition": "required-derived-vocabulary",
+      "derivableFrom": "the 21 member pairs of relation.derivedBy.kind — any one of them, e.g. relation.derivedBy.kind:aggregate-to-grain~join. MEASURED: footprint(relation.derivedBy.kind) is exactly the leaf together with all 21 pairs and nothing else, and every pair's footprint is exactly itself. So erasing the leaf destroys what erasing any pair destroys, while no pair subsumes the leaf: the leaf asserts nothing a pair does not, and its necessity is implied by any single one.",
+      "requiredBy": "the emitted fixture schema declares the property on every derivation and the doctrine's vocabulary names it, and the engine's per-operator locus (`OPERATOR_LAWS` for `relation.derivedBy.kind`, the join law's cardinality distinctions for `relation.derivedBy.join.cardinality`) is stated in its terms — so the name may not disappear from the representation even though it confers no independent standing.",
+      "reason": "The operator discriminator is the COARSEST coordinate of its enum: erasing it destroys every one of the 21 member pairs' distinctions, while no pair subsumes it, so it confers no independent degree of freedom. Retained because the emitted schema declares `kind` on every derivation and `OPERATOR_LAWS` states each operator's transition law in its terms, so deleting the name would remove governed vocabulary rather than a redundancy."
     },
     "relation.derivedBy.kind:aggregate-to-grain~<absent>": {
       "disposition": "representation-artifact",

@@ -70,11 +70,11 @@ describe("stage-2 erasure freeze", () => {
     expect(r.ok).toBe(true);
   });
 
-  it("freezes the population the erasure-plan refactor must not move: 10 witnessed / 29 representation-artifact / 87 unresolved", () => {
+  it("freezes the population the erasure-plan refactor must not move: 10 witnessed / 2 required-derived-vocabulary / 29 representation-artifact / 85 unresolved", () => {
     expect(Object.fromEntries(Object.entries(frozen.verdicts).map(([d, ids]) => [d, ids.length]))).toEqual({
-      unresolved: 87,
+      unresolved: 85,
       witnessed: 10,
-      "required-derived-vocabulary": 0,
+      "required-derived-vocabulary": 2,
       "representation-artifact": 29,
       "not-yet-admitted": 0,
     });

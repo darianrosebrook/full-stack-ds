@@ -1478,7 +1478,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // obligations 3-6), which puts both carriers and the two `#incidence` coordinates their
     // normalizations forget into the closure-accounted class. Accounted is not ratified, and
     // the assertion below is what keeps the two apart.
-    expect(byClass).toEqual({ primitive: 52, "closure-accounted": 15, "required-derived-vocabulary": 1, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 52, "closure-accounted": 15, "required-derived-vocabulary": 3, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -1607,6 +1607,8 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "relation.derivedBy.bin.closure",
       "relation.derivedBy.bin.closure:left-closed~<absent>",
       "relation.derivedBy.bin.field#incidence",
+      "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.kind",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
       "relation.derivedBy.normalize.field#incidence",
@@ -1645,6 +1647,8 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "relation.derivedBy.bin.closure",
       "relation.derivedBy.bin.closure:left-closed~<absent>",
       "relation.derivedBy.bin.field#incidence",
+      "relation.derivedBy.join.cardinality",
+      "relation.derivedBy.kind",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
       "relation.derivedBy.normalize.field#incidence",
@@ -1763,7 +1767,11 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       for (const id of [c.carrier, ...c.dependencies]) {
         if (support.primitive.has(id)) continue; // separately ratified; the closure adds nothing
         const s = evidenceStanding(id, support, holds);
-        if (s.state === "holding") expect(s.via, `${id} is carried only by a provisional closure`).toBe("closure-accounted");
+        // Two accounting grounds, and BOTH are accounting rather than standing. A coordinate the
+        // SUBTRACTION retained independently reads as `required-derived-vocabulary`, which is
+        // strictly more specific than the provisional closure that also depends on it; the point
+        // of this test is the `primitive` exclusion above, which no ground may cross.
+        if (s.state === "holding") expect(["closure-accounted", "required-derived-vocabulary"], `${id} is carried only by a provisional closure`).toContain(s.via);
       }
     }
   });
