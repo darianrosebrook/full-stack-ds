@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: sequence-declaration
 created_at: '2026-09-15T07:16:49.898Z'
-updated_at: '2026-09-15T07:17:06.572Z'
+updated_at: '2026-09-15T07:40:06.593Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
@@ -22,6 +22,7 @@ scope:
     - 'packages/ds-contracts/relation.contract.schema.json'
     - 'docs/architecture/analytical-relation-doctrine.md'
     - 'docs/current-implementation-snapshot.md'
+    - packages/ds-contracts/quotient-image.schema.json
   out: []
 invariants:
   - 'The necessity census claims only degrees of freedom the declaration expresses. Where the emitted schema cannot say whether a name list''s order is semantic, the census must not emit an order facet for it, and a name list that declares no sequence fact is a defect the walk refuses rather than a coordinate the walk invents.'
