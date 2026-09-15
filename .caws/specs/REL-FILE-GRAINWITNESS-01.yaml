@@ -2,9 +2,10 @@ id: REL-FILE-GRAINWITNESS-01
 title: 'File the grain-witness incidence witness: the corpus fan-out cause decides it'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: file-grainwitness
 created_at: '2026-09-15T23:08:43.221Z'
-updated_at: '2026-09-15T23:08:43.221Z'
+updated_at: '2026-09-15T23:08:45.084Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
