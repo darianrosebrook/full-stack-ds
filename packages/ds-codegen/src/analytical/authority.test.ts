@@ -368,8 +368,9 @@ describe("evidence earned under one erasure definition is refused under another"
       input: "the schema-derived locator machinery (the declaration's arity floor no longer rides on the locator)",
       mutate: {
         file: "census.ts",
-        from: "const locator: StructuralLocator = { path: rawPath, steps, ...(arityFloor !== undefined ? { arityFloor } : {}) };",
-        to: "const locator: StructuralLocator = { path: rawPath, steps };",
+        from:
+          "const locator: StructuralLocator = { path: rawPath, steps, ...(arityFloor !== undefined ? { arityFloor } : {}), ...(operand ? { operand } : {}) };",
+        to: "const locator: StructuralLocator = { path: rawPath, steps, ...(operand ? { operand } : {}) };",
       },
       moves: ["coordinateBasisDigest"],
     },

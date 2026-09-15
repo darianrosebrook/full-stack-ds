@@ -42,6 +42,15 @@ const live = computeFreeze({}, frozen.fixtures);
  * `erasure-specimens.ts` build a pair astride the floor and do exercise it.
  * Truncating to one element instead, as before, moved four fixtures and
  * produced images the representation cannot express.
+ *
+ * THE SIX `*from#incidence` ENTRIES ARRIVED WITH THE BOUND REBINDING. A bound
+ * slot now rebinds to the operand namespace's own declaration order, and these
+ * slots already hold the FIRST relation their structure declares, so the
+ * canonical bind writes the binding it found and reach is zero. The same kind
+ * of corpus fact as the arity entries, one definition deeper: a fixture that
+ * declares its input relation second makes all six live immediately. Reach is
+ * reported and never read as necessity — whether the synthesized specimens
+ * separate a coordinate is `erasure-audit`'s question, not this list's.
  */
 const CORPUS_DEAD = [
   "evidence.grainWitness#arity",
@@ -49,11 +58,17 @@ const CORPUS_DEAD = [
   "relation.derivedBy.aggregate-to-grain.toGrain#arity",
   "relation.derivedBy.aggregate-to-grain.toGrain#order",
   "relation.derivedBy.bin.closure:right-closed~<absent>",
+  "relation.derivedBy.bin.from#incidence",
+  "relation.derivedBy.graph.edgeFrom#incidence",
+  "relation.derivedBy.graph.from#incidence",
   "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
   "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
   "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+  "relation.derivedBy.join.from#incidence",
+  "relation.derivedBy.nest.from#incidence",
   "relation.derivedBy.nest.levels#arity",
   "relation.derivedBy.nest.levels#order",
+  "relation.derivedBy.normalize.from#incidence",
   "structure.peers[]#arity",
 ];
 
@@ -293,11 +308,14 @@ describe("stage-2 erasure freeze", () => {
     // statement is indistinguishable from a re-record that absorbed a defect.
     const s = frozen.supersedes;
     expect(s, "the record was re-taken under a new erasure authority and says nothing about it").toBeDefined();
-    // This record supersedes the SEQUENCE DECLARATION: five order facets left
-    // the census because their list declarations now say `set`, and each was
-    // adjudicated as it left. Both classes are consequences of that one cause,
-    // and each carries its own authored effect below.
-    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["census=5", "verdict=5"]);
+    // This record supersedes the BINDING QUOTIENT: the incidence erasure at a
+    // derivation operand now rebinds the slot to the operand's own declared
+    // names instead of rewriting them to reserved tokens, because a token image
+    // stops resolving and the boundary refuses it as a declaration. Sixteen
+    // bound slots' images moved, and the class carries its authored effect below.
+    // The earlier statement -- round 27's `census=5`, `verdict=5` for the
+    // sequence declaration -- is what this one replaced, and it is in git.
+    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["forget-reference-incidence=16"]);
     for (const d of s!.divergences) expect(d.effect.length, `${d.operation} is superseded with no authored effect`).toBeGreaterThan(120);
   });
 
