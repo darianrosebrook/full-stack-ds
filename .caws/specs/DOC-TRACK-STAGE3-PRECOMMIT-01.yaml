@@ -1,0 +1,28 @@
+id: DOC-TRACK-STAGE3-PRECOMMIT-01
+title: 'Record the stage-3 precommit on the durable surface'
+risk_tier: 3
+mode: doc
+lifecycle_state: draft
+created_at: '2026-09-15T04:36:30.868Z'
+updated_at: '2026-09-15T04:36:30.868Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'docs/architecture/analytical-relation-doctrine.md (stage-3 precommit subsection)'
+    - 'docs/current-implementation-snapshot.md (the reference to stage 3''s precommitted experiment)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'An acceptance condition that binds an experiment is authority and lives on the tracked surface; document governance files roadmaps and working notes under docs/internal untracked, so no tracked doc may depend on an untracked one for a condition.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the stage-3 success condition and its four gameability closures exist only in the untracked docs/internal/analytical-relation-roadmap.md; when the precommit is recorded in the tracked doctrine; then the doctrine states the success condition and all four closures, the snapshot''s reference to stage 3''s precommitted experiment resolves to that section, and no tracked document''s acceptance condition depends on an untracked file'
+non_functional: {}
+contracts: []
