@@ -960,6 +960,96 @@
         },
         "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: a subtotal to a grain the nest does not declare. Reordering the declared levels to [state, country] removes `country` from the declared prefixes, so the existing `toGrain: [country]` subtotal is off-grain -- the judgment follows from an already-existing cause, and NOTHING else about the fixture moves."
       }
+    },
+    {
+      "coordinates": [
+        "relation.derivedBy.aggregate-to-grain.toGrain#order"
+      ],
+      "a": {
+        "base": "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+        "patch": [
+          {
+            "set": "structure.relations.subtotals.derivedBy.toGrain",
+            "value": [
+              "country",
+              "state"
+            ]
+          },
+          {
+            "set": "structure.relations.subtotals.grain",
+            "value": [
+              "country",
+              "state"
+            ]
+          },
+          {
+            "set": "structure.relations.subtotals.fields",
+            "value": {
+              "country": {
+                "transformation": "nominal",
+                "key": true
+              },
+              "state": {
+                "transformation": "nominal",
+                "key": true
+              },
+              "revenue": {
+                "transformation": "ratio"
+              }
+            }
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN does not fire: toGrain [country, state] IS a declared grain of the nest levels [country, state] (isDeclaredNestGrain compares positionally), the declared result grain equals the target grain as a set, every target name is a field of the nest's relation, and no field is invented -- so every aggregate-to-grain clause holds and the structure is admissible. No committed fixture carries a two-element target grain, so the surrounding shape (the result relation's declared grain and its fields) is written IDENTICALLY on both sides: the pair itself differs at exactly the two `toGrain` positions, and `changedPaths` measures that."
+      },
+      "b": {
+        "base": "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+        "patch": [
+          {
+            "set": "structure.relations.subtotals.derivedBy.toGrain",
+            "value": [
+              "state",
+              "country"
+            ]
+          },
+          {
+            "set": "structure.relations.subtotals.grain",
+            "value": [
+              "country",
+              "state"
+            ]
+          },
+          {
+            "set": "structure.relations.subtotals.fields",
+            "value": {
+              "country": {
+                "transformation": "nominal",
+                "key": true
+              },
+              "state": {
+                "transformation": "nominal",
+                "key": true
+              },
+              "revenue": {
+                "transformation": "ratio"
+              }
+            }
+          }
+        ],
+        "outcome": {
+          "status": "illegal",
+          "codes": [
+            "REL_GRAIN_SUBTOTAL_MISMATCH"
+          ],
+          "terms": []
+        },
+        "cause": "CASE_NESTED_SUBTOTALS_OFF_GRAIN: reordering the target grain to [state, country] makes it no longer a declared prefix of the nest levels [country, state], so REL_GRAIN_SUBTOTAL_MISMATCH is the corpus's own cause for a subtotal to a grain the nest does not declare. The declared result grain still equals the target grain as a SET, so the pair is a legal declaration on both sides and nothing but the order moves. No committed fixture carries a two-element target grain, so the surrounding shape (the result relation's declared grain and its fields) is written IDENTICALLY on both sides: the pair itself differs at exactly the two `toGrain` positions, and `changedPaths` measures that."
+      },
+      "note": "STAGE-2 necessity for relation.derivedBy.aggregate-to-grain.toGrain#order: separates the declared SEQUENCE of the target grain. Both sides are AUTHORED stimuli over one corpus base -- this is the first witness whose a-side is a patch, and it is forced by the corpus: every committed toGrain is one name long, so no fixture or fixture-pair can express a target grain whose order varies. What makes it a witness rather than a manufactured pair is measured, not asserted: the two sides differ at exactly [.structure.relations.subtotals.derivedBy.toGrain[0], ...[1]], each side is separately justified from the frozen corpus and doctrine, the ordering erasure identifies them, and checkIsolation discharges on both sides (the a-side is unchanged by sorting; the b-side sorts into the admissible shape with no introduced boundary finding). NON-CLAIM: this establishes that the target grain's declared SEQUENCE is necessary for the grain relation it participates in. It does not establish that the coordinate is a primitive analytical axis, and by construction it does not license any pair whose sides need DIFFERENT adjustments -- that would be evidence about two constructors rather than about this coordinate."
     }
   ]
 }

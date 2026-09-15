@@ -472,7 +472,8 @@
       "disposition": "unresolved"
     },
     "relation.derivedBy.aggregate-to-grain.toGrain#order": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness whose BOTH sides are authored stimuli over one corpus base, because no committed fixture carries a two-element target grain and no fixture pair can therefore express the order of one. Reordering toGrain from [country, state] to [state, country] makes the target grain stop being a declared prefix of the nest levels, so REL_GRAIN_SUBTOTAL_MISMATCH -- an already-existing cause, CASE_NESTED_SUBTOTALS_OFF_GRAIN -- decides it; the declared result grain still equals the target grain as a set, so both sides are legal declarations and the pair differs at exactly the two toGrain positions. Erasing this coordinate sorts the list and identifies them, and checkIsolation discharges on both sides. NON-CLAIM: the route needs the result relation's grain and fields written identically on BOTH sides -- a shared shape adjustment, not a second coordinate -- and that is recorded in the witness note because a pair requiring DIFFERENT adjustments would be evidence about two constructors rather than about this coordinate. Establishes that the target grain's declared SEQUENCE is a necessary distinction; it does NOT establish it as a primitive analytical axis. By contrast toGrain#arity is NOT independently erasable: the law requires the declared result grain to equal the target grain as a set, so truncating toGrain alone leaves the image unable to type its own result."
     },
     "relation.derivedBy.aggregate-to-grain.toGrain#present": {
       "disposition": "representation-artifact",

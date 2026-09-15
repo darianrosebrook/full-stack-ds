@@ -257,9 +257,9 @@ describe("containment is structural, never a string prefix", () => {
 describe("the witness audit", () => {
   const byVerdict = (v: string) => live.witnesses.filter((w) => w.verdict === v);
 
-  it("classifies all 56 witnesses and leaves none with an unresolved plan", () => {
-    // 47 + the six stage-2 necessities the corpus already discriminates (REL-STAGE2-WITNESS-ADJUDICATION-01).
-    expect(live.witnesses.length).toBe(56);
+  it("classifies all 57 witnesses and leaves none with an unresolved plan", () => {
+    // 47 at stage 1.5, plus ten stage-2 necessities added by later adjudications.
+    expect(live.witnesses.length).toBe(57);
     expect(byVerdict("unresolved-plan")).toEqual([]);
   });
 
@@ -325,8 +325,8 @@ describe("the witness audit", () => {
     for (const id of two.declared) expect(ledgeredCoordinates.has(id), `${id} is named by a lapsed witness that no adjudication covers`).toBe(true);
   });
 
-  it("leaves the remaining forty-one atomic, so the correction is bounded", () => {
-    expect(byVerdict("atomic").length).toBe(41);
+  it("leaves the remaining forty-two atomic, so the correction is bounded", () => {
+    expect(byVerdict("atomic").length).toBe(42);
     for (const w of byVerdict("atomic")) {
       expect(w.declared.length).toBe(1);
       expect(w.actual).toEqual(w.declared);
@@ -391,7 +391,7 @@ describe("the terminal invariant is measured over the population the report name
       };
       // A scope admitting it saw fewer than the population it names.
       expect(bend((x) => { x.scopes.quotientLanguageInvalid.specimens = 112; }), `${side}: wrong scope count`).toEqual([
-        expect.stringContaining("measured over 112 of 211 specimens"),
+        expect.stringContaining("measured over 112 of 213 specimens"),
       ]);
       // No named population at all: coverage could only be compared by count.
       expect(bend((x) => { delete (x.specimens as unknown as Record<string, unknown>).populationDigest; }), `${side}: no named population`).toEqual([
@@ -556,7 +556,7 @@ describe("the terminal invariant is measured over the population the report name
     // A null recorded scope must not suppress detection of a changed current one.
     const suppressed = run((r, l) => { r.scopes.sourceLanguageDeparture = null; l.scopes.sourceLanguageDeparture.populationDigest = "0".repeat(64); });
     expectProblem(suppressed, "RECORDED", "sourceLanguageDeparture scope is not a scope", "null scope beside a changed current digest");
-    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 115 authored", "source count 999");
+    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 117 authored", "source count 999");
     expectProblem(run((r) => { r.specimens.total = 0; r.scopes.quotientLanguageInvalid.specimens = 0; }), "RECORDED", "specimens.total 0 is not corpus + stimuli + synthesized", "total 0 beside unchanged components");
 
     // BOTH-SIDES corruptions of the fields that only had equality comparisons.
@@ -786,7 +786,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
   /** An outcome that is genuinely about THIS fixture's content: both halves are required. */
   const isBound = (f: { id: string }, oracle: ReturnType<typeof loadOracle>) => hasOutcome(f, oracle) && contentMatches(f, oracle);
 
-  it("holds 25 ids more than once, every one of them with distinct contents", () => {
+  it("holds 26 ids more than once, every one of them with distinct contents", () => {
     const s = specimens();
     const byId = new Map<string, Set<string>>();
     for (const f of s.fixtures) {
@@ -795,9 +795,9 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
       byId.set(f.id, set);
     }
     const shared = [...byId].filter(([, cs]) => cs.size > 1);
-    expect(s.fixtures.length).toBe(211);
+    expect(s.fixtures.length).toBe(213);
     expect(byId.size).toBe(107);
-    expect(shared.length).toBe(25);
+    expect(shared.length).toBe(26);
     // Not one of them is a benign repeat: every shared id carries two or more DIFFERENT fixtures.
     expect(shared.every(([, cs]) => cs.size > 1)).toBe(true);
     expect(Math.max(...shared.map(([, cs]) => cs.size))).toBe(31);
@@ -820,7 +820,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     // the corrected reading rather than a narrower window. The id-resolving version reported two.
     const doc = loadSubtraction();
     const unresolved = doc.basis.candidates.filter((id) => (doc.verdicts[id]?.disposition ?? "unresolved") === "unresolved");
-    expect(unresolved.length).toBe(78);
+    expect(unresolved.length).toBe(77);
 
     const s = specimens();
     const oracle = loadOracle();

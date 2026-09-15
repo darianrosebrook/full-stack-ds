@@ -146,16 +146,22 @@ describe("the committed closure ledger", () => {
     expect(cardinality).toHaveLength(7);
     // Standing here tracks the SUBTRACTION's verdicts and nothing else: the cardinality leaf is
     // settled because REL-OPERATOR-LEAF-FACTORING-01 retained it as required derived vocabulary,
-    // and the other twenty are unresolved. None is primitive -- which is the standing the closure
-    // form is forbidden to confer.
+    // and the rest are unresolved. Neither primitive is primitive FOR being in a closure -- which
+    // is the standing the closure form is forbidden to confer.
     expect(derivation.filter((d) => d.standing.state !== "unresolved").map((d) => d.coordinate)).toEqual([
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.join.cardinality",
       "relation.derivedBy.nest.levels#order",
     ]);
-    // And one IS primitive: REL-TOPOLOGY-AUTHORED-STIMULUS-01 witnessed the nest-levels ORDER, so
-    // the closures whose footprints contain it now carry the composite diagnosis rather than an
-    // outstanding one. That reading is obligation 8's, and asserting it here keeps it visible.
-    expect(derivation.filter((d) => d.standing.state === "primitive").map((d) => d.coordinate)).toEqual(["relation.derivedBy.nest.levels#order"]);
+    // And two ARE primitive, each because a single-coordinate witness ratifies it:
+    // REL-TOPOLOGY-AUTHORED-STIMULUS-01 witnessed the nest-levels ORDER and this slice witnessed the
+    // aggregate TARGET-GRAIN order, so the closures whose footprints contain either now carry the
+    // composite diagnosis rather than an outstanding one. That reading is obligation 8's, and
+    // asserting it here keeps it visible.
+    expect(derivation.filter((d) => d.standing.state === "primitive").map((d) => d.coordinate)).toEqual([
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
+      "relation.derivedBy.nest.levels#order",
+    ]);
   });
 
   it("has no dependency cycle, so no carrier's normalization depends back on it", () => {
@@ -206,19 +212,26 @@ describe("adopting the closure form confers no standing", () => {
       else expect(s, `${coordinate} must read its own basis verdict, not the closure`).toEqual({ state: "resolved", disposition: verdict });
     }
     const primitiveDeps = r.dependencies.filter((d) => d.standing.state === "primitive");
-    // Two now, and both for the same reason: a holding single-coordinate witness ratifies them.
+    // Three now, all for the same reason: a holding single-coordinate witness ratifies them.
     expect(primitiveDeps.map((d) => d.coordinate)).toEqual([
       "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.nest.levels#order",
     ]);
     const affected = r.checks.filter((c) => c.obligations.find((o) => o.id.startsWith("8-"))!.detail.includes("PRIMITIVE"));
-    // Eight, not two: witnessing the nest-levels ORDER puts it in six more footprints, so those
-    // closures now carry obligation 8's composite diagnosis instead of an outstanding one. The
-    // additivity pair was already there for the same reason.
+    // Thirteen, not two. The two additivity closures were already there; witnessing the nest-levels
+    // ORDER put it in six more footprints; and witnessing the aggregate TARGET-GRAIN order puts it in
+    // all six `aggregate-to-grain~X` footprints, five of which the ORDER facet does not reach. So
+    // those closures carry obligation 8's composite diagnosis instead of an outstanding one.
     expect(affected.map((c) => c.carrier).sort()).toEqual([
       "field.additivity.kind:additive~semi-additive",
       "field.additivity.kind:semi-additive~ratio-measure",
+      "relation.derivedBy.kind:aggregate-to-grain~bin",
+      "relation.derivedBy.kind:aggregate-to-grain~graph",
+      "relation.derivedBy.kind:aggregate-to-grain~join",
       "relation.derivedBy.kind:aggregate-to-grain~nest",
+      "relation.derivedBy.kind:aggregate-to-grain~normalize",
+      "relation.derivedBy.kind:aggregate-to-grain~project",
       "relation.derivedBy.kind:join~nest",
       "relation.derivedBy.kind:nest~bin",
       "relation.derivedBy.kind:nest~graph",
@@ -780,14 +793,18 @@ describe("the unresolved dependencies are blocked by EVIDENCE, not by an undecid
   // deciding them by convenience, which is the one thing the standing index exists to prevent.
   const openDeps = () => checkClosures().dependencies.filter((d) => d.standing.state !== "resolved");
 
-  it("names the dependencies that ARE decided, and both are decided AGAINST their closures", () => {
-    // A stage-1 re-earning ratified this one (`removals.json` leafMap maps the removed
+  it("names the dependencies that ARE decided, and every one of them is decided AGAINST its closures", () => {
+    // A stage-1 re-earning ratified the additivity one (`removals.json` leafMap maps the removed
     // `nonAdditiveAlong` leaf onto `nonAdditiveAlong#incidence`), so the two additivity
     // closures cannot prove their carrier primitive at all: constructor and payload are
-    // composite under this encoding. That is a verdict, not an outstanding adjudication.
+    // composite under this encoding. The two ORDER facets are primitive the ordinary way, from a
+    // holding single-coordinate witness. Either way that is a verdict, not an outstanding
+    // adjudication: obligation 8 admits no primitive, so a witnessed dependency blocks its
+    // carrier's promotion just as firmly as an unsettled one.
     const primitive = openDeps().filter((d) => d.standing.state === "primitive").map((d) => d.coordinate);
     expect(primitive).toEqual([
       "field.additivity.semi-additive.nonAdditiveAlong#incidence",
+      "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.nest.levels#order",
     ]);
   });
@@ -1173,8 +1190,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(78);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 34, "member-absence": 8, leaf: 5, "member-pair": 31 });
+    expect(unresolved.length).toBe(77);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 33, "member-absence": 8, leaf: 5, "member-pair": 31 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
@@ -1194,11 +1211,12 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // And only 16 of the 35 topology facets block anything at all: the other 19, and all 38
     // non-topology candidates, are a separate obligation that no carrier is waiting on.
     const topology = unresolved.filter((id) => kindOf(id) === "reference-topology");
-    expect(topology.length).toBe(34);
-    // Fifteen, not sixteen: the sixteenth is `relation.derivedBy.nest.levels#order`, which this
-    // slice witnessed, so it is no longer unresolved and no longer counted here -- while the
-    // closures that depended on it still depend on a PRIMITIVE coordinate and stay blocked.
-    expect(topology.filter((id) => dependents.has(id)).length).toBe(15);
+    expect(topology.length).toBe(33);
+    // Fourteen, not sixteen: two of the sixteen were witnessed -- `relation.derivedBy.nest.levels#order`
+    // by REL-TOPOLOGY-AUTHORED-STIMULUS-01 and `relation.derivedBy.aggregate-to-grain.toGrain#order` by
+    // REL-ORDER-FACET-SEMANTICS-01 -- so neither is unresolved and neither is counted here, while the
+    // closures that depended on them still depend on a PRIMITIVE coordinate and stay blocked.
+    expect(topology.filter((id) => dependents.has(id)).length).toBe(14);
     expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(57);
   });
 });

@@ -1644,9 +1644,11 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     }
     // 15, not 11: two closures gained controlled stimuli (their receipt pairs discharge
     // obligations 3-6), which puts both carriers and the two `#incidence` coordinates their
-    // normalizations forget into the closure-accounted class. Accounted is not ratified, and
+    // normalizations forget into the closure-accounted class. Then 14, because a coordinate the
+    // closure form was accounting for earned a witness of its own and moved to `primitive` -- the
+    // classes are a partition, so a coordinate cannot be in both. Accounted is not ratified, and
     // the assertion below is what keeps the two apart.
-    expect(byClass).toEqual({ primitive: 53, "closure-accounted": 15, "required-derived-vocabulary": 3, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 54, "closure-accounted": 14, "required-derived-vocabulary": 3, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
