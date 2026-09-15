@@ -2,9 +2,11 @@ id: REL-INCIDENCE-QUOTIENT-LIMIT-01
 title: 'Measure and pin why the derivation-operand topology facets cannot be witnessed: their erasure is not a legal quotient'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Measured and pinned that 18 of 39 reference-topology coordinates have an erasure the derivation boundary refuses, so no witness can ever be admitted for them; the distinction is oracle-separated and the collision holds, so this is a limit of the quotient rather than missing corpus coverage, and the keystone partitions into 18 quotient / 10 corpus-shape / 6 corpus-coverage.'
 created_at: '2026-09-15T06:36:43.706Z'
-updated_at: '2026-09-15T06:36:59.348Z'
+updated_at: '2026-09-15T06:47:19.248Z'
 created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
 blast_radius:
   modules:
