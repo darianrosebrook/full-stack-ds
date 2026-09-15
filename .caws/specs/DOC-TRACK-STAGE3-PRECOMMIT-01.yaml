@@ -26,3 +26,12 @@ acceptance:
     then: 'given the stage-3 success condition and its four gameability closures exist only in the untracked docs/internal/analytical-relation-roadmap.md; when the precommit is recorded in the tracked doctrine; then the doctrine states the success condition and all four closures, the snapshot''s reference to stage 3''s precommitted experiment resolves to that section, and no tracked document''s acceptance condition depends on an untracked file'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "The doctrine now carries 'Stage-3 precommit (recorded before stage 3 runs)' as a subsection of 'Order of construction and what each stage falsifies' (docs/architecture/analytical-relation-doctrine.md), containing the success-condition sentence, all four closures (distinctness downstream of a frozen authority; residue bounded by analytical standing; anti-lookup set deltas with the precommitted prediction block verbatim; irrelevant-perturbation invariance as the control) and the four-part metamorphic summary. The snapshot's analytical row now reads '...making it so is stage 3's precommitted experiment, whose success condition and four gameability closures are recorded on the durable surface in the doctrine's stage-3 precommit', so the reference resolves inside the tracked tree. Bounded audit that no tracked doc's condition needs an off-tree file: git grep docs/internal over tracked *.md returns only governance descriptions (document_governance.md, docs/README.md, AGENTS.md, CONTRIBUTING.md) and evidence pointers already labelled machine-local whose check is a tracked script (mobile-parity-matrix, render-binding-audit). Non-claim: that audit is a path-reference grep, not a proof that no tracked doc depends on off-tree content by other means; and the machine-local roadmap still carries its own copy of this text, which the doctrine now supersedes."
+    recorded_at: "2026-09-15T04:38:01.007Z"
+    command: "pnpm run docs:check-claims && pnpm run docs:check-links && pnpm exec vitest run packages/ds-codegen/src/analytical"
+    exit_code: 0
+    artifact_path: docs/architecture/analytical-relation-doctrine.md
+    commit_sha: d34dd7e7
