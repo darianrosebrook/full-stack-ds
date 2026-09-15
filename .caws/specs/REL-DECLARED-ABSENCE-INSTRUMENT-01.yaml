@@ -1,0 +1,31 @@
+id: REL-DECLARED-ABSENCE-INSTRUMENT-01
+title: 'State and pin the rule that an erasure cannot witness a coordinate whose absence is itself diagnosed'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T05:29:00.324Z'
+updated_at: '2026-09-15T05:29:00.324Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'docs/architecture/analytical-relation-doctrine.md (the erasure instrument''s limit)'
+    - 'packages/ds-codegen/src/analytical/necessity.test.ts (pin the rule and its contrast)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'packages/ds-codegen/src/analytical'
+  out: []
+invariants:
+  - 'A witness requires an erasure that leaves the surrounding representation well-formed; where the engine diagnoses a coordinate''s ABSENCE, the erasure is the violation itself and the coordinate''s necessity is stated by that diagnostic rather than by a discriminating pair.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given three stage-2 candidates are refused as witnesses because erasing them introduces the very diagnostic the corpus states, and the field is optional in the schema so the deletion is the correct erasure; when the rule is stated and pinned; then the doctrine names it among the instrument limits, a test re-derives it from the engine and contrasts it with a coordinate whose absence is not diagnosed and which is witnessed, and no coordinate is adjudicated, removed or moved'
+non_functional: {}
+contracts:
+  - name: 'necessity-instrument'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
