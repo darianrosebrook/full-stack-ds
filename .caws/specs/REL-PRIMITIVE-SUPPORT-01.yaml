@@ -2,9 +2,11 @@ id: REL-PRIMITIVE-SUPPORT-01
 title: 'One footprint-aware support classifier: a sibling facet destroyed in place is not primitive standing'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'One footprint-aware support classifier landed and wired into every consumer plus the gate; nest.levels#incidence re-adjudicated unresolved, no published verdict demoted, 58 of 60 ratify.'
 created_at: '2026-09-15T22:10:20.454Z'
-updated_at: '2026-09-15T22:10:21.809Z'
+updated_at: '2026-09-15T22:29:25.931Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
