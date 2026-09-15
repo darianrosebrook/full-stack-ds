@@ -1,0 +1,32 @@
+id: REL-PRESENCE-PAIR-SWEEP-01
+title: 'Sweep the unresolved candidates for clean presence pairs and name the clause that refuses the only one'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-15T05:35:47.959Z'
+updated_at: '2026-09-15T05:35:47.959Z'
+created_by_session: 'session-272d1906-0cae-4fae-ba00-e86a4ac9d030'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/necessity.test.ts (pin the sweep and the refusal)'
+    - 'docs/architecture/analytical-relation-doctrine.md (the isolation clause''s limit)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'A witness for a presence coordinate needs a pair on which the erasure is a no-op on one side, because collision then means that side IS the other minus the holder; a pair that does not have that shape is not evidence for the presence distinction however well it collides.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the 83 unresolved stage-2 candidates; when each is swept for a pair where the erasure is a no-op on one side; then exactly two have one and both are relation.derivedBy.bin.closure spellings whose outcomes differ, the sweep is pinned as a test, the isolation clause is named in the doctrine as the instrument that refuses that pair, and evidence.rows.*#present is recorded as having no such pair rather than a wrongly chosen one'
+non_functional: {}
+contracts:
+  - name: 'presence-pair'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
