@@ -354,10 +354,12 @@
       "disposition": "unresolved"
     },
     "assertion.aggregate.along#present": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness the corpus already licenses: FX_STOCK_SUM_ALONG_DATE against FX_N_STOCK_SUM_ALONG_PRODUCT require different outcomes, and erasing this coordinate identifies them. Establishes the distinction is necessary to separate those two cases; it does NOT by itself establish the coordinate as a primitive analytical axis."
     },
     "assertion.aggregate.field#incidence": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness the corpus already licenses: FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN against FX_N_LINE_QTY_SUMMED_AFTER_JOIN require different outcomes, and erasing this coordinate identifies them. Establishes the distinction is necessary to separate those two cases; it does NOT by itself establish the coordinate as a primitive analytical axis."
     },
     "assertion.aggregate.nulls:as-observed~<absent>": {
       "disposition": "unresolved"
@@ -366,7 +368,8 @@
       "disposition": "unresolved"
     },
     "assertion.aggregate.nulls:exclude~<absent>": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness the corpus already licenses: FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS against FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED require different outcomes, and erasing this coordinate identifies them. Establishes the distinction is necessary to separate those two cases; it does NOT by itself establish the coordinate as a primitive analytical axis."
     },
     "assertion.aggregate.relation#incidence": {
       "disposition": "unresolved"
@@ -386,15 +389,13 @@
     "evidence.grainWitness#order": {
       "disposition": "unresolved"
     },
-    "evidence.rows.*#present": {
-      "disposition": "unresolved"
-    },
     "field.additivity.kind:additive~<absent>": {
       "disposition": "representation-artifact",
       "reason": "REDUNDANT, not unwitnessable. Its branch is tag-only, so the erasure IS isolated — and that is the problem: the quotient is extensionally the same as field.additivity#present. Keeping it would encode holder existence once per branch instead of once. Distinct finding from the eight payload-bearing branches, same disposition: an optional tagged holder has exactly two independent degrees of freedom, existence and branch identity, and 'member versus holder absent' is their cross-term."
     },
     "field.additivity.kind:additive~non-additive": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness the corpus already licenses: FX_SHARE_OF_AVERAGE_SCORE against FX_N_SHARE_OF_ADDITIVE_TOTAL require different outcomes, and erasing this coordinate identifies them. Establishes the distinction is necessary to separate those two cases; it does NOT by itself establish the coordinate as a primitive analytical axis."
     },
     "field.additivity.kind:non-additive~<absent>": {
       "disposition": "representation-artifact",
@@ -421,13 +422,15 @@
       "disposition": "unresolved"
     },
     "field.temporality.grain": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness the corpus already licenses: FX_PEERS_AT_DAY_AND_MONTH_GRAIN against FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN require different outcomes, and erasing this coordinate identifies them. Establishes the distinction is necessary to separate those two cases; it does NOT by itself establish the coordinate as a primitive analytical axis."
     },
     "field.temporality.grain:day~<absent>": {
       "disposition": "unresolved"
     },
     "field.temporality.grain:day~month": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness the corpus already licenses: FX_PEERS_AT_DAY_AND_MONTH_GRAIN against FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN require different outcomes, and erasing this coordinate identifies them. Establishes the distinction is necessary to separate those two cases; it does NOT by itself establish the coordinate as a primitive analytical axis."
     },
     "field.temporality.grain:month~<absent>": {
       "disposition": "unresolved"
@@ -728,6 +731,9 @@
       "disposition": "unresolved"
     },
     "structure.peers[]#present": {
+      "disposition": "unresolved"
+    },
+    "evidence.rows.*#present": {
       "disposition": "unresolved"
     }
   },

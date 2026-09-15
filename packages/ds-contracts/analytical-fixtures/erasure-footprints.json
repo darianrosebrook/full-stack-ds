@@ -2,7 +2,7 @@
   "$comment": "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
-    "witnesses.json": "33bb30685dcab051ba67f375ddbeafa6c550cb7cc3b82e0e1890c0f63870a966",
+    "witnesses.json": "cc0c8aa55ccfeeddfd00dc201c92bd0ccb33378cf5fd76ab3a233ae8f330648e",
     "closures-stage2.json": "f31bad18f9700fa22602f459a24d49474fbfa53fef856092fdd010a7a5dba024"
   },
   "authority": {
@@ -1181,6 +1181,41 @@
       "standing": "primitive"
     },
     {
+      "witness": "assertion.aggregate.along#present",
+      "declared": [
+        "assertion.aggregate.along#present"
+      ],
+      "actual": [
+        "assertion.aggregate.along#arity",
+        "assertion.aggregate.along#incidence",
+        "assertion.aggregate.along#order",
+        "assertion.aggregate.along#present"
+      ],
+      "collateral": [
+        "assertion.aggregate.along#arity",
+        "assertion.aggregate.along#incidence",
+        "assertion.aggregate.along#order"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.field#incidence",
+      "declared": [
+        "assertion.aggregate.field#incidence"
+      ],
+      "actual": [
+        "assertion.aggregate.field#incidence"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
       "witness": "assertion.aggregate.nulls",
       "declared": [
         "assertion.aggregate.nulls"
@@ -1241,6 +1276,20 @@
       ],
       "actual": [
         "assertion.aggregate.nulls:as-zero~as-observed"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "assertion.aggregate.nulls:exclude~<absent>",
+      "declared": [
+        "assertion.aggregate.nulls:exclude~<absent>"
+      ],
+      "actual": [
+        "assertion.aggregate.nulls:exclude~<absent>"
       ],
       "collateral": [],
       "outside": [],
@@ -1510,6 +1559,20 @@
       "standing": "primitive"
     },
     {
+      "witness": "field.additivity.kind:additive~non-additive",
+      "declared": [
+        "field.additivity.kind:additive~non-additive"
+      ],
+      "actual": [
+        "field.additivity.kind:additive~non-additive"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
       "witness": "field.additivity.kind:additive~ratio-measure",
       "declared": [
         "field.additivity.kind:additive~ratio-measure"
@@ -1631,6 +1694,41 @@
       ],
       "actual": [
         "field.proportion"
+      ],
+      "collateral": [],
+      "outside": [],
+      "verdict": "atomic",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.temporality.grain",
+      "declared": [
+        "field.temporality.grain"
+      ],
+      "actual": [
+        "field.temporality.grain",
+        "field.temporality.grain:day~<absent>",
+        "field.temporality.grain:day~month",
+        "field.temporality.grain:month~<absent>"
+      ],
+      "collateral": [
+        "field.temporality.grain:day~<absent>",
+        "field.temporality.grain:day~month",
+        "field.temporality.grain:month~<absent>"
+      ],
+      "outside": [],
+      "verdict": "subsumes-refinements",
+      "holds": true,
+      "standing": "primitive"
+    },
+    {
+      "witness": "field.temporality.grain:day~month",
+      "declared": [
+        "field.temporality.grain:day~month"
+      ],
+      "actual": [
+        "field.temporality.grain:day~month"
       ],
       "collateral": [],
       "outside": [],

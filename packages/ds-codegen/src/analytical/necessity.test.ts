@@ -422,11 +422,13 @@ describe("C1 — coverage: every kernel coordinate is ratified", () => {
       })
       .map((c) => c.id);
     // A handling's distinctions are visible only once a missing value is present; the
-    // leaf itself (handling declared or not) has a schema-class witness.
+    // leaf itself (handling declared or not) has a schema-class witness. `exclude~<absent>`
+    // joins them: whether a null policy is DECLARED is also only visible with rows.
     expect(instanceOnly).toEqual([
       "assertion.aggregate.nulls:exclude~as-zero",
       "assertion.aggregate.nulls:exclude~as-observed",
       "assertion.aggregate.nulls:as-zero~as-observed",
+      "assertion.aggregate.nulls:exclude~<absent>",
     ]);
   });
 });
@@ -1476,7 +1478,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // obligations 3-6), which puts both carriers and the two `#incidence` coordinates their
     // normalizations forget into the closure-accounted class. Accounted is not ratified, and
     // the assertion below is what keeps the two apart.
-    expect(byClass).toEqual({ primitive: 44, "closure-accounted": 15, "required-derived-vocabulary": 1, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 50, "closure-accounted": 15, "required-derived-vocabulary": 1, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -1595,7 +1597,13 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
     // coordinates their normalizations forget. The historical authority is an INPUT, never a
     // function of the present, so a gain is exactly what must surface here.
     expect(r.unexplainedGain).toEqual([
+      "assertion.aggregate.along#present",
+      "assertion.aggregate.field#incidence",
+      "assertion.aggregate.nulls:exclude~<absent>",
+      "field.additivity.kind:additive~non-additive",
       "field.temporality#present",
+      "field.temporality.grain",
+      "field.temporality.grain:day~month",
       "relation.derivedBy.bin.field#incidence",
       "relation.derivedBy.kind:bin~project",
       "relation.derivedBy.kind:normalize~project",
@@ -1625,7 +1633,12 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
     expect(historicallyAccounted()).toEqual(historicalSet);
     const r = reconcileHistory(widened, historicalSet, holds);
     expect(r.unexplainedGain).toEqual([
+      "assertion.aggregate.along#present",
+      "assertion.aggregate.field#incidence",
+      "assertion.aggregate.nulls:exclude~<absent>",
+      "field.additivity.kind:additive~non-additive",
       "field.temporality#present",
+      "field.temporality.grain",
       "field.temporality.grain:day~month",
       "relation.derivedBy.bin.field#incidence",
       "relation.derivedBy.kind:bin~project",
@@ -2112,5 +2125,44 @@ describe("a non-confluent coordinate set is refused as evidence before any colli
       const r = checkWitness(w, census, oracle);
       expect(r.failures.map((f) => f.code), w.coordinates.join(" + ")).not.toContain("ERASURE_NOT_CONFLUENT");
     }
+  });
+});
+
+describe("an oracle-separated pair is NECESSARY for a witness and not sufficient", () => {
+  // The stage-2 witnessability measurement is the first of three stages, and the two later
+  // ones each refuse something the first admits, for a different reason. Recorded so that
+  // measurement is never read as "these ten are available".
+  it("refuses a pair that does not vary the coordinate it is offered for", () => {
+    // `evidence.rows.*#present` has a clean oracle-separated collided pair:
+    // FX_T_GRAIN_WITNESS_UNIQUE_ROWS (admissible) against ..._DUPLICATE_ROWS (illegal with
+    // REL_GRAIN_FANOUT). But BOTH carry `evidence.rows` -- three rows each -- so erasing the
+    // presence coordinate collides them only by destroying the rows' content, which is what
+    // actually differs between them. The adjudication policy's isolation rule is explicit that
+    // substitution must isolate the claimed distinction, and this one does not. It stays
+    // unresolved, and the footprint audit agrees by classifying the pair `over-erasing`.
+    const rowsOf = (id: string) => (oracle.fixtures.get(id) as unknown as { evidence?: { rows?: unknown } }).evidence?.rows;
+    const a = rowsOf("FX_T_GRAIN_WITNESS_UNIQUE_ROWS");
+    const b = rowsOf("FX_T_GRAIN_WITNESS_DUPLICATE_ROWS");
+    expect(a, "both sides carrying rows is exactly why this pair is no witness for presence").toBeDefined();
+    expect(b, "both sides carrying rows is exactly why this pair is no witness for presence").toBeDefined();
+    expect(a).not.toEqual(b);
+  });
+
+  it("refuses an erasure that INTRODUCES a defect instead of forgetting one", () => {
+    // The three `relation.derivedBy.bin.closure` coordinates have oracle-separated collided
+    // pairs too, but erasing the declaration does not merely forget it: the fixture becomes
+    // ill-formed, and checkWitness reports ERASURE_NOT_ISOLATED rather than a collision.
+    const c = checkWitness(
+      {
+        coordinates: ["relation.derivedBy.bin.closure"],
+        a: { fixture: "FX_READINGS_BINNED_NO_CLOSURE" },
+        b: { fixture: "FX_N_READINGS_BINNED_LEFT_CLOSED" },
+      },
+      kernel,
+      oracle,
+    );
+    expect(c.ok).toBe(false);
+    expect(c.failures.map((f) => f.code)).toEqual(["ERASURE_NOT_ISOLATED"]);
+    expect(String(c.failures[0]!.detail)).toContain("REL_BIN_CLOSURE_UNDECLARED");
   });
 });
