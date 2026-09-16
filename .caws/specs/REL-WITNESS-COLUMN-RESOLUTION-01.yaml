@@ -1,0 +1,32 @@
+id: REL-WITNESS-COLUMN-RESOLUTION-01
+title: 'Stop an unresolved witness column from fabricating fan-out'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-16T02:27:42.327Z'
+updated_at: '2026-09-16T02:27:42.327Z'
+created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the additivity rule treats a witness column whose observations are unavailable as a repeated observation because the missing-value sentinel repeats, so a witness naming a column the relation does not declare fabricates REL_GRAIN_FANOUT; when the rule requires the named columns to resolve and to carry observations before duplicate evidence may be read; then an unresolved column and an unobservable column both leave the grain obligation outstanding instead of producing a fan-out diagnostic, a genuinely repeating declared column still produces the instance fan-out finding, a uniquely valued column stays admissible, and the filed grain witness whose fan-out came from the sentinel is re-adjudicated rather than left standing'
+non_functional: {}
+contracts:
+  - name: 'witness-admission'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/stage2-rules.test.ts'
