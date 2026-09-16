@@ -460,7 +460,8 @@
       "disposition": "unresolved"
     },
     "observation.null:censored~suppressed": {
-      "disposition": "unresolved"
+      "disposition": "witnessed",
+      "reason": "WITNESSED by a single-coordinate witness. The stimulus is AUTHORED over a committed fixture and follows from an already-existing cause: the corpus case reads a censored bound as an observed value, which is illegal REL_NULL_CENSORED_AS_OBSERVED, and writing the suppressed member at the same slot leaves null:missing-mechanism outstanding instead, so erasing exactly this coordinate (which merges the two members) identifies the two stimuli while their verdicts differ. PRIMITIVE standing is checked rather than assumed: the footprint classifier classes this coordinate atomic -- its erasure destroys nothing but itself -- so the witness declares one coordinate and ratifies."
     },
     "observation.null:suppressed~<absent>": {
       "disposition": "unresolved"
