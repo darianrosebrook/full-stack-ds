@@ -264,9 +264,9 @@ describe("containment is structural, never a string prefix", () => {
 describe("the witness audit", () => {
   const byVerdict = (v: string) => live.witnesses.filter((w) => w.verdict === v);
 
-  it("classifies all 66 witnesses and leaves none with an unresolved plan", () => {
+  it("classifies all 67 witnesses and leaves none with an unresolved plan", () => {
     // 47 at stage 1.5, plus the stage-2 necessities added by later adjudications.
-    expect(live.witnesses.length).toBe(66);
+    expect(live.witnesses.length).toBe(67);
     expect(byVerdict("unresolved-plan")).toEqual([]);
   });
 
@@ -380,8 +380,8 @@ describe("the witness audit", () => {
     for (const id of two.declared) expect(ledgeredCoordinates.has(id), `${id} is named by a lapsed witness that no adjudication covers`).toBe(true);
   });
 
-  it("leaves the remaining fifty-two atomic, so the correction is bounded", () => {
-    expect(byVerdict("atomic").length).toBe(52);
+  it("leaves the remaining fifty-three atomic, so the correction is bounded", () => {
+    expect(byVerdict("atomic").length).toBe(53);
     for (const w of byVerdict("atomic")) {
       expect(w.declared.length).toBe(1);
       expect(w.actual).toEqual(w.declared);
@@ -611,7 +611,7 @@ describe("the terminal invariant is measured over the population the report name
     // A null recorded scope must not suppress detection of a changed current one.
     const suppressed = run((r, l) => { r.scopes.sourceLanguageDeparture = null; l.scopes.sourceLanguageDeparture.populationDigest = "0".repeat(64); });
     expectProblem(suppressed, "RECORDED", "sourceLanguageDeparture scope is not a scope", "null scope beside a changed current digest");
-    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 127 authored", "source count 999");
+    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 128 authored", "source count 999");
     expectProblem(run((r) => { r.specimens.total = 0; r.scopes.quotientLanguageInvalid.specimens = 0; }), "RECORDED", "specimens.total 0 is not corpus + stimuli + synthesized", "total 0 beside unchanged components");
 
     // BOTH-SIDES corruptions of the fields that only had equality comparisons.
@@ -854,7 +854,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     // 111, not 110: a filing's patched side is minted with a `_PATCHED` id, so
     // an authored stimulus contributes an id of its own where the synthesized
     // specimen it pre-empts carried the base fixture's id.
-    expect(byId.size).toBe(111);
+    expect(byId.size).toBe(112);
     expect(shared.length).toBe(26);
     // Not one of them is a benign repeat: every shared id carries two or more DIFFERENT fixtures.
     expect(shared.every(([, cs]) => cs.size > 1)).toBe(true);
@@ -862,17 +862,17 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     expect(shared.map(([id]) => id)).toContain("FX_SURVEY_MEAN_SATISFACTION");
   });
 
-  it("and an id-resolving sweep claims 164 bound specimens where content says 79", () => {
+  it("and an id-resolving sweep claims 163 bound specimens where content says 79", () => {
     const s = specimens();
     const oracle = loadOracle();
-    expect(s.fixtures.filter((f) => hasOutcome(f, oracle)).length).toBe(164);
+    expect(s.fixtures.filter((f) => hasOutcome(f, oracle)).length).toBe(163);
     expect(s.fixtures.filter((f) => contentMatches(f, oracle)).length).toBe(90);
     expect(s.fixtures.filter((f) => isBound(f, oracle)).length).toBe(79);
-    // The difference is the mis-attribution: 85 specimens have an outcome BY ID that is not
+    // The difference is the mis-attribution: 84 specimens have an outcome BY ID that is not
     // about their content, and a witnessability sweep counts those as discriminating pairs.
     // The gap runs the other way too: 11 specimens match their oracle fixture byte-for-byte
-    // under an id the oracle does not know, so 164 = 79 + 85 and 90 = 79 + 11.
-    expect(s.fixtures.filter((f) => hasOutcome(f, oracle) && !contentMatches(f, oracle)).length).toBe(85);
+    // under an id the oracle does not know, so 163 = 79 + 84 and 90 = 79 + 11.
+    expect(s.fixtures.filter((f) => hasOutcome(f, oracle) && !contentMatches(f, oracle)).length).toBe(84);
   });
 
   it("reduces the discriminating set to ONE, and that one is not a witness for presence either", () => {
@@ -880,7 +880,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     // the corrected reading rather than a narrower window. The id-resolving version reported two.
     const doc = loadSubtraction();
     const unresolved = doc.basis.candidates.filter((id) => (doc.verdicts[id]?.disposition ?? "unresolved") === "unresolved");
-    expect(unresolved.length).toBe(64);
+    expect(unresolved.length).toBe(63);
 
     const s = specimens();
     const oracle = loadOracle();

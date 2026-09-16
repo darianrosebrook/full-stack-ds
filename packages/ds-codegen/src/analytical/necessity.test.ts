@@ -2214,7 +2214,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // the bound-incidence quotient (nest.levels#incidence, the round-25 pair the instrument
     // refused while the erasure tokenized) moved it to primitive standing, and each of
     // the stage-2 filings under that repaired standing added one more each.
-    expect(byClass).toEqual({ primitive: 62, "closure-accounted": 11, "required-derived-vocabulary": 3, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 63, "closure-accounted": 10, "required-derived-vocabulary": 3, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {

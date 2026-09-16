@@ -155,6 +155,7 @@ describe("the committed closure ledger", () => {
       "relation.derivedBy.join.cardinality",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.nest.levels#order",
+      "relation.derivedBy.normalize.field#incidence",
     ]);
     // And two ARE primitive, each because a single-coordinate witness ratifies it:
     // REL-TOPOLOGY-AUTHORED-STIMULUS-01 witnessed the nest-levels ORDER and this slice witnessed the
@@ -165,6 +166,7 @@ describe("the committed closure ledger", () => {
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.nest.levels#order",
+      "relation.derivedBy.normalize.field#incidence",
     ]);
   });
 
@@ -216,19 +218,22 @@ describe("adopting the closure form confers no standing", () => {
       else expect(s, `${coordinate} must read its own basis verdict, not the closure`).toEqual({ state: "resolved", disposition: verdict });
     }
     const primitiveDeps = r.dependencies.filter((d) => d.standing.state === "primitive");
-    // Five now, all for the same reason: a holding single-coordinate witness ratifies them.
+    // Six now, all for the same reason: a holding single-coordinate witness ratifies them.
     expect(primitiveDeps.map((d) => d.coordinate)).toEqual([
       "field.additivity.semi-additive.nonAdditiveAlong#arity",
       "field.additivity.semi-additive.nonAdditiveAlong#incidence",
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.nest.levels#order",
+      "relation.derivedBy.normalize.field#incidence",
     ]);
     const affected = r.checks.filter((c) => c.obligations.find((o) => o.id.startsWith("8-"))!.detail.includes("PRIMITIVE"));
-    // Thirteen, not two. The two additivity closures were already there; witnessing the nest-levels
-    // ORDER put it in six more footprints; and witnessing the aggregate TARGET-GRAIN order puts it in
-    // all six `aggregate-to-grain~X` footprints, five of which the ORDER facet does not reach. So
-    // those closures carry obligation 8's composite diagnosis instead of an outstanding one.
+    // Nineteen, not two. The two additivity closures were already there; witnessing the nest-levels
+    // ORDER put it in six more footprints; witnessing the aggregate TARGET-GRAIN order puts it in
+    // all six `aggregate-to-grain~X` footprints, five of which the ORDER facet does not reach; and
+    // witnessing the normalize FIELD incidence puts it in the two `normalize~X` footprints, which
+    // no earlier filing reached. Those closures carry obligation 8's composite diagnosis rather
+    // than an outstanding one.
     expect(affected.map((c) => c.carrier).sort()).toEqual([
       "field.additivity.kind:additive~semi-additive",
       "field.additivity.kind:semi-additive~ratio-measure",
@@ -247,6 +252,8 @@ describe("adopting the closure form confers no standing", () => {
       "relation.derivedBy.kind:nest~graph",
       "relation.derivedBy.kind:nest~normalize",
       "relation.derivedBy.kind:nest~project",
+      "relation.derivedBy.kind:normalize~graph",
+      "relation.derivedBy.kind:normalize~project",
     ]);
     for (const c of affected) expect(c.rereadIf).toContain("COMPOSITE CONSTRUCTOR");
   });
@@ -819,6 +826,7 @@ describe("the unresolved dependencies are blocked by EVIDENCE, not by an undecid
       "relation.derivedBy.aggregate-to-grain.toGrain#order",
       "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.nest.levels#order",
+      "relation.derivedBy.normalize.field#incidence",
     ]);
   });
 
@@ -1212,8 +1220,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(64);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 23, "member-absence": 8, leaf: 5, "member-pair": 28 });
+    expect(unresolved.length).toBe(63);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 22, "member-absence": 8, leaf: 5, "member-pair": 28 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
@@ -1239,7 +1247,7 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // 31-37) moved it out of unresolved for one round; the footprint-aware
     // classifier put it back, because its erasure takes the sibling ORDER facet
     // of a surviving list and so does not ratify primitive standing.
-    expect(topology.length).toBe(23);
+    expect(topology.length).toBe(22);
     // Fourteen, not sixteen: two of the sixteen were witnessed -- `relation.derivedBy.nest.levels#order`
     // by REL-TOPOLOGY-AUTHORED-STIMULUS-01 and `relation.derivedBy.aggregate-to-grain.toGrain#order` by
     // REL-ORDER-FACET-SEMANTICS-01 -- so neither is unresolved and neither is counted here, while the
@@ -1247,16 +1255,20 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // Twelve: two of the sixteen were witnessed (see above), and two more -- `keep#order` and
     // `nonAdditiveAlong#order` -- left the kernel with the sequence declaration, so they are
     // neither unresolved nor in a footprint any more.
-    // Eleven: `nest.levels#incidence` is unresolved again after the footprint-aware classifier
-    // demoted it, so it blocks its carriers once more rather than being counted settled.
-    expect(topology.filter((id) => dependents.has(id)).length).toBe(11);
+    // Ten: `nest.levels#incidence` is unresolved again after the footprint-aware classifier
+    // demoted it, so it blocks its carriers once more rather than being counted settled -- and
+    // `normalize.field#incidence` LEFT this set by being witnessed, which is the filing that
+    // reaches the `normalize~X` carriers.
+    expect(topology.filter((id) => dependents.has(id)).length).toBe(10);
     // 48, not 57: three coordinates that blocked nothing are gone from the kernel -- `along#order`,
     // `peers[]#order` and `grainWitness#order` -- and six more left the unresolved set with a
-    // verdict, so the non-blocking unresolved count falls by nine. The last four are
+    // verdict, so the non-blocking unresolved count falls by nine. Those six are
     // `evidence.grainWitness#incidence`, `relation.derivedBy.aggregate-to-grain.from#incidence`,
-    // `field.additivity.kind:non-additive~ratio-measure` and `observation.null:censored~suppressed`,
-    // the witnesses filed under the repaired standing and the triage: each blocked no carrier, so
-    // filing it moved this count and no other.
+    // `field.additivity.kind:non-additive~ratio-measure`, `observation.null:censored~suppressed`
+    // and the two orders settled earlier: each blocked no carrier, so filing it moved this count
+    // and no other. `relation.derivedBy.normalize.field#incidence` -- filed after them -- DID block
+    // carriers, so it left this count alone and moved the closures' composite diagnosis instead
+    // (the `affected` list above grows by the two `normalize~X` carriers).
     expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(48);
   });
 });
