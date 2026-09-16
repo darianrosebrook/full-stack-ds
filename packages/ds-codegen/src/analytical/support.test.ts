@@ -248,7 +248,12 @@ describe("the constructibility triage: what EVIDENCE each ratifiable candidate h
       // is a SEARCH DEVICE — its ids repeat and it is not a citable stimulus —
       // so each of the remaining ones still needs a committed fixture or an
       // authored {base, patch} whose judgment follows from an existing cause
-      // before a witness can be filed.
+      // before a witness can be filed. For ONE of them that route is closed by
+      // measurement rather than by backlog: `relation.derivedBy.project.from#incidence`
+      // separates over specimens, but authored over its committed fixture the side
+      // that does not type is the AUTHORED one, so the evidence-pool clause refuses
+      // it. The other two author cleanly -- their committed side carries an ordinary
+      // corpus cause -- and `necessity.test.ts` pins all three verdicts together.
       expect(bySpecimenShape.length).toBe(17);
       expect(bySpecimenShape).toContain("relation.derivedBy.graph.value#incidence");
       // And the remainder have no separating shape at all, which is a corpus gap
