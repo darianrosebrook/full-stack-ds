@@ -2,9 +2,11 @@ id: REL-EVIDENCE-POOL-GUARD-01
 title: 'Enforce the witness evidence pool as an instrument clause'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Enforced the doctrine''s evidence pool as a checkWitness clause (OUTCOME_NOT_CORPUS_SUPPLIED): refuses no witness on file, closes one of the three remaining candidates as evidence-refused rather than backlog, and pins all three verdicts two-directionally.'
 created_at: '2026-09-16T00:16:47.387Z'
-updated_at: '2026-09-16T00:17:14.098Z'
+updated_at: '2026-09-16T00:24:59.370Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
