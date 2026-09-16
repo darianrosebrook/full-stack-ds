@@ -30,3 +30,8 @@ contracts:
   - name: 'witness-admission'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical (20 files / 868 tests, including the two generated per-witness cases C2 and C7 for the filed coordinate) and pnpm test (302 files / 4089 tests), re-run after the legacy re-record; pnpm run analytical:subtraction:gate prints 'drift ... OK' on all three bases with 65 of 118 candidates still unadjudicated; analytical:footprints:check (0 illegal quotient images over 212 specimens), analytical:freeze:check (19 witnessed / 71 unresolved of 126 verdicts), analytical:final-quotient (primitives: 61 single-coordinate witnesses), analytical:check-schemas, analytical:check-baseline, analytical:closures:check, analytical:stimuli, fixtures:check, legacy-comparison --check (34980 pairs over 212 specimens and 160 coordinates), docs:check-claims, docs:check-links, lint and typecheck all pass on merge b2bc3a7c. NON-CLAIM: the witness is AUTHORED because the corpus carries the ratio-measure case and its cause but no committed near-neighbour differing only in this member, so what is proven is that the member pair is PRIMITIVE relative to the already-existing cause REL_RATIO_MEASURE_AVERAGED, not that the corpus witnesses it; the subtraction gate stays red by design (65 unresolved), so this filing does not close REL-VIEW-ALGEBRA-01, and the three structurally-unwitnessable coordinates still have no terminal class."
+    recorded_at: "2026-09-16T00:00:06.448Z"
