@@ -2,9 +2,10 @@ id: REL-FILE-NORMALIZEFIELD-01
 title: 'File the normalize field-incidence witness'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: file-normfield
 created_at: '2026-09-16T00:28:31.272Z'
-updated_at: '2026-09-16T00:28:31.272Z'
+updated_at: '2026-09-16T00:28:32.509Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
