@@ -30,3 +30,8 @@ contracts:
   - name: 'witness-admission'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical (20 files / 871 tests, including the new pin 'refuses only the candidate whose AUTHORED side is the one that does not type' which asserts the three candidates' admission verdicts individually AND that no witness on file is refused by the clause) and pnpm test (302 files / 4092 tests); pnpm run analytical:subtraction:gate prints 'drift ... OK' on all three bases with 64 of 118 unadjudicated, unchanged by this slice; analytical:footprints:check, analytical:freeze:check (126 verdicts match after the authority re-record), analytical:closures:check (restamped), analytical:final-quotient (primitives: 62, unchanged), analytical:check-schemas, analytical:check-baseline, analytical:stimuli, fixtures:check, docs:check-claims, docs:check-links, lint and typecheck all pass on merge a0100442. NON-CLAIM: the clause enforces the pool rule the doctrine already stated; it does NOT close the open question of whether a pair whose distinction IS a well-formedness refusal should nonetheless count, and it does not adjudicate the four join-cardinality pairs or relation.derivedBy.project.from#incidence to a new disposition -- they stay unresolved with that reason. It also does not make the two remaining candidates witnessed: their admission was measured, not filed, and each still needs its own filing cycle. Re-recording the authority-stamped ledgers accepted a RULE-SOURCE move, not a behaviour move: no verdict, erasure reach or specimen population moved."
+    recorded_at: "2026-09-16T00:24:58.694Z"
