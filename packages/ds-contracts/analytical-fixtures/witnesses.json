@@ -998,6 +998,32 @@
     },
     {
       "coordinates": [
+        "observation.null:censored~suppressed"
+      ],
+      "a": {
+        "fixture": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS"
+      },
+      "b": {
+        "base": "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+        "patch": [
+          {
+            "set": "evidence.rows.survival.1.days.null",
+            "value": "suppressed"
+          }
+        ],
+        "outcome": {
+          "status": "unproven",
+          "codes": [],
+          "terms": [
+            "null:missing-mechanism"
+          ]
+        },
+        "cause": "a suppressed value is neither a bound nor an observation, and the corpus declares no mechanism for it, so null:missing-mechanism stays outstanding where the same slot read as censored is REL_NULL_CENSORED_AS_OBSERVED -- the two members are told apart by which finding they attract."
+      },
+      "note": "STAGE-2 necessity for observation.null:censored~suppressed: separates SUPPRESSED from CENSORED at one slot, the member pair the absent-against-censored witness does not reach. The committed side is illegal REL_NULL_CENSORED_AS_OBSERVED (a censored bound treated as an observed value); moving that one marker to suppressed leaves an obligation rather than a finding, so the erasure that merges the two members identifies the stimuli while their verdicts differ. Authored over a committed fixture because the corpus carries the censored case and its cause but no committed near-neighbour differing only in this member."
+    },
+    {
+      "coordinates": [
         "observation.unit"
       ],
       "a": {

@@ -1212,8 +1212,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(65);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 23, "member-absence": 8, leaf: 5, "member-pair": 29 });
+    expect(unresolved.length).toBe(64);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 23, "member-absence": 8, leaf: 5, "member-pair": 28 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
@@ -1250,13 +1250,14 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // Eleven: `nest.levels#incidence` is unresolved again after the footprint-aware classifier
     // demoted it, so it blocks its carriers once more rather than being counted settled.
     expect(topology.filter((id) => dependents.has(id)).length).toBe(11);
-    // 49, not 57: three coordinates that blocked nothing are gone from the kernel -- `along#order`,
-    // `peers[]#order` and `grainWitness#order` -- and five more left the unresolved set with a
-    // verdict, so the non-blocking unresolved count falls by eight. The last three are
-    // `evidence.grainWitness#incidence`, `relation.derivedBy.aggregate-to-grain.from#incidence` and
-    // `field.additivity.kind:non-additive~ratio-measure`, the witnesses filed under the repaired
-    // standing and the triage: each blocked no carrier, so filing it moved this count and no other.
-    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(49);
+    // 48, not 57: three coordinates that blocked nothing are gone from the kernel -- `along#order`,
+    // `peers[]#order` and `grainWitness#order` -- and six more left the unresolved set with a
+    // verdict, so the non-blocking unresolved count falls by nine. The last four are
+    // `evidence.grainWitness#incidence`, `relation.derivedBy.aggregate-to-grain.from#incidence`,
+    // `field.additivity.kind:non-additive~ratio-measure` and `observation.null:censored~suppressed`,
+    // the witnesses filed under the repaired standing and the triage: each blocked no carrier, so
+    // filing it moved this count and no other.
+    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(48);
   });
 });
 

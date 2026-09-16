@@ -2143,8 +2143,8 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // the assertion below is what keeps the two apart. Then 59: the FIRST witness filed under
     // the bound-incidence quotient (nest.levels#incidence, the round-25 pair the instrument
     // refused while the erasure tokenized) moved it to primitive standing, and each of
-    // the three stage-2 filings under that repaired standing added one more.
-    expect(byClass).toEqual({ primitive: 61, "closure-accounted": 11, "required-derived-vocabulary": 3, suspended: 2 });
+    // the stage-2 filings under that repaired standing added one more each.
+    expect(byClass).toEqual({ primitive: 62, "closure-accounted": 11, "required-derived-vocabulary": 3, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -2293,6 +2293,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "field.temporality#present",
       "field.temporality.grain",
       "field.temporality.grain:day~month",
+      "observation.null:censored~suppressed",
       "relation.derivedBy.aggregate-to-grain.from#incidence",
       "relation.derivedBy.bin.closure",
       "relation.derivedBy.bin.closure:left-closed~<absent>",
@@ -2340,6 +2341,7 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "field.temporality#present",
       "field.temporality.grain",
       "field.temporality.grain:day~month",
+      "observation.null:censored~suppressed",
       "relation.derivedBy.aggregate-to-grain.from#incidence",
       "relation.derivedBy.bin.closure",
       "relation.derivedBy.bin.closure:left-closed~<absent>",

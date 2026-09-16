@@ -7,8 +7,8 @@
  },
  "population": {
   "corpus": 90,
-  "stimuli": 36,
-  "synthesized": 86,
+  "stimuli": 37,
+  "synthesized": 85,
   "total": 212,
   "membershipDigest": "e976aafcfa1b4685ff71a18c9fbaebf03f9acb29f0f47d5425b82489581da5d8"
  },
@@ -28,7 +28,7 @@
  "pairs": 34980,
  "agree": {
   "count": 24667,
-  "digest": "8de19f91772722a027d961763d0c004b260722f80a3dae9cfa65786c69e38411"
+  "digest": "3decdaa10984db57dfc4c34f0bdbdf2ecdc1d5c3eaf18459a921ca8100f8f366"
  },
  "classes": {
   "new-no-plan": {
@@ -1081,6 +1081,13 @@
   ],
   [
    "assertion.aggregate.along",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -1748,13 +1755,6 @@
    "assertion.aggregate.along",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.along",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -2560,6 +2560,13 @@
    "assertion.aggregate.along#order",
    "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
    "86480456f0e8",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
    "-",
    "only-legacy-coordinate"
   ],
@@ -3237,13 +3244,6 @@
   ],
   [
    "assertion.aggregate.along#order",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "assertion.aggregate.along#order",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "688e52bd38e8",
    "-",
@@ -4049,6 +4049,13 @@
   ],
   [
    "assertion.aggregate.field",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -4716,13 +4723,6 @@
    "assertion.aggregate.field",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.field",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -5715,6 +5715,13 @@
   ],
   [
    "assertion.aggregate.op",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "5f1e1484ea55",
+   "cd2cc4ee1957",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "66e7a801ec04",
    "aec6f1e4caed",
@@ -6362,13 +6369,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "72f52451ffbe",
    "9c093a259341",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.aggregate.op",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "2cd61f564970",
-   "deb7026d19b1",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -7199,6 +7199,13 @@
   ],
   [
    "assertion.aggregate.op:mean~count",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "2c883858ebcb",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~count",
    "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
    "fc6b62f532b9",
    "b58d3513626f",
@@ -7426,13 +7433,6 @@
    "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
    "b15d6bf04dc8",
    "d9f0eb65df3b",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:mean~count",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
-   "3dd99ff5a94a",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -7846,6 +7846,13 @@
    "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
    "86480456f0e8",
    "a7e90e334dda",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~min",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "19517d6fb03f",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -8357,13 +8364,6 @@
    "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
    "b15d6bf04dc8",
    "c0bf30008736",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:mean~min",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
-   "2998b3a22b00",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -9439,6 +9439,13 @@
   ],
   [
    "assertion.aggregate.op:sum~mean",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "f45a4793f1d8",
+   "4c08222c42b3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
    "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
    "6b93f9b16afd",
    "5688aa3c89c6",
@@ -9792,13 +9799,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
    "5fd3c44cf353",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~mean",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "d28f84514887",
-   "9da26f22f7c6",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -11644,6 +11644,13 @@
   ],
   [
    "assertion.aggregate.relation",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -12311,13 +12318,6 @@
    "assertion.aggregate.relation",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.relation",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -13128,6 +13128,13 @@
   ],
   [
    "assertion.kind",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "14125f262ae3",
+   "6a3ee7f34726",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "aba4531a6c26",
    "7a90e77f506f",
@@ -13796,13 +13803,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "2024d15c12d5",
    "7f80fe866bae",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.kind",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "cb5c7cd0b245",
-   "663cd4a87bd1",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -14612,6 +14612,13 @@
   ],
   [
    "assertion.kind:aggregate~ratio-comparison",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "a3e8cd58e51e",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "b5852f911a52",
@@ -15280,13 +15287,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
    "d2d890f94d55",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.kind:aggregate~ratio-comparison",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
-   "ece4eb2692e3",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -16096,6 +16096,13 @@
   ],
   [
    "assertion.ratio-comparison.field",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -16763,13 +16770,6 @@
    "assertion.ratio-comparison.field",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.field",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -17580,6 +17580,13 @@
   ],
   [
    "assertion.ratio-comparison.relation",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -18247,13 +18254,6 @@
    "assertion.ratio-comparison.relation",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.relation",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -19064,6 +19064,13 @@
   ],
   [
    "evidence.grainWitness",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -19731,13 +19738,6 @@
    "evidence.grainWitness",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "evidence.grainWitness",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -20548,6 +20548,13 @@
   ],
   [
    "evidence.grainWitness#order",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -21215,13 +21222,6 @@
    "evidence.grainWitness#order",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "evidence.grainWitness#order",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "only-legacy-coordinate"
   ],
@@ -22620,6 +22620,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -23287,13 +23294,6 @@
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -24104,6 +24104,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -24776,13 +24783,6 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong#order",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "688e52bd38e8",
    "-",
@@ -25035,6 +25035,13 @@
   ],
   [
    "field.temporality.kind",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "e4c6654a6184",
+   "dd9006d9ccf6",
+   "forget-value:absent>hole:legacy-valid"
+  ],
+  [
+   "field.temporality.kind",
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "2020bd0a0225",
    "a15ee7fe0960",
@@ -25129,13 +25136,6 @@
    "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
    "92e1f7d75d6a",
    "d65d091c7c1b",
-   "forget-value:absent>hole:legacy-valid"
-  ],
-  [
-   "field.temporality.kind",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "be0e79e03162",
-   "547904808e48",
    "forget-value:absent>hole:legacy-valid"
   ],
   [
@@ -25329,6 +25329,13 @@
   ],
   [
    "field.temporality.kind:instant~interval",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "64bac4cb3e3b",
+   "b68e72d0b8a6",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.temporality.kind:instant~interval",
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "acd6cd8c68da",
    "0a3898afd940",
@@ -25423,13 +25430,6 @@
    "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
    "21d0018abfaa",
    "ba2703ddeb74",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.temporality.kind:instant~interval",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "354cecd49b20",
-   "88cfcc578b8b",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -26218,6 +26218,13 @@
   ],
   [
    "field.transformation",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "e6aa26e0b92c",
+   "f47f61a6ec5a",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "17f45ee7c943",
    "fdc9aab2d1f6",
@@ -26886,13 +26893,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "fa0ca4431767",
    "c2bc0172657a",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "field.transformation",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "8239fd2c17ef",
-   "dc747a8e7da8",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -27639,6 +27639,13 @@
   ],
   [
    "field.transformation:interval~ratio",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "c08f53fba12b",
+   "f112dd71e538",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "fb32363772f9",
    "ecb287c4246f",
@@ -28118,13 +28125,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "041dabb8f72c",
    "5053e760d9f3",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:interval~ratio",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "1dee6eb7eba0",
-   "8fe3bccab9bf",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -28927,6 +28927,13 @@
   ],
   [
    "field.transformation:nominal~interval",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "79ce144dc5df",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "4786936af22c",
@@ -29581,13 +29588,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
    "bdb5b37d2760",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~interval",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
-   "a5f700f33fb1",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -30390,6 +30390,13 @@
   ],
   [
    "field.transformation:nominal~ordinal",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "fa0dc71786e8",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "4cd826de3f2a",
@@ -31044,13 +31051,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
    "efe0b3a7dedf",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ordinal",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
-   "61a9db4cd5ff",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -31860,6 +31860,13 @@
   ],
   [
    "field.transformation:nominal~ratio",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "7b88d0da5cb5",
+   "a3e87dc5ab0c",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "e6872f6cdcc9",
    "77e595f1cd97",
@@ -32514,13 +32521,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "71f07008905e",
    "aa2d671a40dc",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ratio",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "82d23acbbba1",
-   "431f24e5b168",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33750,6 +33750,13 @@
   ],
   [
    "field.transformation:ordinal~ratio",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "f124517f7e8a",
+   "6662da652abc",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "03cd4e25d75b",
    "b6530120f929",
@@ -34362,13 +34369,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "caa74e269e19",
    "66871c8ee54b",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:ordinal~ratio",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "c5aab909e8d1",
-   "78e545557b8a",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -35178,6 +35178,13 @@
   ],
   [
    "field.whole.perRow",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -35850,13 +35857,6 @@
   ],
   [
    "field.whole.perRow",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.whole.perRow",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "688e52bd38e8",
    "-",
@@ -36060,9 +36060,9 @@
   ],
   [
    "observation.null:absent~suppressed",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "bd5012cd330c",
-   "97db2633dcbf",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "86480456f0e8",
+   "26126c444aae",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -36137,6 +36137,13 @@
   ],
   [
    "observation.null:censored~suppressed",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "bc69e208ae78",
+   "4ee4bd49ece7",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "observation.null:censored~suppressed",
    "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
    "92977c1e1fde",
    "18cecbc17089",
@@ -36168,13 +36175,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
    "ff672dd52bcd",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "observation.null:censored~suppressed",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "eb27b17c2729",
-   "c963b2eab840",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -36970,6 +36970,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.from",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -37637,13 +37644,6 @@
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.from",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -38601,6 +38601,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -39268,13 +39275,6 @@
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.toGrain",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -40274,6 +40274,13 @@
   ],
   [
    "relation.derivedBy.bin.field",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -40941,13 +40948,6 @@
    "relation.derivedBy.bin.field",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.field",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -41821,6 +41821,13 @@
   ],
   [
    "relation.derivedBy.bin.from",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -42488,13 +42495,6 @@
    "relation.derivedBy.bin.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.from",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -43375,6 +43375,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeFrom",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -44042,13 +44049,6 @@
    "relation.derivedBy.graph.edgeFrom",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeFrom",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -44950,6 +44950,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeTo",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -45617,13 +45624,6 @@
    "relation.derivedBy.graph.edgeTo",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeTo",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -46525,6 +46525,13 @@
   ],
   [
    "relation.derivedBy.graph.from",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -47192,13 +47199,6 @@
    "relation.derivedBy.graph.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.from",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -48107,6 +48107,13 @@
   ],
   [
    "relation.derivedBy.graph.value",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -48774,13 +48781,6 @@
    "relation.derivedBy.graph.value",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.value",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -49955,6 +49955,13 @@
   ],
   [
    "relation.derivedBy.join.from",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -50622,13 +50629,6 @@
    "relation.derivedBy.join.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.from",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -51509,6 +51509,13 @@
   ],
   [
    "relation.derivedBy.join.with",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -52176,13 +52183,6 @@
    "relation.derivedBy.join.with",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.with",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -57515,6 +57515,13 @@
   ],
   [
    "relation.derivedBy.nest.from",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -58182,13 +58189,6 @@
    "relation.derivedBy.nest.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.from",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -59181,6 +59181,13 @@
   ],
   [
    "relation.derivedBy.nest.levels",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -59848,13 +59855,6 @@
    "relation.derivedBy.nest.levels",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.levels",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -61022,6 +61022,13 @@
   ],
   [
    "relation.derivedBy.normalize.field",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -61689,13 +61696,6 @@
    "relation.derivedBy.normalize.field",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.field",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -62555,6 +62555,13 @@
   ],
   [
    "relation.derivedBy.normalize.from",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -63222,13 +63229,6 @@
    "relation.derivedBy.normalize.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.from",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -64102,6 +64102,13 @@
   ],
   [
    "relation.derivedBy.project.from",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -64769,13 +64776,6 @@
    "relation.derivedBy.project.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.from",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -65642,6 +65642,13 @@
   ],
   [
    "relation.derivedBy.project.keep",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -66309,13 +66316,6 @@
    "relation.derivedBy.project.keep",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.keep",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -67224,6 +67224,13 @@
   ],
   [
    "relation.derivedBy.project.keep#order",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -67891,13 +67898,6 @@
    "relation.derivedBy.project.keep#order",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "relation.derivedBy.project.keep#order",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "only-legacy-coordinate"
   ],
@@ -68708,6 +68708,13 @@
   ],
   [
    "relation.grain",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "b3bdaa6fe28c",
+   "53625ca0fc1f",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "d1e040c91744",
    "51eb1a45d53a",
@@ -69376,13 +69383,6 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "a4c1c40586e7",
    "16047fe5ccb7",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "relation.grain",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "ff815871f775",
-   "5679b3d44b64",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -70192,6 +70192,13 @@
   ],
   [
    "structure.peers[]",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -70859,13 +70866,6 @@
    "structure.peers[]",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "structure.peers[]",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "new-no-plan"
   ],
@@ -71788,6 +71788,13 @@
   ],
   [
    "structure.peers[]#order",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
    "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
    "ab14d40bedcb",
    "-",
@@ -72455,13 +72462,6 @@
    "structure.peers[]#order",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "32b2bc12f95c",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "structure.peers[]#order",
-   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
-   "b5a71a369074",
    "-",
    "only-legacy-coordinate"
   ],
