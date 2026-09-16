@@ -2,9 +2,11 @@ id: REL-FILE-NULLMEMBER-01
 title: 'File the null-member censored-suppressed witness'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Filed observation.null:censored~suppressed (null enum''s second member pair): authored pair over FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS moving one null marker to suppressed, atomic class so it ratifies; subtraction 64/118, freeze 20/70, ratified 62, legacy re-recorded.'
 created_at: '2026-09-16T00:05:04.199Z'
-updated_at: '2026-09-16T00:05:10.237Z'
+updated_at: '2026-09-16T00:12:04.587Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
