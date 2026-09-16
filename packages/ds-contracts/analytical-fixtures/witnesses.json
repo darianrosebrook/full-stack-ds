@@ -377,34 +377,6 @@
     },
     {
       "coordinates": [
-        "evidence.grainWitness#incidence"
-      ],
-      "a": {
-        "fixture": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS"
-      },
-      "b": {
-        "base": "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
-        "patch": [
-          {
-            "set": "evidence.grainWitness.orders",
-            "value": [
-              "orders"
-            ]
-          }
-        ],
-        "outcome": {
-          "status": "illegal",
-          "codes": [
-            "REL_GRAIN_FANOUT"
-          ],
-          "terms": []
-        },
-        "cause": "The declared witness column stops being unique: the corpus cause `REL_GRAIN_FANOUT` is raised with INSTANCE evidence when the aggregate's witness column repeats across rows (engines.ts:189, `hasDuplicates(rows, witness)`), so the fixture that was admissible with a unique witness becomes illegal with a fanning one. The judgment follows from an already-existing cause and from instance evidence the fixture already carries -- nothing about the structure moves."
-      },
-      "note": "STAGE-2 necessity for evidence.grainWitness#incidence: separates WHICH column is declared as the grain witness at all. The a-side is the committed fixture with a unique witness column; the b-side is the same declaration whose witness column repeats across rows, so the corpus's fan-out cause (REL_GRAIN_FANOUT, instance evidence, engines.ts:189) turns an admissible judgment illegal. One authored path, because the corpus carries the near-neighbour shape but not the pair."
-    },
-    {
-      "coordinates": [
         "evidence.grainWitness#present"
       ],
       "a": {

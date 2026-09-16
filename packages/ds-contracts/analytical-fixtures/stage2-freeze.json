@@ -6,9 +6,9 @@
   "authority": {
     "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
     "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
-    "witnessAuthorityDigest": "1d1abcb4f570f64a61d77edf6bd757c3ea9017f6149c7da554d68cf25375925e",
+    "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "4e641c934b2577c36194422723e47d38a6d81c815d8bbd83cea10bd227427c54"
+    "ruleDigest": "835d38941c9032692aedb4ecf8e89498ee11448a05b9570dc7c118d9bd46b255"
   },
   "fixtures": [
     "FX_SURVEY_MEAN_SATISFACTION",
@@ -106,6 +106,7 @@
       "assertion.kind:aggregate~ratio-comparison",
       "assertion.ratio-comparison.field#incidence",
       "assertion.ratio-comparison.relation#incidence",
+      "evidence.grainWitness#incidence",
       "evidence.rows.*#present",
       "field.additivity#present",
       "field.additivity.kind:additive~semi-additive",
@@ -173,7 +174,6 @@
       "assertion.aggregate.field#incidence",
       "assertion.aggregate.nulls:exclude~<absent>",
       "evidence.grainWitness#arity",
-      "evidence.grainWitness#incidence",
       "field.additivity.kind:additive~non-additive",
       "field.additivity.kind:non-additive~ratio-measure",
       "field.additivity.semi-additive.nonAdditiveAlong#arity",

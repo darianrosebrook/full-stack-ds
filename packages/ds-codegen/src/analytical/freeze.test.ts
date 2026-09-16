@@ -97,14 +97,15 @@ describe("stage-2 erasure freeze", () => {
     expect(r.ok).toBe(true);
   });
 
-  it("freezes the population the erasure-plan refactor must not move: 21 witnessed / 2 required-derived-vocabulary / 34 representation-artifact / 69 unresolved", () => {
-    // 21 witnessed: each filed single-coordinate witness moves exactly one verdict,
-    // and the orders settled in rounds 31-37 are part of the same count.
+  it("freezes the population the erasure-plan refactor must not move: 20 witnessed / 2 required-derived-vocabulary / 34 representation-artifact / 70 unresolved", () => {
+    // 20 witnessed: each filed single-coordinate witness moves exactly one verdict,
+    // the orders settled in rounds 31-37 are part of the same count, and the grain
+    // witness LEFT this count when its fabricated pair stopped holding.
     // (The FIRST one filed, nest.levels#incidence over the round-25 pair, moved a
     // verdict and then returned to unresolved when the standing repair landed.)
     expect(Object.fromEntries(Object.entries(frozen.verdicts).map(([d, ids]) => [d, ids.length]))).toEqual({
-      unresolved: 69,
-      witnessed: 21,
+      unresolved: 70,
+      witnessed: 20,
       "required-derived-vocabulary": 2,
       "representation-artifact": 34,
       "not-yet-admitted": 0,

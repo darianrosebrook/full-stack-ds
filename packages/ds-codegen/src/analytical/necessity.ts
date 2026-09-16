@@ -24,6 +24,8 @@ import type { Coordinate } from "./census.js";
 import { type Bindings, type Holdout, loadCorpusInput } from "./corpus-integrity.js";
 import { DERIVATION_DIAG } from "./codes.js";
 import { type BoundaryFinding, checkDerivations } from "./derivation.js";
+import { judge } from "./engines.js";
+import { codesOf, termsOf } from "./judgment.js";
 import { type ErasurePlan, resolveSlots, type StructuralLocator } from "./erasure-plan.js";
 import { canonical, collides, declaredNonCommuting, distinctListingImages, erase, eraseAll, planFor } from "./quotient.js";
 import { loadQuotientValidator, markersIn } from "./quotient-image.js";
@@ -348,7 +350,24 @@ export type WitnessFailure =
    * the SAME oracle the sides are resolved against, so an authored cause is
    * checked against the corpus rather than taken on its word.
    */
-  | "OUTCOME_NOT_CORPUS_SUPPLIED";
+  | "OUTCOME_NOT_CORPUS_SUPPLIED"
+  /**
+   * The authored side declares an outcome the engine does not produce.
+   *
+   * APPLICABILITY, as distinct from vocabulary. A hand adjudication states what
+   * the engine will say about a stimulus the oracle does not carry; the pool
+   * clause checks that the cited cause is one the CORPUS supplies, which is a
+   * fact about the vocabulary and not about this stimulus. Nothing compared the
+   * declaration against the engine, so a witness could go on citing a cause its
+   * own stimulus no longer exhibits — which is exactly what happened when the
+   * grain witness declared `REL_GRAIN_FANOUT` for a column that does not exist:
+   * the code is in the catalogue, and the engine never produced it.
+   *
+   * The comparison is on the engine's own judgment (status, diagnostics,
+   * obligations). A side that needs a DERIVATION finding to separate is compared
+   * on that finding, because `judge` is what the fixture's judgment means.
+   */
+  | "OUTCOME_NOT_OBSERVED";
 
 export interface WitnessCheck {
   ok: boolean;
@@ -432,6 +451,22 @@ export function checkWitness(
     if (!("base" in side)) continue;
     const outside = outsidePool(side.outcome, pool);
     if (outside) failures.push({ code: "OUTCOME_NOT_CORPUS_SUPPLIED", detail: `${label}: ${outside}` });
+  }
+  // AND THE CAUSE MUST APPLY TO THIS STIMULUS, not merely exist in the
+  // vocabulary. Re-judged here rather than trusted: the declaration is a claim
+  // about what the engine says, and a claim nothing checks is not evidence.
+  for (const [label, side] of [["a", a], ["b", b]] as const) {
+    const authored = label === "a" ? w.a : w.b;
+    if (!("base" in authored)) continue;
+    try {
+      const j = judge(side.fixture.structure, side.fixture.assertions, side.fixture.evidence);
+      const observed = outcomeFrom(j.status, codesOf(j), termsOf(j));
+      if (!sameOutcome(observed, side.outcome)) {
+        failures.push({ code: "OUTCOME_NOT_OBSERVED", detail: `${label}: declares ${JSON.stringify(side.outcome)} but the engine produces ${JSON.stringify(observed)}` });
+      }
+    } catch (e) {
+      failures.push({ code: "OUTCOME_NOT_OBSERVED", detail: `${label}: the engine threw on this stimulus (${(e as Error).message.slice(0, 80)})` });
+    }
   }
   if (failures.length > 0 || coords.length !== w.coordinates.length) return { ok: false, failures, isolation, a, b };
   // CONFLUENCE BEFORE COLLISION. A 2-set's collision is read off ONE composed

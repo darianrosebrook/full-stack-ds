@@ -337,6 +337,59 @@ describe("REL_GRAIN_FANOUT from the declaration — double-counted revenue, orde
     expect(codesOf(judge(valid(joined("many-to-one")), ask("qty", "sum")))).toEqual([DIAG.GRAIN_FANOUT]);
   });
 
+  /**
+   * THE WITNESS MUST BE READABLE BEFORE ITS OBSERVATIONS COUNT AS REPETITION.
+   *
+   * The rule used to key each row by `row[f]?.value ?? "null:" + (row[f]?.null ?? "absent")`.
+   * A column the relation does not declare produced the same sentinel in EVERY
+   * row, so `hasDuplicates` returned true and the rule reported an instance
+   * fan-out finding built from a missing-field lookup. The filed grain witness
+   * was exactly that: it named `orders`, the RELATION, as a witness column, and
+   * its "repeating column" never existed. Repetition requires an observation to
+   * repeat, so a row contributes only when every named column carries a value.
+   */
+  describe("a witness is read only from rows that carry its columns", () => {
+    const unknownGrain = (witness: string[], rows: Record<string, { value?: unknown }>[] | undefined) => ({
+      structure: { relations: { orders: { grain: "unknown" as const, fields: { order_id: key, amount: ratio } } } },
+      evidence: { ...(rows ? { rows: { orders: rows } } : {}), grainWitness: { orders: witness } } as Evidence,
+    });
+    const summing = [{ kind: "aggregate", relation: "orders", field: "amount", op: "sum" }] as Assertion[];
+    const unique = [{ order_id: { value: "o1" }, amount: { value: 10 } }, { order_id: { value: "o2" }, amount: { value: 25 } }];
+    const repeating = [{ order_id: { value: "o1" }, amount: { value: 10 } }, { order_id: { value: "o1" }, amount: { value: 10 } }];
+    const run = (c: ReturnType<typeof unknownGrain>) => judge(valid(c.structure), summing, c.evidence);
+
+    it("leaves the grain obligation outstanding for a column the relation does not declare", () => {
+      const j = run(unknownGrain(["orders"], unique));
+      expect(j.status).toBe("unproven");
+      expect(codesOf(j)).toEqual([]);
+      expect(termsOf(j)).toEqual([OBLIGATION.GRAIN_DECLARED]);
+      // The fabricated shape: this is what used to report an INSTANCE fan-out.
+      expect(codesOf(j)).not.toContain(DIAG.GRAIN_FANOUT);
+    });
+
+    it("leaves the grain obligation outstanding when the witness column carries no observations", () => {
+      const j = run(unknownGrain(["order_id"], [{ amount: { value: 10 } }, { amount: { value: 25 } }]));
+      expect(j.status).toBe("unproven");
+      expect(termsOf(j)).toEqual([OBLIGATION.GRAIN_DECLARED]);
+    });
+
+    it("still reports instance fan-out for a DECLARED column whose values repeat", () => {
+      const j = run(unknownGrain(["order_id"], repeating));
+      expect(codesOf(j)).toEqual([DIAG.GRAIN_FANOUT]);
+      expect(j.diagnostics[0].evidenceClass).toBe("instance");
+    });
+
+    it("still admits a DECLARED column whose values are unique", () => {
+      expect(run(unknownGrain(["order_id"], unique)).status).toBe("admissible");
+    });
+
+    it("reads a declared column with no observations as unobservable, not as no witness at all", () => {
+      // Same obligation, different reach: with no rows there is nothing to read,
+      // and the schema-class obligation for a MISSING witness is a different fact.
+      expect(termsOf(run(unknownGrain(["order_id"], undefined)))).toEqual([OBLIGATION.GRAIN_DECLARED]);
+    });
+  });
+
   it("admits either side after a one-to-one join, where nothing is repeated", () => {
     expect(codesOf(judge(valid(joined("one-to-one")), ask("revenue", "sum")))).toEqual([]);
     expect(codesOf(judge(valid(joined("one-to-one")), ask("qty", "sum")))).toEqual([]);
