@@ -459,6 +459,76 @@ describe("C3 — the harness is falsified", () => {
     };
     expect(codes(w)).toContain("SCHEMA_INVALID");
   });
+  /**
+   * THE EVIDENCE POOL, ENFORCED — and the half of it that is easy to get wrong.
+   *
+   * The doctrine says a witness side's required outcome must be a judgment the
+   * corpus supplies, and that the boundary's well-formedness refusals are not in
+   * that pool. Nothing enforced it: `resolveSide` records a hand adjudication's
+   * cause as free text, so a pair whose whole distinction is "this declaration
+   * does not type" could be filed as if a cause explained it. The clause reads
+   * the pool off the SAME oracle the sides resolve against.
+   *
+   * WHICH SIDE carries the refusal is the entire question, and the specimen
+   * population cannot answer it: `separatingPairs` clones a base and keeps its
+   * id, so a specimen pair can show `illegal` with no diagnostic on either side
+   * while the COMMITTED fixture at that id carries an ordinary corpus cause.
+   * These three candidates are the measured instance — all three separate over
+   * specimens through a judgment that names nothing, and only one of them is
+   * refused once authored over the committed fixture.
+   */
+  it("refuses only the candidate whose AUTHORED side is the one that does not type", () => {
+    const authoredOverCommitted = (id: string, base: string, path: string, value: unknown, outcome: ReturnType<typeof outcomeFrom>): Witness => ({
+      coordinates: [id],
+      a: { fixture: base },
+      b: { base, patch: [{ set: path, value }], outcome, cause: "authored for the triage" },
+    });
+    const candidates: [string, Witness][] = [
+      [
+        "relation.derivedBy.graph.value#incidence",
+        authoredOverCommitted(
+          "relation.derivedBy.graph.value#incidence",
+          "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+          "structure.relations.routed.derivedBy.value",
+          "src",
+          outcomeFrom("unproven", [], ["invariant:conservation"]),
+        ),
+      ],
+      [
+        "relation.derivedBy.normalize.field#incidence",
+        authoredOverCommitted(
+          "relation.derivedBy.normalize.field#incidence",
+          "FX_SHARE_OF_AVERAGE_SCORE",
+          "structure.relations.shares.derivedBy.field",
+          "region",
+          outcomeFrom("admissible"),
+        ),
+      ],
+      [
+        "relation.derivedBy.project.from#incidence",
+        authoredOverCommitted(
+          "relation.derivedBy.project.from#incidence",
+          "FX_PROJECT_DROPS_NEST_LEVEL",
+          "structure.relations.flat.derivedBy.from",
+          "sale_id",
+          outcomeFrom("illegal"),
+        ),
+      ],
+    ];
+    // The committed side of each pair carries a CAUSE, which is what makes the
+    // first two filable: their required outcomes are the corpus's own.
+    expect(resolveSide({ fixture: "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE" }, oracle).outcome).toEqual(outcomeFrom("illegal", ["REL_FLOW_NOT_CONSERVED"]));
+    expect(resolveSide({ fixture: "FX_SHARE_OF_AVERAGE_SCORE" }, oracle).outcome).toEqual(outcomeFrom("illegal", ["REL_ADDITIVITY_NORMALIZE_NONADDITIVE"]));
+    const verdicts = candidates.map(([, w]) => codes(w));
+    expect(verdicts[0]).toEqual([]);
+    expect(verdicts[1]).toEqual([]);
+    expect(verdicts[2]).toEqual(["OUTCOME_NOT_CORPUS_SUPPLIED"]);
+    // The other direction, over the whole surface: the clause refuses no
+    // witness on file, so tightening it further (or loosening the pool) fails
+    // here rather than silently re-opening or closing a verdict.
+    const refusedOnFile = witnesses.filter((w) => codes(w).includes("OUTCOME_NOT_CORPUS_SUPPLIED"));
+    expect(refusedOnFile.map((w) => w.coordinates.join(" + "))).toEqual([]);
+  });
   it("rejects an erasure that manufactures a derivation defect instead of isolating its coordinate", () => {
     // A structure whose derived relation is lawful. Forgetting the bin's
     // CLOSURE declaration leaves the binned result underivable — the boundary

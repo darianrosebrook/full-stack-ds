@@ -158,6 +158,52 @@ export function outcomeFrom(status: Outcome["status"], codes: string[] = [], ter
   return { status, codes: [...new Set(codes)].sort(), terms: [...new Set(terms)].sort() };
 }
 
+/**
+ * The outcomes the corpus itself supplies — its own causes and obligations.
+ *
+ * Read off the oracle rather than re-derived from the corpus files: the oracle
+ * IS the corpus's adjudicated surface (cases, near-neighbour absences, triads and
+ * holdout), so a witness's authored side is checked against the same authority
+ * its stimuli are resolved against, and the pool cannot drift from it.
+ */
+export function corpusSupplied(oracle: Oracle): { codes: Set<string>; terms: Set<string> } {
+  const codes = new Set<string>();
+  const terms = new Set<string>();
+  for (const id of oracle.fixtures.keys()) {
+    const o = oracle.outcomeOf(id);
+    if (!o) continue;
+    for (const c of o.outcome.codes) codes.add(c);
+    for (const t of o.outcome.terms) terms.add(t);
+  }
+  return { codes, terms };
+}
+
+/**
+ * Why an AUTHORED outcome is not corpus-supplied, or `undefined` when it is.
+ *
+ * `admissible` is always in the pool — it is the absence of a finding, which is
+ * what a legal near-neighbour supplies. The two refusals are the interesting
+ * ones: an `illegal` that names no diagnostic (the shape a boundary refusal takes
+ * at the engine, which sees no corpus cause) and any `REL_DERIVATION_*` code
+ * named explicitly. Both say the declaration does not type, not that the
+ * coordinate carries a distinction the corpus can decide.
+ */
+export function outsidePool(outcome: Outcome, pool: { codes: Set<string>; terms: Set<string> }): string | undefined {
+  if (outcome.status === "admissible") return undefined;
+  if (outcome.status === "illegal") {
+    if (outcome.codes.length === 0) return "illegal names no diagnostic, so no cause is cited";
+    const boundary = outcome.codes.filter((c) => c.startsWith("REL_DERIVATION_"));
+    if (boundary.length > 0) return `${boundary.join(", ")} is a well-formedness refusal, which carries no corpus case`;
+    const unknown = outcome.codes.filter((c) => !pool.codes.has(c));
+    if (unknown.length > 0) return `${unknown.join(", ")} is not a diagnostic the corpus asserts`;
+    return undefined;
+  }
+  if (outcome.terms.length === 0) return "unproven names no obligation, so nothing is owed";
+  const unknown = outcome.terms.filter((t) => !pool.terms.has(t));
+  if (unknown.length > 0) return `${unknown.join(", ")} is not an obligation the corpus carries`;
+  return undefined;
+}
+
 /** The frozen oracle as a map from fixture id to its required outcome and provenance. */
 export function loadOracle(contractsDir = CONTRACTS_DIR, doctrinePath = DOCTRINE): Oracle {
   const read = (rel: string) => fs.readFileSync(path.join(contractsDir, rel), "utf-8");
@@ -284,7 +330,25 @@ export type WitnessFailure =
    * for `#order` alone and for the joint set with incidence, because the
    * owner of the difference is then named.
    */
-  | "DIFFERENCE_MISATTRIBUTED";
+  | "DIFFERENCE_MISATTRIBUTED"
+  /**
+   * The authored side's required outcome is not one the corpus supplies.
+   *
+   * A witness side may be AUTHORED — a `{base, patch}` pair — but the judgment
+   * it is required to produce must be one the corpus already licenses: a
+   * diagnostic from the catalogue, an obligation term the triads carry, or
+   * `admissible`, which is the ABSENCE of a finding. The boundary's own
+   * well-formedness refusals (`REL_DERIVATION_*`) are deliberately not in that
+   * pool, and neither is an `illegal` that names no code at all: a pair whose
+   * whole distinction IS a refusal is evidence that one of the two declarations
+   * does not type, not evidence about the coordinate it cites.
+   *
+   * The doctrine stated this rule; nothing enforced it, because `resolveSide`
+   * records a hand adjudication's cause as free text. The pool is now read off
+   * the SAME oracle the sides are resolved against, so an authored cause is
+   * checked against the corpus rather than taken on its word.
+   */
+  | "OUTCOME_NOT_CORPUS_SUPPLIED";
 
 export interface WitnessCheck {
   ok: boolean;
@@ -359,6 +423,16 @@ export function checkWitness(
     failures.push({ code: "IDENTICAL_STIMULI", detail: "the two stimuli are the same representation" });
   }
   if (sameOutcome(a.outcome, b.outcome)) failures.push({ code: "SAME_OUTCOME", detail: JSON.stringify(a.outcome) });
+  // THE EVIDENCE POOL, ENFORCED. An authored side names its own judgment; this
+  // is what keeps that freedom from laundering a well-formedness refusal into a
+  // cause. Oracle-resolved sides need no check — the corpus supplied them by
+  // construction, which is why only the `base` variant is examined.
+  const pool = corpusSupplied(oracle);
+  for (const [label, side] of [["a", w.a], ["b", w.b]] as const) {
+    if (!("base" in side)) continue;
+    const outside = outsidePool(side.outcome, pool);
+    if (outside) failures.push({ code: "OUTCOME_NOT_CORPUS_SUPPLIED", detail: `${label}: ${outside}` });
+  }
   if (failures.length > 0 || coords.length !== w.coordinates.length) return { ok: false, failures, isolation, a, b };
   // CONFLUENCE BEFORE COLLISION. A 2-set's collision is read off ONE composed
   // image per stimulus. If the composition depends on the order the two plans
