@@ -160,7 +160,6 @@
       "relation.derivedBy.nest.from#incidence",
       "relation.derivedBy.nest.levels#arity",
       "relation.derivedBy.nest.levels#incidence",
-      "relation.derivedBy.normalize.field#incidence",
       "relation.derivedBy.normalize.from#incidence",
       "relation.derivedBy.project.from#incidence",
       "relation.derivedBy.project.keep#arity",
@@ -189,6 +188,7 @@
       "relation.derivedBy.join.cardinality:one-to-many~many-to-many",
       "relation.derivedBy.kind:bin~normalize",
       "relation.derivedBy.nest.levels#order",
+      "relation.derivedBy.normalize.field#incidence",
       "structure.peers[]#arity"
     ],
     "required-derived-vocabulary": [

@@ -7,8 +7,8 @@
  },
  "population": {
   "corpus": 90,
-  "stimuli": 37,
-  "synthesized": 85,
+  "stimuli": 38,
+  "synthesized": 84,
   "total": 212,
   "membershipDigest": "e976aafcfa1b4685ff71a18c9fbaebf03f9acb29f0f47d5425b82489581da5d8"
  },
@@ -28,7 +28,7 @@
  "pairs": 34980,
  "agree": {
   "count": 24667,
-  "digest": "3decdaa10984db57dfc4c34f0bdbdf2ecdc1d5c3eaf18459a921ca8100f8f366"
+  "digest": "c3e5b89b9853811c71bc65459568cc52f440eae96aadd04c70eee0d463fe8407"
  },
  "classes": {
   "new-no-plan": {
@@ -1123,6 +1123,13 @@
   ],
   [
    "assertion.aggregate.along",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -1503,13 +1510,6 @@
    "assertion.aggregate.along",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.along",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -2607,6 +2607,13 @@
   ],
   [
    "assertion.aggregate.along#order",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -2987,13 +2994,6 @@
    "assertion.aggregate.along#order",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "assertion.aggregate.along#order",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "only-legacy-coordinate"
   ],
@@ -4091,6 +4091,13 @@
   ],
   [
    "assertion.aggregate.field",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -4471,13 +4478,6 @@
    "assertion.aggregate.field",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.field",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -5757,6 +5757,13 @@
   ],
   [
    "assertion.aggregate.op",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "8ae58f67f420",
+   "42adbf4b67d0",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "5f3485fb46e3",
    "cce48f7e0ba3",
@@ -6138,13 +6145,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "2ac979dde5c3",
    "c32875ce5b7a",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.aggregate.op",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "fd00eb45042f",
-   "6b0da2153741",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -6716,6 +6716,13 @@
   ],
   [
    "assertion.aggregate.op:count~min",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "6f7f19a05a80",
+   "acf67da27468",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:count~min",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "322c3bc15970",
    "4420241be75d",
@@ -6866,13 +6873,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "3abca4e0fdbf",
    "d35b91fa0b20",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:count~min",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "798a3cd4e134",
-   "d102681c7693",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -7885,6 +7885,13 @@
   ],
   [
    "assertion.aggregate.op:mean~min",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "5d704ba467ce",
+   "1dfd1a54cc27",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~min",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "8b4f6b1b5517",
    "a1e1e2d63396",
@@ -8154,13 +8161,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "4183b616e137",
    "79b9933c47e5",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:mean~min",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "e88970647611",
-   "89a7cb25e802",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -10454,6 +10454,13 @@
   ],
   [
    "assertion.aggregate.op:sum~min",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "e30ea38f66b2",
+   "0ef1dd1153ef",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "05d06b1d2538",
    "2784a3710fdc",
@@ -10716,13 +10723,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "f03a7a9b8b4e",
    "61c94da218ca",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~min",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "e38a71bc06a0",
-   "884ac6c0d06b",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -11686,6 +11686,13 @@
   ],
   [
    "assertion.aggregate.relation",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -12066,13 +12073,6 @@
    "assertion.aggregate.relation",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.relation",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -13170,6 +13170,13 @@
   ],
   [
    "assertion.kind",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "f75ddbfe6c39",
+   "bb98d6eb327a",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "ac7526b3994b",
    "bf75187c7e4e",
@@ -13551,13 +13558,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "931d7d866f72",
    "1dd640020870",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.kind",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "d3cb700c1098",
-   "3ba286bb053e",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -14654,6 +14654,13 @@
   ],
   [
    "assertion.kind:aggregate~ratio-comparison",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "17ecc97ab47c",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "e040c528373c",
@@ -15035,13 +15042,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
    "2a203d716a58",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.kind:aggregate~ratio-comparison",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
-   "be0418c266dd",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -16138,6 +16138,13 @@
   ],
   [
    "assertion.ratio-comparison.field",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -16518,13 +16525,6 @@
    "assertion.ratio-comparison.field",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.field",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -17622,6 +17622,13 @@
   ],
   [
    "assertion.ratio-comparison.relation",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -18002,13 +18009,6 @@
    "assertion.ratio-comparison.relation",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.relation",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -19106,6 +19106,13 @@
   ],
   [
    "evidence.grainWitness",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -19486,13 +19493,6 @@
    "evidence.grainWitness",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "evidence.grainWitness",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -20590,6 +20590,13 @@
   ],
   [
    "evidence.grainWitness#order",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -20975,13 +20982,6 @@
   ],
   [
    "evidence.grainWitness#order",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "evidence.grainWitness#order",
    "FX_PROJECT_DROPS_NEST_LEVEL",
    "e1e5c00eb44f",
    "-",
@@ -21332,6 +21332,13 @@
   ],
   [
    "field.additivity.kind",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "21e98ac9033f",
+   "a3aca4cf3876",
+   "forget-value:absent>hole:legacy-valid"
+  ],
+  [
+   "field.additivity.kind",
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "7fb0b8e48682",
    "2bc5f88ce386",
@@ -21387,13 +21394,6 @@
    "forget-value:absent>hole:legacy-valid"
   ],
   [
-   "field.additivity.kind",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "575bf019cdbc",
-   "8fd46110d008",
-   "forget-value:absent>hole:legacy-valid"
-  ],
-  [
    "field.additivity.kind:additive~non-additive",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "90b53143f089",
@@ -21423,6 +21423,13 @@
   ],
   [
    "field.additivity.kind:additive~non-additive",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "8b0d61bd7564",
+   "ee58e813ec1a",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.additivity.kind:additive~non-additive",
    "FX_STOCK_SUM_ALONG_DATE_PATCHED",
    "acd6cd8c68da",
    "a00a9680bfcd",
@@ -21447,13 +21454,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "dd1ff7983eb8",
    "98fce2faae6d",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.additivity.kind:additive~non-additive",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "9b514d7a851b",
-   "5dd284d39f39",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -21619,6 +21619,13 @@
   ],
   [
    "field.additivity.kind:non-additive~ratio-measure",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "c05afed29bcf",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.additivity.kind:non-additive~ratio-measure",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ddb7edc4ece9",
    "777155e95468",
@@ -21636,13 +21643,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
    "0c3df3de4520",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.additivity.kind:non-additive~ratio-measure",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
-   "b64cd6865ee9",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -21696,6 +21696,13 @@
   ],
   [
    "field.additivity.kind:semi-additive~non-additive",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "cd5d7df93a87",
+   "f9830457b2a4",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "field.additivity.kind:semi-additive~non-additive",
    "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
    "fc6b62f532b9",
    "c13958de08a0",
@@ -21741,13 +21748,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "34aea5f71a16",
    "2cb231a545ec",
-   "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "field.additivity.kind:semi-additive~non-additive",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "3c004c56cd9a",
-   "be25f0ebe0a9",
    "merge-enum-members:scalar>class:legacy-invalid"
   ],
   [
@@ -22662,6 +22662,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -23042,13 +23049,6 @@
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -24146,6 +24146,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -24526,13 +24533,6 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong#order",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "only-legacy-coordinate"
   ],
@@ -26260,6 +26260,13 @@
   ],
   [
    "field.transformation",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "424ccdef52af",
+   "4f9d0a6d6364",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "73f7c5c1fb74",
    "cf73a4a49483",
@@ -26641,13 +26648,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "e68e48205bbb",
    "a802bcab1b97",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "field.transformation",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "41cd626219bd",
-   "1ceea0677078",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -27681,6 +27681,13 @@
   ],
   [
    "field.transformation:interval~ratio",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "3eba8c5cac47",
+   "7971a6f63fb0",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "7d5bade119ca",
    "6848789b6c90",
@@ -27971,13 +27978,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "aec9c1b9abaa",
    "14d7bf21e7d7",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:interval~ratio",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "28015d3dbff7",
-   "fc9bd9d97ebf",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -28969,6 +28969,13 @@
   ],
   [
    "field.transformation:nominal~interval",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "ec9076702f1e",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "cd5575694f13",
@@ -29336,13 +29343,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
    "c06f8f469319",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~interval",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
-   "d02fa581e68e",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -30432,6 +30432,13 @@
   ],
   [
    "field.transformation:nominal~ordinal",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "e0e679b92a60",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "b9e74f634a14",
@@ -30799,13 +30806,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
    "1ec67cd7d6b6",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ordinal",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
-   "7f9f3fc78c34",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -31902,6 +31902,13 @@
   ],
   [
    "field.transformation:nominal~ratio",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "46b30e79a8ac",
+   "43a957561f7d",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "e810a9b4454a",
    "c7714144c878",
@@ -32269,13 +32276,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "0c122e788f85",
    "5d225f9ad677",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ratio",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "44b1ca291ee8",
-   "b65d4cb8c9c5",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33792,6 +33792,13 @@
   ],
   [
    "field.transformation:ordinal~ratio",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "bfdffe3ec978",
+   "d226600fe9e1",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "21c687a71001",
    "fad3b5660ef3",
@@ -34138,13 +34145,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "2b35fde08020",
    "71b521d1fb43",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:ordinal~ratio",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "d92c26344776",
-   "aabfac9997ea",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -35220,6 +35220,13 @@
   ],
   [
    "field.whole.perRow",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -35600,13 +35607,6 @@
    "field.whole.perRow",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.whole.perRow",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -37012,6 +37012,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.from",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -37392,13 +37399,6 @@
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.from",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -38643,6 +38643,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -39023,13 +39030,6 @@
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.toGrain",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -40316,6 +40316,13 @@
   ],
   [
    "relation.derivedBy.bin.field",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -40696,13 +40703,6 @@
    "relation.derivedBy.bin.field",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.field",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -41863,6 +41863,13 @@
   ],
   [
    "relation.derivedBy.bin.from",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -42243,13 +42250,6 @@
    "relation.derivedBy.bin.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.from",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -43417,6 +43417,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeFrom",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -43797,13 +43804,6 @@
    "relation.derivedBy.graph.edgeFrom",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeFrom",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -44992,6 +44992,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeTo",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -45372,13 +45379,6 @@
    "relation.derivedBy.graph.edgeTo",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeTo",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -46567,6 +46567,13 @@
   ],
   [
    "relation.derivedBy.graph.from",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -46947,13 +46954,6 @@
    "relation.derivedBy.graph.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.from",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -48149,6 +48149,13 @@
   ],
   [
    "relation.derivedBy.graph.value",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -48529,13 +48536,6 @@
    "relation.derivedBy.graph.value",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.value",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -49997,6 +49997,13 @@
   ],
   [
    "relation.derivedBy.join.from",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -50377,13 +50384,6 @@
    "relation.derivedBy.join.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.from",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -51551,6 +51551,13 @@
   ],
   [
    "relation.derivedBy.join.with",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -51931,13 +51938,6 @@
    "relation.derivedBy.join.with",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.with",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -52503,6 +52503,13 @@
   ],
   [
    "relation.derivedBy.kind",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "43c1707f9972",
+   "d436eb584fd1",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "7cbd0e7ffc9e",
    "a0d2afba3e24",
@@ -52695,13 +52702,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "f49b08a6cb23",
    "f749a7683631",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "66da72393337",
-   "54530b196d31",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -53763,6 +53763,13 @@
   ],
   [
    "relation.derivedBy.kind:aggregate-to-grain~normalize",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "23abf3f7570d",
+   "54d800423d22",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind:aggregate-to-grain~normalize",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "be866395d5ab",
@@ -53878,13 +53885,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "67eeb480f319",
    "b47d9cd45c79",
-   "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind:aggregate-to-grain~normalize",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "20ab69d6e88b",
-   "35590a1a4ef1",
    "merge-enum-members:scalar>class:legacy-invalid"
   ],
   [
@@ -54316,6 +54316,13 @@
   ],
   [
    "relation.derivedBy.kind:bin~normalize",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "9d738485d651",
+   "c3b296c4be7c",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:bin~normalize",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "a1e25454c9f9",
    "68e969e6a611",
@@ -54382,13 +54389,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "b9859dd8b7a7",
    "de95d5daed23",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:bin~normalize",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "3c81839606ff",
-   "afdba817851e",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -55142,6 +55142,13 @@
   ],
   [
    "relation.derivedBy.kind:join~normalize",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "75814ecc9f1d",
+   "3bdab1ea54af",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind:join~normalize",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "320e1f95c06c",
    "7c1b19fbf344",
@@ -55201,13 +55208,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "d5b5493faff2",
    "0c8b6b5880cb",
-   "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind:join~normalize",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "7d2a7844f2b1",
-   "f4e8a372ed65",
    "merge-enum-members:scalar>class:legacy-invalid"
   ],
   [
@@ -55947,6 +55947,13 @@
   ],
   [
    "relation.derivedBy.kind:nest~normalize",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "09dbb1a15369",
+   "c1dbbb3241be",
+   "merge-enum-members:scalar>class:legacy-invalid"
+  ],
+  [
+   "relation.derivedBy.kind:nest~normalize",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "1b0d294dd79e",
@@ -56062,13 +56069,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "0f62b9f249c5",
    "c28522301ba1",
-   "merge-enum-members:scalar>class:legacy-invalid"
-  ],
-  [
-   "relation.derivedBy.kind:nest~normalize",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "a4bb34c167c8",
-   "9c4dbf9632f5",
    "merge-enum-members:scalar>class:legacy-invalid"
   ],
   [
@@ -56367,6 +56367,13 @@
   ],
   [
    "relation.derivedBy.kind:normalize~graph",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "df0243be21e7",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:normalize~graph",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "1a0cde1901ab",
    "dcdcbc013fd0",
@@ -56391,13 +56398,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
    "dcd80b5a5e34",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:normalize~graph",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
-   "a09eb7f68840",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -56514,6 +56514,13 @@
   ],
   [
    "relation.derivedBy.kind:normalize~project",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "eb27444edf46",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.kind:normalize~project",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "1a0cde1901ab",
    "cc3352a218be",
@@ -56538,13 +56545,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
    "9e8b046ed95e",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.kind:normalize~project",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
-   "fd64d00e1102",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -57557,6 +57557,13 @@
   ],
   [
    "relation.derivedBy.nest.from",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -57937,13 +57944,6 @@
    "relation.derivedBy.nest.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.from",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -59223,6 +59223,13 @@
   ],
   [
    "relation.derivedBy.nest.levels",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -59603,13 +59610,6 @@
    "relation.derivedBy.nest.levels",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.levels",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -61064,6 +61064,13 @@
   ],
   [
    "relation.derivedBy.normalize.field",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -61444,13 +61451,6 @@
    "relation.derivedBy.normalize.field",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.field",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -61750,16 +61750,16 @@
   ],
   [
    "relation.derivedBy.normalize.field#incidence",
-   "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
-   "23fe2336b366",
-   "46be13100156",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c1cbb19e2d23",
+   "c92ef63abd04",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
    "relation.derivedBy.normalize.field#incidence",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "88a64eb40530",
-   "c8cbe58273cc",
+   "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
+   "23fe2336b366",
+   "46be13100156",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
@@ -62597,6 +62597,13 @@
   ],
   [
    "relation.derivedBy.normalize.from",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -62977,13 +62984,6 @@
    "relation.derivedBy.normalize.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.from",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -63283,6 +63283,13 @@
   ],
   [
    "relation.derivedBy.normalize.from#incidence",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "d2275a9ca94f",
+   "c92ef63abd04",
+   "forget-reference-incidence:scalar>scalar:legacy-valid"
+  ],
+  [
+   "relation.derivedBy.normalize.from#incidence",
    "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
    "3aeb7246c6de",
    "910d6ea3f232",
@@ -63307,13 +63314,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "9d11082f8bde",
    "17b9ed4d4bbf",
-   "forget-reference-incidence:scalar>scalar:legacy-valid"
-  ],
-  [
-   "relation.derivedBy.normalize.from#incidence",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "a1c9cd191f01",
-   "c8cbe58273cc",
    "forget-reference-incidence:scalar>scalar:legacy-valid"
   ],
   [
@@ -64144,6 +64144,13 @@
   ],
   [
    "relation.derivedBy.project.from",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -64524,13 +64531,6 @@
    "relation.derivedBy.project.from",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.from",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -65684,6 +65684,13 @@
   ],
   [
    "relation.derivedBy.project.keep",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -66064,13 +66071,6 @@
    "relation.derivedBy.project.keep",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.keep",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -67266,6 +67266,13 @@
   ],
   [
    "relation.derivedBy.project.keep#order",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -67646,13 +67653,6 @@
    "relation.derivedBy.project.keep#order",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "relation.derivedBy.project.keep#order",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "only-legacy-coordinate"
   ],
@@ -68750,6 +68750,13 @@
   ],
   [
    "relation.grain",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "708921d50219",
+   "5d68d539eac2",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "6af556488053",
    "c1e1db5f0b4d",
@@ -69131,13 +69138,6 @@
    "FX_SHARE_OF_AVERAGE_SCORE",
    "ef8f282f3f33",
    "85a03e063c14",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "relation.grain",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "f2c134397140",
-   "53084c2aad5d",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -70234,6 +70234,13 @@
   ],
   [
    "structure.peers[]",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -70614,13 +70621,6 @@
    "structure.peers[]",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "structure.peers[]",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "new-no-plan"
   ],
@@ -71830,6 +71830,13 @@
   ],
   [
    "structure.peers[]#order",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
    "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
    "168bff7d68ca",
    "-",
@@ -72210,13 +72217,6 @@
    "structure.peers[]#order",
    "FX_SHARE_OF_AVERAGE_SCORE",
    "17b9ed4d4bbf",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "structure.peers[]#order",
-   "FX_SHARE_OF_AVERAGE_SCORE",
-   "c8cbe58273cc",
    "-",
    "only-legacy-coordinate"
   ],

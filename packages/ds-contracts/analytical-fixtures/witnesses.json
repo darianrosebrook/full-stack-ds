@@ -1236,6 +1236,30 @@
     },
     {
       "coordinates": [
+        "relation.derivedBy.normalize.field#incidence"
+      ],
+      "a": {
+        "fixture": "FX_SHARE_OF_AVERAGE_SCORE"
+      },
+      "b": {
+        "base": "FX_SHARE_OF_AVERAGE_SCORE",
+        "patch": [
+          {
+            "set": "structure.relations.shares.derivedBy.field",
+            "value": "region"
+          }
+        ],
+        "outcome": {
+          "status": "admissible",
+          "codes": [],
+          "terms": []
+        },
+        "cause": "CASE_NORMALIZED_AVERAGES makes sharing out a NON-ADDITIVE measure illegal: the committed declaration normalizes `avg_score`, whose additivity kind is `non-additive`, so a share of it is not a quantity. Binding the relation's key field instead means nothing non-additive is rescaled against a whole, and the same declaration is admissible -- which field the normalize reads decides whether the additivity law fires."
+      },
+      "note": "STAGE-2 necessity for relation.derivedBy.normalize.field#incidence: separates WHICH field a normalize reads, over the committed FX_SHARE_OF_AVERAGE_SCORE. The committed side is illegal REL_ADDITIVITY_NORMALIZE_NONADDITIVE under the corpus cause CASE_NORMALIZED_AVERAGES; moving that one field binding to the relation's key field is admissible. Authored over a committed fixture because the corpus carries the illegal side and its cause but no committed near-neighbour that differs only in this binding."
+    },
+    {
+      "coordinates": [
         "relation.derivedBy.nest.levels#incidence"
       ],
       "a": {
