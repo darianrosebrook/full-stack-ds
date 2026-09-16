@@ -166,10 +166,52 @@ export const meaningfulness: Rule = {
   },
 };
 
+/**
+ * The rows on which the declared witness can actually be READ.
+ *
+ * Repetition requires an observation to repeat, so a row contributes only when
+ * every named column carries a value. The check this replaces built a key from
+ * `row[f]?.value ?? "null:absent"`, which meant a column the relation does not
+ * declare — and a declared column with no observation — produced the SAME
+ * sentinel in every row, so `hasDuplicates` returned true and the rule reported
+ * an INSTANCE fan-out finding built from a missing-field lookup. That is a
+ * fabricated witness: it claims the corpus observed repeated values when it
+ * observed nothing at all.
+ *
+ * Two ways a witness cannot be read, kept apart because they are different
+ * facts about the declaration:
+ *  - `unresolved`: a named column is not declared by the relation. The
+ *    declaration references something that does not exist. (A catalogued
+ *    declaration-level code for this is a separate slice; what matters here is
+ *    that it can never be read as observed fan-out.)
+ *  - `unobservable`: every named column is declared, but fewer than two rows
+ *    carry values for all of them, so no repetition can be established from the
+ *    data seen. This is the same shape as the conservation checker's "unusable
+ *    observation" rule: a check that cannot see the values it needs has an
+ *    outstanding obligation, not a finding.
+ */
+type WitnessReading =
+  | { state: "unresolved"; columns: string[] }
+  | { state: "unobservable" }
+  | { state: "read"; rows: Record<string, Observation>[] };
+
+const readWitness = (
+  rows: Record<string, Observation>[] | undefined,
+  keys: readonly string[],
+  declared: Readonly<Record<string, unknown>>,
+): WitnessReading => {
+  const unresolved = keys.filter((k) => !(k in declared));
+  if (unresolved.length > 0) return { state: "unresolved", columns: unresolved };
+  const usable = (rows ?? []).filter((row) => keys.every((k) => row[k]?.value !== undefined));
+  if (usable.length < 2) return { state: "unobservable" };
+  return { state: "read", rows: usable };
+};
+
+/** Rows already known to carry a value for every key, so the key is the VALUES. */
 const hasDuplicates = (rows: Record<string, Observation>[], keys: string[]) => {
   const seen = new Set<string>();
   for (const row of rows) {
-    const k = JSON.stringify(keys.map((f) => row[f]?.value ?? `null:${row[f]?.null ?? "absent"}`));
+    const k = JSON.stringify(keys.map((f) => row[f]!.value));
     if (seen.has(k)) return true;
     seen.add(k);
   }
@@ -185,8 +227,16 @@ export const additivity: Rule = {
     if (relation.grain === "unknown") {
       const witness = ctx.evidence?.grainWitness?.[relationName];
       if (!witness) oblig(out, ctx, E, OBLIGATION.GRAIN_DECLARED, "schema", relationName);
-      // instance-evidence branch (stage-2 catalogue code)
-      else if (ctx.rows && hasDuplicates(ctx.rows, witness)) diag(out, ctx, E, DIAG.GRAIN_FANOUT, "instance", relationName);
+      else {
+        const reading = readWitness(ctx.rows, witness, relation.fields ?? {});
+        // A witness that cannot be read leaves the grain UNESTABLISHED. It never
+        // becomes an instance fan-out finding: the finding says the corpus
+        // observed a repeated value, and neither of these states observed one.
+        if (reading.state === "unresolved") oblig(out, ctx, E, OBLIGATION.GRAIN_DECLARED, "schema", relationName);
+        else if (reading.state === "unobservable") oblig(out, ctx, E, OBLIGATION.GRAIN_DECLARED, "instance", relationName);
+        // instance-evidence branch (stage-2 catalogue code), readable and repeating
+        else if (hasDuplicates(reading.rows, witness)) diag(out, ctx, E, DIAG.GRAIN_FANOUT, "instance", relationName);
+      }
     }
     const op = opOf(a);
     // Fan-out is decidable from the DECLARATION once the join says its

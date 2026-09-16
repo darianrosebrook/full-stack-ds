@@ -1220,8 +1220,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(63);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 22, "member-absence": 8, leaf: 5, "member-pair": 28 });
+    expect(unresolved.length).toBe(64);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 23, "member-absence": 8, leaf: 5, "member-pair": 28 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
@@ -1247,7 +1247,7 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // 31-37) moved it out of unresolved for one round; the footprint-aware
     // classifier put it back, because its erasure takes the sibling ORDER facet
     // of a surviving list and so does not ratify primitive standing.
-    expect(topology.length).toBe(22);
+    expect(topology.length).toBe(23);
     // Fourteen, not sixteen: two of the sixteen were witnessed -- `relation.derivedBy.nest.levels#order`
     // by REL-TOPOLOGY-AUTHORED-STIMULUS-01 and `relation.derivedBy.aggregate-to-grain.toGrain#order` by
     // REL-ORDER-FACET-SEMANTICS-01 -- so neither is unresolved and neither is counted here, while the
@@ -1268,8 +1268,10 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // and the two orders settled earlier: each blocked no carrier, so filing it moved this count
     // and no other. `relation.derivedBy.normalize.field#incidence` -- filed after them -- DID block
     // carriers, so it left this count alone and moved the closures' composite diagnosis instead
-    // (the `affected` list above grows by the two `normalize~X` carriers).
-    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(48);
+    // (the `affected` list above grows by the two `normalize~X` carriers). The grain
+    // witness coordinate returned to unresolved when its fabricated pair was retired, and
+    // it blocks no carrier either, so this count is back to 49.
+    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(49);
   });
 });
 

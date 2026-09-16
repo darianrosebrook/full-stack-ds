@@ -522,7 +522,11 @@ describe("C3 — the harness is falsified", () => {
     const verdicts = candidates.map(([, w]) => codes(w));
     expect(verdicts[0]).toEqual([]);
     expect(verdicts[1]).toEqual([]);
-    expect(verdicts[2]).toEqual(["OUTCOME_NOT_CORPUS_SUPPLIED"]);
+    // TWO refusals now, and both are the point: the pool clause refuses the
+    // vocabulary (an `illegal` that names no diagnostic) and the applicability
+    // clause refuses the OBSERVATION (the engine does not produce that outcome
+    // for this stimulus). A witness must survive both.
+    expect(verdicts[2]).toEqual(["OUTCOME_NOT_CORPUS_SUPPLIED", "OUTCOME_NOT_OBSERVED"]);
     // The other direction, over the whole surface: the clause refuses no
     // witness on file, so tightening it further (or loosening the pool) fails
     // here rather than silently re-opening or closing a verdict.
@@ -2214,7 +2218,7 @@ describe("C4b — CURRENT evidence standing: what the authority in force now sup
     // the bound-incidence quotient (nest.levels#incidence, the round-25 pair the instrument
     // refused while the erasure tokenized) moved it to primitive standing, and each of
     // the stage-2 filings under that repaired standing added one more each.
-    expect(byClass).toEqual({ primitive: 63, "closure-accounted": 10, "required-derived-vocabulary": 3, suspended: 2 });
+    expect(byClass).toEqual({ primitive: 62, "closure-accounted": 10, "required-derived-vocabulary": 3, suspended: 2 });
     // And the class boundary is real: every closure-accounted coordinate is
     // absent from the primitive set, by construction of `evidenceStanding`.
     for (const id of support.closureAccounted) {
@@ -2357,7 +2361,6 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "assertion.aggregate.field#incidence",
       "assertion.aggregate.nulls:exclude~<absent>",
       "evidence.grainWitness#arity",
-      "evidence.grainWitness#incidence",
       "field.additivity.kind:additive~non-additive",
       "field.additivity.kind:non-additive~ratio-measure",
       "field.temporality#present",
@@ -2405,7 +2408,6 @@ describe("C4c — history is an INPUT to reconciliation, not a function of the p
       "assertion.aggregate.field#incidence",
       "assertion.aggregate.nulls:exclude~<absent>",
       "evidence.grainWitness#arity",
-      "evidence.grainWitness#incidence",
       "field.additivity.kind:additive~non-additive",
       "field.additivity.kind:non-additive~ratio-measure",
       "field.temporality#present",

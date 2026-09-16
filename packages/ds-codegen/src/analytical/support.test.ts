@@ -94,7 +94,7 @@ describe("one definition of primitive support, consumed by every surface", () =>
       const audited = report.witnesses.find((a) => a.witness === id);
       if (audited) expect(audited.standing, `${id} audit standing`).toBe("primitive");
     }
-    expect(ratified.size).toBe(63);
+    expect(ratified.size).toBe(62);
   });
 
   it("the classifier names THREE consequences, and each is exercised by a real witness", () => {
@@ -182,9 +182,9 @@ describe("the footprint-class triage over the live basis candidates", () => {
     // does something; a witness still needs two stimuli the oracle SEPARATES
     // that the erasure identifies, and the constructibility triage below
     // measures that separately -- 16 of the 60 have such a shape at all.
-    expect(unresolved.length).toBe(63);
-    expect(ratifiable.length).toBe(60);
-    expect(moving.length).toBe(46);
+    expect(unresolved.length).toBe(64);
+    expect(ratifiable.length).toBe(61);
+    expect(moving.length).toBe(47);
     // And the blocked three are NOT in it.
     expect(ratifiable).not.toContain("relation.derivedBy.nest.levels#incidence");
     expect(ratifiable).not.toContain("structure.peers[]#present");
@@ -256,7 +256,7 @@ describe("the constructibility triage: what EVIDENCE each ratifiable candidate h
       // it. One of the other two is now FILED (normalize.field#incidence, above);
       // `relation.derivedBy.graph.value#incidence` still authors cleanly and is
       // unfiled, and `necessity.test.ts` pins all three verdicts together.
-      expect(bySpecimenShape.length).toBe(16);
+      expect(bySpecimenShape.length).toBe(17);
       expect(bySpecimenShape).toContain("relation.derivedBy.graph.value#incidence");
       // And the remainder have no separating shape at all, which is a corpus gap
       // and not an instrument one.

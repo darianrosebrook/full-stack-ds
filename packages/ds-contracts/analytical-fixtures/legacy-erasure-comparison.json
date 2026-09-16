@@ -7,8 +7,8 @@
  },
  "population": {
   "corpus": 90,
-  "stimuli": 38,
-  "synthesized": 84,
+  "stimuli": 37,
+  "synthesized": 85,
   "total": 212,
   "membershipDigest": "e976aafcfa1b4685ff71a18c9fbaebf03f9acb29f0f47d5425b82489581da5d8"
  },
@@ -28,7 +28,7 @@
  "pairs": 34980,
  "agree": {
   "count": 24667,
-  "digest": "c3e5b89b9853811c71bc65459568cc52f440eae96aadd04c70eee0d463fe8407"
+  "digest": "3a0cbd55062e72358326c7dadd3e4f871457b0e06d8e3f6ff4563036b3398088"
  },
  "classes": {
   "new-no-plan": {
@@ -984,13 +984,6 @@
   [
    "assertion.aggregate.along",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.along",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -1775,6 +1768,13 @@
   [
    "assertion.aggregate.along",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "7c97e7ce96d4",
    "-",
    "new-no-plan"
@@ -2462,13 +2462,6 @@
    "assertion.aggregate.along#order",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "27240bc0a677",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "assertion.aggregate.along#order",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
    "-",
    "only-legacy-coordinate"
   ],
@@ -3259,6 +3252,13 @@
   [
    "assertion.aggregate.along#order",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "7c97e7ce96d4",
    "-",
    "only-legacy-coordinate"
@@ -3946,13 +3946,6 @@
    "assertion.aggregate.field",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "27240bc0a677",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.field",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
    "-",
    "new-no-plan"
   ],
@@ -4737,6 +4730,13 @@
    "assertion.aggregate.field",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -5618,13 +5618,6 @@
   [
    "assertion.aggregate.op",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "9c6bf2ab4db6",
-   "6fb518992f5c",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.aggregate.op",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa0842ea95a5",
    "ff21ecca9b63",
    "forget-value:absent>hole:legacy-invalid"
@@ -6383,6 +6376,13 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "53f76674fbc8",
    "a77684932837",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "12c5edd8be24",
+   "200995bc0b49",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -8705,13 +8705,6 @@
   [
    "assertion.aggregate.op:sum~count",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "875fce75f3da",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~count",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "645d11c0d164",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -8917,6 +8910,13 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
    "4e303278c783",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~count",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "c107d1f13033",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -9344,13 +9344,6 @@
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "27240bc0a677",
    "fd40e0a9f99d",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~mean",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "33651ee1b391",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -9813,6 +9806,13 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
    "fdbc68e3843e",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "0f71c5683641",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -10350,13 +10350,6 @@
   [
    "assertion.aggregate.op:sum~min",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "ffd6b8a89404",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~min",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "bcd672340f6f",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -10849,6 +10842,13 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
    "f3ba54f0f605",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "cb97d63cb0c6",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -11541,13 +11541,6 @@
    "assertion.aggregate.relation",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "27240bc0a677",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.relation",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
    "-",
    "new-no-plan"
   ],
@@ -12338,6 +12331,13 @@
   [
    "assertion.aggregate.relation",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "7c97e7ce96d4",
    "-",
    "new-no-plan"
@@ -13026,13 +13026,6 @@
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "2a1a053385ae",
    "69b39412c0a1",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.kind",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "8e26b5610f33",
-   "f5ce462e3c01",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -13822,6 +13815,13 @@
   [
    "assertion.kind",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "fdc7ba67a8a7",
+   "2ca83b24c26f",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "2c332e25dba8",
    "ec33726653c5",
    "forget-value:absent>hole:legacy-invalid"
@@ -14510,13 +14510,6 @@
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "27240bc0a677",
    "bacc8d5bba05",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.kind:aggregate~ratio-comparison",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "c1acadde07e5",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -15306,6 +15299,13 @@
   [
    "assertion.kind:aggregate~ratio-comparison",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "735e0a15c287",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "7c97e7ce96d4",
    "33897c151bcb",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -15999,13 +15999,6 @@
   [
    "assertion.ratio-comparison.field",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.field",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -16784,6 +16777,13 @@
    "assertion.ratio-comparison.field",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -17483,13 +17483,6 @@
   [
    "assertion.ratio-comparison.relation",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.relation",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -18268,6 +18261,13 @@
    "assertion.ratio-comparison.relation",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -18967,13 +18967,6 @@
   [
    "evidence.grainWitness",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "evidence.grainWitness",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -19752,6 +19745,13 @@
    "evidence.grainWitness",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -20451,13 +20451,6 @@
   [
    "evidence.grainWitness#order",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "evidence.grainWitness#order",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "only-legacy-coordinate"
@@ -21236,6 +21229,13 @@
    "evidence.grainWitness#order",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "only-legacy-coordinate"
   ],
@@ -22523,13 +22523,6 @@
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -23314,6 +23307,13 @@
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "7c97e7ce96d4",
    "-",
    "new-no-plan"
@@ -24001,13 +24001,6 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "27240bc0a677",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong#order",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
    "-",
    "only-legacy-coordinate"
   ],
@@ -24792,6 +24785,13 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "only-legacy-coordinate"
   ],
@@ -26121,13 +26121,6 @@
   [
    "field.transformation",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "cd459b68458a",
-   "f196945547dd",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "field.transformation",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "b11a9a1e3a11",
    "2063a586f6f1",
    "forget-value:absent>hole:legacy-invalid"
@@ -26912,6 +26905,13 @@
   [
    "field.transformation",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "d1b700ca10b2",
+   "092832e80cb9",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "6f8f83b28c21",
    "fdbfa145daee",
    "forget-value:absent>hole:legacy-invalid"
@@ -27542,13 +27542,6 @@
   [
    "field.transformation:interval~ratio",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "cd01688d9064",
-   "03a9f3cc5932",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:interval~ratio",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "6ee0b2dfe3ce",
    "ea4b57d0362b",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -28139,6 +28132,13 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "aec214113b77",
    "6be47fd5fdf4",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "ff4a02e7ad40",
+   "24b1d40c8350",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -28825,13 +28825,6 @@
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "27240bc0a677",
    "aad5d34bfb55",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~interval",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "0e3349668c0b",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -29607,6 +29600,13 @@
   [
    "field.transformation:nominal~interval",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "3a6de8717b67",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "7c97e7ce96d4",
    "4abae9c938b5",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -30288,13 +30288,6 @@
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "27240bc0a677",
    "79ad9b1cca46",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ordinal",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "e6d9e0a800e1",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -31070,6 +31063,13 @@
   [
    "field.transformation:nominal~ordinal",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "757ba82549d6",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "7c97e7ce96d4",
    "61877c5cd715",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -31758,13 +31758,6 @@
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "1671da2dc3ce",
    "c610c28ed6ba",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ratio",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "6fc93a80c03f",
-   "0c5bf4606e4c",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -32535,6 +32528,13 @@
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "1619fb3c501b",
    "e477cab044de",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "3aa541f90ab3",
+   "2c7b33fe521a",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33653,13 +33653,6 @@
   [
    "field.transformation:ordinal~ratio",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "2237d0e81848",
-   "c6c3ccd0ebbb",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:ordinal~ratio",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "05a5fdaa5aa9",
    "ca6b46668658",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -34388,6 +34381,13 @@
   [
    "field.transformation:ordinal~ratio",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "d704865464f3",
+   "863973227243",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "bedb14ea9f6c",
    "f8c5cca49c31",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -35075,13 +35075,6 @@
    "field.whole.perRow",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "27240bc0a677",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.whole.perRow",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
    "-",
    "new-no-plan"
   ],
@@ -35866,6 +35859,13 @@
    "field.whole.perRow",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -36873,13 +36873,6 @@
   [
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.from",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -37658,6 +37651,13 @@
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -38504,13 +38504,6 @@
   [
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.toGrain",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -39289,6 +39282,13 @@
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -40177,13 +40177,6 @@
   [
    "relation.derivedBy.bin.field",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.field",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -40962,6 +40955,13 @@
    "relation.derivedBy.bin.field",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -41724,13 +41724,6 @@
   [
    "relation.derivedBy.bin.from",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.from",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -42509,6 +42502,13 @@
    "relation.derivedBy.bin.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -43278,13 +43278,6 @@
   [
    "relation.derivedBy.graph.edgeFrom",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeFrom",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -44063,6 +44056,13 @@
    "relation.derivedBy.graph.edgeFrom",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -44853,13 +44853,6 @@
   [
    "relation.derivedBy.graph.edgeTo",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeTo",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -45638,6 +45631,13 @@
    "relation.derivedBy.graph.edgeTo",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -46428,13 +46428,6 @@
   [
    "relation.derivedBy.graph.from",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.from",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -47213,6 +47206,13 @@
    "relation.derivedBy.graph.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -48010,13 +48010,6 @@
   [
    "relation.derivedBy.graph.value",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.value",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -48795,6 +48788,13 @@
    "relation.derivedBy.graph.value",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -49858,13 +49858,6 @@
   [
    "relation.derivedBy.join.from",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.from",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -50643,6 +50636,13 @@
    "relation.derivedBy.join.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -51412,13 +51412,6 @@
   [
    "relation.derivedBy.join.with",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.with",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -52197,6 +52190,13 @@
    "relation.derivedBy.join.with",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -57418,13 +57418,6 @@
   [
    "relation.derivedBy.nest.from",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.from",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -58203,6 +58196,13 @@
    "relation.derivedBy.nest.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -59084,13 +59084,6 @@
   [
    "relation.derivedBy.nest.levels",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.levels",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -59869,6 +59862,13 @@
    "relation.derivedBy.nest.levels",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -60925,13 +60925,6 @@
   [
    "relation.derivedBy.normalize.field",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.field",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -61710,6 +61703,13 @@
    "relation.derivedBy.normalize.field",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -62458,13 +62458,6 @@
   [
    "relation.derivedBy.normalize.from",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.from",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -63243,6 +63236,13 @@
    "relation.derivedBy.normalize.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -64005,13 +64005,6 @@
   [
    "relation.derivedBy.project.from",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.from",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -64790,6 +64783,13 @@
    "relation.derivedBy.project.from",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -65545,13 +65545,6 @@
   [
    "relation.derivedBy.project.keep",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.keep",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "new-no-plan"
@@ -66330,6 +66323,13 @@
    "relation.derivedBy.project.keep",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -67127,13 +67127,6 @@
   [
    "relation.derivedBy.project.keep#order",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "relation.derivedBy.project.keep#order",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "only-legacy-coordinate"
@@ -67918,6 +67911,13 @@
   [
    "relation.derivedBy.project.keep#order",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "7c97e7ce96d4",
    "-",
    "only-legacy-coordinate"
@@ -68606,13 +68606,6 @@
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "1b878e509d68",
    "68362d885f36",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "relation.grain",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "b07aab42bc43",
-   "a17b0c827b51",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -69402,6 +69395,13 @@
   [
    "relation.grain",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "b7bc867636dc",
+   "ecafdceca6d8",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
    "2dacbddb23ab",
    "8b2525f97d8a",
    "forget-value:absent>hole:legacy-invalid"
@@ -70089,13 +70089,6 @@
    "structure.peers[]",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "27240bc0a677",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "structure.peers[]",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
    "-",
    "new-no-plan"
   ],
@@ -70880,6 +70873,13 @@
    "structure.peers[]",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "new-no-plan"
   ],
@@ -71691,13 +71691,6 @@
   [
    "structure.peers[]#order",
    "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
-   "df5484ac4c55",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "structure.peers[]#order",
-   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
    "aa2fb0e70fed",
    "-",
    "only-legacy-coordinate"
@@ -72476,6 +72469,13 @@
    "structure.peers[]#order",
    "FX_T_CURRENCY_ROWS_ONE_UNIT",
    "9b1c44bd4e73",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
    "-",
    "only-legacy-coordinate"
   ],
