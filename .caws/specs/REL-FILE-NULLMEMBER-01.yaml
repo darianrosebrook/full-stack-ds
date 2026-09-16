@@ -1,0 +1,32 @@
+id: REL-FILE-NULLMEMBER-01
+title: 'File the null-member censored-suppressed witness'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-16T00:05:04.199Z'
+updated_at: '2026-09-16T00:05:04.199Z'
+created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given observation.null:censored~suppressed is unresolved and ratifiable with a single-path separating shape; when the authored stimulus is filed (FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS as committed, illegal REL_NULL_CENSORED_AS_OBSERVED, against the same fixture with evidence.rows carrying suppressed in place of censored, unproven null:missing-mechanism) and checkWitness admits it; then the verdict moves unresolved to witnessed, the coordinate classes atomic so the witness ratifies primitive standing, the drift check stays green on all three bases, and the analytical suite, every gate and every ledger agree'
+non_functional: {}
+contracts:
+  - name: 'witness-admission'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/necessity.test.ts'
