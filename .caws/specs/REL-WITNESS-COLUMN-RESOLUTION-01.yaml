@@ -2,9 +2,11 @@ id: REL-WITNESS-COLUMN-RESOLUTION-01
 title: 'Stop an unresolved witness column from fabricating fan-out'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Repaired the witness-reading precondition: an unresolved or unobservable witness column leaves the grain obligation outstanding instead of fabricating REL_GRAIN_FANOUT from the missing-value sentinel; added OUTCOME_NOT_OBSERVED so a hand adjudication must match the engine; retired the fabricated grain witness and reverted its verdict; holdout re-verified and digest re-recorded.'
 created_at: '2026-09-16T02:27:42.327Z'
-updated_at: '2026-09-16T02:27:43.855Z'
+updated_at: '2026-09-16T02:42:41.551Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
