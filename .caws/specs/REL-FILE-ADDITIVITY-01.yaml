@@ -2,9 +2,11 @@ id: REL-FILE-ADDITIVITY-01
 title: 'File the additivity ratio-measure member-pair witness'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Filed field.additivity.kind:non-additive~ratio-measure (first member-pair witness): authored pair over FX_GDP_PER_CAPITA_ROLLUP_MEAN moving additivity.kind to non-additive, atomic class so it ratifies primitive standing; subtraction 65/118, freeze 19/71, ratified 61, legacy re-recorded.'
 created_at: '2026-09-15T23:46:20.725Z'
-updated_at: '2026-09-15T23:46:26.935Z'
+updated_at: '2026-09-16T00:00:12.356Z'
 created_by_session: 'session-b6592f79-7786-4ee0-994b-98b934cd1254'
 blast_radius:
   modules:
