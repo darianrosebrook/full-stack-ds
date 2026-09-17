@@ -189,11 +189,20 @@ export const meaningfulness: Rule = {
  *    data seen. This is the same shape as the conservation checker's "unusable
  *    observation" rule: a check that cannot see the values it needs has an
  *    outstanding obligation, not a finding.
+ *
+ * A `read` reading also reports whether it COVERED every supplied row, because
+ * repetition and uniqueness are established over different populations. A
+ * repeated value among the rows that could be read refutes uniqueness over the
+ * supplied population, which contains them. Its ABSENCE over a proper subset
+ * establishes nothing about the rows that were discarded: each discarded row
+ * may carry a key that repeats one already read. Grain evidence therefore
+ * ranges over exactly the population it could read, and a reader that silently
+ * narrows that population reports a uniqueness it never observed.
  */
 type WitnessReading =
   | { state: "unresolved"; columns: string[] }
   | { state: "unobservable" }
-  | { state: "read"; rows: Record<string, Observation>[] };
+  | { state: "read"; rows: Record<string, Observation>[]; covered: boolean };
 
 const readWitness = (
   rows: Record<string, Observation>[] | undefined,
@@ -202,9 +211,10 @@ const readWitness = (
 ): WitnessReading => {
   const unresolved = keys.filter((k) => !(k in declared));
   if (unresolved.length > 0) return { state: "unresolved", columns: unresolved };
-  const usable = (rows ?? []).filter((row) => keys.every((k) => row[k]?.value !== undefined));
+  const supplied = rows ?? [];
+  const usable = supplied.filter((row) => keys.every((k) => row[k]?.value !== undefined));
   if (usable.length < 2) return { state: "unobservable" };
-  return { state: "read", rows: usable };
+  return { state: "read", rows: usable, covered: usable.length === supplied.length };
 };
 
 /** Rows already known to carry a value for every key, so the key is the VALUES. */
@@ -236,6 +246,12 @@ export const additivity: Rule = {
         else if (reading.state === "unobservable") oblig(out, ctx, E, OBLIGATION.GRAIN_DECLARED, "instance", relationName);
         // instance-evidence branch (stage-2 catalogue code), readable and repeating
         else if (hasDuplicates(reading.rows, witness)) diag(out, ctx, E, DIAG.GRAIN_FANOUT, "instance", relationName);
+        // A repeat among the readable rows refutes uniqueness over the supplied
+        // rows; its absence over a subset of them cannot establish it. Where the
+        // reader could not read every supplied row the grain stays UNESTABLISHED,
+        // because the conclusion would range over a population the evidence
+        // never covered.
+        else if (!reading.covered) oblig(out, ctx, E, OBLIGATION.GRAIN_DECLARED, "instance", relationName);
       }
     }
     const op = opOf(a);

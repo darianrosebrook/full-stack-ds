@@ -3,14 +3,14 @@
   "digests": {
     "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
     "witnesses.json": "db2bffcdffb729188da6e1fe054c879e1bd9db5b4aa89e1fbff6630ae87ca57b",
-    "closures-stage2.json": "99530da10e61764ec4179e839dc90cbe197c4414ead2bc50503b0bd0e9d9b719"
+    "closures-stage2.json": "529636f38134c5ece936bcd94829a27ac6ca8f3aa47fe5220d0dece797760321"
   },
   "authority": {
     "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
     "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "835d38941c9032692aedb4ecf8e89498ee11448a05b9570dc7c118d9bd46b255"
+    "ruleDigest": "31627ef1ba9385fab9d6c8e793cd6895322df473ffdbcb4f1527017e00600fa3"
   },
   "footprintBasisDigest": "e976aafcfa1b4685ff71a18c9fbaebf03f9acb29f0f47d5425b82489581da5d8",
   "quotientSchemaVersion": 1,
