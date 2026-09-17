@@ -1,0 +1,31 @@
+id: REL-WITNESS-COVERAGE-01
+title: 'Preserve the scope of grain evidence: a partially readable witness establishes repetition but not uniqueness'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-17T22:51:42.934Z'
+updated_at: '2026-09-17T22:51:42.934Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/engines.ts (readWitness + the additivity rule''s unknown-grain branch)'
+    - 'packages/ds-codegen/src/analytical/stage2-rules.test.ts (the witness-reading control group gains the mixed-coverage transition)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the witness reader reads only the supplied rows that carry a value for every named column, and discards the rest without recording that it did; when a supplied row cannot be read for those columns and no readable row repeats; then the grain obligation stays outstanding instead of the assertion being admitted, because repetition can be established from a readable subset while uniqueness over the supplied population cannot'
+non_functional: {}
+contracts:
+  - name: 'witness-coverage'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/stage2-rules.test.ts'
