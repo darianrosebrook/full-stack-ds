@@ -8,7 +8,6 @@ updated_at: '2026-09-17T22:51:42.934Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
-    - 'packages/ds-codegen/src/analytical/engines.ts (readWitness + the additivity rule''s unknown-grain branch)'
     - 'packages/ds-codegen/src/analytical/stage2-rules.test.ts (the witness-reading control group gains the mixed-coverage transition)'
     - 'packages/ds-codegen/src/analytical/engines.ts (readWitness and the additivity rule''s unknown-grain branch)'
   data_migration: false
