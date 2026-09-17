@@ -1,0 +1,31 @@
+id: REL-PROJECTION-EXPERIMENT-01
+title: 'Bounded stage-3 experiment: does one fixed analytical authority yield structurally different lawful projections without a form name selecting the result'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-17T23:43:32.892Z'
+updated_at: '2026-09-17T23:43:32.892Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given stage 2 is unratified and its census still carries unresolved coordinates; when a bounded experiment enumerates projections for one admitted analytical object; then the candidate universe arises from the product of declared projection choices and their constraints rather than from a catalogue of desired forms, no form name participates at any layer below L4, and the enumerated set is retained as actual programs with their consumed inputs and their admission, refusal or obligation reason'
+non_functional: {}
+contracts:
+  - name: 'projection-enumeration'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/projection.test.ts'
