@@ -10,6 +10,7 @@ blast_radius:
   modules:
     - 'packages/ds-codegen/src/analytical/engines.ts (readWitness + the additivity rule''s unknown-grain branch)'
     - 'packages/ds-codegen/src/analytical/stage2-rules.test.ts (the witness-reading control group gains the mixed-coverage transition)'
+    - 'packages/ds-codegen/src/analytical/engines.ts (readWitness and the additivity rule''s unknown-grain branch)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -18,7 +19,11 @@ scope:
     - 'packages/ds-contracts/analytical-fixtures'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Repetition and uniqueness are established over different populations: a readable subset can refute uniqueness, and only full readable coverage can establish it. Discarding an unreadable supplied row must not silently narrow the population the conclusion ranges over.'
+  - 'The repair preserves both directions of the repaired reader: an unresolved column stays a schema-class obligation, an unreadable column stays an instance-class obligation, and a readable duplicate still produces the instance fan-out finding even when other supplied rows are unreadable.'
+  - 'No new diagnostic, obligation, catalogue code, corpus case, accounting disposition, or primitive-standing change. The obligation and the diagnostic already exist; only the branch that chooses between them moves.'
+  - 'The scope of the claim stays the INSTANCE the evidence covers: the reader may not claim uniqueness over unseen rows or an unobserved larger dataset.'
+  - 'The five controls committed by REL-WITNESS-COLUMN-RESOLUTION-01 are retained unchanged, and the original sentinel repair is not reverted.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
