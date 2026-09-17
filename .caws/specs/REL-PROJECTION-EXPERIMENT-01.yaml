@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: projection-experiment
 created_at: '2026-09-17T23:43:32.892Z'
-updated_at: '2026-09-17T23:44:27.335Z'
+updated_at: '2026-09-17T23:44:29.017Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
@@ -19,6 +19,7 @@ scope:
     - 'packages/ds-codegen/src/analytical'
     - 'docs/architecture/analytical-relation-doctrine.md'
     - 'docs/current-implementation-snapshot.md'
+    - packages/ds-contracts/analytical-fixtures
   out: []
 invariants:
   - 'SEQUENCING DECISION, recorded at entry: this slice permits a bounded experiment against the current analytical basis while stage 2 remains UNRATIFIED. It does not ratify stage 2, does not adjudicate any unresolved census coordinate, and does not satisfy REL-VIEW-ALGEBRA-01''s acceptance. Experiment results are CONDITIONAL on the basis named here, and a successful projection result is NOT retrospective proof of coordinate necessity.'
