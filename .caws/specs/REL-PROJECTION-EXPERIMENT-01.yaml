@@ -2,9 +2,10 @@ id: REL-PROJECTION-EXPERIMENT-01
 title: 'Bounded stage-3 experiment: does one fixed analytical authority yield structurally different lawful projections without a form name selecting the result'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: projection-experiment
 created_at: '2026-09-17T23:43:32.892Z'
-updated_at: '2026-09-17T23:43:32.892Z'
+updated_at: '2026-09-17T23:44:27.335Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
