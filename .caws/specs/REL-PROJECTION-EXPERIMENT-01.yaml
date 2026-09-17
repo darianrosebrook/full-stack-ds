@@ -56,6 +56,14 @@ acceptance:
       The strong observer reports the disagreement and the declaration-reading
       observer does not, so the experiment cannot pass by inspecting its own
       certificate of success.
+  - id: A4
+    given: 'The experiment retains its result.'
+    when: 'The artifact is read.'
+    then: >-
+      It carries the actual normalized candidate sets rather than counts, the
+      consumed inputs, each candidate's admission, refusal or obligation reason, and
+      the shared claims and explicit losses across the retained set, together with
+      the non-claims that bound the result to the declared candidate universe.
 non_functional: {}
 contracts:
   - name: 'projection-enumeration'
