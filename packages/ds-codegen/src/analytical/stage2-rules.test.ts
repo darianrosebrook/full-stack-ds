@@ -388,6 +388,51 @@ describe("REL_GRAIN_FANOUT from the declaration — double-counted revenue, orde
       // and the schema-class obligation for a MISSING witness is a different fact.
       expect(termsOf(run(unknownGrain(["order_id"], undefined)))).toEqual([OBLIGATION.GRAIN_DECLARED]);
     });
+
+    /**
+     * COVERAGE IS PART OF THE EVIDENCE.
+     *
+     * The reader reads the rows it can and discards the rest. The two directions
+     * are not symmetric: a repeat among the readable rows refutes uniqueness
+     * over the supplied population, because that population contains them, while
+     * the ABSENCE of a repeat over a proper subset establishes nothing about the
+     * rows that were discarded — any one of them may carry a key that repeats
+     * one already read. Grain evidence ranges over exactly the population the
+     * reader could see.
+     */
+    const blind = { amount: { value: 5 } };
+    const uniqueThenBlind = [...unique, blind];
+    const repeatingThenBlind = [unique[0], { ...unique[0] }, blind];
+    const revealedFresh = [...unique, { order_id: { value: "o3" }, amount: { value: 5 } }];
+    const revealedRepeat = [...unique, { order_id: { value: "o1" }, amount: { value: 5 } }];
+
+    it("leaves the grain obligation outstanding when a supplied row could not be read", () => {
+      const j = run(unknownGrain(["order_id"], uniqueThenBlind));
+      expect(j.status).toBe("unproven");
+      expect(codesOf(j)).toEqual([]);
+      expect(termsOf(j)).toEqual([OBLIGATION.GRAIN_DECLARED]);
+    });
+
+    it("still reports instance fan-out for a readable repeat beside an unreadable row", () => {
+      // Coverage does not weaken the refuting direction: the repeat is observed,
+      // and the discarded row cannot un-observe it.
+      const j = run(unknownGrain(["order_id"], repeatingThenBlind));
+      expect(codesOf(j)).toEqual([DIAG.GRAIN_FANOUT]);
+      expect(j.diagnostics[0].evidenceClass).toBe("instance");
+    });
+
+    it("discharges the obligation when the unreadable row is revealed as a fresh key", () => {
+      // The same three supplied rows as the unproven case above, with the one
+      // value the reader could not see. Both completions agree with every
+      // observation it had, which is why neither conclusion was available then.
+      expect(run(unknownGrain(["order_id"], revealedFresh)).status).toBe("admissible");
+    });
+
+    it("produces the diagnostic when the unreadable row is revealed as a duplicate", () => {
+      const j = run(unknownGrain(["order_id"], revealedRepeat));
+      expect(codesOf(j)).toEqual([DIAG.GRAIN_FANOUT]);
+      expect(j.diagnostics[0].evidenceClass).toBe("instance");
+    });
   });
 
   it("admits either side after a one-to-one join, where nothing is repeated", () => {
