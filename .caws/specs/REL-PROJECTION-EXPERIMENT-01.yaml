@@ -32,6 +32,20 @@ acceptance:
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
     then: 'given stage 2 is unratified and its census still carries unresolved coordinates; when a bounded experiment enumerates projections for one admitted analytical object; then the candidate universe arises from the product of declared projection choices and their constraints rather than from a catalogue of desired forms, no form name participates at any layer below L4, and the enumerated set is retained as actual programs with their consumed inputs and their admission, refusal or obligation reason'
+  - id: A2
+    given: 'The doctrine precommits four metamorphic controls for stage 3.'
+    when: 'The enumerator is run over the frozen basis under each perturbation.'
+    then: >-
+      The expectations are recorded before the results are read and the run reports
+      the ACTUAL membership delta for each: ratio to ordinal removes every candidate
+      whose task-bearing assignment requires ratio capacity and preserves the
+      nominal and ordinal compatible alternatives; grain declared to unknown removes
+      candidates whose legality depends on grain, preserves candidates whose
+      admissibility does not inspect grain, and carries the grain obligation;
+      non-cyclic to cyclic adds at least one cyclic-capable assignment where the
+      target inventory provides angle and removes no unrelated cartesian or tabular
+      candidate; and the irrelevant semantic perturbation leaves the normalized set
+      byte-identical.
 non_functional: {}
 contracts:
   - name: 'projection-enumeration'
