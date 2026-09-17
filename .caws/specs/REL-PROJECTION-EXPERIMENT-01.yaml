@@ -8,7 +8,9 @@ updated_at: '2026-09-17T23:43:32.892Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/projection.ts (projection model, channel capacities, task table, enumerator, claim observer)'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts (precommitted expectations, the four metamorphic controls, the observer-sensitivity control)'
+    - 'docs/architecture/analytical-relation-doctrine.md (the explicit sequencing decision)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -18,7 +20,13 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'SEQUENCING DECISION, recorded at entry: this slice permits a bounded experiment against the current analytical basis while stage 2 remains UNRATIFIED. It does not ratify stage 2, does not adjudicate any unresolved census coordinate, and does not satisfy REL-VIEW-ALGEBRA-01''s acceptance. Experiment results are CONDITIONAL on the basis named here, and a successful projection result is NOT retrospective proof of coordinate necessity.'
+  - 'The basis is identified with its ACTUAL admission evidence, not its provisional status: fixture FX_N_STOCK_SUM_ALONG_PRODUCT, relation stock with grain [product, date] declared, fields product (nominal), date (interval/instant), on_hand (ratio, semi-additive with nonAdditiveAlong [date]); its canonical judgment is admissible with zero diagnostics and zero obligations. The facts the projection rules consume are transformation (ratio for the measure, nominal for the dimension), additivity.kind and nonAdditiveAlong (which partitions may be summed), and the declared grain (which makes grain-dependent candidates decidable).'
+  - 'A premise whose truth matters to a candidate is ESTABLISHED, carried as an OBLIGATION, or shown IRRELEVANT to that candidate. Provisional status is never a substitute: no candidate may be admitted by a note saying a premise''s ratification is pending.'
+  - 'The candidate space ARISES from the declared projection choices and their constraints. An enumerator that accepts a catalogue of desired forms and checks their predicates is not this experiment, and form aliases remain downstream names that no layer below L4 reads.'
+  - 'The observer must inspect the claims the actual projection PROGRAM induces - its assignments, baseline, ordering and structural choices - against independently justified expectations for the declared task. An observer that reads the candidate''s own preservedClaims declaration and reports success is the false pass this slice exists to prevent, and the sensitivity control (mutate one claim-bearing choice, leave the declared explanation unchanged) must separate the two.'
+  - 'All control expectations are recorded BEFORE the enumerator''s results are read, and the retained artifact carries the actual normalized candidate SETS rather than counts, alongside the consumed inputs and each candidate''s reason.'
+  - 'Non-claims carried from entry: no stage-2 closure, no completion of stage 3, no rendered or navigational behaviour, no cross-substrate claim, and no proof that a more elaborate lookup implementation could not mimic a finite test set. Generalization is pressured later by unfamiliar recombinations, not declared here.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
