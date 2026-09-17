@@ -46,6 +46,16 @@ acceptance:
       target inventory provides angle and removes no unrelated cartesian or tabular
       candidate; and the irrelevant semantic perturbation leaves the normalized set
       byte-identical.
+  - id: A3
+    given: 'An observer can read a candidate''s own preservedClaims declaration.'
+    when: >-
+      The strong observer instead derives claims from the actual projection program,
+      and one claim-bearing choice is mutated while the declared explanation is left
+      unchanged.
+    then: >-
+      The strong observer reports the disagreement and the declaration-reading
+      observer does not, so the experiment cannot pass by inspecting its own
+      certificate of success.
 non_functional: {}
 contracts:
   - name: 'projection-enumeration'
