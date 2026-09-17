@@ -195,6 +195,7 @@ export const UNIDENTIFIED_MODULES: Readonly<Record<string, string>> = {
   "erasure-audit.ts": "computes the footprint report and checks the committed one against a fresh computation; a changed rule cannot leave the recorded report identical",
   "freeze.ts": "records and checks the stage-2 freeze the same way",
   "legacy-comparison.ts": "compares the live ledgers against the legacy record; it reports a difference and adjudicates nothing",
+  "projection.ts": "consumes the relation authority for the bounded stage-3 experiment and records a committed candidate-set ledger it byte-checks against a fresh computation; it feeds no verdict and is not a rule source, and a changed projection rule cannot leave the recorded ledger identical",
 };
 
 /** Local `./x.js` imports of one analytical module, by basename. */
