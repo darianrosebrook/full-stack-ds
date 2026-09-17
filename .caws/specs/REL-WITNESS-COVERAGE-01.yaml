@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: witness-coverage
 created_at: '2026-09-17T22:51:42.934Z'
-updated_at: '2026-09-17T23:00:39.190Z'
+updated_at: '2026-09-17T23:01:58.539Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
@@ -19,6 +19,7 @@ scope:
     - 'packages/ds-contracts/analytical-fixtures'
     - docs/current-implementation-snapshot.md
     - docs/architecture/analytical-relation-doctrine.md
+    - README.md
   out: []
 invariants:
   - 'Repetition and uniqueness are established over different populations: a readable subset can refute uniqueness, and only full readable coverage can establish it. Discarding an unreadable supplied row must not silently narrow the population the conclusion ranges over.'
