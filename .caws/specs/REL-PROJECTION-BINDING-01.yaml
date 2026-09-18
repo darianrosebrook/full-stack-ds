@@ -2,9 +2,11 @@ id: REL-PROJECTION-BINDING-01
 title: 'Bind one admitted analytical operation through the projection boundary and observe its claims through two consumers'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Bound the admitted analytical operation through the projection boundary: every retained topology carries it, two structurally different consumers recover the same values by evaluating it rather than by trusting a claim label, a mutated field/grouping/aggregate is detected, the demonstrated omitted-partition and additivity-kind defects are repaired, and two precommitted predictions are recorded as refuted rather than as vacuous passes.'
 created_at: '2026-09-18T00:46:16.362Z'
-updated_at: '2026-09-18T00:47:09.796Z'
+updated_at: '2026-09-18T00:59:49.467Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
