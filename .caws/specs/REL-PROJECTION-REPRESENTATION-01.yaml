@@ -2,9 +2,11 @@ id: REL-PROJECTION-REPRESENTATION-01
 title: 'One admitted sum result, two produced representations, and recovery observed from the representations alone'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Recovered the bound sum from two produced representations by decoders that see only their own output: extents 60 and 210 decode to 30 and 105 through the declared scale, a bumped extent and a shifted group binding are both detected with the total held at 135, the enumerator now filters on result facts and refuses unsupported aggregates and relations, and the earlier shared-evaluator interpretation is withdrawn in the record.'
 created_at: '2026-09-18T02:06:06.181Z'
-updated_at: '2026-09-18T02:06:07.325Z'
+updated_at: '2026-09-18T02:59:51.957Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
