@@ -32,7 +32,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { RelationalStructure as RelationalStructureSchema } from "./relation-model.js";
-import type { FieldDecl, RelationalStructure, Transformation } from "./relation-model.js";
+import type { AggregateOp, FieldDecl, RelationalStructure, Transformation } from "./relation-model.js";
 import { CONTRACTS_DIR, loadOracle } from "./necessity.js";
 
 /* ------------------------------------------------------------------ types */
@@ -82,6 +82,96 @@ export type Claim =
 
 export type BaselineDecl = "zero" | "truncated";
 
+/**
+ * The analytical operation a projection DISPLAYS, carried as a bound object.
+ *
+ * A topology alone does not say which analysis it shows. The same coordinate and
+ * channel assignment can display a sum taken over one dimension, a sum taken
+ * over another, or the raw observations; those are different analytical claims
+ * with the same picture. Binding the operation is what lets a consumer recover
+ * the displayed values and an observer check them, instead of a later consumer
+ * choosing the analysis or a claim label standing in for it.
+ */
+export type BoundOperation = {
+  relation: string;
+  field: string;
+  op: AggregateOp;
+  /** The dimensions the aggregate is taken OVER. */
+  along: string[];
+  /** The grain of the RESULT: the declared grain minus `along`. */
+  resultGrain: string[];
+};
+
+/** A supplied row of the population a consumer is exercised over. */
+export type Row = Record<string, number | string>;
+
+export type GroupValue = { key: string; value: number };
+export type OperationResult = { grain: string[]; groups: GroupValue[]; total: number };
+
+/** The admitted assertion, carried into the projection boundary. */
+export type AggregateAssertionDecl = { relation: string; field: string; op: AggregateOp; along?: readonly string[] };
+
+export function bindOperation(structure: RelationalStructure, assertion: AggregateAssertionDecl): BoundOperation {
+  const rel = structure.relations[assertion.relation];
+  if (!rel) throw new Error(`the bound operation names relation ${assertion.relation}, which the structure does not declare`);
+  const grain = Array.isArray(rel.grain) ? [...rel.grain] : [];
+  if (grain.length === 0) throw new Error("the bound operation needs a declared grain: without it the result grain is not established");
+  const along = [...(assertion.along ?? [])].sort();
+  const resultGrain = grain.filter((g) => !along.includes(g)).sort();
+  if (resultGrain.length === 0) throw new Error("the operation sums over every grain column, so it has no result grain to display");
+  return { relation: assertion.relation, field: assertion.field, op: assertion.op, along, resultGrain };
+}
+
+/**
+ * Why a binding does not resolve against the structure it is asserted of, or
+ * `undefined` when it does. A binding that names a field the relation does not
+ * declare, or sums over a dimension the declared grain does not contain, has no
+ * established result grain — which is the corpus's `grain:declared` obligation,
+ * not a favorable branch.
+ */
+export function operationResolves(op: BoundOperation | undefined, facts: BasisFacts): string | undefined {
+  if (!op) return "the program carries no operation";
+  if (!facts.fieldNames.includes(op.field)) return `the operation aggregates ${op.field}, which the relation does not declare`;
+  const grain = Array.isArray(facts.grain) ? (facts.grain as string[]) : [];
+  const stray = op.along.filter((a) => !grain.includes(a));
+  if (stray.length > 0) return `the operation sums over ${stray.join(", ")}, which the declared grain does not contain`;
+  const expected = grain.filter((g) => !op.along.includes(g)).sort();
+  if (JSON.stringify(expected) !== JSON.stringify([...op.resultGrain].sort())) {
+    return `the result grain [${op.resultGrain.join(", ")}] is not the declared grain minus the summed-over dimensions [${expected.join(", ")}]`;
+  }
+  if (op.resultGrain.length === 0) return "the operation has no result grain to display";
+  return undefined;
+}
+
+/** Structural identity of two bindings. A binding is a claim, so it compares by value. */
+export function matchesAdmitted(program: BoundOperation, admitted: BoundOperation): boolean {
+  const same = (a: readonly string[], b: readonly string[]) => JSON.stringify([...a].sort()) === JSON.stringify([...b].sort());
+  return (
+    program.relation === admitted.relation &&
+    program.field === admitted.field &&
+    program.op === admitted.op &&
+    same(program.along, admitted.along) &&
+    same(program.resultGrain, admitted.resultGrain)
+  );
+}
+
+/**
+ * The operation evaluated over a supplied population. This is the INDEPENDENT
+ * side of every consumer check: expected values come from here, never from the
+ * classification function that decides whether a candidate is admitted.
+ */
+export function evaluateOperation(op: BoundOperation, rows: readonly Row[]): OperationResult {
+  const sums = new Map<string, number>();
+  for (const row of rows) {
+    const key = op.resultGrain.map((g) => String(row[g] ?? "")).join("|");
+    const v = row[op.field];
+    if (typeof v !== "number") throw new Error(`a supplied row does not carry a numeric ${op.field}`);
+    sums.set(key, (sums.get(key) ?? 0) + v);
+  }
+  const groups = [...sums.entries()].map(([key, value]) => ({ key, value })).sort((x, y) => x.key.localeCompare(y.key));
+  return { grain: op.resultGrain, groups, total: groups.reduce((n, g) => n + g.value, 0) };
+}
+
 /** A program is a point in the projection product space. */
 export type Program = {
   coordinate: CoordinateSpace;
@@ -91,12 +181,23 @@ export type Program = {
   task: Task;
   /** What the author SAYS it preserves. Never the thing the observer reads. */
   claims: Claim[];
+  /** The admitted operation this program displays. A program without one is not retained. */
+  operation: BoundOperation;
 };
 
 export type Refusal = { program: Program; cause: string; detail: string };
 export type Undecided = { program: Program; obligation: string; detail: string };
 
 export type Enumeration = {
+  /**
+   * How the product was disposed of, so a closure statement names its
+   * POST-EXCLUSION population rather than implying every triple was judged:
+   * `considered` is every coordinate/channel/channel triple the inventory can
+   * host, `excluded` are the ones a channel has no slot for at all, and
+   * `disposed` is considered minus excluded - the set the three arrays below
+   * partition.
+   */
+  population: { considered: number; excluded: number; disposed: number };
   retained: Program[];
   refused: Refusal[];
   undecided: Undecided[];
@@ -110,6 +211,8 @@ export type TargetInventory = {
 
 /** The analytical facts the projection rules are allowed to read. */
 export type BasisFacts = {
+  /** Every field the relation declares, so a binding can be resolved against it. */
+  fieldNames: string[];
   dimension: { transformation: Transformation; key: boolean; cyclic: boolean };
   measure: {
     transformation: Transformation;
@@ -186,6 +289,7 @@ export function basisFacts(structure: RelationalStructure, relation: string, dim
   };
   const m = f(measure);
   return {
+    fieldNames: Object.keys(rel.fields ?? {}).sort(),
     dimension: { transformation: f(dimension).transformation, key: f(dimension).key === true, cyclic: f(dimension).cyclic === true },
     measure: {
       transformation: m.transformation,
@@ -247,7 +351,14 @@ export type EnumerationInput = {
   facts: BasisFacts;
   task: Task;
   inventory: TargetInventory;
-  /** Which dimension the composition invariant partitions over, if any. */
+  /** The admitted operation every retained program must display. */
+  operation: BoundOperation;
+  /**
+   * Which dimension the composition invariant partitions over. OMITTING IT IS A
+   * MISSING PREMISE, not a default: the composition task's partition is a
+   * decision-relevant input, and an absent one leaves the candidates undecided
+   * rather than taking the branch a favorable completion would have taken.
+   */
   partitionDimension?: string;
 };
 
@@ -289,6 +400,8 @@ export function enumerate(input: EnumerationInput): Enumeration {
   const retained: Program[] = [];
   const refused: Refusal[] = [];
   const undecided: Undecided[] = [];
+  let considered = 0;
+  let excluded = 0;
 
   for (const coordinate of inventory.spaces) {
     for (const dimensionChannel of inventory.channels) {
@@ -296,14 +409,15 @@ export function enumerate(input: EnumerationInput): Enumeration {
         if (!CAPACITY[dimensionChannel].spaces.includes(coordinate)) continue;
         if (!CAPACITY[measureChannel].spaces.includes(coordinate)) continue;
         if (dimensionChannel === measureChannel) continue;
-        const p: Program = { coordinate, dimension: dimensionChannel, measure: measureChannel, baseline: "zero", task, claims: [] };
+        considered += 1;
+        const p: Program = { coordinate, dimension: dimensionChannel, measure: measureChannel, baseline: "zero", task, claims: [], operation: input.operation };
 
         if ("notEnumerated" in spec) {
           continue; // the task's preconditions are not implemented here; see TASK_INVARIANTS
         }
 
         const dimVerdict = capacityVerdict(dimensionChannel, facts.dimension.transformation, facts, "dimension");
-        if (dimVerdict === "excluded") continue;
+        if (dimVerdict === "excluded") { excluded += 1; continue; }
         if (dimVerdict) {
           refused.push({ program: p, cause: dimVerdict.cause, detail: dimVerdict.detail });
           continue;
@@ -313,22 +427,65 @@ export function enumerate(input: EnumerationInput): Enumeration {
           continue;
         }
         const measVerdict = capacityVerdict(measureChannel, facts.measure.transformation, facts, "measure");
-        if (measVerdict === "excluded") continue;
+        if (measVerdict === "excluded") { excluded += 1; continue; }
         if (measVerdict) {
           refused.push({ program: p, cause: measVerdict.cause, detail: measVerdict.detail });
           continue;
         }
 
-        // Composition additionally requires additivity over the partition
-        // dimension: a partition of a measure that is not additive along it
-        // double-counts or lies, and the cause is the corpus's own.
-        if (task === "composition" && input.partitionDimension && facts.measure.nonAdditiveAlong.includes(input.partitionDimension)) {
-          refused.push({
+        // THE BINDING IS A PREMISE. A program that does not carry the admitted
+        // operation does not say which analysis it displays, so it is not
+        // retained: the result grain it would show is unestablished, and
+        // `grain:declared` is the corpus's own obligation for exactly that.
+        const bindingProblem = operationResolves(p.operation, facts);
+        if (bindingProblem) {
+          undecided.push({
             program: p,
-            cause: "REL_ADDITIVITY_SUM_SEMIADDITIVE",
-            detail: `the measure is declared non-additive along ${input.partitionDimension}, and a composition partitions over it`,
+            obligation: "grain:declared",
+            detail: `${bindingProblem}, so the grain of the result it displays is not established`,
           });
           continue;
+        }
+
+        // Composition requires additivity over the partition dimension, and the
+        // partition is a DECISION-RELEVANT input. An omitted one is a missing
+        // premise and is carried, never resolved by the branch a favorable
+        // completion would have taken; a contradiction that IS established is
+        // refused under the corpus's own cause.
+        if (task === "composition") {
+          const kind = facts.measure.additivityKind;
+          if (!input.partitionDimension) {
+            undecided.push({
+              program: p,
+              obligation: "invariant:exhaustive",
+              detail: "the composition declares no partition dimension, so which partition its parts must exhaust is not established",
+            });
+            continue;
+          }
+          if (kind === "non-additive") {
+            refused.push({
+              program: p,
+              cause: "REL_ADDITIVITY_SUM_SEMIADDITIVE",
+              detail: "the measure is declared non-additive, so no partition of it is summable",
+            });
+            continue;
+          }
+          if (kind === "ratio-measure") {
+            refused.push({
+              program: p,
+              cause: "REL_RATIO_MEASURE_AVERAGED",
+              detail: `a rate must re-derive from its numerator and denominator at ${input.partitionDimension}, and a composition of it averages instead`,
+            });
+            continue;
+          }
+          if (kind === "semi-additive" && facts.measure.nonAdditiveAlong.includes(input.partitionDimension)) {
+            refused.push({
+              program: p,
+              cause: "REL_ADDITIVITY_SUM_SEMIADDITIVE",
+              detail: `the measure is declared non-additive along ${input.partitionDimension}, and a composition partitions over it`,
+            });
+            continue;
+          }
         }
 
         const induced = inducedClaims(candidate(p, p.baseline), facts);
@@ -351,7 +508,12 @@ export function enumerate(input: EnumerationInput): Enumeration {
       }
     }
   }
-  return { retained: sortPrograms(retained), refused: sortRefusals(refused), undecided: sortUndecided(undecided) };
+  return {
+    population: { considered, excluded, disposed: considered - excluded },
+    retained: sortPrograms(retained),
+    refused: sortRefusals(refused),
+    undecided: sortUndecided(undecided),
+  };
 }
 
 const candidate = (p: Program, baseline: BaselineDecl): Program => ({ ...p, baseline });
@@ -380,6 +542,84 @@ export function programObserver(p: Program, facts: BasisFacts): { ok: boolean; i
   const induced = inducedClaims(p, facts);
   return { ok: spec.requires.every((c) => induced.includes(c)), induced, missing: spec.requires.filter((c) => !induced.includes(c)) };
 }
+
+/* -------------------------------------------------------------- consumers */
+
+/**
+ * A consumer recovers the bound operation's values through ONE topology. Its
+ * expected side is `evaluateOperation` over the supplied population; its
+ * recovered side comes from the program. A consumer that agreed with a
+ * classification function about a label would have demonstrated nothing, so the
+ * comparison here is over VALUES.
+ */
+export type ConsumerReport = {
+  channel: "text" | "length";
+  ok: boolean;
+  /** What the consumer recovered through this topology. */
+  recovered: GroupValue[];
+  /** What the admitted operation evaluates to, independently of the topology. */
+  expected: GroupValue[];
+  reason?: string;
+};
+
+const sameGroups = (a: readonly GroupValue[], b: readonly GroupValue[]) => JSON.stringify(a) === JSON.stringify(b);
+
+/**
+ * The readback consumer: every group's key and its exact value, readable.
+ * It declines a topology that is not a readback channel, and it refuses a
+ * program whose binding does not match the admitted operation BEFORE evaluating
+ * it, so a coinciding-values mutation is caught structurally as well.
+ */
+export function readbackConsumer(program: Program, admitted: BoundOperation, rows: readonly Row[]): ConsumerReport {
+  const expected = evaluateOperation(admitted, rows).groups;
+  if (!matchesAdmitted(program.operation, admitted)) {
+    return { channel: "text", ok: false, recovered: evaluateOperation(program.operation, rows).groups, expected, reason: "binding-mismatch" };
+  }
+  if (!CAPACITY[program.measure].valueReadback) return { channel: "text", ok: false, recovered: [], expected, reason: "not-a-readback-channel" };
+  const recovered = evaluateOperation(program.operation, rows).groups;
+  return { channel: "text", ok: sameGroups(recovered, expected), recovered, expected, ...(sameGroups(recovered, expected) ? {} : { reason: "value-disagreement" }) };
+}
+
+/**
+ * The metric consumer: the same groups as magnitudes on a length channel over a
+ * declared zero baseline. It declines a topology that makes no positional
+ * magnitude claim, so the two consumers are structurally different rather than
+ * two spellings of one.
+ */
+export function metricConsumer(program: Program, admitted: BoundOperation, rows: readonly Row[]): ConsumerReport {
+  const expected = evaluateOperation(admitted, rows).groups;
+  if (!matchesAdmitted(program.operation, admitted)) {
+    return { channel: "length", ok: false, recovered: evaluateOperation(program.operation, rows).groups, expected, reason: "binding-mismatch" };
+  }
+  if (CAPACITY[program.measure].valueReadback) return { channel: "length", ok: false, recovered: [], expected, reason: "not-a-metric-channel" };
+  if (program.baseline !== "zero") return { channel: "length", ok: false, recovered: [], expected, reason: "no-declared-zero-baseline" };
+  const recovered = evaluateOperation(program.operation, rows).groups;
+  return { channel: "length", ok: sameGroups(recovered, expected), recovered, expected, ...(sameGroups(recovered, expected) ? {} : { reason: "value-disagreement" }) };
+}
+
+/**
+ * The observer, extended from the program to its BINDING: it derives which
+ * consumer the topology licenses, runs it, and requires the values it recovered
+ * to equal the admitted operation's own evaluation. It never reads `claims`.
+ */
+export function bindingObserver(
+  program: Program,
+  admitted: BoundOperation,
+  rows: readonly Row[],
+): { ok: boolean; channel: "text" | "length" | "none"; recovered: GroupValue[]; expected: GroupValue[]; reason?: string } {
+  const report = CAPACITY[program.measure].valueReadback ? readbackConsumer(program, admitted, rows) : metricConsumer(program, admitted, rows);
+  const channel = CAPACITY[program.measure].valueReadback ? ("text" as const) : ("length" as const);
+  if (!report.ok) return { ok: false, channel, recovered: report.recovered, expected: report.expected, reason: report.reason };
+  return { ok: true, channel, recovered: report.recovered, expected: report.expected };
+}
+
+/** The supplied population the consumers are exercised over. */
+export const CONSUMER_POPULATION: readonly Row[] = [
+  { product: "A", date: "day1", on_hand: 10, reserved: 1 },
+  { product: "B", date: "day1", on_hand: 20, reserved: 2 },
+  { product: "A", date: "day2", on_hand: 100, reserved: 3 },
+  { product: "B", date: "day2", on_hand: 5, reserved: 4 },
+];
 
 /* ------------------------------------------------ precommitted predictions */
 
@@ -416,6 +656,17 @@ export type ControlReport = {
   control: string;
   expected: string;
   actual: string;
+  /** The general requirement the control states, which may hold vacuously. */
+  requirementMet: boolean;
+  /**
+   * A CONCRETE prediction the precommit made that this run REFUTED. Refuted is
+   * not vacuous: the general requirement can have an empty applicable set while
+   * the named members of that set were wrong, and collapsing the two would
+   * discard what the run taught.
+   */
+  predictionRefuted: boolean;
+  /** What the run taught where a prediction was refuted. */
+  correction?: string;
   ok: boolean;
 };
 
@@ -434,6 +685,17 @@ export const EXPERIMENT_TARGET: TargetInventory = {
 
 export type ExperimentResult = {
   basis: string;
+  /** The admitted operation every retained program displays. */
+  binding: BoundOperation;
+  /** What the product space did, so a closure names its post-exclusion set. */
+  population: { considered: number; excluded: number; disposed: number };
+  consumers: {
+    readback: ConsumerReport;
+    metric: ConsumerReport;
+    /** The same population under the aggregation direction the declaration forbids. */
+    forbiddenDirection: { operation: BoundOperation; result: OperationResult; readbackRejects: boolean };
+  };
+  bindingMutation: { mutated: BoundOperation; readback: ConsumerReport; rejectedBeforeConsumption: boolean; valueDisagreement: boolean };
   consumed: Record<string, unknown>;
   retained: Program[];
   refused: Refusal[];
@@ -520,8 +782,20 @@ export function runExperiment(): ExperimentResult {
   const base = legal(fixture.structure as RelationalStructure, "basis");
   const facts = basisFacts(base, BASIS.relation, BASIS.dimension, BASIS.measure);
 
+  // The operation the entry record cited: the fixture's OWN admitted assertion,
+  // bound once and carried through every candidate.
+  const aggregate = fixture.assertions.find((a) => a.kind === "aggregate");
+  if (!aggregate) throw new Error(`basis fixture ${BASIS_FIXTURE} carries no aggregate assertion to bind`);
+  const admitted = bindOperation(base, aggregate as AggregateAssertionDecl);
+
   const run = (s: RelationalStructure, task: Task = "magnitude-comparison") =>
-    enumerate({ facts: basisFacts(s, BASIS.relation, BASIS.dimension, BASIS.measure), task, inventory: EXPERIMENT_TARGET, partitionDimension: BASIS.partitionDimension });
+    enumerate({
+      facts: basisFacts(s, BASIS.relation, BASIS.dimension, BASIS.measure),
+      task,
+      inventory: EXPERIMENT_TARGET,
+      operation: admitted,
+      partitionDimension: BASIS.partitionDimension,
+    });
 
   const baseline = run(base);
   const dimOrdinal = run(legal(withDimensionOrdinal(base), "dimension nominal->ordinal"));
@@ -553,26 +827,35 @@ export function runExperiment(): ExperimentResult {
         `preserved ${keptByOrdinal.length}. MEASURED VACUITY: the preservation limb has no members for THIS task, because magnitude-comparison requires ratio ` +
         `comparability and every retained program derives it from the measure's scale. The narrowing is not blanket - see the targeted-narrowing control, ` +
         `which removes the nominal-only dimension channels and preserves the rest.`,
-      ok: removedByOrdinal.length === baseKeys.length && ratioDependent && keptByOrdinal.length === 0,
+      requirementMet: removedByOrdinal.length === baseKeys.length && ratioDependent,
+      predictionRefuted: true,
+      correction:
+        "The precommit named the value-readback programs as the alternatives a ratio->ordinal move must preserve. Ten existed and none survived: magnitude comparison requires ratio comparability, and a readable ordinal value does not supply it. The general same-task preservation requirement has an empty applicable set for this task; the CONCRETE prediction was wrong.",
+      ok: false,
     },
     {
       control: "declared->unknown",
       expected: `${PRECOMMITTED["declared->unknown"].mustRemove}; ${PRECOMMITTED["declared->unknown"].mustPreserve}; carry ${PRECOMMITTED["declared->unknown"].mustCarry}`,
-      actual: `retained ${retainedKeys(unknownGrain).length} of ${baseKeys.length}, undecided ${unknownGrain.undecided.length} carrying ${[...new Set(unknownGrain.undecided.map((u) => u.obligation))].join(", ") || "nothing"}`,
-      ok:
-        retainedKeys(unknownGrain).length > 0 &&
+      actual: `retained ${retainedKeys(unknownGrain).length} of ${baseKeys.length}, undecided ${unknownGrain.undecided.length} carrying ${[...new Set(unknownGrain.undecided.map((u) => u.obligation))].join(", ") || "nothing"} — with the operation bound, EVERY topology depends on the result grain`,
+      requirementMet:
         retainedKeys(unknownGrain).length < baseKeys.length &&
         unknownGrain.undecided.length > 0 &&
         unknownGrain.undecided.every((u) => u.obligation === "grain:declared"),
+      predictionRefuted: true,
+      correction:
+        "The precommit treated the value-readback family as not inspecting grain, and that was true only of a program carrying no grain-bearing content. A BOUND program names a result grain, so an unknown grain leaves that grain unestablished in every topology: the removal is universal, not selective. This is a consequence of the missing binding the predecessor result was corrected for, and it is recorded as a refutation rather than absorbed.",
+      ok: false,
     },
     {
       control: "non-cyclic->cyclic",
       expected: `${PRECOMMITTED["non-cyclic->cyclic"].mustAdd}; ${PRECOMMITTED["non-cyclic->cyclic"].mustNotRemove} (both sides sit on the ORDINAL dimension, so the cyclic claim is the only fact that differs)`,
       actual: `added ${retainedKeys(cyclic).filter((k) => !retainedKeys(cyclicBaseline).includes(k)).length} cyclic-capable assignment(s), removed ${retainedKeys(cyclicBaseline).filter((k) => !retainedKeys(cyclic).includes(k)).length}`,
-      ok:
+      requirementMet:
         retainedKeys(cyclic).length > retainedKeys(cyclicBaseline).length &&
         retainedKeys(cyclicBaseline).every((k) => retainedKeys(cyclic).includes(k)) &&
         cyclic.retained.some((p) => p.dimension === "angle" || p.measure === "angle"),
+      predictionRefuted: false,
+      ok: true,
     },
     {
       control: "targeted-narrowing",
@@ -594,11 +877,15 @@ export function runExperiment(): ExperimentResult {
           kept.some((k) => ["position", "text"].includes(k.split("|")[1]))
         );
       })(),
+      requirementMet: true,
+      predictionRefuted: false,
     },
     {
       control: "irrelevant-perturbation",
       expected: PRECOMMITTED["irrelevant-perturbation"].mustEqual,
       actual: `${JSON.stringify(retainedKeys(irrelevant)) === JSON.stringify(baseKeys) ? "identical" : "MOVED"} (${baseKeys.length} programs)`,
+      requirementMet: JSON.stringify(retainedKeys(irrelevant)) === JSON.stringify(baseKeys),
+      predictionRefuted: false,
       ok: JSON.stringify(retainedKeys(irrelevant)) === JSON.stringify(baseKeys),
     },
   ];
@@ -623,14 +910,46 @@ export function runExperiment(): ExperimentResult {
   const union = [...new Set(perProgramClaims.flatMap((c) => c.induced))].sort();
   const shared = union.filter((c) => perProgramClaims.every((x) => x.induced.includes(c)));
 
+  // Two structurally different programs over the SAME bound operation: one
+  // readback, one metric. Their expected side is the operation, not a label.
+  const readbackProgram = baseline.retained.find((p) => CAPACITY[p.measure].valueReadback)!;
+  const metricProgram = baseline.retained.find((p) => !CAPACITY[p.measure].valueReadback && p.baseline === "zero")!;
+  const readback = readbackConsumer(readbackProgram, admitted, CONSUMER_POPULATION);
+  const metric = metricConsumer(metricProgram, admitted, CONSUMER_POPULATION);
+
+  // The direction the semi-additivity declaration forbids, over the same
+  // population: the discriminator is the VALUES, not the topology.
+  const forbidden: BoundOperation = { ...admitted, along: ["date"], resultGrain: ["product"] };
+  const forbiddenDirection = {
+    operation: forbidden,
+    result: evaluateOperation(forbidden, CONSUMER_POPULATION),
+    readbackRejects: readbackConsumer(readbackProgram, forbidden, CONSUMER_POPULATION).ok === false,
+  };
+
+  // The binding mutation: one claim-bearing part of the operation moves while
+  // the program's declared explanation does not.
+  const mutatedBinding: BoundOperation = { ...admitted, field: "reserved" };
+  const mutatedProgram: Program = { ...readbackProgram, operation: mutatedBinding };
+  const mutationReport = readbackConsumer(mutatedProgram, admitted, CONSUMER_POPULATION);
+
   return {
     basis: BASIS_FIXTURE,
+    binding: admitted,
+    population: baseline.population,
+    consumers: { readback, metric, forbiddenDirection },
+    bindingMutation: {
+      mutated: mutatedBinding,
+      readback: mutationReport,
+      rejectedBeforeConsumption: mutationReport.reason === "binding-mismatch",
+      valueDisagreement: !sameGroups(mutationReport.recovered, mutationReport.expected),
+    },
     consumed: {
       relation: BASIS.relation,
       grain: facts.grain,
       dimension: facts.dimension,
       measure: facts.measure,
       task: "magnitude-comparison",
+      binding: `${admitted.op}(${admitted.relation}.${admitted.field}) over [${admitted.along.join(", ")}] -> grain [${admitted.resultGrain.join(", ")}]`,
       target: EXPERIMENT_TARGET.id,
       inventoryChannels: EXPERIMENT_TARGET.channels.length,
       inventorySpaces: EXPERIMENT_TARGET.spaces.length,
@@ -655,17 +974,71 @@ export function runExperiment(): ExperimentResult {
   };
 }
 
-/** The composition probe: the same authority, a task the measure cannot serve. */
-export function compositionProbe(): { retained: number; refused: number; causes: string[] } {
+/**
+ * The composition probe: the same authority, a task the measure can and cannot
+ * serve — and the case where the DECISION-RELEVANT partition is simply absent.
+ *
+ * The three populations are the point. `product` is the lawful completion,
+ * `date` is the contradiction the semi-additivity declaration establishes, and
+ * the OMITTED case must resolve to neither: an absent premise is carried as an
+ * obligation, because treating it as the favorable completion is exactly the
+ * fault this probe exists to catch.
+ */
+export function compositionProbe(): {
+  lawful: { partition: string; retained: number; refused: number };
+  unlawful: { partition: string; retained: number; refused: number; causes: string[] };
+  omitted: { retained: number; refused: number; undecided: number; obligations: string[] };
+} {
   const fixture = loadOracle().fixtures.get(BASIS_FIXTURE)!;
   const base = fixture.structure as RelationalStructure;
-  const e = enumerate({
-    facts: basisFacts(base, BASIS.relation, BASIS.dimension, BASIS.measure),
-    task: "composition",
-    inventory: EXPERIMENT_TARGET,
-    partitionDimension: BASIS.partitionDimension,
-  });
-  return { retained: e.retained.length, refused: e.refused.length, causes: [...new Set(e.refused.map((r) => r.cause))].sort() };
+  const aggregate = fixture.assertions.find((a) => a.kind === "aggregate")!;
+  const admitted = bindOperation(base, aggregate as AggregateAssertionDecl);
+  const facts = basisFacts(base, BASIS.relation, BASIS.dimension, BASIS.measure);
+  const run = (partitionDimension?: string) =>
+    enumerate({ facts, task: "composition", inventory: EXPERIMENT_TARGET, operation: admitted, partitionDimension });
+  const lawful = run("product");
+  const unlawful = run(BASIS.partitionDimension);
+  const omitted = run(undefined);
+  return {
+    lawful: { partition: "product", retained: lawful.retained.length, refused: lawful.refused.length },
+    unlawful: {
+      partition: BASIS.partitionDimension,
+      retained: unlawful.retained.length,
+      refused: unlawful.refused.length,
+      causes: [...new Set(unlawful.refused.map((r) => r.cause))].sort(),
+    },
+    omitted: {
+      retained: omitted.retained.length,
+      refused: omitted.refused.length,
+      undecided: omitted.undecided.length,
+      obligations: [...new Set(omitted.undecided.map((u) => u.obligation))].sort(),
+    },
+  };
+}
+
+/** The composition premise over a measure whose KIND, not its dimension set, contradicts it. */
+export function compositionKindProbe(): Record<string, { retained: number; refused: number; causes: string[] }> {
+  const fixture = loadOracle().fixtures.get(BASIS_FIXTURE)!;
+  const base = fixture.structure as RelationalStructure;
+  const aggregate = fixture.assertions.find((a) => a.kind === "aggregate")!;
+  const admitted = bindOperation(base, aggregate as AggregateAssertionDecl);
+  const out: Record<string, { retained: number; refused: number; causes: string[] }> = {};
+  for (const kind of ["non-additive", "ratio-measure"] as const) {
+    const rel = base.relations[BASIS.relation];
+    const mutated = legal(
+      { ...base, relations: { ...base.relations, [BASIS.relation]: { ...rel, fields: { ...rel.fields, [BASIS.measure]: { ...rel.fields[BASIS.measure], additivity: { kind } } } } } },
+      `additivity ${kind}`,
+    );
+    const e = enumerate({
+      facts: basisFacts(mutated, BASIS.relation, BASIS.dimension, BASIS.measure),
+      task: "composition",
+      inventory: EXPERIMENT_TARGET,
+      operation: admitted,
+      partitionDimension: "product",
+    });
+    out[kind] = { retained: e.retained.length, refused: e.refused.length, causes: [...new Set(e.refused.map((r) => r.cause))].sort() };
+  }
+  return out;
 }
 
 /* ---------------------------------------------------------------- ledger */
@@ -680,6 +1053,10 @@ export const NON_CLAIMS = [
   "The precommit's third distinctness limb names projection FAMILY (visual / tabular / textual / navigational) beside coordinate space and channel assignment. This experiment has no separate family axis: the coordinate space stands in for it, so two programs both in `tabular` are not told apart by family. The distinctness count is therefore over coordinate, channel and baseline, and a family-level claim is NOT established here.",
   "A program is a projection TOPOLOGY - coordinate, the channel each task-bearing variable is assigned to, and the baseline - not an encoded artifact. Marks, scales, axes, label placement and emission are downstream of it and are not enumerated, so nothing here establishes that any program can be realized.",
   "Residue is enumerated per target family at stage 5; this experiment retains the realization-specific residue it observes but does not claim the stage-5 enumeration.",
+  "THE PREDECESSOR'S ALL-PASS INTERPRETATION IS CORRECTED HERE. Topology enumeration is established; the attribution of established analytical preservation and loss to a topology whose analytical operation was unbound was an overclaim. That binding now travels with every program and is checked by value, but the correction itself stands as the record of what the earlier result did not establish.",
+  "The general same-task preservation requirement can have an EMPTY applicable set, and that is not the same thing as a concrete prediction being confirmed. The predecessor precommit named the value-readback programs as the alternatives to preserve; none survived, so that prediction was REFUTED. The targeted-narrowing control added alongside it is subsequent evidence that some narrowing is selective, not retrospective confirmation.",
+  "A consumer recovers the bound operation's values through one topology over ONE supplied population. That establishes the binding controls what is displayed for that population; it is not a general theorem about the topology, and it says nothing about rendered output, which does not exist.",
+  "The two consumers differ in topology and in how the value is carried; both recover the same numbers because the same operation is bound. That is the shared analytical proposition, and it is established for the declared population only.",
 ];
 
 export function ledgerOf(r: ExperimentResult): Record<string, unknown> {
@@ -699,6 +1076,17 @@ export function ledgerOf(r: ExperimentResult): Record<string, unknown> {
     refused: r.refused,
     undecided: r.undecided,
     distinctAfterFixedAuthority: r.distinctAfterFixedAuthority,
+    population: r.population,
+    binding: r.binding,
+    consumers: r.consumers,
+    bindingMutation: r.bindingMutation,
+    correctedAccount: {
+      readbackPrediction: "REFUTED. The precommit named the value-readback programs as the alternatives a ratio->ordinal move must preserve. Ten existed and none survived: magnitude comparison requires ratio comparability, and a readable ordinal value does not supply it. The general same-task preservation requirement therefore had an EMPTY applicable set for this task, but that does not retroactively confirm the concrete prediction, which was wrong.",
+      grainPrediction: "ALSO REFUTED, and the refutation is a consequence of the missing binding this slice corrects. The precommit treated the value-readback family as not inspecting grain; that was true only of a program carrying no grain-bearing content. A bound program names a result grain, so an unknown grain leaves that grain unestablished in EVERY topology. Two of the four precommitted metamorphic controls therefore carry refuted concrete predictions rather than confirmed ones, and the controls array reports requirementMet and predictionRefuted separately so the general requirement is not confused with the concrete one.",
+      closurePopulation: "The closure statement is about the POST-EXCLUSION population: considered minus excluded. Triples a channel has no slot for are not judgments, and they are counted rather than implied.",
+      lossLabels: "A `loss` here is an absent property NAME, not a measured information loss. It does not distinguish a lost analytical proposition from the absence of a perceptual encoding, and this experiment does not measure the former.",
+      residue: "Realization-level residue remains UNMEASURED; the projection-level variation below is observed projection variation and does not satisfy the residue clause.",
+    },
     sharedClaims: r.claims.shared,
     claimUnion: r.claims.union,
     perProgramClaims: r.claims.perProgram,
@@ -706,6 +1094,7 @@ export function ledgerOf(r: ExperimentResult): Record<string, unknown> {
     controls: r.controls,
     observerControl: r.observer,
     compositionProbe: compositionProbe(),
+    compositionKindProbe: compositionKindProbe(),
     nonClaims: NON_CLAIMS,
   };
 }
