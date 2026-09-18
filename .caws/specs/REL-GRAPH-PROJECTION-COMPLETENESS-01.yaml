@@ -1,0 +1,32 @@
+id: REL-GRAPH-PROJECTION-COMPLETENESS-01
+title: 'M2 opening: soundness, bounded completeness and the anti-lookup controls over the graph candidate space'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-18T18:07:25.458Z'
+updated_at: '2026-09-18T18:07:25.458Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/projection.ts (the independently derived lawful set and the membership controls)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+  out: []
+invariants:
+  - 'BOUNDED COMPLETENESS IS CHECKED AGAINST AN INDEPENDENTLY DERIVED SET, not against the enumerator output. The expectation is computed by direct reasoning over the capacity table and the stated domain restriction, without calling enumerateGraph, so a candidate the implementation never generates is visible as a missing member.'
+  - 'PRE-COMMITS ARE MEMBERSHIP, NOT COUNTS. A removed capability must remove exactly the predicted candidates and preserve the unaffected ones serving the same task; the predicted membership is recorded before the run.'
+  - 'UNPROVEN IS NOT CONTRADICTION AND NEITHER IS UNIMPLEMENTED SUPPORT. A candidate whose premise is missing, one the facts forbid, and a task whose preconditions are not implemented carry different dispositions and must not collapse.'
+  - 'No new candidate space is opened: this is the graph topology universe already implemented, and no widening into OHLC, all tasks, combinators, layout or stage-2.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the graph topology candidate space over a declared target inventory; when soundness, bounded completeness and the anti-lookup controls are measured; then every retained candidate satisfies the premises, the retained set equals an independently derived lawful set, capability removal changes membership exactly as precommitted, and the zero/one/multiple and unproven cases carry distinct dispositions'
+non_functional: {}
+contracts:
+  - name: 'graph-completeness'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/graph-projection.test.ts'
