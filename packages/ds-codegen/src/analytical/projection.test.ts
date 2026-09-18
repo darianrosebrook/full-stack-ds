@@ -284,6 +284,32 @@ describe("A4 — a changed analytical binding is detected without trusting the e
     expect(bindingObserver(mutated, admitted, CONSUMER_POPULATION).ok).toBe(false);
   });
 
+  /**
+   * A RECORDED LIMITATION, PINNED SO IT CANNOT DRIFT SILENTLY.
+   *
+   * These assertions document what the observers do NOT check. They are not
+   * aspirations: the first fails the day an observer starts validating topology
+   * admissibility, and the second the day one starts consulting grain status.
+   * When that happens this test must be updated to assert the check, rather than
+   * the limitation quietly disappearing while A3 and A4 keep claiming no more
+   * than they do today.
+   */
+  it("records that neither observer checks topology admissibility or grain status", () => {
+    const inHostile: Program = { ...metricProgram, coordinate: "non-metric" as never };
+    expect(CAPACITY[inHostile.measure].spaces).not.toContain("non-metric");
+    // The enumerator refuses it; both observers accept it.
+    expect(enumeration.retained.some((p) => programKey(p) === programKey(inHostile))).toBe(false);
+    expect(programObserver(inHostile, facts).ok).toBe(true);
+    expect(bindingObserver(inHostile, admitted, CONSUMER_POPULATION).ok).toBe(true);
+
+    const unknownGrain = { ...facts, grain: "unknown" };
+    const unknownEnumeration = enumerate({ facts: unknownGrain, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, operation: admitted });
+    expect(unknownEnumeration.retained).toEqual([]);
+    expect(unknownEnumeration.undecided.length).toBeGreaterThan(0);
+    expect(programObserver(metricProgram, unknownGrain).ok).toBe(true);
+    expect(bindingObserver(metricProgram, admitted, CONSUMER_POPULATION).ok).toBe(true);
+  });
+
   it("accepts the unmutated pair through the same observer", () => {
     const observed = bindingObserver(readbackProgram, admitted, CONSUMER_POPULATION);
     expect(observed.ok).toBe(true);
