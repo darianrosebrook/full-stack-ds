@@ -38,6 +38,15 @@ acceptance:
       scale rather than re-evaluating, each decoder receives only its own
       representation, and the recovered values are distinguished from the
       aggregation direction the declaration forbids.
+  - id: A3
+    given: 'A representation carries the result.'
+    when: >-
+      One metric extent is changed, and separately the group bindings are shifted
+      while every value is held.
+    then: >-
+      Both changes are detected: the recovered set differs from the operation's, and
+      the binding mutation is detected even though the numeric total is unchanged,
+      so preservation is distinguished from agreement on a total.
 non_functional: {}
 contracts:
   - name: 'representation-recovery'
