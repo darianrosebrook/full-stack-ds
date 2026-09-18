@@ -21,7 +21,12 @@ scope:
     - 'docs/architecture/analytical-relation-doctrine.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The predecessor''s interpretation is CORRECTED, not discarded: its product construction, retained baseline sets and scale/grain/cyclic sensitivities stand; what is withdrawn is the claim that every retained program preserves the analytical claims attributed to it, and the precommit''s concrete readback-preservation prediction is recorded as REFUTED rather than vacuous.'
+  - 'A relevant premise that is unavailable is CARRIED as an obligation; a contradiction that is established is REFUSED. An omitted composition partition selects no completion, and no unrelated catalogue diagnostic is assigned to keep a result inside the existing cause list.'
+  - 'Expected values for a consumer come from the bound operation evaluated over a supplied population, NEVER from inducedClaims. A consumer that passes because its own classification function agrees with itself has demonstrated nothing.'
+  - 'Every asserted loss names what becomes unrecoverable, and an unmeasured loss stays unmeasured. Changing a claim label is not evidence of information loss.'
+  - 'Out of scope and not to be widened into: OHLC and graph support, the eight unimplemented tasks, projection combinators, production emission, stage-2 census accounting, and exhaustive realization residue. A need to redesign the projection algebra is a stopping result, not permission to widen.'
+  - 'Stage 2 stays unratified. This slice ratifies no coordinate and does not change the sequencing decision recorded for the predecessor experiment.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
