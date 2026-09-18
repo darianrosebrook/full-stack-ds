@@ -47,6 +47,9 @@ import {
   enumerate,
   evaluateOperation,
   lawfulRelationPrograms,
+  IMPLEMENTED_TASKS,
+  RESULT_KINDS,
+  projectionSupport,
   ledgerOf,
   metricConsumer,
   relationMembership,
@@ -57,7 +60,7 @@ import {
   recover,
   runExperiment,
 } from "./projection.js";
-import type { AggregateAssertionDecl, Program } from "./projection.js";
+import type { AggregateAssertionDecl, Program, TargetInventory } from "./projection.js";
 import type { RelationalStructure } from "./relation-model.js";
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -214,18 +217,78 @@ describe("A2 — a relevant premise is carried, and an established contradiction
     expect(probe["ratio-measure"].refusedAtAdmission).toMatch(/REL_RATIO_MEASURE_AVERAGED/);
   });
 
-  it("admits no candidate for a task whose preconditions this experiment does not implement", () => {
+  it("reports a task it does not implement as UNSUPPORTED, not as a task whose candidates all failed", () => {
     const notImplemented = (Object.entries(TASK_INVARIANTS) as Array<[string, unknown]>).filter(([, v]) => "notEnumerated" in (v as object));
-    // Eight until `topology` acquired preconditions; the RELATION path cannot
-    // serve topology either, because a relation-shaped operation induces no
-    // incidence claim — that is checked below rather than by the count.
     expect(notImplemented.length).toBe(7);
     expect(Object.keys(TASK_INVARIANTS)).toContain("topology");
-    expect(enumerate({ structure, admitted, task: "topology" as never, inventory: EXPERIMENT_TARGET }).retained).toEqual([]);
     for (const [task, v] of notImplemented) {
       const e = enumerate({ structure, admitted, task: task as never, inventory: EXPERIMENT_TARGET });
       expect(e.retained, `${task} must admit nothing while ${JSON.stringify((v as { notEnumerated: string }).notEnumerated)} is unimplemented`).toEqual([]);
+      // The disposition, not the emptiness, is the claim. `retained === []` alone
+      // is satisfied by "we searched and the facts forbade everything", which is
+      // a judgment this experiment never made.
+      expect(e.support.supported, `${task} is not implemented here`).toBe(false);
+      expect(e.refused, `${task} must carry no analytical cause: there is no rule to name`).toEqual([]);
+      expect(e.population.considered).toBe(0);
     }
+  });
+
+  it("does not treat a task implemented on ANOTHER path as one whose requirements merely went unmet", () => {
+    // `topology` has a `requires` entry because the GRAPH path implements it. The
+    // relation path reaching for that entry would report "incidence-recoverable
+    // was not induced" as though it had judged something.
+    expect(IMPLEMENTED_TASKS.graph).toContain("topology");
+    const e = enumerate({ structure, admitted, task: "topology", inventory: EXPERIMENT_TARGET });
+    expect(e.support.supported).toBe(false);
+    expect(e.support.supported === false && e.support.obligation).toBe("invariant:topology-on-relation");
+    expect(e.refused).toEqual([]);
+    expect(e.population.considered).toBe(0);
+  });
+});
+
+describe("support is decided at the request boundary, before any candidate exists", () => {
+  it("agrees with itself across inventories that host everything and nothing", () => {
+    const empty: TargetInventory = { id: "none", channels: [], spaces: [] };
+    expect(enumerate({ structure, admitted, task: "distribution", inventory: empty }).support).toEqual(
+      enumerate({ structure, admitted, task: "distribution", inventory: EXPERIMENT_TARGET }).support,
+    );
+    // ...and the same for a SUPPORTED task: an empty inventory is a search that
+    // found nothing, which is a different thing from a request never searched.
+    const supportedEmpty = enumerate({ structure, admitted, task: "magnitude-comparison", inventory: empty });
+    expect(supportedEmpty.support.supported).toBe(true);
+    expect(supportedEmpty.population.considered).toBe(0);
+    expect(supportedEmpty.retained).toEqual([]);
+    expect(supportedEmpty.support).not.toEqual(enumerate({ structure, admitted, task: "distribution", inventory: empty }).support);
+  });
+
+  it("carries the task's requirements on the SUPPORTED arm, so the task table cannot contradict the decision", () => {
+    for (const kind of RESULT_KINDS) {
+      for (const task of IMPLEMENTED_TASKS[kind]) {
+        const decision = projectionSupport(kind, task);
+        expect(decision.supported, `${kind} claims to implement ${task}`).toBe(true);
+        const spec = TASK_INVARIANTS[task];
+        expect("notEnumerated" in spec, `${kind}/${task} is claimed implemented and the task table says otherwise`).toBe(false);
+        expect(decision.supported && [...decision.requires]).toEqual("notEnumerated" in spec ? [] : [...spec.requires]);
+      }
+    }
+  });
+
+  it("keeps the two paths' implemented sets disjoint and both non-empty", () => {
+    for (const kind of RESULT_KINDS) expect(IMPLEMENTED_TASKS[kind].length).toBeGreaterThan(0);
+    const relationTasks = IMPLEMENTED_TASKS.relation as readonly string[];
+    const graphTasks = IMPLEMENTED_TASKS.graph as readonly string[];
+    expect(relationTasks.filter((x) => graphTasks.includes(x))).toEqual([]);
+    // Every task is either implemented somewhere or named as not enumerated, and
+    // no task is claimed by a path whose table entry says it is not built.
+    for (const task of RESULT_KINDS.flatMap((k) => IMPLEMENTED_TASKS[k])) {
+      expect(Object.keys(TASK_INVARIANTS)).toContain(task);
+    }
+  });
+
+  it("the independently derived lawful set refuses an unsupported task rather than answering that none is lawful", () => {
+    expect(() => lawfulRelationPrograms(facts, "distribution", EXPERIMENT_TARGET)).toThrow(/does not implement it/);
+    // A supported task still derives normally.
+    expect(lawfulRelationPrograms(facts, "magnitude-comparison", EXPERIMENT_TARGET).length).toBeGreaterThan(0);
   });
 });
 
