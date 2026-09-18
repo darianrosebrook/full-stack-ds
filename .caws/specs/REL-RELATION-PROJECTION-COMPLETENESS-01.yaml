@@ -3,7 +3,6 @@ title: 'M2: soundness, bounded completeness and anti-lookup controls for the rel
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: relation-completeness
 created_at: '2026-09-18T18:19:18.577Z'
 updated_at: '2026-09-18T18:19:20.619Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
