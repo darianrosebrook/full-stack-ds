@@ -1,0 +1,37 @@
+id: REL-GRAPH-NODE-UNIVERSE-01
+title: 'Carry an independently declared node universe and its edge incidence through two produced representations'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-18T04:28:28.282Z'
+updated_at: '2026-09-18T04:28:28.282Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/graph-projection.ts (GraphBinding, evaluateGraph, the two representations and their decoders)'
+    - 'packages/ds-codegen/src/analytical/graph-projection.test.ts (the decisive pair and the identity mutation)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'docs/current-implementation-status.md'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'The node universe is DECLARED, never inferred. A consumer must not derive the node population from edge endpoints, and must not infer the binding from fields that happen to be named id, src and dst. The declaration is validated against the structure before any representation exists.'
+  - 'The decisive pair is two structures with an IDENTICAL edge relation and different declared node populations. A representation that reconstructs nodes from edge endpoints collapses them, and that collapse is exhibited rather than asserted.'
+  - 'The identity-preserving mutation replaces the isolated node identity while keeping the node count and the edge set. Recovery must detect the wrong IDENTITY; agreement on three nodes and one edge is not sufficient.'
+  - 'The authority''s own graph operand declares no node relation, and that absence is recorded as the residual rather than repaired here: this slice declares the binding as an explicit validated premise, it does not extend the zod model, and it does not touch schema emission or the stage-2 ledgers.'
+  - 'No layout, marks, interaction, accessibility implementation, general combinators, or redesign of the analytical algebra. A requirement for any of those is a stopping finding.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given two structures whose edge relation is identical and whose declared node populations differ by one isolated node; when the node universe is declared as a binding, validated against the structure, and carried through two produced representations; then both representations recover the exact node identities and the incidence, the two structures are distinguished, and a representation that derives nodes from edge endpoints is shown to collapse them'
+non_functional: {}
+contracts:
+  - name: 'graph-node-universe'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/graph-projection.test.ts'
