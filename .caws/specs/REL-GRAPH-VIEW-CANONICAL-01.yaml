@@ -3,7 +3,6 @@ title: 'A canonical graph-view declaration with a graph-valued result, authored 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: graph-view-canonical
 created_at: '2026-09-18T08:13:07.705Z'
 updated_at: '2026-09-18T08:13:09.135Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
