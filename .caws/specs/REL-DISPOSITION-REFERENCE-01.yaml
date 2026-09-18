@@ -65,3 +65,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts: reports a task it does not implement as UNSUPPORTED, not as a task whose candidates all failed (pnpm exec vitest run packages/ds-codegen/src/analytical, 22 files 986 tests green)"
     recorded_at: "2026-09-18T18:57:41.587Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "projection.test.ts: support is decided at the request boundary - agrees with itself across inventories that host everything and nothing (pnpm exec vitest run packages/ds-codegen/src/analytical, 22 files 986 tests green)"
+    recorded_at: "2026-09-18T18:57:42.080Z"
