@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts: support is decided at the request boundary - agrees with itself across inventories that host everything and nothing (pnpm exec vitest run packages/ds-codegen/src/analytical, 22 files 986 tests green)"
     recorded_at: "2026-09-18T18:57:42.080Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts: does not treat a task implemented on ANOTHER path as one whose requirements merely went unmet (pnpm exec vitest run packages/ds-codegen/src/analytical, 22 files 986 tests green)"
+    recorded_at: "2026-09-18T18:57:42.574Z"
