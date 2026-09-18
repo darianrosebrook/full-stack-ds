@@ -70,3 +70,8 @@ contracts:
   - name: 'projection-enumeration'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/projection.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical (21 files / 903 tests, projection.test.ts contributing 23) and pnpm test (4124 tests), typecheck and lint green, governed:rail and test:frameworks green in the worktree on merge 1387c4d8. The A1 group asserts, over the live run: at least two structurally different lawful programs from the SAME fixed authority; every retained program keeps the task fixed and satisfies the channel capacity rules read from the module table; the DENYLIST CHECK, which strips the quarantined FORM_ALIASES table and all comments from projection.ts and then fails if any name in analytical-pack/form-names.json appears elsewhere in the module; and that every refusal cause the enumerator emits is a cause extractDoctrineDiagnostics finds in the doctrine catalogue. MEASURED: 42 retained, 57 refused, 0 undecided, 42 structurally distinct after the authority is frozen; refusal causes are REL_AREA_INTERVAL_SCALE 11, REL_BASELINE_RATIO_CLAIM 11, REL_CYCLIC_ANGLE_NONCYCLIC 4, REL_HUE_CARRIES_ORDER 16, REL_SEQUENTIAL_ON_NOMINAL 15, every one a catalogue cause. Dispositions are exhaustive and each refusal carries a non-empty detail, so no candidate is silently dropped. NON-CLAIM: no form name participates below L4 and the check is mechanical, but a denylist is a word list; the structural claim rests on the candidate space being a product of declared choices, not on the denylist alone."
+    recorded_at: "2026-09-18T00:02:07.336Z"
