@@ -8,7 +8,9 @@ updated_at: '2026-09-18T18:46:36.338Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/projection.ts (the support decision at the enumerator boundary, and the relation-path reference comparison)'
+    - 'packages/ds-codegen/src/analytical/graph-projection.ts (task-scoped soundness, the endpoint and key-field necessity records)'
+    - 'packages/ds-contracts/analytical-fixtures/graph-experiment.json (the corrected necessity census)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -17,35 +19,38 @@ scope:
     - 'packages/ds-contracts/analytical-fixtures'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'ABSENT IMPLEMENTATION IS NOT A SEMANTIC JUDGMENT. A task the experiment does not implement is reported as unsupported, decided at the request boundary before any candidate exists, and never as an analytical refusal. A diagnostic cause names a rule the facts violate; using one for a rule that was never written makes "we did not ask" indistinguishable from "the facts forbid it".'
+  - 'Support is decided per RESULT KIND and task together. A task implemented on one path is not thereby implemented on another, and the support decision does not read the inventory, so an empty inventory cannot turn an unsupported request into an ordinary empty result.'
+  - 'A necessity disposition is bounded by the premise that established it. Withdrawing a minimality claim does not license adding a restriction to rescue it, and a redundancy that holds under a unique-key premise is not a family-wide erasure permission.'
+  - 'A soundness helper answers the question its name asks. It checks the declared task, or it is explicitly scoped to the topology programs it was written for.'
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'An enumerator invocation naming a result kind and a task the experiment does not implement, with a non-empty inventory.'
+    when: 'The enumeration is inspected.'
     then: 'given a result kind and task the experiment does not implement; when the enumerator is invoked; then it returns an explicit unsupported disposition decided before candidate generation and no candidate carries an analytical diagnostic for absent implementation'
   - id: A2
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The same unimplemented task with an inventory that hosts no channel at all.'
+    when: 'The enumeration is inspected.'
     then: 'given an empty inventory and an unimplemented task; when the enumerator is invoked; then the unsupported disposition is returned rather than a silently empty result'
   - id: A3
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The task name `topology` requested through the relation-valued path and through the graph path.'
+    when: 'Each path''s support decision is inspected.'
     then: 'given one task name on the relation path and the graph path; when support is decided; then topology is supported on the graph path and unsupported on the relation path'
   - id: A4
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The graph-view endpoint binding in the committed census, and an authored source carrying a third declared endpoint field.'
+    when: 'Each single-coordinate neighbour is denoted and the census record is read.'
     then: 'given the graph-view endpoint binding; when each endpoint field is changed alone; then the joint-minimality claim is withdrawn and replaced by independently separating single-coordinate evidence and no new restriction is added to the contract'
   - id: A5
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'An authored source declaring two unique key fields.'
+    when: 'Each keyField binding is denoted and the census record is read.'
     then: 'given a source declaring more than one unique key field; when keyField is changed; then the redundancy disposition is qualified to the single-key premise that established it'
   - id: A6
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'A program whose assignment induces one claim while its declared task requires another.'
+    when: 'The soundness helper is called.'
     then: 'given graphCandidateIsSound; when a program declares a task other than the one its assignment induces claims for; then it is not reported sound'
   - id: A7
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'An inventory and a variant that adds a channel the inventory genuinely does not contain.'
+    when: 'Both memberships are compared.'
     then: 'given the irrelevant-capability control; when the added channel is genuinely absent from the inventory; then membership is unchanged'
 non_functional: {}
 contracts:
