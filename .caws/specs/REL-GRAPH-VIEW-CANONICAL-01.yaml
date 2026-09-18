@@ -30,6 +30,13 @@ acceptance:
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
     then: 'given graph views are authored as declarations in the canonical location; when the decisive source-selection pair is parsed through the loader and denoted; then the two already-earned graphs are reproduced from the parsed declarations rather than from hand-built objects, and the graph-valued result is what both produced representations consume'
+  - id: A2
+    given: 'The canonical declaration path exists.'
+    when: 'Both produced representations are obtained from a parsed declaration.'
+    then: >-
+      Neither producer infers the universe from edges nor reconstructs a binding
+      from field names; a missing population is unproven, a contradictory binding is
+      refused, and the existing identity mutation still fails recovery comparison.
 non_functional: {}
 contracts:
   - name: 'graph-view-canonical'
