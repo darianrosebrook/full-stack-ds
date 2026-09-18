@@ -3,7 +3,6 @@ title: 'Carry an independently declared node universe and its edge incidence thr
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: graph-node-universe
 created_at: '2026-09-18T04:28:28.282Z'
 updated_at: '2026-09-18T04:28:29.718Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
