@@ -81,3 +81,7 @@ evidence:
     status: pass
     evidence_ref: "graph-projection.test.ts: the key-field redundancy holds UNDER A PREMISE, and the counterexample is executed (pnpm exec vitest run packages/ds-codegen/src/analytical, 22 files 986 tests green)"
     recorded_at: "2026-09-18T18:57:43.531Z"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "graph-projection.test.ts: the soundness helper answers the question its name asks (pnpm exec vitest run packages/ds-codegen/src/analytical, 22 files 986 tests green)"
+    recorded_at: "2026-09-18T18:57:44.039Z"
