@@ -30,6 +30,15 @@ acceptance:
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
     then: 'given two structures whose edge relation is identical and whose declared node populations differ by one isolated node; when the node universe is declared as a binding, validated against the structure, and carried through two produced representations; then both representations recover the exact node identities and the incidence, the two structures are distinguished, and a representation that derives nodes from edge endpoints is shown to collapse them'
+  - id: A2
+    given: 'Two structures have an identical edge relation and different declared node populations.'
+    when: >-
+      Both are carried through the two produced representations and through a
+      representation that derives its node list from edge endpoints.
+    then: >-
+      Both representations recover the exact node identities, the incidence and the
+      isolated node, so the pair is distinguished; the edges-derived representation
+      yields the same node list for both and is exhibited as collapsing them.
 non_functional: {}
 contracts:
   - name: 'graph-node-universe'
