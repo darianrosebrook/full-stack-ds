@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: observer-limits
 created_at: '2026-09-18T01:14:41.788Z'
-updated_at: '2026-09-18T01:14:42.966Z'
+updated_at: '2026-09-18T01:15:25.446Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
@@ -17,6 +17,7 @@ scope:
   in:
     - 'packages/ds-codegen/src/analytical'
     - 'packages/ds-contracts/analytical-fixtures'
+    - docs/current-implementation-snapshot.md
   out: []
 invariants:
   - 'The observers check the BINDING and the claims derived from the program. They do not check the topology own admissibility against the capacity table, and they do not consult grain status. Both were reproduced on the merged code and are recorded, not repaired here: a limitation that is left implicit reads as a claim.'
