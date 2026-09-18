@@ -2,9 +2,11 @@ id: REL-RELATION-PROJECTION-COMPLETENESS-01
 title: 'M2: soundness, bounded completeness and anti-lookup controls for the relation-valued candidate space'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'The relation-valued candidate space passes soundness per program and bounded completeness against an independently derived set, and the control corrected the derivation rather than the enumerator: the cyclic licence applies to the dimension role too, and the two sets now agree at twelve.'
 created_at: '2026-09-18T18:19:18.577Z'
-updated_at: '2026-09-18T18:19:20.619Z'
+updated_at: '2026-09-18T18:25:48.701Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
