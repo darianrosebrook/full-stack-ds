@@ -24,7 +24,10 @@ import {
   decodeRelationalGraph,
   denoteGraph,
   deriveNodesFromEdges,
+  declaredGraphViewCoordinates,
   graphLedger,
+  graphOf,
+  graphViewNecessityCensus,
   loadGraphViews,
   VIEW_ALL_NODES,
   VIEW_CONNECTED_SET,
@@ -35,7 +38,7 @@ import {
   renameInOutput,
 } from "./graph-projection.js";
 import { enumerateGraph, inducedGraphClaims, EXPERIMENT_TARGET } from "./projection.js";
-import type { GraphResult } from "./graph-projection.js";
+import type { GraphBinding, GraphResult } from "./graph-projection.js";
 import { GraphViewFile } from "./graph-view-model.js";
 import { CONTRACTS_DIR } from "./necessity.js";
 
@@ -312,5 +315,75 @@ describe("M1 gap — a binding mutant that leaves descriptive metadata unchanged
     expect(a).not.toEqual(b);
     expect(a).toEqual(["n1", "n2", "n3"]);
     expect(b).toEqual(["n1", "n2"]);
+  });
+});
+
+describe("M1 — necessity accounting for the declaration coordinates", () => {
+  it("accounts for EVERY coordinate the emitted schema declares", () => {
+    const declared = declaredGraphViewCoordinates();
+    const census = graphViewNecessityCensus();
+    expect(census.map((c) => c.coordinate).sort()).toEqual(declared);
+    // Derived from the emitted schema, so a field added to the declaration
+    // arrives failing here rather than silently gaining standing.
+    expect(declared).toEqual([
+      "binds.edges.fromField",
+      "binds.edges.relation",
+      "binds.edges.toField",
+      "binds.nodes.keyField",
+      "binds.nodes.relation",
+      "id",
+    ]);
+  });
+
+  it("earns the witnessed dispositions with EXECUTED pairs, not assertions", () => {
+    const byId = new Map(graphViewNecessityCensus().map((c) => [c.coordinate, c]));
+    const nodesRelation = byId.get("binds.nodes.relation")!;
+    expect(nodesRelation.disposition).toBe("witnessed");
+    if (nodesRelation.disposition !== "witnessed") throw new Error("unreachable");
+    // Same source, same edge relation; only the node universe differs.
+    expect(nodesRelation.outcomes).toEqual({ a: "n1,n2,n3", b: "n1,n2" });
+
+    const edgesRelation = byId.get("binds.edges.relation")!;
+    if (edgesRelation.disposition !== "witnessed") throw new Error("unreachable");
+    expect(edgesRelation.outcomes.a).not.toBe(edgesRelation.outcomes.b);
+
+    for (const field of ["binds.edges.fromField", "binds.edges.toField"]) {
+      const c = byId.get(field)!;
+      expect(c.disposition).toBe("witnessed");
+      if (c.disposition !== "witnessed") throw new Error("unreachable");
+      expect(c.pair.differsIn).toContain("JOINTLY");
+      // The reversal changes the DIRECTED incidence and no population at all.
+      expect(c.outcomes).toEqual({ a: "n1->n2", b: "n2->n1" });
+    }
+  });
+
+  it("records the key field as derived, and the reason it is not independent HERE", () => {
+    const key = graphViewNecessityCensus().find((c) => c.coordinate === "binds.nodes.keyField")!;
+    expect(key.disposition).toBe("representation-artifact");
+    if (key.disposition !== "representation-artifact") throw new Error("unreachable");
+    expect(key.reason).toContain("exactly 1 key");
+    expect(key.reason).toContain("more than one key");
+  });
+
+  it("shows by EXECUTION that the declaration id carries no analytical degree of freedom", () => {
+    // Renaming the view and updating its references denotes the same graph, so
+    // the id is an artifact of the declaration's encoding, not a coordinate.
+    const { source, views, declaration } = loadGraphViews();
+    const original = views.get(VIEW_ALL_NODES)!;
+    const renamedDeclaration = { ...declaration, views: declaration.views.map((v) => (v.id === VIEW_ALL_NODES ? { ...v, id: "GV_RENAMED" } : v)) };
+    const renamedView = renamedDeclaration.views.find((v) => v.id === "GV_RENAMED")!;
+    // Same source, same binding, different id: the graph it denotes is unchanged.
+    expect(graphOf(renamedView.binds as GraphBinding, source).nodes).toEqual(graphOf(original, source).nodes);
+    expect(graphOf(renamedView.binds as GraphBinding, source).edges).toEqual(graphOf(original, source).edges);
+    const id = graphViewNecessityCensus().find((c) => c.coordinate === "id")!;
+    expect(id.disposition).toBe("representation-artifact");
+    if (id.disposition !== "representation-artifact") throw new Error("unreachable");
+    expect(id.reason).toContain("SAME GRAPH");
+  });
+
+  it("carries the census in the retained ledger", () => {
+    const census = graphLedger().necessityCensus as Array<{ coordinate: string; disposition: string }>;
+    expect(census).toHaveLength(6);
+    expect(census.every((c) => c.disposition.length > 0)).toBe(true);
   });
 });

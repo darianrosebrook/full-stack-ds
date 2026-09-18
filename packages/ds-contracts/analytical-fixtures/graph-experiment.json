@@ -188,6 +188,70 @@
     "declaresANodeRelation": false,
     "note": "the relation-valued graph derivation is unchanged and retains its documented edge-relation meaning; the graph VIEW is a separate declaration family whose result is a graph, accounted under its own identity rather than by extending the relation algebra"
   },
+  "necessityCensus": [
+    {
+      "coordinate": "binds.nodes.relation",
+      "disposition": "witnessed",
+      "pair": {
+        "a": "GV_ALL_NODES",
+        "b": "GV_CONNECTED_SET",
+        "differsIn": "binds.nodes.relation"
+      },
+      "outcomes": {
+        "a": "n1,n2,n3",
+        "b": "n1,n2"
+      }
+    },
+    {
+      "coordinate": "binds.edges.relation",
+      "disposition": "witnessed",
+      "pair": {
+        "a": "GV_ALL_NODES",
+        "b": "GV_ALL_NODES via links_mirror",
+        "differsIn": "binds.edges.relation"
+      },
+      "outcomes": {
+        "a": "n1->n2",
+        "b": "n2->n1"
+      }
+    },
+    {
+      "coordinate": "binds.nodes.keyField",
+      "disposition": "representation-artifact",
+      "reason": "every candidate node relation in this source declares exactly 1 key, so the identity field is DERIVABLE from the relation's own declaration and is not an independent degree of freedom here. It would be independent for a relation declaring more than one key, and the edge relation declares none, which is why fromField/toField are not derivable the same way."
+    },
+    {
+      "coordinate": "binds.edges.fromField",
+      "disposition": "witnessed",
+      "pair": {
+        "a": "src,dst",
+        "b": "dst,src",
+        "differsIn": "binds.edges.fromField and binds.edges.toField together: they are witnessed only JOINTLY, in a minimal 2-set, because changing one alone yields a degenerate endpoint"
+      },
+      "outcomes": {
+        "a": "n1->n2",
+        "b": "n2->n1"
+      }
+    },
+    {
+      "coordinate": "binds.edges.toField",
+      "disposition": "witnessed",
+      "pair": {
+        "a": "src,dst",
+        "b": "dst,src",
+        "differsIn": "binds.edges.fromField and binds.edges.toField together: they are witnessed only JOINTLY, in a minimal 2-set, because changing one alone yields a degenerate endpoint"
+      },
+      "outcomes": {
+        "a": "n1->n2",
+        "b": "n2->n1"
+      }
+    },
+    {
+      "coordinate": "id",
+      "disposition": "representation-artifact",
+      "reason": "renaming the view and updating its references DENOTES THE SAME GRAPH (executed: the renamed view denotes nodes [n1,n2,n3] over the same edges), so the id carries no analytical degree of freedom. Its role is reference identity, selection and provenance."
+    }
+  ],
   "nonClaims": [
     "This is a bounded experiment on ONE source holding two candidate node universes and one edge relation, plus its isolate-removal neighbor. It does not establish arbitrary graph realization, does not implement a layout, marks, interaction or accessibility, and does not establish the complete projection thesis.",
     "NO CANONICAL-MODEL INTEGRATION. The authority's graph operand declares no node relation, so the binding is an explicit validated PREMISE; the zod model, schema emission and the stage-2 ledgers are untouched. What this slice measures is what the binding OWNS — source selection, key qualification, endpoint membership and the resulting graph object — so that a later placement decision integrates measured semantics rather than a promising shape.",
