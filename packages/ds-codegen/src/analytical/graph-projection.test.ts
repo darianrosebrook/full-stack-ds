@@ -37,7 +37,16 @@ import {
   recoverGraph,
   renameInOutput,
 } from "./graph-projection.js";
-import { enumerateGraph, inducedGraphClaims, EXPERIMENT_TARGET } from "./projection.js";
+import {
+  CAPACITY,
+  enumerateGraph,
+  graphCandidateIsSound,
+  graphMembership,
+  inducedGraphClaims,
+  lawfulGraphTopologies,
+  TASK_INVARIANTS,
+  EXPERIMENT_TARGET,
+} from "./projection.js";
 import type { GraphBinding, GraphResult } from "./graph-projection.js";
 import { GraphViewFile } from "./graph-view-model.js";
 import { CONTRACTS_DIR } from "./necessity.js";
@@ -385,5 +394,88 @@ describe("M1 — necessity accounting for the declaration coordinates", () => {
     const census = graphLedger().necessityCensus as Array<{ coordinate: string; disposition: string }>;
     expect(census).toHaveLength(6);
     expect(census.every((c) => c.disposition.length > 0)).toBe(true);
+  });
+});
+
+describe("M2 — soundness, bounded completeness and the anti-lookup controls", () => {
+  const denoted = graphPreservation(ALL_NODES, SOURCE).result;
+  const run = (inventory: typeof EXPERIMENT_TARGET) => enumerateGraph({ graph: denoted, task: "topology", inventory });
+
+  it("SOUNDNESS: every retained candidate satisfies the declared premises", () => {
+    const e = run(EXPERIMENT_TARGET);
+    expect(e.retained.length).toBeGreaterThan(0);
+    for (const p of e.retained) expect(graphCandidateIsSound(p, EXPERIMENT_TARGET), `${p.nodes}->${p.edges} is unsound`).toBe(true);
+  });
+
+  it("BOUNDED COMPLETENESS: the retained set equals an INDEPENDENTLY derived lawful set", () => {
+    // The expectation does not call the enumerator, so a candidate it never
+    // generates shows up as a missing member rather than as a smaller number.
+    const expected = lawfulGraphTopologies(EXPERIMENT_TARGET).map((t) => `${t.coordinate}|${t.nodes}|${t.edges}`).sort();
+    expect(expected.length).toBeGreaterThan(0);
+    expect(graphMembership(run(EXPERIMENT_TARGET))).toEqual(expected);
+  });
+
+  it("PRE-COMMIT (membership, not count): removing `connection` removes exactly the affected candidates", () => {
+    const full = graphMembership(run(EXPERIMENT_TARGET));
+    // Recorded BEFORE the run: the incidence claim needs a connection channel,
+    // so every retained candidate disappears and nothing survives by luck.
+    const predictedRemoved = full.filter(() => true);
+    const predictedKept: string[] = [];
+    const withoutConnection = { ...EXPERIMENT_TARGET, channels: EXPERIMENT_TARGET.channels.filter((c) => c !== "connection") };
+    const after = graphMembership(run(withoutConnection));
+    expect(after).toEqual(predictedKept);
+    expect(full.filter((k) => !after.includes(k)).sort()).toEqual([...predictedRemoved].sort());
+  });
+
+  it("PRE-COMMIT: removing a NODE channel removes exactly the candidates assigning it", () => {
+    const full = graphMembership(run(EXPERIMENT_TARGET));
+    // `texture` is hosted by non-metric and is therefore actually assigned by a
+    // retained candidate; `text` and `position` are not, which is why they would
+    // make this control vacuous.
+    const channel = "texture" as const;
+    const predictedRemoved = full.filter((k) => k.split("|")[1] === channel);
+    const predictedKept = full.filter((k) => k.split("|")[1] !== channel);
+    const without = { ...EXPERIMENT_TARGET, channels: EXPERIMENT_TARGET.channels.filter((c) => c !== channel) };
+    const after = graphMembership(run(without));
+    expect(predictedRemoved.length).toBeGreaterThan(0);
+    expect(predictedKept.length).toBeGreaterThan(0);
+    expect(after).toEqual(predictedKept);
+  });
+
+  it("INVARIANCE: a capability this domain cannot host changes nothing", () => {
+    // `area` is not hosted by `non-metric`, so it is irrelevant to this space and
+    // must leave the normalized outcome untouched. `shape` would NOT be
+    // irrelevant here - it is a lawful node channel under non-metric, and adding
+    // it correctly ADDS a candidate - which is why the perturbation is chosen by
+    // the capacity table rather than by taste.
+    expect(CAPACITY.area.spaces).not.toContain("non-metric");
+    const withExtra = { ...EXPERIMENT_TARGET, channels: [...EXPERIMENT_TARGET.channels, "area" as const] };
+    expect(graphMembership(run(withExtra))).toEqual(graphMembership(run(EXPERIMENT_TARGET)));
+  });
+
+  it("ZERO, ONE and MULTIPLE lawful results are all reachable", () => {
+    const zero = { ...EXPERIMENT_TARGET, channels: EXPERIMENT_TARGET.channels.filter((c) => c !== "connection") };
+    expect(run(zero).retained).toEqual([]);
+    const one = { ...EXPERIMENT_TARGET, channels: ["connection", "hue"] as const };
+    expect(graphMembership(run(one as typeof EXPERIMENT_TARGET))).toEqual(["non-metric|hue|connection"]);
+    expect(run(EXPERIMENT_TARGET).retained.length).toBeGreaterThan(1);
+  });
+
+  it("keeps UNPROVEN, CONTRADICTION and UNIMPLEMENTED support distinct", () => {
+    // A missing population is carried, not refused and not empty.
+    const missing = denoteGraph(ALL_NODES, { structure: SOURCE.structure, rows: { links: SOURCE.rows.links } });
+    expect(missing.kind).toBe("unproven");
+    // A contradiction is refused.
+    expect(() => denoteGraph(ALL_NODES, { ...SOURCE, rows: { ...SOURCE.rows, links: [{ src: "n1", dst: "n9" }] } })).toThrow(/does not contain/);
+    // An unimplemented task is its own disposition, not an empty set.
+    const unimplemented = Object.entries(TASK_INVARIANTS).filter(([, v]) => "notEnumerated" in (v as object)).map(([k]) => k);
+    expect(unimplemented.length).toBe(7);
+    expect(unimplemented).not.toContain("topology");
+  });
+
+  it("states its excluded population rather than reporting an empty lawful set", () => {
+    const e = run(EXPERIMENT_TARGET);
+    expect(e.population.excluded).toBeGreaterThan(0);
+    expect(e.population.disposed).toBe(e.population.considered - e.population.excluded);
   });
 });
