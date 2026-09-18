@@ -13,11 +13,13 @@
       "date"
     ],
     "dimension": {
-      "transformation": "nominal",
+      "field": "date",
+      "transformation": "interval",
       "key": false,
       "cyclic": false
     },
     "measure": {
+      "field": "sum(on_hand)",
       "transformation": "ratio",
       "additivityKind": "semi-additive",
       "nonAdditiveAlong": [
@@ -46,164 +48,12 @@
       "mustNotRemove": "unrelated cartesian/tabular lawful assignments"
     },
     "irrelevant-perturbation": {
-      "mustEqual": "the normalized retained set, byte-identical"
+      "mustEqual": "the normalized retained set, byte-identical after a declared field no candidate assigns and no task reads is added"
     }
   },
   "retained": [
     {
       "coordinate": "cartesian",
-      "dimension": "connection",
-      "measure": "area",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "connection",
-      "measure": "length",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "connection",
-      "measure": "position",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "connection",
-      "measure": "text",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "hue",
-      "measure": "area",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "hue",
-      "measure": "length",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "hue",
-      "measure": "position",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "hue",
-      "measure": "text",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
       "dimension": "position",
       "measure": "area",
       "baseline": "zero",
@@ -261,82 +111,6 @@
     },
     {
       "coordinate": "cartesian",
-      "dimension": "shape",
-      "measure": "area",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "shape",
-      "measure": "length",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "shape",
-      "measure": "position",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "shape",
-      "measure": "text",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
       "dimension": "text",
       "measure": "area",
       "baseline": "zero",
@@ -376,139 +150,6 @@
     {
       "coordinate": "cartesian",
       "dimension": "text",
-      "measure": "position",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "texture",
-      "measure": "area",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "texture",
-      "measure": "length",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "texture",
-      "measure": "position",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "cartesian",
-      "dimension": "texture",
-      "measure": "text",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "containment",
-      "dimension": "containment",
-      "measure": "text",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "geographic",
-      "dimension": "hue",
-      "measure": "area",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "geographic",
-      "dimension": "hue",
       "measure": "position",
       "baseline": "zero",
       "task": "magnitude-comparison",
@@ -546,63 +187,6 @@
     },
     {
       "coordinate": "lane",
-      "dimension": "hue",
-      "measure": "length",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "lane",
-      "dimension": "hue",
-      "measure": "position",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "lane",
-      "dimension": "hue",
-      "measure": "text",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "lane",
       "dimension": "position",
       "measure": "length",
       "baseline": "zero",
@@ -679,160 +263,8 @@
     },
     {
       "coordinate": "polar",
-      "dimension": "hue",
-      "measure": "length",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "polar",
-      "dimension": "hue",
-      "measure": "position",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "polar",
       "dimension": "position",
       "measure": "length",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "polar",
-      "dimension": "shape",
-      "measure": "length",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "polar",
-      "dimension": "shape",
-      "measure": "position",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "polar",
-      "dimension": "texture",
-      "measure": "length",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "polar",
-      "dimension": "texture",
-      "measure": "position",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "tabular",
-      "dimension": "hue",
-      "measure": "text",
-      "baseline": "zero",
-      "task": "magnitude-comparison",
-      "claims": [],
-      "operation": {
-        "relation": "stock",
-        "field": "on_hand",
-        "op": "sum",
-        "along": [
-          "product"
-        ],
-        "resultGrain": [
-          "date"
-        ]
-      }
-    },
-    {
-      "coordinate": "tabular",
-      "dimension": "texture",
-      "measure": "text",
       "baseline": "zero",
       "task": "magnitude-comparison",
       "claims": [],
@@ -871,7 +303,7 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
@@ -894,7 +326,7 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
@@ -917,7 +349,7 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
@@ -940,7 +372,7 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
@@ -963,7 +395,7 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
@@ -986,7 +418,7 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
@@ -1009,7 +441,7 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
@@ -1032,81 +464,12 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
-    },
-    {
-      "program": {
-        "coordinate": "cartesian",
-        "dimension": "connection",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
-    },
-    {
-      "program": {
-        "coordinate": "cartesian",
-        "dimension": "connection",
-        "measure": "luminance",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_BASELINE_RATIO_CLAIM",
-      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
         "coordinate": "cartesian",
         "dimension": "hue",
-        "measure": "luminance",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_BASELINE_RATIO_CLAIM",
-      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
-    },
-    {
-      "program": {
-        "coordinate": "cartesian",
-        "dimension": "luminance",
         "measure": "area",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -1123,13 +486,13 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
         "coordinate": "cartesian",
-        "dimension": "luminance",
+        "dimension": "hue",
         "measure": "connection",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -1146,36 +509,13 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
         "coordinate": "cartesian",
-        "dimension": "luminance",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
-    },
-    {
-      "program": {
-        "coordinate": "cartesian",
-        "dimension": "luminance",
+        "dimension": "hue",
         "measure": "length",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -1192,13 +532,36 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
         "coordinate": "cartesian",
-        "dimension": "luminance",
+        "dimension": "hue",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "hue",
         "measure": "position",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -1215,13 +578,13 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
         "coordinate": "cartesian",
-        "dimension": "luminance",
+        "dimension": "hue",
         "measure": "shape",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -1238,13 +601,13 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
         "coordinate": "cartesian",
-        "dimension": "luminance",
+        "dimension": "hue",
         "measure": "text",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -1261,13 +624,13 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
         "coordinate": "cartesian",
-        "dimension": "luminance",
+        "dimension": "hue",
         "measure": "texture",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -1284,8 +647,8 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
@@ -1314,52 +677,6 @@
       "program": {
         "coordinate": "cartesian",
         "dimension": "position",
-        "measure": "luminance",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_BASELINE_RATIO_CLAIM",
-      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
-    },
-    {
-      "program": {
-        "coordinate": "cartesian",
-        "dimension": "shape",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
-    },
-    {
-      "program": {
-        "coordinate": "cartesian",
-        "dimension": "shape",
         "measure": "luminance",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -1427,52 +744,6 @@
     },
     {
       "program": {
-        "coordinate": "cartesian",
-        "dimension": "texture",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
-    },
-    {
-      "program": {
-        "coordinate": "cartesian",
-        "dimension": "texture",
-        "measure": "luminance",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_BASELINE_RATIO_CLAIM",
-      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
-    },
-    {
-      "program": {
         "coordinate": "geographic",
         "dimension": "area",
         "measure": "hue",
@@ -1492,7 +763,7 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
@@ -1515,7 +786,7 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
@@ -1538,35 +809,12 @@
         }
       },
       "cause": "REL_AREA_INTERVAL_SCALE",
-      "detail": "area carries ratio only, and this field is nominal"
+      "detail": "area carries ratio only, and this field is interval"
     },
     {
       "program": {
         "coordinate": "geographic",
         "dimension": "hue",
-        "measure": "luminance",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_BASELINE_RATIO_CLAIM",
-      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
-    },
-    {
-      "program": {
-        "coordinate": "geographic",
-        "dimension": "luminance",
         "measure": "area",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -1583,14 +831,14 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
         "coordinate": "geographic",
-        "dimension": "luminance",
-        "measure": "hue",
+        "dimension": "hue",
+        "measure": "luminance",
         "baseline": "zero",
         "task": "magnitude-comparison",
         "claims": [],
@@ -1606,13 +854,13 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
         "coordinate": "geographic",
-        "dimension": "luminance",
+        "dimension": "hue",
         "measure": "position",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -1629,8 +877,8 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
@@ -1681,8 +929,8 @@
     {
       "program": {
         "coordinate": "lane",
-        "dimension": "position",
-        "measure": "hue",
+        "dimension": "hue",
+        "measure": "length",
         "baseline": "zero",
         "task": "magnitude-comparison",
         "claims": [],
@@ -1699,311 +947,12 @@
         }
       },
       "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
         "coordinate": "lane",
-        "dimension": "text",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
-    },
-    {
-      "program": {
-        "coordinate": "non-metric",
-        "dimension": "connection",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
-    },
-    {
-      "program": {
-        "coordinate": "non-metric",
-        "dimension": "shape",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
-    },
-    {
-      "program": {
-        "coordinate": "non-metric",
-        "dimension": "texture",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
-    },
-    {
-      "program": {
-        "coordinate": "polar",
         "dimension": "hue",
-        "measure": "angle",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
-      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
-    },
-    {
-      "program": {
-        "coordinate": "polar",
-        "dimension": "position",
-        "measure": "angle",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
-      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
-    },
-    {
-      "program": {
-        "coordinate": "polar",
-        "dimension": "position",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
-    },
-    {
-      "program": {
-        "coordinate": "polar",
-        "dimension": "shape",
-        "measure": "angle",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
-      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
-    },
-    {
-      "program": {
-        "coordinate": "polar",
-        "dimension": "shape",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
-    },
-    {
-      "program": {
-        "coordinate": "polar",
-        "dimension": "texture",
-        "measure": "angle",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
-      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
-    },
-    {
-      "program": {
-        "coordinate": "polar",
-        "dimension": "texture",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_HUE_CARRIES_ORDER",
-      "detail": "hue is nominal-capacity, and this field is ratio"
-    },
-    {
-      "program": {
-        "coordinate": "tabular",
-        "dimension": "hue",
-        "measure": "luminance",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_BASELINE_RATIO_CLAIM",
-      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
-    },
-    {
-      "program": {
-        "coordinate": "tabular",
-        "dimension": "luminance",
-        "measure": "hue",
-        "baseline": "zero",
-        "task": "magnitude-comparison",
-        "claims": [],
-        "operation": {
-          "relation": "stock",
-          "field": "on_hand",
-          "op": "sum",
-          "along": [
-            "product"
-          ],
-          "resultGrain": [
-            "date"
-          ]
-        }
-      },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
-    },
-    {
-      "program": {
-        "coordinate": "tabular",
-        "dimension": "luminance",
         "measure": "order",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -2020,13 +969,36 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
-        "coordinate": "tabular",
-        "dimension": "luminance",
+        "coordinate": "lane",
+        "dimension": "hue",
+        "measure": "position",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "lane",
+        "dimension": "hue",
         "measure": "text",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -2043,13 +1015,105 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
-        "coordinate": "tabular",
-        "dimension": "luminance",
+        "coordinate": "lane",
+        "dimension": "position",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "lane",
+        "dimension": "text",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "non-metric",
+        "dimension": "hue",
+        "measure": "connection",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "non-metric",
+        "dimension": "hue",
+        "measure": "shape",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "non-metric",
+        "dimension": "hue",
         "measure": "texture",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -2066,13 +1130,266 @@
           ]
         }
       },
-      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
-      "detail": "a sequential ramp implies an order the nominal scale does not have"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
-        "coordinate": "tabular",
-        "dimension": "text",
+        "coordinate": "polar",
+        "dimension": "angle",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "angle",
+        "measure": "length",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "angle",
+        "measure": "position",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "angle",
+        "measure": "shape",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "angle",
+        "measure": "texture",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "hue",
+        "measure": "angle",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "hue",
+        "measure": "length",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "hue",
+        "measure": "position",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "hue",
+        "measure": "shape",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "hue",
+        "measure": "texture",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "position",
+        "measure": "angle",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "position",
         "measure": "hue",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -2095,7 +1412,7 @@
     {
       "program": {
         "coordinate": "tabular",
-        "dimension": "text",
+        "dimension": "hue",
         "measure": "luminance",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -2112,13 +1429,82 @@
           ]
         }
       },
-      "cause": "REL_BASELINE_RATIO_CLAIM",
-      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
     },
     {
       "program": {
         "coordinate": "tabular",
-        "dimension": "texture",
+        "dimension": "hue",
+        "measure": "order",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "hue",
+        "measure": "text",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "hue",
+        "measure": "texture",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": [],
+        "operation": {
+          "relation": "stock",
+          "field": "on_hand",
+          "op": "sum",
+          "along": [
+            "product"
+          ],
+          "resultGrain": [
+            "date"
+          ]
+        }
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is interval"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "text",
         "measure": "hue",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -2141,7 +1527,7 @@
     {
       "program": {
         "coordinate": "tabular",
-        "dimension": "texture",
+        "dimension": "text",
         "measure": "luminance",
         "baseline": "zero",
         "task": "magnitude-comparison",
@@ -2163,11 +1549,11 @@
     }
   ],
   "undecided": [],
-  "distinctAfterFixedAuthority": 42,
+  "distinctAfterFixedAuthority": 12,
   "population": {
     "considered": 168,
-    "excluded": 69,
-    "disposed": 99
+    "excluded": 101,
+    "disposed": 67
   },
   "binding": {
     "relation": "stock",
@@ -2179,6 +1565,100 @@
     "resultGrain": [
       "date"
     ]
+  },
+  "resultFacts": {
+    "sourceRelation": "stock",
+    "sourceGrain": [
+      "product",
+      "date"
+    ],
+    "resultGrain": [
+      "date"
+    ],
+    "dimension": {
+      "field": "date",
+      "transformation": "interval",
+      "key": false,
+      "cyclic": false
+    },
+    "measure": {
+      "field": "sum(on_hand)",
+      "transformation": "ratio",
+      "additivityKind": "semi-additive",
+      "nonAdditiveAlong": [
+        "date"
+      ],
+      "cyclic": false
+    }
+  },
+  "preservation": {
+    "result": [
+      {
+        "key": "day1",
+        "value": 30
+      },
+      {
+        "key": "day2",
+        "value": 105
+      }
+    ],
+    "readback": {
+      "recovered": [
+        {
+          "key": "day1",
+          "value": 30
+        },
+        {
+          "key": "day2",
+          "value": 105
+        }
+      ],
+      "preserved": true
+    },
+    "metric": {
+      "recovered": [
+        {
+          "key": "day1",
+          "value": 30
+        },
+        {
+          "key": "day2",
+          "value": 105
+        }
+      ],
+      "preserved": true,
+      "scale": {
+        "unitsPerValue": 2,
+        "baseline": "zero"
+      }
+    },
+    "mutatedExtent": {
+      "recovered": [
+        {
+          "key": "day1",
+          "value": 30.5
+        },
+        {
+          "key": "day2",
+          "value": 105
+        }
+      ],
+      "preserved": false
+    },
+    "mutatedBinding": {
+      "recovered": [
+        {
+          "key": "day2",
+          "value": 30
+        },
+        {
+          "key": "day1",
+          "value": 105
+        }
+      ],
+      "preserved": false,
+      "totalUnchanged": true
+    }
   },
   "consumers": {
     "readback": {
@@ -2206,7 +1686,7 @@
       ]
     },
     "metric": {
-      "channel": "length",
+      "channel": "area",
       "ok": true,
       "recovered": [
         {
@@ -2301,6 +1781,10 @@
     "valueDisagreement": true
   },
   "correctedAccount": {
+    "operationIdentity": "CORRECTED UPWARD IN FORM AND DOWNWARD IN CLAIM. The guarantee that a candidate carries the admitted operation is now a CONSTRUCTION property - every candidate is stamped from the validated operation, so it cannot carry another - and the boundary validates that operation against the relation it NAMES before any candidate exists. What that does not do is check a caller-supplied operation against some independently established admitted one: the enumerator has no such second authority, so an operation for a different analysis is refused only if it contradicts the relation.",
+    "representationRecovery": "This is what the earlier consumers did NOT establish. Both sides called `evaluateOperation`, so nothing representation-dependent lay between them: agreement showed the binding and channel guards admit one shared evaluation, not that a value survived text or metric encoding. Recovery is now observed through two PRODUCED representations whose decoders receive neither the rows nor the evaluator, and the metric decoder recovers from extents and the DECLARED SCALE alone.",
+    "aggregateDispatch": "REPAIRED. `evaluateOperation` read `op.resultGrain` for grouping while ignoring `op.op`, so mean, min and count all executed as sum, and matching mean descriptors on both sides returned ok while returning sums. The executable contract is now narrowed to sum and every other aggregate name is REFUSED rather than executed.",
+    "metricChannelLabel": "REPAIRED. `metricConsumer` reported the channel as `length` for every non-readback success, including the area program the runner actually selected. It now reports the channel it consumed.",
     "readbackPrediction": "REFUTED. The precommit named the value-readback programs as the alternatives a ratio->ordinal move must preserve. Ten existed and none survived: magnitude comparison requires ratio comparability, and a readable ordinal value does not supply it. The general same-task preservation requirement therefore had an EMPTY applicable set for this task, but that does not retroactively confirm the concrete prediction, which was wrong.",
     "grainPrediction": "ALSO REFUTED, and the refutation is a consequence of the missing binding this slice corrects. The precommit treated the value-readback family as not inspecting grain; that was true only of a program carrying no grain-bearing content. A bound program names a result grain, so an unknown grain leaves that grain unestablished in EVERY topology. Two of the four precommitted metamorphic controls therefore carry refuted concrete predictions rather than confirmed ones, and the controls array reports requirementMet and predictionRefuted separately so the general requirement is not confused with the concrete one.",
     "closurePopulation": "The closure statement is about the POST-EXCLUSION population: considered minus excluded. Triples a channel has no slot for are not judgments, and they are counted rather than implied.",
@@ -2319,94 +1803,6 @@
     "value-recoverable"
   ],
   "perProgramClaims": [
-    {
-      "program": "cartesian|connection|area|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|connection|length|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|connection|position|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|connection|text|zero|magnitude-comparison",
-      "induced": [
-        "partition-membership",
-        "ratio-comparability",
-        "value-recoverable"
-      ],
-      "loss": [
-        "aggregate-magnitude"
-      ]
-    },
-    {
-      "program": "cartesian|hue|area|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|hue|length|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|hue|position|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|hue|text|zero|magnitude-comparison",
-      "induced": [
-        "partition-membership",
-        "ratio-comparability",
-        "value-recoverable"
-      ],
-      "loss": [
-        "aggregate-magnitude"
-      ]
-    },
     {
       "program": "cartesian|position|area|zero|magnitude-comparison",
       "induced": [
@@ -2431,50 +1827,6 @@
     },
     {
       "program": "cartesian|position|text|zero|magnitude-comparison",
-      "induced": [
-        "partition-membership",
-        "ratio-comparability",
-        "value-recoverable"
-      ],
-      "loss": [
-        "aggregate-magnitude"
-      ]
-    },
-    {
-      "program": "cartesian|shape|area|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|shape|length|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|shape|position|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|shape|text|zero|magnitude-comparison",
       "induced": [
         "partition-membership",
         "ratio-comparability",
@@ -2518,83 +1870,6 @@
       ]
     },
     {
-      "program": "cartesian|texture|area|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|texture|length|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|texture|position|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "cartesian|texture|text|zero|magnitude-comparison",
-      "induced": [
-        "partition-membership",
-        "ratio-comparability",
-        "value-recoverable"
-      ],
-      "loss": [
-        "aggregate-magnitude"
-      ]
-    },
-    {
-      "program": "containment|containment|text|zero|magnitude-comparison",
-      "induced": [
-        "partition-membership",
-        "ratio-comparability",
-        "value-recoverable"
-      ],
-      "loss": [
-        "aggregate-magnitude"
-      ]
-    },
-    {
-      "program": "geographic|hue|area|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "geographic|hue|position|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
       "program": "geographic|position|area|zero|magnitude-comparison",
       "induced": [
         "aggregate-magnitude",
@@ -2603,39 +1878,6 @@
       ],
       "loss": [
         "value-recoverable"
-      ]
-    },
-    {
-      "program": "lane|hue|length|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "lane|hue|position|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "lane|hue|text|zero|magnitude-comparison",
-      "induced": [
-        "partition-membership",
-        "ratio-comparability",
-        "value-recoverable"
-      ],
-      "loss": [
-        "aggregate-magnitude"
       ]
     },
     {
@@ -2683,28 +1925,6 @@
       ]
     },
     {
-      "program": "polar|hue|length|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "polar|hue|position|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
       "program": "polar|position|length|zero|magnitude-comparison",
       "induced": [
         "aggregate-magnitude",
@@ -2713,72 +1933,6 @@
       ],
       "loss": [
         "value-recoverable"
-      ]
-    },
-    {
-      "program": "polar|shape|length|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "polar|shape|position|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "polar|texture|length|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "polar|texture|position|zero|magnitude-comparison",
-      "induced": [
-        "aggregate-magnitude",
-        "partition-membership",
-        "ratio-comparability"
-      ],
-      "loss": [
-        "value-recoverable"
-      ]
-    },
-    {
-      "program": "tabular|hue|text|zero|magnitude-comparison",
-      "induced": [
-        "partition-membership",
-        "ratio-comparability",
-        "value-recoverable"
-      ],
-      "loss": [
-        "aggregate-magnitude"
-      ]
-    },
-    {
-      "program": "tabular|texture|text|zero|magnitude-comparison",
-      "induced": [
-        "partition-membership",
-        "ratio-comparability",
-        "value-recoverable"
-      ],
-      "loss": [
-        "aggregate-magnitude"
       ]
     }
   ],
@@ -2790,7 +1944,7 @@
     {
       "control": "ratio->ordinal",
       "expected": "every retained program whose measure assignment requires ratio capacity; preserve the nominal/ordinal-compatible alternatives, namely the value-readback programs",
-      "actual": "removed 42 of 42, every removed program's task-bearing claim resting on the ratio scale: true; preserved 0. MEASURED VACUITY: the preservation limb has no members for THIS task, because magnitude-comparison requires ratio comparability and every retained program derives it from the measure's scale. The narrowing is not blanket - see the targeted-narrowing control, which removes the nominal-only dimension channels and preserves the rest.",
+      "actual": "removed 12 of 12, every removed program's task-bearing claim resting on the ratio scale: true; preserved 0. MEASURED VACUITY: the preservation limb has no members for THIS task, because magnitude-comparison requires ratio comparability and every retained program derives it from the measure's scale. The narrowing is not blanket - see the targeted-narrowing control, which removes the nominal-only dimension channels and preserves the rest.",
       "requirementMet": true,
       "predictionRefuted": true,
       "correction": "The precommit named the value-readback programs as the alternatives a ratio->ordinal move must preserve. Ten existed and none survived: magnitude comparison requires ratio comparability, and a readable ordinal value does not supply it. The general same-task preservation requirement has an empty applicable set for this task; the CONCRETE prediction was wrong.",
@@ -2799,7 +1953,7 @@
     {
       "control": "declared->unknown",
       "expected": "every program whose admissibility inspects grain; every program whose admissibility does not inspect grain; carry grain:declared as an obligation",
-      "actual": "retained 0 of 42, undecided 53 carrying grain:declared — with the operation bound, EVERY topology depends on the result grain",
+      "actual": "retained 0 of 12, undecided 168 of 168 considered carrying grain:declared — with the operation bound, EVERY topology depends on the result grain, and because the facts that would decide a channel exclusion are the missing ones, the whole considered population is carried rather than excluded",
       "requirementMet": true,
       "predictionRefuted": true,
       "correction": "The precommit treated the value-readback family as not inspecting grain, and that was true only of a program carrying no grain-bearing content. A BOUND program names a result grain, so an unknown grain leaves that grain unestablished in every topology: the removal is universal, not selective. This is a consequence of the missing binding the predecessor result was corrected for, and it is recorded as a refutation rather than absorbed.",
@@ -2815,16 +1969,17 @@
     },
     {
       "control": "targeted-narrowing",
-      "expected": "a perturbation that removes a capability SOME candidates need and others do not must remove exactly those, so the narrowing is targeted rather than blanket",
-      "actual": "dimension nominal->ordinal: removed 29, preserved 13",
-      "ok": true,
+      "expected": "a capability SOME candidates need and others do not must remove exactly those, so narrowing is targeted rather than blanket. The target's channel inventory is the doctrine's own mechanism for this, so the perturbation removes text from the inventory.",
+      "actual": "inventory minus text: removed 7, preserved 5",
       "requirementMet": true,
-      "predictionRefuted": false
+      "predictionRefuted": false,
+      "ok": true,
+      "correction": "REPLACED, and the reason is recorded rather than hidden. This control used to perturb the DIMENSION's scale nominal->ordinal and call the result a narrowing. Under result facts the dimension is the result's own group column, whose scale is interval, and no scale in the lattice is narrower than interval for this purpose - so that perturbation narrows nothing and the control no longer measured what it claimed. Removing a CHANNEL from the target inventory is a narrowing that is both real and target-specific."
     },
     {
       "control": "irrelevant-perturbation",
-      "expected": "the normalized retained set, byte-identical",
-      "actual": "identical (42 programs)",
+      "expected": "the normalized retained set, byte-identical after a declared field no candidate assigns and no task reads is added",
+      "actual": "identical (12 programs)",
       "requirementMet": true,
       "predictionRefuted": false,
       "ok": true
@@ -2835,7 +1990,7 @@
     "derived": false,
     "mutated": {
       "coordinate": "cartesian",
-      "dimension": "connection",
+      "dimension": "position",
       "measure": "length",
       "baseline": "truncated",
       "task": "magnitude-comparison",
@@ -2859,53 +2014,49 @@
     ]
   },
   "compositionProbe": {
-    "lawful": {
-      "partition": "product",
-      "retained": 43,
-      "refused": 56
-    },
-    "unlawful": {
+    "declared": {
       "partition": "date",
       "retained": 0,
-      "refused": 99,
+      "refused": 67,
       "causes": [
         "REL_ADDITIVITY_SUM_SEMIADDITIVE",
         "REL_AREA_INTERVAL_SCALE",
         "REL_CYCLIC_ANGLE_NONCYCLIC",
-        "REL_HUE_CARRIES_ORDER",
-        "REL_SEQUENTIAL_ON_NOMINAL"
+        "REL_HUE_CARRIES_ORDER"
       ]
     },
     "omitted": {
       "retained": 0,
-      "refused": 46,
-      "undecided": 53,
+      "refused": 51,
+      "undecided": 16,
       "obligations": [
         "invariant:exhaustive"
       ]
+    },
+    "lawfulCompletion": {
+      "exists": false,
+      "reason": "the result is keyed by date and the measure is declared non-additive along it, so every declared partition of this result is the forbidden aggregation"
     }
   },
   "compositionKindProbe": {
     "non-additive": {
       "retained": 0,
-      "refused": 99,
+      "refused": 67,
       "causes": [
         "REL_ADDITIVITY_SUM_SEMIADDITIVE",
         "REL_AREA_INTERVAL_SCALE",
         "REL_CYCLIC_ANGLE_NONCYCLIC",
-        "REL_HUE_CARRIES_ORDER",
-        "REL_SEQUENTIAL_ON_NOMINAL"
+        "REL_HUE_CARRIES_ORDER"
       ]
     },
     "ratio-measure": {
       "retained": 0,
-      "refused": 99,
+      "refused": 67,
       "causes": [
         "REL_AREA_INTERVAL_SCALE",
         "REL_CYCLIC_ANGLE_NONCYCLIC",
         "REL_HUE_CARRIES_ORDER",
-        "REL_RATIO_MEASURE_AVERAGED",
-        "REL_SEQUENTIAL_ON_NOMINAL"
+        "REL_RATIO_MEASURE_AVERAGED"
       ]
     }
   },

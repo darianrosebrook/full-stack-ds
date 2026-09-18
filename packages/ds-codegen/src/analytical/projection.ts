@@ -32,7 +32,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { RelationalStructure as RelationalStructureSchema } from "./relation-model.js";
-import type { AggregateOp, FieldDecl, RelationalStructure, Transformation } from "./relation-model.js";
+import type { AggregateOp, FieldDecl, RelationDecl, RelationalStructure, Transformation } from "./relation-model.js";
 import { CONTRACTS_DIR, loadOracle } from "./necessity.js";
 
 /* ------------------------------------------------------------------ types */
@@ -123,25 +123,68 @@ export function bindOperation(structure: RelationalStructure, assertion: Aggrega
 }
 
 /**
- * Why a binding does not resolve against the structure it is asserted of, or
- * `undefined` when it does. A binding that names a field the relation does not
- * declare, or sums over a dimension the declared grain does not contain, has no
- * established result grain — which is the corpus's `grain:declared` obligation,
- * not a favorable branch.
+ * Whether an operation is one this experiment can carry, judged against the
+ * relation the operation NAMES — the name included, because an operation for a
+ * different relation is not the admitted one however well its grain equation
+ * happens to fit.
+ *
+ * Three-valued, because the doctrine's grain rule is: an UNKNOWN grain is a
+ * value and makes grain-dependent judgments unproven, it does not block. A
+ * declaration that contradicts the operation is refused; a premise that is
+ * missing is carried.
  */
-export function operationResolves(op: BoundOperation | undefined, facts: BasisFacts): string | undefined {
-  if (!op) return "the program carries no operation";
-  if (!facts.fieldNames.includes(op.field)) return `the operation aggregates ${op.field}, which the relation does not declare`;
-  const grain = Array.isArray(facts.grain) ? (facts.grain as string[]) : [];
+export type OperationAdmission =
+  | { kind: "admitted"; facts: ResultFacts }
+  | { kind: "unproven"; obligation: string; reason: string };
+
+export function admitOperation(structure: RelationalStructure, op: BoundOperation): OperationAdmission {
+  const refuse = (reason: string): never => {
+    throw new Error(`the admitted operation is refused: ${reason}`);
+  };
+  if (op.op !== "sum") refuse(`the executable contract is sum, and this operation names ${op.op}`);
+  const rel = structure.relations[op.relation];
+  if (!rel) refuse(`the operation names relation ${op.relation}, which the structure does not declare`);
+  if (!Array.isArray(rel.grain)) {
+    return { kind: "unproven", obligation: "grain:declared", reason: `${op.relation} declares no grain, so the result grain is not established` };
+  }
+  const grain = [...rel.grain];
+  if (grain.length === 0) return { kind: "unproven", obligation: "grain:declared", reason: `${op.relation} declares an empty grain` };
+  const field = rel.fields?.[op.field];
+  if (!field) refuse(`the operation aggregates ${op.relation}.${op.field}, which the relation does not declare`);
   const stray = op.along.filter((a) => !grain.includes(a));
-  if (stray.length > 0) return `the operation sums over ${stray.join(", ")}, which the declared grain does not contain`;
+  if (stray.length > 0) refuse(`the operation sums over ${stray.join(", ")}, which the declared grain does not contain`);
   const expected = grain.filter((g) => !op.along.includes(g)).sort();
   if (JSON.stringify(expected) !== JSON.stringify([...op.resultGrain].sort())) {
-    return `the result grain [${op.resultGrain.join(", ")}] is not the declared grain minus the summed-over dimensions [${expected.join(", ")}]`;
+    refuse(`the result grain [${op.resultGrain.join(", ")}] is not the declared grain minus the summed-over dimensions [${expected.join(", ")}]`);
   }
-  if (op.resultGrain.length === 0) return "the operation has no result grain to display";
-  return undefined;
+  if (op.resultGrain.length === 0) refuse("the operation has no result grain to display");
+  if (op.resultGrain.length !== 1) refuse(`the bounded experiment projects a single result-grain column, and this operation produces ${op.resultGrain.length}`);
+  const groupField = rel.fields?.[op.resultGrain[0]];
+  if (!groupField) refuse(`the result grain names ${op.resultGrain[0]}, which ${op.relation} does not declare as a field`);
+  return { kind: "admitted", facts: resultFactsOf(op, rel, field, groupField) };
 }
+
+/** The result of an admitted operation, as facts the projection filters on. */
+function resultFactsOf(op: BoundOperation, rel: RelationDecl, field: FieldDecl, groupField: FieldDecl): ResultFacts {
+  return {
+    sourceRelation: op.relation,
+    sourceGrain: rel.grain,
+    resultGrain: [...op.resultGrain],
+    // The projection assigns the RESULT's own columns, never a source column the
+    // operation aggregated away.
+    dimension: { field: op.resultGrain[0], transformation: groupField.transformation, key: groupField.key === true, cyclic: groupField.cyclic === true },
+    measure: {
+      field: resultFieldName(op),
+      transformation: field.transformation,
+      additivityKind: field.additivity?.kind,
+      nonAdditiveAlong: field.additivity?.kind === "semi-additive" ? field.additivity.nonAdditiveAlong : [],
+      cyclic: field.cyclic === true,
+    },
+  };
+}
+
+/** The name the aggregate result carries, since it is not a declared column. */
+export const resultFieldName = (op: BoundOperation): string => `${op.op}(${op.field})`;
 
 /** Structural identity of two bindings. A binding is a claim, so it compares by value. */
 export function matchesAdmitted(program: BoundOperation, admitted: BoundOperation): boolean {
@@ -161,6 +204,10 @@ export function matchesAdmitted(program: BoundOperation, admitted: BoundOperatio
  * classification function that decides whether a candidate is admitted.
  */
 export function evaluateOperation(op: BoundOperation, rows: readonly Row[]): OperationResult {
+  // The executable contract is NARROWED, not quietly widened: an aggregate this
+  // evaluator cannot perform is refused. Reading `op` for grouping while
+  // ignoring `op.op` would execute every named aggregate as a sum.
+  if (op.op !== "sum") throw new Error(`the bounded evaluator performs sum, and this operation names ${op.op}`);
   const sums = new Map<string, number>();
   for (const row of rows) {
     const key = op.resultGrain.map((g) => String(row[g] ?? "")).join("|");
@@ -209,18 +256,25 @@ export type TargetInventory = {
   spaces: readonly CoordinateSpace[];
 };
 
-/** The analytical facts the projection rules are allowed to read. */
-export type BasisFacts = {
-  /** Every field the relation declares, so a binding can be resolved against it. */
-  fieldNames: string[];
-  dimension: { transformation: Transformation; key: boolean; cyclic: boolean };
+/**
+ * The facts the projection rules are allowed to read, derived from the ADMITTED
+ * operation and the relation it names. `dimension` and `measure` are columns of
+ * the RESULT: the group key the operation produced and the aggregate itself.
+ * Reading source columns here would let the projection assign a field the
+ * operation already aggregated away.
+ */
+export type ResultFacts = {
+  sourceRelation: string;
+  sourceGrain: unknown;
+  resultGrain: string[];
+  dimension: { field: string; transformation: Transformation; key: boolean; cyclic: boolean };
   measure: {
+    field: string;
     transformation: Transformation;
     additivityKind?: string;
     nonAdditiveAlong: string[];
     cyclic: boolean;
   };
-  grain: unknown;
 };
 
 /* --------------------------------------------------- capacities and tasks */
@@ -279,32 +333,6 @@ export const TASK_INVARIANTS: Record<Task, { requires: Claim[] } | { notEnumerat
 
 /* ------------------------------------------------------------------ facts */
 
-export function basisFacts(structure: RelationalStructure, relation: string, dimension: string, measure: string): BasisFacts {
-  const rel = structure.relations[relation];
-  if (!rel) throw new Error(`relation ${relation} is not declared`);
-  const f = (name: string): FieldDecl => {
-    const decl = rel.fields?.[name];
-    if (!decl) throw new Error(`field ${relation}.${name} is not declared`);
-    return decl;
-  };
-  const m = f(measure);
-  return {
-    fieldNames: Object.keys(rel.fields ?? {}).sort(),
-    dimension: { transformation: f(dimension).transformation, key: f(dimension).key === true, cyclic: f(dimension).cyclic === true },
-    measure: {
-      transformation: m.transformation,
-      additivityKind: m.additivity?.kind,
-      // `nonAdditiveAlong` exists on the semi-additive variant alone, so the
-      // dimension set is read from the variant that carries it rather than
-      // defaulted off a union member that never had it.
-      nonAdditiveAlong: m.additivity?.kind === "semi-additive" ? m.additivity.nonAdditiveAlong : [],
-      // `cyclic` is a capability claim on the field, per the stage-1.5 decoding.
-      cyclic: m.cyclic === true,
-    },
-    grain: rel.grain,
-  };
-}
-
 /* ------------------------------------------------------- induced claims */
 
 /**
@@ -313,7 +341,7 @@ export function basisFacts(structure: RelationalStructure, relation: string, dim
  * the reason a mutation to a claim-bearing choice is detectable even when the
  * declared explanation is left untouched.
  */
-export function inducedClaims(p: Program, facts: BasisFacts): Claim[] {
+export function inducedClaims(p: Program, facts: ResultFacts): Claim[] {
   const out = new Set<Claim>();
   const cap = CAPACITY[p.measure];
   const t = facts.measure.transformation;
@@ -348,16 +376,22 @@ export function inducedClaims(p: Program, facts: BasisFacts): Claim[] {
 /* ------------------------------------------------------------ enumeration */
 
 export type EnumerationInput = {
-  facts: BasisFacts;
+  /**
+   * The structure the operation is asserted of. The enumerator derives the facts
+   * it filters on from THIS and the admitted operation, so a caller cannot pair
+   * an operation with unrelated facts describing another relation or a field the
+   * operation already aggregated away.
+   */
+  structure: RelationalStructure;
+  /** The admitted operation. It is validated against `structure` before any candidate exists. */
+  admitted: BoundOperation;
   task: Task;
   inventory: TargetInventory;
-  /** The admitted operation every retained program must display. */
-  operation: BoundOperation;
   /**
-   * Which dimension the composition invariant partitions over. OMITTING IT IS A
-   * MISSING PREMISE, not a default: the composition task's partition is a
-   * decision-relevant input, and an absent one leaves the candidates undecided
-   * rather than taking the branch a favorable completion would have taken.
+   * Which RESULT-grain column the composition invariant partitions over.
+   * OMITTING IT IS A MISSING PREMISE, not a default: an absent partition leaves
+   * the candidates undecided rather than taking the branch a favorable
+   * completion would have taken.
    */
   partitionDimension?: string;
 };
@@ -373,7 +407,7 @@ export type EnumerationInput = {
  */
 type CapacityVerdict = { cause: string; detail: string } | "excluded" | undefined;
 
-const capacityVerdict = (channel: Channel, t: Transformation, facts: BasisFacts, role: "dimension" | "measure"): CapacityVerdict => {
+const capacityVerdict = (channel: Channel, t: Transformation, facts: ResultFacts, role: "dimension" | "measure"): CapacityVerdict => {
   if (channel === "area" && t !== "ratio") return { cause: "REL_AREA_INTERVAL_SCALE", detail: `area carries ratio only, and this field is ${t}` };
   if (channel === "hue" && t !== "nominal") return { cause: "REL_HUE_CARRIES_ORDER", detail: `hue is nominal-capacity, and this field is ${t}` };
   if (channel === "luminance" && t === "nominal") return { cause: "REL_SEQUENTIAL_ON_NOMINAL", detail: "a sequential ramp implies an order the nominal scale does not have" };
@@ -395,7 +429,11 @@ const capacityVerdict = (channel: Channel, t: Transformation, facts: BasisFacts,
  * with an obligation when a premise the candidate needs is not established.
  */
 export function enumerate(input: EnumerationInput): Enumeration {
-  const { facts, task, inventory } = input;
+  const { task, inventory } = input;
+  // Throws when the operation contradicts the relation, so a mismatched or
+  // absent operation cannot enter through unrelated facts; returns `unproven`
+  // when the premise is merely missing.
+  const admission = admitOperation(input.structure, input.admitted);
   const spec = TASK_INVARIANTS[task];
   const retained: Program[] = [];
   const refused: Refusal[] = [];
@@ -410,11 +448,21 @@ export function enumerate(input: EnumerationInput): Enumeration {
         if (!CAPACITY[measureChannel].spaces.includes(coordinate)) continue;
         if (dimensionChannel === measureChannel) continue;
         considered += 1;
-        const p: Program = { coordinate, dimension: dimensionChannel, measure: measureChannel, baseline: "zero", task, claims: [], operation: input.operation };
+        // Stamped from the ADMITTED operation: a candidate cannot carry a
+        // different one, so the identity guarantee is a construction property
+        // rather than a per-candidate check that could be bypassed.
+        const p: Program = { coordinate, dimension: dimensionChannel, measure: measureChannel, baseline: "zero", task, claims: [], operation: input.admitted };
 
         if ("notEnumerated" in spec) {
           continue; // the task's preconditions are not implemented here; see TASK_INVARIANTS
         }
+
+        // A missing premise is CARRIED, never resolved to a favorable branch.
+        if (admission.kind === "unproven") {
+          undecided.push({ program: p, obligation: admission.obligation, detail: `${admission.reason}, so the grain of the result it displays is not established` });
+          continue;
+        }
+        const facts = admission.facts;
 
         const dimVerdict = capacityVerdict(dimensionChannel, facts.dimension.transformation, facts, "dimension");
         if (dimVerdict === "excluded") { excluded += 1; continue; }
@@ -437,16 +485,6 @@ export function enumerate(input: EnumerationInput): Enumeration {
         // operation does not say which analysis it displays, so it is not
         // retained: the result grain it would show is unestablished, and
         // `grain:declared` is the corpus's own obligation for exactly that.
-        const bindingProblem = operationResolves(p.operation, facts);
-        if (bindingProblem) {
-          undecided.push({
-            program: p,
-            obligation: "grain:declared",
-            detail: `${bindingProblem}, so the grain of the result it displays is not established`,
-          });
-          continue;
-        }
-
         // Composition requires additivity over the partition dimension, and the
         // partition is a DECISION-RELEVANT input. An omitted one is a missing
         // premise and is carried, never resolved by the branch a favorable
@@ -500,10 +538,6 @@ export function enumerate(input: EnumerationInput): Enumeration {
 
         // A candidate whose induced claims assert an aggregate magnitude needs
         // the grain to be declared; without it the aggregate is undecided.
-        if (induced.includes("aggregate-magnitude") && facts.grain === "unknown") {
-          undecided.push({ program: p, obligation: "grain:declared", detail: "an aggregate magnitude is claimed and the relation declares no grain" });
-          continue;
-        }
         retained.push(p);
       }
     }
@@ -536,11 +570,95 @@ export function declarationObserver(p: Program): { ok: boolean; read: Claim[] } 
 }
 
 /** Derives the claims from the program's own choices and checks those. */
-export function programObserver(p: Program, facts: BasisFacts): { ok: boolean; induced: Claim[]; missing: Claim[] } {
+export function programObserver(p: Program, facts: ResultFacts): { ok: boolean; induced: Claim[]; missing: Claim[] } {
   const spec = TASK_INVARIANTS[p.task];
   if ("notEnumerated" in spec) return { ok: false, induced: [], missing: [] };
   const induced = inducedClaims(p, facts);
   return { ok: spec.requires.every((c) => induced.includes(c)), induced, missing: spec.requires.filter((c) => !induced.includes(c)) };
+}
+
+/* --------------------------------------------------------- representations */
+
+/**
+ * TWO PRODUCED REPRESENTATIONS of one evaluated result, and a decoder for each.
+ *
+ * The boundary that matters: a decoder receives ONLY the representation it
+ * decodes. It is given neither the supplied rows nor `evaluateOperation`, so it
+ * cannot reconstruct the expected answer instead of observing what the
+ * projection produced. A second evaluation of the same operation is not
+ * evidence that a distinct representation preserved it.
+ */
+export type ReadbackOutput = { kind: "readback"; entries: GroupValue[] };
+export type MetricOutput = {
+  kind: "metric";
+  scale: { unitsPerValue: number; baseline: BaselineDecl };
+  entries: Array<{ key: string; extent: number }>;
+};
+export type ProjectionOutputs = { readback: ReadbackOutput; metric: MetricOutput };
+
+/** Produces both representations from ONE evaluated result. */
+export function produce(result: OperationResult, unitsPerValue: number, baseline: BaselineDecl = "zero"): ProjectionOutputs {
+  if (!(unitsPerValue > 0)) throw new Error(`a metric representation needs a positive declared scale, and this one is ${unitsPerValue}`);
+  return {
+    readback: { kind: "readback", entries: result.groups.map((g) => ({ key: g.key, value: g.value })) },
+    metric: {
+      kind: "metric",
+      scale: { unitsPerValue, baseline },
+      entries: result.groups.map((g) => ({ key: g.key, extent: g.value * unitsPerValue })),
+    },
+  };
+}
+
+/** Recovers group/values from the READBACK output ALONE. */
+export function decodeReadback(o: ReadbackOutput): GroupValue[] {
+  return o.entries.map((e) => ({ key: e.key, value: e.value }));
+}
+
+/** Recovers group/values from the METRIC output and its DECLARED SCALE alone. */
+export function decodeMetric(o: MetricOutput): GroupValue[] {
+  return o.entries.map((e) => ({ key: e.key, value: e.extent / o.scale.unitsPerValue }));
+}
+
+/** Dispatch by representation kind. Takes the output and nothing else. */
+export function recover(o: ReadbackOutput | MetricOutput): GroupValue[] {
+  return o.kind === "readback" ? decodeReadback(o) : decodeMetric(o);
+}
+
+const totalOf = (gs: readonly GroupValue[]) => gs.reduce((n, g) => n + g.value, 0);
+/** Moves every value under the NEXT group's key, so the total is unchanged. */
+const shiftKeys = (entries: GroupValue[]): GroupValue[] =>
+  entries.length < 2 ? entries : entries.map((e, i) => ({ key: entries[(i + 1) % entries.length].key, value: e.value }));
+
+export type PreservationReport = {
+  result: GroupValue[];
+  readback: { recovered: GroupValue[]; preserved: boolean };
+  metric: { recovered: GroupValue[]; preserved: boolean; scale: MetricOutput["scale"] };
+  mutatedExtent: { recovered: GroupValue[]; preserved: boolean };
+  mutatedBinding: { recovered: GroupValue[]; preserved: boolean; totalUnchanged: boolean };
+};
+
+/**
+ * Evaluates the admitted operation ONCE, produces both representations from that
+ * one result, and recovers through the decoders. The mutations then move the
+ * REPRESENTATION, not the operation: one extent changes, and one set of group
+ * bindings moves while the numeric total is held fixed.
+ */
+export function preservationReport(admitted: BoundOperation, rows: readonly Row[], unitsPerValue = 2): PreservationReport {
+  const result = evaluateOperation(admitted, rows).groups;
+  const outputs = produce(evaluateOperation(admitted, rows), unitsPerValue);
+
+  const bumped: MetricOutput = { ...outputs.metric, entries: outputs.metric.entries.map((e, i) => (i === 0 ? { ...e, extent: e.extent + 1 } : e)) };
+  const shifted: ReadbackOutput = { ...outputs.readback, entries: shiftKeys(outputs.readback.entries) };
+  const bumpedValues = recover(bumped);
+  const shiftedValues = recover(shifted);
+
+  return {
+    result,
+    readback: { recovered: recover(outputs.readback), preserved: sameGroups(recover(outputs.readback), result) },
+    metric: { recovered: recover(outputs.metric), preserved: sameGroups(recover(outputs.metric), result), scale: outputs.metric.scale },
+    mutatedExtent: { recovered: bumpedValues, preserved: sameGroups(bumpedValues, result) },
+    mutatedBinding: { recovered: shiftedValues, preserved: sameGroups(shiftedValues, result), totalUnchanged: totalOf(shiftedValues) === totalOf(result) },
+  };
 }
 
 /* -------------------------------------------------------------- consumers */
@@ -553,7 +671,7 @@ export function programObserver(p: Program, facts: BasisFacts): { ok: boolean; i
  * comparison here is over VALUES.
  */
 export type ConsumerReport = {
-  channel: "text" | "length";
+  channel: Channel;
   ok: boolean;
   /** What the consumer recovered through this topology. */
   recovered: GroupValue[];
@@ -589,12 +707,12 @@ export function readbackConsumer(program: Program, admitted: BoundOperation, row
 export function metricConsumer(program: Program, admitted: BoundOperation, rows: readonly Row[]): ConsumerReport {
   const expected = evaluateOperation(admitted, rows).groups;
   if (!matchesAdmitted(program.operation, admitted)) {
-    return { channel: "length", ok: false, recovered: evaluateOperation(program.operation, rows).groups, expected, reason: "binding-mismatch" };
+    return { channel: program.measure, ok: false, recovered: evaluateOperation(program.operation, rows).groups, expected, reason: "binding-mismatch" };
   }
-  if (CAPACITY[program.measure].valueReadback) return { channel: "length", ok: false, recovered: [], expected, reason: "not-a-metric-channel" };
-  if (program.baseline !== "zero") return { channel: "length", ok: false, recovered: [], expected, reason: "no-declared-zero-baseline" };
+  if (CAPACITY[program.measure].valueReadback) return { channel: program.measure, ok: false, recovered: [], expected, reason: "not-a-metric-channel" };
+  if (program.baseline !== "zero") return { channel: program.measure, ok: false, recovered: [], expected, reason: "no-declared-zero-baseline" };
   const recovered = evaluateOperation(program.operation, rows).groups;
-  return { channel: "length", ok: sameGroups(recovered, expected), recovered, expected, ...(sameGroups(recovered, expected) ? {} : { reason: "value-disagreement" }) };
+  return { channel: program.measure, ok: sameGroups(recovered, expected), recovered, expected, ...(sameGroups(recovered, expected) ? {} : { reason: "value-disagreement" }) };
 }
 
 /**
@@ -606,12 +724,15 @@ export function bindingObserver(
   program: Program,
   admitted: BoundOperation,
   rows: readonly Row[],
-): { ok: boolean; channel: "text" | "length" | "none"; recovered: GroupValue[]; expected: GroupValue[]; reason?: string } {
+): { ok: boolean; channel: Channel | "none"; recovered: GroupValue[]; expected: GroupValue[]; reason?: string } {
   const report = CAPACITY[program.measure].valueReadback ? readbackConsumer(program, admitted, rows) : metricConsumer(program, admitted, rows);
-  const channel = CAPACITY[program.measure].valueReadback ? ("text" as const) : ("length" as const);
+  const channel = report.channel;
   if (!report.ok) return { ok: false, channel, recovered: report.recovered, expected: report.expected, reason: report.reason };
   return { ok: true, channel, recovered: report.recovered, expected: report.expected };
 }
+
+/** The declared metric scale: two extent units per unit of value. */
+export const METRIC_UNITS_PER_VALUE = 2;
 
 /** The supplied population the consumers are exercised over. */
 export const CONSUMER_POPULATION: readonly Row[] = [
@@ -648,7 +769,7 @@ export const PRECOMMITTED = {
     mustNotRemove: "unrelated cartesian/tabular lawful assignments",
   },
   "irrelevant-perturbation": {
-    mustEqual: "the normalized retained set, byte-identical",
+    mustEqual: "the normalized retained set, byte-identical after a declared field no candidate assigns and no task reads is added",
   },
 } as const;
 
@@ -674,7 +795,15 @@ export type ControlReport = {
 
 /** The frozen basis named in the entry record. */
 export const BASIS_FIXTURE = "FX_N_STOCK_SUM_ALONG_PRODUCT";
-export const BASIS = { relation: "stock", dimension: "product", measure: "on_hand", partitionDimension: "date" } as const;
+export const BASIS = {
+  relation: "stock",
+  /** The field the admitted operation aggregates. */
+  measure: "on_hand",
+  /** The result-grain column the operation produces and the projection assigns. */
+  resultGrain: "date",
+  /** The column the operation sums OVER. */
+  summedOver: "product",
+} as const;
 
 /** The target the experiment enumerates against. */
 export const EXPERIMENT_TARGET: TargetInventory = {
@@ -696,6 +825,10 @@ export type ExperimentResult = {
     forbiddenDirection: { operation: BoundOperation; result: OperationResult; readbackRejects: boolean };
   };
   bindingMutation: { mutated: BoundOperation; readback: ConsumerReport; rejectedBeforeConsumption: boolean; valueDisagreement: boolean };
+  /** Recovery observed from the PRODUCED representations, with two output mutations. */
+  preservation: PreservationReport;
+  /** The facts the enumerator filtered on, derived from the operation and the relation it names. */
+  resultFacts: ResultFacts;
   consumed: Record<string, unknown>;
   retained: Program[];
   refused: Refusal[];
@@ -729,12 +862,12 @@ const withMeasure = (s: RelationalStructure, t: Transformation): RelationalStruc
  */
 const withDimensionOrdinal = (s: RelationalStructure): RelationalStructure => {
   const rel = s.relations[BASIS.relation];
-  const { cyclic: _drop, ...rest } = rel.fields[BASIS.dimension];
-  return { ...s, relations: { ...s.relations, [BASIS.relation]: { ...rel, fields: { ...rel.fields, [BASIS.dimension]: { ...rest, transformation: "ordinal" } } } } };
+  const { cyclic: _drop, ...rest } = rel.fields[BASIS.resultGrain];
+  return { ...s, relations: { ...s.relations, [BASIS.relation]: { ...rel, fields: { ...rel.fields, [BASIS.resultGrain]: { ...rest, transformation: "ordinal" } } } } };
 };
 const withCyclicDimension = (s: RelationalStructure): RelationalStructure => {
   const rel = s.relations[BASIS.relation];
-  return { ...s, relations: { ...s.relations, [BASIS.relation]: { ...rel, fields: { ...rel.fields, [BASIS.dimension]: { ...rel.fields[BASIS.dimension], cyclic: true } } } } };
+  return { ...s, relations: { ...s.relations, [BASIS.relation]: { ...rel, fields: { ...rel.fields, [BASIS.resultGrain]: { ...rel.fields[BASIS.resultGrain], cyclic: true } } } } };
 };
 
 const withUnknownGrain = (s: RelationalStructure): RelationalStructure => {
@@ -743,33 +876,21 @@ const withUnknownGrain = (s: RelationalStructure): RelationalStructure => {
 };
 
 /**
- * An IRRELEVANT semantic perturbation: `date`'s temporality kind moves from
- * instant to interval. No candidate in this universe assigns `date`, and no
- * declared task reads it, so the normalized retained set must not move. This is
- * the control without which an implementation that hashes its input into a
- * different template set passes every relevant-perturbation test.
+ * An IRRELEVANT semantic perturbation: the relation gains a declared field that
+ * no candidate assigns and no declared task reads. The normalized retained set
+ * must not move. This is the control without which an implementation that hashes
+ * its input into a different template set passes every relevant-perturbation
+ * test.
  */
-const withIrrelevantTemporality = (s: RelationalStructure): RelationalStructure => {
+const withIrrelevantField = (s: RelationalStructure): RelationalStructure => {
   const rel = s.relations[BASIS.relation];
   return {
     ...s,
-    relations: { ...s.relations, [BASIS.relation]: { ...rel, fields: { ...rel.fields, date: { ...rel.fields.date, temporality: { kind: "interval" as const } } } } },
+    relations: { ...s.relations, [BASIS.relation]: { ...rel, fields: { ...rel.fields, warehouse: { transformation: "nominal" as const } } } },
   };
 };
 
 const retainedKeys = (e: Enumeration) => e.retained.map(keyOf);
-/** Coordinate|dimension|measure only: the part a scale perturbation may move. */
-const dimensionKeys = (e: Enumeration) => e.retained.map((p) => `${p.coordinate}|${p.dimension}|${p.measure}`);
-
-/** Channels whose capacity is nominal and nothing else. */
-const NOMINAL_ONLY: Channel[] = ["hue", "shape", "texture", "connection"];
-
-/**
- * A perturbation that produces an ILLEGAL declaration proves nothing: the
- * candidate set would move because the input stopped being a structure, not
- * because the semantic fact moved. Each perturbed structure is therefore
- * re-parsed through the same schema authority the corpus uses.
- */
 const legal = (s: RelationalStructure, what: string): RelationalStructure => {
   const r = RelationalStructureSchema.safeParse(s);
   if (!r.success) throw new Error(`perturbation ${what} is not a legal declaration: ${JSON.stringify(r.error.issues[0])}`);
@@ -780,30 +901,34 @@ export function runExperiment(): ExperimentResult {
   const fixture = loadOracle().fixtures.get(BASIS_FIXTURE);
   if (!fixture) throw new Error(`basis fixture ${BASIS_FIXTURE} is not in the corpus`);
   const base = legal(fixture.structure as RelationalStructure, "basis");
-  const facts = basisFacts(base, BASIS.relation, BASIS.dimension, BASIS.measure);
 
   // The operation the entry record cited: the fixture's OWN admitted assertion,
   // bound once and carried through every candidate.
   const aggregate = fixture.assertions.find((a) => a.kind === "aggregate");
   if (!aggregate) throw new Error(`basis fixture ${BASIS_FIXTURE} carries no aggregate assertion to bind`);
   const admitted = bindOperation(base, aggregate as AggregateAssertionDecl);
+  const admission = admitOperation(base, admitted);
+  if (admission.kind !== "admitted") throw new Error(`the basis operation is not admitted: ${admission.reason}`);
+  const facts = admission.facts;
 
-  const run = (s: RelationalStructure, task: Task = "magnitude-comparison") =>
-    enumerate({
-      facts: basisFacts(s, BASIS.relation, BASIS.dimension, BASIS.measure),
-      task,
-      inventory: EXPERIMENT_TARGET,
-      operation: admitted,
-      partitionDimension: BASIS.partitionDimension,
-    });
+  const run = (s: RelationalStructure, task: Task = "magnitude-comparison", partition?: string) =>
+    enumerate({ structure: s, admitted, task, inventory: EXPERIMENT_TARGET, partitionDimension: partition });
 
   const baseline = run(base);
-  const dimOrdinal = run(legal(withDimensionOrdinal(base), "dimension nominal->ordinal"));
   const ordinal = run(legal(withMeasure(base, "ordinal"), "ratio->ordinal"));
   const unknownGrain = run(legal(withUnknownGrain(base), "declared->unknown"));
   const cyclicBaseline = run(legal(withDimensionOrdinal(base), "cyclic-control-baseline"));
   const cyclic = run(legal(withCyclicDimension(legal(withDimensionOrdinal(base), "cyclic-control-baseline")), "non-cyclic->cyclic"));
-  const irrelevant = run(legal(withIrrelevantTemporality(base), "irrelevant-temporality"));
+  const irrelevant = run(legal(withIrrelevantField(base), "irrelevant-field"));
+  // A target whose inventory does not provide `hue`: a narrowing that is real
+  // and target-specific, unlike a scale move on an interval dimension.
+  const NARROWED_CHANNEL: Channel = "text";
+  const narrowInventory: TargetInventory = { ...EXPERIMENT_TARGET, channels: EXPERIMENT_TARGET.channels.filter((c) => c !== NARROWED_CHANNEL) };
+  const narrowedEnum = enumerate({ structure: base, admitted, task: "magnitude-comparison", inventory: narrowInventory, partitionDimension: BASIS.resultGrain });
+  const narrowed = {
+    removed: baseline.retained.filter((p) => !narrowedEnum.retained.some((q) => keyOf(q) === keyOf(p))),
+    kept: narrowedEnum.retained,
+  };
 
   const baseKeys = retainedKeys(baseline);
   const ordinalKeys = retainedKeys(ordinal);
@@ -836,7 +961,7 @@ export function runExperiment(): ExperimentResult {
     {
       control: "declared->unknown",
       expected: `${PRECOMMITTED["declared->unknown"].mustRemove}; ${PRECOMMITTED["declared->unknown"].mustPreserve}; carry ${PRECOMMITTED["declared->unknown"].mustCarry}`,
-      actual: `retained ${retainedKeys(unknownGrain).length} of ${baseKeys.length}, undecided ${unknownGrain.undecided.length} carrying ${[...new Set(unknownGrain.undecided.map((u) => u.obligation))].join(", ") || "nothing"} — with the operation bound, EVERY topology depends on the result grain`,
+      actual: `retained ${retainedKeys(unknownGrain).length} of ${baseKeys.length}, undecided ${unknownGrain.undecided.length} of ${unknownGrain.population.considered} considered carrying ${[...new Set(unknownGrain.undecided.map((u) => u.obligation))].join(", ") || "nothing"} — with the operation bound, EVERY topology depends on the result grain, and because the facts that would decide a channel exclusion are the missing ones, the whole considered population is carried rather than excluded`,
       requirementMet:
         retainedKeys(unknownGrain).length < baseKeys.length &&
         unknownGrain.undecided.length > 0 &&
@@ -859,26 +984,18 @@ export function runExperiment(): ExperimentResult {
     },
     {
       control: "targeted-narrowing",
-      expected: "a perturbation that removes a capability SOME candidates need and others do not must remove exactly those, so the narrowing is targeted rather than blanket",
-      actual: `dimension nominal->ordinal: removed ${dimensionKeys(baseline).filter((k) => !dimensionKeys(dimOrdinal).includes(k)).length}, preserved ${dimensionKeys(baseline).filter((k) => dimensionKeys(dimOrdinal).includes(k)).length}`,
-      ok: (() => {
-        const before = dimensionKeys(baseline);
-        const after = dimensionKeys(dimOrdinal);
-        const removed = before.filter((k) => !after.includes(k));
-        const kept = before.filter((k) => after.includes(k));
-        // Every removal is a dimension channel whose capacity is nominal only,
-        // and something positional or readable survives: the narrowing is
-        // targeted, not blanket, which is the property a hash-to-template
-        // implementation cannot exhibit.
-        return (
-          removed.length > 0 &&
-          kept.length > 0 &&
-          removed.every((k) => NOMINAL_ONLY.includes(k.split("|")[1] as Channel)) &&
-          kept.some((k) => ["position", "text"].includes(k.split("|")[1]))
-        );
-      })(),
-      requirementMet: true,
+      expected:
+        `a capability SOME candidates need and others do not must remove exactly those, so narrowing is targeted rather than blanket. The target's channel inventory is the doctrine's own mechanism for this, so the perturbation removes ${NARROWED_CHANNEL} from the inventory.`,
+      actual: `inventory minus ${NARROWED_CHANNEL}: removed ${narrowed.removed.length}, preserved ${narrowed.kept.length}`,
+      requirementMet: narrowed.removed.length > 0 && narrowed.kept.length > 0,
       predictionRefuted: false,
+      ok:
+        narrowed.removed.length > 0 &&
+        narrowed.kept.length > 0 &&
+        narrowed.removed.every((p) => p.dimension === NARROWED_CHANNEL || p.measure === NARROWED_CHANNEL) &&
+        narrowed.kept.every((p) => p.dimension !== NARROWED_CHANNEL && p.measure !== NARROWED_CHANNEL),
+      correction:
+        "REPLACED, and the reason is recorded rather than hidden. This control used to perturb the DIMENSION's scale nominal->ordinal and call the result a narrowing. Under result facts the dimension is the result's own group column, whose scale is interval, and no scale in the lattice is narrower than interval for this purpose - so that perturbation narrows nothing and the control no longer measured what it claimed. Removing a CHANNEL from the target inventory is a narrowing that is both real and target-specific.",
     },
     {
       control: "irrelevant-perturbation",
@@ -935,6 +1052,8 @@ export function runExperiment(): ExperimentResult {
   return {
     basis: BASIS_FIXTURE,
     binding: admitted,
+    resultFacts: facts,
+    preservation: preservationReport(admitted, CONSUMER_POPULATION, METRIC_UNITS_PER_VALUE),
     population: baseline.population,
     consumers: { readback, metric, forbiddenDirection },
     bindingMutation: {
@@ -945,7 +1064,7 @@ export function runExperiment(): ExperimentResult {
     },
     consumed: {
       relation: BASIS.relation,
-      grain: facts.grain,
+      grain: facts.sourceGrain,
       dimension: facts.dimension,
       measure: facts.measure,
       task: "magnitude-comparison",
@@ -975,43 +1094,48 @@ export function runExperiment(): ExperimentResult {
 }
 
 /**
- * The composition probe: the same authority, a task the measure can and cannot
- * serve — and the case where the DECISION-RELEVANT partition is simply absent.
+ * The composition probe. The partition is now a column of the RESULT the
+ * operation produced, which is the only kind of column a projection of that
+ * result can partition.
  *
- * The three populations are the point. `product` is the lawful completion,
- * `date` is the contradiction the semi-additivity declaration establishes, and
- * the OMITTED case must resolve to neither: an absent premise is carried as an
- * obligation, because treating it as the favorable completion is exactly the
- * fault this probe exists to catch.
+ * WHAT THIS CHANGED, and why it is a finding rather than a regression: with
+ * source facts the probe could partition over `product` and call that a lawful
+ * completion. But `product` is exactly the dimension the admitted operation
+ * SUMS OVER, so it is not a column of the result at all — partitioning a
+ * projection of the result by it was an artifact of filtering on source facts.
+ * At this result grain there is no lawful composition of a measure the
+ * declaration calls non-additive along the very dimension the result is keyed
+ * by, so the declared case refuses and the omitted case is carried.
  */
 export function compositionProbe(): {
-  lawful: { partition: string; retained: number; refused: number };
-  unlawful: { partition: string; retained: number; refused: number; causes: string[] };
+  declared: { partition: string; retained: number; refused: number; causes: string[] };
   omitted: { retained: number; refused: number; undecided: number; obligations: string[] };
+  lawfulCompletion: { exists: boolean; reason: string };
 } {
   const fixture = loadOracle().fixtures.get(BASIS_FIXTURE)!;
   const base = fixture.structure as RelationalStructure;
   const aggregate = fixture.assertions.find((a) => a.kind === "aggregate")!;
   const admitted = bindOperation(base, aggregate as AggregateAssertionDecl);
-  const facts = basisFacts(base, BASIS.relation, BASIS.dimension, BASIS.measure);
   const run = (partitionDimension?: string) =>
-    enumerate({ facts, task: "composition", inventory: EXPERIMENT_TARGET, operation: admitted, partitionDimension });
-  const lawful = run("product");
-  const unlawful = run(BASIS.partitionDimension);
+    enumerate({ structure: base, admitted, task: "composition", inventory: EXPERIMENT_TARGET, partitionDimension });
+  const declared = run(BASIS.resultGrain);
   const omitted = run(undefined);
   return {
-    lawful: { partition: "product", retained: lawful.retained.length, refused: lawful.refused.length },
-    unlawful: {
-      partition: BASIS.partitionDimension,
-      retained: unlawful.retained.length,
-      refused: unlawful.refused.length,
-      causes: [...new Set(unlawful.refused.map((r) => r.cause))].sort(),
+    declared: {
+      partition: BASIS.resultGrain,
+      retained: declared.retained.length,
+      refused: declared.refused.length,
+      causes: [...new Set(declared.refused.map((r) => r.cause))].sort(),
     },
     omitted: {
       retained: omitted.retained.length,
       refused: omitted.refused.length,
       undecided: omitted.undecided.length,
       obligations: [...new Set(omitted.undecided.map((u) => u.obligation))].sort(),
+    },
+    lawfulCompletion: {
+      exists: false,
+      reason: `the result is keyed by ${BASIS.resultGrain} and the measure is declared non-additive along it, so every declared partition of this result is the forbidden aggregation`,
     },
   };
 }
@@ -1029,13 +1153,7 @@ export function compositionKindProbe(): Record<string, { retained: number; refus
       { ...base, relations: { ...base.relations, [BASIS.relation]: { ...rel, fields: { ...rel.fields, [BASIS.measure]: { ...rel.fields[BASIS.measure], additivity: { kind } } } } } },
       `additivity ${kind}`,
     );
-    const e = enumerate({
-      facts: basisFacts(mutated, BASIS.relation, BASIS.dimension, BASIS.measure),
-      task: "composition",
-      inventory: EXPERIMENT_TARGET,
-      operation: admitted,
-      partitionDimension: "product",
-    });
+    const e = enumerate({ structure: mutated, admitted, task: "composition", inventory: EXPERIMENT_TARGET, partitionDimension: BASIS.resultGrain });
     out[kind] = { retained: e.retained.length, refused: e.refused.length, causes: [...new Set(e.refused.map((r) => r.cause))].sort() };
   }
   return out;
@@ -1079,9 +1197,19 @@ export function ledgerOf(r: ExperimentResult): Record<string, unknown> {
     distinctAfterFixedAuthority: r.distinctAfterFixedAuthority,
     population: r.population,
     binding: r.binding,
+    resultFacts: r.resultFacts,
+    preservation: r.preservation,
     consumers: r.consumers,
     bindingMutation: r.bindingMutation,
     correctedAccount: {
+      operationIdentity:
+        "CORRECTED UPWARD IN FORM AND DOWNWARD IN CLAIM. The guarantee that a candidate carries the admitted operation is now a CONSTRUCTION property - every candidate is stamped from the validated operation, so it cannot carry another - and the boundary validates that operation against the relation it NAMES before any candidate exists. What that does not do is check a caller-supplied operation against some independently established admitted one: the enumerator has no such second authority, so an operation for a different analysis is refused only if it contradicts the relation.",
+      representationRecovery:
+        "This is what the earlier consumers did NOT establish. Both sides called `evaluateOperation`, so nothing representation-dependent lay between them: agreement showed the binding and channel guards admit one shared evaluation, not that a value survived text or metric encoding. Recovery is now observed through two PRODUCED representations whose decoders receive neither the rows nor the evaluator, and the metric decoder recovers from extents and the DECLARED SCALE alone.",
+      aggregateDispatch:
+        "REPAIRED. `evaluateOperation` read `op.resultGrain` for grouping while ignoring `op.op`, so mean, min and count all executed as sum, and matching mean descriptors on both sides returned ok while returning sums. The executable contract is now narrowed to sum and every other aggregate name is REFUSED rather than executed.",
+      metricChannelLabel:
+        "REPAIRED. `metricConsumer` reported the channel as `length` for every non-readback success, including the area program the runner actually selected. It now reports the channel it consumed.",
       readbackPrediction: "REFUTED. The precommit named the value-readback programs as the alternatives a ratio->ordinal move must preserve. Ten existed and none survived: magnitude comparison requires ratio comparability, and a readable ordinal value does not supply it. The general same-task preservation requirement therefore had an EMPTY applicable set for this task, but that does not retroactively confirm the concrete prediction, which was wrong.",
       grainPrediction: "ALSO REFUTED, and the refutation is a consequence of the missing binding this slice corrects. The precommit treated the value-readback family as not inspecting grain; that was true only of a program carrying no grain-bearing content. A bound program names a result grain, so an unknown grain leaves that grain unestablished in EVERY topology. Two of the four precommitted metamorphic controls therefore carry refuted concrete predictions rather than confirmed ones, and the controls array reports requirementMet and predictionRefuted separately so the general requirement is not confused with the concrete one.",
       closurePopulation: "The closure statement is about the POST-EXCLUSION population: considered minus excluded. Triples a channel has no slot for are not judgments, and they are counted rather than implied.",
