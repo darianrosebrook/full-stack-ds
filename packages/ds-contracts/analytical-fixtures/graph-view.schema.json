@@ -1,0 +1,653 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "graph-view.schema.json",
+  "$ref": "#/definitions/graph-view-file",
+  "definitions": {
+    "graph-view-file": {
+      "type": "object",
+      "properties": {
+        "$comment": {
+          "type": "string"
+        },
+        "structure": {
+          "$ref": "#/definitions/relationalStructure"
+        },
+        "rows": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              }
+            }
+          }
+        },
+        "views": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/graph-view"
+          }
+        }
+      },
+      "required": [
+        "structure",
+        "rows",
+        "views"
+      ],
+      "additionalProperties": false,
+      "description": "The authored graph-view collection over one source, validated against the emitted schema."
+    },
+    "relationalStructure": {
+      "type": "object",
+      "properties": {
+        "relations": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/definitions/name"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/relation"
+          }
+        },
+        "peers": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/name"
+            },
+            "x-fsds-sequence": "set"
+          }
+        }
+      },
+      "required": [
+        "relations"
+      ],
+      "additionalProperties": false,
+      "title": "Relational structure (L0-L2 kernel)",
+      "x-fsds-operands": {
+        "peers": "relation"
+      },
+      "description": "The authoritative analytical object of ARCH-ANALYTICAL-RELATION-001 at stage 1.5: one or more named relations, each with a declared grain and typed fields. Every coordinate carries a necessity witness. Emitted from packages/ds-codegen/src/analytical/relation-model.ts; do not edit by hand."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "grain": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "unknown"
+            },
+            {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              },
+              "x-fsds-sequence": "set"
+            }
+          ]
+        },
+        "fields": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/definitions/name"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/field"
+          }
+        },
+        "derivedBy": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/derivation"
+            }
+          ]
+        }
+      },
+      "required": [
+        "grain",
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "field": {
+      "type": "object",
+      "properties": {
+        "transformation": {
+          "type": "string",
+          "enum": [
+            "nominal",
+            "ordinal",
+            "interval",
+            "ratio"
+          ]
+        },
+        "cyclic": {
+          "type": "boolean",
+          "const": true
+        },
+        "proportion": {
+          "type": "boolean",
+          "const": true
+        },
+        "index": {
+          "type": "boolean",
+          "const": true
+        },
+        "key": {
+          "type": "boolean"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/unit"
+            }
+          ]
+        },
+        "temporality": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/temporality"
+            }
+          ]
+        },
+        "whole": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "fixed"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "perRow": {
+                  "$ref": "#/definitions/name"
+                }
+              },
+              "required": [
+                "perRow"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "base": {
+          "type": "boolean",
+          "const": true
+        },
+        "additivity": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/additivity"
+            }
+          ]
+        },
+        "permits": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/permits"
+            }
+          ]
+        }
+      },
+      "required": [
+        "transformation"
+      ],
+      "additionalProperties": false
+    },
+    "unit": {
+      "type": "object",
+      "properties": {
+        "units": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "perRow": {
+          "type": "boolean"
+        },
+        "conversions": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "temporality": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "instant",
+            "interval"
+          ]
+        },
+        "grain": {
+          "type": "string",
+          "enum": [
+            "day",
+            "month"
+          ]
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "additivity": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "additive"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "semi-additive"
+            },
+            "nonAdditiveAlong": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              },
+              "x-fsds-sequence": "set"
+            }
+          },
+          "required": [
+            "kind",
+            "nonAdditiveAlong"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "non-additive"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "ratio-measure"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "permits": {
+      "type": "object",
+      "properties": {
+        "null": {
+          "type": "boolean",
+          "const": true
+        },
+        "uncertainty": {
+          "type": "boolean",
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "derivation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "aggregate-to-grain"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "toGrain": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              },
+              "x-fsds-sequence": "ordered"
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "toGrain"
+          ],
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "toGrain": {
+              "namespace": "field",
+              "mirrors": "result.grain"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "join"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "with": {
+              "$ref": "#/definitions/name"
+            },
+            "cardinality": {
+              "type": "string",
+              "enum": [
+                "one-to-one",
+                "one-to-many",
+                "many-to-one",
+                "many-to-many"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "with",
+            "cardinality"
+          ],
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "with": {
+              "namespace": "relation",
+              "distinctFrom": "from"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "nest"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "levels": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              },
+              "x-fsds-sequence": "ordered"
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "levels"
+          ],
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "levels": "field"
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "bin"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "field": {
+              "$ref": "#/definitions/name"
+            },
+            "closure": {
+              "type": "string",
+              "enum": [
+                "left-closed",
+                "right-closed"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "field"
+          ],
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "field": "field"
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "normalize"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "field": {
+              "$ref": "#/definitions/name"
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "field"
+          ],
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "field": "field"
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "project"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "keep": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/name"
+              },
+              "x-fsds-sequence": "set"
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "keep"
+          ],
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "keep": {
+              "namespace": "field",
+              "mirrors": "result.fields"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "graph"
+            },
+            "from": {
+              "$ref": "#/definitions/name"
+            },
+            "edgeFrom": {
+              "$ref": "#/definitions/name"
+            },
+            "edgeTo": {
+              "$ref": "#/definitions/name"
+            },
+            "value": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/name"
+                }
+              ]
+            },
+            "requiresConservation": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "kind",
+            "from",
+            "edgeFrom",
+            "edgeTo"
+          ],
+          "additionalProperties": false,
+          "x-fsds-operands": {
+            "from": "relation",
+            "edgeFrom": "field",
+            "edgeTo": {
+              "namespace": "field",
+              "distinctFrom": "edgeFrom"
+            },
+            "value": "field"
+          }
+        }
+      ]
+    },
+    "graph-view": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^GV_[A-Z0-9_]+$"
+        },
+        "binds": {
+          "$ref": "#/definitions/graph-view-binding"
+        }
+      },
+      "required": [
+        "id",
+        "binds"
+      ],
+      "additionalProperties": false,
+      "title": "Analytical graph view",
+      "description": "A canonical declaration binding a node universe and an edge interpretation into a graph-valued analytical object. Emitted from packages/ds-codegen/src/analytical/graph-view-model.ts; do not edit by hand."
+    },
+    "graph-view-binding": {
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "type": "object",
+          "properties": {
+            "relation": {
+              "$ref": "#/definitions/name"
+            },
+            "keyField": {
+              "$ref": "#/definitions/name"
+            }
+          },
+          "required": [
+            "relation",
+            "keyField"
+          ],
+          "additionalProperties": false
+        },
+        "edges": {
+          "type": "object",
+          "properties": {
+            "relation": {
+              "$ref": "#/definitions/name"
+            },
+            "fromField": {
+              "$ref": "#/definitions/name"
+            },
+            "toField": {
+              "$ref": "#/definitions/name"
+            }
+          },
+          "required": [
+            "relation",
+            "fromField",
+            "toField"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "nodes",
+        "edges"
+      ],
+      "additionalProperties": false,
+      "description": "The named node universe and the named edge interpretation this view binds into one graph."
+    }
+  }
+}

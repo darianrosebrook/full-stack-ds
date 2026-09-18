@@ -1,12 +1,18 @@
 {
-  "$comment": "The isolated-node graph experiment (REL-GRAPH-NODE-UNIVERSE-01) and its binding-selection correction (REL-GRAPH-BINDING-SELECTS-01). The selection control is ONE source with TWO bindings. Regenerate with `tsx packages/ds-codegen/src/analytical/graph-projection.ts --record`; the test fails when this file and a fresh computation disagree.",
+  "$comment": "The isolated-node graph experiment (REL-GRAPH-NODE-UNIVERSE-01), its binding-selection correction (REL-GRAPH-BINDING-SELECTS-01), and the canonical graph-view integration (REL-GRAPH-VIEW-CANONICAL-01). The views are AUTHORED in analytical-fixtures/graph-views.json and loaded through the canonical parser; regenerate with `tsx packages/ds-codegen/src/analytical/graph-projection.ts --record`.",
+  "authoredFrom": "analytical-fixtures/graph-views.json",
+  "schemaEmittedFrom": "graph-view-model.ts",
+  "viewIds": [
+    "GV_ALL_NODES",
+    "GV_CONNECTED_SET"
+  ],
   "question": "Can one admitted relational structure preserve an independently declared node population and its edge incidence through two produced representations, without deriving the node population from the edges and without special-case consumer knowledge?",
   "selectionControl": {
-    "what": "ONE named source holds two candidate node universes and one edge relation; only the BINDING changes",
+    "what": "ONE authored source holds two candidate node universes and one edge relation; only the PARSED binding changes",
     "sourceRelations": [
-      "allNodes",
-      "connectedSet",
-      "links"
+      "links",
+      "all_nodes",
+      "connected_set"
     ],
     "byAllNodes": {
       "selected": [
@@ -38,8 +44,7 @@
       "isolates": []
     },
     "selectionChanged": true,
-    "edgeRelationIdentical": true,
-    "sourceRowsUnchanged": true
+    "edgeRelationIdentical": true
   },
   "recovered": {
     "allNodes": {
@@ -120,11 +125,11 @@
     "distinguishesThePair": false
   },
   "qualification": {
-    "keyThatResolvesButIsNotTheKey": "the graph binding is refused: allNodes.label resolves but is not the relation's declared key, so it does not establish a node identity",
+    "keyThatResolvesButIsNotTheKey": "the graph binding is refused: all_nodes.label resolves but is not the relation's declared key, so it does not establish a node identity",
     "endpointOutsideTheSelectedUniverse": "the graph binding is refused: links.dst names n9, which the selected node universe does not contain",
     "missingPopulation": {
       "carried": "invariant:population-declared",
-      "reason": "no rows are supplied for the node universe allNodes"
+      "reason": "no rows are supplied for the node universe all_nodes"
     },
     "nodeUniverseIsTheEdgeRelation": "the graph binding is refused: the node universe and the incidence must be different relations: deriving one from the other is what this binding exists to prevent"
   },
@@ -181,12 +186,15 @@
       "value": "field"
     },
     "declaresANodeRelation": false,
-    "note": "the authority's graph operand names an edge relation and two of its fields and no node relation; the binding is an explicit validated premise here, and what it OWNS is now measured so that placing it in the canonical model integrates measured semantics"
+    "note": "the relation-valued graph derivation is unchanged and retains its documented edge-relation meaning; the graph VIEW is a separate declaration family whose result is a graph, accounted under its own identity rather than by extending the relation algebra"
   },
   "nonClaims": [
     "This is a bounded experiment on ONE source holding two candidate node universes and one edge relation, plus its isolate-removal neighbor. It does not establish arbitrary graph realization, does not implement a layout, marks, interaction or accessibility, and does not establish the complete projection thesis.",
     "NO CANONICAL-MODEL INTEGRATION. The authority's graph operand declares no node relation, so the binding is an explicit validated PREMISE; the zod model, schema emission and the stage-2 ledgers are untouched. What this slice measures is what the binding OWNS — source selection, key qualification, endpoint membership and the resulting graph object — so that a later placement decision integrates measured semantics rather than a promising shape.",
     "The graph tests construct the source directly and do not invoke the analytical judge, so they establish binding resolution, selection and representation preservation, not graph-specific semantic admission through the full authority.",
-    "The two representations differ in shape, not in substrate: both are inspectable data structures, and neither is rendered."
+    "The two representations differ in shape, not in substrate: both are inspectable data structures, and neither is rendered.",
+    "The key check establishes that the designated field carries `key: true`. It does NOT establish that every supplied identity is unique, and it is NOT a general source-key integrity proof.",
+    "The supplied arrays ARE the selected populations for a snapshot. How a partially fetched population should be interpreted is not established here, and `not observed yet` is not silently read as `outside the universe`.",
+    "The graph-valued result carries STRING identities and directed endpoint pairs. Labels, weights, layout and arbitrary multigraph behaviour have not earned preservation claims merely because their source fields exist."
   ]
 }

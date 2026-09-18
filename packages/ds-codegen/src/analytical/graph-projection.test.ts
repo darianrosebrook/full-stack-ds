@@ -15,6 +15,7 @@
  * endpoint strings compose to the same joined text stay distinct.
  */
 import fs from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   GRAPH_LEDGER,
@@ -23,22 +24,51 @@ import {
   decodeRelationalGraph,
   denoteGraph,
   deriveNodesFromEdges,
-  graphFixture,
   graphLedger,
+  loadGraphViews,
+  VIEW_ALL_NODES,
+  VIEW_CONNECTED_SET,
   graphPreservation,
   isolateRemoved,
   produceGraph,
   recoverGraph,
   renameInOutput,
 } from "./graph-projection.js";
-import type { GraphBinding, GraphResult } from "./graph-projection.js";
+import type { GraphResult } from "./graph-projection.js";
+import { GraphViewFile } from "./graph-view-model.js";
+import { CONTRACTS_DIR } from "./necessity.js";
 
-const SOURCE = graphFixture();
-const ALL_NODES: GraphBinding = { nodes: { relation: "allNodes", keyField: "id" }, edges: { relation: "links", fromField: "src", toField: "dst" } };
-const CONNECTED_SET: GraphBinding = { nodes: { relation: "connectedSet", keyField: "id" }, edges: { relation: "links", fromField: "src", toField: "dst" } };
+// THE DECISIVE PAIR ENTERS THROUGH THE CANONICAL LOADER. Nothing here hand-builds
+// a declaration: the views are parsed from the authored file and validated
+// against the definition the emitted schema is rendered from.
+const LOADED = loadGraphViews();
+const SOURCE = LOADED.source;
+const ALL_NODES = LOADED.views.get(VIEW_ALL_NODES)!;
+const CONNECTED_SET = LOADED.views.get(VIEW_CONNECTED_SET)!;
 
 const all = graphPreservation(ALL_NODES, SOURCE);
 const connected = graphPreservation(CONNECTED_SET, SOURCE);
+
+describe("the canonical path: authored, parsed, schema-emitted", () => {
+  it("declares the views in the canonical authored file and parses them", () => {
+    expect([...LOADED.views.keys()].sort()).toEqual([VIEW_ALL_NODES, VIEW_CONNECTED_SET]);
+    expect(LOADED.declaration.views).toHaveLength(2);
+  });
+
+  it("reproduces the two already-earned graphs from the PARSED declarations", () => {
+    // Same source, same rows; only the parsed node-universe binding differs.
+    expect(graphPreservation(ALL_NODES, SOURCE).result.nodes).toEqual(["n1", "n2", "n3"]);
+    expect(graphPreservation(CONNECTED_SET, SOURCE).result.nodes).toEqual(["n1", "n2"]);
+  });
+
+  it("refuses an authored file that does not validate, rather than defaulting", () => {
+    // A view naming no node relation is schema-valid in shape but not in meaning;
+    // a file missing the required `views` key fails validation outright.
+    const bad = JSON.parse(fs.readFileSync(path.join(CONTRACTS_DIR, "analytical-fixtures/graph-views.json"), "utf-8"));
+    expect(GraphViewFile.safeParse({ structure: bad.structure, rows: bad.rows }).success).toBe(false);
+    expect(GraphViewFile.safeParse({ ...bad, views: [] }).success).toBe(false);
+  });
+});
 
 describe("the binding SELECTS its populations from one named source", () => {
   it("changes the denoted graph when only the binding changes", () => {
@@ -57,7 +87,7 @@ describe("the binding SELECTS its populations from one named source", () => {
     const admission = denoteGraph(CONNECTED_SET, SOURCE);
     expect(admission.kind).toBe("denoted");
     if (admission.kind !== "denoted") throw new Error("unreachable");
-    expect(admission.selected).toEqual({ nodes: "connectedSet", edges: "links" });
+    expect(admission.selected).toEqual({ nodes: "connected_set", edges: "links" });
     const other = denoteGraph(ALL_NODES, SOURCE);
     expect(other.kind === "denoted" && other.graph.nodes).toEqual(["n1", "n2", "n3"]);
   });
@@ -107,12 +137,12 @@ describe("preservation through two produced representations", () => {
 describe("qualification: a name that resolves is not a semantic qualification", () => {
   it("refuses an identity field that resolves but is not the relation's key", () => {
     // `label` exists, so a name-resolution check alone accepted it.
-    expect(() => denoteGraph({ ...ALL_NODES, nodes: { relation: "allNodes", keyField: "label" } }, SOURCE)).toThrow(/not the relation's declared key/);
+    expect(() => denoteGraph({ ...ALL_NODES, nodes: { relation: "all_nodes", keyField: "label" } }, SOURCE)).toThrow(/not the relation's declared key/);
   });
 
   it("refuses an endpoint outside the SELECTED universe instead of dropping it", () => {
     expect(() => denoteGraph(ALL_NODES, { ...SOURCE, rows: { ...SOURCE.rows, links: [{ src: "n1", dst: "n9", weight: 1 }] } })).toThrow(/does not contain/);
-    const widened = { ...SOURCE, rows: { ...SOURCE.rows, allNodes: [...SOURCE.rows.allNodes, { id: "n9", label: "Extra" }] } };
+    const widened = { ...SOURCE, rows: { ...SOURCE.rows, all_nodes: [...SOURCE.rows.all_nodes, { id: "n9", label: "Extra" }] } };
     expect(denoteGraph(ALL_NODES, widened).kind).toBe("denoted");
   });
 

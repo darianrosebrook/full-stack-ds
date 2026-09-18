@@ -36,7 +36,7 @@ const CONTRACTS = path.resolve(HERE, "../../../ds-contracts");
 
 const sha = (bytes: string | Buffer) => createHash("sha256").update(bytes).digest("hex");
 
-export type AuthorityName = "coordinateBasis" | "erasureAuthority" | "witnessAuthority";
+export type AuthorityName = "coordinateBasis" | "erasureAuthority" | "witnessAuthority" | "graphViewBasis";
 
 export interface AuthorityIdentity {
   name: AuthorityName;
@@ -168,7 +168,25 @@ export const WITNESS_AUTHORITY: AuthorityIdentity = {
   artifacts: [],
 };
 
-export const IDENTITIES: readonly AuthorityIdentity[] = [COORDINATE_BASIS, ERASURE_AUTHORITY, WITNESS_AUTHORITY];
+/**
+ * WHAT A GRAPH VIEW MEANS: the canonical declaration family whose result is a
+ * graph rather than a relation, and the interpreter that denotes it.
+ *
+ * Its own identity on purpose. Extending `coordinateBasis` would move that
+ * digest and every verdict stamped with it, for a family that is not a census
+ * coordinate; a separate identity states the new family's standing without
+ * silently re-stamping the existing ones.
+ */
+const GRAPH_VIEW_BASIS: AuthorityIdentity = {
+  name: "graphViewBasis",
+  invalidates: "any verdict that names a graph view id, since the id may now denote a different binding or none",
+  entryPoints: ["graph-projection.ts"],
+  owns: ["graph-view-model.ts", "graph-projection.ts"],
+  excluded: {},
+  artifacts: ["analytical-fixtures/graph-view.schema.json"],
+};
+
+export const IDENTITIES: readonly AuthorityIdentity[] = [COORDINATE_BASIS, ERASURE_AUTHORITY, WITNESS_AUTHORITY, GRAPH_VIEW_BASIS];
 
 /**
  * Production modules that belong to NO identity, each with the reason.
@@ -196,7 +214,6 @@ export const UNIDENTIFIED_MODULES: Readonly<Record<string, string>> = {
   "freeze.ts": "records and checks the stage-2 freeze the same way",
   "legacy-comparison.ts": "compares the live ledgers against the legacy record; it reports a difference and adjudicates nothing",
   "projection.ts": "consumes the relation authority for the bounded stage-3 experiment and records a committed candidate-set ledger it byte-checks against a fresh computation; it feeds no verdict and is not a rule source, and a changed projection rule cannot leave the recorded ledger identical",
-  "graph-projection.ts": "the bounded graph experiment: it consumes a declared node-universe binding and records a committed ledger it byte-checks against a fresh computation; it feeds no verdict and is not a rule source",
 };
 
 /** Local `./x.js` imports of one analytical module, by basename. */

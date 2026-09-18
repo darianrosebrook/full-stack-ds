@@ -12,6 +12,7 @@ import * as path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import * as z from "zod";
 import { emitQuotientSchema, QUOTIENT_SCHEMA_FILE } from "./quotient-image.js";
+import { GraphViewFile, GRAPH_VIEW_SCHEMA_FILE } from "./graph-view-model.js";
 import { Assertion, Fixture, RelationalStructure } from "./relation-model.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -21,6 +22,9 @@ const TARGETS = [
   { file: "relation.contract.schema.json", schema: RelationalStructure },
   { file: "analytical-fixtures/assertion.schema.json", schema: Assertion },
   { file: "analytical-fixtures/fixture.schema.json", schema: Fixture },
+  // The graph-view family is emitted from its own zod definition: a declaration
+  // family with a graph-valued result, alongside the relation-valued ones.
+  { file: GRAPH_VIEW_SCHEMA_FILE, schema: GraphViewFile },
 ] as const;
 
 function render(file: string, schema: z.ZodType): string {

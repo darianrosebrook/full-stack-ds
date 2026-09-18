@@ -28,6 +28,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { CONTRACTS_DIR } from "./necessity.js";
+import { GRAPH_VIEW_AUTHORING_FILE, GraphViewFile } from "./graph-view-model.js";
+import type { GraphViewFileDecl } from "./graph-view-model.js";
 import type { RelationalStructure } from "./relation-model.js";
 
 /**
@@ -287,25 +289,35 @@ export const GRAPH_NON_CLAIMS = [
   "NO CANONICAL-MODEL INTEGRATION. The authority's graph operand declares no node relation, so the binding is an explicit validated PREMISE; the zod model, schema emission and the stage-2 ledgers are untouched. What this slice measures is what the binding OWNS — source selection, key qualification, endpoint membership and the resulting graph object — so that a later placement decision integrates measured semantics rather than a promising shape.",
   "The graph tests construct the source directly and do not invoke the analytical judge, so they establish binding resolution, selection and representation preservation, not graph-specific semantic admission through the full authority.",
   "The two representations differ in shape, not in substrate: both are inspectable data structures, and neither is rendered.",
+  "The key check establishes that the designated field carries `key: true`. It does NOT establish that every supplied identity is unique, and it is NOT a general source-key integrity proof.",
+  "The supplied arrays ARE the selected populations for a snapshot. How a partially fetched population should be interpreted is not established here, and `not observed yet` is not silently read as `outside the universe`.",
+  "The graph-valued result carries STRING identities and directed endpoint pairs. Labels, weights, layout and arbitrary multigraph behaviour have not earned preservation claims merely because their source fields exist.",
 ];
 
-/** ONE source holding two candidate node universes and one edge relation. */
-export function graphFixture(): GraphSource {
-  return {
-    structure: {
-      relations: {
-        allNodes: { grain: ["id"], fields: { id: { transformation: "nominal", key: true }, label: { transformation: "nominal" } } },
-        connectedSet: { grain: ["id"], fields: { id: { transformation: "nominal", key: true }, label: { transformation: "nominal" } } },
-        links: { grain: ["src", "dst"], fields: { src: { transformation: "nominal" }, dst: { transformation: "nominal" }, weight: { transformation: "ratio" } } },
-      },
-    } as unknown as RelationalStructure,
-    rows: {
-      allNodes: [{ id: "n1", label: "Contract" }, { id: "n2", label: "IR" }, { id: "n3", label: "Orphan" }],
-      connectedSet: [{ id: "n1", label: "Contract" }, { id: "n2", label: "IR" }],
-      links: [{ src: "n1", dst: "n2", weight: 1 }],
-    },
-  };
+/**
+ * THE CANONICAL LOADER. The authored file is parsed and validated against the
+ * definition the emitted schema is rendered from, so a declaration enters
+ * through the project's own path rather than as a hand-built TypeScript object
+ * beside a separately checked schema.
+ */
+export function loadGraphViews(contractsDir = CONTRACTS_DIR): {
+  declaration: GraphViewFileDecl;
+  source: GraphSource;
+  views: Map<string, GraphBinding>;
+} {
+  const file = path.join(contractsDir, GRAPH_VIEW_AUTHORING_FILE);
+  const parsed = GraphViewFile.safeParse(JSON.parse(fs.readFileSync(file, "utf-8")));
+  if (!parsed.success) {
+    throw new Error(`the authored graph views at ${GRAPH_VIEW_AUTHORING_FILE} do not validate: ${JSON.stringify(parsed.error.issues[0])}`);
+  }
+  const declaration = parsed.data;
+  const views = new Map<string, GraphBinding>(declaration.views.map((v) => [v.id, v.binds as GraphBinding]));
+  return { declaration, source: { structure: declaration.structure, rows: declaration.rows }, views };
 }
+
+/** The view ids the experiment's decisive pair uses, as authored. */
+export const VIEW_ALL_NODES = "GV_ALL_NODES";
+export const VIEW_CONNECTED_SET = "GV_CONNECTED_SET";
 
 const attempt = (f: () => unknown): string => {
   try {
@@ -322,32 +334,32 @@ const attempt = (f: () => unknown): string => {
  * qualification refusals and the direct output mutation — not a verdict.
  */
 export function graphLedger(): Record<string, unknown> {
-  const source = graphFixture();
-  const allNodes: GraphBinding = { nodes: { relation: "allNodes", keyField: "id" }, edges: { relation: "links", fromField: "src", toField: "dst" } };
-  const connectedSet: GraphBinding = { nodes: { relation: "connectedSet", keyField: "id" }, edges: { relation: "links", fromField: "src", toField: "dst" } };
+  const { source, views } = loadGraphViews();
+  const allNodes = views.get(VIEW_ALL_NODES);
+  const connectedSet = views.get(VIEW_CONNECTED_SET);
+  if (!allNodes || !connectedSet) throw new Error(`the authored file must declare ${VIEW_ALL_NODES} and ${VIEW_CONNECTED_SET}`);
   const all = graphPreservation(allNodes, source);
   const connected = graphPreservation(connectedSet, source);
 
-  // Two distinct edges whose joined endpoint text collides under a
-  // separator-keyed deduplication. Both must survive.
   const ambiguous: GraphResult = { nodes: ["a", "b", "c"], edges: [{ from: "a->b", to: "c" }, { from: "a", to: "b->c" }], isolates: [] };
   const ambiguousDecoded = recoverGraph(produceGraph(ambiguous).incidence);
-
   const missing = denoteGraph(allNodes, { structure: source.structure, rows: { links: source.rows.links } });
 
   return {
     $comment:
-      "The isolated-node graph experiment (REL-GRAPH-NODE-UNIVERSE-01) and its binding-selection correction (REL-GRAPH-BINDING-SELECTS-01). The selection control is ONE source with TWO bindings. Regenerate with `tsx packages/ds-codegen/src/analytical/graph-projection.ts --record`; the test fails when this file and a fresh computation disagree.",
+      "The isolated-node graph experiment (REL-GRAPH-NODE-UNIVERSE-01), its binding-selection correction (REL-GRAPH-BINDING-SELECTS-01), and the canonical graph-view integration (REL-GRAPH-VIEW-CANONICAL-01). The views are AUTHORED in analytical-fixtures/graph-views.json and loaded through the canonical parser; regenerate with `tsx packages/ds-codegen/src/analytical/graph-projection.ts --record`.",
+    authoredFrom: GRAPH_VIEW_AUTHORING_FILE,
+    schemaEmittedFrom: "graph-view-model.ts",
+    viewIds: [...views.keys()],
     question:
       "Can one admitted relational structure preserve an independently declared node population and its edge incidence through two produced representations, without deriving the node population from the edges and without special-case consumer knowledge?",
     selectionControl: {
-      what: "ONE named source holds two candidate node universes and one edge relation; only the BINDING changes",
+      what: "ONE authored source holds two candidate node universes and one edge relation; only the PARSED binding changes",
       sourceRelations: Object.keys(source.structure.relations),
       byAllNodes: { selected: all.result.nodes, edges: all.result.edges, isolates: all.result.isolates },
       byConnectedSet: { selected: connected.result.nodes, edges: connected.result.edges, isolates: connected.result.isolates },
       selectionChanged: JSON.stringify(all.result.nodes) !== JSON.stringify(connected.result.nodes),
       edgeRelationIdentical: JSON.stringify(all.result.edges) === JSON.stringify(connected.result.edges),
-      sourceRowsUnchanged: true,
     },
     recovered: {
       allNodes: { relational: all.relational.recovered, incidence: all.incidence.recovered, bothPreserve: all.relational.ok && all.incidence.ok },
@@ -360,7 +372,7 @@ export function graphLedger(): Record<string, unknown> {
       distinguishesThePair: all.derivedFromEdges.distinguishesThePair,
     },
     qualification: {
-      keyThatResolvesButIsNotTheKey: attempt(() => denoteGraph({ ...allNodes, nodes: { relation: "allNodes", keyField: "label" } }, source)),
+      keyThatResolvesButIsNotTheKey: attempt(() => denoteGraph({ ...allNodes, nodes: { relation: "all_nodes", keyField: "label" } }, source)),
       endpointOutsideTheSelectedUniverse: attempt(() => denoteGraph(allNodes, { ...source, rows: { ...source.rows, links: [{ src: "n1", dst: "n9", weight: 1 }] } })),
       missingPopulation: missing.kind === "unproven" ? { carried: missing.obligation, reason: missing.reason } : "ACCEPTED",
       nodeUniverseIsTheEdgeRelation: attempt(() => denoteGraph({ nodes: { relation: "links", keyField: "src" }, edges: { relation: "links", fromField: "src", toField: "dst" } }, source)),
@@ -380,7 +392,7 @@ export function graphLedger(): Record<string, unknown> {
     authorityGap: {
       operand: { from: "relation", edgeFrom: "field", edgeTo: "field", value: "field" },
       declaresANodeRelation: false,
-      note: "the authority's graph operand names an edge relation and two of its fields and no node relation; the binding is an explicit validated premise here, and what it OWNS is now measured so that placing it in the canonical model integrates measured semantics",
+      note: "the relation-valued graph derivation is unchanged and retains its documented edge-relation meaning; the graph VIEW is a separate declaration family whose result is a graph, accounted under its own identity rather than by extending the relation algebra",
     },
     nonClaims: GRAPH_NON_CLAIMS,
   };
