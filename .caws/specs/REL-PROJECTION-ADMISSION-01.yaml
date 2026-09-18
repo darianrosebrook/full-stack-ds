@@ -1,0 +1,36 @@
+id: REL-PROJECTION-ADMISSION-01
+title: 'Connect an admitted analytical operation to a selected projection program and its produced representation'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-18T03:32:05.886Z'
+updated_at: '2026-09-18T03:32:05.886Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/projection.ts (semantic admission through judge, partition membership, lower, lowerAndRecover, preservationReport)'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'SEMANTIC ADMISSION USES THE EXISTING ANALYTICAL AUTHORITY, never a second implementation of the laws. The operation is judged by the same engine that judges the corpus, and its structural resolution is not allowed to substitute for that judgment. A structural check that passes while the analytical rules refuse the operation is exactly the defect this closes.'
+  - 'A preservation result is not an admission result. A round trip can hold perfectly for an operation that should never have been admitted, so the two are tested separately and neither stands in for the other.'
+  - 'Program choice must DETERMINE the produced representation. The lowering entry point consumes a retained program; with no candidate there is no output, and removing the capability a representation needs prevents that representation from being produced.'
+  - 'A declared composition partition must be a column of the RESULT. A partition naming a source column the operation summed away, or a name that exists nowhere, is an invalid binding and is refused at the same boundary as the operation, not treated as an unknown partition and not given an unrelated analytical diagnostic.'
+  - 'Out of scope and not to be widened into: OHLC and graph recombination, the eight unimplemented tasks, general combinators, rendering, cross-target behaviour, stage-2 accounting, and residue enumeration. Only the existing readback and one explicit metric assignment are lowered; the remaining programs stay enumerated and unrealized, and that limit is stated.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an analytical operation is supplied with the structure it names; when its semantic standing is established before its result is treated as admitted; then the operation is judged by the existing analytical authority, an operation the declared facts forbid is REFUSED even though the arithmetic evaluator can compute it, a premise that is merely missing is carried, and structural resolution never substitutes for the judgment'
+non_functional: {}
+contracts:
+  - name: 'admission-lowering'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/projection.test.ts'
