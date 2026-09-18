@@ -1592,17 +1592,19 @@
     }
   },
   "preservation": {
-    "result": [
-      {
-        "key": "day1",
-        "value": 30
-      },
-      {
-        "key": "day2",
-        "value": 105
-      }
-    ],
     "readback": {
+      "program": "cartesian|position|text",
+      "representation": "readback",
+      "result": [
+        {
+          "key": "day1",
+          "value": 30
+        },
+        {
+          "key": "day2",
+          "value": 105
+        }
+      ],
       "recovered": [
         {
           "key": "day1",
@@ -1613,9 +1615,37 @@
           "value": 105
         }
       ],
-      "preserved": true
+      "preserved": true,
+      "scale": null,
+      "mutated": {
+        "kind": "key-binding",
+        "recovered": [
+          {
+            "key": "day2",
+            "value": 30
+          },
+          {
+            "key": "day1",
+            "value": 105
+          }
+        ],
+        "preserved": false,
+        "totalUnchanged": true
+      }
     },
     "metric": {
+      "program": "cartesian|position|area",
+      "representation": "metric",
+      "result": [
+        {
+          "key": "day1",
+          "value": 30
+        },
+        {
+          "key": "day2",
+          "value": 105
+        }
+      ],
       "recovered": [
         {
           "key": "day1",
@@ -1630,35 +1660,27 @@
       "scale": {
         "unitsPerValue": 2,
         "baseline": "zero"
+      },
+      "mutated": {
+        "kind": "extent",
+        "recovered": [
+          {
+            "key": "day1",
+            "value": 30.5
+          },
+          {
+            "key": "day2",
+            "value": 105
+          }
+        ],
+        "preserved": false,
+        "totalUnchanged": false
       }
-    },
-    "mutatedExtent": {
-      "recovered": [
-        {
-          "key": "day1",
-          "value": 30.5
-        },
-        {
-          "key": "day2",
-          "value": 105
-        }
-      ],
-      "preserved": false
-    },
-    "mutatedBinding": {
-      "recovered": [
-        {
-          "key": "day2",
-          "value": 30
-        },
-        {
-          "key": "day1",
-          "value": 105
-        }
-      ],
-      "preserved": false,
-      "totalUnchanged": true
     }
+  },
+  "loweringControls": {
+    "emptyInventoryRetained": 0,
+    "metricWithoutBaseline": "a metric representation needs a declared zero baseline"
   },
   "consumers": {
     "readback": {
@@ -1781,6 +1803,11 @@
     "valueDisagreement": true
   },
   "correctedAccount": {
+    "semanticAdmission": "REPAIRED, and it is the finding this slice exists for. Structural resolution - aggregate support, relation and field resolution, the grain equation, the single-result-column rule - answered whether the operation RESOLVES, not whether the declared facts FORBID it, so `sum(stock.on_hand) over [date] -> grain [product]` was admitted, enumerated and PRESERVED perfectly while contradicting `nonAdditiveAlong: [date]`. The operation is now judged by the same engine that judges the corpus: an illegal one is REFUSED with the corpus's own causes, an unproven one is carried. A perfect round trip is not an admission result, and the two are now tested separately.",
+    "partitionMembership": "REPAIRED at the same boundary. A declared composition partition naming a source column the operation summed away (`product`), or a name that exists nowhere, was retaining candidates because the composition branch checked absence and additivity but never membership in the result grain. It is now refused as an invalid binding.",
+    "singleEvaluation": "REPAIRED. preservationReport called evaluateOperation twice - once for the result and once to feed produce - which contradicted the single-evaluation claim. It evaluates once and lowers that result.",
+    "programDeterminedOutput": "NEW, and it is the connection the earlier result lacked. produce() can build both representations from any result, so on its own it demonstrated an encoding helper: with an EMPTY channel inventory, enumeration retained nothing and the standalone report still produced both outputs. `lower` consumes an actual RETAINED PROGRAM, and the program's measure channel decides which representation is produced or refuses to produce one. The decisive controls: an empty inventory retains 0 candidates and therefore yields no output, and clearing the baseline a metric program needs makes lowering unrealized.",
+    "arityClaim": "NARROWED. `Function.length === 1` is a signature fact, not a proof of the information boundary: a one-argument function can still read a captured variable or call a module-level evaluator. No such behaviour was found in the decoder bodies, and the support for decoder independence is the isolated execution in a context containing the representation but neither the evaluator nor the rows.",
     "operationIdentity": "CORRECTED UPWARD IN FORM AND DOWNWARD IN CLAIM. The guarantee that a candidate carries the admitted operation is now a CONSTRUCTION property - every candidate is stamped from the validated operation, so it cannot carry another - and the boundary validates that operation against the relation it NAMES before any candidate exists. What that does not do is check a caller-supplied operation against some independently established admitted one: the enumerator has no such second authority, so an operation for a different analysis is refused only if it contradicts the relation.",
     "representationRecovery": "This is what the earlier consumers did NOT establish. Both sides called `evaluateOperation`, so nothing representation-dependent lay between them: agreement showed the binding and channel guards admit one shared evaluation, not that a value survived text or metric encoding. Recovery is now observed through two PRODUCED representations whose decoders receive neither the rows nor the evaluator, and the metric decoder recovers from extents and the DECLARED SCALE alone.",
     "aggregateDispatch": "REPAIRED. `evaluateOperation` read `op.resultGrain` for grouping while ignoring `op.op`, so mean, min and count all executed as sum, and matching mean descriptors on both sides returned ok while returning sums. The executable contract is now narrowed to sum and every other aggregate name is REFUSED rather than executed.",
@@ -1944,10 +1971,10 @@
     {
       "control": "ratio->ordinal",
       "expected": "every retained program whose measure assignment requires ratio capacity; preserve the nominal/ordinal-compatible alternatives, namely the value-readback programs",
-      "actual": "removed 12 of 12, every removed program's task-bearing claim resting on the ratio scale: true; preserved 0. MEASURED VACUITY: the preservation limb has no members for THIS task, because magnitude-comparison requires ratio comparability and every retained program derives it from the measure's scale. The narrowing is not blanket - see the targeted-narrowing control, which removes the nominal-only dimension channels and preserves the rest.",
+      "actual": "REFUSED AT ADMISSION before any candidate exists: the admitted operation is refused: the analytical rules forbid it: REL_MEANINGFULNESS_INTERVAL_SUM",
       "requirementMet": true,
       "predictionRefuted": true,
-      "correction": "The precommit named the value-readback programs as the alternatives a ratio->ordinal move must preserve. Ten existed and none survived: magnitude comparison requires ratio comparability, and a readable ordinal value does not supply it. The general same-task preservation requirement has an empty applicable set for this task; the CONCRETE prediction was wrong.",
+      "correction": "SUPERSEDED BY SEMANTIC ADMISSION, and this is the stronger result. The precommit named the value-readback programs as the alternatives a ratio->ordinal move must preserve; summing an ordinal measure is itself an analysis the rules forbid, so the perturbed operation is now refused BEFORE any candidate exists and there is no candidate set in which a readback program could survive. The control is not weakened: the narrower claim it tested is unreachable because admission rejects the premise first.",
       "ok": false
     },
     {
@@ -2051,13 +2078,9 @@
     },
     "ratio-measure": {
       "retained": 0,
-      "refused": 67,
-      "causes": [
-        "REL_AREA_INTERVAL_SCALE",
-        "REL_CYCLIC_ANGLE_NONCYCLIC",
-        "REL_HUE_CARRIES_ORDER",
-        "REL_RATIO_MEASURE_AVERAGED"
-      ]
+      "refused": 0,
+      "causes": [],
+      "refusedAtAdmission": "the admitted operation is refused: the analytical rules forbid it: REL_RATIO_MEASURE_AVERAGED"
     }
   },
   "nonClaims": [

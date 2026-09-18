@@ -33,6 +33,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { RelationalStructure as RelationalStructureSchema } from "./relation-model.js";
 import type { AggregateOp, FieldDecl, RelationDecl, RelationalStructure, Transformation } from "./relation-model.js";
+import { judge } from "./engines.js";
+import { codesOf, termsOf } from "./judgment.js";
 import { CONTRACTS_DIR, loadOracle } from "./necessity.js";
 
 /* ------------------------------------------------------------------ types */
@@ -137,7 +139,24 @@ export type OperationAdmission =
   | { kind: "admitted"; facts: ResultFacts }
   | { kind: "unproven"; obligation: string; reason: string };
 
-export function admitOperation(structure: RelationalStructure, op: BoundOperation): OperationAdmission {
+/** The assertion an operation makes, in the analytical grammar's own terms. */
+export const assertionFor = (op: BoundOperation): AggregateAssertionDecl & { kind: "aggregate" } => ({
+  kind: "aggregate",
+  relation: op.relation,
+  field: op.field,
+  op: op.op,
+  ...(op.along.length > 0 ? { along: [...op.along] } : {}),
+});
+
+/**
+ * SEMANTIC ADMISSION runs the EXISTING analytical authority over the exact
+ * assertion the operation makes. Structural resolution answers "does this
+ * operation resolve against the structure"; it does not answer "do the declared
+ * facts forbid it", and a structural pass must never stand in for that judgment:
+ * a cross-date sum over a measure declared non-additive along date resolves
+ * perfectly and is still a lie the corpus can name.
+ */
+export function admitOperation(structure: RelationalStructure, op: BoundOperation, evidence?: unknown): OperationAdmission {
   const refuse = (reason: string): never => {
     throw new Error(`the admitted operation is refused: ${reason}`);
   };
@@ -161,6 +180,18 @@ export function admitOperation(structure: RelationalStructure, op: BoundOperatio
   if (op.resultGrain.length !== 1) refuse(`the bounded experiment projects a single result-grain column, and this operation produces ${op.resultGrain.length}`);
   const groupField = rel.fields?.[op.resultGrain[0]];
   if (!groupField) refuse(`the result grain names ${op.resultGrain[0]}, which ${op.relation} does not declare as a field`);
+
+  // The judgment, from the same engine that judges the corpus. An ILLEGAL
+  // operation is refused with the corpus's own causes; an UNPROVEN one is
+  // carried, because a missing premise is not a contradiction.
+  const judgment = judge(structure, [assertionFor(op) as never], evidence as never);
+  if (judgment.status === "illegal") {
+    refuse(`the analytical rules forbid it: ${codesOf(judgment).join(", ") || "no diagnostic named"}`);
+  }
+  if (judgment.status === "unproven") {
+    const terms = termsOf(judgment);
+    return { kind: "unproven", obligation: terms[0] ?? "unknown", reason: `the analytical rules leave this operation unproven (${terms.join(", ") || "no obligation named"})` };
+  }
   return { kind: "admitted", facts: resultFactsOf(op, rel, field, groupField) };
 }
 
@@ -434,6 +465,15 @@ export function enumerate(input: EnumerationInput): Enumeration {
   // absent operation cannot enter through unrelated facts; returns `unproven`
   // when the premise is merely missing.
   const admission = admitOperation(input.structure, input.admitted);
+  // A DECLARED partition must be a column of the RESULT. Naming a source column
+  // the operation summed away, or a name that exists nowhere, is an invalid
+  // binding: it is refused here rather than slipping past the additivity check
+  // into the favorable branch.
+  if (input.partitionDimension !== undefined && admission.kind === "admitted" && !admission.facts.resultGrain.includes(input.partitionDimension)) {
+    throw new Error(
+      `the declared composition partition ${input.partitionDimension} is not a column of the result [${admission.facts.resultGrain.join(", ")}]; a projection of the result cannot partition by it`,
+    );
+  }
   const spec = TASK_INVARIANTS[task];
   const retained: Program[] = [];
   const refused: Refusal[] = [];
@@ -629,37 +669,81 @@ const totalOf = (gs: readonly GroupValue[]) => gs.reduce((n, g) => n + g.value, 
 const shiftKeys = (entries: GroupValue[]): GroupValue[] =>
   entries.length < 2 ? entries : entries.map((e, i) => ({ key: entries[(i + 1) % entries.length].key, value: e.value }));
 
+/**
+ * LOWERING: a RETAINED PROGRAM determines which representation is produced.
+ *
+ * This is the connection that was missing. `produce` can build both
+ * representations from any result, so on its own it demonstrates an encoding
+ * helper and nothing about projection: with no candidate retained there would
+ * still be two outputs. `lower` consumes an actual program, and the program's
+ * measure channel decides the representation — or refuses to produce one.
+ */
+export type Lowered =
+  | { kind: "readback"; program: Program; output: ReadbackOutput }
+  | { kind: "metric"; program: Program; output: MetricOutput }
+  | { kind: "unrealized"; program: Program; reason: string };
+
+export function lower(program: Program, evaluated: OperationResult, unitsPerValue = METRIC_UNITS_PER_VALUE): Lowered {
+  if (CAPACITY[program.measure].valueReadback) {
+    return { kind: "readback", program, output: produce(evaluated, unitsPerValue).readback };
+  }
+  if (program.baseline !== "zero") {
+    return { kind: "unrealized", program, reason: "a metric representation needs a declared zero baseline" };
+  }
+  if (!(unitsPerValue > 0)) {
+    return { kind: "unrealized", program, reason: `a metric representation needs a positive declared scale, and it was ${unitsPerValue}` };
+  }
+  return { kind: "metric", program, output: produce(evaluated, unitsPerValue).metric };
+}
+
+/** The report for ONE program. The representation is the program's, not a choice made here. */
 export type PreservationReport = {
+  program: string;
+  representation: "readback" | "metric";
   result: GroupValue[];
-  readback: { recovered: GroupValue[]; preserved: boolean };
-  metric: { recovered: GroupValue[]; preserved: boolean; scale: MetricOutput["scale"] };
-  mutatedExtent: { recovered: GroupValue[]; preserved: boolean };
-  mutatedBinding: { recovered: GroupValue[]; preserved: boolean; totalUnchanged: boolean };
+  recovered: GroupValue[];
+  preserved: boolean;
+  scale: MetricOutput["scale"] | null;
+  /** The representation-appropriate mutation, applied to the PRODUCED output. */
+  mutated: { kind: "extent" | "key-binding"; recovered: GroupValue[]; preserved: boolean; totalUnchanged: boolean };
 };
 
 /**
- * Evaluates the admitted operation ONCE, produces both representations from that
- * one result, and recovers through the decoders. The mutations then move the
- * REPRESENTATION, not the operation: one extent changes, and one set of group
- * bindings moves while the numeric total is held fixed.
+ * Evaluates the admitted operation ONCE, lowers it through the GIVEN program,
+ * and recovers from the produced output. The mutation then moves the OUTPUT, not
+ * the operation.
  */
-export function preservationReport(admitted: BoundOperation, rows: readonly Row[], unitsPerValue = 2): PreservationReport {
-  const result = evaluateOperation(admitted, rows).groups;
-  const outputs = produce(evaluateOperation(admitted, rows), unitsPerValue);
-
-  const bumped: MetricOutput = { ...outputs.metric, entries: outputs.metric.entries.map((e, i) => (i === 0 ? { ...e, extent: e.extent + 1 } : e)) };
-  const shifted: ReadbackOutput = { ...outputs.readback, entries: shiftKeys(outputs.readback.entries) };
-  const bumpedValues = recover(bumped);
-  const shiftedValues = recover(shifted);
-
+export function preservationReport(
+  program: Program,
+  admitted: BoundOperation,
+  rows: readonly Row[],
+  unitsPerValue = METRIC_UNITS_PER_VALUE,
+): PreservationReport | { program: string; unrealized: string } {
+  const evaluated = evaluateOperation(admitted, rows);
+  const lowered = lower(program, evaluated, unitsPerValue);
+  if (lowered.kind === "unrealized") return { program: `${program.coordinate}|${program.dimension}|${program.measure}`, unrealized: lowered.reason };
+  const recovered = recover(lowered.output);
+  const mutatedValues =
+    lowered.kind === "metric"
+      ? recover({ ...lowered.output, entries: lowered.output.entries.map((e, i) => (i === 0 ? { ...e, extent: e.extent + 1 } : e)) })
+      : recover({ ...lowered.output, entries: shiftKeys(lowered.output.entries) });
   return {
-    result,
-    readback: { recovered: recover(outputs.readback), preserved: sameGroups(recover(outputs.readback), result) },
-    metric: { recovered: recover(outputs.metric), preserved: sameGroups(recover(outputs.metric), result), scale: outputs.metric.scale },
-    mutatedExtent: { recovered: bumpedValues, preserved: sameGroups(bumpedValues, result) },
-    mutatedBinding: { recovered: shiftedValues, preserved: sameGroups(shiftedValues, result), totalUnchanged: totalOf(shiftedValues) === totalOf(result) },
+    program: `${program.coordinate}|${program.dimension}|${program.measure}`,
+    representation: lowered.kind,
+    result: evaluated.groups,
+    recovered,
+    preserved: sameGroups(recovered, evaluated.groups),
+    scale: lowered.kind === "metric" ? lowered.output.scale : null,
+    mutated: {
+      kind: lowered.kind === "metric" ? "extent" : "key-binding",
+      recovered: mutatedValues,
+      preserved: sameGroups(mutatedValues, evaluated.groups),
+      totalUnchanged: totalOf(mutatedValues) === totalOf(evaluated.groups),
+    },
   };
 }
+
+export const reportKey = (p: Program) => `${p.coordinate}|${p.dimension}|${p.measure}`;
 
 /* -------------------------------------------------------------- consumers */
 
@@ -825,8 +909,13 @@ export type ExperimentResult = {
     forbiddenDirection: { operation: BoundOperation; result: OperationResult; readbackRejects: boolean };
   };
   bindingMutation: { mutated: BoundOperation; readback: ConsumerReport; rejectedBeforeConsumption: boolean; valueDisagreement: boolean };
-  /** Recovery observed from the PRODUCED representations, with two output mutations. */
-  preservation: PreservationReport;
+  /** Recovery observed per PROGRAM: the program decides which representation is produced. */
+  preservation: {
+    readback: PreservationReport | { program: string; unrealized: string };
+    metric: PreservationReport | { program: string; unrealized: string };
+  };
+  /** The decisive control: removing the channel a representation needs prevents it. */
+  loweringControls: { emptyInventoryRetained: number; metricWithoutBaseline: string | null };
   /** The facts the enumerator filtered on, derived from the operation and the relation it names. */
   resultFacts: ResultFacts;
   consumed: Record<string, unknown>;
@@ -913,9 +1002,22 @@ export function runExperiment(): ExperimentResult {
 
   const run = (s: RelationalStructure, task: Task = "magnitude-comparison", partition?: string) =>
     enumerate({ structure: s, admitted, task, inventory: EXPERIMENT_TARGET, partitionDimension: partition });
+  /**
+   * A perturbation can now be REFUSED at admission, because the operation is
+   * judged before any candidate exists. That is an outcome to report, not a
+   * crash: a control whose perturbed analysis the rules forbid has no candidate
+   * set to compare, and saying so is the honest result.
+   */
+  const tryRun = (s: RelationalStructure, task: Task = "magnitude-comparison"): { ok: true; e: Enumeration } | { ok: false; refused: string } => {
+    try {
+      return { ok: true, e: run(s, task) };
+    } catch (err) {
+      return { ok: false, refused: (err as Error).message };
+    }
+  };
 
   const baseline = run(base);
-  const ordinal = run(legal(withMeasure(base, "ordinal"), "ratio->ordinal"));
+  const ordinalAttempt = tryRun(legal(withMeasure(base, "ordinal"), "ratio->ordinal"));
   const unknownGrain = run(legal(withUnknownGrain(base), "declared->unknown"));
   const cyclicBaseline = run(legal(withDimensionOrdinal(base), "cyclic-control-baseline"));
   const cyclic = run(legal(withCyclicDimension(legal(withDimensionOrdinal(base), "cyclic-control-baseline")), "non-cyclic->cyclic"));
@@ -931,14 +1033,14 @@ export function runExperiment(): ExperimentResult {
   };
 
   const baseKeys = retainedKeys(baseline);
-  const ordinalKeys = retainedKeys(ordinal);
-  const removedByOrdinal = baseKeys.filter((k) => !ordinalKeys.includes(k));
-  const keptByOrdinal = baseKeys.filter((k) => ordinalKeys.includes(k));
+  const ordinalKeys = ordinalAttempt.ok ? retainedKeys(ordinalAttempt.e) : [];
+  const removedByOrdinal = ordinalAttempt.ok ? baseKeys.filter((k) => !ordinalKeys.includes(k)) : baseKeys;
+  const keptByOrdinal = ordinalAttempt.ok ? baseKeys.filter((k) => ordinalKeys.includes(k)) : [];
   // "Requires ratio capacity" means the program's TASK-BEARING CLAIM rests on
   // the measure's ratio scale - not that its measure channel is literally a
   // metric one. A readable value gets its ratio comparability from the scale
   // too, so it is removed for the same reason and by the same fact.
-  const ratioDependent = removedByOrdinal.every((k) => {
+  const ratioDependent = !ordinalAttempt.ok || removedByOrdinal.every((k) => {
     const p = baseline.retained.find((cand) => keyOf(cand) === k);
     return p !== undefined && inducedClaims(p, facts).includes("ratio-comparability");
   });
@@ -948,14 +1050,15 @@ export function runExperiment(): ExperimentResult {
       control: "ratio->ordinal",
       expected: `${PRECOMMITTED["ratio->ordinal"].mustRemove}; preserve ${PRECOMMITTED["ratio->ordinal"].mustPreserve}`,
       actual:
-        `removed ${removedByOrdinal.length} of ${baseKeys.length}, every removed program's task-bearing claim resting on the ratio scale: ${ratioDependent}; ` +
-        `preserved ${keptByOrdinal.length}. MEASURED VACUITY: the preservation limb has no members for THIS task, because magnitude-comparison requires ratio ` +
-        `comparability and every retained program derives it from the measure's scale. The narrowing is not blanket - see the targeted-narrowing control, ` +
-        `which removes the nominal-only dimension channels and preserves the rest.`,
-      requirementMet: removedByOrdinal.length === baseKeys.length && ratioDependent,
+        ordinalAttempt.ok
+          ? `enumerated: removed ${removedByOrdinal.length} of ${baseKeys.length}, preserved ${keptByOrdinal.length}`
+          : `REFUSED AT ADMISSION before any candidate exists: ${ordinalAttempt.refused}`,
+      requirementMet: !ordinalAttempt.ok || (removedByOrdinal.length === baseKeys.length && ratioDependent),
       predictionRefuted: true,
       correction:
-        "The precommit named the value-readback programs as the alternatives a ratio->ordinal move must preserve. Ten existed and none survived: magnitude comparison requires ratio comparability, and a readable ordinal value does not supply it. The general same-task preservation requirement has an empty applicable set for this task; the CONCRETE prediction was wrong.",
+        ordinalAttempt.ok
+          ? "The precommit named the value-readback programs as the alternatives a ratio->ordinal move must preserve. None survived."
+          : "SUPERSEDED BY SEMANTIC ADMISSION, and this is the stronger result. The precommit named the value-readback programs as the alternatives a ratio->ordinal move must preserve; summing an ordinal measure is itself an analysis the rules forbid, so the perturbed operation is now refused BEFORE any candidate exists and there is no candidate set in which a readback program could survive. The control is not weakened: the narrower claim it tested is unreachable because admission rejects the premise first.",
       ok: false,
     },
     {
@@ -1053,8 +1156,19 @@ export function runExperiment(): ExperimentResult {
     basis: BASIS_FIXTURE,
     binding: admitted,
     resultFacts: facts,
-    preservation: preservationReport(admitted, CONSUMER_POPULATION, METRIC_UNITS_PER_VALUE),
+    preservation: {
+      readback: preservationReport(readbackProgram, admitted, CONSUMER_POPULATION, METRIC_UNITS_PER_VALUE),
+      metric: preservationReport(metricProgram, admitted, CONSUMER_POPULATION, METRIC_UNITS_PER_VALUE),
+    },
     population: baseline.population,
+    loweringControls: {
+      emptyInventoryRetained: enumerate({ structure: base, admitted, task: "magnitude-comparison", inventory: { ...EXPERIMENT_TARGET, channels: [] } }).retained.length,
+      metricWithoutBaseline: (() => {
+        const evaluated = evaluateOperation(admitted, CONSUMER_POPULATION);
+        const lowered = lower({ ...metricProgram, baseline: "truncated" }, evaluated, METRIC_UNITS_PER_VALUE);
+        return lowered.kind === "unrealized" ? lowered.reason : null;
+      })(),
+    },
     consumers: { readback, metric, forbiddenDirection },
     bindingMutation: {
       mutated: mutatedBinding,
@@ -1141,20 +1255,27 @@ export function compositionProbe(): {
 }
 
 /** The composition premise over a measure whose KIND, not its dimension set, contradicts it. */
-export function compositionKindProbe(): Record<string, { retained: number; refused: number; causes: string[] }> {
+export function compositionKindProbe(): Record<string, { retained: number; refused: number; causes: string[]; refusedAtAdmission?: string }> {
   const fixture = loadOracle().fixtures.get(BASIS_FIXTURE)!;
   const base = fixture.structure as RelationalStructure;
   const aggregate = fixture.assertions.find((a) => a.kind === "aggregate")!;
   const admitted = bindOperation(base, aggregate as AggregateAssertionDecl);
-  const out: Record<string, { retained: number; refused: number; causes: string[] }> = {};
+  const out: Record<string, { retained: number; refused: number; causes: string[]; refusedAtAdmission?: string }> = {};
   for (const kind of ["non-additive", "ratio-measure"] as const) {
     const rel = base.relations[BASIS.relation];
     const mutated = legal(
       { ...base, relations: { ...base.relations, [BASIS.relation]: { ...rel, fields: { ...rel.fields, [BASIS.measure]: { ...rel.fields[BASIS.measure], additivity: { kind } } } } } },
       `additivity ${kind}`,
     );
-    const e = enumerate({ structure: mutated, admitted, task: "composition", inventory: EXPERIMENT_TARGET, partitionDimension: BASIS.resultGrain });
-    out[kind] = { retained: e.retained.length, refused: e.refused.length, causes: [...new Set(e.refused.map((r) => r.cause))].sort() };
+    try {
+      const e = enumerate({ structure: mutated, admitted, task: "composition", inventory: EXPERIMENT_TARGET, partitionDimension: BASIS.resultGrain });
+      out[kind] = { retained: e.retained.length, refused: e.refused.length, causes: [...new Set(e.refused.map((r) => r.cause))].sort() };
+    } catch (err) {
+      // The perturbed MEASURE can make the operation itself illegal - a sum over
+      // a ratio-measure is averaged rather than re-derived - in which case there
+      // is no composition to probe and the refusal is the result.
+      out[kind] = { retained: 0, refused: 0, causes: [], refusedAtAdmission: (err as Error).message };
+    }
   }
   return out;
 }
@@ -1199,9 +1320,20 @@ export function ledgerOf(r: ExperimentResult): Record<string, unknown> {
     binding: r.binding,
     resultFacts: r.resultFacts,
     preservation: r.preservation,
+    loweringControls: r.loweringControls,
     consumers: r.consumers,
     bindingMutation: r.bindingMutation,
     correctedAccount: {
+      semanticAdmission:
+        "REPAIRED, and it is the finding this slice exists for. Structural resolution - aggregate support, relation and field resolution, the grain equation, the single-result-column rule - answered whether the operation RESOLVES, not whether the declared facts FORBID it, so `sum(stock.on_hand) over [date] -> grain [product]` was admitted, enumerated and PRESERVED perfectly while contradicting `nonAdditiveAlong: [date]`. The operation is now judged by the same engine that judges the corpus: an illegal one is REFUSED with the corpus's own causes, an unproven one is carried. A perfect round trip is not an admission result, and the two are now tested separately.",
+      partitionMembership:
+        "REPAIRED at the same boundary. A declared composition partition naming a source column the operation summed away (`product`), or a name that exists nowhere, was retaining candidates because the composition branch checked absence and additivity but never membership in the result grain. It is now refused as an invalid binding.",
+      singleEvaluation:
+        "REPAIRED. preservationReport called evaluateOperation twice - once for the result and once to feed produce - which contradicted the single-evaluation claim. It evaluates once and lowers that result.",
+      programDeterminedOutput:
+        "NEW, and it is the connection the earlier result lacked. produce() can build both representations from any result, so on its own it demonstrated an encoding helper: with an EMPTY channel inventory, enumeration retained nothing and the standalone report still produced both outputs. `lower` consumes an actual RETAINED PROGRAM, and the program's measure channel decides which representation is produced or refuses to produce one. The decisive controls: an empty inventory retains 0 candidates and therefore yields no output, and clearing the baseline a metric program needs makes lowering unrealized.",
+      arityClaim:
+        "NARROWED. `Function.length === 1` is a signature fact, not a proof of the information boundary: a one-argument function can still read a captured variable or call a module-level evaluator. No such behaviour was found in the decoder bodies, and the support for decoder independence is the isolated execution in a context containing the representation but neither the evaluator nor the rows.",
       operationIdentity:
         "CORRECTED UPWARD IN FORM AND DOWNWARD IN CLAIM. The guarantee that a candidate carries the admitted operation is now a CONSTRUCTION property - every candidate is stamped from the validated operation, so it cannot carry another - and the boundary validates that operation against the relation it NAMES before any candidate exists. What that does not do is check a caller-supplied operation against some independently established admitted one: the enumerator has no such second authority, so an operation for a different analysis is refused only if it contradicts the relation.",
       representationRecovery:
