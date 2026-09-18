@@ -29,6 +29,15 @@ acceptance:
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
     then: 'given an analytical operation is supplied with the structure it names; when its semantic standing is established before its result is treated as admitted; then the operation is judged by the existing analytical authority, an operation the declared facts forbid is REFUSED even though the arithmetic evaluator can compute it, a premise that is merely missing is carried, and structural resolution never substitutes for the judgment'
+  - id: A2
+    given: 'An operation has been admitted and a candidate retained.'
+    when: 'The admitted result is lowered through a specific retained program.'
+    then: >-
+      The program's measure channel DETERMINES the representation produced: a
+      readback program yields readback entries, a metric program yields extents
+      under a declared scale, an empty inventory yields no candidate and therefore
+      no output, and clearing the baseline a metric program needs makes lowering
+      unrealized.
 non_functional: {}
 contracts:
   - name: 'admission-lowering'
