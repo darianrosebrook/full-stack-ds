@@ -1,0 +1,32 @@
+id: REL-GRAPH-VIEW-NECESSITY-01
+title: 'Account for the graph-view declaration coordinates: witness, artifact, or not a coordinate'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-18T17:51:39.684Z'
+updated_at: '2026-09-18T17:51:39.684Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/graph-projection.ts (the coordinate census over the emitted schema)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+  out: []
+invariants:
+  - 'The coordinate list is DERIVED FROM THE EMITTED SCHEMA, not hand-listed, so a field added to the declaration arrives failing rather than silently unaccounted. Deriving it already corrected an undercount: there are six coordinates, not five.'
+  - 'A disposition is earned by an EXECUTED pair, not asserted. Each witnessed coordinate carries the stimuli it was separated by and the outcomes those stimuli produced.'
+  - 'No behavior changes and no verdict moves: this is an accounting claim about the declaration family, and the existing ledgers keep their standing with no re-record.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the graph-view declaration family declares a set of coordinates; when its necessity is accounted for; then every schema-declared coordinate carries a disposition, each witnessed coordinate names an executed discriminating pair and its outcomes, and the accounting is derived from the emitted schema rather than hand-maintained'
+non_functional: {}
+contracts:
+  - name: 'graph-view-necessity'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/graph-projection.test.ts'
