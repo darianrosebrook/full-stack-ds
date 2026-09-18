@@ -705,6 +705,57 @@ export function enumerateGraph(input: GraphEnumerationInput): GraphEnumeration {
   };
 }
 
+/* ------------------------------- M2: soundness, completeness, sensitivity */
+
+/**
+ * THE INDEPENDENTLY DERIVED LAWFUL SET.
+ *
+ * Written from the capacity table and the stated domain restriction by direct
+ * reasoning, and it does NOT call `enumerateGraph`. That is the point: a
+ * completeness check against the implementation's own output is a tautology, so
+ * the expectation is derived here and the enumerator is required to agree. A
+ * candidate the implementation never generates shows up as a missing member
+ * rather than as a smaller number that still looks self-consistent.
+ *
+ * The reasoning, in full:
+ *  - the domain restriction admits only coordinates that make no positional
+ *    claim, so `non-metric` is the only coordinate in scope;
+ *  - both channels must be hosted by that coordinate;
+ *  - the node channel and the edge channel must differ;
+ *  - the edge channel must be `connection`, because that is the only channel
+ *    that induces the incidence claim a topology task requires.
+ */
+export function lawfulGraphTopologies(inventory: TargetInventory): Array<{ coordinate: CoordinateSpace; nodes: Channel; edges: Channel }> {
+  const out: Array<{ coordinate: CoordinateSpace; nodes: Channel; edges: Channel }> = [];
+  const coordinate: CoordinateSpace = "non-metric";
+  if (!inventory.spaces.includes(coordinate)) return out;
+  for (const nodes of inventory.channels) {
+    if (!inventory.channels.includes("connection")) continue;
+    if (nodes === "connection") continue;
+    if (!CAPACITY[nodes].spaces.includes(coordinate)) continue;
+    if (!CAPACITY.connection.spaces.includes(coordinate)) continue;
+    out.push({ coordinate, nodes, edges: "connection" });
+  }
+  return out.sort((a, b) => `${a.nodes}`.localeCompare(`${b.nodes}`));
+}
+
+/** The premises a retained graph candidate must satisfy. */
+export function graphCandidateIsSound(p: GraphProgram, inventory: TargetInventory): boolean {
+  return (
+    inventory.spaces.includes(p.coordinate) &&
+    inventory.channels.includes(p.nodes) &&
+    inventory.channels.includes(p.edges) &&
+    p.nodes !== p.edges &&
+    p.coordinate === "non-metric" &&
+    CAPACITY[p.nodes].spaces.includes(p.coordinate) &&
+    CAPACITY[p.edges].spaces.includes(p.coordinate) &&
+    inducedGraphClaims(p).includes("incidence-recoverable")
+  );
+}
+
+/** The retained set as comparable membership, so a control names candidates and not a count. */
+export const graphMembership = (e: GraphEnumeration) => e.retained.map((p) => `${p.coordinate}|${p.nodes}|${p.edges}`).sort();
+
 /* ------------------------------------------------------------- observers */
 
 /**
