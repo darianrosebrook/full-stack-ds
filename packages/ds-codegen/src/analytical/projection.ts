@@ -683,8 +683,27 @@ export type Lowered =
   | { kind: "metric"; program: Program; output: MetricOutput }
   | { kind: "unrealized"; program: Program; reason: string };
 
+/**
+ * THE DECLARED SUPPORT OF THIS LOWERER, and the reason it is a declaration
+ * rather than an artefact of which program the runner happened to pick.
+ *
+ * The experiment witnesses exactly two realizations. Branching on readback
+ * capability alone would accept TEN of the twelve retained programs into the
+ * generic metric producer, so "the remaining programs stay unrealized" would be
+ * a property of the example selection and not of the code. Every pair outside
+ * this list returns `unrealized`.
+ */
+export const LOWERING_SUPPORT: ReadonlyArray<{ coordinate: CoordinateSpace; dimension: Channel; measure: Channel; representation: "readback" | "metric" }> = [
+  { coordinate: "cartesian", dimension: "position", measure: "text", representation: "readback" },
+  { coordinate: "cartesian", dimension: "position", measure: "area", representation: "metric" },
+];
+
 export function lower(program: Program, evaluated: OperationResult, unitsPerValue = METRIC_UNITS_PER_VALUE): Lowered {
-  if (CAPACITY[program.measure].valueReadback) {
+  const supported = LOWERING_SUPPORT.find((s) => s.coordinate === program.coordinate && s.dimension === program.dimension && s.measure === program.measure);
+  if (!supported) {
+    return { kind: "unrealized", program, reason: `no lowering is declared for ${program.coordinate}|${program.dimension}|${program.measure}` };
+  }
+  if (supported.representation === "readback") {
     return { kind: "readback", program, output: produce(evaluated, unitsPerValue).readback };
   }
   if (program.baseline !== "zero") {
@@ -694,6 +713,43 @@ export function lower(program: Program, evaluated: OperationResult, unitsPerValu
     return { kind: "unrealized", program, reason: `a metric representation needs a positive declared scale, and it was ${unitsPerValue}` };
   }
   return { kind: "metric", program, output: produce(evaluated, unitsPerValue).metric };
+}
+
+export type LoweringRun = {
+  /** How many candidates the inventory retained. */
+  considered: number;
+  /** The outputs actually produced, by program. */
+  realized: Array<{ program: string; representation: "readback" | "metric" }>;
+  /** Every retained program the lowerer declines, with its reason. */
+  unrealized: Array<{ program: string; reason: string }>;
+};
+
+/**
+ * THE ORCHESTRATION THE EXPERIMENT RUNS: select candidates under an inventory,
+ * then lower what was selected. It exists so that "no candidate" and "no
+ * produced output" are ONE executed observation rather than two facts asserted
+ * side by side, and so that a caller records what the run produced instead of
+ * a verdict about it.
+ */
+export function selectAndLower(input: {
+  structure: RelationalStructure;
+  admitted: BoundOperation;
+  task: Task;
+  inventory: TargetInventory;
+  rows: readonly Row[];
+  unitsPerValue?: number;
+}): LoweringRun {
+  const evaluated = evaluateOperation(input.admitted, input.rows);
+  const enumeration = enumerate({ structure: input.structure, admitted: input.admitted, task: input.task, inventory: input.inventory });
+  const realized: LoweringRun["realized"] = [];
+  const unrealized: LoweringRun["unrealized"] = [];
+  for (const p of enumeration.retained) {
+    const lowered = lower(p, evaluated, input.unitsPerValue ?? METRIC_UNITS_PER_VALUE);
+    const key = `${p.coordinate}|${p.dimension}|${p.measure}`;
+    if (lowered.kind === "unrealized") unrealized.push({ program: key, reason: lowered.reason });
+    else realized.push({ program: key, representation: lowered.kind });
+  }
+  return { considered: enumeration.retained.length, realized, unrealized };
 }
 
 /** The report for ONE program. The representation is the program's, not a choice made here. */
@@ -914,8 +970,12 @@ export type ExperimentResult = {
     readback: PreservationReport | { program: string; unrealized: string };
     metric: PreservationReport | { program: string; unrealized: string };
   };
-  /** The decisive control: removing the channel a representation needs prevents it. */
-  loweringControls: { emptyInventoryRetained: number; metricWithoutBaseline: string | null };
+  /** The decisive control: what the orchestration PRODUCES, not what it counted. */
+  loweringControls: {
+    emptyInventory: LoweringRun;
+    fullInventory: LoweringRun;
+    metricWithoutBaseline: string | null;
+  };
   /** The facts the enumerator filtered on, derived from the operation and the relation it names. */
   resultFacts: ResultFacts;
   consumed: Record<string, unknown>;
@@ -1132,8 +1192,14 @@ export function runExperiment(): ExperimentResult {
 
   // Two structurally different programs over the SAME bound operation: one
   // readback, one metric. Their expected side is the operation, not a label.
-  const readbackProgram = baseline.retained.find((p) => CAPACITY[p.measure].valueReadback)!;
-  const metricProgram = baseline.retained.find((p) => !CAPACITY[p.measure].valueReadback && p.baseline === "zero")!;
+  const supportedProgram = (representation: "readback" | "metric") => {
+    const decl = LOWERING_SUPPORT.find((d) => d.representation === representation)!;
+    const found = baseline.retained.find((p) => p.coordinate === decl.coordinate && p.dimension === decl.dimension && p.measure === decl.measure && p.baseline === "zero");
+    if (!found) throw new Error(`no retained program realizes the declared ${representation} support`);
+    return found;
+  };
+  const readbackProgram = supportedProgram("readback");
+  const metricProgram = supportedProgram("metric");
   const readback = readbackConsumer(readbackProgram, admitted, CONSUMER_POPULATION);
   const metric = metricConsumer(metricProgram, admitted, CONSUMER_POPULATION);
 
@@ -1162,7 +1228,8 @@ export function runExperiment(): ExperimentResult {
     },
     population: baseline.population,
     loweringControls: {
-      emptyInventoryRetained: enumerate({ structure: base, admitted, task: "magnitude-comparison", inventory: { ...EXPERIMENT_TARGET, channels: [] } }).retained.length,
+      emptyInventory: selectAndLower({ structure: base, admitted, task: "magnitude-comparison", inventory: { ...EXPERIMENT_TARGET, channels: [] }, rows: CONSUMER_POPULATION }),
+      fullInventory: selectAndLower({ structure: base, admitted, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, rows: CONSUMER_POPULATION }),
       metricWithoutBaseline: (() => {
         const evaluated = evaluateOperation(admitted, CONSUMER_POPULATION);
         const lowered = lower({ ...metricProgram, baseline: "truncated" }, evaluated, METRIC_UNITS_PER_VALUE);
