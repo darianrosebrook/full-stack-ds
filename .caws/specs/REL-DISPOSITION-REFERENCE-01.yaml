@@ -85,3 +85,7 @@ evidence:
     status: pass
     evidence_ref: "graph-projection.test.ts: the soundness helper answers the question its name asks (pnpm exec vitest run packages/ds-codegen/src/analytical, 22 files 986 tests green)"
     recorded_at: "2026-09-18T18:57:44.039Z"
+  - criterion_id: A7
+    status: pass
+    evidence_ref: "graph-projection.test.ts: INVARIANCE a capability this domain cannot host changes nothing (pnpm exec vitest run packages/ds-codegen/src/analytical, 22 files 986 tests green)"
+    recorded_at: "2026-09-18T18:57:44.574Z"
