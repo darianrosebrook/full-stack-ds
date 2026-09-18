@@ -29,6 +29,15 @@ acceptance:
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
     then: 'given a projection is bound to an admitted aggregate operation; when the enumerator derives the facts it filters on; then those facts come from the operation and the relation it names, an operation naming a relation that does not exist or disagreeing with the admitted one cannot enter, and an aggregate the evaluator cannot perform is rejected rather than executed as a sum'
+  - id: A2
+    given: 'One admitted sum has been evaluated over a supplied population.'
+    when: 'Two representations are produced from that single result and each is decoded.'
+    then: >-
+      A readback representation and a metric representation both recover the
+      operation's values, the metric recovery uses the extents and the DECLARED
+      scale rather than re-evaluating, each decoder receives only its own
+      representation, and the recovered values are distinguished from the
+      aggregation direction the declaration forbids.
 non_functional: {}
 contracts:
   - name: 'representation-recovery'
