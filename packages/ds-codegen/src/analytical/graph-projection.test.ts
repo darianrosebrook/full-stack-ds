@@ -363,10 +363,79 @@ describe("M1 — necessity accounting for the declaration coordinates", () => {
       const c = byId.get(field)!;
       expect(c.disposition).toBe("witnessed");
       if (c.disposition !== "witnessed") throw new Error("unreachable");
-      expect(c.pair.differsIn).toContain("JOINTLY");
-      // The reversal changes the DIRECTED incidence and no population at all.
-      expect(c.outcomes).toEqual({ a: "n1->n2", b: "n2->n1" });
+      // MINIMALITY IS NOT CLAIMED, and this is the correction. A single-
+      // coordinate neighbour separates each endpoint field over a source that
+      // declares a third endpoint field, so the pair differs in ONE binding and
+      // neither side is degenerate. The census records that pair, not the
+      // reversal.
+      expect(c.pair.differsIn).toContain(`${field} alone`);
+      expect(c.outcomes.a).not.toBe(c.outcomes.b);
+      for (const side of [c.outcomes.a, c.outcomes.b]) {
+        expect(side, "a self-loop is a weaker stimulus: it moves the endpoint AND collapses the pair").not.toMatch(/^(\w+)->\1$/);
+      }
+      // The REVERSAL is preserved, as secondary evidence carrying its own
+      // recorded outcomes, and it is expressly not offered as a minimality claim.
+      expect(c.alsoWitnessedBy?.outcomes).toEqual({ a: "n1->n2", b: "n2->n1" });
+      expect(c.alsoWitnessedBy?.differsIn).toContain("TOGETHER");
     }
+  });
+
+  it("the single-coordinate endpoint pairs are EXECUTED, not asserted: the recorded outcomes match a fresh denotation", () => {
+    // The census is measured. This rebuilds the authored third-endpoint-field
+    // source independently and denotes the three bindings, so a prose change
+    // that left the recorded outcomes stale would be caught here.
+    const viaSource = {
+      structure: {
+        relations: { ...SOURCE.structure.relations, links: { ...SOURCE.structure.relations.links, fields: { ...SOURCE.structure.relations.links.fields, via: { transformation: "nominal" } } } },
+      },
+      rows: { ...SOURCE.rows, links: [{ src: "n1", dst: "n2", via: "n3", weight: 1 }] },
+    } as unknown as typeof SOURCE;
+    const baseline = graphOf(ALL_NODES, viaSource).edges.map((e) => `${e.from}->${e.to}`).join(",");
+    const fromVia = graphOf({ ...ALL_NODES, edges: { ...ALL_NODES.edges, fromField: "via" } }, viaSource).edges.map((e) => `${e.from}->${e.to}`).join(",");
+    const toVia = graphOf({ ...ALL_NODES, edges: { ...ALL_NODES.edges, toField: "via" } }, viaSource).edges.map((e) => `${e.from}->${e.to}`).join(",");
+
+    // Both single-coordinate neighbours DENOTE. Neither is degenerate, and each
+    // differs from the baseline in exactly one endpoint.
+    expect([baseline, fromVia, toVia]).toEqual(["n1->n2", "n3->n2", "n1->n3"]);
+
+    const byId = new Map(graphViewNecessityCensus().map((c) => [c.coordinate, c]));
+    const from = byId.get("binds.edges.fromField")!;
+    const to = byId.get("binds.edges.toField")!;
+    if (from.disposition !== "witnessed" || to.disposition !== "witnessed") throw new Error("unreachable");
+    expect(from.outcomes).toEqual({ a: baseline, b: fromVia });
+    expect(to.outcomes).toEqual({ a: baseline, b: toVia });
+  });
+
+  it("the key-field redundancy holds UNDER A PREMISE, and the counterexample is executed rather than argued", () => {
+    // Two unique key fields over the same rows: every value is unique within each
+    // selected field, so this is not a duplicate-key integrity test. It tests
+    // WHICH identity universe the binding selects.
+    const twoKey = {
+      structure: {
+        relations: {
+          ...SOURCE.structure.relations,
+          all_nodes: {
+            ...SOURCE.structure.relations.all_nodes,
+            fields: { id: { transformation: "nominal", key: true }, alt_id: { transformation: "nominal", key: true } },
+          },
+        },
+      },
+      rows: { ...SOURCE.rows, all_nodes: [{ id: "n1", alt_id: "n1" }, { id: "n2", alt_id: "n2" }, { id: "n3", alt_id: "n4" }] },
+    } as unknown as typeof SOURCE;
+    // Both universes keep the edge endpoints valid, so what differs is WHICH
+    // identity universe the declaration selects and nothing else. The two rows
+    // that agree are what make the rest of the graph denotable at all.
+    const byId = graphOf(ALL_NODES, twoKey).nodes.join(",");
+    const byAlt = graphOf({ ...ALL_NODES, nodes: { ...ALL_NODES.nodes, keyField: "alt_id" } }, twoKey).nodes.join(",");
+    expect(byId).toBe("n1,n2,n3");
+    expect(byAlt).toBe("n1,n2,n4");
+    // The census does not claim the slot is redundant in general; it says the
+    // premise it rests on, and that premise is the single-key declaration.
+    const key = graphViewNecessityCensus().find((c) => c.coordinate === "binds.nodes.keyField")!;
+    if (key.disposition !== "representation-artifact") throw new Error("unreachable");
+    expect(key.reason).toContain("UNDER THE PREMISE");
+    expect(key.reason).toContain("more than one key");
+    expect(key.reason, "the local redundancy must not be promoted into erasure permission").toContain("licenses removing the slot");
   });
 
   it("records the key field as derived, and the reason it is not independent HERE", () => {
