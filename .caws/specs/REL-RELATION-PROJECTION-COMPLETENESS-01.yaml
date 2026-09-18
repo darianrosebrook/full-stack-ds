@@ -1,0 +1,32 @@
+id: REL-RELATION-PROJECTION-COMPLETENESS-01
+title: 'M2: soundness, bounded completeness and anti-lookup controls for the relation-valued candidate space'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-18T18:19:18.577Z'
+updated_at: '2026-09-18T18:19:18.577Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/projection.ts (the independently derived relation-valued lawful set and the membership controls)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+  out: []
+invariants:
+  - 'BOUNDED COMPLETENESS AGAINST AN INDEPENDENT DERIVATION: the expectation is reasoned from the capacity table, the task requirement and the result facts WITHOUT calling enumerate, so a candidate the implementation never generates appears as a missing member.'
+  - 'PRE-COMMITS ARE MEMBERSHIP, NOT COUNTS: removing a capability removes exactly the predicted candidates and preserves the unaffected ones serving the same task.'
+  - 'ALPHA-RENAMING IS AN INVARIANT: renaming the relation, its fields and the view identifiers must not move the retained membership; a normalized outcome that depends on a spelling is a name-based dispatch.'
+  - 'No widening: this is the magnitude-comparison universe already implemented over the stock fixture, and not OHLC, not the other tasks, not combinators, not lowering, not stage-2.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the relation-valued magnitude-comparison candidate space over a declared inventory; when soundness, bounded completeness and the anti-lookup controls are measured; then every retained program satisfies the premises, the retained membership equals an independently derived lawful set, capability removal changes membership exactly as precommitted, alpha-renaming leaves the membership unchanged, and an irrelevant declaration leaves it invariant'
+non_functional: {}
+contracts:
+  - name: 'relation-completeness'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/projection.test.ts'
