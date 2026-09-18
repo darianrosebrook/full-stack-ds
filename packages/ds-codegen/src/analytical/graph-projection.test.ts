@@ -46,7 +46,10 @@ import {
   lawfulGraphTopologies,
   TASK_INVARIANTS,
   EXPERIMENT_TARGET,
+  IMPLEMENTED_TASKS,
+  projectionSupport,
 } from "./projection.js";
+import type { Task } from "./projection.js";
 import type { GraphBinding, GraphResult } from "./graph-projection.js";
 import { GraphViewFile } from "./graph-view-model.js";
 import { CONTRACTS_DIR } from "./necessity.js";
@@ -360,10 +363,79 @@ describe("M1 — necessity accounting for the declaration coordinates", () => {
       const c = byId.get(field)!;
       expect(c.disposition).toBe("witnessed");
       if (c.disposition !== "witnessed") throw new Error("unreachable");
-      expect(c.pair.differsIn).toContain("JOINTLY");
-      // The reversal changes the DIRECTED incidence and no population at all.
-      expect(c.outcomes).toEqual({ a: "n1->n2", b: "n2->n1" });
+      // MINIMALITY IS NOT CLAIMED, and this is the correction. A single-
+      // coordinate neighbour separates each endpoint field over a source that
+      // declares a third endpoint field, so the pair differs in ONE binding and
+      // neither side is degenerate. The census records that pair, not the
+      // reversal.
+      expect(c.pair.differsIn).toContain(`${field} alone`);
+      expect(c.outcomes.a).not.toBe(c.outcomes.b);
+      for (const side of [c.outcomes.a, c.outcomes.b]) {
+        expect(side, "a self-loop is a weaker stimulus: it moves the endpoint AND collapses the pair").not.toMatch(/^(\w+)->\1$/);
+      }
+      // The REVERSAL is preserved, as secondary evidence carrying its own
+      // recorded outcomes, and it is expressly not offered as a minimality claim.
+      expect(c.alsoWitnessedBy?.outcomes).toEqual({ a: "n1->n2", b: "n2->n1" });
+      expect(c.alsoWitnessedBy?.differsIn).toContain("TOGETHER");
     }
+  });
+
+  it("the single-coordinate endpoint pairs are EXECUTED, not asserted: the recorded outcomes match a fresh denotation", () => {
+    // The census is measured. This rebuilds the authored third-endpoint-field
+    // source independently and denotes the three bindings, so a prose change
+    // that left the recorded outcomes stale would be caught here.
+    const viaSource = {
+      structure: {
+        relations: { ...SOURCE.structure.relations, links: { ...SOURCE.structure.relations.links, fields: { ...SOURCE.structure.relations.links.fields, via: { transformation: "nominal" } } } },
+      },
+      rows: { ...SOURCE.rows, links: [{ src: "n1", dst: "n2", via: "n3", weight: 1 }] },
+    } as unknown as typeof SOURCE;
+    const baseline = graphOf(ALL_NODES, viaSource).edges.map((e) => `${e.from}->${e.to}`).join(",");
+    const fromVia = graphOf({ ...ALL_NODES, edges: { ...ALL_NODES.edges, fromField: "via" } }, viaSource).edges.map((e) => `${e.from}->${e.to}`).join(",");
+    const toVia = graphOf({ ...ALL_NODES, edges: { ...ALL_NODES.edges, toField: "via" } }, viaSource).edges.map((e) => `${e.from}->${e.to}`).join(",");
+
+    // Both single-coordinate neighbours DENOTE. Neither is degenerate, and each
+    // differs from the baseline in exactly one endpoint.
+    expect([baseline, fromVia, toVia]).toEqual(["n1->n2", "n3->n2", "n1->n3"]);
+
+    const byId = new Map(graphViewNecessityCensus().map((c) => [c.coordinate, c]));
+    const from = byId.get("binds.edges.fromField")!;
+    const to = byId.get("binds.edges.toField")!;
+    if (from.disposition !== "witnessed" || to.disposition !== "witnessed") throw new Error("unreachable");
+    expect(from.outcomes).toEqual({ a: baseline, b: fromVia });
+    expect(to.outcomes).toEqual({ a: baseline, b: toVia });
+  });
+
+  it("the key-field redundancy holds UNDER A PREMISE, and the counterexample is executed rather than argued", () => {
+    // Two unique key fields over the same rows: every value is unique within each
+    // selected field, so this is not a duplicate-key integrity test. It tests
+    // WHICH identity universe the binding selects.
+    const twoKey = {
+      structure: {
+        relations: {
+          ...SOURCE.structure.relations,
+          all_nodes: {
+            ...SOURCE.structure.relations.all_nodes,
+            fields: { id: { transformation: "nominal", key: true }, alt_id: { transformation: "nominal", key: true } },
+          },
+        },
+      },
+      rows: { ...SOURCE.rows, all_nodes: [{ id: "n1", alt_id: "n1" }, { id: "n2", alt_id: "n2" }, { id: "n3", alt_id: "n4" }] },
+    } as unknown as typeof SOURCE;
+    // Both universes keep the edge endpoints valid, so what differs is WHICH
+    // identity universe the declaration selects and nothing else. The two rows
+    // that agree are what make the rest of the graph denotable at all.
+    const byId = graphOf(ALL_NODES, twoKey).nodes.join(",");
+    const byAlt = graphOf({ ...ALL_NODES, nodes: { ...ALL_NODES.nodes, keyField: "alt_id" } }, twoKey).nodes.join(",");
+    expect(byId).toBe("n1,n2,n3");
+    expect(byAlt).toBe("n1,n2,n4");
+    // The census does not claim the slot is redundant in general; it says the
+    // premise it rests on, and that premise is the single-key declaration.
+    const key = graphViewNecessityCensus().find((c) => c.coordinate === "binds.nodes.keyField")!;
+    if (key.disposition !== "representation-artifact") throw new Error("unreachable");
+    expect(key.reason).toContain("UNDER THE PREMISE");
+    expect(key.reason).toContain("more than one key");
+    expect(key.reason, "the local redundancy must not be promoted into erasure permission").toContain("licenses removing the slot");
   });
 
   it("records the key field as derived, and the reason it is not independent HERE", () => {
@@ -400,6 +472,8 @@ describe("M1 — necessity accounting for the declaration coordinates", () => {
 describe("M2 — soundness, bounded completeness and the anti-lookup controls", () => {
   const denoted = graphPreservation(ALL_NODES, SOURCE).result;
   const run = (inventory: typeof EXPERIMENT_TARGET) => enumerateGraph({ graph: denoted, task: "topology", inventory });
+  /** The same entry point, asked for a task this path does not implement. */
+  const runTask = (inventory: typeof EXPERIMENT_TARGET, task: Task) => enumerateGraph({ graph: denoted, task, inventory });
 
   it("SOUNDNESS: every retained candidate satisfies the declared premises", () => {
     const e = run(EXPERIMENT_TARGET);
@@ -449,8 +523,17 @@ describe("M2 — soundness, bounded completeness and the anti-lookup controls", 
     // it correctly ADDS a candidate - which is why the perturbation is chosen by
     // the capacity table rather than by taste.
     expect(CAPACITY.area.spaces).not.toContain("non-metric");
-    const withExtra = { ...EXPERIMENT_TARGET, channels: [...EXPERIMENT_TARGET.channels, "area" as const] };
-    expect(graphMembership(run(withExtra))).toEqual(graphMembership(run(EXPERIMENT_TARGET)));
+    // The transition has to be ABSENT -> PRESENT. Appending `area` to an
+    // inventory that already lists it perturbs nothing and would pass whether or
+    // not the invariance held, so the base is the inventory WITHOUT the channel
+    // and the variant is the base plus it.
+    const withoutArea = { ...EXPERIMENT_TARGET, channels: EXPERIMENT_TARGET.channels.filter((c) => c !== "area") };
+    expect(withoutArea.channels).not.toContain("area");
+    expect(EXPERIMENT_TARGET.channels).toContain("area");
+    const withExtra = { ...withoutArea, channels: [...withoutArea.channels, "area" as const] };
+    expect(withExtra.channels.length).toBe(EXPERIMENT_TARGET.channels.length);
+    expect(graphMembership(run(withExtra))).toEqual(graphMembership(run(withoutArea)));
+    expect(graphMembership(run(withoutArea))).toEqual(graphMembership(run(EXPERIMENT_TARGET)));
   });
 
   it("ZERO, ONE and MULTIPLE lawful results are all reachable", () => {
@@ -467,10 +550,60 @@ describe("M2 — soundness, bounded completeness and the anti-lookup controls", 
     expect(missing.kind).toBe("unproven");
     // A contradiction is refused.
     expect(() => denoteGraph(ALL_NODES, { ...SOURCE, rows: { ...SOURCE.rows, links: [{ src: "n1", dst: "n9" }] } })).toThrow(/does not contain/);
-    // An unimplemented task is its own disposition, not an empty set.
-    const unimplemented = Object.entries(TASK_INVARIANTS).filter(([, v]) => "notEnumerated" in (v as object)).map(([k]) => k);
-    expect(unimplemented.length).toBe(7);
-    expect(unimplemented).not.toContain("topology");
+    // An unimplemented task is its own disposition, and it is read off the REAL
+    // entry point. Counting `notEnumerated` entries answers a question about the
+    // task table; it does not execute the enumerator, so it cannot observe what
+    // the enumerator returns.
+    const unsupported = runTask(EXPERIMENT_TARGET, "distribution");
+    expect(unsupported.support.supported).toBe(false);
+    expect(unsupported.support.supported === false && unsupported.support.obligation).toBe("invariant:declared-closure");
+    expect(unsupported.population.considered, "no candidate space was searched").toBe(0);
+    expect(unsupported.retained).toEqual([]);
+    expect(
+      unsupported.refused,
+      "absent implementation must not be reported as an analytical refusal: a cause names a rule the facts violate",
+    ).toEqual([]);
+
+    // AND THE SAME DECISION UNDER AN INVENTORY THAT HOSTS NOTHING. Support is
+    // read at the request boundary, so an empty inventory cannot turn an
+    // unsupported request into an ordinary empty result.
+    const emptyInventory = runTask({ ...EXPERIMENT_TARGET, channels: [] }, "distribution");
+    expect(emptyInventory.support).toEqual(unsupported.support);
+    expect(emptyInventory.refused).toEqual([]);
+    expect(emptyInventory.retained).toEqual([]);
+
+    // The task table still says what it says; the point is that the enumerator
+    // no longer speaks in its place.
+    const notEnumerated = Object.entries(TASK_INVARIANTS).filter(([, v]) => "notEnumerated" in (v as object)).map(([k]) => k);
+    expect(notEnumerated.length).toBe(7);
+    expect(notEnumerated).not.toContain("topology");
+  });
+
+  it("a task implemented on ANOTHER path is unsupported here rather than a candidate that fails a requirement", () => {
+    // `topology` carries a `requires` entry because the GRAPH path implements it.
+    // Reading that entry as "the relation path implements topology too, its
+    // candidates merely fail" is the same collapse in a different place.
+    expect(IMPLEMENTED_TASKS.graph).toContain("topology");
+    expect(IMPLEMENTED_TASKS.relation).not.toContain("topology");
+    const v = projectionSupport("relation", "topology");
+    expect(v.supported).toBe(false);
+    expect(v.supported === false && v.obligation).toBe("invariant:topology-on-relation");
+    expect("requires" in v).toBe(false);
+  });
+
+  it("the soundness helper answers the question its name asks, so the DECLARED TASK is part of the premise", () => {
+    const retained = run(EXPERIMENT_TARGET).retained[0]!;
+    expect(retained.task).toBe("topology");
+    expect(graphCandidateIsSound(retained, EXPERIMENT_TARGET)).toBe(true);
+    // The same assignment, re-labelled. Its only induced claim is incidence
+    // recoverability, which is not what magnitude comparison requires, so a
+    // helper that ignores the task would call this sound.
+    expect(graphCandidateIsSound({ ...retained, task: "magnitude-comparison" }, EXPERIMENT_TARGET)).toBe(false);
+    // And a task this path does not implement at all is not sound either.
+    expect(graphCandidateIsSound({ ...retained, task: "distribution" }, EXPERIMENT_TARGET)).toBe(false);
+    // The other premises still bite.
+    expect(graphCandidateIsSound(retained, { ...EXPERIMENT_TARGET, channels: [] })).toBe(false);
+    expect(graphCandidateIsSound({ ...retained, nodes: retained.edges }, EXPERIMENT_TARGET)).toBe(false);
   });
 
   it("states its excluded population rather than reporting an empty lawful set", () => {

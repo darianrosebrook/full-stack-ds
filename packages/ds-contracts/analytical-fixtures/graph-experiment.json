@@ -218,32 +218,50 @@
     {
       "coordinate": "binds.nodes.keyField",
       "disposition": "representation-artifact",
-      "reason": "every candidate node relation in this source declares exactly 1 key, so the identity field is DERIVABLE from the relation's own declaration and is not an independent degree of freedom here. It would be independent for a relation declaring more than one key, and the edge relation declares none, which is why fromField/toField are not derivable the same way."
+      "reason": "UNDER THE PREMISE THAT THE SELECTED RELATION DECLARES EXACTLY ONE KEY, the identity field is DERIVABLE from the relation's own declaration: every candidate node relation in this source declares exactly 1 key. That premise is what the redundancy rests on and it is not enforced by the contract — the schema does not restrict the selected relation to one key. For a relation declaring more than one key the field is an INDEPENDENT CHOICE, because each key field selects a different identity universe over the same rows; that case is authored and executed in the test rather than argued. Nothing here licenses removing the slot: no information is lost by keeping it, and the redundancy is local to this source."
     },
     {
       "coordinate": "binds.edges.fromField",
       "disposition": "witnessed",
       "pair": {
-        "a": "src,dst",
-        "b": "dst,src",
-        "differsIn": "binds.edges.fromField and binds.edges.toField together: they are witnessed only JOINTLY, in a minimal 2-set, because changing one alone yields a degenerate endpoint"
+        "a": "fromField=src, toField=dst",
+        "b": "fromField=via, toField=dst",
+        "differsIn": "binds.edges.fromField alone, over a source declaring a third endpoint field"
       },
       "outcomes": {
         "a": "n1->n2",
-        "b": "n2->n1"
+        "b": "n3->n2"
+      },
+      "alsoWitnessedBy": {
+        "a": "fromField=src, toField=dst",
+        "b": "fromField=dst, toField=src",
+        "differsIn": "binds.edges.fromField and binds.edges.toField TOGETHER: it reverses the directed incidence, and it is recorded as evidence about both coordinates rather than as a minimality claim about either",
+        "outcomes": {
+          "a": "n1->n2",
+          "b": "n2->n1"
+        }
       }
     },
     {
       "coordinate": "binds.edges.toField",
       "disposition": "witnessed",
       "pair": {
-        "a": "src,dst",
-        "b": "dst,src",
-        "differsIn": "binds.edges.fromField and binds.edges.toField together: they are witnessed only JOINTLY, in a minimal 2-set, because changing one alone yields a degenerate endpoint"
+        "a": "fromField=src, toField=dst",
+        "b": "fromField=src, toField=via",
+        "differsIn": "binds.edges.toField alone, over a source declaring a third endpoint field"
       },
       "outcomes": {
         "a": "n1->n2",
-        "b": "n2->n1"
+        "b": "n1->n3"
+      },
+      "alsoWitnessedBy": {
+        "a": "fromField=src, toField=dst",
+        "b": "fromField=dst, toField=src",
+        "differsIn": "binds.edges.fromField and binds.edges.toField TOGETHER: it reverses the directed incidence, and it is recorded as evidence about both coordinates rather than as a minimality claim about either",
+        "outcomes": {
+          "a": "n1->n2",
+          "b": "n2->n1"
+        }
       }
     },
     {

@@ -298,10 +298,17 @@ export type CoordinateDisposition =
   | {
       coordinate: string;
       disposition: "witnessed";
-      /** The stimuli the coordinate was separated by. */
+      /** The stimuli the coordinate was separated by, differing in THAT coordinate alone. */
       pair: { a: string; b: string; differsIn: string };
       /** What each side produced, measured rather than asserted. */
       outcomes: { a: string; b: string };
+      /**
+       * A further executed pair that also separates the coordinate but varies
+       * more than one thing. Kept because it is real evidence about the
+       * coordinate, and kept SEPARATE because it cannot support a minimality
+       * claim the single-coordinate pair does not.
+       */
+      alsoWitnessedBy?: { a: string; b: string; differsIn: string; outcomes: { a: string; b: string } };
     }
   | { coordinate: string; disposition: "representation-artifact"; reason: string }
   | { coordinate: string; disposition: "required-derived-vocabulary"; reason: string };
@@ -326,6 +333,8 @@ export function declaredGraphViewCoordinates(contractsDir = CONTRACTS_DIR): stri
 
 const nodesOf = (b: GraphBinding, source: GraphSource) => graphOf(b, source).nodes.join(",");
 const edgesOf = (b: GraphBinding, source: GraphSource) => graphOf(b, source).edges.map((e) => `${e.from}->${e.to}`).join(",");
+/** The same binding with `fromField` put back to the baseline, so only `toField` moved. */
+const toFieldViaOnly = (b: GraphBinding): GraphBinding => ({ ...b, edges: { ...b.edges, fromField: "src" } });
 
 /**
  * Account for every declared coordinate. Each `witnessed` entry carries an
@@ -346,6 +355,25 @@ export function graphViewNecessityCensus(contractsDir = CONTRACTS_DIR): Coordina
   const viaMirror: GraphBinding = { ...all, edges: { ...all.edges, relation: "links_mirror" } };
 
   const reversed: GraphBinding = { ...all, edges: { ...all.edges, fromField: "dst", toField: "src" } };
+
+  // A THIRD DECLARED ENDPOINT FIELD, authored for this census the same way the
+  // second edge relation was. Without it the only single-coordinate neighbours
+  // available are the self-loops `dst,dst` and `src,src`, and a self-loop is a
+  // weaker stimulus: it changes the endpoint AND collapses the pair. With `via`
+  // the neighbour changes ONE binding and nothing else, and the two graphs are
+  // both non-degenerate — so the separation no longer depends on how self-loops
+  // are treated.
+  const withVia: GraphSource = {
+    structure: {
+      relations: {
+        ...source.structure.relations,
+        links: { ...source.structure.relations.links, fields: { ...source.structure.relations.links.fields, via: { transformation: "nominal" } } },
+      },
+    } as RelationalStructure,
+    rows: { ...source.rows, links: [{ src: "n1", dst: "n2", via: "n3", weight: 1 }] },
+  };
+  const viaAsFrom: GraphBinding = { ...all, edges: { ...all.edges, fromField: "via" } };
+  const viaAsTo: GraphBinding = { ...all, edges: { ...all.edges, toField: "via" } };
 
   // How many keys each relation declares: a single-keyed relation makes the
   // identity field derivable, and the edge relation declares none at all.
@@ -368,19 +396,31 @@ export function graphViewNecessityCensus(contractsDir = CONTRACTS_DIR): Coordina
     {
       coordinate: "binds.nodes.keyField",
       disposition: "representation-artifact",
-      reason: `every candidate node relation in this source declares exactly ${keyCount(all.nodes.relation)} key, so the identity field is DERIVABLE from the relation's own declaration and is not an independent degree of freedom here. It would be independent for a relation declaring more than one key, and the edge relation declares none, which is why fromField/toField are not derivable the same way.`,
+      reason: `UNDER THE PREMISE THAT THE SELECTED RELATION DECLARES EXACTLY ONE KEY, the identity field is DERIVABLE from the relation's own declaration: every candidate node relation in this source declares exactly ${keyCount(all.nodes.relation)} key. That premise is what the redundancy rests on and it is not enforced by the contract — the schema does not restrict the selected relation to one key. For a relation declaring more than one key the field is an INDEPENDENT CHOICE, because each key field selects a different identity universe over the same rows; that case is authored and executed in the test rather than argued. Nothing here licenses removing the slot: no information is lost by keeping it, and the redundancy is local to this source.`,
     },
     {
       coordinate: "binds.edges.fromField",
       disposition: "witnessed",
-      pair: { a: "src,dst", b: "dst,src", differsIn: "binds.edges.fromField and binds.edges.toField together: they are witnessed only JOINTLY, in a minimal 2-set, because changing one alone yields a degenerate endpoint" },
-      outcomes: { a: edgesOf(all, source), b: edgesOf(reversed, source) },
+      pair: { a: "fromField=src, toField=dst", b: "fromField=via, toField=dst", differsIn: "binds.edges.fromField alone, over a source declaring a third endpoint field" },
+      outcomes: { a: edgesOf(all, withVia), b: edgesOf(viaAsFrom, withVia) },
+      alsoWitnessedBy: {
+        a: "fromField=src, toField=dst",
+        b: "fromField=dst, toField=src",
+        differsIn: "binds.edges.fromField and binds.edges.toField TOGETHER: it reverses the directed incidence, and it is recorded as evidence about both coordinates rather than as a minimality claim about either",
+        outcomes: { a: edgesOf(all, source), b: edgesOf(reversed, source) },
+      },
     },
     {
       coordinate: "binds.edges.toField",
       disposition: "witnessed",
-      pair: { a: "src,dst", b: "dst,src", differsIn: "binds.edges.fromField and binds.edges.toField together: they are witnessed only JOINTLY, in a minimal 2-set, because changing one alone yields a degenerate endpoint" },
-      outcomes: { a: edgesOf(all, source), b: edgesOf(reversed, source) },
+      pair: { a: "fromField=src, toField=dst", b: "fromField=src, toField=via", differsIn: "binds.edges.toField alone, over a source declaring a third endpoint field" },
+      outcomes: { a: edgesOf(all, withVia), b: edgesOf(toFieldViaOnly(viaAsTo), withVia) },
+      alsoWitnessedBy: {
+        a: "fromField=src, toField=dst",
+        b: "fromField=dst, toField=src",
+        differsIn: "binds.edges.fromField and binds.edges.toField TOGETHER: it reverses the directed incidence, and it is recorded as evidence about both coordinates rather than as a minimality claim about either",
+        outcomes: { a: edgesOf(all, source), b: edgesOf(reversed, source) },
+      },
     },
     {
       coordinate: "id",
