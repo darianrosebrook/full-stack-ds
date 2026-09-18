@@ -1,0 +1,37 @@
+id: REL-GRAPH-VIEW-CANONICAL-01
+title: 'A canonical graph-view declaration with a graph-valued result, authored and consumed through the project''s own path'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-18T08:13:07.705Z'
+updated_at: '2026-09-18T08:13:07.705Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/graph-view-model.ts (the zod model and its emission)'
+    - 'packages/ds-codegen/src/analytical/graph-projection.ts (the loader and the denotation path over a parsed declaration)'
+    - 'packages/ds-codegen/src/analytical/authority.ts (the new declaration family''s identity)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'THE DECISION, recorded: a canonical GRAPH-VIEW declaration with a GRAPH-VALUED result, alongside the existing relation-valued derivations. The existing graph derivation retains its documented edge-relation meaning; no nodeRelation operand is added to it, because the result object cannot be described as the old edge relation with one more validated input when its node population can change while the edge relation, its endpoint fields and its grain stay fixed.'
+  - 'THE DECISIVE PAIR ENTERS THROUGH THE CANONICAL PATH. A test that hand-builds a declaration while the emitted schema is checked separately does not establish authorability, so the source-selection pair is parsed from the authored file through the loader and its OUTPUTS are observed.'
+  - 'New declaration coordinates are accounted for explicitly. The graph-view family is its own identity with its own digest, so existing identities and their ledger stamps do not move; adding a canonical declaration is NOT retrospective ratification of stage 2, and preserving the existing unresolved count is not proof that the extension''s accounting is complete.'
+  - 'Boundaries that must not be promoted: the key check establishes that the field carries key: true, NOT that every supplied identity is unique, and it is not a general source-key integrity proof. The supplied arrays are the selected populations for a snapshot; how a partially fetched population should be interpreted is NOT established, and ''not observed yet'' is not silently read as ''outside the universe''.'
+  - 'Out of scope: layouts, general graph algorithms, arbitrary multigraph support, new projection families, closing the stage-2 census, and any redesign of the derivation algebra into a graph-valued one.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given graph views are authored as declarations in the canonical location; when the decisive source-selection pair is parsed through the loader and denoted; then the two already-earned graphs are reproduced from the parsed declarations rather than from hand-built objects, and the graph-valued result is what both produced representations consume'
+non_functional: {}
+contracts:
+  - name: 'graph-view-canonical'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/graph-projection.test.ts'
