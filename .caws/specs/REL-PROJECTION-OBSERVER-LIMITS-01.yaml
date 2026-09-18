@@ -2,9 +2,11 @@ id: REL-PROJECTION-OBSERVER-LIMITS-01
 title: 'Record and pin what the projection observers do not check: topology admissibility and grain status'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Recorded and pinned the two reproduced observer limits - neither observer checks topology admissibility against the capacity table nor grain status, so A3 and A4 establish that a changed analytical binding is detected and not complete admissibility checking; no behaviour changed.'
 created_at: '2026-09-18T01:14:41.788Z'
-updated_at: '2026-09-18T01:15:25.446Z'
+updated_at: '2026-09-18T01:21:59.298Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
