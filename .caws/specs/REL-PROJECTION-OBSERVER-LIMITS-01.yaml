@@ -1,0 +1,30 @@
+id: REL-PROJECTION-OBSERVER-LIMITS-01
+title: 'Record and pin what the projection observers do not check: topology admissibility and grain status'
+risk_tier: 3
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-18T01:14:41.788Z'
+updated_at: '2026-09-18T01:14:41.788Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/projection.ts (NON_CLAIMS)'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts (a test pinning the recorded limitation)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+  out: []
+invariants:
+  - 'The observers check the BINDING and the claims derived from the program. They do not check the topology own admissibility against the capacity table, and they do not consult grain status. Both were reproduced on the merged code and are recorded, not repaired here: a limitation that is left implicit reads as a claim.'
+  - 'The limitation is PINNED by a test asserting the measured behaviour, so a later reader who adds the check sees the test change rather than a silent widening of what A3 and A4 establish.'
+  - 'No behaviour changes. This slice corrects what the record says the evidence establishes; it does not make the observer stronger, and it does not touch the enumerator.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the observers were described as reading the program rather than its certificate; when the two reproduced limits are compared against what the retained record says; then the record states that neither observer checks topology admissibility against the capacity table nor grain status, a test pins the measured behaviour so it cannot drift silently, and the corrected account names this boundary beside the binding result'
+non_functional: {}
+contracts: []
