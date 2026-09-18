@@ -188,12 +188,16 @@ describe("A2 — a relevant premise is carried, and an established contradiction
     expect(probe.declared.causes).toContain("REL_ADDITIVITY_SUM_SEMIADDITIVE");
   });
 
-  it("records that the earlier probe's LAWFUL completion was an artifact of source facts", () => {
-    // `product` is the column the operation SUMS OVER, so it is not a column of
-    // the result and a projection of the result cannot partition by it.
-    const probe = compositionProbe();
-    expect(probe.lawfulCompletion.exists).toBe(false);
-    expect(probe.lawfulCompletion.reason).toContain(BASIS.resultGrain);
+  it("REFUSES a partition that is not a column of the result, rather than asserting that it would", () => {
+    // The earlier probe stored `lawfulCompletion: false` as prose and the test
+    // asserted the stored flag. This EXECUTES the rejection: `product` is the
+    // column the operation sums over, and `does_not_exist` exists nowhere.
+    for (const partition of ["product", "does_not_exist"]) {
+      expect(
+        () => enumerate({ structure, admitted, task: "composition", inventory: EXPERIMENT_TARGET, partitionDimension: partition }),
+        `${partition} reached a favorable branch`,
+      ).toThrow(/not a column of the result/);
+    }
   });
 
   it("refuses a composition over a measure whose KIND contradicts it", () => {
@@ -201,7 +205,9 @@ describe("A2 — a relevant premise is carried, and an established contradiction
     expect(probe["non-additive"].retained).toBe(0);
     expect(probe["non-additive"].causes).toContain("REL_ADDITIVITY_SUM_SEMIADDITIVE");
     expect(probe["ratio-measure"].retained).toBe(0);
-    expect(probe["ratio-measure"].causes).toContain("REL_RATIO_MEASURE_AVERAGED");
+    // A sum over a ratio-measure is itself illegal, so the perturbation is
+    // refused at ADMISSION and there is no composition left to probe.
+    expect(probe["ratio-measure"].refusedAtAdmission).toMatch(/REL_RATIO_MEASURE_AVERAGED/);
   });
 
   it("admits no candidate for a task whose preconditions this experiment does not implement", () => {
@@ -215,18 +221,20 @@ describe("A2 — a relevant premise is carried, and an established contradiction
 });
 
 describe("A3 — recovery observed from two PRODUCED representations", () => {
-  const report = result.preservation;
+  const readback = result.preservation.readback as Extract<typeof result.preservation.readback, { representation: string }>;
+  const metric = result.preservation.metric as Extract<typeof result.preservation.metric, { representation: string }>;
 
   it("evaluates the admitted sum once over the supplied population", () => {
-    expect(report.result).toEqual([
+    expect(readback.result).toEqual([
       { key: "day1", value: 30 },
       { key: "day2", value: 105 },
     ]);
   });
 
   it("recovers those values from a READBACK representation", () => {
-    expect(report.readback.preserved).toBe(true);
-    expect(report.readback.recovered).toEqual(report.result);
+    expect(readback.preserved).toBe(true);
+    expect(readback.representation).toBe("readback");
+    expect(readback.recovered).toEqual(readback.result);
   });
 
   it("recovers them from a METRIC representation, from extents and the DECLARED SCALE", () => {
@@ -236,8 +244,9 @@ describe("A3 — recovery observed from two PRODUCED representations", () => {
       { key: "day2", extent: 210 },
     ]);
     expect(outputs.metric.scale).toEqual({ unitsPerValue: 2, baseline: "zero" });
-    expect(decodeMetric(outputs.metric)).toEqual(report.result);
-    expect(report.metric.preserved).toBe(true);
+    expect(decodeMetric(outputs.metric)).toEqual(readback.result);
+    expect(metric.preserved).toBe(true);
+    expect(metric.representation).toBe("metric");
     // The decoder reads the SCALE rather than re-deriving the answer: under a
     // different declared scale the same extents must decode differently.
     expect(decodeMetric({ ...outputs.metric, scale: { unitsPerValue: 1, baseline: "zero" } })).toEqual([
@@ -246,14 +255,18 @@ describe("A3 — recovery observed from two PRODUCED representations", () => {
     ]);
   });
 
-  it("gives each decoder the representation and nothing else", () => {
-    // One parameter each: no rows, no evaluator, no admitted operation.
+  it("declares each decoder with one parameter - a signature fact, not a proof", () => {
+    // NARROWED CLAIM: arity does not mechanically enforce the information
+    // boundary, since a one-argument function can still read a captured variable
+    // or call a module-level evaluator. The support for decoder independence is
+    // the isolated execution in a context holding the representation but neither
+    // the evaluator nor the rows; this asserts only the declared signature.
     expect(decodeReadback.length).toBe(1);
     expect(decodeMetric.length).toBe(1);
     expect(recover.length).toBe(1);
     const outputs = produce(evaluateOperation(admitted, CONSUMER_POPULATION), METRIC_UNITS_PER_VALUE);
-    expect(recover(outputs.readback)).toEqual(report.result);
-    expect(recover(outputs.metric)).toEqual(report.result);
+    expect(recover(outputs.readback)).toEqual(readback.result);
+    expect(recover(outputs.metric)).toEqual(readback.result);
   });
 
   it("distinguishes the recovered values from the aggregation direction the declaration forbids", () => {
@@ -262,7 +275,7 @@ describe("A3 — recovery observed from two PRODUCED representations", () => {
       { key: "A", value: 110 },
       { key: "B", value: 25 },
     ]);
-    expect(forbidden.groups).not.toEqual(report.result);
+    expect(forbidden.groups).not.toEqual(readback.result);
   });
 
   it("will not let a consumer pass on a topology that cannot carry the value", () => {
@@ -280,19 +293,35 @@ describe("A3 — recovery observed from two PRODUCED representations", () => {
 });
 
 describe("A4 — mutations are detected without trusting the explanation", () => {
-  const report = result.preservation;
+  const readback = result.preservation.readback as Extract<typeof result.preservation.readback, { representation: string }>;
+  const metric = result.preservation.metric as Extract<typeof result.preservation.metric, { representation: string }>;
 
   it("detects a changed METRIC EXTENT, so recovery observes the representation", () => {
-    expect(report.mutatedExtent.preserved).toBe(false);
-    expect(report.mutatedExtent.recovered).not.toEqual(report.result);
-    expect(report.mutatedExtent.recovered).toContainEqual({ key: "day1", value: 30.5 });
+    expect(metric.mutated.kind).toBe("extent");
+    expect(metric.mutated.preserved).toBe(false);
+    expect(metric.mutated.recovered).not.toEqual(metric.result);
+    expect(metric.mutated.recovered).toContainEqual({ key: "day1", value: 30.5 });
   });
 
   it("detects a changed GROUP BINDING even though the numeric total is unchanged", () => {
-    expect(report.mutatedBinding.preserved).toBe(false);
-    expect(report.mutatedBinding.totalUnchanged).toBe(true);
-    const total = report.result.reduce((n, g) => n + g.value, 0);
-    expect(report.mutatedBinding.recovered.reduce((n, g) => n + g.value, 0)).toBe(total);
+    expect(readback.mutated.kind).toBe("key-binding");
+    expect(readback.mutated.preserved).toBe(false);
+    expect(readback.mutated.totalUnchanged).toBe(true);
+    const total = readback.result.reduce((n, g) => n + g.value, 0);
+    expect(readback.mutated.recovered.reduce((n, g) => n + g.value, 0)).toBe(total);
+  });
+
+  it("lets PROGRAM CHOICE decide which representation is produced", () => {
+    expect(readback.program).not.toBe(metric.program);
+    expect(readback.representation).toBe("readback");
+    expect(metric.representation).toBe("metric");
+    expect(readback.scale).toBeNull();
+    expect(metric.scale).toEqual({ unitsPerValue: 2, baseline: "zero" });
+  });
+
+  it("produces NO representation when no candidate is retained, and none when the capability is removed", () => {
+    expect(result.loweringControls.emptyInventoryRetained).toBe(0);
+    expect(result.loweringControls.metricWithoutBaseline).toMatch(/zero baseline/);
   });
 
   it("rejects a mutated bound FIELD before consumption, with an observed disagreement", () => {
@@ -343,6 +372,11 @@ describe("A5 — the corrected account is carried in the record", () => {
     expect(account.aggregateDispatch).toMatch(/REPAIRED/);
     expect(account.metricChannelLabel).toMatch(/REPAIRED/);
     expect(account.operationIdentity).toMatch(/CORRECTED/);
+    expect(account.semanticAdmission).toMatch(/REPAIRED/);
+    expect(account.partitionMembership).toMatch(/REPAIRED/);
+    expect(account.singleEvaluation).toMatch(/REPAIRED/);
+    expect(account.programDeterminedOutput).toMatch(/NEW/);
+    expect(account.arityClaim).toMatch(/NARROWED/);
   });
 
   it("keeps the two earlier refutations", () => {
@@ -380,7 +414,7 @@ describe("the inherited controls still hold, and the ledger still matches a fres
     expect(refuted.length).toBeGreaterThanOrEqual(2);
     expect(refuted.map((c) => c.control)).toContain("ratio->ordinal");
     expect(refuted.map((c) => c.control)).toContain("declared->unknown");
-    for (const c of refuted) expect(c.correction ?? "").toMatch(/REFUTED|wrong|not selective|narrows nothing/);
+    for (const c of refuted) expect(c.correction ?? "").toMatch(/REFUTED|SUPERSEDED|wrong|not selective|narrows nothing/);
   });
 
   it("matches a fresh computation, so a stale ledger is drift", () => {
