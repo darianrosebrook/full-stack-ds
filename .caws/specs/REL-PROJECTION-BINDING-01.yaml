@@ -56,6 +56,17 @@ acceptance:
       from a classification function, the observer distinguishes them from the
       incompatible aggregation direction, and the values are recovered for the
       four-row population as 30 and 105 against the forbidden 110 and 25.
+  - id: A4
+    given: >-
+      A consumer's success could be reported from the declared explanation rather
+      than from the bound operation.
+    when: >-
+      One claim-bearing part of the binding - the bound field, the grouping, or the
+      aggregate - is mutated while the declared explanation is left unchanged.
+    then: >-
+      The mutation is either refused before consumption or produces an OBSERVED
+      disagreement between what the consumer recovered and what the operation
+      evaluates to, so the result cannot pass by inspecting its own certificate.
 non_functional: {}
 contracts:
   - name: 'projection-binding'
