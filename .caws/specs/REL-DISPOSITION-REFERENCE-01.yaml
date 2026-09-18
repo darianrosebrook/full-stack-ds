@@ -2,9 +2,11 @@ id: REL-DISPOSITION-REFERENCE-01
 title: 'Absent implementation is not an analytical contradiction, and the graph necessity record is corrected'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Absent implementation is now its own disposition decided at the request boundary and scoped per result kind, and the graph endpoint minimality claim is withdrawn in favour of executed single-coordinate evidence.'
 created_at: '2026-09-18T18:46:36.338Z'
-updated_at: '2026-09-18T18:46:46.916Z'
+updated_at: '2026-09-18T18:57:49.802Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
