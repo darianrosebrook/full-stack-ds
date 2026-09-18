@@ -1,0 +1,1624 @@
+{
+  "$comment": "The bounded stage-3 experiment (REL-PROJECTION-EXPERIMENT-01). Retained as the actual normalized candidate SETS with their consumed inputs and their per-candidate reason, not as counts. Regenerate with `tsx packages/ds-codegen/src/analytical/projection.ts --record`; `projection.test.ts` fails when this file and a fresh computation disagree.",
+  "question": "Given one fixed analytical authority - relation, derivation and task - does the system independently enumerate at least two structurally different lawful projection programs, with shared claims identifiable, losses explicit and non-empty residue, with no form name participating?",
+  "basis": {
+    "fixture": "FX_N_STOCK_SUM_ALONG_PRODUCT",
+    "identification": "declared grain [product, date]; product nominal (dimension); date interval/instant (partition dimension, not assigned by any retained candidate); on_hand ratio, semi-additive with nonAdditiveAlong [date] (measure)",
+    "admissionEvidence": "the live engine's canonical judgment for this fixture is `admissible` with zero diagnostics and zero obligations; the basis is admitted on evidence, not on provisional status"
+  },
+  "consumed": {
+    "relation": "stock",
+    "grain": [
+      "product",
+      "date"
+    ],
+    "dimension": {
+      "transformation": "nominal",
+      "key": false,
+      "cyclic": false
+    },
+    "measure": {
+      "transformation": "ratio",
+      "additivityKind": "semi-additive",
+      "nonAdditiveAlong": [
+        "date"
+      ],
+      "cyclic": false
+    },
+    "task": "magnitude-comparison",
+    "target": "svg-dom",
+    "inventoryChannels": 12,
+    "inventorySpaces": 7
+  },
+  "precommitted": {
+    "ratio->ordinal": {
+      "mustRemove": "every retained program whose measure assignment requires ratio capacity",
+      "mustPreserve": "the nominal/ordinal-compatible alternatives, namely the value-readback programs"
+    },
+    "declared->unknown": {
+      "mustRemove": "every program whose admissibility inspects grain",
+      "mustPreserve": "every program whose admissibility does not inspect grain",
+      "mustCarry": "grain:declared as an obligation"
+    },
+    "non-cyclic->cyclic": {
+      "mustAdd": "at least one cyclic-capable assignment if the target inventory provides one",
+      "mustNotRemove": "unrelated cartesian/tabular lawful assignments"
+    },
+    "irrelevant-perturbation": {
+      "mustEqual": "the normalized retained set, byte-identical"
+    }
+  },
+  "retained": [
+    {
+      "coordinate": "cartesian",
+      "dimension": "connection",
+      "measure": "area",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "connection",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "connection",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "connection",
+      "measure": "text",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "hue",
+      "measure": "area",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "hue",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "hue",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "hue",
+      "measure": "text",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "position",
+      "measure": "area",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "position",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "position",
+      "measure": "text",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "shape",
+      "measure": "area",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "shape",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "shape",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "shape",
+      "measure": "text",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "text",
+      "measure": "area",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "text",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "text",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "texture",
+      "measure": "area",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "texture",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "texture",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "cartesian",
+      "dimension": "texture",
+      "measure": "text",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "containment",
+      "dimension": "containment",
+      "measure": "text",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "geographic",
+      "dimension": "hue",
+      "measure": "area",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "geographic",
+      "dimension": "hue",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "geographic",
+      "dimension": "position",
+      "measure": "area",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "lane",
+      "dimension": "hue",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "lane",
+      "dimension": "hue",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "lane",
+      "dimension": "hue",
+      "measure": "text",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "lane",
+      "dimension": "position",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "lane",
+      "dimension": "position",
+      "measure": "text",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "lane",
+      "dimension": "text",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "lane",
+      "dimension": "text",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "polar",
+      "dimension": "hue",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "polar",
+      "dimension": "hue",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "polar",
+      "dimension": "position",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "polar",
+      "dimension": "shape",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "polar",
+      "dimension": "shape",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "polar",
+      "dimension": "texture",
+      "measure": "length",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "polar",
+      "dimension": "texture",
+      "measure": "position",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "tabular",
+      "dimension": "hue",
+      "measure": "text",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    {
+      "coordinate": "tabular",
+      "dimension": "texture",
+      "measure": "text",
+      "baseline": "zero",
+      "task": "magnitude-comparison",
+      "claims": []
+    }
+  ],
+  "refused": [
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "area",
+        "measure": "connection",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "area",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "area",
+        "measure": "length",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "area",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "area",
+        "measure": "position",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "area",
+        "measure": "shape",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "area",
+        "measure": "text",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "area",
+        "measure": "texture",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "connection",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "connection",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "hue",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "luminance",
+        "measure": "area",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "luminance",
+        "measure": "connection",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "luminance",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "luminance",
+        "measure": "length",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "luminance",
+        "measure": "position",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "luminance",
+        "measure": "shape",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "luminance",
+        "measure": "text",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "luminance",
+        "measure": "texture",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "position",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "position",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "shape",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "shape",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "text",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "text",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "texture",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "cartesian",
+        "dimension": "texture",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    },
+    {
+      "program": {
+        "coordinate": "geographic",
+        "dimension": "area",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "geographic",
+        "dimension": "area",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "geographic",
+        "dimension": "area",
+        "measure": "position",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_AREA_INTERVAL_SCALE",
+      "detail": "area carries ratio only, and this field is nominal"
+    },
+    {
+      "program": {
+        "coordinate": "geographic",
+        "dimension": "hue",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    },
+    {
+      "program": {
+        "coordinate": "geographic",
+        "dimension": "luminance",
+        "measure": "area",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "geographic",
+        "dimension": "luminance",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "geographic",
+        "dimension": "luminance",
+        "measure": "position",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "geographic",
+        "dimension": "position",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "geographic",
+        "dimension": "position",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    },
+    {
+      "program": {
+        "coordinate": "lane",
+        "dimension": "position",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "lane",
+        "dimension": "text",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "non-metric",
+        "dimension": "connection",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "non-metric",
+        "dimension": "shape",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "non-metric",
+        "dimension": "texture",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "hue",
+        "measure": "angle",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "position",
+        "measure": "angle",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "position",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "shape",
+        "measure": "angle",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "shape",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "texture",
+        "measure": "angle",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "detail": "angle is licensed by a cyclic scale or a declared whole, and this field is neither"
+    },
+    {
+      "program": {
+        "coordinate": "polar",
+        "dimension": "texture",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "hue",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "luminance",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "luminance",
+        "measure": "order",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "luminance",
+        "measure": "text",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "luminance",
+        "measure": "texture",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_SEQUENTIAL_ON_NOMINAL",
+      "detail": "a sequential ramp implies an order the nominal scale does not have"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "text",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "text",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "texture",
+        "measure": "hue",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_HUE_CARRIES_ORDER",
+      "detail": "hue is nominal-capacity, and this field is ratio"
+    },
+    {
+      "program": {
+        "coordinate": "tabular",
+        "dimension": "texture",
+        "measure": "luminance",
+        "baseline": "zero",
+        "task": "magnitude-comparison",
+        "claims": []
+      },
+      "cause": "REL_BASELINE_RATIO_CLAIM",
+      "detail": "the declared task requires ratio-comparability and this program induces aggregate-magnitude, difference-comparability, partition-membership"
+    }
+  ],
+  "undecided": [],
+  "distinctAfterFixedAuthority": 42,
+  "sharedClaims": [
+    "partition-membership",
+    "ratio-comparability"
+  ],
+  "claimUnion": [
+    "aggregate-magnitude",
+    "partition-membership",
+    "ratio-comparability",
+    "value-recoverable"
+  ],
+  "perProgramClaims": [
+    {
+      "program": "cartesian|connection|area|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|connection|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|connection|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|connection|text|zero|magnitude-comparison",
+      "induced": [
+        "partition-membership",
+        "ratio-comparability",
+        "value-recoverable"
+      ],
+      "loss": [
+        "aggregate-magnitude"
+      ]
+    },
+    {
+      "program": "cartesian|hue|area|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|hue|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|hue|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|hue|text|zero|magnitude-comparison",
+      "induced": [
+        "partition-membership",
+        "ratio-comparability",
+        "value-recoverable"
+      ],
+      "loss": [
+        "aggregate-magnitude"
+      ]
+    },
+    {
+      "program": "cartesian|position|area|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|position|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|position|text|zero|magnitude-comparison",
+      "induced": [
+        "partition-membership",
+        "ratio-comparability",
+        "value-recoverable"
+      ],
+      "loss": [
+        "aggregate-magnitude"
+      ]
+    },
+    {
+      "program": "cartesian|shape|area|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|shape|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|shape|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|shape|text|zero|magnitude-comparison",
+      "induced": [
+        "partition-membership",
+        "ratio-comparability",
+        "value-recoverable"
+      ],
+      "loss": [
+        "aggregate-magnitude"
+      ]
+    },
+    {
+      "program": "cartesian|text|area|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|text|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|text|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|texture|area|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|texture|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|texture|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "cartesian|texture|text|zero|magnitude-comparison",
+      "induced": [
+        "partition-membership",
+        "ratio-comparability",
+        "value-recoverable"
+      ],
+      "loss": [
+        "aggregate-magnitude"
+      ]
+    },
+    {
+      "program": "containment|containment|text|zero|magnitude-comparison",
+      "induced": [
+        "partition-membership",
+        "ratio-comparability",
+        "value-recoverable"
+      ],
+      "loss": [
+        "aggregate-magnitude"
+      ]
+    },
+    {
+      "program": "geographic|hue|area|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "geographic|hue|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "geographic|position|area|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "lane|hue|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "lane|hue|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "lane|hue|text|zero|magnitude-comparison",
+      "induced": [
+        "partition-membership",
+        "ratio-comparability",
+        "value-recoverable"
+      ],
+      "loss": [
+        "aggregate-magnitude"
+      ]
+    },
+    {
+      "program": "lane|position|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "lane|position|text|zero|magnitude-comparison",
+      "induced": [
+        "partition-membership",
+        "ratio-comparability",
+        "value-recoverable"
+      ],
+      "loss": [
+        "aggregate-magnitude"
+      ]
+    },
+    {
+      "program": "lane|text|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "lane|text|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "polar|hue|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "polar|hue|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "polar|position|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "polar|shape|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "polar|shape|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "polar|texture|length|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "polar|texture|position|zero|magnitude-comparison",
+      "induced": [
+        "aggregate-magnitude",
+        "partition-membership",
+        "ratio-comparability"
+      ],
+      "loss": [
+        "value-recoverable"
+      ]
+    },
+    {
+      "program": "tabular|hue|text|zero|magnitude-comparison",
+      "induced": [
+        "partition-membership",
+        "ratio-comparability",
+        "value-recoverable"
+      ],
+      "loss": [
+        "aggregate-magnitude"
+      ]
+    },
+    {
+      "program": "tabular|texture|text|zero|magnitude-comparison",
+      "induced": [
+        "partition-membership",
+        "ratio-comparability",
+        "value-recoverable"
+      ],
+      "loss": [
+        "aggregate-magnitude"
+      ]
+    }
+  ],
+  "residue": {
+    "projectionLevel": "coordinate space, channel assignment and baseline are consumed by the projection and are NOT carried by the relation: two lawful programs of one authority differ here with no change to the analytical object",
+    "realizationLevel": "NOT measured here. Focus affordances, label placement, text wrapping, collision handling, animation and substrate mechanics are stage-5 residue; this experiment claims nothing about them."
+  },
+  "controls": [
+    {
+      "control": "ratio->ordinal",
+      "expected": "every retained program whose measure assignment requires ratio capacity; preserve the nominal/ordinal-compatible alternatives, namely the value-readback programs",
+      "actual": "removed 42 of 42, every removed program's task-bearing claim resting on the ratio scale: true; preserved 0. MEASURED VACUITY: the preservation limb has no members for THIS task, because magnitude-comparison requires ratio comparability and every retained program derives it from the measure's scale. The narrowing is not blanket - see the targeted-narrowing control, which removes the nominal-only dimension channels and preserves the rest.",
+      "ok": true
+    },
+    {
+      "control": "declared->unknown",
+      "expected": "every program whose admissibility inspects grain; every program whose admissibility does not inspect grain; carry grain:declared as an obligation",
+      "actual": "retained 10 of 42, undecided 32 carrying grain:declared",
+      "ok": true
+    },
+    {
+      "control": "non-cyclic->cyclic",
+      "expected": "at least one cyclic-capable assignment if the target inventory provides one; unrelated cartesian/tabular lawful assignments (both sides sit on the ORDINAL dimension, so the cyclic claim is the only fact that differs)",
+      "actual": "added 2 cyclic-capable assignment(s), removed 0",
+      "ok": true
+    },
+    {
+      "control": "targeted-narrowing",
+      "expected": "a perturbation that removes a capability SOME candidates need and others do not must remove exactly those, so the narrowing is targeted rather than blanket",
+      "actual": "dimension nominal->ordinal: removed 29, preserved 13",
+      "ok": true
+    },
+    {
+      "control": "irrelevant-perturbation",
+      "expected": "the normalized retained set, byte-identical",
+      "actual": "identical (42 programs)",
+      "ok": true
+    }
+  ],
+  "observerControl": {
+    "declared": true,
+    "derived": false,
+    "mutated": {
+      "coordinate": "cartesian",
+      "dimension": "connection",
+      "measure": "length",
+      "baseline": "truncated",
+      "task": "magnitude-comparison",
+      "claims": []
+    },
+    "inducedAfterMutation": [
+      "aggregate-magnitude",
+      "difference-comparability",
+      "partition-membership"
+    ]
+  },
+  "compositionProbe": {
+    "retained": 0,
+    "refused": 99,
+    "causes": [
+      "REL_ADDITIVITY_SUM_SEMIADDITIVE",
+      "REL_AREA_INTERVAL_SCALE",
+      "REL_CYCLIC_ANGLE_NONCYCLIC",
+      "REL_HUE_CARRIES_ORDER",
+      "REL_SEQUENTIAL_ON_NOMINAL"
+    ]
+  },
+  "nonClaims": [
+    "This result is CONDITIONAL on the basis named above and holds only for the declared candidate universe. It does not close stage 2, complete stage 3, establish rendered or navigational behaviour, or settle the cross-substrate thesis, which the doctrine places at stages 4 and 6.",
+    "Passing the precommitted controls is evidence against particular template-selection explanations. It is NOT proof that a more elaborate lookup implementation could not mimic this finite test set; generalization is pressured later by unfamiliar recombinations, not declared here.",
+    "The stage-2 subtraction stays open at its existing unresolved count. No coordinate is adjudicated, ratified or retired by this experiment.",
+    "Only two of the doctrine's ten tasks have their preconditions implemented; the other eight are recorded in TASK_INVARIANTS with the invariant they would need, and no candidate is admitted for them.",
+    "The precommit's third distinctness limb names projection FAMILY (visual / tabular / textual / navigational) beside coordinate space and channel assignment. This experiment has no separate family axis: the coordinate space stands in for it, so two programs both in `tabular` are not told apart by family. The distinctness count is therefore over coordinate, channel and baseline, and a family-level claim is NOT established here.",
+    "A program is a projection TOPOLOGY - coordinate, the channel each task-bearing variable is assigned to, and the baseline - not an encoded artifact. Marks, scales, axes, label placement and emission are downstream of it and are not enumerated, so nothing here establishes that any program can be realized.",
+    "Residue is enumerated per target family at stage 5; this experiment retains the realization-specific residue it observes but does not claim the stage-5 enumeration."
+  ]
+}
