@@ -1,144 +1,100 @@
 /**
- * The isolated-node graph experiment (REL-GRAPH-NODE-UNIVERSE-01).
+ * The isolated-node graph experiment and its binding-selection correction
+ * (REL-GRAPH-NODE-UNIVERSE-01, REL-GRAPH-BINDING-SELECTS-01).
  *
- * THE DISCRIMINATOR IS A PAIR, not a fixture. Both structures have the SAME edge
- * relation — one edge from `n1` to `n2` — and differ only in their declared node
- * population: `{n1,n2,n3}` against `{n1,n2}`. Anything that reads the node list
- * off the edge endpoints is blind to the difference, which is why the node
- * universe has to be declared rather than inferred.
+ * ONE SOURCE, TWO BINDINGS. `graphFixture()` holds two candidate node universes
+ * (`allNodes` = {n1,n2,n3}, `connectedSet` = {n1,n2}) and one edge relation
+ * (`links` = {(n1,n2)}). The rows never change; only the binding does. If the
+ * binding merely documented a choice the caller had already made, changing it
+ * would change nothing — so that is the control.
  *
- * The fixture is real: `FX_P_GRAPH_ISOLATED_NODE` declares `nodes` (grain `[id]`)
- * and `edges` (grain `[src, dst]`) and supplies an orphan node. The binding is
- * declared here as an explicit premise because the authority's own `graph`
- * operand names no node relation — that absence is recorded in the ledger, not
- * silently patched in a decoder.
+ * The remaining controls are the input conditions this experiment relies on: a
+ * field that RESOLVES is not thereby the key, an endpoint outside the selected
+ * universe is a contradiction rather than a silent omission, a missing
+ * population is carried rather than becoming empty, and two distinct edges whose
+ * endpoint strings compose to the same joined text stay distinct.
  */
 import fs from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   GRAPH_LEDGER,
   GRAPH_NON_CLAIMS,
-  declareGraphBinding,
   decodeIncidence,
   decodeRelationalGraph,
+  denoteGraph,
   deriveNodesFromEdges,
-  evaluateGraph,
+  graphFixture,
   graphLedger,
   graphPreservation,
   isolateRemoved,
   produceGraph,
   recoverGraph,
-  renameIsolate,
+  renameInOutput,
 } from "./graph-projection.js";
-import type { GraphBinding, GraphRows } from "./graph-projection.js";
-import type { RelationalStructure } from "./relation-model.js";
+import type { GraphBinding, GraphResult } from "./graph-projection.js";
 
-/** The fixture's own declarations, transcribed from FX_P_GRAPH_ISOLATED_NODE. */
-const STRUCTURE: RelationalStructure = {
-  relations: {
-    nodes: { grain: ["id"], fields: { id: { transformation: "nominal", key: true }, label: { transformation: "nominal" } } },
-    edges: { grain: ["src", "dst"], fields: { src: { transformation: "nominal" }, dst: { transformation: "nominal" }, weight: { transformation: "ratio" } } },
-  },
-} as RelationalStructure;
+const SOURCE = graphFixture();
+const ALL_NODES: GraphBinding = { nodes: { relation: "allNodes", keyField: "id" }, edges: { relation: "links", fromField: "src", toField: "dst" } };
+const CONNECTED_SET: GraphBinding = { nodes: { relation: "connectedSet", keyField: "id" }, edges: { relation: "links", fromField: "src", toField: "dst" } };
 
-/** The declaration. Every name is STATED; none is inferred from a field name. */
-const BINDING: GraphBinding = {
-  nodes: { relation: "nodes", keyField: "id" },
-  edges: { relation: "edges", fromField: "src", toField: "dst" },
-};
-const bound = declareGraphBinding(STRUCTURE, BINDING);
+const all = graphPreservation(ALL_NODES, SOURCE);
+const connected = graphPreservation(CONNECTED_SET, SOURCE);
 
-/** Structure A: three declared nodes, one edge, one isolated node. */
-const ROWS_A: GraphRows = {
-  nodes: [{ id: "n1", label: "Contract" }, { id: "n2", label: "IR" }, { id: "n3", label: "Orphan" }],
-  edges: [{ src: "n1", dst: "n2", weight: 1 }],
-};
-/** Structure B: the SAME edges, the isolated node's row simply absent. */
-const ROWS_B: GraphRows = {
-  nodes: [{ id: "n1", label: "Contract" }, { id: "n2", label: "IR" }],
-  edges: [{ src: "n1", dst: "n2", weight: 1 }],
-};
-
-const report = graphPreservation(bound, ROWS_A);
-const a = report.result;
-
-describe("A1 — the node universe is DECLARED and validated, never inferred", () => {
-  it("resolves every name in the declaration against the structure", () => {
-    expect(bound).toEqual(BINDING);
-    expect(a.nodes).toEqual(["n1", "n2", "n3"]);
-    expect(a.edges).toEqual([{ from: "n1", to: "n2" }]);
-    expect(a.isolates).toEqual(["n3"]);
+describe("the binding SELECTS its populations from one named source", () => {
+  it("changes the denoted graph when only the binding changes", () => {
+    expect(all.result.nodes).toEqual(["n1", "n2", "n3"]);
+    expect(connected.result.nodes).toEqual(["n1", "n2"]);
+    expect(all.result.isolates).toEqual(["n3"]);
+    expect(connected.result.isolates).toEqual([]);
   });
 
-  it("refuses a declaration that does not resolve, rather than falling back to a convention", () => {
-    expect(() => declareGraphBinding(STRUCTURE, { ...BINDING, nodes: { relation: "missing", keyField: "id" } })).toThrow(/does not declare/);
-    expect(() => declareGraphBinding(STRUCTURE, { ...BINDING, nodes: { relation: "nodes", keyField: "name" } })).toThrow(/does not declare/);
-    expect(() => declareGraphBinding(STRUCTURE, { ...BINDING, edges: { relation: "edges", fromField: "source", toField: "dst" } })).toThrow(/does not declare/);
+  it("holds the edge relation fixed across the two bindings", () => {
+    expect(all.result.edges).toEqual([{ from: "n1", to: "n2" }]);
+    expect(connected.result.edges).toEqual(all.result.edges);
   });
 
-  it("refuses to let the node universe be the edge relation", () => {
-    expect(() =>
-      declareGraphBinding(STRUCTURE, { nodes: { relation: "edges", keyField: "src" }, edges: { relation: "edges", fromField: "src", toField: "dst" } }),
-    ).toThrow(/different relations/);
+  it("reads the arrays by the binding's relation NAMES rather than trusting an arrangement", () => {
+    const admission = denoteGraph(CONNECTED_SET, SOURCE);
+    expect(admission.kind).toBe("denoted");
+    if (admission.kind !== "denoted") throw new Error("unreachable");
+    expect(admission.selected).toEqual({ nodes: "connectedSet", edges: "links" });
+    const other = denoteGraph(ALL_NODES, SOURCE);
+    expect(other.kind === "denoted" && other.graph.nodes).toEqual(["n1", "n2", "n3"]);
   });
 
-  it("does not read the node population off the edges", () => {
-    // `n3` has no edge, so nothing derived from the incidence can produce it.
-    expect(a.nodes).toContain("n3");
-    expect(deriveNodesFromEdges(a)).not.toContain("n3");
+  it("creates the isolate-removal neighbour by binding change alone", () => {
+    const partner = isolateRemoved(all.result)!;
+    expect(partner.nodes).toEqual(connected.result.nodes);
+    expect(partner.edges).toEqual(connected.result.edges);
+    // A graph with no isolate has no such neighbour, and says so.
+    expect(isolateRemoved(connected.result)).toBeUndefined();
   });
 });
 
-describe("A2 — the decisive pair: identical edges, different declared node populations", () => {
-  const b = evaluateGraph(bound, ROWS_B);
-
-  it("holds the edge relation fixed across the pair", () => {
-    expect(a.edges).toEqual(b.edges);
-    expect(a.nodes).not.toEqual(b.nodes);
+describe("preservation through two produced representations", () => {
+  it("recovers the exact node identities and incidence for BOTH bindings", () => {
+    for (const [name, report, expected] of [
+      ["allNodes", all, ["n1", "n2", "n3"]],
+      ["connectedSet", connected, ["n1", "n2"]],
+    ] as const) {
+      expect(report.relational.ok, `${name} relational`).toBe(true);
+      expect(report.incidence.ok, `${name} incidence`).toBe(true);
+      expect(report.relational.recovered.nodes).toEqual([...expected]);
+      expect(report.incidence.recovered.nodes).toEqual([...expected]);
+      expect(report.relational.recovered.edges).toEqual([{ from: "n1", to: "n2" }]);
+      expect(report.incidence.recovered.edges).toEqual([{ from: "n1", to: "n2" }]);
+    }
   });
 
-  it("distinguishes the pair through BOTH produced representations", () => {
-    const relA = recoverGraph(produceGraph(a).relational);
-    const relB = recoverGraph(produceGraph(b).relational);
-    const incA = recoverGraph(produceGraph(a).incidence);
-    const incB = recoverGraph(produceGraph(b).incidence);
-    expect(relA.nodes).toEqual(["n1", "n2", "n3"]);
-    expect(relB.nodes).toEqual(["n1", "n2"]);
-    expect(incA.nodes).toEqual(["n1", "n2", "n3"]);
-    expect(incB.nodes).toEqual(["n1", "n2"]);
+  it("keeps the isolated node in the incidence representation with no incident edges", () => {
+    const orphan = produceGraph(all.result).incidence.entries.find((e) => e.node === "n3");
+    expect(orphan).toBeDefined();
+    expect(orphan!.incident).toEqual([]);
   });
 
   it("EXHIBITS the collapse a node-from-edges representation would suffer", () => {
-    // This is the counterexample, executed rather than asserted: the derived node
-    // list is identical for A and B, so it cannot tell them apart.
-    expect(deriveNodesFromEdges(a)).toEqual(deriveNodesFromEdges(b));
-    expect(report.derivedFromEdges.distinguishesThePair).toBe(false);
-  });
-
-  it("keeps the isolated node in the incidence representation, with no incident edges", () => {
-    const outputs = produceGraph(a);
-    const orphan = outputs.incidence.entries.find((e) => e.node === "n3");
-    expect(orphan).toBeDefined();
-    expect(orphan!.incident).toEqual([]);
-    expect(outputs.incidence.entries.find((e) => e.node === "n1")!.incident).toEqual([{ from: "n1", to: "n2" }]);
-  });
-});
-
-describe("A3 — recovery reads each representation alone", () => {
-  it("recovers the exact node identities and the incidence from the relational output", () => {
-    expect(report.relational.ok).toBe(true);
-    const decoded = decodeRelationalGraph(produceGraph(a).relational);
-    expect(decoded.nodes).toEqual(["n1", "n2", "n3"]);
-    expect(decoded.edges).toEqual([{ from: "n1", to: "n2" }]);
-    expect(decoded.isolates).toEqual(["n3"]);
-  });
-
-  it("recovers them from the incidence output, including the isolated node", () => {
-    expect(report.incidence.ok).toBe(true);
-    const decoded = decodeIncidence(produceGraph(a).incidence);
-    expect(decoded.nodes).toEqual(["n1", "n2", "n3"]);
-    expect(decoded.edges).toEqual([{ from: "n1", to: "n2" }]);
-    expect(decoded.isolates).toEqual(["n3"]);
+    expect(deriveNodesFromEdges(all.result)).toEqual(deriveNodesFromEdges(connected.result));
+    expect(all.derivedFromEdges.distinguishesThePair).toBe(false);
   });
 
   it("gives each decoder one argument", () => {
@@ -146,36 +102,64 @@ describe("A3 — recovery reads each representation alone", () => {
     expect(decodeIncidence.length).toBe(1);
     expect(recoverGraph.length).toBe(1);
   });
+});
 
-  it("names the isolate-removed neighbour as the SAME edges with one fewer node", () => {
-    const b = isolateRemoved(a);
-    expect(b.edges).toEqual(a.edges);
-    expect(b.nodes).toEqual(["n1", "n2"]);
-    expect(b.isolates).toEqual([]);
+describe("qualification: a name that resolves is not a semantic qualification", () => {
+  it("refuses an identity field that resolves but is not the relation's key", () => {
+    // `label` exists, so a name-resolution check alone accepted it.
+    expect(() => denoteGraph({ ...ALL_NODES, nodes: { relation: "allNodes", keyField: "label" } }, SOURCE)).toThrow(/not the relation's declared key/);
+  });
+
+  it("refuses an endpoint outside the SELECTED universe instead of dropping it", () => {
+    expect(() => denoteGraph(ALL_NODES, { ...SOURCE, rows: { ...SOURCE.rows, links: [{ src: "n1", dst: "n9", weight: 1 }] } })).toThrow(/does not contain/);
+    const widened = { ...SOURCE, rows: { ...SOURCE.rows, allNodes: [...SOURCE.rows.allNodes, { id: "n9", label: "Extra" }] } };
+    expect(denoteGraph(ALL_NODES, widened).kind).toBe("denoted");
+  });
+
+  it("CARRIES a missing population rather than treating it as empty", () => {
+    const missing = denoteGraph(ALL_NODES, { structure: SOURCE.structure, rows: { links: SOURCE.rows.links } });
+    expect(missing.kind).toBe("unproven");
+    if (missing.kind !== "unproven") throw new Error("unreachable");
+    expect(missing.obligation).toBe("invariant:population-declared");
+    // A silent empty population would have produced `nodes: []` and called it a graph.
+    expect(() => graphPreservation(ALL_NODES, { structure: SOURCE.structure, rows: { links: SOURCE.rows.links } })).toThrow(/does not denote a graph/);
+  });
+
+  it("still refuses to let the node universe be the edge relation", () => {
+    expect(() =>
+      denoteGraph({ nodes: { relation: "links", keyField: "src" }, edges: { relation: "links", fromField: "src", toField: "dst" } }, SOURCE),
+    ).toThrow(/different relations/);
+  });
+
+  it("refuses names that do not resolve at all", () => {
+    expect(() => denoteGraph({ ...ALL_NODES, nodes: { relation: "missing", keyField: "id" } }, SOURCE)).toThrow(/does not declare/);
+    expect(() => denoteGraph({ ...ALL_NODES, edges: { relation: "links", fromField: "source", toField: "dst" } }, SOURCE)).toThrow(/does not declare/);
   });
 });
 
-describe("A4 — the identity mutation is detected, not just the count", () => {
-  it("detects a changed isolate IDENTITY while the count and the edge set are unchanged", () => {
-    const mutated = renameIsolate(a, "n9");
-    expect(mutated.nodes).toEqual(["n1", "n2", "n9"]);
-    expect(mutated.edges).toEqual(a.edges);
-    expect(mutated.nodes.length).toBe(a.nodes.length);
-    expect(report.mutatedIsolate.ok).toBe(false);
+describe("the incidence decoder keeps distinct edges distinct", () => {
+  it("recovers two edges whose endpoint strings compose to the same joined text", () => {
+    const ambiguous: GraphResult = { nodes: ["a", "b", "c"], edges: [{ from: "a->b", to: "c" }, { from: "a", to: "b->c" }], isolates: [] };
+    const decoded = recoverGraph(produceGraph(ambiguous).incidence);
+    expect(decoded.edges).toHaveLength(2);
+    expect(decoded.edges).toEqual(expect.arrayContaining([{ from: "a->b", to: "c" }, { from: "a", to: "b->c" }]));
+  });
+});
+
+describe("the identity mutation is detected in the PRODUCED output", () => {
+  it("moves one produced entry's identity while holding the count and the edge set", () => {
+    const produced = produceGraph(all.result).incidence;
+    const mutated = renameInOutput(produced, "n3", "n3-impostor");
+    const recovered = recoverGraph(mutated);
+    expect(recovered.nodes).toEqual(["n1", "n2", "n3-impostor"]);
+    expect(recovered.nodes.length).toBe(all.result.nodes.length);
+    expect(recovered.edges).toEqual(all.result.edges);
+    expect(recovered.nodes).not.toEqual(all.result.nodes);
   });
 
-  it("shows that agreement on 'three nodes, one edge' would NOT be sufficient", () => {
-    // The mutation preserves both counts, so a consumer comparing counts passes
-    // it. Recovery compares IDENTITIES, which is what the mutation changes.
-    expect(report.mutatedIsolate.countAndEdgesUnchanged).toBe(true);
-    expect(report.mutatedIsolate.recovered.nodes).not.toEqual(a.nodes);
-    expect(report.mutatedIsolate.recovered.nodes.length).toBe(a.nodes.length);
-    expect(report.mutatedIsolate.recovered.edges.length).toBe(a.edges.length);
-  });
-
-  it("accepts the unmutated graph through the same comparison", () => {
-    expect(report.relational.ok).toBe(true);
-    expect(report.incidence.ok).toBe(true);
+  it("reports the mutation detected through the module's own control", () => {
+    expect(all.mutatedIsolate.ok).toBe(false);
+    expect(all.mutatedIsolate.countAndEdgesUnchanged).toBe(true);
   });
 });
 
@@ -183,21 +167,26 @@ describe("the retained ledger", () => {
   it("matches a fresh computation, so a stale ledger is drift", () => {
     expect(fs.existsSync(GRAPH_LEDGER), "run: tsx packages/ds-codegen/src/analytical/graph-projection.ts --record").toBe(true);
     const committed = JSON.parse(fs.readFileSync(GRAPH_LEDGER, "utf-8"));
-    expect(committed).toEqual(JSON.parse(JSON.stringify(graphLedger(STRUCTURE, BINDING, ROWS_A, ROWS_B))));
+    expect(committed).toEqual(JSON.parse(JSON.stringify(graphLedger())));
   });
 
-  it("records the pair, the counterexample and the identity mutation", () => {
-    const ledger = graphLedger(STRUCTURE, BINDING, ROWS_A, ROWS_B);
-    expect((ledger.pair as { edgeRelationIdentical: boolean }).edgeRelationIdentical).toBe(true);
-    expect((ledger.counterexample as { distinguishesThePair: boolean }).distinguishesThePair).toBe(false);
+  it("records the selection control, the refusals, the mutation and the collision", () => {
+    const ledger = graphLedger();
+    const selection = ledger.selectionControl as { selectionChanged: boolean; edgeRelationIdentical: boolean };
+    expect(selection.selectionChanged).toBe(true);
+    expect(selection.edgeRelationIdentical).toBe(true);
+    const qualification = ledger.qualification as Record<string, unknown>;
+    expect(String(qualification.keyThatResolvesButIsNotTheKey)).toMatch(/not the relation's declared key/);
+    expect(String(qualification.endpointOutsideTheSelectedUniverse)).toMatch(/does not contain/);
+    expect(qualification.missingPopulation).toMatchObject({ carried: "invariant:population-declared" });
     expect((ledger.identityMutation as { detected: boolean }).detected).toBe(true);
+    expect((ledger.decoderCollision as { bothSurvive: boolean }).bothSurvive).toBe(true);
+    expect((ledger.counterexample as { distinguishesThePair: boolean }).distinguishesThePair).toBe(false);
     expect((ledger.authorityGap as { declaresANodeRelation: boolean }).declaresANodeRelation).toBe(false);
   });
-});
 
-describe("the record bounds the result", () => {
   it("carries non-claims, including the authority's missing node operand", () => {
-    expect(GRAPH_NON_CLAIMS.some((n) => n.includes("NO node relation"))).toBe(true);
-    expect(GRAPH_NON_CLAIMS.some((n) => n.includes("does not establish arbitrary graph realization"))).toBe(true);
+    expect(GRAPH_NON_CLAIMS.some((n) => /no node relation/i.test(n))).toBe(true);
+    expect(GRAPH_NON_CLAIMS.some((n) => n.includes("NO CANONICAL-MODEL INTEGRATION"))).toBe(true);
   });
 });

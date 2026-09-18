@@ -1,43 +1,51 @@
 /**
- * The isolated-node graph experiment (REL-GRAPH-NODE-UNIVERSE-01).
+ * The isolated-node graph experiment (REL-GRAPH-NODE-UNIVERSE-01) and the
+ * binding-selection correction (REL-GRAPH-BINDING-SELECTS-01).
  *
  * THE QUESTION: can one admitted relational structure preserve an independently
  * declared NODE POPULATION and its edge incidence through two produced
  * representations, without deriving the node population from the edges and
  * without adding special-case knowledge to a consumer?
  *
- * Why this is a different shape from the stock experiment: there the analysis
- * produced a sequence of group/value pairs, every one of them backed by an
- * observation. A graph must preserve something that may have NO corresponding
- * edge observation — an isolated node. A representation that reconstructs its
- * node list from the edge endpoints cannot tell `{n1,n2,n3}` with edges
- * `{(n1,n2)}` from `{n1,n2}` with the same edges, and that pair is the
- * discriminator this module is built around.
+ * A graph must preserve something that may have NO corresponding edge
+ * observation — an isolated node. A representation that reconstructs its node
+ * list from the edge endpoints cannot tell `{n1,n2,n3}` with edges `{(n1,n2)}`
+ * from `{n1,n2}` with the same edges.
  *
- * THE DECLARATION IS THE POINT. The relation model's own `graph` operand names
- * an edge relation and two of its fields (`from`, `edgeFrom`, `edgeTo`,
- * `value`); it does not name a node relation, so nothing in the authority says
- * `edges.src` ranges over `nodes.id`. Inferring that from the field names is
- * exactly what the doctrine forbids. This module therefore takes the binding as
- * an EXPLICIT PREMISE, validates it against the structure, and records the
- * authority's missing operand as the residual rather than silently repairing it
- * in a decoder.
+ * WHAT THE BINDING OWNS, established here: source SELECTION (it names the
+ * relations and the source is keyed by those names), KEY QUALIFICATION (the
+ * designated identity field is the relation's declared key, not merely a field
+ * that resolves), ENDPOINT MEMBERSHIP (every supplied endpoint belongs to the
+ * selected universe), and the resulting graph object. A name that resolves is
+ * not a semantic qualification, and a caller cannot pair a binding with
+ * independently preselected role arrays: no entry point takes them.
+ *
+ * THE AUTHORITY'S OWN GAP IS RECORDED, NOT REPAIRED. The relation model's `graph`
+ * operand names an edge relation and two of its fields and declares NO node
+ * relation. The binding is an explicit validated PREMISE; the zod model, schema
+ * emission and the stage-2 ledgers are untouched.
  */
 import fs from "node:fs";
 import path from "node:path";
 import { CONTRACTS_DIR } from "./necessity.js";
 import type { RelationalStructure } from "./relation-model.js";
 
-/** A supplied population: the node rows and the edge rows, kept apart. */
-export type GraphRows = { nodes: ReadonlyArray<Record<string, unknown>>; edges: ReadonlyArray<Record<string, unknown>> };
+/**
+ * THE NAMED RELATIONAL SOURCE. Rows are keyed by RELATION NAME, so the binding's
+ * names select them: a caller supplies ONE source, and which populations it
+ * denotes is the binding's decision rather than the caller's arrangement of
+ * arrays.
+ */
+export type GraphSource = {
+  structure: RelationalStructure;
+  rows: Record<string, ReadonlyArray<Record<string, unknown>>>;
+};
 
 /**
- * THE DECLARED NODE UNIVERSE.
- *
- * `nodes` names the relation whose rows ARE the node universe and the field that
- * keys it. `edges` names the relation whose rows are the incidence and the two
- * fields that reference a node. Nothing here is inferred: every name is stated,
- * and `declareGraphBinding` refuses a declaration that does not resolve.
+ * THE DECLARED NODE UNIVERSE. `nodes` names the relation whose rows ARE the node
+ * universe and the field that KEYS it; `edges` names the relation whose rows are
+ * the incidence and the two fields that reference a node. Nothing is inferred
+ * from a field name.
  */
 export type GraphBinding = {
   nodes: { relation: string; keyField: string };
@@ -53,50 +61,93 @@ export type GraphResult = {
   isolates: string[];
 };
 
-export function declareGraphBinding(structure: RelationalStructure, binding: GraphBinding): GraphBinding {
-  const nodeRel = structure.relations[binding.nodes.relation];
-  if (!nodeRel) throw new Error(`the node universe names relation ${binding.nodes.relation}, which the structure does not declare`);
-  if (!nodeRel.fields?.[binding.nodes.keyField]) {
-    throw new Error(`the node universe keys on ${binding.nodes.relation}.${binding.nodes.keyField}, which the relation does not declare`);
-  }
-  const edgeRel = structure.relations[binding.edges.relation];
-  if (!edgeRel) throw new Error(`the incidence names relation ${binding.edges.relation}, which the structure does not declare`);
-  for (const f of [binding.edges.fromField, binding.edges.toField]) {
-    if (!edgeRel.fields?.[f]) throw new Error(`the incidence names ${binding.edges.relation}.${f}, which the relation does not declare`);
-  }
-  if (binding.nodes.relation === binding.edges.relation) {
-    throw new Error("the node universe and the incidence must be different relations: deriving one from the other is what this binding exists to prevent");
-  }
-  return binding;
-}
+/**
+ * Whether a binding denotes a graph over this source. Three-valued for the same
+ * reason the analytical judgment is: a CONTRADICTION is refused, a MISSING
+ * premise is carried, and only a discharged binding denotes a graph.
+ */
+export type GraphAdmission =
+  | { kind: "denoted"; graph: GraphResult; selected: { nodes: string; edges: string } }
+  | { kind: "unproven"; obligation: string; reason: string };
 
 /**
- * The analytical result: the declared node population and the incidence, read
- * from the two populations INDEPENDENTLY. The node list never comes from the
- * edges.
+ * The binding SELECTS from the source by name and QUALIFIES what it selected:
+ * the identity field must be the node relation's declared key, and every
+ * supplied endpoint must belong to the selected universe.
  */
-export function evaluateGraph(binding: GraphBinding, rows: GraphRows): GraphResult {
-  const nodes = rows.nodes.map((r) => {
+export function denoteGraph(binding: GraphBinding, source: GraphSource): GraphAdmission {
+  // Declared with an explicit function type so the calls narrow the code after
+  // them: a `const` arrow with only a return annotation is not treated as a
+  // never-returning call target for control-flow analysis.
+  const refuse: (reason: string) => never = (reason) => {
+    throw new Error(`the graph binding is refused: ${reason}`);
+  };
+
+  const nodeRel = source.structure.relations[binding.nodes.relation];
+  if (!nodeRel) refuse(`the node universe names relation ${binding.nodes.relation}, which the structure does not declare`);
+  const edgeRel = source.structure.relations[binding.edges.relation];
+  if (!edgeRel) refuse(`the incidence names relation ${binding.edges.relation}, which the structure does not declare`);
+  if (binding.nodes.relation === binding.edges.relation) {
+    refuse("the node universe and the incidence must be different relations: deriving one from the other is what this binding exists to prevent");
+  }
+
+  // KEY QUALIFICATION. A field that resolves is not thereby an identity.
+  const keyField = nodeRel.fields?.[binding.nodes.keyField];
+  if (!keyField) refuse(`the node universe keys on ${binding.nodes.relation}.${binding.nodes.keyField}, which the relation does not declare`);
+  if (keyField.key !== true) {
+    refuse(`${binding.nodes.relation}.${binding.nodes.keyField} resolves but is not the relation's declared key, so it does not establish a node identity`);
+  }
+  for (const f of [binding.edges.fromField, binding.edges.toField]) {
+    if (!edgeRel.fields?.[f]) refuse(`the incidence names ${binding.edges.relation}.${f}, which the relation does not declare`);
+  }
+
+  // A MISSING population is CARRIED, never silently empty.
+  const nodeRows = source.rows[binding.nodes.relation];
+  const edgeRows = source.rows[binding.edges.relation];
+  if (!nodeRows) {
+    return { kind: "unproven", obligation: "invariant:population-declared", reason: `no rows are supplied for the node universe ${binding.nodes.relation}` };
+  }
+  if (!edgeRows) {
+    return { kind: "unproven", obligation: "invariant:population-declared", reason: `no rows are supplied for the incidence ${binding.edges.relation}` };
+  }
+
+  const nodes = nodeRows.map((r) => {
     const v = r[binding.nodes.keyField];
-    if (typeof v !== "string") throw new Error(`a node row does not carry a string ${binding.nodes.keyField}`);
+    if (typeof v !== "string") refuse(`a row of ${binding.nodes.relation} does not carry a string ${binding.nodes.keyField}`);
     return v;
   });
-  const edges = rows.edges.map((r) => {
+  const universe = new Set(nodes);
+  const edges = edgeRows.map((r) => {
     const from = r[binding.edges.fromField];
     const to = r[binding.edges.toField];
     if (typeof from !== "string" || typeof to !== "string") {
-      throw new Error(`an edge row does not carry string ${binding.edges.fromField}/${binding.edges.toField}`);
+      refuse(`a row of ${binding.edges.relation} does not carry string ${binding.edges.fromField}/${binding.edges.toField}`);
     }
+    // ENDPOINT MEMBERSHIP. A contradictory endpoint is REFUSED, not dropped.
+    if (!universe.has(from)) refuse(`${binding.edges.relation}.${binding.edges.fromField} names ${from}, which the selected node universe does not contain`);
+    if (!universe.has(to)) refuse(`${binding.edges.relation}.${binding.edges.toField} names ${to}, which the selected node universe does not contain`);
     return { from, to };
   });
+
   const touched = new Set(edges.flatMap((e) => [e.from, e.to]));
-  return { nodes, edges, isolates: nodes.filter((n) => !touched.has(n)) };
+  return {
+    kind: "denoted",
+    graph: { nodes, edges, isolates: nodes.filter((n) => !touched.has(n)) },
+    selected: { nodes: binding.nodes.relation, edges: binding.edges.relation },
+  };
+}
+
+/** The denoted graph, or a throw naming why the binding does not denote one. */
+export function graphOf(binding: GraphBinding, source: GraphSource): GraphResult {
+  const admission = denoteGraph(binding, source);
+  if (admission.kind !== "denoted") throw new Error(`the binding does not denote a graph: ${admission.reason}`);
+  return admission.graph;
 }
 
 /**
  * A representation that DERIVES its node list from edge endpoints. It is not a
  * projection this system produces; it is the counterexample the experiment must
- * beat, kept in the module so the collapse is exhibited rather than asserted.
+ * beat, kept here so the collapse is exhibited rather than asserted.
  */
 export function deriveNodesFromEdges(result: GraphResult): string[] {
   return [...new Set(result.edges.flatMap((e) => [e.from, e.to]))].sort();
@@ -113,9 +164,9 @@ export type RelationalGraphOutput = {
 
 /**
  * An incidence-oriented output: every node carries its incident edges, and an
- * isolated node is present WITH NO INCIDENT EDGES rather than absent. This is
- * the representation whose shape would tempt a consumer to reconstruct the node
- * list from the edges, so it states the node list explicitly.
+ * isolated node is present WITH NO INCIDENT EDGES rather than absent. This is the
+ * representation whose shape would tempt a consumer to reconstruct the node list
+ * from the edges, so it states the node list explicitly.
  */
 export type IncidenceOutput = {
   kind: "incidence";
@@ -143,8 +194,12 @@ export function decodeRelationalGraph(o: RelationalGraphOutput): GraphResult {
 /** Recovers the graph from the INCIDENCE output alone. */
 export function decodeIncidence(o: IncidenceOutput): GraphResult {
   const nodes = o.entries.map((e) => e.node);
+  // THE KEY MUST BE COLLISION-FREE UNDER CONCATENATION AMBIGUITY. Joining the
+  // endpoints with a separator maps ("a->b","c") and ("a","b->c") to the same
+  // text, so one of two distinct edges would be silently dropped. An ordered
+  // pair, JSON-encoded, has no such collision.
   const seen = new Map<string, { from: string; to: string }>();
-  for (const e of o.entries) for (const inc of e.incident) seen.set(`${inc.from}->${inc.to}`, { ...inc });
+  for (const e of o.entries) for (const inc of e.incident) seen.set(JSON.stringify([inc.from, inc.to]), { ...inc });
   const edges = [...seen.values()];
   const touched = new Set(edges.flatMap((e) => [e.from, e.to]));
   return { nodes, edges, isolates: nodes.filter((n) => !touched.has(n)) };
@@ -157,8 +212,7 @@ export function recoverGraph(o: RelationalGraphOutput | IncidenceOutput): GraphR
 /* ----------------------------------------------------------- experiment */
 
 const sameGraph = (a: GraphResult, b: GraphResult) =>
-  JSON.stringify(a.nodes) === JSON.stringify(b.nodes) &&
-  JSON.stringify(a.edges) === JSON.stringify(b.edges);
+  JSON.stringify(a.nodes) === JSON.stringify(b.nodes) && JSON.stringify(a.edges) === JSON.stringify(b.edges);
 
 export type GraphPreservationReport = {
   result: GraphResult;
@@ -166,42 +220,46 @@ export type GraphPreservationReport = {
   incidence: { ok: boolean; recovered: GraphResult };
   /** The counterexample: what a node-from-edges representation would report. */
   derivedFromEdges: { nodes: string[]; distinguishesThePair: boolean };
-  /** The identity mutation: the isolate's NAME moves, count and edges do not. */
+  /**
+   * The identity mutation, applied to the PRODUCED incidence output: one entry's
+   * node identity moves while the node count and the edge set are held fixed.
+   */
   mutatedIsolate: { recovered: GraphResult; ok: boolean; countAndEdgesUnchanged: boolean };
 };
 
 /**
- * The decisive pair: an IDENTICAL edge relation over different declared node
- * populations. `B` is `A` with the isolated node removed. Nothing about the
- * edges differs, so anything that reads the node population off the edges —
- * including `deriveNodesFromEdges` — cannot tell them apart.
+ * The pair partner: the same graph with its isolated node removed. A graph with
+ * no isolate has no such neighbour, and returns `undefined` rather than a
+ * silently identical copy, so "there is nothing to distinguish here" is a value
+ * and not an accident.
  */
-export function isolateRemoved(a: GraphResult): GraphResult {
+export function isolateRemoved(a: GraphResult): GraphResult | undefined {
   const isolate = a.isolates[0];
-  if (isolate === undefined) throw new Error("the pair needs a structure with an isolated node to remove");
+  if (isolate === undefined) return undefined;
   return { nodes: a.nodes.filter((n) => n !== isolate), edges: a.edges.map((e) => ({ ...e })), isolates: [] };
 }
 
-/** Replaces the isolated node's identity, holding the node count and edges fixed. */
-export function renameIsolate(a: GraphResult, to: string): GraphResult {
-  const isolate = a.isolates[0];
-  if (isolate === undefined) throw new Error("the mutation needs a structure with an isolated node to rename");
-  return { nodes: a.nodes.map((n) => (n === isolate ? to : n)), edges: a.edges.map((e) => ({ ...e })), isolates: [to] };
+/** Mutates the PRODUCED output directly, instead of re-encoding a mutated result. */
+export function renameInOutput<T extends RelationalGraphOutput | IncidenceOutput>(output: T, from: string, to: string): T {
+  if (output.kind === "relational") {
+    return { ...output, nodes: output.nodes.map((n) => (n === from ? to : n)) } as T;
+  }
+  return { ...output, entries: output.entries.map((e) => (e.node === from ? { ...e, node: to } : e)) } as T;
 }
 
-export function graphPreservation(binding: GraphBinding, rows: GraphRows): GraphPreservationReport {
-  const result = evaluateGraph(binding, rows);
+export function graphPreservation(binding: GraphBinding, source: GraphSource): GraphPreservationReport {
+  const result = graphOf(binding, source);
   const outputs = produceGraph(result);
   const relational = recoverGraph(outputs.relational);
   const incidence = recoverGraph(outputs.incidence);
 
   const derived = deriveNodesFromEdges(result);
-  const derivedPair = deriveNodesFromEdges(isolateRemoved(result));
+  const partner = isolateRemoved(result);
+  const derivedPair = partner === undefined ? undefined : deriveNodesFromEdges(partner);
 
-  // Mutate the PRODUCED incidence output: the isolate's identity moves, its
-  // count and the edge set do not.
-  const mutated = produceGraph(renameIsolate(result, `${result.isolates[0]}-impostor`)).incidence;
-  const recoveredMutation = recoverGraph(mutated);
+  const isolate = result.isolates[0];
+  const mutatedOutput = isolate === undefined ? outputs.incidence : renameInOutput(outputs.incidence, isolate, `${isolate}-impostor`);
+  const recoveredMutation = recoverGraph(mutatedOutput);
 
   return {
     result,
@@ -209,7 +267,7 @@ export function graphPreservation(binding: GraphBinding, rows: GraphRows): Graph
     incidence: { ok: sameGraph(incidence, result), recovered: incidence },
     derivedFromEdges: {
       nodes: derived,
-      distinguishesThePair: JSON.stringify(derived) !== JSON.stringify(derivedPair),
+      distinguishesThePair: derivedPair !== undefined && JSON.stringify(derived) !== JSON.stringify(derivedPair),
     },
     mutatedIsolate: {
       recovered: recoveredMutation,
@@ -224,72 +282,112 @@ export function graphPreservation(binding: GraphBinding, rows: GraphRows): Graph
 
 export const GRAPH_LEDGER = path.join(CONTRACTS_DIR, "analytical-fixtures/graph-experiment.json");
 
+export const GRAPH_NON_CLAIMS = [
+  "This is a bounded experiment on ONE source holding two candidate node universes and one edge relation, plus its isolate-removal neighbor. It does not establish arbitrary graph realization, does not implement a layout, marks, interaction or accessibility, and does not establish the complete projection thesis.",
+  "NO CANONICAL-MODEL INTEGRATION. The authority's graph operand declares no node relation, so the binding is an explicit validated PREMISE; the zod model, schema emission and the stage-2 ledgers are untouched. What this slice measures is what the binding OWNS — source selection, key qualification, endpoint membership and the resulting graph object — so that a later placement decision integrates measured semantics rather than a promising shape.",
+  "The graph tests construct the source directly and do not invoke the analytical judge, so they establish binding resolution, selection and representation preservation, not graph-specific semantic admission through the full authority.",
+  "The two representations differ in shape, not in substrate: both are inspectable data structures, and neither is rendered.",
+];
+
+/** ONE source holding two candidate node universes and one edge relation. */
+export function graphFixture(): GraphSource {
+  return {
+    structure: {
+      relations: {
+        allNodes: { grain: ["id"], fields: { id: { transformation: "nominal", key: true }, label: { transformation: "nominal" } } },
+        connectedSet: { grain: ["id"], fields: { id: { transformation: "nominal", key: true }, label: { transformation: "nominal" } } },
+        links: { grain: ["src", "dst"], fields: { src: { transformation: "nominal" }, dst: { transformation: "nominal" }, weight: { transformation: "ratio" } } },
+      },
+    } as unknown as RelationalStructure,
+    rows: {
+      allNodes: [{ id: "n1", label: "Contract" }, { id: "n2", label: "IR" }, { id: "n3", label: "Orphan" }],
+      connectedSet: [{ id: "n1", label: "Contract" }, { id: "n2", label: "IR" }],
+      links: [{ src: "n1", dst: "n2", weight: 1 }],
+    },
+  };
+}
+
+const attempt = (f: () => unknown): string => {
+  try {
+    f();
+    return "ACCEPTED";
+  } catch (err) {
+    return (err as Error).message;
+  }
+};
+
 /**
- * The retained result. It carries the CONCRETE PAIR, the two representations'
- * recovered graphs, the counterexample's collapse, and the identity mutation -
- * not a verdict about them.
+ * The retained result. It carries the CONCRETE SOURCE, both bindings over it, the
+ * two representations' recovered graphs, the counterexample's collapse, the
+ * qualification refusals and the direct output mutation — not a verdict.
  */
-export function graphLedger(structure: RelationalStructure, binding: GraphBinding, rowsA: GraphRows, rowsB: GraphRows): Record<string, unknown> {
-  const declared = declareGraphBinding(structure, binding);
-  const report = graphPreservation(declared, rowsA);
-  const b = evaluateGraph(declared, rowsB);
+export function graphLedger(): Record<string, unknown> {
+  const source = graphFixture();
+  const allNodes: GraphBinding = { nodes: { relation: "allNodes", keyField: "id" }, edges: { relation: "links", fromField: "src", toField: "dst" } };
+  const connectedSet: GraphBinding = { nodes: { relation: "connectedSet", keyField: "id" }, edges: { relation: "links", fromField: "src", toField: "dst" } };
+  const all = graphPreservation(allNodes, source);
+  const connected = graphPreservation(connectedSet, source);
+
+  // Two distinct edges whose joined endpoint text collides under a
+  // separator-keyed deduplication. Both must survive.
+  const ambiguous: GraphResult = { nodes: ["a", "b", "c"], edges: [{ from: "a->b", to: "c" }, { from: "a", to: "b->c" }], isolates: [] };
+  const ambiguousDecoded = recoverGraph(produceGraph(ambiguous).incidence);
+
+  const missing = denoteGraph(allNodes, { structure: source.structure, rows: { links: source.rows.links } });
+
   return {
     $comment:
-      "The bounded graph experiment (REL-GRAPH-NODE-UNIVERSE-01). The discriminator is the PAIR: identical edges, different declared node populations. Regenerate with `tsx packages/ds-codegen/src/analytical/graph-projection.ts --record`; the test fails when this file and a fresh computation disagree.",
+      "The isolated-node graph experiment (REL-GRAPH-NODE-UNIVERSE-01) and its binding-selection correction (REL-GRAPH-BINDING-SELECTS-01). The selection control is ONE source with TWO bindings. Regenerate with `tsx packages/ds-codegen/src/analytical/graph-projection.ts --record`; the test fails when this file and a fresh computation disagree.",
     question:
       "Can one admitted relational structure preserve an independently declared node population and its edge incidence through two produced representations, without deriving the node population from the edges and without special-case consumer knowledge?",
-    binding: declared,
-    pair: {
-      A: { declaredNodes: report.result.nodes, edges: report.result.edges, isolates: report.result.isolates },
-      B: { declaredNodes: b.nodes, edges: b.edges },
-      edgeRelationIdentical: JSON.stringify(report.result.edges) === JSON.stringify(b.edges),
+    selectionControl: {
+      what: "ONE named source holds two candidate node universes and one edge relation; only the BINDING changes",
+      sourceRelations: Object.keys(source.structure.relations),
+      byAllNodes: { selected: all.result.nodes, edges: all.result.edges, isolates: all.result.isolates },
+      byConnectedSet: { selected: connected.result.nodes, edges: connected.result.edges, isolates: connected.result.isolates },
+      selectionChanged: JSON.stringify(all.result.nodes) !== JSON.stringify(connected.result.nodes),
+      edgeRelationIdentical: JSON.stringify(all.result.edges) === JSON.stringify(connected.result.edges),
+      sourceRowsUnchanged: true,
     },
     recovered: {
-      relational: report.relational.recovered,
-      incidence: report.incidence.recovered,
-      bothPreserve: report.relational.ok && report.incidence.ok,
+      allNodes: { relational: all.relational.recovered, incidence: all.incidence.recovered, bothPreserve: all.relational.ok && all.incidence.ok },
+      connectedSet: { relational: connected.relational.recovered, incidence: connected.incidence.recovered, bothPreserve: connected.relational.ok && connected.incidence.ok },
     },
     counterexample: {
       what: "a representation that derives its node list from edge endpoints",
-      derivedForA: deriveNodesFromEdges(report.result),
-      derivedForB: deriveNodesFromEdges(b),
-      distinguishesThePair: report.derivedFromEdges.distinguishesThePair,
+      derivedForAllNodes: deriveNodesFromEdges(all.result),
+      derivedForConnectedSet: deriveNodesFromEdges(connected.result),
+      distinguishesThePair: all.derivedFromEdges.distinguishesThePair,
+    },
+    qualification: {
+      keyThatResolvesButIsNotTheKey: attempt(() => denoteGraph({ ...allNodes, nodes: { relation: "allNodes", keyField: "label" } }, source)),
+      endpointOutsideTheSelectedUniverse: attempt(() => denoteGraph(allNodes, { ...source, rows: { ...source.rows, links: [{ src: "n1", dst: "n9", weight: 1 }] } })),
+      missingPopulation: missing.kind === "unproven" ? { carried: missing.obligation, reason: missing.reason } : "ACCEPTED",
+      nodeUniverseIsTheEdgeRelation: attempt(() => denoteGraph({ nodes: { relation: "links", keyField: "src" }, edges: { relation: "links", fromField: "src", toField: "dst" } }, source)),
     },
     identityMutation: {
-      what: "the isolated node's identity moves while the node count and the edge set are held fixed",
-      recovered: report.mutatedIsolate.recovered,
-      detected: !report.mutatedIsolate.ok,
-      countAndEdgesUnchanged: report.mutatedIsolate.countAndEdgesUnchanged,
+      what: "the isolated node's identity moves IN THE PRODUCED OUTPUT while the node count and the edge set are held fixed",
+      recovered: all.mutatedIsolate.recovered,
+      detected: !all.mutatedIsolate.ok,
+      countAndEdgesUnchanged: all.mutatedIsolate.countAndEdgesUnchanged,
+    },
+    decoderCollision: {
+      what: "two distinct edges whose endpoint strings compose to the same joined text under a separator-keyed deduplication",
+      input: ambiguous.edges,
+      recovered: ambiguousDecoded.edges,
+      bothSurvive: ambiguousDecoded.edges.length === ambiguous.edges.length,
     },
     authorityGap: {
       operand: { from: "relation", edgeFrom: "field", edgeTo: "field", value: "field" },
       declaresANodeRelation: false,
-      note: "the authority's graph operand names an edge relation and two of its fields and no node relation; the binding is an explicit validated premise here, and moving it into the authority is separate work",
+      note: "the authority's graph operand names an edge relation and two of its fields and no node relation; the binding is an explicit validated premise here, and what it OWNS is now measured so that placing it in the canonical model integrates measured semantics",
     },
     nonClaims: GRAPH_NON_CLAIMS,
   };
 }
 
-export const GRAPH_NON_CLAIMS = [
-  "This is a bounded experiment on ONE three-node/one-edge fixture and its isolate-removal neighbor. It does not establish arbitrary graph realization, does not implement a layout, marks, interaction or accessibility, and does not establish the complete projection thesis.",
-  "THE AUTHORITY'S OWN GAP IS RECORDED, NOT REPAIRED. The relation model's `graph` operand names an edge relation and its endpoint fields and declares NO node relation, so nothing in the authority says the endpoints range over a named node key. This slice declares the binding as an explicit validated PREMISE; it does not extend the zod model, does not touch schema emission, and does not alter the stage-2 ledgers. A future slice that moves the binding into the authority is a different piece of work.",
-  "The two representations differ in shape, not in substrate: both are inspectable data structures, and neither is rendered.",
-];
-
 const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
 if (invokedDirectly && process.argv.includes("--record")) {
-  const rowsA: GraphRows = {
-    nodes: [{ id: "n1", label: "Contract" }, { id: "n2", label: "IR" }, { id: "n3", label: "Orphan" }],
-    edges: [{ src: "n1", dst: "n2", weight: 1 }],
-  };
-  const rowsB: GraphRows = { nodes: [{ id: "n1", label: "Contract" }, { id: "n2", label: "IR" }], edges: [{ src: "n1", dst: "n2", weight: 1 }] };
-  const structure = {
-    relations: {
-      nodes: { grain: ["id"], fields: { id: { transformation: "nominal", key: true }, label: { transformation: "nominal" } } },
-      edges: { grain: ["src", "dst"], fields: { src: { transformation: "nominal" }, dst: { transformation: "nominal" }, weight: { transformation: "ratio" } } },
-    },
-  } as unknown as RelationalStructure;
-  const binding: GraphBinding = { nodes: { relation: "nodes", keyField: "id" }, edges: { relation: "edges", fromField: "src", toField: "dst" } };
-  fs.writeFileSync(GRAPH_LEDGER, `${JSON.stringify(graphLedger(structure, binding, rowsA, rowsB), null, 2)}\n`);
+  fs.writeFileSync(GRAPH_LEDGER, `${JSON.stringify(graphLedger(), null, 2)}\n`);
   console.log(`graph-projection: recorded ${GRAPH_LEDGER}`);
 }
