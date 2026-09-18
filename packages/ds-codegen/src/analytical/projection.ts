@@ -33,6 +33,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { RelationalStructure as RelationalStructureSchema } from "./relation-model.js";
 import type { AggregateOp, FieldDecl, RelationDecl, RelationalStructure, Transformation } from "./relation-model.js";
+import type { GraphResult } from "./graph-projection.js";
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
 import { CONTRACTS_DIR, loadOracle } from "./necessity.js";
@@ -80,7 +81,9 @@ export type Claim =
   | "difference-comparability"
   | "value-recoverable"
   | "partition-membership"
-  | "aggregate-magnitude";
+  | "aggregate-magnitude"
+  /** The incidence of a graph is carried, so a topology task can be served by it. */
+  | "incidence-recoverable";
 
 export type BaselineDecl = "zero" | "truncated";
 
@@ -356,7 +359,7 @@ export const TASK_INVARIANTS: Record<Task, { requires: Claim[] } | { notEnumerat
   "change-over-time": { notEnumerated: "invariant:interpolation-policy" },
   correlation: { notEnumerated: "invariant:position-non-meaningful" },
   ranking: { notEnumerated: "invariant:shared-ordering" },
-  topology: { notEnumerated: "invariant:position-non-meaningful" },
+  topology: { requires: ["incidence-recoverable"] },
   flow: { notEnumerated: "invariant:conservation" },
   "lookup-rollup": { notEnumerated: "invariant:structure-preserved" },
   trend: { notEnumerated: "invariant:position-non-meaningful" },
@@ -595,6 +598,112 @@ const keyOf = (p: Program) => `${p.coordinate}|${p.dimension}|${p.measure}|${p.b
 const sortPrograms = (xs: Program[]) => [...xs].sort((a, b) => keyOf(a).localeCompare(keyOf(b)));
 const sortRefusals = (xs: Refusal[]) => [...xs].sort((a, b) => (keyOf(a.program) + a.cause).localeCompare(keyOf(b.program) + b.cause));
 const sortUndecided = (xs: Undecided[]) => [...xs].sort((a, b) => (keyOf(a.program) + a.obligation).localeCompare(keyOf(b.program) + b.obligation));
+
+/* -------------------------------------------------- the graph-valued result */
+
+/**
+ * A program over a GRAPH-VALUED result. Distinct from `Program`, which displays
+ * one relation's aggregate: a graph program assigns channels to the NODE
+ * population and to the INCIDENCE, and it makes no magnitude claim at all.
+ *
+ * The result travels with the program, and the enumerator receives it as a
+ * denoted `GraphResult` — never a `GraphBinding`. That is the M1 exit criterion
+ * made structural: a layer that never sees the binding cannot re-resolve a
+ * relation name, re-select a population, or consult a second declaration.
+ */
+export type GraphProgram = {
+  coordinate: CoordinateSpace;
+  /** How node identity is carried. */
+  nodes: Channel;
+  /** How the incidence is carried. */
+  edges: Channel;
+  task: Task;
+  graph: GraphResult;
+  claims: Claim[];
+};
+
+export type GraphRefusal = { program: GraphProgram; cause: string; detail: string };
+export type GraphEnumeration = {
+  population: { considered: number; excluded: number; disposed: number };
+  retained: GraphProgram[];
+  refused: GraphRefusal[];
+};
+
+export type GraphEnumerationInput = {
+  /** The DENOTED graph. No binding, no relation name, no rows. */
+  graph: GraphResult;
+  task: Task;
+  inventory: TargetInventory;
+};
+
+/** What a graph program actually claims, read off its own assignments. */
+export function inducedGraphClaims(p: GraphProgram): Claim[] {
+  const out = new Set<Claim>();
+  if (p.edges === "connection") out.add("incidence-recoverable");
+  if (p.nodes === "position" || CAPACITY[p.nodes].valueReadback) out.add("partition-membership");
+  return [...out].sort();
+}
+
+const graphKeyOf = (p: GraphProgram) => `${p.coordinate}|${p.nodes}|${p.edges}|${p.task}`;
+
+/**
+ * Enumerate graph programs from the graph-valued result.
+ *
+ * THE DOMAIN RESTRICTION IS EXPLICIT. A topology projection must not make a
+ * positional claim, so a coordinate other than `non-metric` is EXCLUDED rather
+ * than refused: it is not an illegal program, it is outside the declared domain
+ * of this enumeration. The population counters make that visible instead of
+ * letting it read as "no lawful projection exists".
+ */
+export function enumerateGraph(input: GraphEnumerationInput): GraphEnumeration {
+  const { graph, task, inventory } = input;
+  const spec = TASK_INVARIANTS[task];
+  const retained: GraphProgram[] = [];
+  const refused: GraphRefusal[] = [];
+  let considered = 0;
+  let excluded = 0;
+
+  for (const coordinate of inventory.spaces) {
+    for (const nodes of inventory.channels) {
+      for (const edges of inventory.channels) {
+        if (nodes === edges) continue;
+        considered += 1;
+        // A coordinate that positions its marks asserts a positional claim a
+        // topology projection must not make.
+        if (coordinate !== "non-metric") {
+          excluded += 1;
+          continue;
+        }
+        if (!CAPACITY[nodes].spaces.includes(coordinate) || !CAPACITY[edges].spaces.includes(coordinate)) {
+          excluded += 1;
+          continue;
+        }
+        const p: GraphProgram = { coordinate, nodes, edges, task, graph, claims: [] };
+        if ("notEnumerated" in spec) {
+          refused.push({ program: { ...p, claims: [] }, cause: "REL_TASK_UNDERSTATED_ENCODING_CLAIM", detail: `the ${task} preconditions are not implemented` });
+          continue;
+        }
+        const claims = inducedGraphClaims(p);
+        const missing = spec.requires.filter((c) => !claims.includes(c));
+        const program: GraphProgram = { ...p, claims };
+        if (missing.length > 0) {
+          refused.push({
+            program,
+            cause: "REL_TASK_UNDERSTATED_ENCODING_CLAIM",
+            detail: `the declared task requires ${spec.requires.join(", ")} and this program induces ${claims.join(", ") || "nothing"}`,
+          });
+          continue;
+        }
+        retained.push(program);
+      }
+    }
+  }
+  return {
+    population: { considered, excluded, disposed: considered - excluded },
+    retained: [...retained].sort((a, b) => graphKeyOf(a).localeCompare(graphKeyOf(b))),
+    refused: [...refused].sort((a, b) => (graphKeyOf(a.program) + a.cause).localeCompare(graphKeyOf(b.program) + b.cause)),
+  };
+}
 
 /* ------------------------------------------------------------- observers */
 

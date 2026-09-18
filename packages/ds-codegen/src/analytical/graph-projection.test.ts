@@ -34,6 +34,7 @@ import {
   recoverGraph,
   renameInOutput,
 } from "./graph-projection.js";
+import { enumerateGraph, inducedGraphClaims, EXPERIMENT_TARGET } from "./projection.js";
 import type { GraphResult } from "./graph-projection.js";
 import { GraphViewFile } from "./graph-view-model.js";
 import { CONTRACTS_DIR } from "./necessity.js";
@@ -218,5 +219,98 @@ describe("the retained ledger", () => {
   it("carries non-claims, including the authority's missing node operand", () => {
     expect(GRAPH_NON_CLAIMS.some((n) => /no node relation/i.test(n))).toBe(true);
     expect(GRAPH_NON_CLAIMS.some((n) => n.includes("NO CANONICAL-MODEL INTEGRATION"))).toBe(true);
+  });
+});
+
+describe("M1 EXIT — the projection layer consumes the graph-valued result", () => {
+  const denoted = graphPreservation(ALL_NODES, SOURCE).result;
+
+  it("enumerates candidates for the task a graph serves, from the RESULT", () => {
+    const e = enumerateGraph({ graph: denoted, task: "topology", inventory: EXPERIMENT_TARGET });
+    expect(e.retained.length).toBeGreaterThan(0);
+    for (const p of e.retained) {
+      // Judged from the graph result and the channel capacities alone.
+      expect(p.graph.nodes).toEqual(denoted.nodes);
+      expect(inducedGraphClaims(p)).toContain("incidence-recoverable");
+      expect(p.coordinate).toBe("non-metric");
+    }
+  });
+
+  it("takes NO binding, so it cannot re-resolve a source name or re-select a population", () => {
+    // The input type is the contract: `{graph, task, inventory}`. A layer that
+    // never receives a binding cannot invent the analysis behind it.
+    const e = enumerateGraph({ graph: denoted, task: "topology", inventory: EXPERIMENT_TARGET });
+    const inputKeys = Object.keys({ graph: denoted, task: "topology", inventory: EXPERIMENT_TARGET }).sort();
+    expect(inputKeys).toEqual(["graph", "inventory", "task"]);
+    expect(e.retained.every((p) => !("operation" in p) && !("binding" in p))).toBe(true);
+  });
+
+  it("states its domain restriction rather than reporting no lawful projection", () => {
+    const e = enumerateGraph({ graph: denoted, task: "topology", inventory: EXPERIMENT_TARGET });
+    // Every positional coordinate is EXCLUDED, not refused: outside the declared
+    // domain is not the same as illegal, and the counters keep that visible.
+    expect(e.population.considered).toBeGreaterThan(0);
+    expect(e.population.excluded).toBeGreaterThan(0);
+    expect(e.retained.every((p) => p.coordinate === "non-metric")).toBe(true);
+  });
+
+  it("still refuses a program that cannot carry the incidence", () => {
+    const e = enumerateGraph({ graph: denoted, task: "topology", inventory: EXPERIMENT_TARGET });
+    expect(e.refused.every((r) => r.detail.length > 0)).toBe(true);
+  });
+
+  it("distinguishes the two graph universes through the SAME enumerator", () => {
+    const other = graphPreservation(CONNECTED_SET, SOURCE).result;
+    const a = enumerateGraph({ graph: denoted, task: "topology", inventory: EXPERIMENT_TARGET });
+    const b = enumerateGraph({ graph: other, task: "topology", inventory: EXPERIMENT_TARGET });
+    expect(a.retained.length).toBe(b.retained.length); // same topologies...
+    expect(a.retained[0].graph.nodes).not.toEqual(b.retained[0].graph.nodes); // ...different graph
+  });
+});
+
+describe("M1 gap — missing versus explicitly EMPTY population", () => {
+  it("denotes an EMPTY graph when both populations are explicitly empty", () => {
+    const empty = denoteGraph(ALL_NODES, { structure: SOURCE.structure, rows: { all_nodes: [], links: [] } });
+    expect(empty.kind).toBe("denoted");
+    if (empty.kind !== "denoted") throw new Error("unreachable");
+    expect(empty.graph).toEqual({ nodes: [], edges: [], isolates: [] });
+  });
+
+  it("REFUSES an explicitly empty node population beside a non-empty edge relation", () => {
+    // The contradiction is established, so it is refused rather than carried.
+    expect(() => denoteGraph(ALL_NODES, { structure: SOURCE.structure, rows: { all_nodes: [], links: [{ src: "n1", dst: "n2" }] } })).toThrow(
+      /does not contain/,
+    );
+  });
+
+  it("keeps MISSING distinct from EMPTY", () => {
+    const missing = denoteGraph(ALL_NODES, { structure: SOURCE.structure, rows: { links: SOURCE.rows.links } });
+    const empty = denoteGraph(ALL_NODES, { structure: SOURCE.structure, rows: { all_nodes: [], links: [] } });
+    expect(missing.kind).toBe("unproven");
+    expect(empty.kind).toBe("denoted");
+  });
+});
+
+describe("M1 gap — a binding mutant that leaves descriptive metadata unchanged", () => {
+  it("ties the RESULT to the population the parsed binding names, not to a fixed relation", () => {
+    // The mutant this detects: an implementation that always reads `all_nodes`
+    // while `selected` still reports the declared relation. An outcome-only
+    // check passes it; this comparison does not.
+    for (const view of [VIEW_ALL_NODES, VIEW_CONNECTED_SET]) {
+      const binding = LOADED.views.get(view)!;
+      const declaredRelation = binding.nodes.relation;
+      const independent = (SOURCE.rows[declaredRelation] as Array<Record<string, unknown>>).map((r) => r[binding.nodes.keyField]);
+      const denoted = denoteGraph(binding, SOURCE);
+      expect(denoted.kind).toBe("denoted");
+      if (denoted.kind !== "denoted") throw new Error("unreachable");
+      expect(denoted.graph.nodes).toEqual(independent);
+      expect(denoted.selected.nodes).toBe(declaredRelation);
+    }
+    // ...and the two populations are genuinely different, so the check has teeth.
+    const a = graphPreservation(ALL_NODES, SOURCE).result.nodes;
+    const b = graphPreservation(CONNECTED_SET, SOURCE).result.nodes;
+    expect(a).not.toEqual(b);
+    expect(a).toEqual(["n1", "n2", "n3"]);
+    expect(b).toEqual(["n1", "n2"]);
   });
 });
