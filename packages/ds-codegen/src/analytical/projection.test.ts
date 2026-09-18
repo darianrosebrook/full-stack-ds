@@ -46,8 +46,11 @@ import {
   decodeReadback,
   enumerate,
   evaluateOperation,
+  lawfulRelationPrograms,
   ledgerOf,
   metricConsumer,
+  relationMembership,
+  relationProgramIsSound,
   produce,
   programObserver,
   readbackConsumer,
@@ -451,5 +454,92 @@ describe("the inherited controls still hold, and the ledger still matches a fres
     expect(fs.existsSync(LEDGER), "run: tsx packages/ds-codegen/src/analytical/projection.ts --record").toBe(true);
     const committed = JSON.parse(fs.readFileSync(LEDGER, "utf-8"));
     expect(committed).toEqual(JSON.parse(JSON.stringify(ledgerOf(runExperiment()))));
+  });
+});
+
+describe("M2 — the RELATION-valued candidate space: soundness, completeness, sensitivity", () => {
+  const run = (structure: RelationalStructure, inventory: typeof EXPERIMENT_TARGET = EXPERIMENT_TARGET) =>
+    enumerate({ structure, admitted, task: "magnitude-comparison", inventory, partitionDimension: BASIS.resultGrain });
+
+  it("SOUNDNESS: every retained program satisfies the declared premises", () => {
+    const e = run(structure);
+    expect(e.retained.length).toBeGreaterThan(0);
+    for (const p of e.retained) expect(relationProgramIsSound(p, facts, "magnitude-comparison", EXPERIMENT_TARGET), `${programKey(p)} is unsound`).toBe(true);
+  });
+
+  it("BOUNDED COMPLETENESS: the retained membership equals an INDEPENDENTLY derived set", () => {
+    // The expectation reasons from the capacity table, the task requirement and
+    // the RESULT facts, and never calls `enumerate`, so a program it never
+    // generates shows up as a missing member.
+    const expected = lawfulRelationPrograms(facts, "magnitude-comparison", EXPERIMENT_TARGET).map((t) => `${t.coordinate}|${t.dimension}|${t.measure}`).sort();
+    expect(expected.length).toBeGreaterThan(0);
+    expect(relationMembership(run(structure))).toEqual(expected);
+  });
+
+  it("PRE-COMMIT (membership, not count): removing a measure channel removes exactly its programs", () => {
+    const full = relationMembership(run(structure));
+    const channel = "area" as const;
+    const predictedRemoved = full.filter((k) => k.split("|")[2] === channel);
+    const predictedKept = full.filter((k) => k.split("|")[2] !== channel);
+    expect(predictedRemoved.length).toBeGreaterThan(0);
+    expect(predictedKept.length).toBeGreaterThan(0);
+    const without = { ...EXPERIMENT_TARGET, channels: EXPERIMENT_TARGET.channels.filter((c) => c !== channel) };
+    expect(relationMembership(run(structure, without))).toEqual(predictedKept);
+  });
+
+  it("ALPHA-RENAMING IS AN INVARIANT: respelling the declaration must not move membership", () => {
+    // A membership that depends on a spelling is name-based dispatch. The
+    // relation, the aggregated field and the group column are all renamed and
+    // the operation is rebound to the new names.
+    const renamed: RelationalStructure = {
+      relations: {
+        inventory: {
+          grain: ["bucket", "item"],
+          fields: {
+            item: { transformation: "nominal" },
+            bucket: { transformation: "interval", temporality: { kind: "instant" } },
+            level: { transformation: "ratio", additivity: { kind: "semi-additive", nonAdditiveAlong: ["bucket"] } },
+          },
+        },
+      },
+    } as unknown as RelationalStructure;
+    const renamedOp = { relation: "inventory", field: "level", op: "sum", along: ["item"], resultGrain: ["bucket"] } as const;
+    const renamedAdmission = admitOperation(renamed, renamedOp as never);
+    expect(renamedAdmission.kind).toBe("admitted");
+    if (renamedAdmission.kind !== "admitted") throw new Error("unreachable");
+    const renamedEnum = enumerate({
+      structure: renamed,
+      admitted: renamedOp as never,
+      task: "magnitude-comparison",
+      inventory: EXPERIMENT_TARGET,
+      partitionDimension: "bucket",
+    });
+    expect(relationMembership(renamedEnum)).toEqual(relationMembership(run(structure)));
+  });
+
+  it("INVARIANCE: an irrelevant declaration leaves the membership unchanged", () => {
+    const withExtra = {
+      ...structure,
+      relations: { ...structure.relations, [BASIS.relation]: { ...structure.relations[BASIS.relation], fields: { ...structure.relations[BASIS.relation].fields, warehouse: { transformation: "nominal" } } } },
+    } as RelationalStructure;
+    expect(relationMembership(run(withExtra))).toEqual(relationMembership(run(structure)));
+  });
+
+  it("ZERO, ONE and MULTIPLE lawful results, and unproven kept distinct from contradiction", () => {
+    const none = { ...EXPERIMENT_TARGET, channels: [] as never[] };
+    expect(run(structure, none as typeof EXPERIMENT_TARGET).retained).toEqual([]);
+    const single = { ...EXPERIMENT_TARGET, channels: ["position", "text"] as never[] };
+    expect(relationMembership(run(structure, single as typeof EXPERIMENT_TARGET)).length).toBeGreaterThan(0);
+    expect(run(structure).retained.length).toBeGreaterThan(relationMembership(run(structure, single as typeof EXPERIMENT_TARGET)).length);
+    // A missing premise is CARRIED; a contradiction is REFUSED.
+    expect(enumerate({ structure: withGrain("unknown"), admitted, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET }).retained).toEqual([]);
+    expect(() => admitOperation(structure, { ...admitted, relation: "does_not_exist" })).toThrow(/does not declare/);
+  });
+
+  it("states its excluded population rather than reporting an empty lawful set", () => {
+    const e = run(structure);
+    expect(e.population.considered).toBe(168);
+    expect(e.population.excluded).toBeGreaterThan(0);
+    expect(e.population.disposed).toBe(e.population.considered - e.population.excluded);
   });
 });
