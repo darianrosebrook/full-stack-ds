@@ -29,6 +29,14 @@ acceptance:
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
     then: 'given a graph-valued result denoted from a canonical graph-view declaration; when the projection layer enumerates candidates for the task a graph serves; then the candidates are judged from the graph result and the target inventory without the enumerator re-resolving a source relation or consulting a second declaration, and the empty-versus-missing and metadata-preserving-mutant controls separate success from the plausible false pass'
+  - id: A2
+    given: 'A graph-valued result has been denoted.'
+    when: 'The enumerator is asked for candidates serving the task a graph serves.'
+    then: >-
+      Candidates are judged from the graph result and the target inventory alone,
+      the domain restriction that excludes positional coordinates is stated rather
+      than reported as no lawful projection, and the relation path still admits
+      nothing for that task.
 non_functional: {}
 contracts:
   - name: 'graph-projection-consume'
