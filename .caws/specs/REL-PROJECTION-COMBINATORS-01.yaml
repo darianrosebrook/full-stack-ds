@@ -1,0 +1,57 @@
+id: REL-PROJECTION-COMBINATORS-01
+title: 'Projection combinators type from their parts: layer, facet and embed derive obligations from operands and the combinator rule'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-18T18:33:05.223Z'
+updated_at: '2026-09-18T18:33:05.223Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an admitted layer, facet or embed whose every part is retained and whose combinator rule is satisfied; when the composite is judged; then it is retained and its exposed scale profile is derived from the parts and the declarations'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a composite with exactly one part replaced by an otherwise identical refused part; when it is judged; then the composite is refused carrying that part''s own cause verbatim and no composite-specific cause is introduced'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a layer whose parts share a channel with no sharing declaration; when it is judged; then it is refused REL_LAYER_SCALE_UNSHARED; and declaring shared over incommensurable declared units refuses REL_UNIT_INCOMMENSURABLE_SHARED_SCALE; and a missing unit is carried unproven rather than refused'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a facet whose scale policy is undeclared for a channel its parts use; when it is judged; then it is refused REL_FACET_SCALE_POLICY_UNDECLARED; and a retained facet''s induced claims follow the declared policy, shared inducing cross-panel comparability and free not'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an embed whose part''s task invariant is unsatisfiable within the declared cell channel budget; when it is judged; then it is refused REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET; and the same part under a sufficient budget is retained'
+  - id: A6
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the pre-registered unfamiliar recombination; when it is judged; then the outcome matches the expectation authored before the implementation existed, and the materially different policy variant differs only by the claim the policy names'
+  - id: A7
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an invariant-preserving perturbation to a declaration no part reads; when the composite is judged; then the verdict and the induced claims are unchanged'
+non_functional: {}
+contracts:
+  - name: 'projection-combinator-typing'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
+  - name: 'composition-precommit'
+    type: schema
+    path: 'packages/ds-contracts/analytical-fixtures/composition-precommit.json'
