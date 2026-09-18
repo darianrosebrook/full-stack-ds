@@ -39,6 +39,13 @@ acceptance:
       Both representations recover the exact node identities, the incidence and the
       isolated node, so the pair is distinguished; the edges-derived representation
       yields the same node list for both and is exhibited as collapsing them.
+  - id: A3
+    given: 'A produced representation carries the graph.'
+    when: 'The isolated node''s identity moves while the node count and the edge set are held fixed.'
+    then: >-
+      Recovery detects the wrong identity, so agreement on the number of nodes and
+      edges is not sufficient, and the unmutated graph is accepted through the same
+      comparison.
 non_functional: {}
 contracts:
   - name: 'graph-node-universe'
