@@ -1,0 +1,36 @@
+id: REL-GRAPH-PROJECTION-CONSUME-01
+title: 'Let the projection layer consume the graph-valued result, and close M1''s evidence gaps'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-18T17:39:59.866Z'
+updated_at: '2026-09-18T17:39:59.866Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/projection.ts (enumerateGraph: the graph-valued result consumed by the enumerator)'
+    - 'packages/ds-codegen/src/analytical/graph-projection.test.ts (consumption, empty-vs-missing, the metadata-preserving binding mutant)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+  out: []
+invariants:
+  - 'THE PROJECTION LAYER CONSUMES THE RESULT, NOT THE BINDING. enumerateGraph receives a denoted GraphResult and never a GraphBinding, so it cannot re-resolve a relation name or re-select a population. If it could, M1''s exit would be nominal.'
+  - 'MILESTONE 1 EXIT, scoped honestly: the graph path reaches the enumerator for the task a graph serves (topology), judged from the graph-valued result and the target inventory. It does NOT claim a complete topology algebra, a layout, or that every topology candidate is enumerated.'
+  - 'Missing versus explicitly empty population must be DISTINGUISHED AND TESTED: empty nodes with empty edges denotes an empty graph; empty nodes with non-empty edges is refused. Only the missing case has been tested so far.'
+  - 'The binding mutant must leave DESCRIPTIVE METADATA UNCHANGED: force the node-row read to ignore the binding so the result is wrong while the reported selection still names the declared relation. Outcome-only checks are not sufficient.'
+  - 'Necessity/accounting for the graph-view coordinates is NOT discharged here and must be recorded as the remaining M1 item rather than implied by schema acceptance.'
+  - 'Stage-2 ratification is untouched: no census coordinate is adjudicated, the subtraction keeps its existing unresolved count, and no existing ledger is re-recorded.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a graph-valued result denoted from a canonical graph-view declaration; when the projection layer enumerates candidates for the task a graph serves; then the candidates are judged from the graph result and the target inventory without the enumerator re-resolving a source relation or consulting a second declaration, and the empty-versus-missing and metadata-preserving-mutant controls separate success from the plausible false pass'
+non_functional: {}
+contracts:
+  - name: 'graph-projection-consume'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/graph-projection.test.ts'
