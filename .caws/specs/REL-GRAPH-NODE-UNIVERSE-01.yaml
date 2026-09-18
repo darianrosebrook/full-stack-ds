@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "Identical edge relation across the pair, asserted as edgeRelationIdentical true, with different declared node populations (3 against 2). Both produced representations recover the exact node identities and the incidence for BOTH structures and so distinguish them. The node-from-edges representation is executed on both sides and returns [n1,n2] each time, so distinguishesThePair is false: it cannot see the difference at all. This is the pair the acceptance names, with the boundary that would lose it demonstrated rather than described."
     recorded_at: "2026-09-18T04:35:34.733Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "The isolated node is renamed to n3-impostor in the PRODUCED incidence output while the node count and the edge set are held fixed: countAndEdgesUnchanged is true, so a consumer comparing counts would pass the mutation. Recovery compares IDENTITIES, returns nodes [n1,n2,n3-impostor] against the expected [n1,n2,n3], and reports the mutation detected. The unmutated graph is accepted through the same comparison (relational.ok and incidence.ok both true), so the control is a discriminator rather than a blanket refusal."
+    recorded_at: "2026-09-18T04:35:35.233Z"
