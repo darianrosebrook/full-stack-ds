@@ -2,9 +2,10 @@ id: REL-PROJECTION-BINDING-01
 title: 'Bind one admitted analytical operation through the projection boundary and observe its claims through two consumers'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: projection-binding
 created_at: '2026-09-18T00:46:16.362Z'
-updated_at: '2026-09-18T00:46:16.362Z'
+updated_at: '2026-09-18T00:47:09.796Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
