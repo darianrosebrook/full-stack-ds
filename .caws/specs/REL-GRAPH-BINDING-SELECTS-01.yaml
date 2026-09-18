@@ -2,9 +2,11 @@ id: REL-GRAPH-BINDING-SELECTS-01
 title: 'Make the graph binding select and qualify its node universe, and repair the incidence decoder collision'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'The binding now selects its populations from one named source and qualifies them: the key must be the declared key, endpoints must belong to the selected universe, a missing population is carried, and the incidence decoder no longer collides on joined endpoint text.'
 created_at: '2026-09-18T05:19:44.967Z'
-updated_at: '2026-09-18T05:19:46.315Z'
+updated_at: '2026-09-18T05:27:20.517Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
