@@ -86,3 +86,8 @@ contracts:
   - name: 'projection-binding'
     type: contract-test
     path: 'packages/ds-codegen/src/analytical/projection.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "pnpm exec vitest run packages/ds-codegen/src/analytical (21 files / 915 tests; projection.test.ts 35) and pnpm test (303 files / 4136 tests), typecheck, lint, docs:check-claims and docs:check-links green; governed:rail and test:frameworks green in the worktree on merge 125a2301; all seven ledger gates green with unchanged numbers. MEASURED: bindOperation on the fixture own assertion gives sum(stock.on_hand) over [product] with result grain [date]; every one of the 42 retained programs carries a binding matching it (asserted per program, not by count). A binding that does not RESOLVE against the structure is not retained: naming an undeclared field (reserved) and summing over a dimension the grain does not contain (warehouse) both leave zero retained and every disposed candidate carried as undecided under grain:declared with a non-empty detail; an ABSENT binding does the same. The candidate population is now named rather than implied: 168 triples considered, 69 excluded where a channel has no slot for a scale, 99 disposed, and retained+refused+undecided equals disposed. NON-CLAIM: the binding is carried and checked by VALUE over one supplied population; it is not a general theorem about any topology, and it says nothing about rendered output."
+    recorded_at: "2026-09-18T00:59:13.991Z"
