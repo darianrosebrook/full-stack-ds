@@ -213,7 +213,12 @@ describe("A2 — a relevant premise is carried, and an established contradiction
 
   it("admits no candidate for a task whose preconditions this experiment does not implement", () => {
     const notImplemented = (Object.entries(TASK_INVARIANTS) as Array<[string, unknown]>).filter(([, v]) => "notEnumerated" in (v as object));
-    expect(notImplemented.length).toBe(8);
+    // Eight until `topology` acquired preconditions; the RELATION path cannot
+    // serve topology either, because a relation-shaped operation induces no
+    // incidence claim — that is checked below rather than by the count.
+    expect(notImplemented.length).toBe(7);
+    expect(Object.keys(TASK_INVARIANTS)).toContain("topology");
+    expect(enumerate({ structure, admitted, task: "topology" as never, inventory: EXPERIMENT_TARGET }).retained).toEqual([]);
     for (const [task, v] of notImplemented) {
       const e = enumerate({ structure, admitted, task: task as never, inventory: EXPERIMENT_TARGET });
       expect(e.retained, `${task} must admit nothing while ${JSON.stringify((v as { notEnumerated: string }).notEnumerated)} is unimplemented`).toEqual([]);
