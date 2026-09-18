@@ -705,6 +705,77 @@ export function enumerateGraph(input: GraphEnumerationInput): GraphEnumeration {
   };
 }
 
+/**
+ * THE INDEPENDENTLY DERIVED LAWFUL SET FOR THE RELATION PATH.
+ *
+ * Reasoned from the capacity table, the task requirement and the RESULT facts,
+ * and it does NOT call `enumerate`. The reasoning, in full:
+ *
+ *  - the dimension is the result's group column and the measure is the
+ *    aggregate, so each must be carried by a channel that admits its
+ *    transformation;
+ *  - the coordinate must host BOTH channels, and the two channels must differ;
+ *  - the declared task's required claims must be induced by the assignment —
+ *    for magnitude comparison that is `ratio-comparability`, which a readback
+ *    channel supplies for a ratio-scaled field, and a length/position/area
+ *    channel supplies from the ratio scale over a declared zero baseline.
+ *
+ * A candidate the implementation never generates therefore appears as a MISSING
+ * MEMBER rather than as a smaller count that still looks self-consistent.
+ */
+export function lawfulRelationPrograms(
+  facts: ResultFacts,
+  task: Task,
+  inventory: TargetInventory,
+): Array<{ coordinate: CoordinateSpace; dimension: Channel; measure: Channel }> {
+  const spec = TASK_INVARIANTS[task];
+  if ("notEnumerated" in spec) return [];
+  const out: Array<{ coordinate: CoordinateSpace; dimension: Channel; measure: Channel }> = [];
+  for (const coordinate of inventory.spaces) {
+    for (const dimension of inventory.channels) {
+      for (const measure of inventory.channels) {
+        if (dimension === measure) continue;
+        if (!CAPACITY[dimension].spaces.includes(coordinate)) continue;
+        if (!CAPACITY[measure].spaces.includes(coordinate)) continue;
+        if (!CAPACITY[dimension].carries.includes(facts.dimension.transformation)) continue;
+        if (!CAPACITY[measure].carries.includes(facts.measure.transformation)) continue;
+        // The cyclic licence applies to WHICHEVER role the angle channel carries,
+        // and the dimension needs it too: `polar|angle|length` is refused because
+        // the result's group column is not cyclic, not because the measure is not.
+        if (CAPACITY[measure].requiresCyclicOrWhole && !facts.measure.cyclic) continue;
+        if (CAPACITY[dimension].requiresCyclicOrWhole && !facts.dimension.cyclic) continue;
+        const p: Program = { coordinate, dimension, measure, baseline: "zero", task, claims: [], operation: { relation: "", field: "", op: "sum", along: [], resultGrain: [] } };
+        const induced = inducedClaims(p, facts);
+        if (!spec.requires.every((c) => induced.includes(c))) continue;
+        out.push({ coordinate, dimension, measure });
+      }
+    }
+  }
+  return out.sort((a, b) => `${a.coordinate}|${a.dimension}|${a.measure}`.localeCompare(`${b.coordinate}|${b.dimension}|${b.measure}`));
+}
+
+/** The retained set as comparable membership, so a control names programs and not a count. */
+export const relationMembership = (e: Enumeration) => e.retained.map((p) => `${p.coordinate}|${p.dimension}|${p.measure}`).sort();
+
+/** The premises a retained relation program must satisfy. */
+export function relationProgramIsSound(p: Program, facts: ResultFacts, task: Task, inventory: TargetInventory): boolean {
+  const spec = TASK_INVARIANTS[task];
+  if ("notEnumerated" in spec) return false;
+  return (
+    inventory.spaces.includes(p.coordinate) &&
+    inventory.channels.includes(p.dimension) &&
+    inventory.channels.includes(p.measure) &&
+    p.dimension !== p.measure &&
+    CAPACITY[p.dimension].spaces.includes(p.coordinate) &&
+    CAPACITY[p.measure].spaces.includes(p.coordinate) &&
+    CAPACITY[p.dimension].carries.includes(facts.dimension.transformation) &&
+    CAPACITY[p.measure].carries.includes(facts.measure.transformation) &&
+    (!CAPACITY[p.dimension].requiresCyclicOrWhole || facts.dimension.cyclic) &&
+    (!CAPACITY[p.measure].requiresCyclicOrWhole || facts.measure.cyclic) &&
+    spec.requires.every((c) => inducedClaims(p, facts).includes(c))
+  );
+}
+
 /* ------------------------------- M2: soundness, completeness, sensitivity */
 
 /**
