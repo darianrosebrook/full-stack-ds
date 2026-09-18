@@ -1679,7 +1679,66 @@
     }
   },
   "loweringControls": {
-    "emptyInventoryRetained": 0,
+    "emptyInventory": {
+      "considered": 0,
+      "realized": [],
+      "unrealized": []
+    },
+    "fullInventory": {
+      "considered": 12,
+      "realized": [
+        {
+          "program": "cartesian|position|area",
+          "representation": "metric"
+        },
+        {
+          "program": "cartesian|position|text",
+          "representation": "readback"
+        }
+      ],
+      "unrealized": [
+        {
+          "program": "cartesian|position|length",
+          "reason": "no lowering is declared for cartesian|position|length"
+        },
+        {
+          "program": "cartesian|text|area",
+          "reason": "no lowering is declared for cartesian|text|area"
+        },
+        {
+          "program": "cartesian|text|length",
+          "reason": "no lowering is declared for cartesian|text|length"
+        },
+        {
+          "program": "cartesian|text|position",
+          "reason": "no lowering is declared for cartesian|text|position"
+        },
+        {
+          "program": "geographic|position|area",
+          "reason": "no lowering is declared for geographic|position|area"
+        },
+        {
+          "program": "lane|position|length",
+          "reason": "no lowering is declared for lane|position|length"
+        },
+        {
+          "program": "lane|position|text",
+          "reason": "no lowering is declared for lane|position|text"
+        },
+        {
+          "program": "lane|text|length",
+          "reason": "no lowering is declared for lane|text|length"
+        },
+        {
+          "program": "lane|text|position",
+          "reason": "no lowering is declared for lane|text|position"
+        },
+        {
+          "program": "polar|position|length",
+          "reason": "no lowering is declared for polar|position|length"
+        }
+      ]
+    },
     "metricWithoutBaseline": "a metric representation needs a declared zero baseline"
   },
   "consumers": {

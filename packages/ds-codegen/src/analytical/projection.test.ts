@@ -31,6 +31,7 @@ import {
   EXPERIMENT_TARGET,
   FORM_ALIASES,
   LEDGER,
+  LOWERING_SUPPORT,
   METRIC_UNITS_PER_VALUE,
   NON_CLAIMS,
   PRECOMMITTED,
@@ -319,8 +320,32 @@ describe("A4 — mutations are detected without trusting the explanation", () =>
     expect(metric.scale).toEqual({ unitsPerValue: 2, baseline: "zero" });
   });
 
-  it("produces NO representation when no candidate is retained, and none when the capability is removed", () => {
-    expect(result.loweringControls.emptyInventoryRetained).toBe(0);
+  it("OBSERVES output absence by running the orchestration, not by counting candidates", () => {
+    // The earlier control counted retained candidates and the test asserted the
+    // count. This runs the same selection-and-lowering path and inspects what it
+    // PRODUCED, which is the limb that was unverified.
+    const empty = result.loweringControls.emptyInventory;
+    expect(empty.considered).toBe(0);
+    expect(empty.realized).toEqual([]);
+    expect(empty.unrealized).toEqual([]);
+    // ...and the same orchestration over the full inventory does produce outputs,
+    // so the empty result is absence and not a path that never produces anything.
+    const full = result.loweringControls.fullInventory;
+    expect(full.considered).toBeGreaterThan(0);
+    expect(full.realized.map((r) => r.representation).sort()).toEqual(["metric", "readback"]);
+    expect(full.unrealized.length).toBeGreaterThan(0);
+  });
+
+  it("declines every program outside its DECLARED support, rather than accepting them silently", () => {
+    // Ten of twelve retained programs reached the generic metric producer before,
+    // so "the rest stay unrealized" was a property of the example selection.
+    const full = result.loweringControls.fullInventory;
+    expect(full.realized.length).toBe(LOWERING_SUPPORT.length);
+    expect(full.realized.length + full.unrealized.length).toBe(full.considered);
+    for (const u of full.unrealized) expect(u.reason).toMatch(/no lowering is declared/);
+  });
+
+  it("still refuses to produce a metric representation without its declared baseline", () => {
     expect(result.loweringControls.metricWithoutBaseline).toMatch(/zero baseline/);
   });
 
