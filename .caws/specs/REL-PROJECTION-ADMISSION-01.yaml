@@ -38,6 +38,14 @@ acceptance:
       under a declared scale, an empty inventory yields no candidate and therefore
       no output, and clearing the baseline a metric program needs makes lowering
       unrealized.
+  - id: A3
+    given: 'A composition declares the dimension it partitions over.'
+    when: >-
+      That dimension is not a column of the result the operation produced, or is a
+      name that exists nowhere.
+    then: >-
+      The declaration is refused at the same boundary as the operation, and the
+      rejection is EXECUTED by a test rather than asserted from a stored flag.
 non_functional: {}
 contracts:
   - name: 'admission-lowering'
