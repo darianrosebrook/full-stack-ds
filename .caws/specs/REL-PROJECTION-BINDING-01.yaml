@@ -32,6 +32,19 @@ acceptance:
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
     then: 'given the retained stage-3 experiment enumerates capacity-compatible topologies but its Program carries no bound analytical operation; when the admitted assertion is carried through the projection boundary; then every retained program carries the operation it displays - relation, field, aggregate, the dimensions summed over and the result grain - and a program without it is refused rather than retained'
+  - id: A2
+    given: >-
+      The composition task's partition premise can be omitted, and the additivity
+      kind is read only through nonAdditiveAlong.
+    when: >-
+      A composition is enumerated with no partition declared, and again with a
+      measure whose kind is non-additive or ratio-measure.
+    then: >-
+      The omitted premise is CARRIED: those candidates are undecided under the
+      missing-premise obligation rather than retained on the favorable branch; a
+      non-additive measure is refused over any partition; a ratio-measure is refused
+      under the corpus's rate cause; and the explicitly declared illegal partition
+      is still refused under REL_ADDITIVITY_SUM_SEMIADDITIVE.
 non_functional: {}
 contracts:
   - name: 'projection-binding'
