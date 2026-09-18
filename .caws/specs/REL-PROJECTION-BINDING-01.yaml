@@ -31,7 +31,12 @@ acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
-    then: 'given the retained stage-3 experiment enumerates capacity-compatible topologies but its Program carries no bound analytical operation; when the admitted assertion is carried through the projection boundary; then every retained program carries the operation it displays - relation, field, aggregate, the dimensions summed over and the result grain - and a program without it is refused rather than retained'
+    then: >-
+      Every retained program carries the operation it displays - relation, field,
+      aggregate, the dimensions summed over and the result grain - and a candidate
+      whose operation is missing or does not match the admitted one is NOT retained:
+      it is carried as undecided under the missing premise, never admitted on the
+      favorable branch.
   - id: A2
     given: >-
       The composition task's partition premise can be omitted, and the additivity
