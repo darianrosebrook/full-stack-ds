@@ -3,7 +3,6 @@ title: 'Record and pin what the projection observers do not check: topology admi
 risk_tier: 3
 mode: fix
 lifecycle_state: active
-worktree: observer-limits
 created_at: '2026-09-18T01:14:41.788Z'
 updated_at: '2026-09-18T01:15:25.446Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
