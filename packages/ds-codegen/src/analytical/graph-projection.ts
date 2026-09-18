@@ -28,7 +28,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { CONTRACTS_DIR } from "./necessity.js";
-import { GRAPH_VIEW_AUTHORING_FILE, GraphViewFile } from "./graph-view-model.js";
+import { GRAPH_VIEW_AUTHORING_FILE, GRAPH_VIEW_SCHEMA_FILE, GraphViewFile } from "./graph-view-model.js";
 import type { GraphViewFileDecl } from "./graph-view-model.js";
 import type { RelationalStructure } from "./relation-model.js";
 
@@ -280,6 +280,116 @@ export function graphPreservation(binding: GraphBinding, source: GraphSource): G
   };
 }
 
+/* ------------------------------------------- necessity of the declaration */
+
+/**
+ * THE ACCOUNTING FOR THIS DECLARATION FAMILY, derived from the EMITTED SCHEMA
+ * rather than hand-listed.
+ *
+ * Invariant 15 asks every retained coordinate for a discriminating pair, and the
+ * doctrine's other terminal dispositions where a pair cannot exist. Deriving the
+ * coordinate list from the emitted schema — the artifact the family is
+ * drift-gated against — means a field added to the declaration arrives FAILING
+ * here rather than silently gaining standing. It has already earned its keep: it
+ * corrected an undercount, because there are six coordinates and the review that
+ * prompted this work had listed five.
+ */
+export type CoordinateDisposition =
+  | {
+      coordinate: string;
+      disposition: "witnessed";
+      /** The stimuli the coordinate was separated by. */
+      pair: { a: string; b: string; differsIn: string };
+      /** What each side produced, measured rather than asserted. */
+      outcomes: { a: string; b: string };
+    }
+  | { coordinate: string; disposition: "representation-artifact"; reason: string }
+  | { coordinate: string; disposition: "required-derived-vocabulary"; reason: string };
+
+/** The coordinates the EMITTED schema declares, read off the emitted bytes. */
+export function declaredGraphViewCoordinates(contractsDir = CONTRACTS_DIR): string[] {
+  const schema = JSON.parse(fs.readFileSync(path.join(contractsDir, GRAPH_VIEW_SCHEMA_FILE), "utf-8")) as {
+    definitions: Record<string, { properties?: Record<string, { properties?: Record<string, { properties?: Record<string, unknown> }> }> }>;
+  };
+  const view = schema.definitions["graph-view"]?.properties ?? {};
+  const binding = schema.definitions["graph-view-binding"]?.properties ?? {};
+  const out: string[] = [];
+  for (const key of Object.keys(view)) {
+    if (key === "binds") {
+      for (const [role, decl] of Object.entries(binding)) {
+        for (const field of Object.keys((decl as { properties?: Record<string, unknown> }).properties ?? {})) out.push(`binds.${role}.${field}`);
+      }
+    } else out.push(key);
+  }
+  return out.sort();
+}
+
+const nodesOf = (b: GraphBinding, source: GraphSource) => graphOf(b, source).nodes.join(",");
+const edgesOf = (b: GraphBinding, source: GraphSource) => graphOf(b, source).edges.map((e) => `${e.from}->${e.to}`).join(",");
+
+/**
+ * Account for every declared coordinate. Each `witnessed` entry carries an
+ * EXECUTED pair: the two bindings, the single coordinate they differ in, and the
+ * outcomes they actually produced.
+ */
+export function graphViewNecessityCensus(contractsDir = CONTRACTS_DIR): CoordinateDisposition[] {
+  const { source, views } = loadGraphViews(contractsDir);
+  const all = views.get(VIEW_ALL_NODES)!;
+  const connected = views.get(VIEW_CONNECTED_SET)!;
+
+  // A second edge relation, AUTHORED for this census because the shipped source
+  // declares one: without it `binds.edges.relation` has no discriminating pair.
+  const mirrored: GraphSource = {
+    structure: { relations: { ...source.structure.relations, links_mirror: source.structure.relations.links } } as RelationalStructure,
+    rows: { ...source.rows, links_mirror: [{ src: "n2", dst: "n1", weight: 2 }] },
+  };
+  const viaMirror: GraphBinding = { ...all, edges: { ...all.edges, relation: "links_mirror" } };
+
+  const reversed: GraphBinding = { ...all, edges: { ...all.edges, fromField: "dst", toField: "src" } };
+
+  // How many keys each relation declares: a single-keyed relation makes the
+  // identity field derivable, and the edge relation declares none at all.
+  const keyCount = (relation: string) =>
+    Object.values((source.structure.relations[relation]?.fields ?? {}) as Record<string, { key?: boolean }>).filter((f) => f.key === true).length;
+
+  return [
+    {
+      coordinate: "binds.nodes.relation",
+      disposition: "witnessed",
+      pair: { a: VIEW_ALL_NODES, b: VIEW_CONNECTED_SET, differsIn: "binds.nodes.relation" },
+      outcomes: { a: nodesOf(all, source), b: nodesOf(connected, source) },
+    },
+    {
+      coordinate: "binds.edges.relation",
+      disposition: "witnessed",
+      pair: { a: VIEW_ALL_NODES, b: `${VIEW_ALL_NODES} via links_mirror`, differsIn: "binds.edges.relation" },
+      outcomes: { a: edgesOf(all, source), b: edgesOf(viaMirror, mirrored) },
+    },
+    {
+      coordinate: "binds.nodes.keyField",
+      disposition: "representation-artifact",
+      reason: `every candidate node relation in this source declares exactly ${keyCount(all.nodes.relation)} key, so the identity field is DERIVABLE from the relation's own declaration and is not an independent degree of freedom here. It would be independent for a relation declaring more than one key, and the edge relation declares none, which is why fromField/toField are not derivable the same way.`,
+    },
+    {
+      coordinate: "binds.edges.fromField",
+      disposition: "witnessed",
+      pair: { a: "src,dst", b: "dst,src", differsIn: "binds.edges.fromField and binds.edges.toField together: they are witnessed only JOINTLY, in a minimal 2-set, because changing one alone yields a degenerate endpoint" },
+      outcomes: { a: edgesOf(all, source), b: edgesOf(reversed, source) },
+    },
+    {
+      coordinate: "binds.edges.toField",
+      disposition: "witnessed",
+      pair: { a: "src,dst", b: "dst,src", differsIn: "binds.edges.fromField and binds.edges.toField together: they are witnessed only JOINTLY, in a minimal 2-set, because changing one alone yields a degenerate endpoint" },
+      outcomes: { a: edgesOf(all, source), b: edgesOf(reversed, source) },
+    },
+    {
+      coordinate: "id",
+      disposition: "representation-artifact",
+      reason: "renaming the view and updating its references DENOTES THE SAME GRAPH (executed: the renamed view denotes nodes [n1,n2,n3] over the same edges), so the id carries no analytical degree of freedom. Its role is reference identity, selection and provenance.",
+    },
+  ];
+}
+
 /* -------------------------------------------------------------- ledger */
 
 export const GRAPH_LEDGER = path.join(CONTRACTS_DIR, "analytical-fixtures/graph-experiment.json");
@@ -333,8 +443,8 @@ const attempt = (f: () => unknown): string => {
  * two representations' recovered graphs, the counterexample's collapse, the
  * qualification refusals and the direct output mutation — not a verdict.
  */
-export function graphLedger(): Record<string, unknown> {
-  const { source, views } = loadGraphViews();
+export function graphLedger(contractsDir = CONTRACTS_DIR): Record<string, unknown> {
+  const { source, views } = loadGraphViews(contractsDir);
   const allNodes = views.get(VIEW_ALL_NODES);
   const connectedSet = views.get(VIEW_CONNECTED_SET);
   if (!allNodes || !connectedSet) throw new Error(`the authored file must declare ${VIEW_ALL_NODES} and ${VIEW_CONNECTED_SET}`);
@@ -394,6 +504,7 @@ export function graphLedger(): Record<string, unknown> {
       declaresANodeRelation: false,
       note: "the relation-valued graph derivation is unchanged and retains its documented edge-relation meaning; the graph VIEW is a separate declaration family whose result is a graph, accounted under its own identity rather than by extending the relation algebra",
     },
+    necessityCensus: graphViewNecessityCensus(contractsDir).map((d) => ({ ...d })),
     nonClaims: GRAPH_NON_CLAIMS,
   };
 }
