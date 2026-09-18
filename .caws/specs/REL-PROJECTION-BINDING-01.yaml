@@ -67,6 +67,15 @@ acceptance:
       The mutation is either refused before consumption or produces an OBSERVED
       disagreement between what the consumer recovered and what the operation
       evaluates to, so the result cannot pass by inspecting its own certificate.
+  - id: A5
+    given: 'The predecessor''s completion record called every check passed.'
+    when: 'The retained record is read against the re-executed evidence.'
+    then: >-
+      It states the precommit's concrete readback-preservation prediction as REFUTED
+      rather than vacuous, names the POST-EXCLUSION candidate population rather than
+      claiming no candidate is silently dropped from the whole product, and states
+      loss labels as absent property names rather than measured information loss,
+      with realization-level residue still recorded as unmeasured.
 non_functional: {}
 contracts:
   - name: 'projection-binding'
