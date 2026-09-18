@@ -1,0 +1,36 @@
+id: REL-PROJECTION-REPRESENTATION-01
+title: 'One admitted sum result, two produced representations, and recovery observed from the representations alone'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-18T02:06:06.181Z'
+updated_at: '2026-09-18T02:06:06.181Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/projection.ts (resultFacts, aggregate dispatch, the two outputs and their decoders, preservationReport)'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts (representation recovery and the output mutations)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'A decoder receives ONLY the produced representation. It is given neither the supplied rows nor access to evaluateOperation, so it cannot reconstruct the expected answer instead of observing what the projection produced. A second evaluation of the same operation is not evidence that a distinct representation preserved it.'
+  - 'The enumerator consumes RESULT facts derived from the admitted operation and the named relation, not independently supplied source facts that can describe a different relation or a field the operation already aggregated away. The operation is validated against the relation, including its name.'
+  - 'The executable contract is narrowed to the aggregate it can actually perform: an unsupported aggregate name is REJECTED, never executed as sum. Implementing every aggregate is out of scope.'
+  - 'Neither 42 retained candidates nor unchanged ledger counts is an acceptance requirement. Deriving result-field facts may change the candidate population, and that change is recorded rather than resisted.'
+  - 'Out of scope and not to be widened into: OHLC and graph support, the eight unimplemented tasks, general combinators, production emission, stage-2 accounting, and exhaustive realization residue. A requirement to build any of those is a stopping finding.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a projection is bound to an admitted aggregate operation; when the enumerator derives the facts it filters on; then those facts come from the operation and the relation it names, an operation naming a relation that does not exist or disagreeing with the admitted one cannot enter, and an aggregate the evaluator cannot perform is rejected rather than executed as a sum'
+non_functional: {}
+contracts:
+  - name: 'representation-recovery'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/projection.test.ts'
