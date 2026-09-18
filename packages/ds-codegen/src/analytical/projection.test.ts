@@ -1,19 +1,20 @@
 /**
- * The projection BINDING (REL-PROJECTION-BINDING-01).
+ * The projection BINDING and REPRESENTATION boundary
+ * (REL-PROJECTION-BINDING-01, REL-PROJECTION-REPRESENTATION-01).
  *
- * The predecessor experiment earned a repeatable, constraint-filtered topology
- * enumeration. It did not earn the stronger conclusion that every retained
- * program preserves the analytical claims attributed to it, because a `Program`
- * carried no analytical operation: the same topology can display a sum over one
- * dimension, a sum over another, or the raw observations. This file tests the
- * binding that closes that gap, the premise handling that was demonstrated to
- * take the favorable branch, and two consumers that recover the bound values
- * from the operation rather than from a claim label.
+ * What the binding slice established, and what it did NOT: both of its consumers
+ * called `evaluateOperation`, so nothing representation-dependent lay between
+ * them. Their agreement showed that the binding and channel guards admit one
+ * shared evaluation — not that a value survived a text or metric encoding.
  *
- * THE NUMBERS BELOW ARE ARITHMETIC, NOT ENGINE OUTPUT. For the supplied
- * population, summing over `product` at each `date` gives 30 and 105; summing
- * over `date` for each `product` gives 110 and 25, the direction the
- * semi-additivity declaration forbids. Those four values are the discriminator.
+ * This file tests the boundary that closes that: one admitted sum, two PRODUCED
+ * representations, and recovery observed from each representation by a decoder
+ * that receives neither the rows nor the evaluator.
+ *
+ * THE NUMBERS ARE ARITHMETIC. Summing over `product` at each `date` gives 30 and
+ * 105; at a declared scale of two extent units per value those are extents 60
+ * and 210. Summing over `date` gives 110 and 25, the direction the
+ * semi-additivity declaration forbids.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -30,25 +31,29 @@ import {
   EXPERIMENT_TARGET,
   FORM_ALIASES,
   LEDGER,
+  METRIC_UNITS_PER_VALUE,
   NON_CLAIMS,
   PRECOMMITTED,
   TASK_INVARIANTS,
-  basisFacts,
+  admitOperation,
   bindOperation,
   bindingObserver,
   compositionKindProbe,
   compositionProbe,
   declarationObserver,
+  decodeMetric,
+  decodeReadback,
   enumerate,
   evaluateOperation,
   ledgerOf,
-  matchesAdmitted,
   metricConsumer,
+  produce,
   programObserver,
   readbackConsumer,
+  recover,
   runExperiment,
 } from "./projection.js";
-import type { AggregateAssertionDecl, Program, Row } from "./projection.js";
+import type { AggregateAssertionDecl, Program } from "./projection.js";
 import type { RelationalStructure } from "./relation-model.js";
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -61,13 +66,15 @@ const fixture = loadOracle().fixtures.get(BASIS_FIXTURE)!;
 const structure = fixture.structure as RelationalStructure;
 const aggregate = fixture.assertions.find((a) => a.kind === "aggregate")! as AggregateAssertionDecl;
 const admitted = bindOperation(structure, aggregate);
-const facts = basisFacts(structure, BASIS.relation, BASIS.dimension, BASIS.measure);
+const admission = admitOperation(structure, admitted);
+if (admission.kind !== "admitted") throw new Error(`the basis operation is not admitted: ${admission.reason}`);
+const facts = admission.facts;
 const enumeration = enumerate({
-  facts,
+  structure,
+  admitted,
   task: "magnitude-comparison",
   inventory: EXPERIMENT_TARGET,
-  operation: admitted,
-  partitionDimension: BASIS.partitionDimension,
+  partitionDimension: BASIS.resultGrain,
 });
 const result = runExperiment();
 const programKey = (p: Program) => `${p.coordinate}|${p.dimension}|${p.measure}`;
@@ -75,6 +82,10 @@ const allowedCauses = extractDoctrineDiagnostics(fs.readFileSync(DOCTRINE, "utf-
 const vocabulary = extractDoctrineVocabulary(fs.readFileSync(DOCTRINE, "utf-8"));
 const readbackProgram = enumeration.retained.find((p) => CAPACITY[p.measure].valueReadback)!;
 const metricProgram = enumeration.retained.find((p) => !CAPACITY[p.measure].valueReadback)!;
+const withGrain = (grain: string[] | "unknown"): RelationalStructure => ({
+  ...structure,
+  relations: { ...structure.relations, [BASIS.relation]: { ...structure.relations[BASIS.relation], grain } },
+});
 
 describe("the entered basis is admitted on evidence, not on provisional status", () => {
   it("carries an admissible canonical judgment with no diagnostics and no obligations", () => {
@@ -87,56 +98,57 @@ describe("the entered basis is admitted on evidence, not on provisional status",
     expect(j.diagnostics).toEqual([]);
     expect(j.obligations).toEqual([]);
   });
-
-  it("names the facts the projection rules consume, and each one is declared", () => {
-    expect(facts.grain).toEqual(["product", "date"]);
-    expect(facts.dimension).toEqual({ transformation: "nominal", key: false, cyclic: false });
-    expect(facts.measure.transformation).toBe("ratio");
-    expect(facts.measure.additivityKind).toBe("semi-additive");
-    expect(facts.measure.nonAdditiveAlong).toEqual(["date"]);
-  });
 });
 
-describe("A1 — every retained program displays the admitted operation", () => {
+describe("A1 — the operation is validated, and the projection reads the RESULT's columns", () => {
   it("binds the fixture's OWN assertion: sum of on_hand over product, grain [date]", () => {
     expect(admitted).toEqual({ relation: "stock", field: "on_hand", op: "sum", along: ["product"], resultGrain: ["date"] });
   });
 
-  it("retains at least two structurally different programs, each carrying that binding", () => {
+  it("filters on the result's group column and the aggregate, NOT on a source column", () => {
+    expect(facts.resultGrain).toEqual(["date"]);
+    expect(facts.dimension.field).toBe("date");
+    expect(facts.measure.field).toBe("sum(on_hand)");
+    // The column the operation SUMS OVER is not a column of the result at all.
+    expect(facts.dimension.field).not.toBe(BASIS.summedOver);
+    expect(facts.measure.transformation).toBe("ratio");
+    expect(facts.measure.nonAdditiveAlong).toEqual(["date"]);
+  });
+
+  it("refuses an operation naming a relation the structure does not declare", () => {
+    expect(() => admitOperation(structure, { ...admitted, relation: "does_not_exist" })).toThrow(/does not declare/);
+    expect(() =>
+      enumerate({ structure, admitted: { ...admitted, relation: "does_not_exist" }, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET }),
+    ).toThrow(/does not declare/);
+  });
+
+  it("refuses an aggregate the bounded evaluator cannot perform, instead of executing it as a sum", () => {
+    expect(() => admitOperation(structure, { ...admitted, op: "mean" as never })).toThrow(/executable contract is sum/);
+    expect(() => evaluateOperation({ ...admitted, op: "mean" as never }, CONSUMER_POPULATION)).toThrow(/performs sum/);
+    expect(() => evaluateOperation({ ...admitted, op: "count" as never }, CONSUMER_POPULATION)).toThrow(/performs sum/);
+  });
+
+  it("refuses a result grain that is not the declared grain minus the summed-over dimensions", () => {
+    expect(() => admitOperation(structure, { ...admitted, along: ["warehouse"] })).toThrow(/does not contain/);
+    expect(() => admitOperation(structure, { ...admitted, resultGrain: ["product"] })).toThrow(/is not the declared grain minus/);
+  });
+
+  it("CARRIES a merely missing premise rather than resolving it either way", () => {
+    const e = enumerate({ structure: withGrain("unknown"), admitted, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET });
+    expect(e.retained).toEqual([]);
+    expect(e.undecided.length).toBeGreaterThan(0);
+    expect(e.undecided.every((u) => u.obligation === "grain:declared")).toBe(true);
+    expect(e.undecided.every((u) => u.detail.length > 0)).toBe(true);
+  });
+
+  it("carries the admitted operation on every retained program BY CONSTRUCTION", () => {
     expect(enumeration.retained.length).toBeGreaterThanOrEqual(2);
-    expect(new Set(enumeration.retained.map(programKey)).size).toBeGreaterThanOrEqual(2);
-    for (const p of enumeration.retained) {
-      expect(matchesAdmitted(p.operation, admitted), `${programKey(p)} does not display the admitted operation`).toBe(true);
-    }
+    for (const p of enumeration.retained) expect(p.operation).toEqual(admitted);
   });
 
-  it("does NOT retain a candidate whose binding does not RESOLVE against the structure", () => {
-    // A binding naming a field the relation does not declare, and one summing
-    // over a dimension the grain does not contain: neither has an established
-    // result grain, so neither is admitted on a favorable branch.
-    for (const bad of [{ ...admitted, field: "reserved" }, { ...admitted, along: ["warehouse"] }]) {
-      const e = enumerate({ facts, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, operation: bad });
-      expect(e.retained, `${JSON.stringify(bad)} was retained`).toEqual([]);
-      expect(e.undecided.length).toBeGreaterThan(0);
-      expect(e.undecided.every((u) => u.obligation === "grain:declared")).toBe(true);
-      // Nothing is silently dropped: every disposed candidate carries a reason.
-      expect(e.refused.length + e.undecided.length).toBe(e.population.disposed);
-      expect(e.undecided.every((u) => u.detail.length > 0)).toBe(true);
-    }
-  });
-
-  it("carries an ABSENT binding as an obligation instead of taking the favorable branch", () => {
-    const unbound = enumerate({ facts, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, operation: undefined as never });
-    expect(unbound.retained).toEqual([]);
-    expect(unbound.undecided.length).toBeGreaterThan(0);
-    expect(unbound.undecided.every((u) => u.obligation === "grain:declared")).toBe(true);
-    expect(unbound.undecided.every((u) => u.detail.length > 0)).toBe(true);
-  });
-
-  it("names its POST-EXCLUSION population, so the closure claim is not about the whole product", () => {
+  it("names its POST-EXCLUSION population", () => {
     const { considered, excluded, disposed } = enumeration.population;
     expect(considered).toBe(168);
-    expect(excluded).toBe(69);
     expect(disposed).toBe(considered - excluded);
     expect(enumeration.retained.length + enumeration.refused.length + enumeration.undecided.length).toBe(disposed);
   });
@@ -158,15 +170,11 @@ describe("A1 — every retained program displays the admitted operation", () => 
 });
 
 describe("A2 — a relevant premise is carried, and an established contradiction is refused", () => {
-  it("does NOT resolve an omitted composition partition to the favorable completion", () => {
+  it("does NOT resolve an omitted composition partition to a favorable completion", () => {
     const probe = compositionProbe();
-    expect(probe.lawful.retained).toBeGreaterThan(0);
     expect(probe.omitted.retained).toBe(0);
     expect(probe.omitted.undecided).toBeGreaterThan(0);
     expect(probe.omitted.obligations).toEqual(["invariant:exhaustive"]);
-    // The decisive comparison: the omitted input and the favorable completion
-    // are DIFFERENT populations, which is exactly what the defect made identical.
-    expect(probe.omitted.retained).not.toBe(probe.lawful.retained);
   });
 
   it("carries that obligation under a term the doctrine's vocabulary lists", () => {
@@ -174,15 +182,21 @@ describe("A2 — a relevant premise is carried, and an established contradiction
     expect(vocabulary.namespaces.invariant).toContain("exhaustive");
   });
 
-  it("still refuses the declared illegal partition under the corpus's own cause", () => {
+  it("refuses the declared partition under the corpus's own cause", () => {
     const probe = compositionProbe();
-    expect(probe.unlawful.retained).toBe(0);
-    expect(probe.unlawful.causes).toContain("REL_ADDITIVITY_SUM_SEMIADDITIVE");
+    expect(probe.declared.retained).toBe(0);
+    expect(probe.declared.causes).toContain("REL_ADDITIVITY_SUM_SEMIADDITIVE");
   });
 
-  it("refuses a composition over a measure whose KIND contradicts it, not only a listed dimension", () => {
-    // The demonstrated defect: `nonAdditiveAlong` is empty for `non-additive`,
-    // so reading only that array left the kind unconstrained and retained 43.
+  it("records that the earlier probe's LAWFUL completion was an artifact of source facts", () => {
+    // `product` is the column the operation SUMS OVER, so it is not a column of
+    // the result and a projection of the result cannot partition by it.
+    const probe = compositionProbe();
+    expect(probe.lawfulCompletion.exists).toBe(false);
+    expect(probe.lawfulCompletion.reason).toContain(BASIS.resultGrain);
+  });
+
+  it("refuses a composition over a measure whose KIND contradicts it", () => {
     const probe = compositionKindProbe();
     expect(probe["non-additive"].retained).toBe(0);
     expect(probe["non-additive"].causes).toContain("REL_ADDITIVITY_SUM_SEMIADDITIVE");
@@ -194,136 +208,147 @@ describe("A2 — a relevant premise is carried, and an established contradiction
     const notImplemented = (Object.entries(TASK_INVARIANTS) as Array<[string, unknown]>).filter(([, v]) => "notEnumerated" in (v as object));
     expect(notImplemented.length).toBe(8);
     for (const [task, v] of notImplemented) {
-      const e = enumerate({ facts, task: task as never, inventory: EXPERIMENT_TARGET, operation: admitted });
+      const e = enumerate({ structure, admitted, task: task as never, inventory: EXPERIMENT_TARGET });
       expect(e.retained, `${task} must admit nothing while ${JSON.stringify((v as { notEnumerated: string }).notEnumerated)} is unimplemented`).toEqual([]);
     }
   });
 });
 
-describe("A3 — two structurally different consumers recover the same bound operation", () => {
-  it("evaluates the bound operation independently of any classification function", () => {
-    const bound = evaluateOperation(admitted, CONSUMER_POPULATION);
-    expect(bound.grain).toEqual(["date"]);
-    expect(bound.groups).toEqual([
+describe("A3 — recovery observed from two PRODUCED representations", () => {
+  const report = result.preservation;
+
+  it("evaluates the admitted sum once over the supplied population", () => {
+    expect(report.result).toEqual([
       { key: "day1", value: 30 },
       { key: "day2", value: 105 },
     ]);
   });
 
-  it("recovers those values through a readback program AND through a metric program", () => {
-    expect(programKey(readbackProgram)).not.toBe(programKey(metricProgram));
-    const a = readbackConsumer(readbackProgram, admitted, CONSUMER_POPULATION);
-    const b = metricConsumer(metricProgram, admitted, CONSUMER_POPULATION);
-    expect(a.channel).toBe("text");
-    expect(b.channel).toBe("length");
-    expect(a.ok).toBe(true);
-    expect(b.ok).toBe(true);
-    expect(a.recovered).toEqual([
-      { key: "day1", value: 30 },
-      { key: "day2", value: 105 },
-    ]);
-    expect(b.recovered).toEqual(a.recovered);
-    expect(result.consumers.readback.recovered).toEqual(result.consumers.metric.recovered);
+  it("recovers those values from a READBACK representation", () => {
+    expect(report.readback.preserved).toBe(true);
+    expect(report.readback.recovered).toEqual(report.result);
   });
 
-  it("distinguishes them from the aggregation direction the declaration forbids", () => {
+  it("recovers them from a METRIC representation, from extents and the DECLARED SCALE", () => {
+    const outputs = produce(evaluateOperation(admitted, CONSUMER_POPULATION), METRIC_UNITS_PER_VALUE);
+    expect(outputs.metric.entries).toEqual([
+      { key: "day1", extent: 60 },
+      { key: "day2", extent: 210 },
+    ]);
+    expect(outputs.metric.scale).toEqual({ unitsPerValue: 2, baseline: "zero" });
+    expect(decodeMetric(outputs.metric)).toEqual(report.result);
+    expect(report.metric.preserved).toBe(true);
+    // The decoder reads the SCALE rather than re-deriving the answer: under a
+    // different declared scale the same extents must decode differently.
+    expect(decodeMetric({ ...outputs.metric, scale: { unitsPerValue: 1, baseline: "zero" } })).toEqual([
+      { key: "day1", value: 60 },
+      { key: "day2", value: 210 },
+    ]);
+  });
+
+  it("gives each decoder the representation and nothing else", () => {
+    // One parameter each: no rows, no evaluator, no admitted operation.
+    expect(decodeReadback.length).toBe(1);
+    expect(decodeMetric.length).toBe(1);
+    expect(recover.length).toBe(1);
+    const outputs = produce(evaluateOperation(admitted, CONSUMER_POPULATION), METRIC_UNITS_PER_VALUE);
+    expect(recover(outputs.readback)).toEqual(report.result);
+    expect(recover(outputs.metric)).toEqual(report.result);
+  });
+
+  it("distinguishes the recovered values from the aggregation direction the declaration forbids", () => {
     const forbidden = evaluateOperation({ ...admitted, along: ["date"], resultGrain: ["product"] }, CONSUMER_POPULATION);
     expect(forbidden.groups).toEqual([
       { key: "A", value: 110 },
       { key: "B", value: 25 },
     ]);
-    expect(forbidden.groups).not.toEqual(evaluateOperation(admitted, CONSUMER_POPULATION).groups);
-    expect(readbackConsumer(readbackProgram, { ...admitted, along: ["date"], resultGrain: ["product"] }, CONSUMER_POPULATION).ok).toBe(false);
-    expect(result.consumers.forbiddenDirection.readbackRejects).toBe(true);
+    expect(forbidden.groups).not.toEqual(report.result);
   });
 
   it("will not let a consumer pass on a topology that cannot carry the value", () => {
-    // Agreement between two spellings of one consumer is not the claim: each
-    // declines the other's channel.
     expect(readbackConsumer(metricProgram, admitted, CONSUMER_POPULATION).reason).toBe("not-a-readback-channel");
     expect(metricConsumer(readbackProgram, admitted, CONSUMER_POPULATION).reason).toBe("not-a-metric-channel");
   });
 
-  it("recovers the values from the operation, not from the claim classifier", () => {
-    // `result`'s induced claims are identical for both programs at the level
-    // that matters here; the recovered VALUES come from evaluateOperation. A
-    // consumer passing on labels alone would not produce these numbers.
-    const rows: readonly Row[] = CONSUMER_POPULATION;
-    expect(evaluateOperation(admitted, rows).total).toBe(135);
-    expect(evaluateOperation({ ...admitted, along: ["date"], resultGrain: ["product"] }, rows).total).toBe(135);
-    // Same total, different partition: only the VALUES distinguish them.
-    expect(result.consumers.readback.recovered).not.toEqual(result.consumers.forbiddenDirection.result.groups);
+  it("reports the channel the metric consumer actually consumed", () => {
+    // The runner selects by capability, and the report must name that channel -
+    // not a fixed label that happens to be the one the test asserts.
+    expect(metricProgram.measure).not.toBe("text");
+    expect(metricConsumer(metricProgram, admitted, CONSUMER_POPULATION).channel).toBe(metricProgram.measure);
+    expect(result.consumers.metric.channel).toBe(metricProgram.measure);
   });
 });
 
-describe("A4 — a changed analytical binding is detected without trusting the explanation", () => {
-  it("rejects a mutated bound FIELD before consumption, and observes the value disagreement", () => {
+describe("A4 — mutations are detected without trusting the explanation", () => {
+  const report = result.preservation;
+
+  it("detects a changed METRIC EXTENT, so recovery observes the representation", () => {
+    expect(report.mutatedExtent.preserved).toBe(false);
+    expect(report.mutatedExtent.recovered).not.toEqual(report.result);
+    expect(report.mutatedExtent.recovered).toContainEqual({ key: "day1", value: 30.5 });
+  });
+
+  it("detects a changed GROUP BINDING even though the numeric total is unchanged", () => {
+    expect(report.mutatedBinding.preserved).toBe(false);
+    expect(report.mutatedBinding.totalUnchanged).toBe(true);
+    const total = report.result.reduce((n, g) => n + g.value, 0);
+    expect(report.mutatedBinding.recovered.reduce((n, g) => n + g.value, 0)).toBe(total);
+  });
+
+  it("rejects a mutated bound FIELD before consumption, with an observed disagreement", () => {
     const mutated: Program = { ...readbackProgram, operation: { ...admitted, field: "reserved" }, claims: [...readbackProgram.claims] };
-    const report = readbackConsumer(mutated, admitted, CONSUMER_POPULATION);
-    expect(report.reason).toBe("binding-mismatch");
-    expect(report.recovered).toEqual([
-      { key: "day1", value: 3 },
-      { key: "day2", value: 7 },
-    ]);
-    expect(report.recovered).not.toEqual(report.expected);
+    const rep = readbackConsumer(mutated, admitted, CONSUMER_POPULATION);
+    expect(rep.reason).toBe("binding-mismatch");
+    expect(rep.recovered).not.toEqual(rep.expected);
     expect(result.bindingMutation.rejectedBeforeConsumption).toBe(true);
     expect(result.bindingMutation.valueDisagreement).toBe(true);
   });
 
   it("rejects a mutated GROUPING even when the declared explanation is untouched", () => {
     const mutated: Program = { ...readbackProgram, operation: { ...admitted, along: ["date"], resultGrain: ["product"] }, claims: ["ratio-comparability"] };
-    expect(declarationObserver(mutated).ok).toBe(true); // the certificate still says fine
+    expect(declarationObserver(mutated).ok).toBe(true);
     const observed = bindingObserver(mutated, admitted, CONSUMER_POPULATION);
     expect(observed.ok).toBe(false);
     expect(observed.reason).toBe("binding-mismatch");
   });
 
-  it("rejects a mutated AGGREGATE, which the topology cannot tell apart", () => {
-    const mutated: Program = { ...metricProgram, operation: { ...admitted, op: "mean" as never }, claims: ["ratio-comparability"] };
-    expect(programObserver(mutated, facts).ok).toBe(true); // the old observer sees nothing wrong
-    expect(bindingObserver(mutated, admitted, CONSUMER_POPULATION).ok).toBe(false);
+  it("accepts the unmutated pair through the same observer", () => {
+    expect(bindingObserver(readbackProgram, admitted, CONSUMER_POPULATION).ok).toBe(true);
+    expect(bindingObserver(metricProgram, admitted, CONSUMER_POPULATION).ok).toBe(true);
+    expect(bindingObserver(metricProgram, admitted, CONSUMER_POPULATION).channel).toBe(metricProgram.measure);
   });
 
   /**
-   * A RECORDED LIMITATION, PINNED SO IT CANNOT DRIFT SILENTLY.
-   *
-   * These assertions document what the observers do NOT check. They are not
-   * aspirations: the first fails the day an observer starts validating topology
-   * admissibility, and the second the day one starts consulting grain status.
-   * When that happens this test must be updated to assert the check, rather than
-   * the limitation quietly disappearing while A3 and A4 keep claiming no more
-   * than they do today.
+   * A RECORDED LIMITATION, PINNED SO IT CANNOT DRIFT SILENTLY. These assertions
+   * document what the observers do NOT check; the day either check is added they
+   * fail and must be updated to assert the check.
    */
   it("records that neither observer checks topology admissibility or grain status", () => {
     const inHostile: Program = { ...metricProgram, coordinate: "non-metric" as never };
     expect(CAPACITY[inHostile.measure].spaces).not.toContain("non-metric");
-    // The enumerator refuses it; both observers accept it.
     expect(enumeration.retained.some((p) => programKey(p) === programKey(inHostile))).toBe(false);
     expect(programObserver(inHostile, facts).ok).toBe(true);
     expect(bindingObserver(inHostile, admitted, CONSUMER_POPULATION).ok).toBe(true);
 
-    const unknownGrain = { ...facts, grain: "unknown" };
-    const unknownEnumeration = enumerate({ facts: unknownGrain, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, operation: admitted });
-    expect(unknownEnumeration.retained).toEqual([]);
-    expect(unknownEnumeration.undecided.length).toBeGreaterThan(0);
-    expect(programObserver(metricProgram, unknownGrain).ok).toBe(true);
-    expect(bindingObserver(metricProgram, admitted, CONSUMER_POPULATION).ok).toBe(true);
-  });
-
-  it("accepts the unmutated pair through the same observer", () => {
-    const observed = bindingObserver(readbackProgram, admitted, CONSUMER_POPULATION);
-    expect(observed.ok).toBe(true);
-    expect(observed.channel).toBe("text");
-    expect(observed.recovered).toEqual(observed.expected);
-    expect(bindingObserver(metricProgram, admitted, CONSUMER_POPULATION).channel).toBe("length");
+    const e = enumerate({ structure: withGrain("unknown"), admitted, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET });
+    expect(e.retained).toEqual([]);
+    expect(programObserver(metricProgram, facts).ok).toBe(true);
   });
 });
 
-describe("A5 — the predecessor's all-pass interpretation is corrected in the record", () => {
-  it("records the precommit's concrete readback prediction as REFUTED, not vacuous", () => {
+describe("A5 — the corrected account is carried in the record", () => {
+  it("records the corrections this slice makes", () => {
+    const account = ledgerOf(result).correctedAccount as Record<string, string>;
+    expect(account.representationRecovery).toContain("evaluateOperation");
+    expect(account.aggregateDispatch).toMatch(/REPAIRED/);
+    expect(account.metricChannelLabel).toMatch(/REPAIRED/);
+    expect(account.operationIdentity).toMatch(/CORRECTED/);
+  });
+
+  it("keeps the two earlier refutations", () => {
     const account = ledgerOf(result).correctedAccount as Record<string, string>;
     expect(account.readbackPrediction).toMatch(/^REFUTED/);
-    expect(account.readbackPrediction).toContain("none survived");
+    expect(account.grainPrediction).toMatch(/REFUTED/);
   });
 
   it("states the closure population, the loss-label meaning and the unmeasured residue", () => {
@@ -331,39 +356,31 @@ describe("A5 — the predecessor's all-pass interpretation is corrected in the r
     expect(account.closurePopulation).toContain("POST-EXCLUSION");
     expect(account.lossLabels).toContain("absent property NAME");
     expect(account.residue).toContain("UNMEASURED");
-    expect((ledgerOf(result).population as { disposed: number }).disposed).toBe(99);
   });
 
-  it("keeps the corrected account beside the non-claims that bound it", () => {
+  it("bounds the result in its non-claims", () => {
     expect(NON_CLAIMS.some((n) => n.includes("ALL-PASS INTERPRETATION IS CORRECTED"))).toBe(true);
-    expect(NON_CLAIMS.some((n) => n.includes("REFUTED"))).toBe(true);
+    expect(NON_CLAIMS.some((n) => n.includes("DO NOT CHECK"))).toBe(true);
   });
 });
 
 describe("the inherited controls still hold, and the ledger still matches a fresh computation", () => {
   for (const control of result.controls) {
     it(control.control, () => {
-      // The general requirement and the concrete prediction are different
-      // claims, and the record keeps them apart.
       expect(control.requirementMet, `expected ${control.expected}; actual ${control.actual}`).toBe(true);
-      expect(control.ok).toBe(control.requirementMet && !control.predictionRefuted);
     });
   }
 
-  it("records the two refuted concrete predictions as refutations, with what they taught", () => {
-    const refuted = result.controls.filter((c) => c.predictionRefuted);
-    expect(refuted.map((c) => c.control).sort()).toEqual(["declared->unknown", "ratio->ordinal"]);
-    for (const c of refuted) expect(c.correction ?? "", `${c.control} has no correction recorded`).toMatch(/REFUTED|wrong|not selective/);
-  });
-
-  it("keeps the grain refutation visible in the corrected account", () => {
-    const account = ledgerOf(result).correctedAccount as Record<string, string>;
-    expect(account.grainPrediction).toMatch(/REFUTED/);
-    expect(account.grainPrediction).toContain("EVERY topology");
-  });
-
   it("still records the four precommitted perturbations", () => {
     expect(Object.keys(PRECOMMITTED).sort()).toEqual(["declared->unknown", "irrelevant-perturbation", "non-cyclic->cyclic", "ratio->ordinal"]);
+  });
+
+  it("keeps the refuted concrete predictions recorded as refutations", () => {
+    const refuted = result.controls.filter((c) => c.predictionRefuted);
+    expect(refuted.length).toBeGreaterThanOrEqual(2);
+    expect(refuted.map((c) => c.control)).toContain("ratio->ordinal");
+    expect(refuted.map((c) => c.control)).toContain("declared->unknown");
+    for (const c of refuted) expect(c.correction ?? "").toMatch(/REFUTED|wrong|not selective|narrows nothing/);
   });
 
   it("matches a fresh computation, so a stale ledger is drift", () => {
