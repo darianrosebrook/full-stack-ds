@@ -278,6 +278,12 @@ export type Enumeration = {
    * `disposed` is considered minus excluded - the set the three arrays below
    * partition.
    */
+  /**
+   * The support decision taken before any candidate existed. REQUIRED, so a
+   * consumer cannot read `retained`/`refused` without the disposition the run
+   * was made under being present in the same object.
+   */
+  support: SupportDecision;
   population: { considered: number; excluded: number; disposed: number };
   retained: Program[];
   refused: Refusal[];
@@ -364,6 +370,68 @@ export const TASK_INVARIANTS: Record<Task, { requires: Claim[] } | { notEnumerat
   "lookup-rollup": { notEnumerated: "invariant:structure-preserved" },
   trend: { notEnumerated: "invariant:position-non-meaningful" },
 };
+
+/* ------------------------------------------------------- result-kind support */
+
+/**
+ * WHICH ANALYTICAL RESULT KIND IS BEING PROJECTED.
+ *
+ * The task table is shared, and that is a trap: `topology` carries a `requires`
+ * entry because the GRAPH path implements it, and reading that entry as "the
+ * relation path implements topology too, its candidates just fail the
+ * requirement" turns absent implementation into an analytical judgment. Support
+ * is therefore decided per (result kind, task) and never inferred from the task
+ * table alone.
+ */
+export type ResultKind = "relation" | "graph";
+
+export const RESULT_KINDS: readonly ResultKind[] = ["relation", "graph"];
+
+/**
+ * The tasks each result kind actually implements. This is the ONLY place that
+ * answers "can this path enumerate this question", and it is consulted BEFORE
+ * any candidate exists.
+ */
+export const IMPLEMENTED_TASKS: Record<ResultKind, readonly Task[]> = {
+  relation: ["magnitude-comparison", "composition"],
+  graph: ["topology"],
+};
+
+/**
+ * The support decision. The SUPPORTED arm carries the task's requirements, so a
+ * caller that has a supported decision cannot reach for the task table again and
+ * find an entry that says the task is not enumerated — the two cannot disagree.
+ */
+export type SupportDecision =
+  | { supported: true; resultKind: ResultKind; task: Task; requires: readonly Claim[] }
+  | { supported: false; resultKind: ResultKind; task: Task; obligation: string; detail: string };
+
+/**
+ * Decide support at the REQUEST BOUNDARY. It reads the result kind and the task
+ * and nothing else — in particular it does not read the inventory, so an
+ * inventory that hosts no candidate cannot turn an unsupported request into an
+ * ordinary empty result.
+ */
+export function projectionSupport(resultKind: ResultKind, task: Task): SupportDecision {
+  if (IMPLEMENTED_TASKS[resultKind].includes(task)) {
+    const spec = TASK_INVARIANTS[task];
+    /* c8 ignore next */
+    if ("notEnumerated" in spec) throw new Error(`${resultKind} claims to implement ${task}, and the task table says it is not enumerated`);
+    return { supported: true, resultKind, task, requires: spec.requires };
+  }
+  const spec = TASK_INVARIANTS[task];
+  // A task the table does not enumerate already names what would have to be
+  // built. A task it DOES enumerate is one this kind does not reach; naming the
+  // pair is the honest obligation, and it is not a diagnostic cause.
+  const obligation = "notEnumerated" in spec ? spec.notEnumerated : `invariant:${task}-on-${resultKind}`;
+  return {
+    supported: false,
+    resultKind,
+    task,
+    obligation,
+    detail: `the ${resultKind}-valued path does not implement the ${task} task, so this request has no candidate space; absent implementation is not a judgment that the declared facts forbid every answer`,
+  };
+}
 
 /* ------------------------------------------------------------------ facts */
 
@@ -477,7 +545,14 @@ export function enumerate(input: EnumerationInput): Enumeration {
       `the declared composition partition ${input.partitionDimension} is not a column of the result [${admission.facts.resultGrain.join(", ")}]; a projection of the result cannot partition by it`,
     );
   }
-  const spec = TASK_INVARIANTS[task];
+  // SUPPORT IS DECIDED FIRST. An unimplemented task returns its own disposition
+  // with an empty population and NO refusals: a refusal carries an analytical
+  // cause, and there is no rule to name for a rule that was never written.
+  const support = projectionSupport("relation", task);
+  if (!support.supported) {
+    return { support, population: { considered: 0, excluded: 0, disposed: 0 }, retained: [], refused: [], undecided: [] };
+  }
+  const spec = { requires: support.requires };
   const retained: Program[] = [];
   const refused: Refusal[] = [];
   const undecided: Undecided[] = [];
@@ -495,10 +570,6 @@ export function enumerate(input: EnumerationInput): Enumeration {
         // different one, so the identity guarantee is a construction property
         // rather than a per-candidate check that could be bypassed.
         const p: Program = { coordinate, dimension: dimensionChannel, measure: measureChannel, baseline: "zero", task, claims: [], operation: input.admitted };
-
-        if ("notEnumerated" in spec) {
-          continue; // the task's preconditions are not implemented here; see TASK_INVARIANTS
-        }
 
         // A missing premise is CARRIED, never resolved to a favorable branch.
         if (admission.kind === "unproven") {
@@ -586,6 +657,7 @@ export function enumerate(input: EnumerationInput): Enumeration {
     }
   }
   return {
+    support,
     population: { considered, excluded, disposed: considered - excluded },
     retained: sortPrograms(retained),
     refused: sortRefusals(refused),
@@ -624,6 +696,7 @@ export type GraphProgram = {
 
 export type GraphRefusal = { program: GraphProgram; cause: string; detail: string };
 export type GraphEnumeration = {
+  support: SupportDecision;
   population: { considered: number; excluded: number; disposed: number };
   retained: GraphProgram[];
   refused: GraphRefusal[];
@@ -657,7 +730,11 @@ const graphKeyOf = (p: GraphProgram) => `${p.coordinate}|${p.nodes}|${p.edges}|$
  */
 export function enumerateGraph(input: GraphEnumerationInput): GraphEnumeration {
   const { graph, task, inventory } = input;
-  const spec = TASK_INVARIANTS[task];
+  const support = projectionSupport("graph", task);
+  if (!support.supported) {
+    return { support, population: { considered: 0, excluded: 0, disposed: 0 }, retained: [], refused: [] };
+  }
+  const spec = { requires: support.requires };
   const retained: GraphProgram[] = [];
   const refused: GraphRefusal[] = [];
   let considered = 0;
@@ -679,10 +756,6 @@ export function enumerateGraph(input: GraphEnumerationInput): GraphEnumeration {
           continue;
         }
         const p: GraphProgram = { coordinate, nodes, edges, task, graph, claims: [] };
-        if ("notEnumerated" in spec) {
-          refused.push({ program: { ...p, claims: [] }, cause: "REL_TASK_UNDERSTATED_ENCODING_CLAIM", detail: `the ${task} preconditions are not implemented` });
-          continue;
-        }
         const claims = inducedGraphClaims(p);
         const missing = spec.requires.filter((c) => !claims.includes(c));
         const program: GraphProgram = { ...p, claims };
@@ -699,6 +772,7 @@ export function enumerateGraph(input: GraphEnumerationInput): GraphEnumeration {
     }
   }
   return {
+    support,
     population: { considered, excluded, disposed: considered - excluded },
     retained: [...retained].sort((a, b) => graphKeyOf(a).localeCompare(graphKeyOf(b))),
     refused: [...refused].sort((a, b) => (graphKeyOf(a.program) + a.cause).localeCompare(graphKeyOf(b.program) + b.cause)),
@@ -728,8 +802,11 @@ export function lawfulRelationPrograms(
   task: Task,
   inventory: TargetInventory,
 ): Array<{ coordinate: CoordinateSpace; dimension: Channel; measure: Channel }> {
-  const spec = TASK_INVARIANTS[task];
-  if ("notEnumerated" in spec) return [];
+  // AN UNIMPLEMENTED TASK HAS NO LAWFUL SET, and returning the empty set would
+  // say it has one and that it is empty. This derivation is a boundary too.
+  const support = projectionSupport("relation", task);
+  if (!support.supported) throw new Error(`lawfulRelationPrograms was asked for the ${task} task on the relation path, which does not implement it`);
+  const spec = { requires: support.requires };
   const out: Array<{ coordinate: CoordinateSpace; dimension: Channel; measure: Channel }> = [];
   for (const coordinate of inventory.spaces) {
     for (const dimension of inventory.channels) {
@@ -759,8 +836,12 @@ export const relationMembership = (e: Enumeration) => e.retained.map((p) => `${p
 
 /** The premises a retained relation program must satisfy. */
 export function relationProgramIsSound(p: Program, facts: ResultFacts, task: Task, inventory: TargetInventory): boolean {
-  const spec = TASK_INVARIANTS[task];
-  if ("notEnumerated" in spec) return false;
+  // `false` here means "not a lawful program", which is the right answer for an
+  // unimplemented task only because no such program exists to be lawful. Callers
+  // that need to distinguish that from a judgment call `projectionSupport`.
+  const support = projectionSupport("relation", task);
+  if (!support.supported) return false;
+  const spec = { requires: support.requires };
   return (
     inventory.spaces.includes(p.coordinate) &&
     inventory.channels.includes(p.dimension) &&
@@ -812,15 +893,22 @@ export function lawfulGraphTopologies(inventory: TargetInventory): Array<{ coord
 
 /** The premises a retained graph candidate must satisfy. */
 export function graphCandidateIsSound(p: GraphProgram, inventory: TargetInventory): boolean {
+  const support = projectionSupport("graph", p.task);
+  if (!support.supported) return false;
   return (
+    // THE DECLARED TASK IS PART OF THE PREMISE, and it is read through the SAME
+    // support decision the enumerator uses. Without it the helper answers "is
+    // this a topology-shaped program" while being read as "is this program
+    // sound", and a program re-labelled `magnitude-comparison` still passes on
+    // the strength of the connection channel it happens to carry.
+    support.requires.every((c) => inducedGraphClaims(p).includes(c)) &&
     inventory.spaces.includes(p.coordinate) &&
     inventory.channels.includes(p.nodes) &&
     inventory.channels.includes(p.edges) &&
     p.nodes !== p.edges &&
     p.coordinate === "non-metric" &&
     CAPACITY[p.nodes].spaces.includes(p.coordinate) &&
-    CAPACITY[p.edges].spaces.includes(p.coordinate) &&
-    inducedGraphClaims(p).includes("incidence-recoverable")
+    CAPACITY[p.edges].spaces.includes(p.coordinate)
   );
 }
 

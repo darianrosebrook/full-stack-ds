@@ -46,7 +46,10 @@ import {
   lawfulGraphTopologies,
   TASK_INVARIANTS,
   EXPERIMENT_TARGET,
+  IMPLEMENTED_TASKS,
+  projectionSupport,
 } from "./projection.js";
+import type { Task } from "./projection.js";
 import type { GraphBinding, GraphResult } from "./graph-projection.js";
 import { GraphViewFile } from "./graph-view-model.js";
 import { CONTRACTS_DIR } from "./necessity.js";
@@ -400,6 +403,8 @@ describe("M1 — necessity accounting for the declaration coordinates", () => {
 describe("M2 — soundness, bounded completeness and the anti-lookup controls", () => {
   const denoted = graphPreservation(ALL_NODES, SOURCE).result;
   const run = (inventory: typeof EXPERIMENT_TARGET) => enumerateGraph({ graph: denoted, task: "topology", inventory });
+  /** The same entry point, asked for a task this path does not implement. */
+  const runTask = (inventory: typeof EXPERIMENT_TARGET, task: Task) => enumerateGraph({ graph: denoted, task, inventory });
 
   it("SOUNDNESS: every retained candidate satisfies the declared premises", () => {
     const e = run(EXPERIMENT_TARGET);
@@ -449,8 +454,17 @@ describe("M2 — soundness, bounded completeness and the anti-lookup controls", 
     // it correctly ADDS a candidate - which is why the perturbation is chosen by
     // the capacity table rather than by taste.
     expect(CAPACITY.area.spaces).not.toContain("non-metric");
-    const withExtra = { ...EXPERIMENT_TARGET, channels: [...EXPERIMENT_TARGET.channels, "area" as const] };
-    expect(graphMembership(run(withExtra))).toEqual(graphMembership(run(EXPERIMENT_TARGET)));
+    // The transition has to be ABSENT -> PRESENT. Appending `area` to an
+    // inventory that already lists it perturbs nothing and would pass whether or
+    // not the invariance held, so the base is the inventory WITHOUT the channel
+    // and the variant is the base plus it.
+    const withoutArea = { ...EXPERIMENT_TARGET, channels: EXPERIMENT_TARGET.channels.filter((c) => c !== "area") };
+    expect(withoutArea.channels).not.toContain("area");
+    expect(EXPERIMENT_TARGET.channels).toContain("area");
+    const withExtra = { ...withoutArea, channels: [...withoutArea.channels, "area" as const] };
+    expect(withExtra.channels.length).toBe(EXPERIMENT_TARGET.channels.length);
+    expect(graphMembership(run(withExtra))).toEqual(graphMembership(run(withoutArea)));
+    expect(graphMembership(run(withoutArea))).toEqual(graphMembership(run(EXPERIMENT_TARGET)));
   });
 
   it("ZERO, ONE and MULTIPLE lawful results are all reachable", () => {
@@ -467,10 +481,60 @@ describe("M2 — soundness, bounded completeness and the anti-lookup controls", 
     expect(missing.kind).toBe("unproven");
     // A contradiction is refused.
     expect(() => denoteGraph(ALL_NODES, { ...SOURCE, rows: { ...SOURCE.rows, links: [{ src: "n1", dst: "n9" }] } })).toThrow(/does not contain/);
-    // An unimplemented task is its own disposition, not an empty set.
-    const unimplemented = Object.entries(TASK_INVARIANTS).filter(([, v]) => "notEnumerated" in (v as object)).map(([k]) => k);
-    expect(unimplemented.length).toBe(7);
-    expect(unimplemented).not.toContain("topology");
+    // An unimplemented task is its own disposition, and it is read off the REAL
+    // entry point. Counting `notEnumerated` entries answers a question about the
+    // task table; it does not execute the enumerator, so it cannot observe what
+    // the enumerator returns.
+    const unsupported = runTask(EXPERIMENT_TARGET, "distribution");
+    expect(unsupported.support.supported).toBe(false);
+    expect(unsupported.support.supported === false && unsupported.support.obligation).toBe("invariant:declared-closure");
+    expect(unsupported.population.considered, "no candidate space was searched").toBe(0);
+    expect(unsupported.retained).toEqual([]);
+    expect(
+      unsupported.refused,
+      "absent implementation must not be reported as an analytical refusal: a cause names a rule the facts violate",
+    ).toEqual([]);
+
+    // AND THE SAME DECISION UNDER AN INVENTORY THAT HOSTS NOTHING. Support is
+    // read at the request boundary, so an empty inventory cannot turn an
+    // unsupported request into an ordinary empty result.
+    const emptyInventory = runTask({ ...EXPERIMENT_TARGET, channels: [] }, "distribution");
+    expect(emptyInventory.support).toEqual(unsupported.support);
+    expect(emptyInventory.refused).toEqual([]);
+    expect(emptyInventory.retained).toEqual([]);
+
+    // The task table still says what it says; the point is that the enumerator
+    // no longer speaks in its place.
+    const notEnumerated = Object.entries(TASK_INVARIANTS).filter(([, v]) => "notEnumerated" in (v as object)).map(([k]) => k);
+    expect(notEnumerated.length).toBe(7);
+    expect(notEnumerated).not.toContain("topology");
+  });
+
+  it("a task implemented on ANOTHER path is unsupported here rather than a candidate that fails a requirement", () => {
+    // `topology` carries a `requires` entry because the GRAPH path implements it.
+    // Reading that entry as "the relation path implements topology too, its
+    // candidates merely fail" is the same collapse in a different place.
+    expect(IMPLEMENTED_TASKS.graph).toContain("topology");
+    expect(IMPLEMENTED_TASKS.relation).not.toContain("topology");
+    const v = projectionSupport("relation", "topology");
+    expect(v.supported).toBe(false);
+    expect(v.supported === false && v.obligation).toBe("invariant:topology-on-relation");
+    expect("requires" in v).toBe(false);
+  });
+
+  it("the soundness helper answers the question its name asks, so the DECLARED TASK is part of the premise", () => {
+    const retained = run(EXPERIMENT_TARGET).retained[0]!;
+    expect(retained.task).toBe("topology");
+    expect(graphCandidateIsSound(retained, EXPERIMENT_TARGET)).toBe(true);
+    // The same assignment, re-labelled. Its only induced claim is incidence
+    // recoverability, which is not what magnitude comparison requires, so a
+    // helper that ignores the task would call this sound.
+    expect(graphCandidateIsSound({ ...retained, task: "magnitude-comparison" }, EXPERIMENT_TARGET)).toBe(false);
+    // And a task this path does not implement at all is not sound either.
+    expect(graphCandidateIsSound({ ...retained, task: "distribution" }, EXPERIMENT_TARGET)).toBe(false);
+    // The other premises still bite.
+    expect(graphCandidateIsSound(retained, { ...EXPERIMENT_TARGET, channels: [] })).toBe(false);
+    expect(graphCandidateIsSound({ ...retained, nodes: retained.edges }, EXPERIMENT_TARGET)).toBe(false);
   });
 
   it("states its excluded population rather than reporting an empty lawful set", () => {
