@@ -2,9 +2,11 @@ id: REL-PROJECTION-COMBINATORS-01
 title: 'Projection combinators type from their parts: layer, facet and embed derive obligations from operands and the combinator rule'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: superseded
+closure_notes: 'Parked unmerged at tag parked/m3-projection-combinators (a6b52195): the owner re-sequenced so the atomic disposition contract is repaired before composition, which otherwise inherits the conflated unsupported/refused outcome.'
 created_at: '2026-09-18T18:33:05.223Z'
-updated_at: '2026-09-18T18:33:22.801Z'
+updated_at: '2026-09-18T18:46:07.405Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
