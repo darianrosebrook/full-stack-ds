@@ -2,9 +2,11 @@ id: REL-PROJECTION-EXPERIMENT-01
 title: 'Bounded stage-3 experiment: does one fixed analytical authority yield structurally different lawful projections without a form name selecting the result'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Executed the bounded stage-3 experiment under a recorded sequencing decision: from one admitted authority the enumerator derives 42 structurally distinct lawful projection programs as the intersection of shared claims with per-program losses, refuses the unlawful composition under the corpus own cause, passes all five controls plus the observer-sensitivity control, and ratifies nothing.'
 created_at: '2026-09-17T23:43:32.892Z'
-updated_at: '2026-09-17T23:44:29.017Z'
+updated_at: '2026-09-18T00:02:33.780Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
