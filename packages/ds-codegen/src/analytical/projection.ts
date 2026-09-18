@@ -1987,6 +1987,7 @@ export const COMPOSITION_NON_CLAIMS: readonly string[] = [
   "The commensurability question is put only where two or more parts read a shared channel as a QUANTITY. A shared nominal or ordinal channel carries identity, and this experiment does not adjudicate what it means for two parts to share one; it neither refuses it nor claims it commensurable.",
   "`cross-panel-comparability` is this layer's own claim name. The doctrine states that a facet's scale policy trade IS a claim; the name is L4's, and it is earned by a separating case rather than asserted: a shared policy induces it, a free policy withholds it, and every other claim is identical between the two.",
   "A layer adds no claim that its parts did not already make, and this experiment does not claim that the claim vocabulary is complete.",
+  "`enumerate` enumerates ATOMIC projections. Composites are JUDGED by `judgeComposite` and are not enumerated as candidates, so this slice establishes that a composite's legality follows from its parts and the combinator, not that the lawful composite space is enumerable.",
 ];
 
 const refusedComposition = (causes: string[], from: "part" | "combinator", detail: string): CompositeRefusal => ({
