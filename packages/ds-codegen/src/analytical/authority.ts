@@ -196,6 +196,7 @@ export const UNIDENTIFIED_MODULES: Readonly<Record<string, string>> = {
   "freeze.ts": "records and checks the stage-2 freeze the same way",
   "legacy-comparison.ts": "compares the live ledgers against the legacy record; it reports a difference and adjudicates nothing",
   "projection.ts": "consumes the relation authority for the bounded stage-3 experiment and records a committed candidate-set ledger it byte-checks against a fresh computation; it feeds no verdict and is not a rule source, and a changed projection rule cannot leave the recorded ledger identical",
+  "graph-projection.ts": "the bounded graph experiment: it consumes a declared node-universe binding and records a committed ledger it byte-checks against a fresh computation; it feeds no verdict and is not a rule source",
 };
 
 /** Local `./x.js` imports of one analytical module, by basename. */
