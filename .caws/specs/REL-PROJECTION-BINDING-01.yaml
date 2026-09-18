@@ -45,6 +45,17 @@ acceptance:
       non-additive measure is refused over any partition; a ratio-measure is refused
       under the corpus's rate cause; and the explicitly declared illegal partition
       is still refused under REL_ADDITIVITY_SUM_SEMIADDITIVE.
+  - id: A3
+    given: 'Two structurally different programs consume the same bound operation.'
+    when: >-
+      Each consumer recovers the analytical result over a supplied population and
+      the observer compares what they recovered against the operation's own
+      evaluation.
+    then: >-
+      Both consumers recover the SAME values computed from the operation rather than
+      from a classification function, the observer distinguishes them from the
+      incompatible aggregation direction, and the values are recovered for the
+      four-row population as 30 and 105 against the forbidden 110 and 25.
 non_functional: {}
 contracts:
   - name: 'projection-binding'
