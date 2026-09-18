@@ -1,0 +1,36 @@
+id: REL-GRAPH-BINDING-SELECTS-01
+title: 'Make the graph binding select and qualify its node universe, and repair the incidence decoder collision'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-18T05:19:44.967Z'
+updated_at: '2026-09-18T05:19:44.967Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/graph-projection.ts (denoteGraph over a named source, key qualification, endpoint membership, the incidence decoder)'
+    - 'packages/ds-codegen/src/analytical/graph-projection.test.ts'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+  out: []
+invariants:
+  - 'The binding SELECTS its populations from one named source. A caller must not be able to pair a binding with independently preselected role arrays without an observable check, so the preset-array entry point is removed rather than documented.'
+  - 'A name that RESOLVES is not a semantic qualification. The designated identity field must be the declared key of the node relation, and every supplied endpoint must belong to the selected universe; neither is established by the name existing.'
+  - 'A missing population is CARRIED, never silently empty; a contradictory endpoint is REFUSED, never silently dropped during incidence encoding.'
+  - 'The incidence deduplication key must be collision-free under concatenation ambiguity: distinct edges whose endpoint strings would compose to the same joined text are distinct edges.'
+  - 'No canonical-model integration. The zod model, schema emission and the stage-2 ledgers stay untouched; this slice establishes what the binding OWNS so that a later placement decision is an integration of measured semantics.'
+  - 'No layouts, general graph algorithms, arbitrary multigraph support, accessibility, combinators or stage-2 accounting. A requirement for any of those is a stopping finding.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given one named source holding two possible node universes and one edge relation; when only the explicit binding changes between them; then the binding selects the universe, the recovered graph changes accordingly, a key or population that merely resolves cannot enter, a missing population is carried, a contradictory endpoint is refused, and the incident edge set distinguishes edges whose endpoint strings would otherwise compose ambiguously'
+non_functional: {}
+contracts:
+  - name: 'graph-binding-selection'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/graph-projection.test.ts'
