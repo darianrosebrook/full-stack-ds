@@ -60,3 +60,8 @@ contracts:
   - name: 'graph-necessity-record'
     type: schema
     path: 'packages/ds-contracts/analytical-fixtures/graph-experiment.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts: reports a task it does not implement as UNSUPPORTED, not as a task whose candidates all failed (pnpm exec vitest run packages/ds-codegen/src/analytical, 22 files 986 tests green)"
+    recorded_at: "2026-09-18T18:57:41.587Z"
