@@ -47,6 +47,14 @@ acceptance:
       Both changes are detected: the recovered set differs from the operation's, and
       the binding mutation is detected even though the numeric total is unchanged,
       so preservation is distinguished from agreement on a total.
+  - id: A4
+    given: 'The earlier binding slice presented consumer agreement as preservation.'
+    when: 'The retained record is read against the re-executed evidence.'
+    then: >-
+      It states what that agreement did not establish, records the
+      aggregate-dispatch and metric-channel-label repairs, records that the
+      composition probe's earlier lawful completion was an artifact of source facts,
+      and carries the corrected candidate population rather than the previous count.
 non_functional: {}
 contracts:
   - name: 'representation-recovery'
