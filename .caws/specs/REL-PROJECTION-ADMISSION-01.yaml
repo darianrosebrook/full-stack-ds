@@ -46,6 +46,14 @@ acceptance:
     then: >-
       The declaration is refused at the same boundary as the operation, and the
       rejection is EXECUTED by a test rather than asserted from a stored flag.
+  - id: A4
+    given: 'The preservation report and the record claim a single evaluation and decoder independence.'
+    when: 'The implemented calls and the decoder signatures are read.'
+    then: >-
+      The report evaluates the admitted operation once and lowers that result, and
+      the arity assertion is stated as a signature fact rather than a proof of the
+      information boundary, with the isolated execution as the support for decoder
+      independence.
 non_functional: {}
 contracts:
   - name: 'admission-lowering'
