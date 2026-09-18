@@ -26,119 +26,193 @@
       "combinator": "layer",
       "construction": "Two retained programs over one cartesian coordinate space, both assigning position, measures commensurable by declared unit, sharing declares position shared.",
       "derivation": "Doctrine line 160: a layer is several atomic projections over one coordinate space with shared scales, and layers declare scale sharing per channel. Every part is retained and the declared sharing is the one the combinator requires.",
-      "expected": { "verdict": "retained", "sharing": { "position": "shared" } }
+      "expected": {
+        "verdict": "retained",
+        "sharing": {
+          "position": "shared"
+        }
+      }
     },
     {
       "id": "L2_LAYER_SHARING_UNDECLARED",
       "combinator": "layer",
       "construction": "L1 with the sharing declaration absent entirely.",
       "derivation": "Doctrine line 382: marks in one space imply one scale, so the declaration is REQUIRED and its absence is declaration-missing, not a default. Minimally changed neighbour of L1.",
-      "expected": { "verdict": "refused", "cause": "REL_LAYER_SCALE_UNSHARED" }
+      "expected": {
+        "verdict": "refused",
+        "cause": "REL_LAYER_SCALE_UNSHARED"
+      }
     },
     {
       "id": "L3_LAYER_SHARED_INCOMMENSURABLE",
       "combinator": "layer",
       "construction": "L1 with the second part's measure declaring a unit that shares no member with the first's units and appears in neither conversions list.",
       "derivation": "Doctrine line 374 and line 160: dimensional analysis fails across a shared scale; the target line in the wrong unit is the doctrine's own second observation of this cause.",
-      "expected": { "verdict": "refused", "cause": "REL_UNIT_INCOMMENSURABLE_SHARED_SCALE" }
+      "expected": {
+        "verdict": "refused",
+        "cause": "REL_UNIT_INCOMMENSURABLE_SHARED_SCALE"
+      }
     },
     {
       "id": "L4_LAYER_SHARED_UNIT_ABSENT",
       "combinator": "layer",
       "construction": "L1 with the second part's measure declaring no unit at all.",
       "derivation": "A premise the declaration does not carry is UNPROVEN, not false — the same three-valued discipline the kernel applies to an unknown grain. The obligation name is the corpus's own `unit:commensurable`, already carried by FX_SALES_SUM_PERROW_UNIT_NO_ROWS and FX_H_INVENTORY_VALUE_UNKNOWN_UNIT. Refusing here would invent a contradiction the declaration does not state.",
-      "expected": { "verdict": "unproven", "obligation": "unit:commensurable" }
+      "expected": {
+        "verdict": "unproven",
+        "obligation": "unit:commensurable"
+      }
     },
     {
       "id": "L5_LAYER_UNSHARED_ONE_COORDINATE_SPACE",
       "combinator": "layer",
       "construction": "L1 with position declared unshared.",
       "derivation": "Doctrine line 160 names this exactly: an unshared positional scale inside one coordinate space is the general form of the dual-axis illegality. Same cause as L2 because it is one cause observed twice.",
-      "expected": { "verdict": "refused", "cause": "REL_LAYER_SCALE_UNSHARED" }
+      "expected": {
+        "verdict": "refused",
+        "cause": "REL_LAYER_SCALE_UNSHARED"
+      }
     },
     {
       "id": "F1_FACET_SHARED_POLICY",
       "combinator": "facet",
       "construction": "Two retained programs, a declared partition over the result-grain dimension, policy declares position shared.",
       "derivation": "Doctrine line 161: facet repeats a projection over a partition with a declared scale policy per channel. Shared is a legal policy and it asserts cross-panel comparability.",
-      "expected": { "verdict": "retained", "policy": { "position": "shared" }, "induces": ["cross-panel-comparability"] }
+      "expected": {
+        "verdict": "retained",
+        "policy": {
+          "position": "shared"
+        },
+        "induces": [
+          "cross-panel-comparability"
+        ]
+      }
     },
     {
       "id": "F2_FACET_POLICY_UNDECLARED",
       "combinator": "facet",
       "construction": "F1 with the policy absent entirely.",
       "derivation": "Doctrine line 383 and line 161: leaving the policy undeclared is ill-typed. Minimally changed neighbour of F1.",
-      "expected": { "verdict": "refused", "cause": "REL_FACET_SCALE_POLICY_UNDECLARED" }
+      "expected": {
+        "verdict": "refused",
+        "cause": "REL_FACET_SCALE_POLICY_UNDECLARED"
+      }
     },
     {
       "id": "F3_FACET_FREE_POLICY",
       "combinator": "facet",
       "construction": "F1 with position declared free.",
       "derivation": "Doctrine line 161: free scales trade comparability for resolution and that trade is a CLAIM, so it is legal and it differs from F1 by exactly the claim it names. Every other claim is unchanged, which is what makes the pair separating.",
-      "expected": { "verdict": "retained", "policy": { "position": "free" }, "withholds": ["cross-panel-comparability"] }
+      "expected": {
+        "verdict": "retained",
+        "policy": {
+          "position": "free"
+        },
+        "withholds": [
+          "cross-panel-comparability"
+        ]
+      }
     },
     {
       "id": "E1_EMBED_TREND_WITHIN_BUDGET",
       "combinator": "embed",
       "construction": "A tabular host projection whose cell budget carries position and text; the embedded part declares the trend task.",
       "derivation": "Doctrine line 162: with position only and no baseline or axis the embedded projection can serve a trend task. Text additionally makes the value recoverable.",
-      "expected": { "verdict": "retained" }
+      "expected": {
+        "verdict": "retained"
+      }
     },
     {
       "id": "E2_EMBED_MAGNITUDE_BEYOND_BUDGET",
       "combinator": "embed",
       "construction": "E1 with the embedded part declaring magnitude-comparison instead of trend.",
       "derivation": "Doctrine lines 162 and 405: the embedded projection is typed against the cell's channel budget and CANNOT serve a magnitude comparison there, because the budget carries no baseline or axis. Minimally changed neighbour of E1.",
-      "expected": { "verdict": "refused", "cause": "REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET" }
+      "expected": {
+        "verdict": "refused",
+        "cause": "REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET"
+      }
     },
     {
       "id": "S1_LAYER_PART_REFUSED",
       "combinator": "layer",
       "construction": "L1 with exactly one part replaced by an otherwise identical program whose operation the analytical rules refuse.",
       "derivation": "Doctrine lines 164 and 261 plus falsification condition 8: the composite is refused because a PART is refused, and it carries that part's own cause verbatim. A composite-specific cause here would mean the composite is being judged by something other than its parts.",
-      "expected": { "verdict": "refused", "causeFrom": "part", "causeIsCompositeSpecific": false }
+      "expected": {
+        "verdict": "refused",
+        "causeFrom": "part",
+        "causeIsCompositeSpecific": false
+      }
     },
     {
       "id": "N1_LAYER_OF_FACET_CONTRADICTION",
       "combinator": "layer",
       "construction": "A layer over [a facet whose policy declares position free, a single-row annotation part], sharing position shared.",
       "derivation": "Nested rule interaction. The facet exposes its panels as separately scaled, so the outer layer has no single position scale to share and cannot be one coordinate space. Neither combinator's rule was written for this pairing; the contradiction is read off the operand's exposed profile.",
-      "expected": { "verdict": "refused", "cause": "REL_LAYER_SCALE_UNSHARED" }
+      "expected": {
+        "verdict": "refused",
+        "cause": "REL_LAYER_SCALE_UNSHARED"
+      }
     },
     {
       "id": "U1_FACET_OF_LAYER_FREE_PANELS",
       "combinator": "facet",
       "construction": "A facet over [a layer over two retained programs sharing position], policy declares position free.",
       "derivation": "UNFAMILIAR RECOMBINATION, expected outcome fixed before the implementation. The inner layer shares one scale WITHIN each panel; the outer facet declines to share it ACROSS panels. Each panel is its own coordinate space, so the layer's requirement is satisfied and the facet's free policy is a legal trade made once per panel. There is no contradiction, so the composite is RETAINED, with cross-panel comparability withheld. A representation that flattens the two scopes into one profile refuses this and is wrong.",
-      "expected": { "verdict": "retained", "policy": { "position": "free" }, "withholds": ["cross-panel-comparability"] }
+      "expected": {
+        "verdict": "retained",
+        "policy": {
+          "position": "free"
+        },
+        "withholds": [
+          "cross-panel-comparability"
+        ]
+      }
     },
     {
       "id": "U2_FACET_OF_LAYER_SHARED_PANELS",
       "combinator": "facet",
       "construction": "U1 with the facet policy declaring position shared.",
       "derivation": "The materially different policy variant. Same construction and same inner layer; the policy is the only difference, so the outcome must differ by exactly the claim the policy names and by nothing else.",
-      "expected": { "verdict": "retained", "policy": { "position": "shared" }, "induces": ["cross-panel-comparability"] }
+      "expected": {
+        "verdict": "retained",
+        "policy": {
+          "position": "shared"
+        },
+        "induces": [
+          "cross-panel-comparability"
+        ]
+      }
     },
     {
       "id": "U3_FACET_OF_LAYER_UNDECLARED_INNER",
       "combinator": "facet",
       "construction": "U1 with the inner layer's sharing declaration absent.",
       "derivation": "The unfamiliar construction is judged from its PARTS. The fault is the inner layer's own missing declaration, so the cause is the layer's and not a facet cause — which is how we know no rule was written for facets-of-layers.",
-      "expected": { "verdict": "refused", "cause": "REL_LAYER_SCALE_UNSHARED", "causeFrom": "part" }
+      "expected": {
+        "verdict": "refused",
+        "cause": "REL_LAYER_SCALE_UNSHARED",
+        "causeFrom": "part"
+      }
     },
     {
       "id": "P1_LAYER_UNUSED_CHANNEL_DECLARATION",
       "combinator": "layer",
       "construction": "L1 with an additional sharing declaration for a channel no part assigns.",
       "derivation": "Invariant-preserving perturbation. No part reads that channel, so no scale is shared over it and the declaration constrains nothing. Verdict and induced claims must be identical to L1.",
-      "expected": { "verdict": "retained", "sameAs": "L1_LAYER_SHARED_POSITION" }
+      "expected": {
+        "verdict": "retained",
+        "sameAs": "L1_LAYER_SHARED_POSITION"
+      }
     },
     {
       "id": "P2_FACET_UNUSED_CHANNEL_POLICY",
       "combinator": "facet",
       "construction": "F1 with an additional policy entry for a channel no part assigns.",
       "derivation": "Invariant-preserving perturbation, the facet counterpart: a policy for a channel the projection does not read is inert, so the undeclared-policy refusal must not fire on it and no claim may move.",
-      "expected": { "verdict": "retained", "sameAs": "F1_FACET_SHARED_POLICY" }
+      "expected": {
+        "verdict": "retained",
+        "sameAs": "F1_FACET_SHARED_POLICY"
+      }
     }
   ],
   "corpusFinding": {
@@ -151,5 +225,56 @@
     "A retained composite's claim set is derived from its parts and its declarations within the claim vocabulary this layer owns; it is not a proof that the vocabulary is complete.",
     "The cell channel budget is declared, not measured: `embed` types the embedded part against the budget the declaration carries and asserts nothing about what a real cell renders.",
     "Only the layer, facet and embed combinators named by the doctrine are typed here; no other composition operator is claimed."
-  ]
+  ],
+  "adjudication": {
+    "$comment": "APPENDED AFTER the implementation existed. The `cases[].expected` blocks above are FROZEN and were not edited; this section records what the rules actually returned, and every place the two disagree. A disagreement is a finding about the algebra or about the expectation, never a licence to edit the expectation.",
+    "disagreements": [
+      {
+        "id": "E1_EMBED_TREND_WITHIN_BUDGET",
+        "expected": "retained",
+        "actual": "unproven (obligation invariant:position-non-meaningful, from the part)",
+        "finding": "The expectation was derived from the doctrine, which says a cell with position only can serve a trend task. The substrate cannot admit it, because this experiment's task table records `trend` as NOT ENUMERATED (it is the same entry that makes `magnitude-comparison` and `composition` the only enumerable quantitative tasks apart from `topology`). So the doctrine's own worked example for `embed` is unreachable here, and the reason is the BOUNDED TASK TABLE rather than the channel budget: the refusal is not that trend exceeds the cell, it is that the experiment declines to type trend at all. Recorded as a disagreement rather than repaired, because repairing it means deciding what the trend invariant requires, which is a task-table decision this slice has no authority to make."
+      }
+    ],
+    "discoveries": [
+      {
+        "id": "COMMENSURABILITY_IS_A_QUESTION_ABOUT_QUANTITY",
+        "what": "The first implementation asked for commensurable declared units on EVERY channel two parts shared, and refused or carried every lawful layer whose parts also shared a LABEL channel. A shared nominal channel carries the identity of each case, not a magnitude; it has no unit to commensurate.",
+        "previousRepresentationFailure": "That representation could not express a layer whose parts share a dimension channel as well as a measure channel, which is the ordinary shape of a layer: two range marks on one lane share the lane coordinate AND the case identity.",
+        "separatingCase": "L1 against itself: with the check applied to every shared channel, L1 is unproven on its `text` channel although both parts carry the SAME field and the same declared unit there. No declaration could have made it pass.",
+        "repair": "The question is put only where two or more parts read the shared channel as a quantity (interval or ratio). The boundary is stated as a non-claim rather than left implicit."
+      },
+      {
+        "id": "THE_TWO_SCALE_SCOPES_ARE_NOT_ONE_PROFILE",
+        "what": "A layer's sharing is within one coordinate space; a facet's policy is across the panels a partition produces. A single flattened profile cannot express a facet whose panels each carry a shared-scale layer.",
+        "status": "This is the distinction the U-cases were pre-registered to test, and the prediction held: U1 and U2 are retained and differ by exactly the cross-panel claim, while N1 is refused because an operand exposing a channel free leaves the layer with no single scale to share."
+      },
+      {
+        "id": "ATTRIBUTION_IS_RESTATED_AT_EACH_LEVEL",
+        "what": "The first implementation propagated a nested part's whole verdict upward, including its `from` attribution. That made the outer facet in U3 look as though it had refused by a rule of its own, when in fact it refused because its part arrived already refused.",
+        "previousRepresentationFailure": "It could not distinguish 'this composite's own combinator rule refused it' from 'a part arrived refused', which is the exact question invariant 13 turns on. The outer composite reported the inner layer's attribution as its own.",
+        "separatingCase": "U3, which the pre-commit had already fixed at `causeFrom: part`. The cause was right and the attribution was wrong, so a check that only compared causes would have passed it.",
+        "repair": "A part's refusal is re-attributed to the part at each level while its CAUSE and detail are carried unaltered. The inner verdict's own attribution is recoverable by judging the inner composite alone, so nothing is lost."
+      }
+    ],
+    "outcomes": {
+      "L1_LAYER_SHARED_POSITION": "retained",
+      "L2_LAYER_SHARING_UNDECLARED": "refused REL_LAYER_SCALE_UNSHARED",
+      "L3_LAYER_SHARED_INCOMMENSURABLE": "refused REL_UNIT_INCOMMENSURABLE_SHARED_SCALE",
+      "L4_LAYER_SHARED_UNIT_ABSENT": "unproven unit:commensurable",
+      "L5_LAYER_UNSHARED_ONE_COORDINATE_SPACE": "refused REL_LAYER_SCALE_UNSHARED",
+      "F1_FACET_SHARED_POLICY": "retained, cross-panel-comparability induced",
+      "F2_FACET_POLICY_UNDECLARED": "refused REL_FACET_SCALE_POLICY_UNDECLARED",
+      "F3_FACET_FREE_POLICY": "retained, cross-panel-comparability withheld and nothing else moved",
+      "E1_EMBED_TREND_WITHIN_BUDGET": "unproven invariant:position-non-meaningful -- SEE disagreements",
+      "E2_EMBED_MAGNITUDE_BEYOND_BUDGET": "refused REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET",
+      "S1_LAYER_PART_REFUSED": "refused, from the part, carrying the part's own cause",
+      "N1_LAYER_OF_FACET_CONTRADICTION": "refused REL_LAYER_SCALE_UNSHARED",
+      "U1_FACET_OF_LAYER_FREE_PANELS": "retained, cross-panel-comparability withheld",
+      "U2_FACET_OF_LAYER_SHARED_PANELS": "retained, cross-panel-comparability induced",
+      "U3_FACET_OF_LAYER_UNDECLARED_INNER": "refused REL_LAYER_SCALE_UNSHARED, from the part",
+      "P1_LAYER_UNUSED_CHANNEL_DECLARATION": "retained, claims identical to L1",
+      "P2_FACET_UNUSED_CHANNEL_POLICY": "retained, claims identical to F1"
+    }
+  }
 }
