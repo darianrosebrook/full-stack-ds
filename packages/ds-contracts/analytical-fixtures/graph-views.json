@@ -1,0 +1,115 @@
+{
+  "$comment": "Canonical graph-view declarations (REL-GRAPH-VIEW-CANONICAL-01). Emitted schema: analytical-fixtures/graph-view.schema.json. Two views over ONE source, differing only in the node universe they bind.",
+  "structure": {
+    "relations": {
+      "links": {
+        "grain": [
+          "src",
+          "dst"
+        ],
+        "fields": {
+          "src": {
+            "transformation": "nominal"
+          },
+          "dst": {
+            "transformation": "nominal"
+          },
+          "weight": {
+            "transformation": "ratio"
+          }
+        }
+      },
+      "all_nodes": {
+        "grain": [
+          "id"
+        ],
+        "fields": {
+          "id": {
+            "transformation": "nominal",
+            "key": true
+          },
+          "label": {
+            "transformation": "nominal"
+          }
+        }
+      },
+      "connected_set": {
+        "grain": [
+          "id"
+        ],
+        "fields": {
+          "id": {
+            "transformation": "nominal",
+            "key": true
+          },
+          "label": {
+            "transformation": "nominal"
+          }
+        }
+      }
+    }
+  },
+  "rows": {
+    "links": [
+      {
+        "src": "n1",
+        "dst": "n2",
+        "weight": 1
+      }
+    ],
+    "all_nodes": [
+      {
+        "id": "n1",
+        "label": "Contract"
+      },
+      {
+        "id": "n2",
+        "label": "IR"
+      },
+      {
+        "id": "n3",
+        "label": "Orphan"
+      }
+    ],
+    "connected_set": [
+      {
+        "id": "n1",
+        "label": "Contract"
+      },
+      {
+        "id": "n2",
+        "label": "IR"
+      }
+    ]
+  },
+  "views": [
+    {
+      "id": "GV_ALL_NODES",
+      "binds": {
+        "nodes": {
+          "relation": "all_nodes",
+          "keyField": "id"
+        },
+        "edges": {
+          "relation": "links",
+          "fromField": "src",
+          "toField": "dst"
+        }
+      }
+    },
+    {
+      "id": "GV_CONNECTED_SET",
+      "binds": {
+        "nodes": {
+          "relation": "connected_set",
+          "keyField": "id"
+        },
+        "edges": {
+          "relation": "links",
+          "fromField": "src",
+          "toField": "dst"
+        }
+      }
+    }
+  ]
+}
