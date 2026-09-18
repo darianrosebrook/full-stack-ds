@@ -1,0 +1,34 @@
+id: REL-PROJECTION-BINDING-01
+title: 'Bind one admitted analytical operation through the projection boundary and observe its claims through two consumers'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-18T00:46:16.362Z'
+updated_at: '2026-09-18T00:46:16.362Z'
+created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
+blast_radius:
+  modules:
+    - 'packages/ds-codegen/src/analytical/projection.ts (BoundOperation, evaluateOperation, the two consumers, the repaired composition premise, the binding observer)'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts (binding, premise, consumer and mutation controls)'
+    - 'docs/current-implementation-snapshot.md (the predecessor''s interpretation corrected)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'docs/current-implementation-snapshot.md'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the retained stage-3 experiment enumerates capacity-compatible topologies but its Program carries no bound analytical operation; when the admitted assertion is carried through the projection boundary; then every retained program carries the operation it displays - relation, field, aggregate, the dimensions summed over and the result grain - and a program without it is refused rather than retained'
+non_functional: {}
+contracts:
+  - name: 'projection-binding'
+    type: contract-test
+    path: 'packages/ds-codegen/src/analytical/projection.test.ts'
