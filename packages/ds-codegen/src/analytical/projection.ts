@@ -32,7 +32,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { RelationalStructure as RelationalStructureSchema } from "./relation-model.js";
-import type { AggregateOp, FieldDecl, RelationDecl, RelationalStructure, Transformation } from "./relation-model.js";
+import type { AggregateOp, FieldDecl, RelationDecl, RelationalStructure, Transformation, UnitDecl } from "./relation-model.js";
 import type { GraphResult } from "./graph-projection.js";
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
@@ -83,7 +83,13 @@ export type Claim =
   | "partition-membership"
   | "aggregate-magnitude"
   /** The incidence of a graph is carried, so a topology task can be served by it. */
-  | "incidence-recoverable";
+  | "incidence-recoverable"
+  /**
+   * A facet's panels can be read against each other. This is the claim a
+   * `shared` scale policy asserts and a `free` policy trades away for
+   * resolution, and it is the ONLY thing the two policies differ by.
+   */
+  | "cross-panel-comparability";
 
 export type BaselineDecl = "zero" | "truncated";
 
@@ -159,43 +165,61 @@ export const assertionFor = (op: BoundOperation): AggregateAssertionDecl & { kin
  * a cross-date sum over a measure declared non-additive along date resolves
  * perfectly and is still a lie the corpus can name.
  */
-export function admitOperation(structure: RelationalStructure, op: BoundOperation, evidence?: unknown): OperationAdmission {
-  const refuse = (reason: string): never => {
-    throw new Error(`the admitted operation is refused: ${reason}`);
-  };
-  if (op.op !== "sum") refuse(`the executable contract is sum, and this operation names ${op.op}`);
+export type OperationJudgment =
+  | { kind: "admitted"; facts: ResultFacts }
+  | { kind: "refused"; causes: string[]; reason: string }
+  | { kind: "unproven"; obligation: string; reason: string };
+
+/**
+ * The same judgment, returned rather than thrown. A COMPOSITE has to report WHY
+ * a part is not retained and carry the part's own cause, and a cause read back
+ * out of an exception message would be a second, lossier definition of the same
+ * decision. `admitOperation` is this function plus the throw, so there is one
+ * rule and one place it is written.
+ */
+export function judgeOperation(structure: RelationalStructure, op: BoundOperation, evidence?: unknown): OperationJudgment {
+  const refuse = (reason: string): OperationJudgment => ({ kind: "refused", causes: [], reason });
+  const illegal = (causes: string[], reason: string): OperationJudgment => ({ kind: "refused", causes, reason });
+  if (op.op !== "sum") return refuse(`the executable contract is sum, and this operation names ${op.op}`);
   const rel = structure.relations[op.relation];
-  if (!rel) refuse(`the operation names relation ${op.relation}, which the structure does not declare`);
+  if (!rel) return refuse(`the operation names relation ${op.relation}, which the structure does not declare`);
   if (!Array.isArray(rel.grain)) {
     return { kind: "unproven", obligation: "grain:declared", reason: `${op.relation} declares no grain, so the result grain is not established` };
   }
   const grain = [...rel.grain];
   if (grain.length === 0) return { kind: "unproven", obligation: "grain:declared", reason: `${op.relation} declares an empty grain` };
   const field = rel.fields?.[op.field];
-  if (!field) refuse(`the operation aggregates ${op.relation}.${op.field}, which the relation does not declare`);
+  if (!field) return refuse(`the operation aggregates ${op.relation}.${op.field}, which the relation does not declare`);
   const stray = op.along.filter((a) => !grain.includes(a));
-  if (stray.length > 0) refuse(`the operation sums over ${stray.join(", ")}, which the declared grain does not contain`);
+  if (stray.length > 0) return refuse(`the operation sums over ${stray.join(", ")}, which the declared grain does not contain`);
   const expected = grain.filter((g) => !op.along.includes(g)).sort();
   if (JSON.stringify(expected) !== JSON.stringify([...op.resultGrain].sort())) {
-    refuse(`the result grain [${op.resultGrain.join(", ")}] is not the declared grain minus the summed-over dimensions [${expected.join(", ")}]`);
+    return refuse(`the result grain [${op.resultGrain.join(", ")}] is not the declared grain minus the summed-over dimensions [${expected.join(", ")}]`);
   }
-  if (op.resultGrain.length === 0) refuse("the operation has no result grain to display");
-  if (op.resultGrain.length !== 1) refuse(`the bounded experiment projects a single result-grain column, and this operation produces ${op.resultGrain.length}`);
+  if (op.resultGrain.length === 0) return refuse("the operation has no result grain to display");
+  if (op.resultGrain.length !== 1) return refuse(`the bounded experiment projects a single result-grain column, and this operation produces ${op.resultGrain.length}`);
   const groupField = rel.fields?.[op.resultGrain[0]];
-  if (!groupField) refuse(`the result grain names ${op.resultGrain[0]}, which ${op.relation} does not declare as a field`);
+  if (!groupField) return refuse(`the result grain names ${op.resultGrain[0]}, which ${op.relation} does not declare as a field`);
 
   // The judgment, from the same engine that judges the corpus. An ILLEGAL
   // operation is refused with the corpus's own causes; an UNPROVEN one is
   // carried, because a missing premise is not a contradiction.
   const judgment = judge(structure, [assertionFor(op) as never], evidence as never);
   if (judgment.status === "illegal") {
-    refuse(`the analytical rules forbid it: ${codesOf(judgment).join(", ") || "no diagnostic named"}`);
+    const causes = codesOf(judgment);
+    return illegal(causes, `the analytical rules forbid it: ${causes.join(", ") || "no diagnostic named"}`);
   }
   if (judgment.status === "unproven") {
     const terms = termsOf(judgment);
     return { kind: "unproven", obligation: terms[0] ?? "unknown", reason: `the analytical rules leave this operation unproven (${terms.join(", ") || "no obligation named"})` };
   }
   return { kind: "admitted", facts: resultFactsOf(op, rel, field, groupField) };
+}
+
+export function admitOperation(structure: RelationalStructure, op: BoundOperation, evidence?: unknown): OperationAdmission {
+  const j = judgeOperation(structure, op, evidence);
+  if (j.kind === "refused") throw new Error(`the admitted operation is refused: ${j.reason}`);
+  return j;
 }
 
 /** The result of an admitted operation, as facts the projection filters on. */
@@ -206,13 +230,20 @@ function resultFactsOf(op: BoundOperation, rel: RelationDecl, field: FieldDecl, 
     resultGrain: [...op.resultGrain],
     // The projection assigns the RESULT's own columns, never a source column the
     // operation aggregated away.
-    dimension: { field: op.resultGrain[0], transformation: groupField.transformation, key: groupField.key === true, cyclic: groupField.cyclic === true },
+    dimension: {
+      field: op.resultGrain[0],
+      transformation: groupField.transformation,
+      key: groupField.key === true,
+      cyclic: groupField.cyclic === true,
+      ...(groupField.unit ? { unit: groupField.unit } : {}),
+    },
     measure: {
       field: resultFieldName(op),
       transformation: field.transformation,
       additivityKind: field.additivity?.kind,
       nonAdditiveAlong: field.additivity?.kind === "semi-additive" ? field.additivity.nonAdditiveAlong : [],
       cyclic: field.cyclic === true,
+      ...(field.unit ? { unit: field.unit } : {}),
     },
   };
 }
@@ -307,13 +338,21 @@ export type ResultFacts = {
   sourceRelation: string;
   sourceGrain: unknown;
   resultGrain: string[];
-  dimension: { field: string; transformation: Transformation; key: boolean; cyclic: boolean };
+  dimension: { field: string; transformation: Transformation; key: boolean; cyclic: boolean; unit?: UnitDecl };
   measure: {
     field: string;
     transformation: Transformation;
     additivityKind?: string;
     nonAdditiveAlong: string[];
     cyclic: boolean;
+    /**
+     * The unit the SOURCE field declares. It rides on the facts because a
+     * composite that shares a scale has to decide commensurability, and that is
+     * decided by declared units rather than by dimension. Absent means the
+     * declaration does not carry the fact, which leaves commensurability
+     * unproven rather than false.
+     */
+    unit?: UnitDecl;
   };
 };
 
@@ -444,35 +483,46 @@ export function projectionSupport(resultKind: ResultKind, task: Task): SupportDe
  * declared explanation is left untouched.
  */
 export function inducedClaims(p: Program, facts: ResultFacts): Claim[] {
-  const out = new Set<Claim>();
-  const cap = CAPACITY[p.measure];
+  const out = new Set<Claim>(channelClaims(p.measure, p.baseline, facts));
+  // The dimension carries the identity of each case the measure is read against.
+  out.add("partition-membership");
+  return [...out].sort();
+}
+
+/**
+ * The claims ONE channel induces for a measure, at a declared baseline. Factored
+ * out of `inducedClaims` so the cell budget in `embed` asks the SAME question of
+ * a channel it has not built a program around, instead of carrying a second copy
+ * of the capacity table's consequences.
+ */
+export function channelClaims(channel: Channel, baseline: BaselineDecl, facts: ResultFacts): Claim[] {
+  const out: Claim[] = [];
+  const cap = CAPACITY[channel];
   const t = facts.measure.transformation;
 
   if (cap.valueReadback) {
     // The value itself is recoverable, so no positional magnitude is claimed...
-    out.add("value-recoverable");
+    out.push("value-recoverable");
     // ...and a readable RATIO value supports an exact comparison. This is the
     // doctrine's lore-oracle argument, and it is why the tabular projection is a
     // PEER of the visual one rather than a degraded one. Nothing here is
     // ratio-comparable without the scale that makes a ratio a ratio.
-    if (t === "ratio") out.add("ratio-comparability");
-  } else if (p.measure === "length" || p.measure === "position") {
-    out.add("aggregate-magnitude");
-    if (t === "ratio") out.add(p.baseline === "zero" ? "ratio-comparability" : "difference-comparability");
-    else if (t === "interval") out.add("difference-comparability");
+    if (t === "ratio") out.push("ratio-comparability");
+  } else if (channel === "length" || channel === "position") {
+    out.push("aggregate-magnitude");
+    if (t === "ratio") out.push(baseline === "zero" ? "ratio-comparability" : "difference-comparability");
+    else if (t === "interval") out.push("difference-comparability");
     // An ordinal measure on a metric channel induces neither: differences of an
     // ordinal are as meaningless as its mean, so nothing comparable is claimed.
-  } else if (p.measure === "area") {
-    out.add("aggregate-magnitude");
-    if (t === "ratio") out.add("ratio-comparability");
-  } else if (p.measure === "luminance" || p.measure === "angle") {
-    out.add("aggregate-magnitude");
-    if (t === "interval" || t === "ratio") out.add("difference-comparability");
+  } else if (channel === "area") {
+    out.push("aggregate-magnitude");
+    if (t === "ratio") out.push("ratio-comparability");
+  } else if (channel === "luminance" || channel === "angle") {
+    out.push("aggregate-magnitude");
+    if (t === "interval" || t === "ratio") out.push("difference-comparability");
   }
 
-  // The dimension carries the identity of each case the measure is read against.
-  out.add("partition-membership");
-  return [...out].sort();
+  return out;
 }
 
 /* ------------------------------------------------------------ enumeration */
@@ -1813,6 +1863,394 @@ const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === pat
 if (invokedDirectly && process.argv.includes("--record")) {
   console.log(`projection: recorded ${recordLedger()}`);
 }
+
+/* ------------------------------------------------------------ composition */
+
+/**
+ * THE PROJECTION COMBINATORS, AND THE RULE EACH ONE IS TYPED BY.
+ *
+ * The doctrine's invariant 13 is the whole design: a composite is admitted or
+ * rejected by its parts and the rule written for its combinator, never by a
+ * special case for the composite. `judgeComposite` therefore runs the PARTS
+ * FIRST and returns a part's own verdict before any combinator rule is reached.
+ * That ordering is what makes "a refused composite carries the part's cause
+ * verbatim" structural rather than a promise, and it is why no code below asks
+ * what kind of composite it is holding.
+ *
+ * The two scale scopes are deliberately NOT flattened. A `layer`'s shared scale
+ * relates projections WITHIN one coordinate space; a `facet`'s scale policy
+ * relates the panels a partition produces, each of which is its own coordinate
+ * space. They constrain different pairs of projections, so a free facet policy
+ * does not contradict a shared layer scale and vice versa.
+ */
+export type Combinator = "layer" | "facet" | "embed";
+
+/**
+ * A FACET's scale policy for a channel. Both values are legal and they are not a
+ * validity enum: `shared` asserts cross-panel comparability and `free` trades it
+ * away for resolution. What is ill-typed is declaring neither.
+ */
+export type ScalePolicy = "shared" | "free";
+
+/**
+ * A LAYER's declaration for a channel two or more of its parts read. The layer is
+ * one coordinate space, so `shared` is the only value that can hold; `unshared` is
+ * EXPRESSIBLE anyway, because the doctrine names an unshared positional scale in
+ * one space as the dual-axis illegality, and a declaration that cannot be written
+ * cannot be refused by name — it would collapse into the undeclared case.
+ */
+export type ScaleSharing = "shared" | "unshared";
+
+export type CompositePart =
+  | { kind: "program"; program: Program }
+  | { kind: "composite"; composite: Composite };
+
+export type LayerComposite = {
+  combinator: "layer";
+  parts: CompositePart[];
+  /** Declared per channel. Required exactly for the channels two or more parts read. */
+  sharing: Partial<Record<Channel, ScaleSharing>>;
+};
+
+export type FacetComposite = {
+  combinator: "facet";
+  parts: CompositePart[];
+  /** The column the projection repeats over. Carried, not adjudicated: see COMPOSITION_NON_CLAIMS. */
+  partition: string;
+  /** Declared per channel the parts read. Both values are legal; they differ by a claim. */
+  policy: Partial<Record<Channel, ScalePolicy>>;
+};
+
+export type EmbedComposite = {
+  combinator: "embed";
+  /** The host projection whose cell holds the embedded one. */
+  host: Program;
+  /** The channels the CELL can carry. Not a coordinate space: a cell is a budget. */
+  budget: readonly Channel[];
+  /** The baseline regime the cell offers on those channels. */
+  cellBaseline: BaselineDecl;
+  part: CompositePart;
+};
+
+export type Composite = LayerComposite | FacetComposite | EmbedComposite;
+
+/**
+ * What a part of a composite presents to the combinator above it. `file` is the
+ * unit the declaration carries; `profile` is how the part's channels stand
+ * across ITS OWN sub-projections, which is what lets a layer notice that an
+ * operand has no single scale to share.
+ */
+export type PartReading = {
+  kind: "retained";
+  channels: Channel[];
+  units: Partial<Record<Channel, UnitDecl>>;
+  /** What each channel carries for this part, so a shared scale knows whether it is a quantity. */
+  transformations: Partial<Record<Channel, Transformation>>;
+  /**
+   * How the channel stands across the part's OWN sub-projections. An atomic
+   * projection is one coordinate space and always presents `shared`; a facet
+   * presents what its policy declared. This is what lets a parent layer notice
+   * that an operand has no single scale to share.
+   */
+  profile: Partial<Record<Channel, ScalePolicy>>;
+  claims: Claim[];
+  tasks: Task[];
+  /** Present for an atomic part only: what `embed` needs to type a cell budget. */
+  probe?: { coordinate: CoordinateSpace; baseline: BaselineDecl; task: Task; facts: ResultFacts };
+};
+
+export type CompositeRefusal = { kind: "refused"; causes: string[]; from: "part" | "combinator"; detail: string };
+export type CompositeObligation = { kind: "unproven"; obligation: string; from: "part" | "combinator"; detail: string };
+
+/** What a PART can be. A part has no combinator of its own; a composite does. */
+export type PartVerdict = PartReading | CompositeRefusal | CompositeObligation;
+
+export type CompositeVerdict = (PartReading & { combinator: Combinator }) | CompositeRefusal | CompositeObligation;
+
+export type CompositeInput = {
+  structure: RelationalStructure;
+  inventory: TargetInventory;
+  composite: Composite;
+  evidence?: unknown;
+};
+
+/**
+ * What a composite does not claim. Stated here rather than left to inference,
+ * because each of these is a place a reader could otherwise assume more than the
+ * rule establishes.
+ */
+export const COMPOSITION_NON_CLAIMS: readonly string[] = [
+  "The cell budget is a CHANNEL budget, declared rather than measured. The experiment does not type the cell's coordinate space, so a budget channel is not required to be hostable by the host projection's own space.",
+  "The facet's partition is carried, not adjudicated: no doctrine cause names a partition a projection cannot repeat over, so inventing one here would be inventing vocabulary.",
+  "A layer adds no claim of its own. It requires that the parts' shared channels be commensurable over one space; what that buys is the parts' own claims holding on one scale, not a further claim the parts did not make.",
+  "Commensurability is decided by DECLARED units and declared conversions. A unit the declaration does not carry leaves the judgment unproven; it is never treated as commensurable by default, and dimension is never consulted.",
+  "The commensurability question is put only where two or more parts read a shared channel as a QUANTITY. A shared nominal or ordinal channel carries identity, and this experiment does not adjudicate what it means for two parts to share one; it neither refuses it nor claims it commensurable.",
+  "`cross-panel-comparability` is this layer's own claim name. The doctrine states that a facet's scale policy trade IS a claim; the name is L4's, and it is earned by a separating case rather than asserted: a shared policy induces it, a free policy withholds it, and every other claim is identical between the two.",
+  "A layer adds no claim that its parts did not already make, and this experiment does not claim that the claim vocabulary is complete.",
+];
+
+const refusedComposition = (causes: string[], from: "part" | "combinator", detail: string): CompositeRefusal => ({
+  kind: "refused",
+  causes,
+  from,
+  detail,
+});
+
+const unprovenComposition = (obligation: string, from: "part" | "combinator", detail: string): CompositeObligation => ({
+  kind: "unproven",
+  obligation,
+  from,
+  detail,
+});
+
+/**
+ * Whether two declared units are commensurable: three-valued, because a
+ * declaration that does not carry the fact is a missing premise and not a
+ * contradiction. `perRow` is the schema's own statement that the observation,
+ * not the declaration, decides — so it too is unproven here.
+ */
+export function unitsCommensurable(a: UnitDecl | undefined, b: UnitDecl | undefined): "yes" | "no" | "unknown" {
+  if (!a || !b) return "unknown";
+  if (a.perRow === true || b.perRow === true) return "unknown";
+  const au = a.units ?? [];
+  const bu = b.units ?? [];
+  if (au.length === 0 || bu.length === 0) return "unknown";
+  const ac = a.conversions ?? [];
+  const bc = b.conversions ?? [];
+  const shares = au.some((u) => bu.includes(u) || bc.includes(u)) || bu.some((u) => ac.includes(u));
+  return shares ? "yes" : "no";
+}
+
+function readPart(part: CompositePart, input: CompositeInput): PartVerdict {
+  if (part.kind === "composite") return judgeComposite({ ...input, composite: part.composite });
+  const { program } = part;
+  const spec = TASK_INVARIANTS[program.task];
+  if ("notEnumerated" in spec) {
+    return unprovenComposition(
+      spec.notEnumerated,
+      "part",
+      `the part declares the ${program.task} task, which this experiment does not enumerate, so what it preserves is not established`,
+    );
+  }
+  const judgment = judgeOperation(input.structure, program.operation, input.evidence);
+  if (judgment.kind === "refused") return refusedComposition(judgment.causes, "part", judgment.reason);
+  if (judgment.kind === "unproven") return unprovenComposition(judgment.obligation, "part", judgment.reason);
+  const facts = judgment.facts;
+  if (!relationProgramIsSound(program, facts, program.task, input.inventory)) {
+    return refusedComposition([], "part", "the part is not a program the enumerator retains: one of its own premises is unsatisfied");
+  }
+  const channels = [program.dimension, program.measure].sort();
+  const units: Partial<Record<Channel, UnitDecl>> = {};
+  const transformations: Partial<Record<Channel, Transformation>> = {};
+  if (facts.dimension.unit) units[program.dimension] = facts.dimension.unit;
+  if (facts.measure.unit) units[program.measure] = facts.measure.unit;
+  transformations[program.dimension] = facts.dimension.transformation;
+  transformations[program.measure] = facts.measure.transformation;
+  // An atomic projection IS one coordinate space, so each of its channels
+  // presents exactly one scale. That is what a parent layer reads.
+  const profile: Partial<Record<Channel, ScalePolicy>> = {};
+  for (const ch of channels) profile[ch] = "shared";
+  return {
+    kind: "retained",
+    channels,
+    units,
+    transformations,
+    profile,
+    claims: inducedClaims(program, facts),
+    tasks: [program.task],
+    probe: { coordinate: program.coordinate, baseline: program.baseline, task: program.task, facts },
+  };
+}
+
+function mergeReadings(parts: PartReading[]): PartReading {
+  const channels = [...new Set(parts.flatMap((p) => p.channels))].sort();
+  const units: Partial<Record<Channel, UnitDecl>> = {};
+  const transformations: Partial<Record<Channel, Transformation>> = {};
+  const profile: Partial<Record<Channel, ScalePolicy>> = {};
+  const claims = new Set<Claim>();
+  const tasks = new Set<Task>();
+  for (const p of parts) {
+    for (const ch of p.channels) {
+      if (p.units[ch] && !units[ch]) units[ch] = p.units[ch];
+      if (p.transformations[ch] && !transformations[ch]) transformations[ch] = p.transformations[ch];
+      profile[ch] = p.profile[ch] ?? "shared";
+    }
+    p.claims.forEach((c) => claims.add(c));
+    p.tasks.forEach((t) => tasks.add(t));
+  }
+  return { kind: "retained", channels, units, transformations, profile, claims: [...claims].sort(), tasks: [...tasks].sort() };
+}
+
+/**
+ * `layer` — several projections over ONE coordinate space with shared scales.
+ *
+ * The rule reads the parts and the declaration and nothing else. A channel two
+ * parts both read is one scale over that one space, so the layer must declare it
+ * shared: declaring it unshared IS the dual-axis illegality, and declaring
+ * nothing does not make it unshared, because marks in one space imply one scale.
+ * A channel only one part reads shares nothing, so a declaration there is inert.
+ */
+function judgeLayer(c: LayerComposite, parts: PartReading[]): CompositeVerdict {
+  const merged = mergeReadings(parts);
+  for (const ch of merged.channels) {
+    const users = parts.filter((p) => p.channels.includes(ch));
+    if (users.length < 2) continue;
+    const declared = c.sharing[ch];
+    if (declared !== "shared") {
+      return refusedComposition(
+        ["REL_LAYER_SCALE_UNSHARED"],
+        "combinator",
+        `the parts share ${ch} over one coordinate space and the layer declares ${declared ? `it ${declared}` : "no sharing for it"}; marks in one space imply one scale`,
+      );
+    }
+    // A part that exposes the channel free is a sub-composite whose own
+    // sub-projections are separately scaled, so there is no one scale to share.
+    const free = users.find((p) => p.profile[ch] === "free");
+    if (free) {
+      return refusedComposition(
+        ["REL_LAYER_SCALE_UNSHARED"],
+        "combinator",
+        `the layer shares ${ch} and an operand exposes it free, so the layer has no single scale over one coordinate space`,
+      );
+    }
+    // DIMENSIONAL ANALYSIS IS A QUESTION ABOUT QUANTITY. A shared nominal
+    // channel carries the identity of each case, not a magnitude, so it has no
+    // unit to commensurate and asking for one would refuse every lawful layer
+    // whose parts share a label channel — which is most of them. The question is
+    // put only where at least two parts read the channel as a quantity.
+    const quantitative = users.filter((p) => {
+      const transformation = p.transformations[ch];
+      return transformation === "interval" || transformation === "ratio";
+    });
+    if (quantitative.length < 2) continue;
+    const verdicts = quantitative.map((p) => unitsCommensurable(quantitative[0]!.units[ch], p.units[ch]));
+    if (verdicts.includes("no")) {
+      return refusedComposition(
+        ["REL_UNIT_INCOMMENSURABLE_SHARED_SCALE"],
+        "combinator",
+        `the parts share the ${ch} scale and their declared units are not convertible, so dimensional analysis fails across it`,
+      );
+    }
+    if (verdicts.includes("unknown")) {
+      return unprovenComposition(
+        "unit:commensurable",
+        "combinator",
+        `the parts share the ${ch} scale and a part's declaration does not carry the unit, so commensurability across it is not established`,
+      );
+    }
+  }
+  return { ...merged, combinator: "layer" };
+}
+
+/**
+ * `facet` — repeat a projection over a partition with a declared scale policy.
+ *
+ * Both policies are legal and they are not a validity enum: `shared` asserts
+ * cross-panel comparability and `free` trades it for resolution. What is
+ * ill-typed is declaring NEITHER, because the trade is a claim.
+ *
+ * The rule deliberately does not read the parts' own profiles. A facet's policy
+ * governs ACROSS panels; a part's profile governs WITHIN one. Consulting the
+ * parts here would make a facet of a shared-scale layer look contradictory when
+ * it is not.
+ */
+function judgeFacet(c: FacetComposite, parts: PartReading[]): CompositeVerdict {
+  const merged = mergeReadings(parts);
+  const profile: Partial<Record<Channel, ScalePolicy>> = {};
+  let anyShared = false;
+  for (const ch of merged.channels) {
+    const declared = c.policy[ch];
+    if (declared !== "shared" && declared !== "free") {
+      return refusedComposition(
+        ["REL_FACET_SCALE_POLICY_UNDECLARED"],
+        "combinator",
+        `the panels read ${ch} and the facet declares no scale policy for it; cross-facet comparability is a claim, and leaving the policy undeclared is ill-typed`,
+      );
+    }
+    profile[ch] = declared;
+    if (declared === "shared") anyShared = true;
+  }
+  const claims = new Set(merged.claims);
+  if (anyShared) claims.add("cross-panel-comparability");
+  return { ...merged, combinator: "facet", profile, claims: [...claims].sort() };
+}
+
+/**
+ * `embed` — a projection as the value of a cell in a tabular projection.
+ *
+ * The embedded projection is typed against the cell's CHANNEL BUDGET. The
+ * question is whether the budget can induce the claims the declared task
+ * requires, asked of the same capacity table every other rule reads: a cell with
+ * position but a truncated baseline induces difference comparability and not
+ * ratio comparability, so it cannot serve a magnitude comparison however
+ * convenient the arithmetic would be.
+ */
+function judgeEmbed(c: EmbedComposite, part: PartReading): CompositeVerdict {
+  if (!part.probe) {
+    return unprovenComposition(
+      "invariant:cell-budget",
+      "combinator",
+      "the embedded part is a sub-composite, and this experiment types a cell budget against an atomic projection only",
+    );
+  }
+  const spec = TASK_INVARIANTS[part.probe.task];
+  if ("notEnumerated" in spec) {
+    return unprovenComposition(spec.notEnumerated, "part", `the embedded part declares the ${part.probe.task} task, which this experiment does not enumerate`);
+  }
+  const inCell = new Set<Claim>();
+  for (const ch of c.budget) {
+    if (!CAPACITY[ch].carries.includes(part.probe.facts.measure.transformation)) continue;
+    if (CAPACITY[ch].requiresCyclicOrWhole && !part.probe.facts.measure.cyclic) continue;
+    for (const claim of channelClaims(ch, c.cellBaseline, part.probe.facts)) inCell.add(claim);
+  }
+  const missing = spec.requires.filter((claim) => !inCell.has(claim));
+  if (missing.length > 0) {
+    return refusedComposition(
+      ["REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET"],
+      "combinator",
+      `the cell budget [${[...c.budget].join(", ")}] at a ${c.cellBaseline} baseline induces ${[...inCell].sort().join(", ") || "nothing"}, and the ${part.probe.task} task requires ${missing.join(", ")}`,
+    );
+  }
+  return { ...part, combinator: "embed", claims: [...new Set([...part.claims, ...inCell])].sort() };
+}
+
+/**
+ * Judge a composite. The parts run first, so a part's own verdict — including its
+ * own cause — reaches the caller before any combinator rule has had a chance to
+ * replace it with a composite-shaped one.
+ */
+export function judgeComposite(input: CompositeInput): CompositeVerdict {
+  const { composite } = input;
+  const parts = composite.combinator === "embed" ? [composite.part] : composite.parts;
+  const readings: PartReading[] = [];
+  for (const part of parts) {
+    const reading = readPart(part, input);
+    // ATTRIBUTION IS RE-STATED AT EACH LEVEL, deliberately. `from` answers "was
+    // this composite refused by its own combinator rule, or did a part arrive
+    // already refused?" — which is the question the compositional invariant
+    // turns on. Propagating a nested verdict's own `from` unchanged would make
+    // an outer composite appear to have refused by a rule it does not have,
+    // while propagating its cause unchanged is what keeps the fault named at
+    // the place it occurred.
+    if (reading.kind === "refused") return { ...reading, from: "part" };
+    if (reading.kind === "unproven") return { ...reading, from: "part" };
+    readings.push(reading);
+  }
+  switch (composite.combinator) {
+    case "layer":
+      return judgeLayer(composite, readings);
+    case "facet":
+      return judgeFacet(composite, readings);
+    case "embed":
+      return judgeEmbed(composite, readings[0]!);
+  }
+}
+
+/** A composite's claims, sorted, for a control that names them rather than counting. */
+export const compositeClaimSet = (v: CompositeVerdict): string[] => (v.kind === "retained" ? v.claims : []);
+
+/** The channels a composite presents, sorted. */
+export const compositeChannels = (v: CompositeVerdict): string[] => (v.kind === "retained" ? v.channels : []);
 
 /* --------------------------------------------------- form names, quarantined */
 
