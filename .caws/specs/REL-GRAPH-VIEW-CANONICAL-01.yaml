@@ -37,6 +37,14 @@ acceptance:
       Neither producer infers the universe from edges nor reconstructs a binding
       from field names; a missing population is unproven, a contradictory binding is
       refused, and the existing identity mutation still fails recovery comparison.
+  - id: A3
+    given: 'A new declaration family joins the analytical model.'
+    when: 'The applicable governance is read.'
+    then: >-
+      The family carries its own authority identity and its emitted schema is
+      drift-gated, the existing identities and their ledger stamps are unmoved with
+      no re-record, and the integration is not treated as retrospective stage-2
+      ratification.
 non_functional: {}
 contracts:
   - name: 'graph-view-canonical'
