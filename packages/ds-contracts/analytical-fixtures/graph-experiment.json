@@ -1,20 +1,15 @@
 {
-  "$comment": "The bounded graph experiment (REL-GRAPH-NODE-UNIVERSE-01). The discriminator is the PAIR: identical edges, different declared node populations. Regenerate with `tsx packages/ds-codegen/src/analytical/graph-projection.ts --record`; the test fails when this file and a fresh computation disagree.",
+  "$comment": "The isolated-node graph experiment (REL-GRAPH-NODE-UNIVERSE-01) and its binding-selection correction (REL-GRAPH-BINDING-SELECTS-01). The selection control is ONE source with TWO bindings. Regenerate with `tsx packages/ds-codegen/src/analytical/graph-projection.ts --record`; the test fails when this file and a fresh computation disagree.",
   "question": "Can one admitted relational structure preserve an independently declared node population and its edge incidence through two produced representations, without deriving the node population from the edges and without special-case consumer knowledge?",
-  "binding": {
-    "nodes": {
-      "relation": "nodes",
-      "keyField": "id"
-    },
-    "edges": {
-      "relation": "edges",
-      "fromField": "src",
-      "toField": "dst"
-    }
-  },
-  "pair": {
-    "A": {
-      "declaredNodes": [
+  "selectionControl": {
+    "what": "ONE named source holds two candidate node universes and one edge relation; only the BINDING changes",
+    "sourceRelations": [
+      "allNodes",
+      "connectedSet",
+      "links"
+    ],
+    "byAllNodes": {
+      "selected": [
         "n1",
         "n2",
         "n3"
@@ -29,8 +24,8 @@
         "n3"
       ]
     },
-    "B": {
-      "declaredNodes": [
+    "byConnectedSet": {
+      "selected": [
         "n1",
         "n2"
       ],
@@ -39,59 +34,102 @@
           "from": "n1",
           "to": "n2"
         }
-      ]
+      ],
+      "isolates": []
     },
-    "edgeRelationIdentical": true
+    "selectionChanged": true,
+    "edgeRelationIdentical": true,
+    "sourceRowsUnchanged": true
   },
   "recovered": {
-    "relational": {
-      "nodes": [
-        "n1",
-        "n2",
-        "n3"
-      ],
-      "edges": [
-        {
-          "from": "n1",
-          "to": "n2"
-        }
-      ],
-      "isolates": [
-        "n3"
-      ]
+    "allNodes": {
+      "relational": {
+        "nodes": [
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2"
+          }
+        ],
+        "isolates": [
+          "n3"
+        ]
+      },
+      "incidence": {
+        "nodes": [
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2"
+          }
+        ],
+        "isolates": [
+          "n3"
+        ]
+      },
+      "bothPreserve": true
     },
-    "incidence": {
-      "nodes": [
-        "n1",
-        "n2",
-        "n3"
-      ],
-      "edges": [
-        {
-          "from": "n1",
-          "to": "n2"
-        }
-      ],
-      "isolates": [
-        "n3"
-      ]
-    },
-    "bothPreserve": true
+    "connectedSet": {
+      "relational": {
+        "nodes": [
+          "n1",
+          "n2"
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2"
+          }
+        ],
+        "isolates": []
+      },
+      "incidence": {
+        "nodes": [
+          "n1",
+          "n2"
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "to": "n2"
+          }
+        ],
+        "isolates": []
+      },
+      "bothPreserve": true
+    }
   },
   "counterexample": {
     "what": "a representation that derives its node list from edge endpoints",
-    "derivedForA": [
+    "derivedForAllNodes": [
       "n1",
       "n2"
     ],
-    "derivedForB": [
+    "derivedForConnectedSet": [
       "n1",
       "n2"
     ],
     "distinguishesThePair": false
   },
+  "qualification": {
+    "keyThatResolvesButIsNotTheKey": "the graph binding is refused: allNodes.label resolves but is not the relation's declared key, so it does not establish a node identity",
+    "endpointOutsideTheSelectedUniverse": "the graph binding is refused: links.dst names n9, which the selected node universe does not contain",
+    "missingPopulation": {
+      "carried": "invariant:population-declared",
+      "reason": "no rows are supplied for the node universe allNodes"
+    },
+    "nodeUniverseIsTheEdgeRelation": "the graph binding is refused: the node universe and the incidence must be different relations: deriving one from the other is what this binding exists to prevent"
+  },
   "identityMutation": {
-    "what": "the isolated node's identity moves while the node count and the edge set are held fixed",
+    "what": "the isolated node's identity moves IN THE PRODUCED OUTPUT while the node count and the edge set are held fixed",
     "recovered": {
       "nodes": [
         "n1",
@@ -111,6 +149,30 @@
     "detected": true,
     "countAndEdgesUnchanged": true
   },
+  "decoderCollision": {
+    "what": "two distinct edges whose endpoint strings compose to the same joined text under a separator-keyed deduplication",
+    "input": [
+      {
+        "from": "a->b",
+        "to": "c"
+      },
+      {
+        "from": "a",
+        "to": "b->c"
+      }
+    ],
+    "recovered": [
+      {
+        "from": "a",
+        "to": "b->c"
+      },
+      {
+        "from": "a->b",
+        "to": "c"
+      }
+    ],
+    "bothSurvive": true
+  },
   "authorityGap": {
     "operand": {
       "from": "relation",
@@ -119,11 +181,12 @@
       "value": "field"
     },
     "declaresANodeRelation": false,
-    "note": "the authority's graph operand names an edge relation and two of its fields and no node relation; the binding is an explicit validated premise here, and moving it into the authority is separate work"
+    "note": "the authority's graph operand names an edge relation and two of its fields and no node relation; the binding is an explicit validated premise here, and what it OWNS is now measured so that placing it in the canonical model integrates measured semantics"
   },
   "nonClaims": [
-    "This is a bounded experiment on ONE three-node/one-edge fixture and its isolate-removal neighbor. It does not establish arbitrary graph realization, does not implement a layout, marks, interaction or accessibility, and does not establish the complete projection thesis.",
-    "THE AUTHORITY'S OWN GAP IS RECORDED, NOT REPAIRED. The relation model's `graph` operand names an edge relation and its endpoint fields and declares NO node relation, so nothing in the authority says the endpoints range over a named node key. This slice declares the binding as an explicit validated PREMISE; it does not extend the zod model, does not touch schema emission, and does not alter the stage-2 ledgers. A future slice that moves the binding into the authority is a different piece of work.",
+    "This is a bounded experiment on ONE source holding two candidate node universes and one edge relation, plus its isolate-removal neighbor. It does not establish arbitrary graph realization, does not implement a layout, marks, interaction or accessibility, and does not establish the complete projection thesis.",
+    "NO CANONICAL-MODEL INTEGRATION. The authority's graph operand declares no node relation, so the binding is an explicit validated PREMISE; the zod model, schema emission and the stage-2 ledgers are untouched. What this slice measures is what the binding OWNS — source selection, key qualification, endpoint membership and the resulting graph object — so that a later placement decision integrates measured semantics rather than a promising shape.",
+    "The graph tests construct the source directly and do not invoke the analytical judge, so they establish binding resolution, selection and representation preservation, not graph-specific semantic admission through the full authority.",
     "The two representations differ in shape, not in substrate: both are inspectable data structures, and neither is rendered."
   ]
 }
