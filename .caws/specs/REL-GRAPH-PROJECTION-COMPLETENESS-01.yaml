@@ -2,9 +2,10 @@ id: REL-GRAPH-PROJECTION-COMPLETENESS-01
 title: 'M2 opening: soundness, bounded completeness and the anti-lookup controls over the graph candidate space'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: graph-completeness
 created_at: '2026-09-18T18:07:25.458Z'
-updated_at: '2026-09-18T18:07:25.458Z'
+updated_at: '2026-09-18T18:07:26.897Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
