@@ -2,9 +2,11 @@ id: REL-GRAPH-PROJECTION-COMPLETENESS-01
 title: 'M2 opening: soundness, bounded completeness and the anti-lookup controls over the graph candidate space'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'M2 opening: the graph candidate space passes soundness per candidate, bounded completeness against an independently derived lawful set, membership pre-commits for capability removal and node-channel removal, a capacity-chosen invariance control, and zero/one/multiple cases with unproven, contradiction and unimplemented kept distinct.'
 created_at: '2026-09-18T18:07:25.458Z'
-updated_at: '2026-09-18T18:07:26.897Z'
+updated_at: '2026-09-18T18:14:40.438Z'
 created_by_session: 'session-69475cd2-20cf-4633-9893-09967382f4d8'
 blast_radius:
   modules:
