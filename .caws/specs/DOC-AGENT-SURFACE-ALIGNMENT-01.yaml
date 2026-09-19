@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "At main 0ff90564: grep -c 'unity + godot' => AGENTS.md:1, CLAUDE.md:1 (--target=all comments now read '5 web + react-native + figma + swiftui + jetpack-compose + unity + godot'); grep -c '`unity`, `godot`, or `all`' README.md => 1 (flag table). Authorities: jq '.targets | length' fsds.targets.json => 11 with ids ending 'unity godot'; registry.ts:331-349 registers both into the configured set that powers --target=all; pnpm run generate:unity (--target=unity) is a live package.json script."
     recorded_at: "2026-09-19T18:31:47.955Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "At main 0ff90564: ls packages | wc -l => 17; AGENTS.md and CLAUDE.md packages blocks enumerate all 17 dirs (both gained ds-react-native, ds-swiftui, ds-jetpack-compose, ds-swift-smoke, ds-compose-smoke, ds-unity, ds-godot; AGENTS.md also gained ds-iconography; README gained ds-unity/ds-godot); grep -c '^pnpm run audit:' => 10 in AGENTS.md and 10 in CLAUDE.md, matching package.json audit:* scripts and the pre-push/CI audit groups; dead-slots now described as 'Zero-gap component token consumption' in both (grep => 1 each), matching scripts/dead-slot-audit/audit.mjs:1-3 header; README ledger-dir list includes carrier-reachability-audit (grep => 1). Gates on the landed tracked tree: node scripts/docs-claims-check.mjs => 'OK — 84 marked claim(s) match derived values; 11 verified stamp(s)' and node scripts/docs-link-check.mjs => 'OK — 110 relative .md link(s) resolve'."
+    recorded_at: "2026-09-19T18:31:48.792Z"
