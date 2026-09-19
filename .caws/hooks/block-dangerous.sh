@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 1,17
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -63,18 +63,87 @@ caws_source_lib emit.sh 2>/dev/null || true
 # session-id resolution onto the SAME precedence every other surface uses.
 # Best-effort source — a missing helper falls back to the inline chain below.
 [[ -f "$SCRIPT_DIR/lib/session-id.sh" ]] && source "$SCRIPT_DIR/lib/session-id.sh"
+# shellcheck source=lib/agent-pid.sh
+# DANGER-LATCH-QUARANTINE-TRAP-001: resolve_agent_pid_with_start supplies the
+# ancestor agent-process identity used to (a) stamp the sentinel at arm time
+# and (b) verify the kill target before any escalation signal. Best-effort —
+# a missing lib degrades escalation to block-only (never to an unverified
+# kill), matching agent-pid.sh's own fail-open contract.
+[[ -f "$SCRIPT_DIR/lib/agent-pid.sh" ]] && source "$SCRIPT_DIR/lib/agent-pid.sh"
 
-# The sticky-latch carve-out (see the latch-armed branch below) exempts
-# read-only commands AND the reset invocation: a latched session can still run
-# `git status`, `ls`, `cat`, etc. and the reset itself. So a latch does NOT
-# freeze "every Bash call" — only MUTATING / capability-risk commands re-block.
-_LATCH_SCOPE_NOTE="subsequent MUTATING / capability-risk Bash commands will block until a human resets the latch; read-only commands (git status, ls, cat, …) and the reset itself still run"
+# DANGER-LATCH-QUARANTINE-TRAP-001: the armed sentinel is a TRAP, not a sticky
+# warning. A trapped session is quarantined: only a fixed read-only allowlist
+# (single simple commands) and the reset invocation run; EVERYTHING else —
+# including classifier-allowed mutators like git commit and the caws CLI —
+# blocks, is recorded as a strike, and the first such attempt escalates to
+# terminating the session's agent process (identity-verified SIGTERM, on
+# surfaces where CAWS_TRAP_KILL is enabled; see agent-surface.sh).
+
+# Render the escalation disposition of THE SURFACE THIS SESSION IS ON.
+#
+# The message used to describe surfaces in general ("on surfaces with kill
+# escalation enabled, the first such attempt ends this session's process"),
+# which left every agent unable to tell whether the sentence was about them. On
+# a shared-process host — dsh, IDE hosts, opencode — it never is, because the
+# pid there names the host, not the offender. An agent that reads a threat
+# meant for someone else is miscalibrated in one direction; one that reads
+# "no kill" as "no consequence" is miscalibrated far worse.
+#
+# So the disabled wording states the quarantine's full force in the same
+# breath. That is not softening: the quarantine is surface-INDEPENDENT. Only
+# the SIGTERM is gated (see trap_escalate below). Deny-by-default, the
+# read-only allowlist, strike recording and the human-only reset run
+# everywhere, and cover the file tools as well as Bash.
+#
+# CAWS_TRAP_KILL is resolved by agent-surface.sh, sourced above, so the value
+# is already settled here.
+trap_escalation_note() {
+  case "${CAWS_TRAP_KILL:-0}" in
+    1)
+      printf '%s' "On THIS surface the first such attempt also ends this session's process (identity-verified SIGTERM to the agent pid)."
+      ;;
+    dryrun)
+      # dryrun runs the whole verification path and stops at the signal
+      # boundary, so promising an ended process would be a lie.
+      printf '%s' "On THIS surface kill escalation is in dry-run: the agent process is identified and logged, but no signal is sent."
+      ;;
+    *)
+      printf '%s' "THIS surface does not process-kill (kill escalation is disabled here), which changes nothing about the quarantine: every further Bash command and file mutation stays denied and recorded until a human clears it."
+      ;;
+  esac
+}
+
+_TRAP_ESCALATION_NOTE="$(trap_escalation_note)"
+_LATCH_SCOPE_NOTE="the session is QUARANTINED: only fixed read-only commands and the reset itself run; every other Bash attempt is blocked and recorded as a strike. $_TRAP_ESCALATION_NOTE"
 
 danger_state_dir() {
   local project_dir="${CAWS_PROJECT_DIR:-.}"
   local state_dir="$project_dir/${CAWS_VENDOR_DIR}/hooks/state"
-  mkdir -p "$state_dir"
+  # DANGER-LATCH-TRAP-WRITE-EDIT-001: --no-create lets the file-tool trap
+  # check ASK whether a sentinel exists without creating the state dir as a
+  # side effect of every Write/Edit in every repo it is installed into.
+  [[ "${1:-}" == "--no-create" ]] || mkdir -p "$state_dir"
   printf '%s\n' "$state_dir"
+}
+
+# Render a complete human-shell command. An immutable snapshot's path cannot
+# identify the governed project, and the human may be standing in another repo.
+# Quote every value as a shell word, including paths and the payload session id.
+danger_recovery_command() {
+  local project_dir="${CAWS_PROJECT_DIR:-.}"
+  local hooks_dir="${CAWS_HOOKS_DIR:-$SCRIPT_DIR}"
+  local machine=0
+  [[ "${CAWS_MACHINE_RUNTIME:-0}" == 1 ]] && machine=1
+  if [[ -d "$project_dir" ]]; then
+    project_dir="$(cd "$project_dir" && pwd -P)"
+  fi
+  case "$hooks_dir" in
+    /*) ;;
+    *) hooks_dir="$project_dir/$hooks_dir" ;;
+  esac
+  printf 'env CAWS_MACHINE_RUNTIME=%s CAWS_PROJECT_DIR=%q CAWS_AGENT_SURFACE=%q bash %q --session %q --reason %q' \
+    "$machine" "$project_dir" "$CAWS_AGENT_SURFACE" \
+    "$hooks_dir/reset-danger-latch.sh" "$1" '<why this is safe>'
 }
 
 # Shared session-id->safe-filename transform.
@@ -90,7 +159,7 @@ _danger_safe_session() {
 danger_latch_file() {
   local safe_session
   safe_session=$(_danger_safe_session "$1")
-  printf '%s/danger-latch-%s.json\n' "$(danger_state_dir)" "$safe_session"
+  printf '%s/danger-latch-%s.json\n' "$(danger_state_dir "${2:-}")" "$safe_session"
 }
 
 # Warn-marker sibling of the latch file. DANGER-LATCH-APPROVAL-AND-FEEDBACK-001
@@ -127,6 +196,25 @@ record_danger_latch() {
       command: $command,
       message: "Dangerous command boundary engaged. User reset required before more Bash commands may run in this session."
     }' > "$file"
+  # DANGER-LATCH-QUARANTINE-TRAP-001: stamp the ancestor agent-process
+  # identity at arm time so escalation can verify the kill target later —
+  # pid drift, PID reuse (start-time mismatch), and comm mismatch all refuse
+  # to kill. Best-effort: a failed resolution leaves an unstamped sentinel,
+  # which escalation treats as "unverifiable, hold the kill".
+  if command -v jq >/dev/null 2>&1; then
+    local _tpid="" _tstart="" _tcomm=""
+    {
+      read -r _tpid
+      read -r _tstart
+      read -r _tcomm
+    } < <(trap_resolve_agent_identity) || true
+    if [[ -n "$_tpid" ]]; then
+      local _ttmp="${file}.ident.$$"
+      jq --arg pid "$_tpid" --arg st "${_tstart:-}" --arg cm "${_tcomm:-}" \
+        '. + {agent_pid: $pid, agent_pid_started_at: $st, agent_pid_comm: $cm}' \
+        "$file" > "$_ttmp" 2>/dev/null && mv "$_ttmp" "$file" || rm -f "$_ttmp" 2>/dev/null || true
+    fi
+  fi
 }
 
 # Classify a command via classify_command.py, echoing the decision
@@ -138,21 +226,258 @@ classify_decision() {
     printf 'unavailable'
     return 0
   fi
+  # CAWS-HOOKPACK-HOME-UNSET-ROOT-AUTHORITY-ALIAS-001: only pass --home when
+  # HOME is actually known. classify_command.py's own default (Path.home())
+  # can still resolve a real home via the passwd database even when $HOME is
+  # unset in the environment; passing an explicit empty string would instead
+  # resolve to the CURRENT DIRECTORY there, weakening its "recursive delete
+  # targets home directory" hard-block by aliasing home to cwd.
+  local -a _classify_args=(--repo-root "${CAWS_PROJECT_DIR:-.}")
+  [[ -n "${HOME:-}" ]] && _classify_args+=(--home "$HOME")
+  _classify_args+=(--cwd "$(pwd)")
   local result
-  result=$(printf '%s' "$cmd" | python3 "$classifier" \
-    --repo-root "${CAWS_PROJECT_DIR:-.}" \
-    --home "$HOME" \
-    --cwd "$(pwd)" 2>/dev/null) || {
+  result=$(printf '%s' "$cmd" | python3 "$classifier" "${_classify_args[@]}" 2>/dev/null) || {
     printf 'unavailable'
     return 0
   }
   printf '%s' "$result" | jq -r '.decision // "ask"' 2>/dev/null || printf 'ask'
 }
 
-# Does this command INVOKE the pack's own reset-danger-latch.sh escape hatch?
+# Does this command INVOKE the pack's own reset-dangerous-latch.sh escape hatch?
+# DANGER-LATCH-RESET-EXEMPT-ANCHOR-001 (port of consumer hardening
+# STERLING-LATCH-RESET-PREFIX-EXEMPTS-UNEXAMINED-REMAINDER-01 / DOC-TH-MA-001
+# §7): the exemption is the trap's ONLY exit, so it must admit exactly ONE
+# simple invocation. The pre-fix prefix-match exempted
+# `reset-danger-latch.sh ... && <arbitrary remainder>` — a compound command
+# rode the exemption past the trap unexamined. Hardened shape, all
+# end-anchored (nothing may follow the invocation):
+#   - optional benign prefixes: `cd <dir> &&`, `VAR=value` assignments, and
+#     `env VAR=value ...` (the emitted machine recovery command's shape)
+#   - the reset script, optionally invoked via bash/sh/. with a path
+#   - arguments free of command separators, substitution metacharacters
+#     ($ backtick), parentheses, and redirection operators
+# Fails closed: any shape this cannot prove simple is NOT exempted.
 is_reset_latch_invocation() {
   local cmd="$1"
-  printf '%s' "$cmd" | grep -qE '^[[:space:]]*((bash|sh|\.)[[:space:]]+)?([^[:space:];|&]*/)?reset-danger-latch\.sh([[:space:]]|$)'
+  printf '%s' "$cmd" | grep -qE \
+    '^[[:space:]]*((cd[[:space:]]+[^;&|`$<>()]+&&[[:space:]]*)|(env[[:space:]]+[A-Za-z_][A-Za-z0-9_]*=[^;&|`$<>()[:space:]]+([[:space:]]+|$))|([A-Za-z_][A-Za-z0-9_]*=[^;&|`$<>()[:space:]]+[[:space:]]+))*[[:space:]]*((bash|sh|\.)[[:space:]]+)?([^[:space:];&|`$<>()]*/)?reset-danger-latch\.sh([[:space:]]+[^;&|`$<>()]*)?[[:space:]]*$'
+}
+
+# --- DANGER-LATCH-QUARANTINE-TRAP-001: quarantine admission + escalation ---
+# While the sentinel exists the session is quarantined: deny-by-default with a
+# fixed read-only allowlist, an explicit enlist-help refusal, strike recording,
+# and an identity-verified kill escalation. Every helper fails toward DENY for
+# admission and toward NO-SIGNAL for the kill.
+
+_latch_in_list() {
+  local item="$1" list="$2" entry
+  for entry in $list; do
+    if [[ "$entry" == "$item" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Fixed read-only admission set. Single simple commands ONLY — no separators,
+# pipes, backgrounding, redirects, or $-substitution shapes. Strict by design:
+# metacharacters inside quoted arguments also deny, because safely parsing
+# shell quoting in this path is harder than denying (fail closed).
+_LATCH_RO_BINS="cat ls head tail wc pwd echo printf grep rg diff stat file jq git caws"
+_LATCH_RO_GIT_SUBS="status diff log show rev-parse"
+_LATCH_RO_CAWS_SUBS="status doctor help version"
+_LATCH_RO_CAWS_PAIRS="scope:show scope:check worktree:list worktree:review specs:list specs:show agents:list agents:show message:poll message:inbox message:history message:status"
+
+latch_read_only_command() {
+  local cmd="$1"
+  if printf '%s' "$cmd" | grep -qE '[;|&><`($]'; then
+    return 1
+  fi
+  if [[ "$cmd" == *$'\n'* || "$cmd" == *$'\r'* ]]; then
+    return 1
+  fi
+  local -a argv
+  read -r -a argv <<< "$cmd"
+  if [[ "${#argv[@]}" -lt 1 ]]; then
+    return 1
+  fi
+  local bin="${argv[0]##*/}"
+  _latch_in_list "$bin" "$_LATCH_RO_BINS" || return 1
+  if [[ "$bin" == "git" ]]; then
+    if [[ "${#argv[@]}" -eq 1 ]]; then
+      return 0
+    fi
+    local sub="${argv[1]}"
+    _latch_in_list "$sub" "$_LATCH_RO_GIT_SUBS" || return 1
+    # Hostile path: a git alias shadowing an allowlisted subcommand executes
+    # arbitrary shell (alias.status=!rm -rf ...). Admit only when no alias of
+    # that name is configured for this repo/user.
+    if [[ -n "$(git -C "${CAWS_PROJECT_DIR:-.}" config --get "alias.$sub" 2>/dev/null || true)" ]]; then
+      return 1
+    fi
+    return 0
+  fi
+  if [[ "$bin" == "caws" ]]; then
+    if [[ "${#argv[@]}" -eq 1 ]]; then
+      return 0
+    fi
+    local sub="${argv[1]}"
+    if _latch_in_list "$sub" "$_LATCH_RO_CAWS_SUBS"; then
+      return 0
+    fi
+    if [[ "${#argv[@]}" -ge 3 ]] && _latch_in_list "${sub}:${argv[2]}" "$_LATCH_RO_CAWS_PAIRS"; then
+      return 0
+    fi
+    return 1
+  fi
+  return 0
+}
+
+# A quarantined session must not enlist a peer to run what it cannot.
+is_caws_enlist_invocation() {
+  local cmd="$1"
+  local -a argv
+  read -r -a argv <<< "$cmd"
+  local bin="${argv[0]:-}"
+  bin="${bin##*/}"
+  if [[ "$bin" != "caws" ]]; then
+    return 1
+  fi
+  if [[ "${argv[1]:-}" != "message" ]]; then
+    return 1
+  fi
+  if [[ "${argv[2]:-}" == "send" || "${argv[2]:-}" == "reply" ]]; then
+    return 0
+  fi
+  return 1
+}
+
+# Append one JSON escalation-audit line. Never fatal.
+trap_log_event() {
+  local session_id="$1" verdict="$2" action="$3" detail="$4" command="$5"
+  local log_dir="${CAWS_PROJECT_DIR:-.}/${CAWS_VENDOR_DIR}/logs"
+  local log_file="$log_dir/danger-latch-escalations.log"
+  command -v jq >/dev/null 2>&1 || return 0
+  mkdir -p "$log_dir" 2>/dev/null || true
+  jq -c -n \
+    --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    --arg session "$session_id" \
+    --arg verdict "$verdict" \
+    --arg action "$action" \
+    --arg detail "$detail" \
+    --arg command "$command" \
+    '{ts:$ts,session_id:$session,verdict:$verdict,action:$action,detail:$detail,command:$command}' \
+    >> "$log_file" 2>/dev/null || true
+}
+
+# Record a quarantined denial as a strike in the sentinel. Never fatal.
+trap_record_strike() {
+  local file="$1" command="$2"
+  command -v jq >/dev/null 2>&1 || return 0
+  local tmp="${file}.strike.$$"
+  jq --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+     --arg cmd "$(printf '%s' "$command" | head -c 200)" \
+     '.trap_strikes = ((.trap_strikes // 0) + 1) | .trap_last_strike_ts = $ts | .trap_last_strike_command = $cmd' \
+     "$file" > "$tmp" 2>/dev/null && mv "$tmp" "$file" || rm -f "$tmp" 2>/dev/null || true
+}
+
+# Live ancestor agent-process identity: prints "<pid>\n<start_epoch>\n<comm>".
+# Empty when the walk or the per-surface names are unavailable — callers treat
+# empty as "identity unresolvable, hold the kill" (never an unverified kill).
+trap_resolve_agent_identity() {
+  if ! command -v resolve_agent_pid_with_start >/dev/null 2>&1; then
+    return 0
+  fi
+  if [[ -z "${CAWS_AGENT_PROCESS_NAMES:-}" ]]; then
+    return 0
+  fi
+  local pid="" start="" comm=""
+  {
+    read -r pid
+    read -r start
+  } < <(resolve_agent_pid_with_start "${CAWS_AGENT_PROCESS_NAMES}") || true
+  if [[ -n "$pid" ]]; then
+    comm="$(ps -o comm= -p "$pid" 2>/dev/null || true)"
+    printf '%s\n%s\n%s\n' "$pid" "${start:-}" "${comm:-}"
+  fi
+  return 0
+}
+
+# Escalation: terminate the quarantined session's agent process. Every
+# failure degrades to "no signal sent" plus an audit line — an unverified
+# kill is strictly worse than no kill. Emits nothing; called AFTER the block
+# decision so the transcript already shows why the session is dying.
+trap_escalate() {
+  local latch_file="$1" session_id="$2" command="$3"
+  local threshold="${CAWS_TRAP_ESCALATION_THRESHOLD:-1}"
+  local strikes
+  strikes="$(jq -r '.trap_strikes // 0' "$latch_file" 2>/dev/null || printf '0')"
+  [[ "$strikes" =~ ^[0-9]+$ ]] || strikes=0
+  if (( strikes < threshold )); then
+    return 0
+  fi
+  # DANGER-LATCH-TRAP-KILL-DRYRUN-001: dryrun runs the whole verification path
+  # and stops at the signal boundary, so an operator can confirm the resolved
+  # target on a surface before enabling a real kill there. It is neither
+  # "disabled" (held) nor "enabled" (signal).
+  local kill_mode="${CAWS_TRAP_KILL:-0}"
+  if [[ "$kill_mode" != "1" && "$kill_mode" != "dryrun" ]]; then
+    trap_log_event "$session_id" "held" "no-kill" "kill escalation disabled for surface ${CAWS_AGENT_SURFACE:-unknown} (shared-process host or unset)" "$command"
+    return 0
+  fi
+  local pid="" start="" comm="" rec_pid="" rec_start="" rec_comm=""
+  {
+    read -r pid
+    read -r start
+    read -r comm
+  } < <(trap_resolve_agent_identity) || true
+  if [[ -z "$pid" ]]; then
+    trap_log_event "$session_id" "held" "no-kill" "agent pid unresolved (surface names or PID walk unavailable)" "$command"
+    return 0
+  fi
+  if [[ "$pid" == "1" || "$pid" == "$$" ]]; then
+    trap_log_event "$session_id" "held" "no-kill" "invalid kill target pid=$pid" "$command"
+    return 0
+  fi
+  if ! kill -0 "$pid" 2>/dev/null; then
+    trap_log_event "$session_id" "held" "no-kill" "agent process $pid already gone" "$command"
+    return 0
+  fi
+  rec_pid="$(jq -r '.agent_pid // ""' "$latch_file" 2>/dev/null || true)"
+  rec_start="$(jq -r '.agent_pid_started_at // ""' "$latch_file" 2>/dev/null || true)"
+  rec_comm="$(jq -r '.agent_pid_comm // ""' "$latch_file" 2>/dev/null || true)"
+  if [[ -n "$rec_pid" && "$rec_pid" != "$pid" ]]; then
+    trap_log_event "$session_id" "held" "no-kill" "pid drifted: armed=$rec_pid live=$pid" "$command"
+    return 0
+  fi
+  if [[ -n "$rec_start" && -n "$start" && "$rec_start" != "$start" ]]; then
+    trap_log_event "$session_id" "held" "no-kill" "start-time mismatch (PID reuse suspected): armed=$rec_start live=$start" "$command"
+    return 0
+  fi
+  if [[ -n "$rec_comm" && -n "$comm" && "$rec_comm" != "$comm" ]]; then
+    trap_log_event "$session_id" "held" "no-kill" "comm mismatch: armed=$rec_comm live=$comm" "$command"
+    return 0
+  fi
+  if [[ "$kill_mode" == "dryrun" ]]; then
+    # Identity verified by the same checks above; stop before signaling and
+    # leave durable evidence of what WOULD have been terminated.
+    trap_log_event "$session_id" "dryrun" "no-signal" "kill target verified: pid=$pid comm=${comm:-unknown} start=${start:-unknown} after strike $strikes — dry run, no signal sent" "$command"
+    local _dtmp="${latch_file}.dry.$$"
+    jq --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg pid "$pid" \
+       '.trap_dryrun_at = $ts | .trap_dryrun_pid = $pid' \
+       "$latch_file" > "$_dtmp" 2>/dev/null && mv "$_dtmp" "$latch_file" || rm -f "$_dtmp" 2>/dev/null || true
+    return 0
+  fi
+  if kill -TERM "$pid" 2>/dev/null; then
+    trap_log_event "$session_id" "escalated" "sigterm" "terminated agent process $pid (${comm:-unknown}) after strike $strikes" "$command"
+    local tmp="${latch_file}.esc.$$"
+    jq --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg pid "$pid" \
+       '.trap_escalated_at = $ts | .trap_escalated_pid = $pid' \
+       "$latch_file" > "$tmp" 2>/dev/null && mv "$tmp" "$latch_file" || rm -f "$tmp" 2>/dev/null || true
+  else
+    trap_log_event "$session_id" "held" "no-kill" "signal to $pid failed" "$command"
+  fi
+  return 0
 }
 
 # Read JSON input from the agent harness
@@ -177,19 +502,73 @@ else
 fi
 unset _PAYLOAD_SID
 
+# ── DANGER-LATCH-TRAP-WRITE-EDIT-001: the trap covers the FILE TOOLS too ────
+# The Bash-only branch below meant a quarantined session could still mutate
+# source, specs, and doctrine through Write/Edit. On kill-disabled surfaces
+# (server-shaped hosts, where no SIGTERM contains the session) that reduced
+# "quarantine" to "no shell mutations" — a claim the trap's own doctrine did
+# not qualify. A trapped session gets NO file-tool mutation: every Write/Edit
+# is denied, recorded as a strike, and escalated through the SAME
+# identity-verified path as Bash. Untrapped sessions are untouched: the lookup
+# uses --no-create, emits nothing, and exits 0.
+case "$TOOL_NAME" in
+  Write|Edit|NotebookEdit|MultiEdit)
+    if [[ -n "${SESSION_ID:-}" && "$SESSION_ID" != "unknown" ]]; then
+      WRITE_LATCH_FILE="$(danger_latch_file "$SESSION_ID" --no-create)"
+      if [[ -f "$WRITE_LATCH_FILE" ]]; then
+        WRITE_PATH="$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')"
+        trap_record_strike "$WRITE_LATCH_FILE" "$TOOL_NAME $WRITE_PATH"
+        REASON="CAWS command-safety: this session is QUARANTINED (danger trap) and file mutations are refused — the trap covers Bash AND the file tools, so there is no read-only Write/Edit. The attempt to $TOOL_NAME '$WRITE_PATH' was recorded as a strike. $_TRAP_ESCALATION_NOTE This is a human-review boundary: do not retry the write, do not route it through another tool, and do not ask another agent to make it. You, the agent, CANNOT clear this in-band: the reset is human-only by design. Ask the USER to run, from their own shell: $(danger_recovery_command "$SESSION_ID")  (or --all to clear every latch). Sentinel: $WRITE_LATCH_FILE"
+        emit_block_json "$REASON"
+        trap_escalate "$WRITE_LATCH_FILE" "$SESSION_ID" "$TOOL_NAME $WRITE_PATH"
+      fi
+    fi
+    exit 0
+    ;;
+esac
+
 # Only check Bash tool
 if [[ "$TOOL_NAME" != "Bash" ]] || [[ -z "$COMMAND" ]]; then
   exit 0
 fi
 
+RECOVERY_COMMAND="$(danger_recovery_command "$SESSION_ID")"
 LATCH_FILE="$(danger_latch_file "$SESSION_ID")"
 if [[ -f "$LATCH_FILE" ]]; then
+  # DANGER-LATCH-QUARANTINE-TRAP-001: the sentinel means QUARANTINE. Only the
+  # reset invocation and the fixed read-only allowlist run; everything else is
+  # denied, recorded as a strike, and escalated (identity-verified SIGTERM on
+  # kill-enabled surfaces). Classifier "allow" no longer admits anything here.
   if is_reset_latch_invocation "$COMMAND"; then
     exit 0
   fi
-  if [[ "$(classify_decision "$COMMAND")" == "allow" ]]; then
+  if is_caws_enlist_invocation "$COMMAND"; then
+    trap_record_strike "$LATCH_FILE" "$COMMAND"
+    REASON="CAWS command-safety: this session is QUARANTINED (danger trap) and cannot enlist another agent to do what it cannot: caws message send / caws message reply are refused while trapped. The attempt was recorded as a strike. $_LATCH_SCOPE_NOTE — you cannot reset it yourself. Ask the USER to run, from their own shell: $RECOVERY_COMMAND  (or --all to clear every latch). Sentinel: $LATCH_FILE. Command was: $COMMAND"
+    emit_block_json "$REASON"
+    trap_escalate "$LATCH_FILE" "$SESSION_ID" "$COMMAND"
     exit 0
   fi
+  # DANGER-LATCH-TRAP-CLASSIFIER-INTERSECTION-001: the allowlist is a
+  # NECESSARY condition, not a sufficient one. The pre-fix branch made it an
+  # ALTERNATIVE to the classifier for allowlisted binaries, so `cat` with any
+  # separator-free path was admitted while trapped — including credential
+  # files the classifier explicitly denies (`cat ~/.ssh/id_rsa`,
+  # `cat /etc/passwd`, `cat .env`), exactly when the session is under
+  # suspicion. Admission is now the INTERSECTION: allowlist AND classifier
+  # "allow". ask-class denies too (a quarantined session cannot prompt a
+  # human), and an unresolvable classifier ("unavailable") fails closed. The
+  # corpus harness over 4,759 real commands is the falsifier: false admits -> 0.
+  TRAP_INTERSECTION_NOTE=""
+  if latch_read_only_command "$COMMAND"; then
+    TRAP_CLS_DECISION="$(classify_decision "$COMMAND")"
+    if [[ "$TRAP_CLS_DECISION" == "allow" ]]; then
+      exit 0
+    fi
+    TRAP_INTERSECTION_NOTE=" This command IS read-only in shape and on the fixed allowlist, but the classifier refuses it (decision: ${TRAP_CLS_DECISION:-unavailable}), so the intersection denies it."
+  fi
+
+  trap_record_strike "$LATCH_FILE" "$COMMAND"
 
   ORIG_CMD=""
   ORIG_WHY=""
@@ -197,14 +576,17 @@ if [[ -f "$LATCH_FILE" ]]; then
     ORIG_CMD=$(jq -r '.command // ""' "$LATCH_FILE" 2>/dev/null)
     ORIG_WHY=$(jq -r '.reason // ""' "$LATCH_FILE" 2>/dev/null)
   fi
-  TRIGGER_NOTE="The latch was engaged earlier in this session"
+  TRIGGER_NOTE="The trap was engaged earlier in this session"
   if [[ -n "$ORIG_CMD" ]]; then
     TRIGGER_NOTE="$TRIGGER_NOTE by this command: \`${ORIG_CMD%%$'\n'*}\`"
-    [[ -n "$ORIG_WHY" ]] && TRIGGER_NOTE="$TRIGGER_NOTE (reason: $ORIG_WHY)"
-    TRIGGER_NOTE="$TRIGGER_NOTE — NOT by the command you just ran. The latch is sticky for mutating commands, so they block until it is cleared (read-only commands and the reset itself are exempt)."
+    if [[ -n "$ORIG_WHY" ]]; then
+      TRIGGER_NOTE="$TRIGGER_NOTE (reason: $ORIG_WHY)"
+    fi
+    TRIGGER_NOTE="$TRIGGER_NOTE — NOT by the command you just ran. The trap is sticky: only fixed read-only commands and the reset itself run."
   fi
-  REASON="CAWS command-safety: a dangerous command was previously blocked or sent for approval in this session. $TRIGGER_NOTE This is a human-review boundary, not a retryable syntax error. Do not rephrase, wrap, reorder, alias, or indirectly invoke the command. You, the agent, CANNOT clear this in-band: the reset is human-only by design. Ask the USER to run, from their own shell (use --session with THIS session id, not --current): bash ${CAWS_HOOKS_DIR:-.caws/hooks}/reset-danger-latch.sh --session $SESSION_ID --reason \"<why this is safe>\"  (or --all to clear every latch). Sentinel: $LATCH_FILE"
+  REASON="CAWS command-safety: this session is QUARANTINED. $TRIGGER_NOTE$TRAP_INTERSECTION_NOTE This command is not admissible while trapped — trapped admission requires BOTH the fixed read-only allowlist AND a classifier allow — so it is blocked and the attempt was recorded as a strike. $_TRAP_ESCALATION_NOTE This is a human-review boundary, not a retryable syntax error. Do not rephrase, wrap, reorder, alias, or indirectly invoke anything to get around it, and do not ask another agent to run it for you. You, the agent, CANNOT clear this in-band: the reset is human-only by design. Ask the USER to run, from their own shell (use --session with THIS session id, not --current): $RECOVERY_COMMAND  (or --all to clear every latch). Sentinel: $LATCH_FILE"
   emit_block_json "$REASON"
+  trap_escalate "$LATCH_FILE" "$SESSION_ID" "$COMMAND"
   exit 0
 fi
 
@@ -260,17 +642,21 @@ fi
 CLASSIFIER="$SCRIPT_DIR/classify_command.py"
 if [[ ! -f "$CLASSIFIER" ]] || ! command -v python3 >/dev/null 2>&1; then
   record_danger_latch "$LATCH_FILE" "ask" "classifier unavailable" "$COMMAND"
-  REASON="CAWS command-safety: command classifier unavailable; dangerous-command safety cannot verify Bash semantics. The session danger latch is NOW ARMED (fail-closed). $_LATCH_SCOPE_NOTE — you cannot reset it yourself. Ask the USER to run: bash ${CAWS_HOOKS_DIR:-.caws/hooks}/reset-danger-latch.sh --session $SESSION_ID --reason \"<why this is safe>\". Command was: $COMMAND"
+  REASON="CAWS command-safety: command classifier unavailable; dangerous-command safety cannot verify Bash semantics. The session danger latch is NOW ARMED (fail-closed). $_LATCH_SCOPE_NOTE — you cannot reset it yourself. Ask the USER to run: $RECOVERY_COMMAND. Command was: $COMMAND"
   emit_ask_json "$REASON"
   exit 0
 fi
 
 REPO_ROOT="${CAWS_PROJECT_DIR:-.}"
 CLASSIFIER_STDERR=$(mktemp)
-RESULT=$(printf '%s' "$COMMAND" | python3 "$CLASSIFIER" \
-  --repo-root "$REPO_ROOT" \
-  --home "$HOME" \
-  --cwd "$(pwd)" 2>"$CLASSIFIER_STDERR") || {
+# CAWS-HOOKPACK-HOME-UNSET-ROOT-AUTHORITY-ALIAS-001: see classify_decision's
+# identical guard above -- omit --home when unknown so Python's own
+# Path.home() default (which can resolve via the passwd db) applies instead
+# of an explicit empty string aliasing home to the current directory.
+declare -a _CLASSIFY_ARGS=(--repo-root "$REPO_ROOT")
+[[ -n "${HOME:-}" ]] && _CLASSIFY_ARGS+=(--home "$HOME")
+_CLASSIFY_ARGS+=(--cwd "$(pwd)")
+RESULT=$(printf '%s' "$COMMAND" | python3 "$CLASSIFIER" "${_CLASSIFY_ARGS[@]}" 2>"$CLASSIFIER_STDERR") || {
   DIAG=$(head -c 200 "$CLASSIFIER_STDERR" 2>/dev/null || true)
   rm -f "$CLASSIFIER_STDERR"
   RESULT="{\"decision\":\"ask\",\"reason\":\"command classifier failed: ${DIAG:-unknown error}\",\"source\":\"classifier_error\",\"enforcement\":\"confirm\"}"
@@ -295,7 +681,7 @@ case "$DECISION" in
     ;;
   deny)
     record_danger_latch "$LATCH_FILE" "$DECISION" "$REASON" "$COMMAND"
-    FULL_REASON="CAWS command-safety: $REASON. This is a HARD BLOCK (catastrophic deny) and the session danger latch is NOW ARMED. $_LATCH_SCOPE_NOTE — you CANNOT reset it yourself. Do not rephrase, wrap, reorder, alias, or indirectly invoke this command (e.g. via 'command git ...', 'env ... git ...', 'bash -lc \"...\"', or 'git --bare init'). Ask the USER to run: bash ${CAWS_HOOKS_DIR:-.caws/hooks}/reset-danger-latch.sh --session $SESSION_ID --reason \"<why this is safe>\", then ask for the next step. Command was: $COMMAND"
+    FULL_REASON="CAWS command-safety: $REASON. This is a HARD BLOCK (catastrophic deny) and the session danger latch is NOW ARMED. $_LATCH_SCOPE_NOTE — you CANNOT reset it yourself. Do not rephrase, wrap, reorder, alias, or indirectly invoke this command (e.g. via 'command git ...', 'env ... git ...', 'bash -lc \"...\"', or 'git --bare init'). Ask the USER to run: $RECOVERY_COMMAND, then ask for the next step. Command was: $COMMAND"
     emit_block_json "$FULL_REASON"
     exit 0
     ;;
@@ -348,12 +734,12 @@ case "$DECISION" in
           exit 0
         fi
         record_danger_latch "$LATCH_FILE" "ask" "$REASON" "$COMMAND"
-        FULL_REASON="CAWS command-safety: $REASON. This is the SECOND capability-risk command this session — the first was a non-blocking warning; this one ARMS the session danger latch. $_LATCH_SCOPE_NOTE — you CANNOT reset it yourself. Do not rephrase, wrap, reorder, alias, or indirectly invoke the command to evade this. Ask the USER to confirm and run: bash ${CAWS_HOOKS_DIR:-.caws/hooks}/reset-danger-latch.sh --session $SESSION_ID --reason \"<why this is safe / approved>\", then proceed. Command was: $COMMAND"
+        FULL_REASON="CAWS command-safety: $REASON. This is the SECOND capability-risk command this session — the first was a non-blocking warning; this one ARMS the session danger latch. $_LATCH_SCOPE_NOTE — you CANNOT reset it yourself. Do not rephrase, wrap, reorder, alias, or indirectly invoke the command to evade this. Ask the USER to confirm and run: $RECOVERY_COMMAND, then proceed. Command was: $COMMAND"
         emit_block_json "$FULL_REASON"
         exit 0
       fi
       record_danger_latch "$LATCH_FILE" "ask" "$REASON" "$COMMAND"
-      FULL_REASON="CAWS command-safety: $REASON. This requires USER CONFIRMATION before it runs and the session danger latch is NOW ARMED (fail-closed: the classifier could not verify this command). $_LATCH_SCOPE_NOTE — you CANNOT reset it yourself. Do not rephrase, wrap, reorder, alias, or indirectly invoke the command to evade this. Ask the USER to confirm and run: bash ${CAWS_HOOKS_DIR:-.caws/hooks}/reset-danger-latch.sh --session $SESSION_ID --reason \"<why this is safe / approved>\", then proceed. Command was: $COMMAND"
+      FULL_REASON="CAWS command-safety: $REASON. This requires USER CONFIRMATION before it runs and the session danger latch is NOW ARMED (fail-closed: the classifier could not verify this command). $_LATCH_SCOPE_NOTE — you CANNOT reset it yourself. Do not rephrase, wrap, reorder, alias, or indirectly invoke the command to evade this. Ask the USER to confirm and run: $RECOVERY_COMMAND, then proceed. Command was: $COMMAND"
       emit_block_json "$FULL_REASON"
       exit 0
     fi
@@ -363,7 +749,7 @@ case "$DECISION" in
     ;;
   *)
     record_danger_latch "$LATCH_FILE" "ask" "classifier unknown decision: $DECISION" "$COMMAND"
-    FULL_REASON="CAWS command-safety: command classifier returned an unrecognized decision '$DECISION'. The session danger latch is NOW ARMED (fail-closed). $_LATCH_SCOPE_NOTE — you cannot reset it yourself. Ask the USER to run: bash ${CAWS_HOOKS_DIR:-.caws/hooks}/reset-danger-latch.sh --session $SESSION_ID --reason \"<why this is safe>\". Command was: $COMMAND"
+    FULL_REASON="CAWS command-safety: command classifier returned an unrecognized decision '$DECISION'. The session danger latch is NOW ARMED (fail-closed). $_LATCH_SCOPE_NOTE — you cannot reset it yourself. Ask the USER to run: $RECOVERY_COMMAND. Command was: $COMMAND"
     emit_ask_json "$FULL_REASON"
     exit 0
     ;;
