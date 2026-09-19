@@ -49,3 +49,12 @@ contracts:
   - name: 'slot-required-usage-binding'
     type: contract-test
     path: 'packages/ds-codegen/src/usage-composition.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Authored audit assertion in src/lib/render-usage.test.tsx ('supplies every consumer-supplied required region in every curated frame'): fails with the exact message '[USAGE-REQUIRED-SLOT-MISSING] <Component>[<frame>]: required region \"<r>\" not supplied'. Falsified by direct perturbation in the spec worktree: flipping Card.contract.json slots.actions.required false->true (the exact catalog mutant) made the suite red with '[USAGE-REQUIRED-SLOT-MISSING] Card[completed-with-note]: required region \"actions\" not supplied (supplied: badge, description, footer, note)'; restored byte-exact via git checkout. Unit coverage of both frame dialects and the narrowing rules at packages/ds-codegen/src/usage-composition.test.ts (10/10 at e6303029)."
+    recorded_at: "2026-09-19T18:05:12.975Z"
+    test_nodeid: "src/lib/render-usage.test.tsx::usage sidecar render projection > supplies every consumer-supplied required region in every curated frame"
+    command: pnpm exec vitest run src/lib/render-usage.test.tsx
+    exit_code: 0
+    commit_sha: e630302919da
