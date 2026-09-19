@@ -1,0 +1,45 @@
+id: REL-ALIAS-INDEPENDENCE-01
+title: 'The alias layer is consumed only by the catalogue: the search outcome is identical with it removed, renamed and blanked'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-19T06:33:55.628Z'
+updated_at: '2026-09-19T06:33:55.628Z'
+created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a contracts directory whose form-region file has been REMOVED; when the search runs over the same basis; then its normalized outcome is identical to the real one, and the region loader throws on that directory so the removal is real rather than nominal'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a contracts directory whose regions are renamed and whose assertions are blanked; when the catalogue is generated and the search runs; then the catalogue differs and the normalized search outcome is identical'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the comparison; when it is read; then the normalized outcome is the FULL one - population, support, retained membership, every refusal with its cause and every undecided with its obligation - not membership alone'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the removed directory; when the catalogue path is exercised; then it fails while the search does not, which is what makes the layer''s consumption observable at all'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the projected module; when the functions the search is built from are read; then none of them names the region loader'
+non_functional: {}
+contracts:
+  - name: 'alias-independence'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
