@@ -25,7 +25,11 @@ scope:
     - 'README.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Obligation scope is consumer-supplied regions only: anatomy.dom named slot regions plus public subcomponents (the same set deriveUsageComposition projects). Component-owned required:true anchors (e.g. Checkbox.input, Popover.trigger anchors) are excluded — they carry the anchor-presence sense, which this slice does not adjudicate.'
+  - 'The check is frame-data-level (walking the curated JSONL tree in both composition dialects: node-level slots maps and fsds.<Component>.<region> children), never DOM-inferred.'
+  - 'deriveUsageComposition outputs are unchanged; the walker and obligation derivation are pure additions.'
+  - 'No emitter or generated-output change.'
+  - 'The mutation kill marker names the authored audit assertion specifically ([USAGE-REQUIRED-SLOT-MISSING] with component and frame), so a generated failure cannot take the credit.'
 acceptance:
   - id: A1
     given: 'a curated usage frame that omits a consumer-supplied region whose contract slot declares required:true'
