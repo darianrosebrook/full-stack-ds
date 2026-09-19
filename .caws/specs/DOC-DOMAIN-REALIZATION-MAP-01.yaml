@@ -65,3 +65,9 @@ evidence:
     recorded_at: "2026-09-19T19:09:47.363Z"
     artifact_path: docs/research-program.md
     commit_sha: "6801775fa33db753e0a08c2dd7a52d0900007fcf"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: docs/domain-realization-comparison.md and packages/ds-iconography/README.md trace icon contract through IconGlyphIR and state that analytical relations do not enter ComponentIR or component emitters
+    recorded_at: "2026-09-19T19:10:18.351Z"
+    artifact_path: docs/domain-realization-comparison.md
+    commit_sha: "6801775fa33db753e0a08c2dd7a52d0900007fcf"
