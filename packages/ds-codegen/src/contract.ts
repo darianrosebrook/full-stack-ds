@@ -901,6 +901,17 @@ export interface ComponentContract {
   styles?: Record<string, Record<string, StyleEntry>>;
   keyframes?: Record<string, Record<string, Record<string, string>>>;
   events?: Record<string, ContractEventSignature>;
+  /**
+   * Named slot anchors keyed by slot name (schema-validated; typed here so
+   * governed consumers can read it without casts — FEAT-SLOT-REQUIRED-USAGE-BINDING-01).
+   * `required` carries two senses distinguished by part ownership: for
+   * consumer-supplied regions (anatomy.dom named slots, public subcomponents)
+   * it means every valid composition must supply the region — enforced
+   * against curated usage frames by the usage audit; for component-owned
+   * anchors it means the anchor is guaranteed present in rendered output.
+   * The `root` entry anchors the host itself.
+   */
+  slots?: Record<string, { required: boolean; selector?: string }>;
   stateMachine?: {
     description?: string;
     transitions?: Array<{

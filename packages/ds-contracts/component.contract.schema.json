@@ -411,7 +411,7 @@
     },
     "slots": {
       "type": "object",
-      "description": "Named slot anchors keyed by slot name. Each entry declares whether the slot is required and an optional CSS selector consumers or test harnesses can use to locate the slot in rendered output. Complements anatomy.details \u2014 anatomy describes the part's semantic role; slots describes its DOM anchor.",
+      "description": "Named slot anchors keyed by slot name. Each entry declares whether the slot is required and an optional CSS selector consumers or test harnesses can use to locate the slot in rendered output. Complements anatomy.details — anatomy describes the part's semantic role; slots describes its DOM anchor.",
       "additionalProperties": {
         "type": "object",
         "additionalProperties": false,
@@ -420,7 +420,8 @@
         ],
         "properties": {
           "required": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Two senses, distinguished by part ownership. For consumer-supplied regions (anatomy.dom named slots, public subcomponents): every valid composition must supply the region — curated usage frames are audited against this (FEAT-SLOT-REQUIRED-USAGE-BINDING-01). For component-owned anchors: the anchor is guaranteed present in rendered output. The `root` entry anchors the host itself."
           },
           "selector": {
             "type": "string",
