@@ -84,3 +84,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts M2: ZERO ONE and MULTIPLE lawful results are asserted by EXACT MEMBERSHIP (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 992 tests green))"
     recorded_at: "2026-09-19T04:37:36.296Z"
+  - criterion_id: A7
+    status: pass
+    evidence_ref: "projection.test.ts M2: UNSUPPORTED UNPROVEN and CONTRADICTED stay three different things through the REAL entry point (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 992 tests green))"
+    recorded_at: "2026-09-19T04:37:36.782Z"
