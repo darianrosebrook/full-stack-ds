@@ -50,3 +50,7 @@ evidence:
     status: pass
     evidence_ref: "At main 0ff90564: grep -c 'SwiftUI generated roots' => AGENTS.md:1, CLAUDE.md:1 (README.md:276 already carried its own correct 'plus the registered SwiftUI and Compose generated roots' phrasing — the authority the others were aligned to); grep -c 'outside CI drift diffs' => 0 across AGENTS.md/README.md/CLAUDE.md. Matches .github/workflows/ci.yml 'Generated artifacts are committed' git diff paths and .githooks/pre-push:205-214. CLAUDE.md is gitignored (.gitignore:69) — its state verified in the local working copy, not the merge."
     recorded_at: "2026-09-19T18:31:24.194Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "At main 0ff90564: grep -c 'unity + godot' => AGENTS.md:1, CLAUDE.md:1 (--target=all comments now read '5 web + react-native + figma + swiftui + jetpack-compose + unity + godot'); grep -c '`unity`, `godot`, or `all`' README.md => 1 (flag table). Authorities: jq '.targets | length' fsds.targets.json => 11 with ids ending 'unity godot'; registry.ts:331-349 registers both into the configured set that powers --target=all; pnpm run generate:unity (--target=unity) is a live package.json script."
+    recorded_at: "2026-09-19T18:31:47.955Z"
