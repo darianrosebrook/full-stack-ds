@@ -41,3 +41,8 @@ acceptance:
     then: 'packages blocks list all 17 package dirs, the audit inventory covers all ten gated audit families, the dead-slots description matches the audit header, README lists carrier-reachability-audit among ledger dirs, and docs:check-claims and docs:check-links pass on the merged tree'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "At main 0ff90564 (merge 34592ea5): grep -c 'user-level' AGENTS.md => 1; grep -c 'wired in' AGENTS.md => 0 (stale wiring claim gone); cat .codex/hooks.json => {\"hooks\":{}}; jq caws-wired event keys of ~/.codex/hooks.json => SessionStart/PreToolUse/PostToolUse/Stop/PreCompact/SessionEnd (exactly six). AGENTS.md 'CAWS runtime hooks' section now names the ~/.caws/bin/caws-hook user-level registration and the retired repo-level block."
+    recorded_at: "2026-09-19T18:31:23.575Z"
