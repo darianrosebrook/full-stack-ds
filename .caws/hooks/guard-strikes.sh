@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 8,16
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -15,17 +15,18 @@
 #   everything else freely.
 # Shared progressive strike handling for CAWS pre-write guard hooks.
 #
-# STRIKE-STATE KEYING (matches CLAUDE.md "Scope-guard strike state"):
-# The counter is keyed by (session_id, checkout-location), NOT session-global.
-#   - canonical checkout  -> ${CAWS_VENDOR_DIR}/logs/guard-strikes-<session>.json
-#   - inside a worktree   -> <gitdir>/caws-guard-strikes/guard-strikes-<session>.json
-#                            (gitdir = <canonical>/.git/worktrees/<name>, OUTSIDE every
-#                             working tree so `git add -A` can never commit it —
-#                             CAWS-GUARD-STRIKE-FILE-OUT-OF-TREE-001)
-# Strikes therefore do NOT bleed across worktrees: a strike in worktree A does
-# not corner an edit in worktree B, and a worktree's count is not visible in the
-# canonical vendor logs file. This per-checkout isolation is intentional —
-# cross-worktree strike bleed is a high-severity control-plane collapse risk.
+# STRIKE-STATE KEYING (CAWS-DESIGN-GLOBAL-IDENTITY-HOME-001 A6):
+# The counter is SESSION-GLOBAL, keyed by the RESOLVED session id in the
+# global home:
+#   ~/.caws/state/sessions/<sanitized-session>/strikes.json
+# A session wedged in one repo stays wedged in every repo — the sidechain
+# route-around (blocked in repo A, go edit repo B instead) does not exist.
+# This REVERSES the per-checkout isolation of the pre-global-home model:
+# cross-REPO wedge bleed is now the protected property (a wedge is a
+# session property, not a repo property). Legacy repo-local strike files
+# (vendor logs + worktree gitdirs) are read ONCE for continuity into the
+# global record and never written again. An unresolved/unknown session is
+# refused with a loud stderr note — no anonymous buckets.
 #
 # If you are reading this because a guard blocked you: editing this file (or the
 # generated guard-strikes JSON) to BYPASS enforcement is the one edit the growth
@@ -104,21 +105,37 @@ guard_worktree_state_dir() {
   return 1
 }
 
-guard_strikes_file() {
-  local project_dir="${CAWS_PROJECT_DIR:-.}"
-  local cwd_hint="${2:-}"
-  local log_dir="$project_dir/${CAWS_VENDOR_DIR}/logs"
+guard_global_strikes_file() {
   local session_id="$1"
   local safe_session
 
-  if guard_worktree_state_dir "$cwd_hint" >/dev/null 2>&1; then
-    log_dir=$(guard_worktree_state_dir "$cwd_hint")
-  else
-    mkdir -p "$log_dir"
+  if [[ -z "$session_id" || "$session_id" == "unknown" ]]; then
+    printf 'guard-strikes: refusing to record strikes for an unresolved session (no identity, no wedge state)\n' >&2
+    return 1
   fi
 
   safe_session=$(printf '%s' "$session_id" | tr -c 'A-Za-z0-9._-' '_')
-  printf '%s/guard-strikes-%s.json' "$log_dir" "$safe_session"
+  mkdir -p "${HOME:-/tmp}/.caws/state/sessions/${safe_session}"
+  printf '%s/.caws/state/sessions/%s/strikes.json' "${HOME:-/tmp}" "$safe_session"
+}
+
+# Legacy repo-local strike files, read ONCE for continuity (never written).
+_guard_legacy_strikes_files() {
+  local project_dir="${CAWS_PROJECT_DIR:-.}"
+  local cwd_hint="${2:-}"
+  local session_id="$1"
+  local safe_session
+  safe_session=$(printf '%s' "$session_id" | tr -c 'A-Za-z0-9._-' '_')
+  printf '%s/%s/logs/guard-strikes-%s.json\n' "$project_dir" "${CAWS_VENDOR_DIR:-.claude}" "$safe_session"
+  local gitdir
+  gitdir=$(guard_worktree_state_dir "$cwd_hint" 2>/dev/null || true)
+  if [[ -n "$gitdir" ]]; then
+    printf '%s/guard-strikes-%s.json\n' "$gitdir" "$safe_session"
+  fi
+}
+
+guard_strikes_file() {
+  guard_global_strikes_file "$1"
 }
 
 guard_record_strike() {
@@ -128,9 +145,20 @@ guard_record_strike() {
   local state_file
   local current_count
 
-  state_file=$(guard_strikes_file "$session_id" "$cwd_hint")
+  state_file=$(guard_strikes_file "$session_id" "$cwd_hint") || return 0
   if [[ ! -f "$state_file" ]]; then
-    printf '{}\n' > "$state_file"
+    # First write: fold legacy repo-local counts into the global record
+    # ONCE, read-only (the legacy files are never written again).
+    local legacy_files=()
+    local legacy_file
+    while IFS= read -r legacy_file; do
+      [[ -n "$legacy_file" && -f "$legacy_file" ]] && legacy_files+=("$legacy_file")
+    done < <(_guard_legacy_strikes_files "$session_id" "$cwd_hint")
+    if [[ ${#legacy_files[@]} -gt 0 ]] && command -v jq >/dev/null 2>&1; then
+      jq -s 'reduce .[] as $o ({}; . * $o)' "${legacy_files[@]}" > "$state_file" 2>/dev/null || printf '{}\n' > "$state_file"
+    else
+      printf '{}\n' > "$state_file"
+    fi
   fi
 
   current_count=$(jq -r --arg guard "$guard_name" '.[$guard] // 0' "$state_file" 2>/dev/null || printf '0')
