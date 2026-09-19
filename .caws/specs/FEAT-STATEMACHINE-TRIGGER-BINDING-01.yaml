@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: statemachine-trigger-binding
 created_at: '2026-09-19T10:51:14.185Z'
-updated_at: '2026-09-19T10:52:05.287Z'
+updated_at: '2026-09-19T11:07:14.216Z'
 created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
 blast_radius:
   modules:
@@ -25,6 +25,7 @@ scope:
     - 'docs/current-implementation-snapshot.md'
     - 'docs/normal-form.md'
     - 'README.md'
+    - packages/ds-figma-plugin/src/generated/components/Tabs/Tabs.figma.json
   out: []
 invariants:
   - 'The rule is name-resolution only: a transition event must resolve to a declared referent (channel key, events key, prop name, dismissal trigger event, a11y.keyboard id, "<part>.<verb>" with part in anatomy.parts, or a member of the closed DOM platform set). It does not adjudicate trigger semantics, kinds, or ordering.'
