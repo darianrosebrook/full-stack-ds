@@ -2609,8 +2609,19 @@ export type CatalogueUnsatisfied = {
   name: string;
   colloquial: string;
   asserts: FormRegion;
-  reason: "not-in-space" | "not-lawful-here";
+  /**
+   * WHY nothing was retained, in the enumeration's OWN terms. These permit the
+   * same empty result and require different next actions: supply evidence,
+   * implement support, or change an analytically invalid request.
+   */
+  reason: "unsupported" | "not-in-space" | "no-retained-match";
   detail: string;
+  /** The enumeration's support decision, when the REQUEST itself is not implemented. */
+  support?: SupportDecision;
+  /** Refused candidates whose point satisfies the region, each with the cause it carried. */
+  refused: Array<{ program: string; cause: string }>;
+  /** Undecided candidates whose point satisfies the region, each with the obligation it carried. */
+  undecided: Array<{ program: string; obligation: string }>;
 };
 
 export type AliasCatalogue = { entries: CatalogueEntry[]; unsatisfied: CatalogueUnsatisfied[] };
@@ -2673,15 +2684,39 @@ export function generateAliasCatalogue(
       entries.push({ name: d.name, colloquial: d.colloquial, asserts: d.asserts, programs });
       continue;
     }
+    // THE ENUMERATION'S OWN EVIDENCE, NOT A MANUFACTURED LABEL. A region holding
+    // BOTH refused and undecided candidates keeps both, because a consumer's next
+    // action differs between them and choosing whichever came first would lose
+    // the distinction the enumeration already made.
+    const matches = (q: { coordinate: CoordinateSpace; dimension: Channel; measure: Channel }) => regionMatches(d.asserts, q);
+    const refused = e.refused.filter((r) => matches(r.program)).map((r) => ({ program: `${r.program.coordinate}|${r.program.dimension}|${r.program.measure}`, cause: r.cause }));
+    const undecided = e.undecided.filter((u) => matches(u.program)).map((u) => ({ program: `${u.program.coordinate}|${u.program.dimension}|${u.program.measure}`, obligation: u.obligation }));
     const inSpace = regionIsInSpace(d.asserts, inventory);
+    if (!e.support.supported) {
+      unsatisfied.push({
+        name: d.name,
+        colloquial: d.colloquial,
+        asserts: d.asserts,
+        reason: "unsupported",
+        detail: `the ${e.support.resultKind}-valued path does not implement the ${e.support.task} task, so no candidate space was searched`,
+        support: e.support,
+        refused,
+        undecided,
+      });
+      continue;
+    }
     unsatisfied.push({
       name: d.name,
       colloquial: d.colloquial,
       asserts: d.asserts,
-      reason: inSpace ? "not-lawful-here" : "not-in-space",
+      reason: inSpace ? "no-retained-match" : "not-in-space",
       detail: inSpace
-        ? "the inventory can host this region, and the enumerator retains no program over this result that satisfies it"
+        ? refused.length + undecided.length > 0
+          ? `the inventory can host this region; no candidate over this result was retained, and the enumeration's own dispositions for it are carried here`
+          : "the inventory can host this region, and no candidate over this result matched it at all"
         : "the inventory hosts no such point at all: no coordinate it offers hosts both channels with those transformations",
+      refused,
+      undecided,
     });
   }
   return { entries, unsatisfied };
