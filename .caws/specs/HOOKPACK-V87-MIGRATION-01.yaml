@@ -1,0 +1,34 @@
+id: HOOKPACK-V87-MIGRATION-01
+title: 'Migrate CAWS hook pack v47 to v87'
+risk_tier: 2
+mode: chore
+lifecycle_state: draft
+created_at: '2026-09-19T05:18:57.618Z'
+updated_at: '2026-09-19T05:18:57.618Z'
+created_by_session: 'd1d85455-7273-417f-b3ab-18165f672d38'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - '.caws/hooks'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the installed pack reports drift against the shipped template set; when the migration lands the upstream pack; then every managed path reports no outstanding drift for the shared and claude-code surfaces'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given local guard growth exists that upstream does not carry; when the pack is upgraded; then that growth is either carried forward onto the new template or shown to be superseded by upstream, never silently dropped'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the hook pack ships its own test scripts; when the migration completes; then those scripts run and their outcomes are reported against the pre-migration baseline'
+non_functional: {}
+contracts: []
