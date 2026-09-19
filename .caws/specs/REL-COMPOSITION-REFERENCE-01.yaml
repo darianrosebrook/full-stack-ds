@@ -80,3 +80,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts COMPOSITION COVERAGE: a key dimension channel is lawful in neither, off position (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
     recorded_at: "2026-09-19T06:27:26.104Z"
+  - criterion_id: A7
+    status: pass
+    evidence_ref: projection.test.ts states what the retained relation proof does NOT establish (SHARED AXIOM / STILL NOT COVERED) (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))
+    recorded_at: "2026-09-19T06:27:26.799Z"
