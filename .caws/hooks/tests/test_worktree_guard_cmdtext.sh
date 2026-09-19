@@ -45,6 +45,51 @@ if [[ ! -f "$HOOKS_DIR/lib/heredoc.sh" ]]; then
   exit 1
 fi
 
+# SYNTHETIC FIXTURE — do not point this suite at the real repo.
+#
+# Every BLOCK case here is gated on the guard seeing at least one ACTIVE
+# worktree ("not allowed while worktrees are active"). Run against the real
+# checkout, this suite therefore reported whatever the repo happened to be
+# doing: 19/19 while some other session held a worktree, 8/19 the moment that
+# worktree was destroyed — with no code change in between. A suite that
+# silently drops its 11 refusal cases is worse than a red one, because the
+# green it shows at rest only ever exercised the ALLOW direction, and "allow
+# more" is exactly what a gutted guard does.
+#
+# So build the precondition instead of hoping for it. A hand-made .git skeleton
+# is enough for is_canonical_checkout (it compares git-dir to git-common-dir);
+# `git init` is deliberately not used, so this writes nothing a real repo would
+# notice and needs no network, config or identity.
+FIXTURE="$(mktemp -d)"
+trap 'rm -rf "$FIXTURE"' EXIT
+mkdir -p "$FIXTURE/repo/.git/objects" "$FIXTURE/repo/.git/refs/heads" "$FIXTURE/repo/.caws"
+printf 'ref: refs/heads/main\n' > "$FIXTURE/repo/.git/HEAD"
+cat > "$FIXTURE/repo/.caws/worktrees.json" <<'JSON'
+{
+  "fixture-active-wt": {
+    "specId": "FIXTURE-ONLY-NOT-A-REAL-SPEC",
+    "branch": "fixture-active-wt",
+    "baseBranch": "main",
+    "path": ".caws/worktrees/fixture-active-wt",
+    "status": "active"
+  }
+}
+JSON
+PROJECT_DIR_FOR_GUARD="$FIXTURE/repo"
+
+# Guard the guard: if the fixture ever stops registering as an active-worktree
+# canonical checkout, every BLOCK case would silently pass-as-ALLOW again. Prove
+# the precondition holds before trusting a single result below.
+if ! printf '%s' '{"tool_name":"Bash","tool_input":{"command":"git stash"}}' \
+  | CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR="$PROJECT_DIR_FOR_GUARD" bash "$GUARD" >/dev/null 2>&1; then
+  :  # refused, as it must be — the fixture is live
+else
+  echo "FAIL: fixture precondition broken — the guard did not refuse a bare stash," >&2
+  echo "      so the BLOCK cases below would be vacuous. Check that" >&2
+  echo "      $PROJECT_DIR_FOR_GUARD registers as a canonical checkout with an active worktree." >&2
+  exit 2
+fi
+
 pass=0
 fail=0
 
@@ -52,7 +97,7 @@ while IFS=$'\t' read -r expect label cmd; do
   [[ "$expect" == "EXPECT" || -z "${expect:-}" ]] && continue
   cmd_real=$(printf '%b' "$cmd")   # \n in the corpus encodes a real newline
   payload=$(CMD="$cmd_real" python3 -c 'import json,os;print(json.dumps({"tool_name":"Bash","tool_input":{"command":os.environ["CMD"]}}))')
-  out=$(printf '%s' "$payload" | CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR="$REPO_ROOT" bash "$GUARD" 2>&1)
+  out=$(printf '%s' "$payload" | CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR="$PROJECT_DIR_FOR_GUARD" bash "$GUARD" 2>&1)
   code=$?
   [[ $code -eq 0 ]] && actual=ALLOW || actual=BLOCK
 
