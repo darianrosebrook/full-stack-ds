@@ -55,3 +55,7 @@ evidence:
     status: pass
     evidence_ref: "CORPUS PRESSURE: the reached three each retain a non-empty membership, so the control is not vacuous (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1034 tests green))"
     recorded_at: "2026-09-19T09:26:24.516Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "CORPUS PRESSURE: each unreached probe reports WHY - names count, names min - rather than being skipped (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1034 tests green))"
+    recorded_at: "2026-09-19T09:26:25.083Z"
