@@ -72,3 +72,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts CONSERVATION: a commensurable nesting stays lawful (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1029 tests green))"
     recorded_at: "2026-09-19T07:21:36.371Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "projection.test.ts CONSERVATION: a free-scale facet over the same incompatible panels stays lawful (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1029 tests green))"
+    recorded_at: "2026-09-19T07:21:37.074Z"
