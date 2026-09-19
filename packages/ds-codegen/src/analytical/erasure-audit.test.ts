@@ -95,7 +95,9 @@ describe("structural claims survive falsification", () => {
     expect(live.unclaimed.length).toBeGreaterThan(0);
   });
 
-  it("can refute: a false claim is caught by a specimen pair", () => {
+  // Falsifier over the specimen population; timed out at the 5s default in
+  // the retained 2026-09-19 worktree run (FIX-CLOSURE-LEDGER-AUTHORITY-TIMEOUT-01).
+  it("can refute: a false claim is caught by a specimen pair", { timeout: 30_000 }, () => {
     // Injected rather than fabricated through a plan, because a plan cannot
     // express a false containment — the claim rule reads the locator the
     // operation executes at, so any containment it derives is true by

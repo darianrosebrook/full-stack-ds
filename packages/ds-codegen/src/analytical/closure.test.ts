@@ -830,7 +830,9 @@ describe("the unresolved dependencies are blocked by EVIDENCE, not by an undecid
     ]);
   });
 
-  it("finds no oracle-separated pair for any other dependency, so no witness is constructible", () => {
+  // Pair search over the specimen population; timed out at the 5s default in
+  // the retained 2026-09-19 worktree run (FIX-CLOSURE-LEDGER-AUTHORITY-TIMEOUT-01).
+  it("finds no oracle-separated pair for any other dependency, so no witness is constructible", { timeout: 30_000 }, () => {
     const s = specimens();
     const plans = loadPlans();
     const oracle = loadOracle();
@@ -1091,7 +1093,13 @@ describe("the ledger carries the authority its claims were verified under", () =
     expect(Object.keys(liveAuthority()).sort()).toEqual(["coordinateBasisDigest", "erasureAuthorityDigest", "quotientSchemaVersion", "ruleDigest", "witnessAuthorityDigest"]);
   });
 
-  it("a ledger authored under a different authority is refused, not re-read -- for EACH identity, though every derivation still agrees", () => {
+  // Five checkClosures re-derivations in one callback measured 758–1301ms
+  // locally but exceeded the 5s default twice in cold-clone gate contexts
+  // (mutation-runner baseline and pre-push) under parallel load — a ~5x
+  // contention factor. 30s is finite, local to this test only, and stays far
+  // below the runner's 20-minute stage budget, so a genuine hang still fails.
+  // Assertions are unchanged (FIX-CLOSURE-LEDGER-AUTHORITY-TIMEOUT-01).
+  it("a ledger authored under a different authority is refused, not re-read -- for EACH identity, though every derivation still agrees", { timeout: 30_000 }, () => {
     // Before this, such a ledger passed: every claim was re-derived and agreed,
     // and nothing recorded that the agreement was under a different executor.
     // Every identity, not only the erasure one: a compared set missing a key is
@@ -1120,7 +1128,10 @@ describe("the ledger carries the authority its claims were verified under", () =
     expect(authorityDrift(undefined, liveAuthority())).toHaveLength(1);
   });
 
-  it("restamp re-verifies and writes the live authority; it refuses to stamp over a claim that is wrong", () => {
+  // restampClosures + checkClosures + loadClosures full re-derivations; timed
+  // out at the 5s default in the retained 2026-09-19 worktree run
+  // (FIX-CLOSURE-LEDGER-AUTHORITY-TIMEOUT-01).
+  it("restamp re-verifies and writes the live authority; it refuses to stamp over a claim that is wrong", { timeout: 30_000 }, () => {
     const agreeing = copyWith(drifted);
     const stamped = restampClosures(agreeing);
     expect(stamped.ok, stamped.message).toBe(true);
