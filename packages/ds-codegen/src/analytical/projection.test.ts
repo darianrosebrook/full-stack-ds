@@ -54,6 +54,7 @@ import {
   evaluateOperation,
   lawfulRelationPrograms,
   partitionAdmitsSummation,
+  classifyAtomicProgram,
   IMPLEMENTED_TASKS,
   RESULT_KINDS,
   projectionSupport,
@@ -76,7 +77,7 @@ import {
   inducedClaims,
   unitsCommensurable,
 } from "./projection.js";
-import type { Composite, CompositeVerdict, Enumeration, OperationJudgment, AggregateAssertionDecl, Program, ResultFacts, TargetInventory } from "./projection.js";
+import type { Composite, CompositePart, CompositeVerdict, Enumeration, OperationJudgment, AggregateAssertionDecl, Program, ResultFacts, TargetInventory } from "./projection.js";
 import type { RelationalStructure, UnitDecl } from "./relation-model.js";
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -1168,6 +1169,97 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     // passing because the string is absent from the file entirely.
     const catalogueBody = src.slice(src.indexOf("export function catalogueFor("));
     expect(catalogueBody.slice(0, catalogueBody.indexOf("\n}"))).toContain("loadFormDeclarations");
+  });
+
+  it("CONSERVATION: the composer consumes the SAME atomic classification the enumerator does", () => {
+    // A request the enumerator withholds must not become lawful by being handed
+    // to a composer instead. The three regimes are the ones the review named.
+    const classify = (program: Program, s: RelationalStructure, partition?: string) => {
+      const op = program.operation;
+      const adm = admitOperation(s, op);
+      if (adm.kind !== "admitted") throw new Error("not admitted");
+      return classifyAtomicProgram(program, adm.facts, program.task, EXPERIMENT_TARGET, partition);
+    };
+    const asLayer = (program: Program, s: RelationalStructure, partition?: string) =>
+      judgeComposite({ structure: s, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [{ kind: "program", program, request: partition === undefined ? undefined : { partitionDimension: partition } }], sharing: {} } }).verdict.kind;
+
+    // (a) A KEYED group column off position.
+    const keyed = { relations: { m: { grain: ["bucket", "item"], fields: {
+      bucket: { transformation: "nominal", key: true }, item: { transformation: "nominal" }, level: { transformation: "ratio" } } } } } as unknown as RelationalStructure;
+    const keyedOp = bindOperation(keyed, { relation: "m", field: "level", op: "sum", along: ["item"] });
+    const keyedProgram: Program = { coordinate: "cartesian", dimension: "text", measure: "length", baseline: "zero", task: "magnitude-comparison", claims: [], operation: keyedOp };
+    const keyedClassification = classify(keyedProgram, keyed);
+    expect(keyedClassification.kind).toBe("refused");
+    expect(keyedClassification.kind === "refused" && keyedClassification.cause).toBe("REL_KEY_ENCODED_TO_CHANNEL");
+    expect(asLayer(keyedProgram, keyed), "the composer must not certify what enumeration refuses").toBe("refused");
+    // ...and position, which a key MAY occupy, is still fine — so this is the
+    // key rule and not a blanket refusal.
+    expect(asLayer({ ...keyedProgram, dimension: "position" }, keyed)).not.toBe("refused");
+
+    // (b) COMPOSITION with the partition omitted.
+    const compStruct = { relations: { m: { grain: ["bucket", "item"], fields: {
+      bucket: { transformation: "nominal" }, item: { transformation: "nominal" }, level: { transformation: "ratio", additivity: { kind: "additive" } } } } } } as unknown as RelationalStructure;
+    const compOp = bindOperation(compStruct, { relation: "m", field: "level", op: "sum", along: ["item"] });
+    const compProgram: Program = { coordinate: "cartesian", dimension: "position", measure: "length", baseline: "zero", task: "composition", claims: [], operation: compOp };
+    const omitted = enumerate({ structure: compStruct, admitted: compOp, task: "composition", inventory: EXPERIMENT_TARGET });
+    expect(relationMembership(omitted)).toEqual([]);
+    expect(omitted.undecided.length).toBeGreaterThan(0);
+    expect(classify(compProgram, compStruct).kind, "a missing premise is CARRIED, not certified").toBe("unproven");
+    expect(asLayer(compProgram, compStruct)).toBe("unproven");
+    // ...and supplying the partition makes the same operand certifiable, so the
+    // carrier is what moved and not the program.
+    expect(asLayer(compProgram, compStruct, "bucket")).toBe("retained");
+
+    // (c) COMPOSITION over a dimension the measure is not additive along.
+    const semi = { relations: { m: { grain: ["bucket", "item"], fields: {
+      bucket: { transformation: "nominal" }, item: { transformation: "nominal" }, level: { transformation: "ratio", additivity: { kind: "semi-additive", nonAdditiveAlong: ["bucket"] } } } } } } as unknown as RelationalStructure;
+    const semiOp = bindOperation(semi, { relation: "m", field: "level", op: "sum", along: ["item"] });
+    const semiProgram: Program = { ...compProgram, operation: semiOp };
+    expect(asLayer(semiProgram, semi, "bucket")).toBe("refused");
+    expect(asLayer(semiProgram, semi, "item")).not.toBe("refused");
+  });
+
+  it("CONSERVATION: a scale summary cannot hide an incompatible unit from its parent", () => {
+    const KG: UnitDecl = { units: ["kg"] };
+    const SEC: UnitDecl = { units: ["s"] };
+    const CONV: UnitDecl = { units: ["g"], conversions: ["kg"] };
+    const mixed = metered(KG, SEC);
+    const commensurable = metered(KG, CONV);
+    const panel = (s: RelationalStructure, rel: string): Program => meteredPart(s, rel);
+    void 0;
+    const sharedFacet = (s: RelationalStructure, rels: string[]): Composite => ({
+      combinator: "facet",
+      parts: rels.map((r) => ({ kind: "program", program: panel(s, r) })),
+      partition: "bucket",
+      policy: { length: "shared", text: "shared" },
+    });
+    const annotation: CompositePart = { kind: "program", program: panel(mixed, "meter_a") };
+    const layered = (facet: Composite, extra: CompositePart): Composite =>
+      ({ combinator: "layer", parts: [{ kind: "composite", composite: facet }, extra], sharing: { length: "shared", text: "shared" } });
+
+    const j = (c: Composite, s: RelationalStructure) => judgeComposite({ structure: s, inventory: EXPERIMENT_TARGET, composite: c }).verdict;
+
+    // THE COUNTEREXAMPLE. Before the correction both of these were RETAINED with
+    // the same parent-visible summary, and only the panel ORDER decided.
+    const ab = j(layered(sharedFacet(mixed, ["meter_a", "meter_b"]), annotation), mixed);
+    const ba = j(layered(sharedFacet(mixed, ["meter_b", "meter_a"]), annotation), mixed);
+    expect(ab.kind).toBe("refused");
+    expect(ba.kind, "panel order must not decide commensurability").toBe("refused");
+    expect(ab.kind === "refused" && ab.causes).toEqual(["REL_UNIT_INCOMMENSURABLE_SHARED_SCALE"]);
+    expect(ba.kind === "refused" && ba.causes).toEqual(ab.kind === "refused" ? ab.causes : []);
+
+    // THE SHARED FACET ITSELF cannot become lawful by nesting, and a commensurable
+    // pair is untouched — so this is the dimensional rule, not a blanket refusal.
+    expect(j(sharedFacet(mixed, ["meter_a", "meter_b"]), mixed).kind).toBe("refused");
+    const good = j(layered(sharedFacet(commensurable, ["meter_a", "meter_b"]), { kind: "program", program: panel(commensurable, "meter_a") }), commensurable);
+    expect(good.kind, "a commensurable nesting stays lawful").toBe("retained");
+
+    // A FREE SCALE MAKES NO CROSS-PANEL CLAIM, so the same incompatible panels
+    // are lawful under it — the scope is preserved rather than everything being
+    // refused for not being shared.
+    const freeFacet: Composite = { ...sharedFacet(mixed, ["meter_a", "meter_b"]), policy: { length: "free", text: "free" } } as Composite;
+    expect(j(freeFacet, mixed).kind).toBe("retained");
+    expect(sharedFacet(mixed, ["meter_a", "meter_b"]).combinator === "facet" && freeFacet.combinator === "facet").toBe(true);
   });
 
   it("states what the generated catalogue does NOT establish", () => {

@@ -960,7 +960,57 @@ export const relationMembership = (e: Enumeration) => e.retained.map((p) => `${p
  * keeps this list, the `SupportDecision` and the admission result; collapsing
  * them into one Boolean is the mistake this shape exists to prevent.
  */
-export function relationProgramUncertified(p: Program, facts: ResultFacts, task: Task, inventory: TargetInventory): string[] {
+/**
+ * THE SINGLE-CANDIDATE CLASSIFIER. Both the enumerator and the composer must
+ * consume THIS, over the same request, so that "passed a smaller helper" can
+ * never upgrade a program the enumeration would withhold.
+ *
+ * `partitionDimension` is the composition partition. It is a TASK-RELEVANT
+ * premise: it is supplied to the enumeration separately, a later reader cannot
+ * recover it from the program, and re-reading the source grain does not
+ * reconstruct the analytical choice that was made.
+ */
+export type AtomicClassification =
+  | { kind: "retained"; unmet: [] }
+  | { kind: "refused"; cause: string; detail: string; unmet: string[] }
+  | { kind: "unproven"; obligation: string; detail: string; unmet: string[] };
+
+export function classifyAtomicProgram(
+  p: Program,
+  facts: ResultFacts,
+  task: Task,
+  inventory: TargetInventory,
+  partitionDimension?: string,
+): AtomicClassification {
+  const unmet = relationProgramUncertified(p, facts, task, inventory, partitionDimension);
+  if (unmet.length === 0) return { kind: "retained", unmet: [] };
+  // A DECLARED CONTRADICTION IS A REFUSAL, NOT AN OBLIGATION. The composition
+  // conditions are the ones the doctrine states as causes, and a program they
+  // contradict must be refused rather than carried — otherwise the composer
+  // would treat "the facts forbid it" as "a premise is missing".
+  if (task === "composition") {
+    const admission = partitionAdmitsSummation(facts, partitionDimension);
+    if (admission.kind === "refused") return { kind: "refused", cause: admission.cause, detail: admission.detail, unmet };
+    if (admission.kind === "unproven") return { kind: "unproven", obligation: admission.obligation, detail: admission.detail, unmet };
+  }
+  if (facts.dimension.key && p.dimension !== "position") {
+    return { kind: "refused", cause: "REL_KEY_ENCODED_TO_CHANNEL", detail: "a key may never be encoded to a non-positional channel", unmet };
+  }
+  return { kind: "unproven", obligation: "part:uncertified", detail: `the program is not one this classifier can certify: ${unmet.join("; ")}`, unmet };
+}
+
+export function relationProgramUncertified(
+  p: Program,
+  facts: ResultFacts,
+  task: Task,
+  inventory: TargetInventory,
+  /**
+   * The declared composition partition. Without it this classifier answers a
+   * SMALLER question than the enumerator does, and an empty answer would read
+   * as permission.
+   */
+  partitionDimension?: string,
+): string[] {
   const unmet: string[] = [];
   // THE DECLARED TASK AND THE QUERIED TASK MUST AGREE. A program carries its own
   // task, and a checker handed a different one would certify a question the
@@ -979,6 +1029,14 @@ export function relationProgramUncertified(p: Program, facts: ResultFacts, task:
   if (!inventory.channels.includes(p.dimension)) unmet.push(`${p.dimension} is not a channel of this inventory`);
   if (!inventory.channels.includes(p.measure)) unmet.push(`${p.measure} is not a channel of this inventory`);
   if (p.dimension === p.measure) unmet.push("the dimension and the measure are the same channel");
+  if (task === "composition") {
+    const admission = partitionAdmitsSummation(facts, partitionDimension);
+    if (admission.kind === "refused") unmet.push(`${admission.cause}: ${admission.detail}`);
+    if (admission.kind === "unproven") unmet.push(`${admission.obligation}: ${admission.detail}`);
+  }
+  if (facts.dimension.key && p.dimension !== "position") {
+    unmet.push("REL_KEY_ENCODED_TO_CHANNEL: a key may never be encoded to a non-positional channel");
+  }
   if (!CAPACITY[p.dimension].spaces.includes(p.coordinate)) unmet.push(`${p.coordinate} does not host the ${p.dimension} channel`);
   if (!CAPACITY[p.measure].spaces.includes(p.coordinate)) unmet.push(`${p.coordinate} does not host the ${p.measure} channel`);
   if (!CAPACITY[p.dimension].carries.includes(facts.dimension.transformation)) {
@@ -1962,8 +2020,15 @@ export type ScalePolicy = "shared" | "free";
  */
 export type ScaleSharing = "shared" | "unshared";
 
+/**
+ * THE PREMISES AN ATOMIC OPERAND'S JUDGMENT DEPENDS ON. They travel WITH the
+ * operand: the partition is supplied to the enumeration separately, and a later
+ * reader that is handed only the program cannot reconstruct it.
+ */
+export type AtomicRequest = { partitionDimension?: string };
+
 export type CompositePart =
-  | { kind: "program"; program: Program }
+  | { kind: "program"; program: Program; request?: AtomicRequest }
   | { kind: "composite"; composite: Composite };
 
 export type LayerComposite = {
@@ -2007,6 +2072,15 @@ export type PartReading = {
   units: Partial<Record<Channel, UnitDecl>>;
   /** What each channel carries for this part, so a shared scale knows whether it is a quantity. */
   transformations: Partial<Record<Channel, Transformation>>;
+  /**
+   * Channels where two or more of the part's OWN sub-projections declare units
+   * that are ESTABLISHED to be incompatible. This is the fact a summary may not
+   * throw away: collapsing it to one representative unit would let a parent
+   * treat kilograms and seconds as one scale.
+   */
+  unitConflict: Channel[];
+  /** Channels where a sub-projection's declaration does not carry the unit, so commensurability is NOT ESTABLISHED. */
+  unitUnestablished: Channel[];
   /**
    * How the channel stands across the part's OWN sub-projections. An atomic
    * projection is one coordinate space and always presents `shared`; a facet
@@ -2139,15 +2213,9 @@ function readPart(part: Extract<CompositePart, { kind: "program" }>, input: Comp
   if (judgment.kind === "refused") return refusedComposition(judgment.causes, "part", judgment.reason);
   if (judgment.kind === "unproven") return unprovenComposition(judgment.obligation, "part", judgment.reason);
   const facts = judgment.facts;
-  const unmet = relationProgramUncertified(program, facts, program.task, input.inventory);
-  if (unmet.length > 0) {
-    // NOT CERTIFIED IS NOT ILLEGAL, and it is not a cause either. This composer
-    // has no named diagnostic for a premise it could not establish, so the part
-    // is CARRIED with the premises that were not met. Refusing here would be
-    // exactly the substitution this project keeps having to undo: a bare `false`
-    // from a soundness helper standing in for a contradiction.
-    return unprovenComposition("part:uncertified", "part", `the part is not one this composer can certify: ${unmet.join("; ")}`);
-  }
+  const classification = classifyAtomicProgram(program, facts, program.task, input.inventory, part.request?.partitionDimension);
+  if (classification.kind === "refused") return refusedComposition([classification.cause], "part", classification.detail);
+  if (classification.kind === "unproven") return unprovenComposition(classification.obligation, "part", classification.detail);
   const channels = [program.dimension, program.measure].sort();
   const units: Partial<Record<Channel, UnitDecl>> = {};
   const transformations: Partial<Record<Channel, Transformation>> = {};
@@ -2164,6 +2232,8 @@ function readPart(part: Extract<CompositePart, { kind: "program" }>, input: Comp
     channels,
     units,
     transformations,
+    unitConflict: [],
+    unitUnestablished: [],
     profile,
     claims: inducedClaims(program, facts),
     tasks: [program.task],
@@ -2178,16 +2248,54 @@ function mergeReadings(parts: PartReading[]): PartReading {
   const profile: Partial<Record<Channel, ScalePolicy>> = {};
   const claims = new Set<Claim>();
   const tasks = new Set<Task>();
+  const unitConflict = new Set<Channel>();
+  const unitUnestablished = new Set<Channel>();
   for (const p of parts) {
     for (const ch of p.channels) {
+      // A REPRESENTATIVE UNIT IS KEPT FOR CONVENIENCE ONLY. What a parent must
+      // decide on is whether the operands AGREE, and that is decided over every
+      // declaration rather than over whichever one was met first.
       if (p.units[ch] && !units[ch]) units[ch] = p.units[ch];
       if (p.transformations[ch] && !transformations[ch]) transformations[ch] = p.transformations[ch];
       profile[ch] = p.profile[ch] ?? "shared";
+      // A part that is itself conflicted infects the summary.
+      if (p.unitConflict.includes(ch)) unitConflict.add(ch);
+      if (p.unitUnestablished.includes(ch)) unitUnestablished.add(ch);
     }
     p.claims.forEach((c) => claims.add(c));
     p.tasks.forEach((t) => tasks.add(t));
   }
-  return { kind: "retained", channels, units, transformations, profile, claims: [...claims].sort(), tasks: [...tasks].sort() };
+  for (const ch of channels) {
+    const users = parts.filter((p) => p.channels.includes(ch));
+    if (users.length < 2) continue;
+    // Only a shared QUANTITATIVE scale has a unit to commensurate.
+    const declared = users.map((p) => p.units[ch]);
+    const metric = users.filter((p) => {
+      const tr = p.transformations[ch];
+      return tr === "interval" || tr === "ratio";
+    });
+    if (metric.length < 2) continue;
+    void declared;
+    const verdicts: Array<"yes" | "no" | "unknown"> = [];
+    for (let i = 1; i < metric.length; i++) verdicts.push(unitsCommensurable(metric[0]!.units[ch], metric[i]!.units[ch]));
+    if (verdicts.includes("no")) {
+      unitConflict.add(ch);
+      unitUnestablished.delete(ch);
+    } else if (verdicts.includes("unknown") && !unitConflict.has(ch)) {
+      unitUnestablished.add(ch);
+    }
+  }
+  return {
+    kind: "retained",
+    channels,
+    units,
+    transformations,
+    unitConflict: [...unitConflict].sort(),
+    unitUnestablished: [...unitUnestablished].sort(),
+    profile,
+    claims: [...claims].sort(),
+    tasks: [...tasks].sort(),
+  };
 }
 
 /**
@@ -2210,6 +2318,25 @@ function judgeLayer(c: LayerComposite, parts: PartReading[]): CompositeVerdict {
         ["REL_LAYER_SCALE_UNSHARED"],
         "combinator",
         `the parts share ${ch} over one coordinate space and the layer declares ${declared ? `it ${declared}` : "no sharing for it"}; marks in one space imply one scale`,
+      );
+    }
+    // AN OPERAND WHOSE OWN SUB-PROJECTIONS DISAGREE HAS NO SINGLE SCALE either,
+    // and picking one of its units as representative would let kilograms and
+    // seconds pass as commensurable through the summary.
+    const conflicted = users.find((p) => p.unitConflict.includes(ch));
+    if (conflicted) {
+      return refusedComposition(
+        ["REL_UNIT_INCOMMENSURABLE_SHARED_SCALE"],
+        "combinator",
+        `the layer shares ${ch}, and an operand's own sub-projections declare units that are not convertible, so it has no single scale to share`,
+      );
+    }
+    const unestablishedIn = users.find((p) => p.unitUnestablished.includes(ch));
+    if (unestablishedIn) {
+      return unprovenComposition(
+        "unit:commensurable",
+        "combinator",
+        `the layer shares ${ch}, and an operand's own sub-projections leave its unit unestablished, so the shared scale is not established`,
       );
     }
     // A part that exposes the channel free is a sub-composite whose own
@@ -2277,7 +2404,25 @@ function judgeFacet(c: FacetComposite, parts: PartReading[]): CompositeVerdict {
       );
     }
     profile[ch] = declared;
-    if (declared === "shared") anyShared = true;
+    if (declared === "shared") {
+      // A SHARED POLICY IS A COMPARABILITY CLAIM, and it cannot hold over
+      // operands whose declared units are established to be incompatible.
+      if (merged.unitConflict.includes(ch)) {
+        return refusedComposition(
+          ["REL_UNIT_INCOMMENSURABLE_SHARED_SCALE"],
+          "combinator",
+          `the facet declares ${ch} shared across panels, and the panels' declared units are not convertible, so the comparability it claims does not hold`,
+        );
+      }
+      if (merged.unitUnestablished.includes(ch)) {
+        return unprovenComposition(
+          "unit:commensurable",
+          "combinator",
+          `the facet declares ${ch} shared across panels, and a panel's declaration does not carry the unit, so cross-panel comparability is not established`,
+        );
+      }
+      anyShared = true;
+    }
   }
   const claims = new Set(merged.claims);
   if (anyShared) claims.add("cross-panel-comparability");
