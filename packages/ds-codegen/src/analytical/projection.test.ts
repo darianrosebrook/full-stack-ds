@@ -61,9 +61,16 @@ import {
   readbackConsumer,
   recover,
   runExperiment,
+  channelClaims,
+  judgeComposite,
+  judgeOperation,
+  COMPOSITION_NON_CLAIMS,
+  compositeClaimSet,
+  inducedClaims,
+  unitsCommensurable,
 } from "./projection.js";
-import type { AggregateAssertionDecl, Program, TargetInventory } from "./projection.js";
-import type { RelationalStructure } from "./relation-model.js";
+import type { Composite, CompositeVerdict, OperationJudgment, AggregateAssertionDecl, Program, TargetInventory } from "./projection.js";
+import type { RelationalStructure, UnitDecl } from "./relation-model.js";
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const DOCTRINE = path.resolve(HERE, "../../../../docs/architecture/analytical-relation-doctrine.md");
@@ -744,5 +751,514 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     expect(e.population.considered).toBe(168);
     expect(e.population.excluded).toBeGreaterThan(0);
     expect(e.population.disposed).toBe(e.population.considered - e.population.excluded);
+  });
+});
+
+/* ---------------------------------------------------------------------------
+ * M3 — COMPOSITION AND UNFAMILIAR CASES OBEY THE SAME RULES
+ *
+ * The expectations are not written here. They are read from
+ * `composition-precommit.json`, which was committed BEFORE any combinator rule
+ * existed, and which records for each case the doctrine text the expectation was
+ * derived from. The implementation is compared against the frozen file; the file
+ * is never edited to match the implementation. Where the two disagree, the
+ * disagreement is recorded in the file's `adjudication` section and asserted
+ * here by identity — so the disagreement set cannot be padded or quietly pruned,
+ * and a case cannot be moved into it without the move being visible.
+ * ------------------------------------------------------------------------- */
+
+const PRECOMMIT_PATH = path.resolve(HERE, "../../../ds-contracts/analytical-fixtures/composition-precommit.json");
+
+type FrozenExpectation = {
+  id: string;
+  combinator: string;
+  construction: string;
+  derivation: string;
+  expected: {
+    verdict: "retained" | "refused" | "unproven";
+    cause?: string;
+    obligation?: string;
+    causeFrom?: "part" | "combinator";
+    causeIsCompositeSpecific?: boolean;
+    induces?: string[];
+    withholds?: string[];
+    sameAs?: string;
+    sharing?: Record<string, string>;
+    policy?: Record<string, string>;
+  };
+};
+
+const precommit = JSON.parse(fs.readFileSync(PRECOMMIT_PATH, "utf-8")) as {
+  cases: FrozenExpectation[];
+  adjudication: { disagreements: Array<{ id: string; expected: string; actual: string; finding: string }> };
+  corpusFinding: { statement: string; measuredBy: string; consequence: string };
+};
+
+/** The authored declarations the unit-dependent cases are built over. */
+const UNIT_KG: UnitDecl = { units: ["kg"] };
+const UNIT_GRAM_CONVERTIBLE: UnitDecl = { units: ["g"], conversions: ["kg"] };
+const UNIT_SECOND: UnitDecl = { units: ["s"] };
+
+/**
+ * Two relations that differ ONLY in the unit their measure field declares, so a
+ * commensurability verdict can be attributed to the unit and to nothing else.
+ * The committed corpus declares no unit on any field, which is why these cases
+ * are authored: see `corpusFinding` in the pre-commit.
+ */
+const metered = (a?: UnitDecl, b?: UnitDecl): RelationalStructure =>
+  ({
+    ...structure,
+    relations: {
+      ...structure.relations,
+      meter_a: { grain: ["bucket"], fields: { bucket: { transformation: "nominal" }, reading: { transformation: "ratio", ...(a ? { unit: a } : {}) } } },
+      meter_b: { grain: ["bucket"], fields: { bucket: { transformation: "nominal" }, reading: { transformation: "ratio", ...(b ? { unit: b } : {}) } } },
+    },
+  }) as unknown as RelationalStructure;
+
+const meteredPart = (s: RelationalStructure, relation: string): Program => {
+  const op = bindOperation(s, { relation, field: "reading", op: "sum" });
+  const admission = admitOperation(s, op);
+  if (admission.kind !== "admitted") throw new Error(`${relation} is not admitted: ${JSON.stringify(admission)}`);
+  return { coordinate: "cartesian", dimension: "text", measure: "length", baseline: "zero", task: "magnitude-comparison", claims: [], operation: op };
+};
+
+/** A retained program from the corpus enumeration, named rather than counted. */
+const corpusPart = (k: string): Program => {
+  const found = enumeration.retained.find((p) => programKey(p) === k);
+  if (!found) throw new Error(`the corpus enumeration retains no program ${k}`);
+  return found;
+};
+
+const A = (s: RelationalStructure) => meteredPart(s, "meter_a");
+const B = (s: RelationalStructure) => meteredPart(s, "meter_b");
+
+const runComposite = (composite: Composite, s: RelationalStructure = structure): CompositeVerdict =>
+  judgeComposite({ structure: s, inventory: EXPERIMENT_TARGET, composite }).verdict;
+
+const KG = metered(UNIT_KG, UNIT_KG);
+const MISMATCHED = metered(UNIT_KG, UNIT_SECOND);
+const UNITLESS = metered(UNIT_KG, undefined);
+
+const layerOver = (s: RelationalStructure, sharing: Record<string, "shared" | "unshared">): Composite => ({
+  combinator: "layer",
+  parts: [
+    { kind: "program", program: A(s) },
+    { kind: "program", program: B(s) },
+  ],
+  sharing,
+});
+const sharedLayer = (s: RelationalStructure) => layerOver(s, { length: "shared", text: "shared" });
+const facetOver = (part: Composite, policy: Record<string, "shared" | "free">): Composite => ({
+  combinator: "facet",
+  parts: [{ kind: "composite", composite: part }],
+  partition: "bucket",
+  policy,
+});
+const facetOf = (k: string, policy: Record<string, "shared" | "free">): Composite => ({
+  combinator: "facet",
+  parts: [{ kind: "program", program: corpusPart(k) }],
+  partition: BASIS.resultGrain,
+  policy,
+});
+
+/** A part the analytical rules themselves refuse: a cross-date sum of a semi-additive measure. */
+const refusedPart = (): Program => {
+  const op = bindOperation(structure, { relation: BASIS.relation, field: "on_hand", op: "sum", along: ["date"] });
+  return { coordinate: "cartesian", dimension: "text", measure: "length", baseline: "zero", task: "magnitude-comparison", claims: [], operation: op };
+};
+
+const CASES: Record<string, () => CompositeVerdict> = {
+  L1_LAYER_SHARED_POSITION: () => runComposite(sharedLayer(KG), KG),
+  L2_LAYER_SHARING_UNDECLARED: () => runComposite(layerOver(KG, {}), KG),
+  L3_LAYER_SHARED_INCOMMENSURABLE: () => runComposite(sharedLayer(MISMATCHED), MISMATCHED),
+  L4_LAYER_SHARED_UNIT_ABSENT: () => runComposite(sharedLayer(UNITLESS), UNITLESS),
+  L5_LAYER_UNSHARED_ONE_COORDINATE_SPACE: () => runComposite(layerOver(KG, { length: "unshared", text: "shared" }), KG),
+  F1_FACET_SHARED_POLICY: () => runComposite(facetOf("cartesian|position|length", { length: "shared", position: "shared" })),
+  F2_FACET_POLICY_UNDECLARED: () => runComposite(facetOf("cartesian|position|length", {})),
+  F3_FACET_FREE_POLICY: () => runComposite(facetOf("cartesian|position|length", { length: "free", position: "free" })),
+  E1_EMBED_TREND_WITHIN_BUDGET: () =>
+    runComposite({
+      combinator: "embed",
+      host: corpusPart("cartesian|position|length"),
+      budget: ["length", "text"],
+      cellBaseline: "truncated",
+      part: { kind: "program", program: { ...corpusPart("cartesian|position|length"), task: "trend" } },
+    }),
+  E2_EMBED_MAGNITUDE_BEYOND_BUDGET: () =>
+    runComposite({
+      combinator: "embed",
+      host: corpusPart("cartesian|position|length"),
+      budget: ["length"],
+      cellBaseline: "truncated",
+      part: { kind: "program", program: corpusPart("cartesian|position|length") },
+    }),
+  S1_LAYER_PART_REFUSED: () =>
+    runComposite({ combinator: "layer", parts: [{ kind: "program", program: refusedPart() }, { kind: "program", program: corpusPart("cartesian|text|length") }], sharing: { length: "shared", text: "shared" } }),
+  N1_LAYER_OF_FACET_CONTRADICTION: () =>
+    runComposite({
+      combinator: "layer",
+      parts: [
+        { kind: "composite", composite: facetOf("cartesian|position|length", { length: "free", position: "free" }) },
+        { kind: "program", program: corpusPart("cartesian|text|length") },
+      ],
+      sharing: { length: "shared", position: "shared", text: "shared" },
+    }),
+  U1_FACET_OF_LAYER_FREE_PANELS: () => runComposite(facetOver(sharedLayer(KG), { length: "free", text: "free" }), KG),
+  U2_FACET_OF_LAYER_SHARED_PANELS: () => runComposite(facetOver(sharedLayer(KG), { length: "shared", text: "shared" }), KG),
+  U3_FACET_OF_LAYER_UNDECLARED_INNER: () => runComposite(facetOver(layerOver(KG, {}), { length: "free", text: "free" }), KG),
+  P1_LAYER_UNUSED_CHANNEL_DECLARATION: () => runComposite({ ...(sharedLayer(KG) as Extract<Composite, { combinator: "layer" }>), sharing: { length: "shared", text: "shared", area: "shared" } }, KG),
+  P2_FACET_UNUSED_CHANNEL_POLICY: () => runComposite({ ...(facetOf("cartesian|position|length", { length: "shared", position: "shared" }) as Extract<Composite, { combinator: "facet" }>), policy: { length: "shared", position: "shared", area: "free" } }),
+};
+
+/** Why a case departs from its frozen expectation. Empty means it agrees. */
+const departures = (e: FrozenExpectation, v: CompositeVerdict, claimsOf: (id: string) => string[]): string[] => {
+  const out: string[] = [];
+  if (e.expected.verdict !== v.kind) return [`verdict ${v.kind}, expected ${e.expected.verdict}`];
+  if (v.kind === "refused") {
+    if (e.expected.cause && !v.causes.includes(e.expected.cause)) out.push(`causes ${JSON.stringify(v.causes)}, expected ${e.expected.cause}`);
+    if (e.expected.causeFrom && v.from !== e.expected.causeFrom) out.push(`refused from ${v.from}, expected ${e.expected.causeFrom}`);
+  }
+  if (v.kind === "unproven" && e.expected.obligation && v.obligation !== e.expected.obligation) {
+    out.push(`obligation ${v.obligation}, expected ${e.expected.obligation}`);
+  }
+  if (v.kind === "retained") {
+    const claims = compositeClaimSet(v);
+    for (const c of e.expected.induces ?? []) if (!claims.includes(c)) out.push(`does not induce ${c}`);
+    for (const c of e.expected.withholds ?? []) if (claims.includes(c)) out.push(`induces ${c}, which the expectation withholds`);
+    if (e.expected.sameAs) {
+      const other = claimsOf(e.expected.sameAs);
+      if (JSON.stringify(claims) !== JSON.stringify(other)) out.push(`claims ${JSON.stringify(claims)} differ from ${e.expected.sameAs} ${JSON.stringify(other)}`);
+    }
+  }
+  return out;
+};
+
+describe("M3 composition: the parts decide first, and the combinator rule decides the rest", () => {
+  it("every pre-registered case is built, and the frozen file records exactly the disagreements that occur", () => {
+    const built = Object.keys(CASES).sort();
+    const frozen = precommit.cases.map((c) => c.id).sort();
+    expect(built, "a frozen case with no construction is an expectation nothing checks").toEqual(frozen);
+
+    const disagreements = new Set(precommit.adjudication.disagreements.map((d) => d.id));
+    const actualDisagreements = new Set<string>();
+    const claimsOf = (id: string) => {
+      const v = CASES[id]!();
+      return v.kind === "retained" ? v.claims : [];
+    };
+    for (const e of precommit.cases) {
+      if (departures(e, CASES[e.id]!(), claimsOf).length > 0) actualDisagreements.add(e.id);
+    }
+    expect(
+      [...actualDisagreements].sort(),
+      "the adjudicated disagreement set must be exactly the set that disagrees — a case may not be moved into it, and it may not be pruned",
+    ).toEqual([...disagreements].sort());
+    expect(disagreements.size).toBe(1);
+  });
+
+  it("agrees with every frozen expectation it did not adjudicate", () => {
+    const claimsOf = (id: string) => {
+      const v = CASES[id]!();
+      return v.kind === "retained" ? v.claims : [];
+    };
+    const ad = new Set(precommit.adjudication.disagreements.map((d) => d.id));
+    for (const e of precommit.cases) {
+      if (ad.has(e.id)) continue;
+      expect(departures(e, CASES[e.id]!(), claimsOf), `${e.id}: ${e.derivation}`).toEqual([]);
+    }
+  });
+
+  it("the one disagreement is the doctrine's embed example, and it is the TASK TABLE that refuses it", () => {
+    const [d] = precommit.adjudication.disagreements;
+    expect(d!.id).toBe("E1_EMBED_TREND_WITHIN_BUDGET");
+    const v = CASES.E1_EMBED_TREND_WITHIN_BUDGET!();
+    // Not a budget refusal: the experiment never reaches the budget, because the
+    // trend task is not implemented on this path. If this ever becomes `refused`
+    // with the embed cause the finding above has been silently overtaken and must
+    // be re-derived.
+    //
+    // RECOVERY MOVED THIS FROM `unproven` TO `unsupported`, and that is the point
+    // of the recovery: a task the path does not implement is not a premise that
+    // went missing.
+    expect(v.kind).toBe("unsupported");
+    expect(v.kind === "unsupported" && v.obligation).toBe("invariant:position-non-meaningful");
+    expect(v.kind === "unsupported" && v.from).toBe("part");
+    expect(v.kind === "unsupported" && v.task).toBe("trend");
+    expect("notEnumerated" in TASK_INVARIANTS.trend).toBe(true);
+  });
+
+  it("RECOVERY: an unimplemented part is UNSUPPORTED -- not unproven, not refused, not merely absent", () => {
+    const trendPart: Program = { ...corpusPart("cartesian|position|length"), task: "trend" };
+    const j = judgeComposite({ structure, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [{ kind: "program", program: trendPart }], sharing: {} } });
+    expect(j.verdict.kind).toBe("unsupported");
+    if (j.verdict.kind !== "unsupported") return;
+    expect(j.verdict.task, "the part's own question is named").toBe("trend");
+    expect(j.verdict.resultKind).toBe("relation");
+    expect(j.verdict.obligation, "what would have to be built is named").toBe("invariant:position-non-meaningful");
+    expect(j.verdict.from).toBe("part");
+    // The three are different shapes, and this asserts the difference rather
+    // than a string that happens to differ.
+    expect(["unproven", "refused", "retained"]).not.toContain(j.verdict.kind);
+  });
+
+  it("RECOVERY: a missing analytical premise keeps its obligation through the composite", () => {
+    const unknown = withGrain("unknown");
+    const j = judgeComposite({ structure: unknown, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [{ kind: "program", program: corpusPart("cartesian|position|length") }], sharing: {} } });
+    expect(j.verdict.kind).toBe("unproven");
+    expect(j.verdict.kind === "unproven" && j.verdict.obligation).toBe("grain:declared");
+    expect(j.verdict.kind === "unproven" && j.verdict.from).toBe("part");
+  });
+
+  it("RECOVERY: a demonstrated contradiction keeps the PART's cause and the PART's location", () => {
+    const part = refusedPart();
+    const judgment = judgeOperation(structure, part.operation) as OperationJudgment;
+    const partCauses = judgment.kind === "refused" ? judgment.causes : [];
+    expect(partCauses.length).toBeGreaterThan(0);
+
+    const j = judgeComposite({ structure, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [{ kind: "program", program: part }], sharing: {} } });
+    expect(j.verdict.kind).toBe("refused");
+    if (j.verdict.kind !== "refused") return;
+    expect(j.verdict.causes).toEqual(partCauses);
+    expect(j.verdict.from).toBe("part");
+    // The recorded origin is the part's own, at its own path.
+    const origin = j.parts.find((x) => x.path.join(".") === "0")!;
+    expect(origin.verdict.kind).toBe("refused");
+    expect(origin.verdict.kind === "refused" && origin.verdict.causes).toEqual(partCauses);
+  });
+
+  it("RECOVERY: parts in SEVERAL dispositions are ALL reported, so no origin is erased", () => {
+    const trendPart: Program = { ...corpusPart("cartesian|position|length"), task: "trend" };
+    // The declared grain is NOT withheld here: an unknown grain makes every
+    // candidate unproven before the rules are consulted, which would mask the
+    // contradiction and collapse three dispositions into two.
+    const j = judgeComposite({
+      structure,
+      inventory: EXPERIMENT_TARGET,
+      composite: {
+        combinator: "layer",
+        parts: [
+          { kind: "program", program: trendPart },
+          { kind: "program", program: refusedPart() },
+          { kind: "program", program: corpusPart("cartesian|position|length") },
+        ],
+        sharing: { length: "shared", position: "shared", text: "shared" },
+      },
+    });
+
+    // The composite's own verdict is ONE thing: the first fault.
+    expect(j.verdict.kind).toBe("unsupported");
+    // ...and every part's disposition is still on the record, including the two
+    // the aggregate verdict does not name.
+    expect(j.parts.map((x) => [x.path.join("."), x.verdict.kind])).toEqual([
+      ["0", "unsupported"],
+      ["1", "refused"],
+      ["2", "retained"],
+    ]);
+    const [unsupportedPart, refusedPartVerdict, retainedPart] = j.parts.map((x) => x.verdict);
+    expect(unsupportedPart!.kind === "unsupported" && unsupportedPart!.obligation).toBe("invariant:position-non-meaningful");
+    expect(refusedPartVerdict!.kind === "refused" && refusedPartVerdict!.causes.length).toBeGreaterThan(0);
+    expect(retainedPart!.kind).toBe("retained");
+  });
+
+  it("RECOVERY: an unproven part is distinguishable from an unsupported one in the same record", () => {
+    const trendPart: Program = { ...corpusPart("cartesian|position|length"), task: "trend" };
+    const j = judgeComposite({
+      structure: withGrain("unknown"),
+      inventory: EXPERIMENT_TARGET,
+      composite: { combinator: "layer", parts: [{ kind: "program", program: trendPart }, { kind: "program", program: corpusPart("cartesian|position|length") }], sharing: { length: "shared", position: "shared", text: "shared" } },
+    });
+    // Both parts are non-retained, and they are non-retained for DIFFERENT
+    // reasons that the record keeps apart.
+    expect(j.parts.map((x) => [x.path.join("."), x.verdict.kind, x.verdict.kind === "unproven" ? x.verdict.obligation : x.verdict.kind === "unsupported" ? x.verdict.obligation : ""])).toEqual([
+      ["0", "unsupported", "invariant:position-non-meaningful"],
+      ["1", "unproven", "grain:declared"],
+    ]);
+  });
+
+  it("RECOVERY: a nested composite's disposition reaches the outer tree with its origins intact", () => {
+    // The inner layer is refused by its OWN rule; the outer facet must attribute
+    // that to its part and must not rewrite the cause.
+    const inner: Composite = layerOver(KG, {});
+    const j = judgeComposite({ structure: KG, inventory: EXPERIMENT_TARGET, composite: facetOver(inner, { length: "free", text: "free" }) });
+    expect(j.verdict.kind).toBe("refused");
+    expect(j.verdict.kind === "refused" && j.verdict.from).toBe("part");
+    expect(j.verdict.kind === "refused" && j.verdict.causes).toEqual(["REL_LAYER_SCALE_UNSHARED"]);
+    // The inner tree's origins are present at their own paths, not flattened.
+    const paths = j.parts.map((x) => x.path.join("."));
+    expect(paths).toContain("0.0");
+    expect(paths).toContain("0.1");
+    expect(paths).toContain("0");
+    // The record entry at the PART's own path holds the inner composite's verdict
+    // VERBATIM, so its attribution is the inner combinator's — the inner layer
+    // refused by its own rule. The outer `verdict.from` above says the OUTER
+    // facet refused because a part arrived faulted. Both attributions are on the
+    // record, which is the point: re-attributing the inner entry too would erase
+    // where the rule that fired actually lives.
+    const inner0 = j.parts.find((x) => x.path.join(".") === "0")!;
+    expect(inner0.verdict.kind).toBe("refused");
+    expect(inner0.verdict.kind === "refused" && inner0.verdict.from).toBe("combinator");
+    // Judging the inner composite on its own returns exactly what the record
+    // carries at its path, so the nesting lost nothing on the way out.
+    const innerAlone = judgeComposite({ structure: KG, inventory: EXPERIMENT_TARGET, composite: inner });
+    expect(innerAlone.verdict).toEqual(inner0.verdict);
+  });
+
+  it("RECOVERY: a part the composer cannot certify is CARRIED, never refused by a helper's false", () => {
+    // A program whose measure channel cannot carry the result's transformation
+    // is not certified. That is not a contradiction and this composer has no
+    // named cause for it, so it must not manufacture one.
+    const uncertifiable: Program = { ...corpusPart("cartesian|position|length"), measure: "hue" };
+    expect(relationProgramIsSound(uncertifiable, facts, "magnitude-comparison", EXPERIMENT_TARGET)).toBe(false);
+    const j = judgeComposite({ structure, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [{ kind: "program", program: uncertifiable }], sharing: {} } });
+    expect(j.verdict.kind, "an uncertified part is not a contradiction").toBe("unproven");
+    if (j.verdict.kind !== "unproven") return;
+    expect(j.verdict.obligation).toBe("part:uncertified");
+    expect(j.verdict.detail, "the premises that were not met are named").toContain("does not carry a ratio measure");
+  });
+
+  it("no combinator cause is invented: all four are declared by the doctrine's own diagnostic table", () => {
+    const emitted = new Set<string>();
+    for (const id of Object.keys(CASES)) {
+      const v = CASES[id]!();
+      if (v.kind === "refused") v.causes.forEach((c) => emitted.add(c));
+    }
+    // One cause comes from the PART's own admission judgment, not from a
+    // combinator; every combinator cause must be one the doctrine declares.
+    for (const cause of emitted) {
+      if (cause === "REL_ADDITIVITY_SUM_SEMIADDITIVE") continue;
+      expect(allowedCauses.has(cause), `${cause} is not a diagnostic the doctrine declares`).toBe(true);
+      expect(["REL_LAYER_SCALE_UNSHARED", "REL_UNIT_INCOMMENSURABLE_SHARED_SCALE", "REL_FACET_SCALE_POLICY_UNDECLARED", "REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET"]).toContain(cause);
+    }
+    expect(emitted.has("REL_LAYER_SCALE_UNSHARED")).toBe(true);
+    expect(emitted.has("REL_UNIT_INCOMMENSURABLE_SHARED_SCALE")).toBe(true);
+    expect(emitted.has("REL_FACET_SCALE_POLICY_UNDECLARED")).toBe(true);
+    expect(emitted.has("REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET")).toBe(true);
+  });
+
+  it("a refused composite carries the PART's cause verbatim, and no composite-shaped one replaces it", () => {
+    const part = refusedPart();
+    const judgment = judgeOperation(structure, part.operation) as OperationJudgment;
+    expect(judgment.kind).toBe("refused");
+    const partCauses = judgment.kind === "refused" ? judgment.causes : [];
+    expect(partCauses.length, "the case is only decisive if the part carries a named cause").toBeGreaterThan(0);
+
+    const v = CASES.S1_LAYER_PART_REFUSED!();
+    expect(v.kind).toBe("refused");
+    if (v.kind !== "refused") return;
+    expect(v.from, "the composite is refused because a PART is refused").toBe("part");
+    expect(v.causes, "the part's cause reaches the caller unaltered").toEqual(partCauses);
+    for (const combinatorCause of ["REL_LAYER_SCALE_UNSHARED", "REL_UNIT_INCOMMENSURABLE_SHARED_SCALE", "REL_FACET_SCALE_POLICY_UNDECLARED", "REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET"]) {
+      expect(v.causes).not.toContain(combinatorCause);
+    }
+    // And the same part under a combinator whose own rule it would satisfy is
+    // still refused, so the refusal is about the part and not about the layer.
+    const alone = runComposite({ combinator: "layer", parts: [{ kind: "program", program: part }], sharing: {} });
+    expect(alone.kind).toBe("refused");
+    expect(alone.kind === "refused" && alone.from).toBe("part");
+  });
+
+  it("a sufficient cell budget admits the SAME part the insufficient one refuses", () => {
+    const insufficient = CASES.E2_EMBED_MAGNITUDE_BEYOND_BUDGET!();
+    expect(insufficient.kind).toBe("refused");
+    const sufficient = runComposite({
+      combinator: "embed",
+      host: corpusPart("cartesian|position|length"),
+      budget: ["length"],
+      cellBaseline: "zero",
+      part: { kind: "program", program: corpusPart("cartesian|position|length") },
+    });
+    expect(sufficient.kind, "the refusal tracks the baseline the cell offers, not the part").toBe("retained");
+    expect(compositeClaimSet(sufficient)).toContain("ratio-comparability");
+  });
+
+  it("the two scale scopes are not one profile: a free facet over a shared layer is lawful, and a shared layer over a free facet is not", () => {
+    const u1 = CASES.U1_FACET_OF_LAYER_FREE_PANELS!();
+    const u2 = CASES.U2_FACET_OF_LAYER_SHARED_PANELS!();
+    expect(u1.kind).toBe("retained");
+    expect(u2.kind).toBe("retained");
+    // A flattened single profile refuses U1; the scopes must be read separately.
+    expect(u1.kind === "retained" && u1.profile.length).toBe("free");
+    expect(u1.kind === "retained" && u1.profile.text).toBe("free");
+    const difference = compositeClaimSet(u2).filter((c) => !compositeClaimSet(u1).includes(c));
+    expect(difference, "U2 differs from U1 by exactly the claim the policy names").toEqual(["cross-panel-comparability"]);
+    // The reverse nesting is refused, because the operand exposes the channel free.
+    const n1 = CASES.N1_LAYER_OF_FACET_CONTRADICTION!();
+    expect(n1.kind).toBe("refused");
+    expect(n1.kind === "refused" && n1.causes).toContain("REL_LAYER_SCALE_UNSHARED");
+    expect(n1.kind === "refused" && n1.from).toBe("combinator");
+  });
+
+  it("the facet's two policies differ by the claim and by nothing else", () => {
+    const shared = CASES.F1_FACET_SHARED_POLICY!();
+    const free = CASES.F3_FACET_FREE_POLICY!();
+    expect(shared.kind).toBe("retained");
+    expect(free.kind).toBe("retained");
+    const s = compositeClaimSet(shared);
+    const f = compositeClaimSet(free);
+    expect(s.filter((c) => !f.includes(c))).toEqual(["cross-panel-comparability"]);
+    expect(f.filter((c) => !s.includes(c))).toEqual([]);
+    expect(shared.kind === "retained" && shared.profile.length).toBe("shared");
+    expect(free.kind === "retained" && free.profile.length).toBe("free");
+  });
+
+  it("commensurability is read off the declaration, and an absent fact is unproven rather than false", () => {
+    expect(unitsCommensurable(UNIT_KG, UNIT_KG)).toBe("yes");
+    expect(unitsCommensurable(UNIT_KG, UNIT_GRAM_CONVERTIBLE)).toBe("yes");
+    expect(unitsCommensurable(UNIT_GRAM_CONVERTIBLE, UNIT_KG)).toBe("yes");
+    expect(unitsCommensurable(UNIT_KG, UNIT_SECOND)).toBe("no");
+    expect(unitsCommensurable(UNIT_KG, undefined)).toBe("unknown");
+    expect(unitsCommensurable(undefined, undefined)).toBe("unknown");
+    expect(unitsCommensurable({ perRow: true, units: ["kg"] }, UNIT_KG), "perRow is the schema's own statement that the instance decides").toBe("unknown");
+    // The three branches reach three different verdicts over otherwise identical declarations.
+    expect(CASES.L1_LAYER_SHARED_POSITION!().kind).toBe("retained");
+    expect(CASES.L3_LAYER_SHARED_INCOMMENSURABLE!().kind).toBe("refused");
+    expect(CASES.L4_LAYER_SHARED_UNIT_ABSENT!().kind).toBe("unproven");
+  });
+
+  it("the committed corpus declares no unit, so the corpus itself exercises the unproven branch", () => {
+    // The pre-commit predicted this and it is load-bearing: L3's refusal is only
+    // reachable over an authored declaration, so presenting the corpus's own
+    // outcome as the refusal would be presenting one branch as the other.
+    const corpusLayer = runComposite({
+      combinator: "layer",
+      parts: [
+        { kind: "program", program: corpusPart("cartesian|position|length") },
+        { kind: "program", program: corpusPart("cartesian|text|length") },
+      ],
+      sharing: { length: "shared", text: "shared" },
+    });
+    expect(corpusLayer.kind).toBe("unproven");
+    expect(corpusLayer.kind === "unproven" && corpusLayer.obligation).toBe("unit:commensurable");
+    expect(Object.values(structure.relations).every((r) => Object.values(r.fields ?? {}).every((f) => f.unit === undefined))).toBe(true);
+  });
+
+  it("declarations no part reads are inert in both combinators", () => {
+    const l1 = CASES.L1_LAYER_SHARED_POSITION!();
+    const p1 = CASES.P1_LAYER_UNUSED_CHANNEL_DECLARATION!();
+    expect(p1.kind).toBe("retained");
+    expect(compositeClaimSet(p1), "an unused channel's sharing declaration moves nothing").toEqual(compositeClaimSet(l1));
+    expect(p1.kind === "retained" && p1.channels).toEqual(l1.kind === "retained" ? l1.channels : []);
+
+    const f1 = CASES.F1_FACET_SHARED_POLICY!();
+    const p2 = CASES.P2_FACET_UNUSED_CHANNEL_POLICY!();
+    expect(p2.kind).toBe("retained");
+    expect(compositeClaimSet(p2), "a policy for a channel the projection does not read is inert").toEqual(compositeClaimSet(f1));
+    expect(p2.kind === "retained" && p2.profile).toEqual(f1.kind === "retained" ? f1.profile : {});
+  });
+
+  it("the cell budget asks the capacity table the same question inducedClaims asks, rather than carrying a second copy", () => {
+    // A ratio measure on a length channel at a zero baseline is ratio comparable;
+    // at a truncated baseline it is only difference comparable. If the embed rule
+    // ever diverged from this, the two would disagree here.
+    expect(channelClaims("length", "zero", facts)).toContain("ratio-comparability");
+    expect(channelClaims("length", "truncated", facts)).not.toContain("ratio-comparability");
+    expect(channelClaims("text", "truncated", facts)).toContain("ratio-comparability");
+    const asProgram = inducedClaims({ ...metricProgram, measure: "length", baseline: "zero" }, facts).filter((c) => c !== "partition-membership");
+    expect(channelClaims("length", "zero", facts).slice().sort()).toEqual(asProgram.slice().sort());
+  });
+
+  it("the composition surface states what it does not claim", () => {
+    expect(COMPOSITION_NON_CLAIMS.length).toBeGreaterThanOrEqual(5);
+    for (const nonClaim of COMPOSITION_NON_CLAIMS) expect(nonClaim.trim().length).toBeGreaterThan(40);
+    expect(COMPOSITION_NON_CLAIMS.join(" ")).toContain("partition");
   });
 });
