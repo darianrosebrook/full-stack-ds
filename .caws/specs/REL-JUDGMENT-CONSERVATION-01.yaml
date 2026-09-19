@@ -1,0 +1,53 @@
+id: REL-JUDGMENT-CONSERVATION-01
+title: 'Analytical judgments are conserved across the M2-M3 boundary: the composer consumes the same atomic classification, and a scale summary preserves what its parent rules need'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-19T07:12:00.571Z'
+updated_at: '2026-09-19T07:12:00.571Z'
+created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given one atomic request under each of the omitted-partition, forbidden-partition and keyed-channel regimes; when it goes through the enumerator and through the composite part-reader; then both report the SAME disposition and the composer cannot certify what enumeration withholds'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an atomic operand; when it is presented to a composer; then the task-relevant premises its judgment depends on travel with it rather than being supplied separately by only one of the two consumers'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a shared facet over a commensurable kg panel and an INCOMMENSURABLE seconds panel; when it is layered with a kg annotation; then it is refused under the shared-scale dimensional rule, and reversing the panel order does not change that'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a shared facet over two commensurable panels; when it is layered; then it remains retained, so the correction does not refuse lawful nesting'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a MISSING unit and an established incompatibility; when each reaches a parent; then the two remain distinguishable, and a free-scale scope is not rejected merely for not being shared'
+  - id: A6
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an environment in which the DEFAULT alias loader encounters a removed or changed layer; when the search runs; then its normalized outcome is identical while the default catalogue path fails or changes, and a deliberately alias-dependent search mutant FAILS that control'
+  - id: A7
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a region no retained program satisfies; when the catalogue reports it; then the enumeration''s own support, refusal and obligation evidence is preserved rather than flattened to one reason, and a region mixing refused and undecided candidates keeps both'
+non_functional: {}
+contracts:
+  - name: 'judgment-conservation'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
