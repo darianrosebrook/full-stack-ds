@@ -2,6 +2,10 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 import { afterEach, describe, expect, it } from "vitest";
 import { bundle } from "../types/bundle";
 import { UsageExamples } from "../views/sections/UsageExamples";
+import {
+  collectSuppliedRegions,
+  deriveRequiredRegionObligations,
+} from "../../packages/ds-codegen/src/usage-composition";
 
 afterEach(cleanup);
 
@@ -179,6 +183,33 @@ describe("usage sidecar render projection", () => {
 
     render(<UsageExamples component={component("Button")} />);
     expect(document.body.querySelector('[data-fsds-component="spinner"]')).toBeTruthy();
+  });
+
+  it("supplies every consumer-supplied required region in every curated frame", () => {
+    // slots[].required binding (FEAT-SLOT-REQUIRED-USAGE-BINDING-01): for
+    // consumer-supplied regions (named slots + public subcomponents), a
+    // curated frame omitting a required region demonstrates an invalid
+    // composition. Component-owned anchors (the anchor-presence sense) and
+    // the root host anchor are excluded by deriveRequiredRegionObligations.
+    let obligationsSeen = 0;
+    for (const entry of bundle.components) {
+      if (!entry.usage.length) continue;
+      const required = deriveRequiredRegionObligations(entry.contract as never);
+      if (!required.length) continue;
+      obligationsSeen += required.length;
+      for (const frame of entry.usage) {
+        const supplied = collectSuppliedRegions(frame.tree);
+        for (const { region } of required) {
+          expect(
+            supplied.has(region),
+            `[USAGE-REQUIRED-SLOT-MISSING] ${entry.name}[${frame.name}]: required region "${region}" not supplied (supplied: ${[...supplied].sort().join(", ") || "none"})`,
+          ).toBe(true);
+        }
+      }
+    }
+    // The sweep must observe real obligations (Field.control) so it cannot
+    // trivially pass by finding none.
+    expect(obligationsSeen).toBeGreaterThan(0);
   });
 
 });

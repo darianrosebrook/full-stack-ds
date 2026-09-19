@@ -159,10 +159,16 @@ export const CONTRACT_MUTANTS = Object.freeze([
     to: true,
     hypothesis:
       "Making a named slot required should change a generated API, validator, authored fact, or remain an explicit documentation-only declaration.",
-    expectedOutcome: "survived",
-    gap: {
-      spec: "RAIL-CONTRACT-INFLUENCE-PROVENANCE-01",
-      note: "This sentinel measures the required flag specifically; named-slot rendering is separately driven by anatomy.dom slot nodes.",
+    expectedOutcome: "detected",
+    expectedDetection: {
+      stage: "root-tests",
+      evidenceClass: "mixed-test",
+      evidenceMarker:
+        "[USAGE-REQUIRED-SLOT-MISSING] Card[completed-with-note]",
+    },
+    kill: {
+      spec: "FEAT-SLOT-REQUIRED-USAGE-BINDING-01",
+      note: "deriveRequiredRegionObligations derives consumer-supplied required regions from the contract; the showcase usage audit fails any curated frame that omits one. The marker names the authored assertion, so a generated failure cannot take the credit.",
     },
   },
   {
