@@ -137,10 +137,16 @@ export const CONTRACT_MUTANTS = Object.freeze([
     to: "reveal",
     hypothesis:
       "Renaming a valid state-machine event should affect a consumer or remain an explicit non-emitting fact.",
-    expectedOutcome: "survived",
-    gap: {
-      spec: "RAIL-CONTRACT-INFLUENCE-PROVENANCE-01",
-      note: "This sentinel measures whether state-machine event vocabulary reaches anything beyond schema and transition self-consistency checks.",
+    expectedOutcome: "detected",
+    expectedDetection: {
+      stage: "generate-check",
+      evidenceClass: "structural",
+      evidenceMarker:
+        '[STATEMACHINE_TRIGGER_UNRESOLVED] trigger "reveal" resolves to no declared referent',
+    },
+    kill: {
+      spec: "FEAT-STATEMACHINE-TRIGGER-BINDING-01",
+      note: "Semantic Rule 6b binds transition events to declared trigger referents (channels, events, props, dismissal triggers, a11y.keyboard ids, part-qualified forms, closed DOM platform set), so a name that references nothing fails generate:check.",
     },
   },
   {
