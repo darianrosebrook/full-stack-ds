@@ -55,37 +55,124 @@ export function parseUsageRef(ref: string): ParsedUsageRef | null {
 }
 
 /**
- * Regions a curated usage frame supplies with composition content, across
- * both composition dialects: node-level `slots` maps (Field-style, where the
- * frame routes regions through the generated slots prop) and part-suffixed
- * refs (`fsds.Card.actions` children trees). Frame-data-level only — never
- * DOM-inferred (FEAT-SLOT-REQUIRED-USAGE-BINDING-01).
+ * A required-region obligation an owning occurrence failed to discharge.
+ * `path` locates the owing occurrence within the frame tree (e.g.
+ * "/fsds.Card/children[1]/fsds.Card") so failures identify WHO owes the
+ * region, not merely that the region name appears somewhere in the frame.
  */
-export function collectSuppliedRegions(frameTree: unknown): Set<string> {
-  const supplied = new Set<string>();
-  visitUsageNode(frameTree, supplied);
-  return supplied;
+export interface RequiredRegionViolation {
+  component: string;
+  path: string;
+  region: string;
+  supplied: string[];
 }
 
-function visitUsageNode(node: unknown, out: Set<string>): void {
+interface Occurrence {
+  component: string;
+  path: string;
+  regions: Set<string>;
+}
+
+/**
+ * Find required-region violations in a curated usage frame, preserving
+ * occurrence ownership (FIX-SLOT-REQUIRED-OWNERSHIP-01).
+ *
+ * The walk mirrors the renderer's composition routing rather than defining a
+ * second interpretation: each usage node carries exactly one `fsds.*` ref; a
+ * node-level or props-level `slots` map delivers regions to THAT occurrence;
+ * an `fsds.X.<region>` child delivers to the enclosing occurrence only when
+ * that occurrence's component is X (otherwise it renders an orphan
+ * subcomponent element and supplies nothing); a nested `fsds.X` root — under
+ * any occurrence's children or slot content, even the same component — is a
+ * NEW ownership context whose supply never discharges its enclosing
+ * occurrence. Every full occurrence is checked against its own component's
+ * obligations, including occurrences nested inside other components' frames.
+ * Frame-data-level only — never DOM-inferred.
+ */
+export function findRequiredRegionViolations(
+  frameTree: unknown,
+  obligationsFor: (component: string) => RequiredRegionObligation[],
+): RequiredRegionViolation[] {
+  const violations: RequiredRegionViolation[] = [];
+  visitUsageNode(frameTree, "", obligationsFor, violations);
+  return violations;
+}
+
+function visitUsageNode(
+  node: unknown,
+  path: string,
+  obligationsFor: (component: string) => RequiredRegionObligation[],
+  violations: RequiredRegionViolation[],
+): void {
   if (!node || typeof node !== "object" || Array.isArray(node)) return;
   for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
     if (!key.startsWith("fsds.")) continue;
     const rest = key.slice("fsds.".length);
     const dot = rest.indexOf(".");
-    if (dot > 0) out.add(rest.slice(dot + 1));
-    if (value && typeof value === "object" && !Array.isArray(value)) {
-      const record = value as Record<string, unknown>;
-      collectSlotEntries(record.slots, out);
-      const props = record.props;
-      if (props && typeof props === "object" && !Array.isArray(props)) {
-        const propsRecord = props as Record<string, unknown>;
-        collectSlotEntries(propsRecord.slots, out);
-        const children = propsRecord.children;
-        if (Array.isArray(children)) children.forEach((child) => visitUsageNode(child, out));
-        else visitUsageNode(children, out);
+    const component = dot > 0 ? rest.slice(0, dot) : rest;
+    const part = dot > 0 ? rest.slice(dot + 1) : null;
+    if (!value || typeof value !== "object" || Array.isArray(value)) continue;
+    const record = value as Record<string, unknown>;
+    const props =
+      record.props && typeof record.props === "object" && !Array.isArray(record.props)
+        ? (record.props as Record<string, unknown>)
+        : {};
+    const here = `${path}/${key}`;
+
+    if (part === null) {
+      // Full occurrence: its own ownership context.
+      const occurrence: Occurrence = { component, path: here, regions: new Set() };
+      collectSlotEntries(record.slots, occurrence.regions);
+      collectSlotEntries(props.slots, occurrence.regions);
+      const children = childList(props.children);
+      children.forEach((child, index) => {
+        // Same-component part refs in THIS occurrence's children deliver to it.
+        deliverPartRefs(child, component, occurrence.regions);
+        // Every child subtree is its own ownership context (nested roots).
+        visitUsageNode(child, `${here}/children[${index}]`, obligationsFor, violations);
+      });
+      // Slot content may itself contain nested component roots.
+      for (const source of [record.slots, props.slots]) {
+        if (!source || typeof source !== "object" || Array.isArray(source)) continue;
+        for (const [region, content] of Object.entries(source as Record<string, unknown>)) {
+          visitUsageNode(content, `${here}/slots/${region}`, obligationsFor, violations);
+        }
       }
+      for (const obligation of obligationsFor(component)) {
+        if (!occurrence.regions.has(obligation.region)) {
+          violations.push({
+            component,
+            path: here,
+            region: obligation.region,
+            supplied: [...occurrence.regions].sort(),
+          });
+        }
+      }
+    } else {
+      // Part occurrence: region content, not an obligated instance. Only
+      // nested roots inside its content create further occurrences.
+      const children = childList(props.children);
+      children.forEach((child, index) => {
+        visitUsageNode(child, `${here}/children[${index}]`, obligationsFor, violations);
+      });
     }
+  }
+}
+
+function childList(children: unknown): unknown[] {
+  if (Array.isArray(children)) return children;
+  if (children && typeof children === "object") return [children];
+  return [];
+}
+
+function deliverPartRefs(child: unknown, ownerComponent: string, out: Set<string>): void {
+  if (!child || typeof child !== "object" || Array.isArray(child)) return;
+  for (const key of Object.keys(child as Record<string, unknown>)) {
+    if (!key.startsWith("fsds.")) continue;
+    const rest = key.slice("fsds.".length);
+    const dot = rest.indexOf(".");
+    if (dot <= 0) continue;
+    if (rest.slice(0, dot) === ownerComponent) out.add(rest.slice(dot + 1));
   }
 }
 
