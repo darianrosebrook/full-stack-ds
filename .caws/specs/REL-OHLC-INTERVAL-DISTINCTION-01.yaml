@@ -42,3 +42,8 @@ contracts:
   - name: 'ohlc-interval-distinction'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "OHLC: the relation IS reached without widening the evaluator - an operation over its own ratio measures admits and enumerates (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1035 tests green))"
+    recorded_at: "2026-09-19T09:34:56.738Z"
