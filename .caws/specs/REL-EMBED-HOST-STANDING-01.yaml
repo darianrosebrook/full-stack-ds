@@ -47,3 +47,8 @@ contracts:
   - name: 'embed-host-standing'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts HOST STANDING: the host is read recorded at its own path and a retained pair stays retained (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1023 tests green))"
+    recorded_at: "2026-09-19T06:09:44.409Z"
