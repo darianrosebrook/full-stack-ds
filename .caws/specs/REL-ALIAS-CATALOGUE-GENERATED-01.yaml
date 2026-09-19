@@ -66,3 +66,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts TRACKS THE SPACE: a name whose region loses its members leaves the entries and is REPORTED (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1018 tests green))"
     recorded_at: "2026-09-19T05:05:35.953Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "projection.test.ts keeps a form name out of the module ENTIRELY, because the names live in the pack (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1018 tests green))"
+    recorded_at: "2026-09-19T05:05:36.507Z"
