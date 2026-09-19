@@ -77,3 +77,10 @@ evidence:
     recorded_at: "2026-09-19T19:10:42.121Z"
     artifact_path: docs/domain-realization-comparison.md
     commit_sha: "6801775fa33db753e0a08c2dd7a52d0900007fcf"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "node scripts/docs-claims-check.mjs and node scripts/docs-link-check.mjs both exited 0 on merged main: 84 governed claims match and 120 tracked links resolve"
+    recorded_at: "2026-09-19T19:11:05.596Z"
+    command: "node scripts/docs-claims-check.mjs && node scripts/docs-link-check.mjs"
+    exit_code: 0
+    commit_sha: "6801775fa33db753e0a08c2dd7a52d0900007fcf"
