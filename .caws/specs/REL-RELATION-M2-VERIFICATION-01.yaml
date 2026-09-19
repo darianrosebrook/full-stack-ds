@@ -2,9 +2,11 @@ id: REL-RELATION-M2-VERIFICATION-01
 title: 'The retained relation-valued proof is corrected and bounded: task agreement, a real singleton, and mutations that must fail'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'The relation checker requires the declared task to agree with the queried one and reports which premise failed, the singleton control is a real singleton asserted by membership, and the reference states its shared premises and its scope.'
 created_at: '2026-09-19T04:31:08.289Z'
-updated_at: '2026-09-19T04:31:56.671Z'
+updated_at: '2026-09-19T04:37:38.089Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
