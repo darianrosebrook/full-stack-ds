@@ -35,3 +35,8 @@ acceptance:
     then: 'given the hook pack ships its own test scripts; when the migration completes; then those scripts run and their outcomes are reported against the pre-migration baseline'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "bash .caws/hooks/tests/test_worktree_guard_cmdtext.sh -> PASS 19 cases (pre-migration baseline: 8 passed/11 failed, fixture-dependent); bash .caws/hooks/tests/test_reprieve_path_resolution.sh -> PASS 10 cases (unchanged from baseline)"
+    recorded_at: "2026-09-19T06:10:06.990Z"
