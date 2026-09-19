@@ -38,3 +38,11 @@ acceptance:
     then: 'the baseline passes'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Affected suites green with assertions byte-unchanged (the diff is per-test { timeout: 30000 } options plus comments only): closure suite 70/70 focused (ledger-authority test at 949ms); full root suite 305/305 files, 4283/4283 tests at worktree commit 84703ada after cache clearing. Honest provenance: two earlier full-suite runs in that worktree were red with a ROTATING failure set (4, then 6, then 15 failures across identical code, including jsdom TypeErrors in untouched files) — diagnosed as a poisoned vitest transform cache seeded during a peer-contention window, cleared via node_modules/.vite + node_modules/.vitest, after which the suite is deterministically green; those red runs are recorded as environmental, not counted. The budget set is bounded to five tests, each justified by a retained timeout observation AND an inspected multi-derivation/population-search workload; a sixth earns a budget only from its own retained timeout."
+    recorded_at: "2026-09-19T21:07:20.357Z"
+    command: pnpm test
+    exit_code: 0
+    commit_sha: "84703ada"
