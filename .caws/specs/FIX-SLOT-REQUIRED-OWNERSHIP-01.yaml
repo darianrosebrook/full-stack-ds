@@ -1,0 +1,41 @@
+id: FIX-SLOT-REQUIRED-OWNERSHIP-01
+title: 'Preserve occurrence ownership in the required-region usage audit'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-19T18:45:52.868Z'
+updated_at: '2026-09-19T18:45:52.868Z'
+created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
+blast_radius:
+  modules:
+    - 'ds-codegen-usage-composition'
+    - 'showcase-usage-audit'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/usage-composition.ts'
+    - 'packages/ds-codegen/src/usage-composition.test.ts'
+    - 'src/lib/render-usage.test.tsx'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'a frame with an outer and an inner occurrence of the same component where only the inner occurrence supplies its required region'
+    when: 'the ownership-aware violation finder runs'
+    then: 'exactly the outer occurrence is reported with its component and tree path and the inner occurrence is not'
+  - id: A2
+    given: 'valid nested compositions where both occurrences supply their regions, and the live corpus including nested occurrences'
+    when: 'the audit runs'
+    then: 'zero violations and the sweep still observes real obligations'
+  - id: A3
+    given: 'the catalog mutant card-actions-slot-required at the landed HEAD with no catalog change'
+    when: 'the targeted full-profile mutation measurement runs'
+    then: 'it is still detected at root-tests with the retained marker prefix'
+non_functional: {}
+contracts:
+  - name: 'slot-required-ownership'
+    type: contract-test
+    path: 'packages/ds-codegen/src/usage-composition.test.ts'
