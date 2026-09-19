@@ -1494,27 +1494,53 @@ def render_session(**kwargs: Any) -> None:
             paths = {key: str(kwargs.get(key, "")) for key in
                      ("transcript_path", "audit_path", "hook_outcome_path")}
             before = {key: input_snapshot(path) for key, path in paths.items()}
-            outcome = _render_session_unlocked(**kwargs)
-            after = {key: input_snapshot(path) for key, path in paths.items()}
-            outputs = {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
-                       for path in sorted(directory.glob("turn-*.json"))}
-            state = {"schema": "caws.session_render.v1", "session_id": kwargs["session_id"],
-                     "status": outcome["status"],
-                     "outputs_current": outcome["outputs_current"] and before == after,
-                     "inputs_before": before, "inputs_after": after,
-                     "inputs_stable": before == after, "outputs": outputs,
-                     "observation_boundary": "renderer_return", "native_delivery": "not_observed"}
-            name = ".render-state.json.tmp." + uuid.uuid4().hex
-            state_fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=fd)
-            try:
-                with os.fdopen(state_fd, "w") as target:
-                    json.dump(state, target, indent=2)
-                os.replace(name, ".render-state.json", src_dir_fd=fd, dst_dir_fd=fd)
-            finally:
+
+            def publish(status: str, outputs_current: bool, error: str | None = None) -> None:
+                after = {key: input_snapshot(path) for key, path in paths.items()}
+                outputs = {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+                           for path in sorted(directory.glob("turn-*.json"))}
+                state = {"schema": "caws.session_render.v1", "session_id": kwargs["session_id"],
+                         "status": status,
+                         "outputs_current": outputs_current and before == after,
+                         "inputs_before": before, "inputs_after": after,
+                         "inputs_stable": before == after, "outputs": outputs,
+                         "observation_boundary": "renderer_return", "native_delivery": "not_observed"}
+                if error is not None:
+                    state["error"] = error
+                name = ".render-state.json.tmp." + uuid.uuid4().hex
+                state_fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=fd)
                 try:
-                    os.unlink(name, dir_fd=fd)
-                except FileNotFoundError:
+                    with os.fdopen(state_fd, "w") as target:
+                        json.dump(state, target, indent=2)
+                    os.replace(name, ".render-state.json", src_dir_fd=fd, dst_dir_fd=fd)
+                finally:
+                    try:
+                        os.unlink(name, dir_fd=fd)
+                    except FileNotFoundError:
+                        pass
+
+            # A CRASHED render must not leave the PREVIOUS render's verdict
+            # standing. .render-state.json is the only artifact that says
+            # whether the turn files reflect the current transcript; written
+            # solely on a normal return, it survives an exception intact, so an
+            # observer reads `status: rendered, outputs_current: true` from the
+            # last GOOD render while the turn files are stale and the render
+            # that would have refreshed them died. Preserving the prior
+            # generation (which the writer below does correctly) is only half
+            # the guarantee -- the other half is that the staleness is visible.
+            try:
+                outcome = _render_session_unlocked(**kwargs)
+            except BaseException as exc:
+                # Record, then re-raise unchanged: the caller's non-zero exit is
+                # the loud signal and must not be swallowed. A failure to write
+                # the receipt must not mask the failure being reported, so the
+                # publish itself is best-effort.
+                try:
+                    publish("failed", False, error=f"{type(exc).__name__}: {exc}")
+                except Exception:
                     pass
+                raise
+            publish(outcome["status"], outcome["outputs_current"])
         finally:
             os.close(lock)
     finally:
