@@ -17,6 +17,7 @@
  * semi-additivity declaration forbids.
  */
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { judge } from "./engines.js";
@@ -75,7 +76,7 @@ import {
   inducedClaims,
   unitsCommensurable,
 } from "./projection.js";
-import type { Composite, CompositeVerdict, OperationJudgment, AggregateAssertionDecl, Program, ResultFacts, TargetInventory } from "./projection.js";
+import type { Composite, CompositeVerdict, Enumeration, OperationJudgment, AggregateAssertionDecl, Program, ResultFacts, TargetInventory } from "./projection.js";
 import type { RelationalStructure, UnitDecl } from "./relation-model.js";
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -1071,6 +1072,102 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     expect(e.refused.filter((r) => r.cause === "REL_KEY_ENCODED_TO_CHANNEL").every((r) => r.program.dimension !== "position")).toBe(true);
     expect(relationMembership(e)).toEqual(reference);
     expect(reference.every((k) => k.split("|")[1] === "position")).toBe(true);
+  });
+
+  it("ALIAS INDEPENDENCE: the search outcome is identical with the alias layer REMOVED, RENAMED and BLANKED", () => {
+    // Three contracts directories that differ ONLY in the alias layer. The
+    // removal has to be REAL, so the loader is required to fail on it — a
+    // control that deletes nothing and observes no change establishes nothing.
+    const realDir = path.resolve(HERE, "../../../ds-contracts");
+    const removedDir = fs.mkdtempSync(path.join(os.tmpdir(), "alias-removed-"));
+    const changedDir = fs.mkdtempSync(path.join(os.tmpdir(), "alias-changed-"));
+    const packDir = (d: string) => {
+      fs.mkdirSync(path.join(d, "analytical-pack"), { recursive: true });
+      return path.join(d, "analytical-pack", "form-regions.json");
+    };
+    const declared = loadFormDeclarations(realDir);
+    fs.writeFileSync(
+      packDir(changedDir),
+      JSON.stringify({
+        regions: [
+          // A BLANK region constrains nothing, so it selects EVERY retained
+          // program. That is a real state of the layer, not an empty catalogue.
+          ...declared.map((_, i) => ({ name: `renamed-${i}`, colloquial: `renamed ${i}`, asserts: {} })),
+          // ...and a region no point of this target satisfies, so the changed
+          // layer exercises the other branch too.
+          { name: "impossible", colloquial: "an impossible region", asserts: { coordinate: "containment", dimension: "hue", measure: "angle" } },
+        ],
+      }),
+      "utf-8",
+    );
+
+    // THE REMOVAL IS REAL: the loader throws on the directory the search is
+    // about to be shown indifferent to.
+    expect(() => loadFormDeclarations(removedDir)).toThrow();
+    expect(loadFormDeclarations(realDir).length).toBeGreaterThan(0);
+    const changedDecls = loadFormDeclarations(changedDir);
+    expect(changedDecls.filter((d) => d.name.startsWith("renamed-")).length).toBe(declared.length);
+    expect(changedDecls.some((d) => d.name === "impossible")).toBe(true);
+    expect(changedDecls.map((d) => d.name)).not.toEqual(declared.map((d) => d.name));
+
+    // THE NORMALIZED SEMANTIC OUTCOME, in full: population, support, retained
+    // membership, every refusal with its cause, every undecided with its
+    // obligation. Membership alone would miss a name that moved a CAUSE.
+    const outcomeOf = (e: Enumeration) =>
+      JSON.stringify({
+        population: e.population,
+        support: e.support,
+        retained: relationMembership(e),
+        refused: e.refused.map((r) => `${programKey(r.program)}::${r.cause}`).sort(),
+        undecided: e.undecided.map((u) => `${programKey(u.program)}::${u.obligation}`).sort(),
+      });
+    const search = () => enumerate({ structure, admitted, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, partitionDimension: BASIS.resultGrain });
+
+    const baseline = outcomeOf(search());
+    const released = [search(), search(), search()].map(outcomeOf);
+    expect(new Set([baseline, ...released]).size, "the search is the same run every time").toBe(1);
+    // It is not a vacuous outcome: there is something to move.
+    expect(JSON.parse(baseline).retained.length).toBeGreaterThan(0);
+    expect(JSON.parse(baseline).refused.length).toBeGreaterThan(0);
+
+    // THE CATALOGUE, BY CONTRAST, DOES depend on the layer — which is what makes
+    // the search's indifference observable rather than asserted.
+    const withReal = catalogueFor(enumeration, EXPERIMENT_TARGET, realDir);
+    const withChanged = catalogueFor(enumeration, EXPERIMENT_TARGET, changedDir);
+    expect(withChanged.entries.map((e) => e.name)).not.toEqual(withReal.entries.map((e) => e.name));
+    // A blank region matches everything, so every renamed name is an ENTRY that
+    // names the whole retained set; the impossible one is the unsatisfied report.
+    expect(withChanged.entries.length).toBe(declared.length);
+    for (const entry of withChanged.entries) expect(entry.programs.length).toBe(relationMembership(enumeration).length);
+    expect(withChanged.unsatisfied.map((u) => u.name)).toEqual(["impossible"]);
+    expect(withChanged.unsatisfied[0]!.reason).toBe("not-in-space");
+    expect(() => catalogueFor(enumeration, EXPERIMENT_TARGET, removedDir)).toThrow();
+
+    // ...and the search is STILL the same run afterwards.
+    expect(outcomeOf(search())).toBe(baseline);
+  });
+
+  it("ALIAS INDEPENDENCE: nothing the search is built from names the region loader", () => {
+    const src = fs.readFileSync(path.resolve(HERE, "projection.ts"), "utf-8");
+    for (const fn of [
+      "export function enumerate(",
+      "export function enumerateGraph(",
+      "export function lawfulRelationPrograms(",
+      "export function relationProgramIsSound(",
+      "export function relationProgramUncertified(",
+      "export function projectionSupport(",
+      "export function partitionAdmitsSummation(",
+      "export function judgeComposite(",
+    ]) {
+      const body = src.slice(src.indexOf(fn));
+      const end = body.indexOf("\n}");
+      expect(end, `${fn} was not found`).toBeGreaterThan(0);
+      expect(body.slice(0, end), `${fn} reaches for the alias layer`).not.toContain("loadFormDeclarations");
+    }
+    // The contrast: the catalogue path DOES name it, so the check above is not
+    // passing because the string is absent from the file entirely.
+    const catalogueBody = src.slice(src.indexOf("export function catalogueFor("));
+    expect(catalogueBody.slice(0, catalogueBody.indexOf("\n}"))).toContain("loadFormDeclarations");
   });
 
   it("states what the generated catalogue does NOT establish", () => {
