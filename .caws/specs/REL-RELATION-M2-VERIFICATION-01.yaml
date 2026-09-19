@@ -1,0 +1,57 @@
+id: REL-RELATION-M2-VERIFICATION-01
+title: 'The retained relation-valued proof is corrected and bounded: task agreement, a real singleton, and mutations that must fail'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-19T04:31:08.289Z'
+updated_at: '2026-09-19T04:31:08.289Z'
+created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a program declaring one task and a soundness query about another; when the relation soundness helper is called; then it does not certify the program, and a program whose declared task is the queried one is unaffected'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a relation inventory that hosts exactly one lawful program; when the enumerator runs; then exactly that member is retained and the membership is asserted by name rather than as non-empty and smaller'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the independently derived lawful set and the enumerator; when the comparison is read; then the premises the reference SHARES with the implementation and the premises it DERIVES are both stated, and the shared ones are asserted to be shared rather than presented as independent'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a generator that suppresses one known lawful candidate; when the comparison runs; then it reports that candidate as a missing member, with the expectation not taken from the mutated generator'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a candidate that violates one independently stated premise; when the checker is asked about it; then it is identified as an invalid extra rather than merely as not retained'
+  - id: A6
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given zero, one and multiple lawful results; when each inventory is enumerated; then each outcome is asserted by exact membership'
+  - id: A7
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an unsupported, an unproven and a contradicted relation-path request; when each goes through the real entry point; then the three remain distinguishable and none is reported as another'
+  - id: A8
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a passing stock magnitude-comparison comparison; when the result is stated; then what it does not establish is recorded rather than left to the helper signature'
+non_functional: {}
+contracts:
+  - name: 'relation-proof-scope'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
