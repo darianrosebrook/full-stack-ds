@@ -76,3 +76,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts COMPOSITION COVERAGE: an omitted partition leaves the set unestablished, carried under invariant:exhaustive (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
     recorded_at: "2026-09-19T06:27:25.348Z"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "projection.test.ts COMPOSITION COVERAGE: a key dimension channel is lawful in neither, off position (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
+    recorded_at: "2026-09-19T06:27:26.104Z"
