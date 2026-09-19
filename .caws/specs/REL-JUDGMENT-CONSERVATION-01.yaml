@@ -75,5 +75,5 @@ evidence:
     recorded_at: "2026-09-19T07:21:36.371Z"
   - criterion_id: A5
     status: pass
-    evidence_ref: "projection.test.ts CONSERVATION: a free-scale facet over the same incompatible panels stays lawful (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1029 tests green))"
-    recorded_at: "2026-09-19T07:21:37.074Z"
+    evidence_ref: "CONSERVATION: missing vs incompatible vs free distinguished; and a KNOWN incompatibility survives an unrelated missing declaration in all six panel orders (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1030 tests green))"
+    recorded_at: "2026-09-19T09:02:50.723Z"
