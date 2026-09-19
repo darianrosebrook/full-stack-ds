@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 1,17
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -186,9 +186,40 @@ DENY_SEGMENT_PATTERNS: list[tuple[str, str]] = [
     (r"\bgit\s+checkout\s+\.\s*$", "git checkout . (discard all changes)"),
     (r"\bgit\s+restore\s+\.\s*$", "git restore . (discard all changes)"),
     (r"^sudo\s+(?!npm|yarn|pnpm|brew|apt-get|apt|dnf|yum)", "sudo command"),
-    (r"\bcat\b.*\.(env|ssh/|aws/)", "credential file read"),
+    # CLASSIFY-CREDENTIAL-PUBLIC-FILE-EXCLUSION-001: credential reads stay
+    # catastrophic/latch-arming — the content enters the model context and is
+    # transmitted to the provider, so the disclosure is irreversible — but the
+    # selector must not match files that are public BY CONSTRUCTION, where no
+    # disclosure is possible. A committed template (`.env.example` and friends)
+    # is exactly the artifact an agent should read to learn which variables the
+    # project expects; denying it hard-blocked a security-hardening task, armed
+    # the latch, and killed the session over a file with four EMPTY values.
+    # `*.pub` likewise: a public key exists to be distributed.
+    # The lookahead is on the FILE selector only, so naming a template
+    # alongside a real credential still denies.
+    (r"\bcat\b.*(\.env(?!\.(example|sample|template|dist|defaults)\b)|\.ssh/(?![^\s]*\.pub\b)|\.aws/)", "credential file read"),
     (r"\bcat\b.*/etc/(passwd|shadow)\b", "system credential read"),
-    (r"\bcat\b.*(id_rsa|credentials)\b", "credential file read"),
+    (r"\bcat\b.*(id_rsa(?!\.pub\b)|credentials)\b", "credential file read"),
+    # CLASSIFY-CREDENTIAL-READ-VERB-COVERAGE-001: a credential read is
+    # catastrophic wherever it happens, not only through `cat`. `head .env` and
+    # `cp .env /tmp/x` disclose exactly as `cat .env` does — the second while
+    # also depositing the secret where a later command can read it.
+    #
+    # ANCHORED TO COMMAND POSITION on purpose, unlike the `cat` alternatives
+    # above. head/tail/less/more/od/strings are ordinary English words, and an
+    # unanchored alternation would match unquoted prose — `git commit -m add
+    # more .env handling` would hard-deny and arm the latch. Quoted content is
+    # already stripped before these patterns run, so anchoring closes the
+    # remaining residue. Anchoring can only ADD coverage: every command these
+    # match is admitted today.
+    #
+    # PATTERN-TAKING TOOLS ARE DELIBERATELY ABSENT. `grep`, `rg`, `sed` and
+    # `awk` accept the credential name as a PATTERN, not a path — and
+    # `git ls-files | grep -E "\.env"` is the security check whose
+    # false-positive hard-deny armed the latch and killed a session. Admitting
+    # them here would reintroduce exactly that incident.
+    (r"(^|[|;&(])\s*(head|tail|less|more|base64|xxd|od|strings|cp)\b.*(\.env(?!\.(example|sample|template|dist|defaults)\b)|\.ssh/(?![^\s]*\.pub\b)|\.aws/|id_rsa(?!\.pub\b)|credentials\b)", "credential file read"),
+    (r"(^|[|;&(])\s*(head|tail|less|more|base64|xxd|od|strings|cp)\b.*/etc/(passwd|shadow)\b", "system credential read"),
     # CAWS spec/policy/waiver protection (RC defect #8).
     # Naked rm/mv on .caws/specs/, .caws/policy.yaml, or .caws/waivers/ bypasses
     # the audit trail. Use `caws specs close|archive`, `caws waiver revoke`,
@@ -200,6 +231,66 @@ DENY_SEGMENT_PATTERNS: list[tuple[str, str]] = [
     (r"\b(rm|mv)\b[^\n]*\.caws/waivers/[^\s'\"]*\.ya?ml\b",
      "naked rm/mv on .caws/waivers/*.yaml — use `caws waiver revoke <id>`"),
 ]
+
+# Segment-level deny patterns that must see the RAW segment (argument values).
+#
+# CLASSIFY-OWNER-IMPERSONATION-DENY-001 (failure-lineage Entry 40, doctrine
+# documented but previously unimplemented). An approver/revoker field on a
+# bounded exception exists so a HUMAN owns the bypass; an agent that self-grants
+# and writes the machine owner's identity into that field removes the only thing
+# the field is for, and the claim is durable — it lands in git and every later
+# reader takes it for a real human decision. Nothing else catches this: the path
+# guards fire on rm/mv of the waiver file, and no guard reads the SEMANTICS of
+# an identity value.
+#
+# These read ARGUMENT VALUES, which are quoted in real invocations, so they must
+# run against `segment`, NOT the quote-stripped `segment_surface` — the quoting
+# is exactly what makes this class invisible to surface-level checks.
+#
+# The identity alternation is built per call by _owner_identity_alternation():
+# the generic "user" token, additive CAWS_OWNER_IDENTITIES values, and the
+# home-directory basename (the human who owns this machine). Keying on an
+# ADJACENT attribution token rather than the handle alone keeps read-only
+# auditing (grep for the key, cat a waiver, git log) admissible; only the act of
+# ATTRIBUTING authorization trips. Known false positive: writing a literal
+# approver-key-plus-handle string in a grep or a commit message — grep the key
+# alone instead.
+DENY_RAW_SEGMENT_PATTERNS: list[tuple[str, str]] = [
+    (
+        r"(?i)--(approved-by|revoked-by|approver|granted-by|authorized-by)"
+        r"[=\s]+['\"]?[^\s'\"]*?@?(?:{OWNER})\b",
+        "agent signing the machine owner's identity into an authorization flag — "
+        "an approver field means a HUMAN owned the bypass; pass your agent "
+        "session id (claude-agent:<session-id>), or ask the owner to grant it",
+    ),
+    (
+        r"(?i)\b(approved_by|revoked_by|approver|authorized_by|granted_by)"
+        r"\s*:\s*['\"]?[^\s'\"]*?@?(?:{OWNER})\b",
+        "agent writing the machine owner's identity into an authorization field — "
+        "an approver field means a HUMAN owned the bypass; write your agent "
+        "session id (claude-agent:<session-id>), or ask the owner to grant it",
+    ),
+]
+
+
+def _owner_identity_alternation(home: Path | None) -> str:
+    """Regex alternation of spellings meaning 'the human who owns this machine'.
+
+    Deliberately generic rather than owner-hardcoded: the generic "user" token,
+    any CAWS_OWNER_IDENTITIES values (comma/space separated, additive so a
+    configured alias never weakens the defaults), and the home-directory
+    basename. Pure and offline: no subprocess, no git, no filesystem read.
+    """
+    tokens = ["user"]
+    for token in re.split(r"[,\s]+", os.environ.get("CAWS_OWNER_IDENTITIES", "")):
+        if token and token not in tokens:
+            tokens.append(token)
+    if home is not None:
+        base = Path(home).name
+        if base and base not in tokens:
+            tokens.append(base)
+    return "|".join(re.escape(token) for token in tokens)
+
 
 # Segment-level regex patterns that require user confirmation (ask).
 #
@@ -1329,6 +1420,15 @@ def classify_commit_deletions(segment: str, cwd: Path | None) -> tuple[str, str]
         return None
     if "--" in commit_args and commit_args.index("--") < len(commit_args) - 1:
         return None  # explicitly path-scoped: the author named their paths
+    # CAWS-DESIGN-GLOBAL-IDENTITY-HOME-001 A6: a LEADING positional token is a
+    # pathspec too — `git commit <path> -m <msg>` is path-scoped exactly like
+    # the trailing `-- <path>` form. The first token starting with '-' ends
+    # the positional region; any positional token before it means the author
+    # named their paths (git validates them; a bad path fails loudly in git,
+    # not here).
+    first_flag = next((i for i, t in enumerate(commit_args) if t.startswith('-')), len(commit_args))
+    if first_flag > 0:
+        return None  # leading pathspec(s) present: path-scoped commit
 
     remediation = (
         "inspect the staged set first (git status; git diff --cached --stat), "
@@ -2821,6 +2921,16 @@ def classify_command(
         # --- Hard-block patterns (segment-level) ---
         for pattern, desc in DENY_SEGMENT_PATTERNS:
             if re.search(pattern, segment_surface, re.IGNORECASE):
+                escalate("deny", desc, "regex")
+
+        # --- Hard-block patterns over RAW argument values (Entry 40) ---
+        # CLASSIFY-OWNER-IMPERSONATION-DENY-001: authorization values are quoted
+        # in real invocations, so these must see `segment`, not the stripped
+        # surface. Owner spellings come from the home basename plus the
+        # additive CAWS_OWNER_IDENTITIES configuration.
+        _owner_alt = _owner_identity_alternation(home)
+        for pattern, desc in DENY_RAW_SEGMENT_PATTERNS:
+            if re.search(pattern.replace("{OWNER}", _owner_alt), segment, re.IGNORECASE):
                 escalate("deny", desc, "regex")
 
         # --- Confirm patterns (segment-level) ---
