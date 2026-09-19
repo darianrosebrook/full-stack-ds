@@ -266,6 +266,101 @@ These are the invariants the slices are asked to encode structurally. Each names
 
 18. **A coordinate is emitted only where the declaration carries the fact that distinguishes it from its encoding.** The necessity census derives its propositions from the emitted declaration's SHAPE, and shape alone does not say whether a sequence's order is semantic, whether a required child's presence is independent, or which branch a payload belongs to. Two classes have measured the cost. The `#present` cross-terms on required children: thirteen discriminator member-absences that were three holder-presence facts, fixed by reading `optional.self`/`optional.holder` instead of ancestry. And `#order` on set-valued name lists, where the declaration is a JSON array standing in for a set: permuting each list at its own slot showed `project.keep` and `structure.peers[]` never move a judgment over any committed instance while `nest.levels` does, and the five plain name-list declarations were shape-identical (`{minItems, type: array, items: {$ref: name}}`) so nothing in the emitted schema could tell the census which was which. **Both are now fixed by the same pattern: the declaration carries the fact and the walk refuses to guess.** Every name list states `x-fsds-sequence: "set" | "ordered"`, `listFacets` throws on one that states neither, and the five set-valued order facets left the kernel with `representation-artifact` verdicts while `levels` and `toGrain` kept theirs. The requirement is on the DECLARATION — set versus sequence, optionality, branch identity — and the general form is not "the walk should be cleverer": where the fact is absent the coordinate is a proposition nothing can adjudicate, and it is not repaired by adding corpus the coordinate's own erasure cannot reach.
 
+## Judgment conservation across projections
+
+Invariant 13 makes admissibility compositional. This section states what
+composition must PRESERVE, because a judgment can be correct where it is produced
+and cease to be justified when a later consumer receives fewer premises or a
+lossy summary. It refines the rejection, uncertainty, scope and evidence-classed
+commitments above rather than adding a new axis.
+
+**A judgment belongs to a complete question.** An analytical judgment is about an
+object *under a request, evidence and scope*; it is not an unconditional attribute
+attached to a topology. The same program shape may be lawful for one partition,
+contradicted for another, and unproven without one. A consumer must therefore
+receive the complete request, receive a qualified result bound to it, or
+explicitly lack standing to decide. A cache or recorded verdict is bound to the
+premises that can change its answer. A composite reader may not certify an atomic
+operand using fewer conditions than atomic admission requires. A changed
+analytical choice is a changed question even when the rendered shape would be
+identical.
+
+Not every datum must travel everywhere: a binding may be RECOVERABLE from
+admitted authority. But recoverable means uniquely determined within the
+supported domain, never guessed because the current fixture happens to contain one
+plausible field. **Carrying the spelling of a premise does not establish its
+applicability** — a complete request includes the bindings that give its premises
+meaning.
+
+**A summary is sufficient for particular consumers, not sufficient in itself.**
+Let `S` be a summary and `J_C` the decision a permitted consumer `C` must make:
+
+> `S(a) = S(b)` implies `J_C(a) = J_C(b)`.
+
+When two inputs require different decisions under a permitted consumer, that
+consumer's summaries must distinguish them. This is a criterion for
+*decision-sufficient* summarization, and it answers design questions before
+implementation: a representative may be exposed only once the relationship making
+it representative is established; a count is insufficient for a consumer that must
+distinguish identities; a channel list is insufficient for one that must know
+which channels share a scale; an audit record is insufficient if the actual parent
+consumes only a reduced object that lost the facts.
+
+The alternative — carrying every raw input to every consumer — avoids some losses
+and reopens interpretation in each consumer, which is what the shared-authority
+architecture exists to prevent. The desired object is neither all raw data nor a
+few convenient flags but a **bounded semantic interface sufficient for the
+declared downstream questions**. A conservative summary may instead force a
+consumer to return unproven; that does not complete a capability that promises the
+lost distinction.
+
+**Conflict and uncertainty attach to a claim, its participating operands, and its
+scope — not to an unqualified global taint.** That kilograms and seconds coexist
+is a fact; that they must share one quantitative scale is an additional
+relationship. The same panels may therefore be lawful under a policy that declines
+the cross-panel claim and unlawful under one that makes it. A policy may change
+which claim is made; it may not erase a violated premise while leaving the claim
+unchanged. The same shape governs population, alignment and ordering: different
+populations or orders are not intrinsically illegal, and become a problem when a
+task or composition asserts a relationship they do not satisfy.
+
+**The proof obligation follows the quantifier.** For a common-scale condition,
+establishment requires the applicable universal — every relevant pair compatible —
+while refutation requires only an applicable witness, one incompatible pair. If no
+incompatible pair is established but a required relationship is unknown, the
+justified answer is unproven; if a known incompatible pair exists, an unrelated
+missing declaration cannot undo it. Representative-based comparison is an
+optimization that must be justified: it is safe only where an established
+representative and the applicable relation make it equivalent to the required
+condition. The same analysis fixes the downstream controls — coverage needs
+evidence over the required universe rather than several matching observations;
+exclusivity, uniqueness and order correspondence are each refuted by a single
+applicable witness, with domain and applicability still supplied by the analytical
+contract.
+
+**A projection may simplify presentation, but it must not strengthen, weaken or
+replace an analytical conclusion merely by discarding its grounds.** A composite
+may derive a new claim from its operands and its rule; conservation requires that
+the new claim's premises be established, not that every consumer display every
+diagnostic. "Nothing was retained", "the request is not implemented", "a premise
+is missing" and "the candidates contradict established facts" permit the same
+empty result and require different next actions, so a projection that keeps only
+the empty result has lost information its consumer needs.
+
+**An intervention establishes nothing about a dependency unless it reaches the
+source the tested consumer would actually use.** A control must distinguish the
+competing explanations it claims to separate — genuine independence from a change
+made where the consumer never looked — and a deliberately dependent mutant must
+fail the same control. Routing the same production rule through two callers
+establishes routing consistency, not the correctness of that rule; independently
+justified expectations remain separate machinery, and reference independence is
+never repaired by having the reference call the production authority.
+
+These obligations derive the next carrier, checker or control from a concrete
+consumer question. They also say when none is justified: do not grow the
+representation to repair a distinction that was already present and then
+discarded.
+
 ## Cost to the existing architecture
 
 Named up front so they are non-claims from the start and not discoveries later.
