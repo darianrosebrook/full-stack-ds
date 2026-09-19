@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 17
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -41,9 +41,41 @@ source "$SCRIPT_DIR/lib/agent-surface.sh" 2>/dev/null || true
 # reset-strikes.sh has always computed its root this way and is immune; this
 # matches it. The state dir is a property of where the hooks are INSTALLED, never
 # of where the operator is standing.
-PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+if [[ "${CAWS_MACHINE_RUNTIME:-}" == "1" ]]; then
+  # A snapshot's install directory is machine state, never the governed repo.
+  # Human recovery must name the project; never infer it from the snapshot.
+  if [[ "${CAWS_PROJECT_DIR:-}" != /* ]]; then
+    echo 'reset-danger-latch.sh: machine recovery requires absolute CAWS_PROJECT_DIR' >&2
+    exit 2
+  fi
+  RECOVERY_WORKTREE_DIR="$(env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR -u GIT_INDEX_FILE git -C "$CAWS_PROJECT_DIR" rev-parse --show-toplevel)"
+  _common_dir="$(env -u GIT_DIR -u GIT_WORK_TREE -u GIT_COMMON_DIR -u GIT_INDEX_FILE git -C "$CAWS_PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir)"
+  PROJECT_DIR="$(dirname "$_common_dir")"
+  export CAWS_PROJECT_DIR="$PROJECT_DIR"
+else
+  PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+  RECOVERY_WORKTREE_DIR="$PROJECT_DIR"
+fi
 STATE_DIR="$PROJECT_DIR/${CAWS_VENDOR_DIR}/hooks/state"
 LOG_FILE="$PROJECT_DIR/${CAWS_VENDOR_DIR}/logs/danger-latch-resets.log"
+
+# DANGER-LATCH-QUARANTINE-TRAP-001: fail closed on the env-stripped snapshot
+# invocation. A machine snapshot lives under <home>/lib/runtimes/<digest> (and
+# carries a manifest.json sibling — project-local packs carry one too, so the
+# PATH SHAPE is the discriminator, manifest the belt); invoked WITHOUT the env
+# prefix the script takes the non-machine branch above, derives PROJECT_DIR
+# from the SNAPSHOT location (~/.caws/lib — machine state, never a project),
+# searches zero vendor state dirs, and (pre-fix) exited 0 "No danger latches
+# found" while the trap stayed armed — success-by-absence on the only human
+# release path, witnessed live in a consumer repo. Detect the snapshot context
+# structurally and refuse loudly with the corrected command.
+if [[ "${CAWS_MACHINE_RUNTIME:-}" != "1" && "$SCRIPT_DIR" == */lib/runtimes/* && -f "$SCRIPT_DIR/manifest.json" ]]; then
+  echo 'reset-danger-latch.sh: this is a machine-runtime snapshot and CAWS_MACHINE_RUNTIME is not set.' >&2
+  echo '  A snapshot cannot infer the governed project from its own location; without the env prefix' >&2
+  echo '  this reset searches machine state and can only report success-by-absence. Re-run with:' >&2
+  echo "  env CAWS_MACHINE_RUNTIME=1 CAWS_PROJECT_DIR=<absolute-project-root> CAWS_AGENT_SURFACE=${CAWS_AGENT_SURFACE:-claude-code} bash '$SCRIPT_DIR/reset-danger-latch.sh' --session <id> --reason '<why this is safe>'" >&2
+  exit 2
+fi
 
 # CAWS-RESET-LATCH-MULTIVENDOR-001: the danger latch is written by
 # block-dangerous.sh under the WRITER's vendor dir (the active harness bridge
@@ -95,19 +127,21 @@ _caws_canonical_root() {
 _caws_all_vendor_state_dirs() {
   local out=()
   local vd dir seen prev
-  # Anchor at the CANONICAL root (where the latch writer lands files), not the
-  # install root (CAWS-LATCH-CANONICAL-STATE-DIR-001). Falls back to install
-  # root if the canonical resolution is unavailable.
-  local search_root
-  search_root="$(_caws_canonical_root)"
-  # Always include the resolved vendor dir first (the primary), then the rest.
-  for vd in "${CAWS_VENDOR_DIR:-.claude}" "${_caws_known_vendor_dirs[@]}"; do
-    dir="$search_root/$vd/hooks/state"
-    # Dedup (empty-array-safe under set -u).
-    seen=0
-    for prev in ${out[@]+"${out[@]}"}; do [[ "$prev" == "$dir" ]] && { seen=1; break; }; done
-    [[ "$seen" == 1 ]] && continue
-    [[ -d "$dir" ]] && out+=("$dir")
+  # Search the canonical repository AND the named worktree. Existing latch
+  # writers use the hook's project root; changing that landing spot would
+  # make an already armed worktree latch invisible after a runtime update.
+  # Both roots are derived from the selected project, never the human's cwd.
+  local search_root canonical_root
+  canonical_root="$(_caws_canonical_root)"
+  for search_root in "$canonical_root" "$RECOVERY_WORKTREE_DIR"; do
+    for vd in "${CAWS_VENDOR_DIR:-.claude}" "${_caws_known_vendor_dirs[@]}"; do
+      dir="$search_root/$vd/hooks/state"
+      # Dedup roots and vendor dirs (empty-array-safe under set -u).
+      seen=0
+      for prev in ${out[@]+"${out[@]}"}; do [[ "$prev" == "$dir" || "$prev" -ef "$dir" ]] && { seen=1; break; }; done
+      [[ "$seen" == 1 ]] && continue
+      [[ -d "$dir" ]] && out+=("$dir")
+    done
   done
   # Empty-array-safe under set -u: prints nothing when no vendor state dirs exist.
   printf '%s\n' ${out[@]+"${out[@]}"}
@@ -286,6 +320,24 @@ case "$MODE" in
 esac
 
 if [[ "${#LATCH_FILES[@]}" -eq 0 && "${#WARN_FILES[@]}" -eq 0 ]]; then
+  # NOTE: _caws_all_vendor_state_dirs emits a single BLANK line when it finds
+  # no dirs (printf '%s\n' with zero args still processes the format once) —
+  # count only non-blank lines.
+  _n_dirs=0
+  while IFS= read -r _vdir; do
+    if [[ -n "$_vdir" ]]; then _n_dirs=$((_n_dirs + 1)); fi
+  done < <(_caws_all_vendor_state_dirs)
+  if (( _n_dirs == 0 )); then
+    # DANGER-LATCH-QUARANTINE-TRAP-001: "searched zero dirs" is never success.
+    # A reset that located nothing to search cannot adjudicate anything; the
+    # trap (and, with escalation enabled, the kill path behind it) stays armed
+    # behind a green exit. Fail loudly and name the likely cause.
+    echo 'reset-danger-latch.sh: located ZERO vendor state dirs to search.' >&2
+    echo '  This reset cannot clear anything and will not report success-by-absence.' >&2
+    echo '  Likely cause: the project root did not resolve (snapshot without env prefix, or a non-repo cwd).' >&2
+    echo "  Re-run with: env CAWS_PROJECT_DIR=<absolute-project-root> bash '$SCRIPT_DIR/reset-danger-latch.sh' --session <id> --reason '<why this is safe>'" >&2
+    exit 2
+  fi
   _searched=""
   while IFS= read -r _vdir; do _searched="${_searched} $_vdir"; done < <(_caws_all_vendor_state_dirs)
   echo "No danger latches found to clear (searched vendor state dirs:${_searched})."
