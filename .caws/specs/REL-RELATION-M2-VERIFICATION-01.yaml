@@ -20,7 +20,7 @@ invariants:
   - 'A soundness helper checks the proposition its inputs name. A task passed separately from the program must AGREE with the program''s declared task, or the helper certifies a different question from the one the program declares.'
   - 'A control that claims to exhibit N results exhibits N results. A restricted inventory asserted only as non-empty and smaller than the full one establishes neither the count nor the membership.'
   - 'Independence is stated, not implied. The reference derives its expected SET without calling the enumerator; it shares the capacity table and the claim function, and a shared premise is an axiom on both sides rather than evidence for either.'
-  - 'A failing check means NOT CERTIFIED. It does not mean analytically illegal; the structured support, admission and obligation results remain the things that say which of the three a request is.''
+  - 'A failing check means NOT CERTIFIED. It does not mean analytically illegal; the structured support, admission and obligation results remain the things that say which of the three a request is.'
 acceptance:
   - id: A1
     given: 'A program whose declared task differs from the task a caller asks the helper about, and a program whose declared task is that task.'
