@@ -30,7 +30,7 @@ scope:
 invariants:
   - 'The rule is name-resolution only: a transition event must resolve to a declared referent (channel key, events key, prop name, dismissal trigger event, a11y.keyboard id, "<part>.<verb>" with part in anatomy.parts, or a member of the closed DOM platform set). It does not adjudicate trigger semantics, kinds, or ordering.'
   - 'The DOM platform event set is closed (animationend, transitionend) and grows only by demonstrated corpus need, mirroring the closed-projection doctrine.'
-  - 'No emitter or generated-output change: transition realization stays out of scope; regenerated trees stay byte-identical (Tabs keyboard ids are declaration-only entries with no behavior lowering).'
+  - 'No component-source or behavior change: transition realization stays out of scope. The six rail-admitted generated trees are byte-identical; the one generated-output delta is the Figma descriptor''s faithful verbatim projection of the new a11y.keyboard id fields (Tabs.figma.json), which carries no realization semantics.'
   - 'Existing Rule 6 (from/to ⊆ states.dimensions) behavior is unchanged.'
   - 'Tabs keyboard id values exactly equal the transition event names they bind (arrow.next, arrow.prev, home, end).'
 acceptance:
