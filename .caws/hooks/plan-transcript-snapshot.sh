@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 27
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -68,8 +68,13 @@ PLAN_FILE=$(grep -oE '"file_path":"[^"]*\/\.caws\/plans\/[^"]*\.md"|"file_path":
 SNAPSHOT="${PLAN_FILE%.md}.transcript.jsonl"
 cp "$TRANSCRIPT_PATH" "$SNAPSHOT" 2>/dev/null || exit 0
 
+# CAWS-HOOKPACK-HOME-UNSET-ROOT-AUTHORITY-ALIAS-001: no HOME means nowhere
+# to track pending snapshots, not a namespace at "/". The snapshot file
+# above is still written; it just will not be Stop-hook finalized.
+[ -n "${HOME:-}" ] || exit 0
+
 # Mark for Stop-hook finalization.
-PENDING="$HOME/${CAWS_VENDOR_DIR}/.pending-plan-snapshots"
+PENDING="${HOME}/${CAWS_VENDOR_DIR}/.pending-plan-snapshots"
 mkdir -p "$(dirname "$PENDING")" 2>/dev/null || true
 
 # Idempotent append: don't duplicate if already pending.
