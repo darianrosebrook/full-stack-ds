@@ -106,6 +106,7 @@ packages/
   ds-react-native/               # Generated RN package — rail-admitted, in the CI drift diff
   ds-swiftui/  ds-jetpack-compose/ # Generated native packages, outside the admission rail
   ds-swift-smoke/  ds-compose-smoke/ # Fixtures for the two native compile lanes
+  ds-unity/  ds-godot/           # Local engine pilots (UPM / Godot addon), excluded from the pnpm workspace
   ds-tokens/                     # Token source, build, validation, and usage gates
   ds-iconography/                # Icon authoring source + emission ledger
   ds-figma-plugin/               # Consumes generated figma descriptors
@@ -156,8 +157,8 @@ docs/
 ```
 
 Machine-generated audit ledgers also live under `docs/` (`dead-slot-audit/`,
-`pseudo-state-audit/`, `state-suppression-audit/`, `token-resolvability-audit/`) — each is
-written by its `pnpm run audit:*` script, not by hand.
+`pseudo-state-audit/`, `state-suppression-audit/`, `token-resolvability-audit/`,
+`carrier-reachability-audit/`) — each is written by its `pnpm run audit:*` script, not by hand.
 
 ## Authoring flow
 
@@ -225,7 +226,7 @@ CLI flags after `--`:
 
 | Flag | Purpose |
 |---|---|
-| `--target=<list>` | Comma-separated target ids: `react`, `vue`, `svelte`, `angular`, `lit`, `react-native`, `figma`, `swiftui`, `jetpack-compose`, or `all`. `all` resolves from `fsds.targets.json` and honors each target's component allowlist. |
+| `--target=<list>` | Comma-separated target ids: `react`, `vue`, `svelte`, `angular`, `lit`, `react-native`, `figma`, `swiftui`, `jetpack-compose`, `unity`, `godot`, or `all`. `all` resolves from `fsds.targets.json` and honors each target's component allowlist. |
 | `--validate` | Schema-validate contracts and exit |
 | `--check-semantics` | Run cross-contract/codegen semantic checks during validation |
 | `--check-usage` | Validate usage JSONL refs, props, and slots |
