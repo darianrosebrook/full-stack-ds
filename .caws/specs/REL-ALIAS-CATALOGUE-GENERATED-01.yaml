@@ -2,9 +2,11 @@ id: REL-ALIAS-CATALOGUE-GENERATED-01
 title: 'The form alias catalogue is generated from the lawful space and the pack, and is never a source of truth'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'The form catalogue is generated from the live enumeration and the pack''s declared regions, is structurally unable to participate in the search, and reports the three regions the hand-authored map claimed that the space does not hold.'
 created_at: '2026-09-19T04:57:36.710Z'
-updated_at: '2026-09-19T04:57:53.166Z'
+updated_at: '2026-09-19T05:05:37.948Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
