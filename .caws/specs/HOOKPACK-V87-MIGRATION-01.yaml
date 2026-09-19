@@ -40,3 +40,7 @@ evidence:
     status: pass
     evidence_ref: "bash .caws/hooks/tests/test_worktree_guard_cmdtext.sh -> PASS 19 cases (pre-migration baseline: 8 passed/11 failed, fixture-dependent); bash .caws/hooks/tests/test_reprieve_path_resolution.sh -> PASS 10 cases (unchanged from baseline)"
     recorded_at: "2026-09-19T06:10:06.990Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Each of the 3 baseline-verified growth files was adjudicated, not dropped: worktree-guard.sh GUARD-CMDTEXT-BOUNDARY-01 superseded by v87 lexical extraction via caws_bash_command_lines (proven by test_worktree_guard_cmdtext.sh PASS 19/19 including all 4 BYPASS-BLOCK cases); post_tool_use.sh doc-frontmatter-check toggle re-expressed as hook-policy.json extension (caws hooks list shows it as repo-policy, sidecar probe shows it in the project-wired chain); lib/reprieve.sh growth retained untouched. lib/heredoc.sh pinned via policy library override because the v87 template drops the piped-sink disqualification."
+    recorded_at: "2026-09-19T06:10:25.460Z"
