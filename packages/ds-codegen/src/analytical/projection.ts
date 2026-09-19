@@ -847,21 +847,77 @@ export function enumerateGraph(input: GraphEnumerationInput): GraphEnumeration {
  * A candidate the implementation never generates therefore appears as a MISSING
  * MEMBER rather than as a smaller count that still looks self-consistent.
  *
- * ITS SCOPE IS MAGNITUDE COMPARISON OVER THE STOCK RESULT, and the shared
- * premises are named in `RELATION_REFERENCE_NON_CLAIMS`. Extending it to
- * `composition` means adding the partition and the additivity conditions it does
- * not receive, not widening the signature.
+ * WHAT IT RECEIVES DECIDES WHAT IT CAN COVER. It now takes the declared
+ * partition and derives the composition conditions and the key-channel
+ * restriction itself, so `composition` is inside its scope for the regimes those
+ * conditions describe. The shared premises are named in
+ * `RELATION_REFERENCE_NON_CLAIMS`, and what is still NOT covered is named there
+ * too rather than implied by a passing comparison.
  */
+/**
+ * WHETHER THE RESULT'S MEASURE ADMITS SUMMATION OVER THE DECLARED PARTITION.
+ *
+ * Derived from the DECLARATION here rather than read off the enumerator, and
+ * stated in the declaration's own terms: a measure declared non-additive has no
+ * summable partition at all; a rate must re-derive from its numerator and
+ * denominator rather than being averaged; and a measure that is not additive
+ * ALONG the partition cannot be summed over it. An omitted partition is a
+ * missing premise, which is not the same as a partition that does not work.
+ */
+export type PartitionAdmission =
+  | { kind: "admitted" }
+  | { kind: "refused"; cause: string; detail: string }
+  | { kind: "unproven"; obligation: string; detail: string };
+
+export function partitionAdmitsSummation(facts: ResultFacts, partitionDimension: string | undefined): PartitionAdmission {
+  if (partitionDimension === undefined) {
+    return {
+      kind: "unproven",
+      obligation: "invariant:exhaustive",
+      detail: "the composition declares no partition dimension, so which partition its parts must exhaust is not established",
+    };
+  }
+  const kind = facts.measure.additivityKind;
+  if (kind === "non-additive") {
+    return { kind: "refused", cause: "REL_ADDITIVITY_SUM_SEMIADDITIVE", detail: "the measure is declared non-additive, so no partition of it is summable" };
+  }
+  if (kind === "ratio-measure") {
+    return {
+      kind: "refused",
+      cause: "REL_RATIO_MEASURE_AVERAGED",
+      detail: `a rate must re-derive from its numerator and denominator at ${partitionDimension}, and a composition of it averages instead`,
+    };
+  }
+  if (kind === "semi-additive" && facts.measure.nonAdditiveAlong.includes(partitionDimension)) {
+    return {
+      kind: "refused",
+      cause: "REL_ADDITIVITY_SUM_SEMIADDITIVE",
+      detail: `the measure is declared non-additive along ${partitionDimension}, and a composition partitions over it`,
+    };
+  }
+  return { kind: "admitted" };
+}
+
 export function lawfulRelationPrograms(
   facts: ResultFacts,
   task: Task,
   inventory: TargetInventory,
+  /**
+   * The declared partition. THE COMPOSITION TASK TURNS ON IT, so a derivation
+   * that does not receive one is not a reference for composition however well it
+   * agrees on magnitude comparison.
+   */
+  partitionDimension?: string,
 ): Array<{ coordinate: CoordinateSpace; dimension: Channel; measure: Channel }> {
   // AN UNIMPLEMENTED TASK HAS NO LAWFUL SET, and returning the empty set would
   // say it has one and that it is empty. This derivation is a boundary too.
   const support = projectionSupport("relation", task);
   if (!support.supported) throw new Error(`lawfulRelationPrograms was asked for the ${task} task on the relation path, which does not implement it`);
   const spec = { requires: support.requires };
+  if (task === "composition") {
+    const admission = partitionAdmitsSummation(facts, partitionDimension);
+    if (admission.kind !== "admitted") return [];
+  }
   const out: Array<{ coordinate: CoordinateSpace; dimension: Channel; measure: Channel }> = [];
   for (const coordinate of inventory.spaces) {
     for (const dimension of inventory.channels) {
@@ -876,6 +932,10 @@ export function lawfulRelationPrograms(
         // the result's group column is not cyclic, not because the measure is not.
         if (CAPACITY[measure].requiresCyclicOrWhole && !facts.measure.cyclic) continue;
         if (CAPACITY[dimension].requiresCyclicOrWhole && !facts.dimension.cyclic) continue;
+        // A KEY IS NOT A CATEGORY. A key column carries identity, so encoding it
+        // to anything but a positional channel is refused — and the reference
+        // has to know that, or it expects a member the enumerator will not make.
+        if (facts.dimension.key && dimension !== "position") continue;
         const p: Program = { coordinate, dimension, measure, baseline: "zero", task, claims: [], operation: { relation: "", field: "", op: "sum", along: [], resultGrain: [] } };
         const induced = inducedClaims(p, facts);
         if (!spec.requires.every((c) => induced.includes(c))) continue;
@@ -954,7 +1014,8 @@ export function relationProgramIsSound(p: Program, facts: ResultFacts, task: Tas
  * accepts any `Task` reads as a general oracle and this one is not.
  */
 export const RELATION_REFERENCE_NON_CLAIMS: readonly string[] = [
-  "The reference is written for MAGNITUDE COMPARISON over the stock result. Its signature accepts any task, but it takes no composition partition and enforces none of the composition-specific additivity conditions, so `projectionSupport('relation','composition')` returning supported does NOT mean this reference assesses composition.",
+  "SHARED AXIOM: the additivity conditions and the key-channel restriction are stated in this reference AND implemented in the enumerator. That duplication is deliberate — calling the enumerator would destroy the comparison — but it means agreement is evidence that both state the same law, never that the law is the right one.",
+  "STILL NOT COVERED: the reference does not reproduce the capacity table's channel-specific causes (`REL_AREA_INTERVAL_SCALE`, `REL_HUE_CARRIES_ORDER`, `REL_SEQUENTIAL_ON_NOMINAL`). Those three narrow the CHANNELS a field may occupy, and `CAPACITY[channel].carries` already excludes the same candidates, so MEMBERSHIP agrees — but a refusal's CAUSE does not, and that is a real difference this reference does not check.",
   "SHARED PREMISE: the capacity table and the task table are axioms on BOTH sides. Agreement between the reference and the enumerator is evidence about candidate construction and assessment WITHIN those tables, and never about the tables themselves.",
   "SHARED PREMISE: the reference calls the production `inducedClaims`. It therefore cannot expose an error that the claim function and the enumerator make together, so every claim-bearing distinction the bounded proof rests on needs an independently justified expectation of its own.",
   "DERIVED, not shared: the membership set is constructed without calling `enumerate`, so a candidate the generator omits appears as a MISSING MEMBER rather than as a smaller count that still looks self-consistent.",
