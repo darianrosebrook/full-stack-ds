@@ -8,7 +8,7 @@ updated_at: '2026-09-19T06:33:55.628Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts (the alias-independence controls, run against authored contracts directories)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -16,27 +16,29 @@ scope:
     - 'packages/ds-codegen/src/analytical'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'THE REMOVAL MUST BE REAL. A control that deletes nothing and observes no change establishes nothing, so the region loader is required to FAIL on the directory the search is shown to be indifferent to.'
+  - 'THE OUTCOME COMPARED IS THE NORMALIZED SEMANTIC ONE. Population, support, retained membership, every refusal with its cause and every undecided with its obligation. A membership-only comparison would miss a name moving a cause.'
+  - 'The alias layer is consumed by the catalogue path and by nothing else, and that asymmetry is what makes the independence observable rather than asserted.'
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'A contracts directory whose form-region file has been removed, and the real one.'
+    when: 'The region loader is called on both, and the search runs over the same basis.'
     then: 'given a contracts directory whose form-region file has been REMOVED; when the search runs over the same basis; then its normalized outcome is identical to the real one, and the region loader throws on that directory so the removal is real rather than nominal'
   - id: A2
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'A contracts directory whose regions are renamed and whose assertions are blanked.'
+    when: 'The catalogue is generated from each and the search outcome compared.'
     then: 'given a contracts directory whose regions are renamed and whose assertions are blanked; when the catalogue is generated and the search runs; then the catalogue differs and the normalized search outcome is identical'
   - id: A3
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The two search outcomes.'
+    when: 'They are compared in full.'
     then: 'given the comparison; when it is read; then the normalized outcome is the FULL one - population, support, retained membership, every refusal with its cause and every undecided with its obligation - not membership alone'
   - id: A4
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The removed directory.'
+    when: 'The catalogue path is exercised on it.'
     then: 'given the removed directory; when the catalogue path is exercised; then it fails while the search does not, which is what makes the layer''s consumption observable at all'
   - id: A5
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The projected module''s source.'
+    when: 'The search functions are read.'
     then: 'given the projected module; when the functions the search is built from are read; then none of them names the region loader'
 non_functional: {}
 contracts:
