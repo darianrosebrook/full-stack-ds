@@ -59,8 +59,8 @@ contracts:
 evidence:
   - criterion_id: A1
     status: pass
-    evidence_ref: "projection.test.ts CONSERVATION: the composer consumes the SAME atomic classification the enumerator does (keyed / omitted partition / forbidden partition) (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1029 tests green))"
-    recorded_at: "2026-09-19T07:21:34.507Z"
+    evidence_ref: "CONSERVATION: the composer consumes the SAME atomic classification (keyed / omitted partition / forbidden partition), plus an INAPPLICABLE partition refused by BOTH consumers through one validator (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1030 tests green))"
+    recorded_at: "2026-09-19T09:02:50.127Z"
   - criterion_id: A2
     status: pass
     evidence_ref: "projection.test.ts CONSERVATION: the atomic operand carries its request, and supplying the partition makes the same operand certifiable (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1029 tests green))"
