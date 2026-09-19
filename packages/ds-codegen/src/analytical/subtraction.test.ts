@@ -529,7 +529,10 @@ describe("a PRESENCE witness needs a pair the erasure is a no-op on one side of"
     }
   });
 
-  it("and evidence.rows.*#present has none, so its refusal is a MISSING FIXTURE SHAPE and not a mis-chosen pair", () => {
+  // Collision search over the 212-specimen population; timed out at the 5s
+  // default in the retained 2026-09-19 worktree run
+  // (FIX-CLOSURE-LEDGER-AUTHORITY-TIMEOUT-01).
+  it("and evidence.rows.*#present has none, so its refusal is a MISSING FIXTURE SHAPE and not a mis-chosen pair", { timeout: 30_000 }, () => {
     // The population varies rows presence widely -- 162 of 212 specimens carry no `evidence.rows`
     // at all, and 129 of those are oracle-bound -- so the earlier record's implication that a
     // better pair could simply be picked is wrong. What the corpus lacks is a fixture that IS

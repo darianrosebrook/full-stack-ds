@@ -830,7 +830,9 @@ describe("the unresolved dependencies are blocked by EVIDENCE, not by an undecid
     ]);
   });
 
-  it("finds no oracle-separated pair for any other dependency, so no witness is constructible", () => {
+  // Pair search over the specimen population; timed out at the 5s default in
+  // the retained 2026-09-19 worktree run (FIX-CLOSURE-LEDGER-AUTHORITY-TIMEOUT-01).
+  it("finds no oracle-separated pair for any other dependency, so no witness is constructible", { timeout: 30_000 }, () => {
     const s = specimens();
     const plans = loadPlans();
     const oracle = loadOracle();
@@ -1126,7 +1128,10 @@ describe("the ledger carries the authority its claims were verified under", () =
     expect(authorityDrift(undefined, liveAuthority())).toHaveLength(1);
   });
 
-  it("restamp re-verifies and writes the live authority; it refuses to stamp over a claim that is wrong", () => {
+  // restampClosures + checkClosures + loadClosures full re-derivations; timed
+  // out at the 5s default in the retained 2026-09-19 worktree run
+  // (FIX-CLOSURE-LEDGER-AUTHORITY-TIMEOUT-01).
+  it("restamp re-verifies and writes the live authority; it refuses to stamp over a claim that is wrong", { timeout: 30_000 }, () => {
     const agreeing = copyWith(drifted);
     const stamped = restampClosures(agreeing);
     expect(stamped.ok, stamped.message).toBe(true);
