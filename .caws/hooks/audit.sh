@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 9
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -31,7 +31,7 @@ source "$SCRIPT_DIR/lib/agent-surface.sh" 2>/dev/null || true
 # the hook process inherits a nonexistent CWD and most commands will fail.
 # Recover to a safe directory before doing anything else.
 if ! pwd >/dev/null 2>&1 || [ ! -d "$(pwd 2>/dev/null || echo __gone__)" ]; then
-  cd "${CAWS_PROJECT_DIR:-$HOME}" 2>/dev/null || cd "$HOME"
+  cd "${CAWS_PROJECT_DIR:-${HOME:-/tmp}}" 2>/dev/null || cd "${HOME:-/tmp}"
 fi
 
 parse_hook_input
@@ -63,7 +63,7 @@ case "$EVENT_TYPE" in
   session-start)
     SOURCE="${HOOK_SOURCE:-unknown}"
     MODEL="${HOOK_MODEL:-unknown}"
-    LOG_ENTRY=$(jq -n \
+    LOG_ENTRY=$(jq -cn \
       --arg ts "$TIMESTAMP" \
       --arg sid "$SESSION_ID" \
       --arg event "session_start" \
@@ -80,7 +80,7 @@ case "$EVENT_TYPE" in
     else
       STOP_HOOK_ACTIVE="false"
     fi
-    LOG_ENTRY=$(jq -n \
+    LOG_ENTRY=$(jq -cn \
       --arg ts "$TIMESTAMP" \
       --arg sid "$SESSION_ID" \
       --arg event "session_stop" \
@@ -94,26 +94,34 @@ case "$EVENT_TYPE" in
     # HOOK_TOOL_INPUT_JSON and HOOK_TOOL_RESPONSE_JSON are pre-serialized
     # JSON strings, always valid (empty "{}" at minimum), so jq --argjson
     # below never trips on missing fields.
+    #
+    # AUDIT-JSONL-EMISSION-001: the record carries the tool payload
+    # (tool_use_id / tool_input / tool_response) and a derived is_error so a
+    # postmortem can reconstruct what ran and whether it failed; the compact
+    # (-c) emission keeps one record on one line for line-wise consumers.
     TOOL_INPUT="$HOOK_TOOL_INPUT_JSON"
     TOOL_RESPONSE="$HOOK_TOOL_RESPONSE_JSON"
     TOOL_USE_ID="$HOOK_TOOL_USE_ID"
     FILE_PATH="$HOOK_FILE_PATH"
     COMMAND="$HOOK_COMMAND"
 
-    LOG_ENTRY=$(jq -n \
+    LOG_ENTRY=$(jq -cn \
       --arg ts "$TIMESTAMP" \
       --arg sid "$SESSION_ID" \
       --arg event "tool_use" \
       --arg tool "$TOOL_NAME" \
+      --arg tool_use_id "$TOOL_USE_ID" \
+      --argjson tool_input "$TOOL_INPUT" \
+      --argjson tool_response "$TOOL_RESPONSE" \
       --arg file "$FILE_PATH" \
       --arg cmd "$COMMAND" \
       --arg cwd "$CWD" \
       --arg mode "$PERMISSION_MODE" \
-      '{timestamp: $ts, session_id: $sid, event: $event, tool: $tool, file: $file, command: $cmd, cwd: $cwd, permission_mode: $mode}')
+      '{timestamp: $ts, session_id: $sid, event: $event, tool: $tool, tool_use_id: $tool_use_id, tool_input: $tool_input, tool_response: $tool_response, is_error: (($tool_response.exit_code // 0) != 0), file: $file, command: $cmd, cwd: $cwd, permission_mode: $mode}')
     ;;
 
   *)
-    LOG_ENTRY=$(jq -n \
+    LOG_ENTRY=$(jq -cn \
       --arg ts "$TIMESTAMP" \
       --arg sid "$SESSION_ID" \
       --arg event "$EVENT_TYPE" \
