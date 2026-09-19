@@ -1,0 +1,30 @@
+id: FIX-CLOSURE-LEDGER-AUTHORITY-TIMEOUT-01
+title: 'Give the closure ledger-authority test a finite local timeout'
+risk_tier: 3
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-19T20:10:50.023Z'
+updated_at: '2026-09-19T20:10:50.023Z'
+created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
+blast_radius:
+  modules:
+    - 'ds-codegen-analytical-tests'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical/closure.test.ts'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'the ledger-authority test which runs checkClosures for five identities in one callback, now carrying an explicit finite local timeout of 30000ms'
+    when: 'the closure suite runs'
+    then: 'all 70 tests pass with unchanged assertions and count (five identities, exact moved-key matchers, only-problem check intact)'
+  - id: A2
+    given: 'a cold-clone gate context of the kind that twice timed this test out at the 5s default'
+    when: 'the targeted full-profile mutation baseline runs root-tests in its clean clone'
+    then: 'the baseline passes'
+non_functional: {}
+contracts: []
