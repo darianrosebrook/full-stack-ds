@@ -1,0 +1,54 @@
+id: DOC-DOMAIN-REALIZATION-MAP-01
+title: 'Document domain realization authorities and repair analytical status drift'
+risk_tier: 2
+mode: doc
+lifecycle_state: draft
+created_at: '2026-09-19T18:38:40.442Z'
+updated_at: '2026-09-19T18:38:40.442Z'
+created_by_session: '01a0baac-db3b-7e71-971d-17b3f2e48e16'
+blast_radius:
+  modules:
+    - 'cross-domain architecture documentation'
+    - 'component and icon realization documentation'
+    - 'analytical claim-boundary documentation'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/domain-realization-comparison.md'
+    - 'docs/research-program.md'
+    - 'docs/current-implementation-snapshot.md'
+    - 'docs/README.md'
+    - 'README.md'
+    - 'packages/ds-iconography/README.md'
+  out: []
+invariants:
+  - 'docs/current-implementation-snapshot.md remains the freshness authority for implemented and proven status'
+  - 'the bounded analytical projection experiment does not raise ratification beyond L0-L2 or imply a general production realization system'
+  - 'each domain retains its own authority and target-specific residue instead of becoming another component-contract alias'
+acceptance:
+  - id: A1
+    given: 'the component, iconography, and analytical authority surfaces'
+    when: 'a reader opens the durable comparison'
+    then: 'one extensible matrix identifies each domain authority, normalized substrate, composition, projections, residue, evidence, falsifier, and current maturity'
+  - id: A2
+    given: 'the bounded stage-three enumerator and lowerer exist while Stage 2 remains open'
+    when: 'the research program and canonical snapshot describe analytical status'
+    then: 'both distinguish implemented experimental machinery from the L0-L2 ratification boundary without claiming that no enumerator or realization exists'
+  - id: A3
+    given: 'component contracts consume governed glyph references while analytical relations remain a separate experimental authority'
+    when: 'a reader follows the documented integration paths'
+    then: 'the icon contract through IconGlyphIR route and the non-integration of analytics into component generation are explicit'
+  - id: A4
+    given: 'a future fourth governed domain'
+    when: 'its maintainers extend the comparison'
+    then: 'the document provides admission questions and a row template that add the domain without restructuring existing entries'
+  - id: A5
+    given: 'the documentation changes'
+    when: 'repository documentation claim and relative-link checks run'
+    then: 'all governed claims and tracked relative links pass'
+non_functional: {}
+contracts:
+  - name: 'domain-realization-map'
+    type: behavior
+    path: 'docs/domain-realization-comparison.md'
