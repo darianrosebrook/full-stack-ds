@@ -53,3 +53,8 @@ contracts:
   - name: 'form-regions'
     type: schema
     path: 'packages/ds-contracts/analytical-pack/form-regions.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts GENERATED: every catalogue entry names a program the enumerator ACTUALLY retained (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1018 tests green))"
+    recorded_at: "2026-09-19T05:05:34.856Z"
