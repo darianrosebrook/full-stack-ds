@@ -2,9 +2,10 @@ id: REL-OHLC-INTERVAL-DISTINCTION-01
 title: 'The OHLC relation is exercised through the projection layer without widening the evaluator, and its interval temporal axis is not reduced to a convenient scalar'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: rel-ohlc
 created_at: '2026-09-19T09:30:09.918Z'
-updated_at: '2026-09-19T09:30:09.918Z'
+updated_at: '2026-09-19T09:30:32.227Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
