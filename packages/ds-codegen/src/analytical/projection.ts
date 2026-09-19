@@ -1959,8 +1959,16 @@ export type PartReading = {
   probe?: { coordinate: CoordinateSpace; baseline: BaselineDecl; task: Task; facts: ResultFacts };
 };
 
-export type CompositeRefusal = { kind: "refused"; causes: string[]; from: "part" | "combinator"; detail: string };
-export type CompositeObligation = { kind: "unproven"; obligation: string; from: "part" | "combinator"; detail: string };
+/**
+ * WHICH OPERAND a composite's fault is attributed to. `combinator` means the
+ * composite's own rule fired; `host` and `part` name the two operands an `embed`
+ * declares. They are kept apart because "the cell has no standing" and "what the
+ * cell holds has no standing" are different repairs.
+ */
+export type OperandRole = "part" | "host" | "combinator";
+
+export type CompositeRefusal = { kind: "refused"; causes: string[]; from: OperandRole; detail: string };
+export type CompositeObligation = { kind: "unproven"; obligation: string; from: OperandRole; detail: string };
 /**
  * A part asking a question this path does not implement. This is its OWN arm,
  * not an obligation and not a refusal: absent implementation is neither a
@@ -1973,7 +1981,7 @@ export type CompositeUnsupported = {
   task: Task;
   obligation: string;
   detail: string;
-  from: "part" | "combinator";
+  from: OperandRole;
 };
 
 /** What a PART can be. A part has no combinator of its own; a composite does. */
@@ -1990,7 +1998,12 @@ export type CompositeVerdict = (PartReading & { combinator: Combinator }) | Comp
  */
 export type CompositeJudgment = {
   verdict: CompositeVerdict;
-  parts: Array<{ path: number[]; verdict: PartVerdict }>;
+  /**
+   * Every operand reached in the tree, at its own path. An `embed`'s HOST is at
+   * `"host"` and its embedded projection at `0`, so the two are never confused
+   * for one another.
+   */
+  parts: Array<{ path: Array<number | "host">; verdict: PartVerdict }>;
 };
 
 export type CompositeInput = {
@@ -2013,17 +2026,19 @@ export const COMPOSITION_NON_CLAIMS: readonly string[] = [
   "The commensurability question is put only where two or more parts read a shared channel as a QUANTITY. A shared nominal or ordinal channel carries identity, and this experiment does not adjudicate what it means for two parts to share one; it neither refuses it nor claims it commensurable.",
   "`cross-panel-comparability` is this layer's own claim name. The doctrine states that a facet's scale policy trade IS a claim; the name is L4's, and it is earned by a separating case rather than asserted: a shared policy induces it, a free policy withholds it, and every other claim is identical between the two.",
   "A layer adds no claim that its parts did not already make, and this experiment does not claim that the claim vocabulary is complete.",
+  "An embed reads its HOST for STANDING and not for its channels: a retained host establishes that the cell is a lawful projection, and the embed still presents the cell's channels upward. This experiment does not type a host frame inside a composite.",
+  "The host is not required to be a tabular projection. The doctrine describes an embedded projection as the value of a cell in a tabular projection, and no cause names a host of the wrong coordinate, so inventing one here would be inventing vocabulary.",
   "`enumerate` enumerates ATOMIC projections. Composites are JUDGED by `judgeComposite` and are not enumerated as candidates, so this slice establishes that a composite's legality follows from its parts and the combinator, not that the lawful composite space is enumerable.",
 ];
 
-const refusedComposition = (causes: string[], from: "part" | "combinator", detail: string): CompositeRefusal => ({
+const refusedComposition = (causes: string[], from: OperandRole, detail: string): CompositeRefusal => ({
   kind: "refused",
   causes,
   from,
   detail,
 });
 
-const unprovenComposition = (obligation: string, from: "part" | "combinator", detail: string): CompositeObligation => ({
+const unprovenComposition = (obligation: string, from: OperandRole, detail: string): CompositeObligation => ({
   kind: "unproven",
   obligation,
   from,
@@ -2218,7 +2233,7 @@ function judgeFacet(c: FacetComposite, parts: PartReading[]): CompositeVerdict {
  * ratio comparability, so it cannot serve a magnitude comparison however
  * convenient the arithmetic would be.
  */
-function judgeEmbed(c: EmbedComposite, part: PartReading): CompositeVerdict {
+function judgeEmbed(c: EmbedComposite, part: PartReading, host: PartReading | undefined): CompositeVerdict {
   if (!part.probe) {
     return unprovenComposition(
       "invariant:cell-budget",
@@ -2244,6 +2259,12 @@ function judgeEmbed(c: EmbedComposite, part: PartReading): CompositeVerdict {
       `the cell budget [${[...c.budget].join(", ")}] at a ${c.cellBaseline} baseline induces ${[...inCell].sort().join(", ") || "nothing"}, and the ${part.probe.task} task requires ${missing.join(", ")}`,
     );
   }
+  // The host's STANDING is a premise; its channels are not merged into the
+  // embed's. The cell is what the composite presents upward, and this experiment
+  // does not type a host frame inside a composite — see COMPOSITION_NON_CLAIMS.
+  if (!host) {
+    return unprovenComposition("host:standing", "host", "the embed reached its rule with no retained host reading, which is a defect in this checker rather than in the declaration");
+  }
   return { ...part, combinator: "embed", claims: [...new Set([...part.claims, ...inCell])].sort() };
 }
 
@@ -2256,12 +2277,26 @@ export function judgeComposite(input: CompositeInput): CompositeJudgment {
   return judgeCompositeAt(input, []);
 }
 
-function judgeCompositeAt(input: CompositeInput, path: number[]): CompositeJudgment {
+function judgeCompositeAt(input: CompositeInput, path: Array<number | "host">): CompositeJudgment {
   const { composite } = input;
   const parts = composite.combinator === "embed" ? [composite.part] : composite.parts;
   const readings: PartReading[] = [];
-  const record: Array<{ path: number[]; verdict: PartVerdict }> = [];
+  const record: Array<{ path: Array<number | "host">; verdict: PartVerdict }> = [];
   let fault: CompositeVerdict | undefined;
+  // THE HOST IS AN OPERAND, and it is read FIRST: a cell must have standing
+  // before what it holds can be typed against it. It is kept OUT of `readings`,
+  // which carries the parts a combinator rule folds together, so the embedded
+  // projection stays the reading the embed rule sees.
+  let hostReading: PartReading | undefined;
+  if (composite.combinator === "embed") {
+    const hostVerdict = readPart({ kind: "program", program: composite.host }, input);
+    record.push({ path: [...path, "host"], verdict: hostVerdict });
+    if (hostVerdict.kind === "retained") {
+      hostReading = hostVerdict;
+    } else {
+      fault = { ...hostVerdict, from: "host" };
+    }
+  }
 
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i]!;
@@ -2297,7 +2332,11 @@ function judgeCompositeAt(input: CompositeInput, path: number[]): CompositeJudgm
 
   if (fault) return { verdict: fault, parts: record };
   const verdict =
-    composite.combinator === "layer" ? judgeLayer(composite, readings) : composite.combinator === "facet" ? judgeFacet(composite, readings) : judgeEmbed(composite, readings[0]!);
+    composite.combinator === "layer"
+      ? judgeLayer(composite, readings)
+      : composite.combinator === "facet"
+        ? judgeFacet(composite, readings)
+        : judgeEmbed(composite, readings[0]!, hostReading);
   return { verdict, parts: record };
 }
 
