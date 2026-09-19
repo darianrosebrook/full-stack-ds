@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 4,8,13
 # edit_stance: YOURS TO EDIT. This is a starting hook lib, not a locked one —
@@ -41,6 +41,22 @@
 #   - HOME                   (env; falls back to empty)
 # Caller passes PROJECT_DIR as $2 (falls back to CAWS_PROJECT_DIR or '.').
 
+# lib/guard-config.sh is pulled in HERE rather than by each caller, so that
+# every guard reaching the allowlist gets the repo's configured prefixes
+# without having to know they exist. A caller that forgot to source it would
+# otherwise get shipped-only behavior while its sibling got the configured
+# table — the exact desynchronization this lib exists to prevent.
+#
+# `[[ -f ]] &&` is required, not stylistic: under the callers' `set -euo
+# pipefail`, `source <missing>` is a fatal builtin error that a trailing
+# `|| true` does NOT catch (CAWS-HOOK-SOURCE-GUARD-FAIL-SOFT-001). The test is
+# exempt from `set -e` as a non-final member of an && list.
+if [[ -f "$(dirname "${BASH_SOURCE[0]}")/guard-config.sh" ]]; then
+  # shellcheck source=lib/guard-config.sh
+  source "$(dirname "${BASH_SOURCE[0]}")/guard-config.sh"
+  caws_guard_config_load "${CAWS_PROJECT_DIR:-.}" || true
+fi
+
 # caws_is_write_allowlisted <abs_path> [<project_dir>]
 #   Returns 0 if <abs_path> is on the unconditional-allow list.
 #   Returns 1 otherwise (caller proceeds to oracle/claim adjudication).
@@ -76,6 +92,30 @@ caws_is_write_allowlisted() {
   case "$file_path" in
     "$project_dir"/.caws/worktrees/*|.caws/worktrees/*) return 1 ;;
   esac
+
+  # ── Repo-declared additional allow prefixes (tier-2 guard config) ──────
+  # Deliberately placed AFTER the worktree-payload exclusion above and never
+  # before it. Configuration is append-only over the shipped table, and this
+  # position is what makes that true of ORDER as well as of content: a repo
+  # cannot re-admit .caws/worktrees/<name>/<payload> by declaring a prefix,
+  # because that arm has already returned 1. Validation rejects `.caws` as a
+  # reserved prefix too, so the property holds twice over — by ordering here
+  # and by refusal at authoring time.
+  #
+  # Both guards that call this function inherit the entry together, which is
+  # the point of the shared lib: bash-write-guard.sh and
+  # worktree-write-guard.sh cannot disagree about a configured prefix any more
+  # than they can about a shipped one (CAWS-GUARD-ALLOWLIST-SYNC-001).
+  if declare -F caws_guard_prefixes >/dev/null 2>&1; then
+    local _cfg_prefix
+    while IFS= read -r _cfg_prefix; do
+      [[ -z "$_cfg_prefix" ]] && continue
+      if [[ "$file_path" == "$project_dir/$_cfg_prefix"* ]] || \
+         [[ "$file_path" == "$_cfg_prefix"* ]]; then
+        return 0
+      fi
+    done < <(caws_guard_prefixes write-allowlist.sh)
+  fi
 
   case "$file_path" in
     "$project_dir"/.caws/*|.caws/*) return 0 ;;
