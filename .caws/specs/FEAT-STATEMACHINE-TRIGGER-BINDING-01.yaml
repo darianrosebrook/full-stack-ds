@@ -2,9 +2,11 @@ id: FEAT-STATEMACHINE-TRIGGER-BINDING-01
 title: 'Bind stateMachine transition events to declared trigger referents'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'stateMachine transition events now bind to declared trigger referents via semantic Rule 6b; corpus greens, mutant killed at generate-check per targeted full-profile run'
 created_at: '2026-09-19T10:51:14.185Z'
-updated_at: '2026-09-19T11:07:14.216Z'
+updated_at: '2026-09-19T11:25:31.267Z'
 created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
 blast_radius:
   modules:
