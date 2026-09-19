@@ -19,7 +19,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { judge } from "./engines.js";
 import { canonicalJudgment } from "./judgment.js";
 import { loadOracle } from "./necessity.js";
@@ -827,7 +827,11 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     // entered result simply is not cyclic, so the enumerator refuses it.
     expect(CAPACITY.angle.spaces).toContain("polar");
     expect(CAPACITY.angle.requiresCyclicOrWhole).toBe(true);
-    expect(byName.get("pie")?.reason).toBe("not-lawful-here");
+    // The reason is now the enumeration's OWN evidence, not a flattened label:
+    // the pie region's candidates were REFUSED, and the cause they carried is
+    // preserved rather than replaced by "not lawful here".
+    expect(byName.get("pie")?.reason).toBe("no-retained-match");
+    expect(byName.get("pie")?.refused.length).toBeGreaterThan(0);
     expect(catalogue.unsatisfied.length).toBe(3);
   });
 
@@ -1076,6 +1080,16 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     expect(reference.every((k) => k.split("|")[1] === "position")).toBe(true);
   });
 
+  const outcomeOf = (e: Enumeration) =>
+    JSON.stringify({
+      population: e.population,
+      support: e.support,
+      retained: relationMembership(e),
+      refused: e.refused.map((r) => `${programKey(r.program)}::${r.cause}`).sort(),
+      undecided: e.undecided.map((u) => `${programKey(u.program)}::${u.obligation}`).sort(),
+    });
+  const search = () => enumerate({ structure, admitted, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, partitionDimension: BASIS.resultGrain });
+
   it("ALIAS INDEPENDENCE: the search outcome is identical with the alias layer REMOVED, RENAMED and BLANKED", () => {
     // Three contracts directories that differ ONLY in the alias layer. The
     // removal has to be REAL, so the loader is required to fail on it — a
@@ -1115,16 +1129,6 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     // THE NORMALIZED SEMANTIC OUTCOME, in full: population, support, retained
     // membership, every refusal with its cause, every undecided with its
     // obligation. Membership alone would miss a name that moved a CAUSE.
-    const outcomeOf = (e: Enumeration) =>
-      JSON.stringify({
-        population: e.population,
-        support: e.support,
-        retained: relationMembership(e),
-        refused: e.refused.map((r) => `${programKey(r.program)}::${r.cause}`).sort(),
-        undecided: e.undecided.map((u) => `${programKey(u.program)}::${u.obligation}`).sort(),
-      });
-    const search = () => enumerate({ structure, admitted, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, partitionDimension: BASIS.resultGrain });
-
     const baseline = outcomeOf(search());
     const released = [search(), search(), search()].map(outcomeOf);
     expect(new Set([baseline, ...released]).size, "the search is the same run every time").toBe(1);
@@ -1322,6 +1326,92 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     const freeFacet: Composite = { ...sharedFacet(mixed, ["meter_a", "meter_b"]), policy: { length: "free", text: "free" } } as Composite;
     expect(j(freeFacet, mixed).kind).toBe("retained");
     expect(sharedFacet(mixed, ["meter_a", "meter_b"]).combinator === "facet" && freeFacet.combinator === "facet").toBe(true);
+  });
+
+  it("A7: a region's report keeps the enumeration's OWN evidence rather than a flattened label", () => {
+    const catalogue = catalogueFor(enumeration, EXPERIMENT_TARGET);
+    const byName = new Map(catalogue.unsatisfied.map((u) => [u.name, u]));
+
+    // REFUSED candidates arrive with the cause each carried — no new cause is
+    // manufactured to compress them.
+    const pie = byName.get("pie")!;
+    expect(pie.reason).toBe("no-retained-match");
+    expect(pie.refused.map((r) => r.program)).toEqual(["polar|hue|angle"]);
+    // The CAUSE the enumeration actually recorded is carried through. It is the
+    // hue-capacity refusal, not the cyclic-angle one: `hue` cannot carry the
+    // result's interval group column, and that check fires first. Naming the real
+    // cause is the point — a flattened reason would have said neither.
+    expect(pie.refused[0]!.cause).toBe("REL_HUE_CARRIES_ORDER");
+    expect(pie.refused.every((r) => r.cause.length > 0)).toBe(true);
+    expect(pie.undecided).toEqual([]);
+
+    // UNDECIDED candidates arrive with the obligation each carried.
+    const unknownGrain = enumerate({ structure: withGrain("unknown"), admitted, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, partitionDimension: BASIS.resultGrain });
+    expect(unknownGrain.retained).toEqual([]);
+    const underUnknown = generateAliasCatalogue(loadFormDeclarations(), unknownGrain, EXPERIMENT_TARGET);
+    const anyUnsatisfied = underUnknown.unsatisfied.filter((u) => u.undecided.length > 0);
+    expect(anyUnsatisfied.length, "an unresolved premise reaches the report").toBeGreaterThan(0);
+    // The obligations that reach the report are the enumeration's OWN, carried
+    // unaltered; the assertion names the set rather than assuming one value.
+    const obligations = [...new Set(anyUnsatisfied.flatMap((u) => u.undecided.map((x) => x.obligation)))].sort();
+    expect(obligations).toContain("grain:declared");
+    expect(obligations.every((o) => o.length > 0)).toBe(true);
+
+    // AN UNSUPPORTED REQUEST keeps its support decision, so "we did not build
+    // this" is not reported as "the facts forbid it".
+    const unsupported = enumerate({ structure, admitted, task: "distribution", inventory: EXPERIMENT_TARGET });
+    const underUnsupported = generateAliasCatalogue(loadFormDeclarations(), unsupported, EXPERIMENT_TARGET);
+    expect(underUnsupported.unsatisfied.length).toBe(loadFormDeclarations().length);
+    for (const u of underUnsupported.unsatisfied) {
+      expect(u.reason).toBe("unsupported");
+      expect(u.support?.supported).toBe(false);
+      expect(u.refused).toEqual([]);
+      expect(u.undecided).toEqual([]);
+    }
+
+    // A region the target cannot host says so WITHOUT inventing a cause.
+    const table = byName.get("table")!;
+    expect(table.reason).toBe("not-in-space");
+    expect(table.refused).toEqual([]);
+    expect(table.undecided).toEqual([]);
+    expect(table.support).toBeUndefined();
+  });
+
+  it("A6: the DEFAULT loader really meets the removed layer, the search does not, and a dependent search FAILS the control", () => {
+    const baseline = outcomeOf(search());
+    const real = fs.readFileSync;
+    const spy = vi.spyOn(fs, "readFileSync").mockImplementation(((p: never, ...rest: never[]) => {
+      if (String(p).endsWith("form-regions.json")) throw new Error("ENOENT: the alias layer is not available");
+      return (real as never as (...a: never[]) => string)(p, ...rest);
+    }) as never);
+    try {
+      // THE DEFAULT ENVIRONMENT, not a directory the search never reads.
+      expect(() => loadFormDeclarations()).toThrow(/alias layer is not available/);
+      expect(() => catalogueFor(enumeration, EXPERIMENT_TARGET)).toThrow(/alias layer is not available/);
+      // ...and the search is unaffected IN THAT SAME ENVIRONMENT.
+      expect(outcomeOf(search())).toBe(baseline);
+      // THE MUTANT. A search that DOES consult the alias layer must fail this
+      // control, or the control could not tell the two explanations apart.
+      const dependent = () => {
+        loadFormDeclarations();
+        return outcomeOf(search());
+      };
+      expect(() => dependent()).toThrow(/alias layer is not available/);
+      // ...and a mutant that reads a CHANGED layer must produce a different
+      // catalogue while the search stays put.
+      spy.mockImplementation(((p: never, ...rest: never[]) => {
+        if (String(p).endsWith("form-regions.json")) return JSON.stringify({ regions: [{ name: "only", colloquial: "only", asserts: { coordinate: "cartesian" } }] });
+        return (real as never as (...a: never[]) => string)(p, ...rest);
+      }) as never);
+      const changedCatalogue = catalogueFor(enumeration, EXPERIMENT_TARGET);
+      expect(changedCatalogue.entries.map((e) => e.name)).toEqual(["only"]);
+      expect(outcomeOf(search()), "the search is unmoved by a CHANGED layer too").toBe(baseline);
+    } finally {
+      spy.mockRestore();
+    }
+    // Restored, everything is back — so the intervention was an intervention.
+    expect(outcomeOf(search())).toBe(baseline);
+    expect(loadFormDeclarations().length).toBeGreaterThan(0);
   });
 
   it("states what the generated catalogue does NOT establish", () => {
