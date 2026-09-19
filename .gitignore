@@ -94,7 +94,7 @@ CLAUDE.md
 # Local screenshots from DevTools-MCP review sessions
 .tmp-review/
 
-# >>> caws gitignore (managed, v2) >>>
+# >>> caws gitignore (managed, v3) >>>
 # Ephemeral CAWS runtime/local state — never tracked. Authority state
 # (.caws/specs/, .caws/policy.yaml, .caws/waivers/) is intentionally NOT
 # listed here so it stays versioned. Managed by `caws init`; edits inside
@@ -103,6 +103,7 @@ CLAUDE.md
 .caws/worktrees.json
 .caws/agents.json
 .caws/leases/
+.caws/claims/
 .caws/cache/
 .caws/sessions/
 .caws/state/
