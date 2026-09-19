@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts NOT A SOURCE OF TRUTH: the search is identical with the catalogue emptied respelled and reordered (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1018 tests green))"
     recorded_at: "2026-09-19T05:05:35.429Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts TRACKS THE SPACE: a name whose region loses its members leaves the entries and is REPORTED (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1018 tests green))"
+    recorded_at: "2026-09-19T05:05:35.953Z"
