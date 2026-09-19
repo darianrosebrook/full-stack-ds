@@ -59,3 +59,9 @@ evidence:
     recorded_at: "2026-09-19T19:09:06.944Z"
     artifact_path: docs/domain-realization-comparison.md
     commit_sha: "6801775fa33db753e0a08c2dd7a52d0900007fcf"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: docs/research-program.md and docs/current-implementation-snapshot.md distinguish the running bounded stage-three enumerator and two lowerings from the still-open L0-L2 ratification boundary
+    recorded_at: "2026-09-19T19:09:47.363Z"
+    artifact_path: docs/research-program.md
+    commit_sha: "6801775fa33db753e0a08c2dd7a52d0900007fcf"
