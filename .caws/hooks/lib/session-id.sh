@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 43
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: (new — CAWS-SESSION-RESOLVER-GUARD-DIVERGENCE-001)
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -66,27 +66,64 @@ _CAWS_SESSION_ID_SH_LOADED=1
 # no exports) so callers can compose it. Callers that need the id as a variable:
 # s="$(resolve_caws_session_id)".
 #
-# Precedence (mirrors the TS resolver resolve-session.ts so shell + TS agree on
-# identity by construction — CAWS-SESSION-SHELL-RESOLVER-CAPSULE-001):
-#   1. $1 payload id (harness-stamped stdin session_id; wins when present)
-#   2. env identity vars (CLAUDE_SESSION_ID / CLAUDE_CODE_SESSION_ID /
-#      CODEX_THREAD_ID / QWEN_CODE_SESSION_ID / CAWS_SESSION_ID /
+# Precedence (CAWS-DEFECT-SESSION-IDENTITY-ENV-SHADOWING-01; mirrors the TS
+# resolver resolve-session.ts so shell + TS agree on identity by construction):
+#   1. the LIVE agent-PID record — the trust ANCHOR. When a start-time-guarded
+#      record for this process exists, it wins over any env/payload
+#      disagreement (it was written under this process; spoofing it requires
+#      owning the PID, and killing the PID kills the agent). A disagreement
+#      with env/payload is surfaced on stderr naming both ids.
+#   2. $1 payload id (harness-stamped stdin session_id)
+#   3. the surface-PINNED var: when CAWS_AGENT_SURFACE names the dispatching
+#      platform, that surface's own env var wins and foreign vars cannot
+#      shadow it (a stray CLAUDE_SESSION_ID in a dsh process no longer
+#      rewrites self).
+#   4. CAWS_SESSION_ID — the canonical var (operator override or normalized
+#      upstream by caws_normalize_session_env)
+#   5. the per-surface env chain (CLAUDE_SESSION_ID / CLAUDE_CODE_SESSION_ID /
+#      CODEX_THREAD_ID / QWEN_CODE_SESSION_ID / DSH_SESSION_ID /
 #      HOOK_SESSION_ID / CURSOR_TRACE_ID)
-#   3. the durable capsule at .caws/sessions/caws-<id>.json — the shell mirror
-#      of the TS resolver's tier-3 readCapsule, and the same file caws worktree
-#      create records as the owner. Reached when the env chain misses (the
-#      agent-Bash case where no identity env var survives the subshell). Without
-#      it, the resolver returned "unknown" and the write-guards treated the
-#      owner's own edits as foreign. This is completing the shell resolver to
-#      match the canonical identity model, NOT a parallel fallback.
-# Returns "unknown" only when no capsule exists (fresh repo, no mint yet).
-resolve_caws_session_id() {
+# Returns "unknown" when no source resolves — deliberately. The former
+# capsule-glob fallback tier is REMOVED (doctrine shift from
+# CAWS-SESSION-SHELL-RESOLVER-CAPSULE-001): a first-match glob manufactured
+# identity with no process correlation. The TS resolver keeps its
+# caller-pointer-correlated capsule tier for the interactive owner; the shell
+# resolver refuses to guess. Verbs fail loudly on "unknown" instead.
+_caws_env_or_payload_id() {
   local payload_id="${1:-}"
-  # The hook payload's session_id is the most authoritative when present (it is
-  # what the harness stamped on THIS tool call). Mirror block-dangerous.sh's
-  # historical behavior of preferring it over env.
+  # The hook payload's session_id is the most authoritative env-class source
+  # when present (it is what the harness stamped on THIS tool call).
   if [[ -n "$payload_id" && "$payload_id" != "unknown" ]]; then
     printf '%s\n' "$payload_id"
+    return 0
+  fi
+  # Surface-pinned precedence: the dispatcher knows the true platform; a
+  # foreign surface's var must not shadow it. The pin map derives from the
+  # registry via the generated snippet (A5); the local case is the fallback
+  # for environments that predate the snippet.
+  local pinned_var=""
+  if declare -F _caws_surface_pin_var >/dev/null 2>&1; then
+    pinned_var="$(_caws_surface_pin_var "${CAWS_AGENT_SURFACE:-}")" || pinned_var=""
+  else
+    case "${CAWS_AGENT_SURFACE:-}" in
+      claude-code) pinned_var="CLAUDE_SESSION_ID" ;;
+      codex) pinned_var="CODEX_THREAD_ID" ;;
+      qwen-code) pinned_var="QWEN_CODE_SESSION_ID" ;;
+      dsh) pinned_var="DSH_SESSION_ID" ;;
+      *) pinned_var="" ;;
+    esac
+  fi
+  if [[ -n "$pinned_var" ]]; then
+    local pinned_val
+    pinned_val="$(printf '%s' "${!pinned_var:-}")"
+    if [[ -n "$pinned_val" && "$pinned_val" != "unknown" ]]; then
+      printf '%s\n' "$pinned_val"
+      return 0
+    fi
+  fi
+  # The canonical var: normalized upstream or operator-set.
+  if [[ -n "${CAWS_SESSION_ID:-}" && "${CAWS_SESSION_ID}" != "unknown" ]]; then
+    printf '%s\n' "$CAWS_SESSION_ID"
     return 0
   fi
   if [[ -n "${CLAUDE_SESSION_ID:-}" ]]; then
@@ -105,8 +142,8 @@ resolve_caws_session_id() {
     printf '%s\n' "$QWEN_CODE_SESSION_ID"
     return 0
   fi
-  if [[ -n "${CAWS_SESSION_ID:-}" && "${CAWS_SESSION_ID}" != "unknown" ]]; then
-    printf '%s\n' "$CAWS_SESSION_ID"
+  if [[ -n "${DSH_SESSION_ID:-}" && "${DSH_SESSION_ID}" != "unknown" ]]; then
+    printf '%s\n' "$DSH_SESSION_ID"
     return 0
   fi
   if [[ -n "${HOOK_SESSION_ID:-}" && "${HOOK_SESSION_ID}" != "unknown" ]]; then
@@ -117,8 +154,16 @@ resolve_caws_session_id() {
     printf '%s\n' "$CURSOR_TRACE_ID"
     return 0
   fi
-  # Resolve the .caws dir (needed by the agent-PID and capsule tiers).
-  # Reused below by both — compute once.
+  return 1
+}
+
+resolve_caws_session_id() {
+  local resolved=""
+  resolved="$(_caws_env_or_payload_id "${1:-}")" || resolved=""
+
+  # The agent-PID record tier is the trust anchor: a LIVE, start-time-guarded
+  # record for this process outranks any env/payload disagreement. Kill the
+  # PID and the identity dies with it — that is the whole spoofing defense.
   local _caws_sid_dir="${CAWS_PROJECT_DIR:-}"
   if [[ -z "$_caws_sid_dir" || "$_caws_sid_dir" == "." ]]; then
     local _caws_self="${BASH_SOURCE[0]:-}"
@@ -126,20 +171,7 @@ resolve_caws_session_id() {
       _caws_sid_dir="$(cd "$(dirname "$_caws_self")/../../.." 2>/dev/null && pwd)"
     fi
   fi
-  # Tier 2.8 (CAWS-AGENT-PID-SESSION-CORRELATION-001): the agent-PID
-  # correlation record. Reached when the env chain misses — exactly the case
-  # for harnesses that export no session-id env var (ZCode / generic). The
-  # agent process is a stable, per-session-unique ANCESTOR of this process;
-  # its PID keys a record the hook wrote (parse-input.sh's
-  # _write_agent_pid_record) carrying the authoritative HOOK_SESSION_ID.
-  # This is the canonical-checkout identity bridge — it resolves BEFORE the
-  # capsule tier so the first-match-wins capsule fallback can no longer
-  # silently misattribute. Fail-opens (prints nothing, continues) on any
-  # miss: missing record, unfound agent ancestor (unknown surface),
-  # stale record, or PID-reuse start-time mismatch.
   if [[ -n "$_caws_sid_dir" ]]; then
-    # Source agent-pid.sh if the read function isn't already defined (a
-    # caller may have sourced session-id.sh without it). Best-effort.
     if ! declare -F read_session_id_from_agent_pid >/dev/null 2>&1; then
       local _caws_self2="${BASH_SOURCE[0]:-}"
       [[ -n "$_caws_self2" ]] && source "$(dirname "$_caws_self2")/agent-pid.sh" 2>/dev/null || true
@@ -149,40 +181,40 @@ resolve_caws_session_id() {
       _caws_pid_sid="$(read_session_id_from_agent_pid \
         "${_caws_sid_dir}/.caws" "${CAWS_AGENT_PROCESS_NAMES:-}")"
       if [[ -n "$_caws_pid_sid" && "$_caws_pid_sid" != "unknown" ]]; then
+        if [[ -n "$resolved" && "$resolved" != "$_caws_pid_sid" ]]; then
+          printf 'Warning: session identity disagreement — env/payload resolved %s but the live agent-PID record for this process says %s; trusting the PID record (it was written under this process).\n' \
+            "$resolved" "$_caws_pid_sid" >&2
+        fi
         printf '%s\n' "$_caws_pid_sid"
         return 0
       fi
     fi
   fi
-  # Tier 3 (CAWS-SESSION-SHELL-RESOLVER-CAPSULE-001): the durable capsule. This
-  # is the shell mirror of resolve-session.ts's tier-3 readCapsule — the same
-  # .caws/sessions/caws-<id>.json file caws worktree create records as the owner.
-  # Reached when the env chain AND the agent-PID tier miss, so the resolver
-  # stops returning "unknown" for the owner's own process. Bounded: one glob,
-  # first match. Fail-opens to "unknown" when no capsule exists.
-  if [[ -n "$_caws_sid_dir" ]]; then
-    local _caws_capsule
-    # First caws-*.json capsule (skip dotfiles like .caller-session.json). The
-    # capsule shape is {session_id, platform, minted_at, worktree_root}; we read
-    # only session_id. A malformed file is skipped (fail-open), not fatal.
-    _caws_capsule="$(ls "$_caws_sid_dir/.caws/sessions"/caws-*.json 2>/dev/null | head -1)"
-    if [[ -n "$_caws_capsule" && -f "$_caws_capsule" ]]; then
-      local _caws_sid
-      _caws_sid="$(python3 -c 'import json,sys
-try:
-    d=json.load(open(sys.argv[1]))
-    sid=d.get("session_id")
-    if isinstance(sid,str) and sid: print(sid)
-except Exception:
-    pass
-' "$_caws_capsule" 2>/dev/null)"
-      if [[ -n "$_caws_sid" && "$_caws_sid" != "unknown" ]]; then
-        printf '%s\n' "$_caws_sid"
-        return 0
-      fi
-    fi
+
+  if [[ -n "$resolved" ]]; then
+    printf '%s\n' "$resolved"
+    return 0
   fi
   printf '%s\n' "unknown"
+}
+
+# caws_normalize_session_env — resolve once and export the result as the
+# canonical CAWS_SESSION_ID so every handler and child process in this
+# dispatch reads ONE variable (CAWS-DEFECT-SESSION-IDENTITY-ENV-SHADOWING-01).
+# Call it DIRECTLY (not in a $(...) subshell) from the dispatch entry; a
+# pre-resolved id may be passed to avoid re-resolution. "unknown" is NOT
+# exported — an unresolved identity stays absent, never canonicalized into a
+# lie.
+caws_normalize_session_env() {
+  local id="${1:-}"
+  if [[ -z "$id" || "$id" == "unknown" ]]; then
+    id="$(resolve_caws_session_id)"
+  fi
+  if [[ -n "$id" && "$id" != "unknown" ]]; then
+    export CAWS_SESSION_ID="$id"
+    printf '%s\n' "$id"
+  fi
+  return 0
 }
 
 # resolve_caws_session_id_with_payload — convenience wrapper for guards that
