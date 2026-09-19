@@ -57,3 +57,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RECOVERY: an unimplemented part is UNSUPPORTED -- not unproven, not refused (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1012 tests green))"
     recorded_at: "2026-09-19T04:52:11.041Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "projection.test.ts RECOVERY: a missing analytical premise keeps its obligation through the composite (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1012 tests green))"
+    recorded_at: "2026-09-19T04:52:11.526Z"
