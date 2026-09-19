@@ -66,3 +66,11 @@ evidence:
     command: "pnpm run tokens:build && pnpm run generate:check"
     exit_code: 0
     commit_sha: e8db220185fc
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Targeted full-profile mutation measurement re-run at the landed revision: pnpm run audit:contract-oracle-mutations -- --profile=full --only=dialog-state-machine-open-event-reveal — exit 0. Report tmp/contract-oracle-mutation/e8db220185fc-2026-09-19T11-19-42-840Z/report.md: Baseline passed (all 18 full-profile stages green in the clean clone of e8db2201, incl. typecheck-all, both Playwright rails); the mutant went red at its first stage generate-check in 2.1s; expected/actual detector generate-check/structural; Evidence marker found; Disposition match; Detected 1/1, survived 0, disposition/marker/provenance mismatches all 0. The catalog disposition flip (survived→detected, scripts/contract-oracle-mutation/catalog.mjs) is therefore backed by measurement at HEAD, not assertion. Non-claim carried in the row: the kill proves name-resolution binding — NOT transition realization; no emitter consumes stateMachine.transitions."
+    recorded_at: "2026-09-19T11:24:38.356Z"
+    command: "pnpm run audit:contract-oracle-mutations -- --profile=full --only=dialog-state-machine-open-event-reveal"
+    exit_code: 0
+    artifact_path: tmp/contract-oracle-mutation/e8db220185fc-2026-09-19T11-19-42-840Z/report.md
+    commit_sha: e8db220185fc
