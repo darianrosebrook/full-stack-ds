@@ -46,3 +46,7 @@ evidence:
     status: pass
     evidence_ref: "At main 0ff90564 (merge 34592ea5): grep -c 'user-level' AGENTS.md => 1; grep -c 'wired in' AGENTS.md => 0 (stale wiring claim gone); cat .codex/hooks.json => {\"hooks\":{}}; jq caws-wired event keys of ~/.codex/hooks.json => SessionStart/PreToolUse/PostToolUse/Stop/PreCompact/SessionEnd (exactly six). AGENTS.md 'CAWS runtime hooks' section now names the ~/.caws/bin/caws-hook user-level registration and the retired repo-level block."
     recorded_at: "2026-09-19T18:31:23.575Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "At main 0ff90564: grep -c 'SwiftUI generated roots' => AGENTS.md:1, CLAUDE.md:1 (README.md:276 already carried its own correct 'plus the registered SwiftUI and Compose generated roots' phrasing — the authority the others were aligned to); grep -c 'outside CI drift diffs' => 0 across AGENTS.md/README.md/CLAUDE.md. Matches .github/workflows/ci.yml 'Generated artifacts are committed' git diff paths and .githooks/pre-push:205-214. CLAUDE.md is gitignored (.gitignore:69) — its state verified in the local working copy, not the merge."
+    recorded_at: "2026-09-19T18:31:24.194Z"
