@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 28
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -41,12 +41,35 @@ source "$SCRIPT_DIR/lib/parse-input.sh"
 source "$SCRIPT_DIR/lib/agent-surface.sh" 2>/dev/null || true
 # shellcheck source=lib/emit.sh
 caws_source_lib emit.sh 2>/dev/null || true
+# shellcheck source=lib/guard-config.sh
+# Provides caws_guard_threshold. Optional: absent lib means the shipped
+# defaults below, which is what this guard did before the config existed.
+[[ -f "$SCRIPT_DIR/lib/guard-config.sh" ]] && source "$SCRIPT_DIR/lib/guard-config.sh"
+if declare -F caws_guard_config_load >/dev/null 2>&1; then
+  caws_guard_config_load "${CAWS_PROJECT_DIR:-.}" || true
+fi
 parse_hook_input
 
 TOOL_NAME="$HOOK_TOOL_NAME"
 FILE_PATH="$HOOK_FILE_PATH"
-THRESHOLD="${CAWS_GOD_OBJECT_LOC:-2000}"
-DELTA_THRESHOLD="${CAWS_GOD_OBJECT_DELTA:-100}"
+# Precedence: ENV > CONFIG > SHIPPED DEFAULT.
+#
+# Env first is deliberate and is the compatibility guarantee: a repo that
+# already tunes this through a `.claude/settings.json` env block keeps working
+# unchanged after the config lands, and a per-session override is a narrower,
+# more current statement of intent than a committed file. caws_guard_threshold
+# implements only the CONFIG > DEFAULT half, so the env arm stays visible here
+# in the form it has always had.
+THRESHOLD="${CAWS_GOD_OBJECT_LOC:-}"
+if [[ -z "$THRESHOLD" ]] && declare -F caws_guard_threshold >/dev/null 2>&1; then
+  THRESHOLD="$(caws_guard_threshold god-object-check.sh loc 2000)"
+fi
+THRESHOLD="${THRESHOLD:-2000}"
+DELTA_THRESHOLD="${CAWS_GOD_OBJECT_DELTA:-}"
+if [[ -z "$DELTA_THRESHOLD" ]] && declare -F caws_guard_threshold >/dev/null 2>&1; then
+  DELTA_THRESHOLD="$(caws_guard_threshold god-object-check.sh delta 100)"
+fi
+DELTA_THRESHOLD="${DELTA_THRESHOLD:-100}"
 
 case "$TOOL_NAME" in
   Write|Edit) ;;
