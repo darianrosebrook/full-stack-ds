@@ -3,7 +3,6 @@ title: 'Preserve occurrence ownership in the required-region usage audit'
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: slot-required-ownership
 created_at: '2026-09-19T18:45:52.868Z'
 updated_at: '2026-09-19T18:46:35.053Z'
 created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
