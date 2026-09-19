@@ -4,8 +4,8 @@ authority: architecture
 status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
-updated: 2026-09-13
-verified_at_commit: 18cc1f66
+updated: 2026-09-19
+verified_at_commit: 0641cf9f
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
@@ -190,7 +190,7 @@ The five Web DOM frameworks were chosen for paradigm spread, not popularity. The
 
 Hooks vs. controllers, virtual DOM vs. shadow DOM, immutable props vs. mutable reactive properties, synthetic events vs. native events, function components vs. classes. These paradigms are not minor variations on a theme. They are different answers to the same questions, and the contract must give an answer that is correct in each idiom without being framed in any of them.
 
-The contract currently drives all five idiomatically, with hundreds of passing tests per framework. One leak mechanism is concrete: target code wanting component-specific interpretation rather than a shared IR fact. `no-component-name-lore.test.ts` rejects that form in the enforced emitter scope. It is not the only leak mechanism. A contract field can also be accepted and carried without affecting any realization. The expanded full contract-oracle profile detects seven of eleven curated one-leaf mutants and lets four survive end to end: the exact Badge mutations `rtl.flipIcon` true→false and `ssr.hydrateOn` none→interaction, Dialog's first state-machine event `open`→`reveal`, and Card's `actions` slot `required` false→true. In contrast, a wrong `textOverflow.line` binding reaches the IR but is contradicted by a hand-authored IR-authority test, while a motion-property change is caught by the contract-derived motion ledger. The IR is centralized and shared, but neither its size nor emitter agreement proves every declared fact is consumed or correct.
+The contract currently drives all five idiomatically, with hundreds of passing tests per framework. One leak mechanism is concrete: target code wanting component-specific interpretation rather than a shared IR fact. `no-component-name-lore.test.ts` rejects that form in the enforced emitter scope. It is not the only leak mechanism. A contract field can also be accepted and carried without affecting any realization. The expanded full contract-oracle profile detects eight of eleven curated one-leaf mutants and lets three survive end to end: the exact Badge mutations `rtl.flipIcon` true→false and `ssr.hydrateOn` none→interaction, and Card's `actions` slot `required` false→true. Dialog's first state-machine event `open`→`reveal` survived the 2026-09-05 measurement and was killed at `generate-check` by the trigger-binding semantic rule (`FEAT-STATEMACHINE-TRIGGER-BINDING-01`, targeted full-profile run at `0641cf9f`): a transition event must now resolve to a declared trigger referent, so a name that references nothing fails the structural gate. In contrast, a wrong `textOverflow.line` binding reaches the IR but is contradicted by a hand-authored IR-authority test, while a motion-property change is caught by the contract-derived motion ledger. The IR is centralized and shared, but neither its size nor emitter agreement proves every declared fact is consumed or correct.
 
 The earlier non-web extensions have graded proof strength: React Native (rail-admitted with package runtime tests), SwiftUI (full-corpus emission, CI compile/test and sampled paint facts, plus a separately invoked macOS interaction harness), and Jetpack Compose (partial-corpus compile and resolver-test evidence). The question this section used to close on — whether a sixth or seventh framework would expose a leak — has been partially answered: three further targets landed without contract escape hatches or per-component emitter-name lore in the enforced scope. Whether the same line holds under broad native device behavior, accessibility, and visual pressure remains open.
 
