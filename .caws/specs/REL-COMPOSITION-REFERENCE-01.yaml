@@ -1,0 +1,53 @@
+id: REL-COMPOSITION-REFERENCE-01
+title: 'The independently derived lawful set covers the composition task: it receives the partition and derives the additivity and key-channel conditions itself'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-19T06:16:56.413Z'
+updated_at: '2026-09-19T06:16:56.413Z'
+created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an admitted operation over the entered basis and a declared partition; when the composition task is enumerated and independently derived; then the two memberships are equal, and the reference received the partition'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a measure declared non-additive; when composition is derived and enumerated; then the lawful set is empty with the corpus''s own cause in the reference and the enumerator refuses for the same reason'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a measure declared a ratio-measure; when composition is derived and enumerated; then the lawful set is empty in both, for the reason the declaration gives'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a measure declared semi-additive; when the declared partition is one it is not additive along; then the lawful set is empty in both, and the same measure partitioned along a dimension it IS additive along is not emptied'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given composition with NO declared partition; when both run; then the lawful set is unestablished rather than empty by decision, and the reference names the obligation'
+  - id: A6
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a result whose group column is a key; when both run; then a non-positional dimension channel is lawful in neither'
+  - id: A7
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the reference; when its premises are read; then what it shares and what it derives are stated, and what it still does not cover is recorded'
+non_functional: {}
+contracts:
+  - name: 'composition-reference'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
