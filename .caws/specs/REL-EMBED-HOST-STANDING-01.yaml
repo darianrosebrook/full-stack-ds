@@ -2,9 +2,10 @@ id: REL-EMBED-HOST-STANDING-01
 title: 'The embedded projection''s HOST is an operand: its standing is read, recorded at its own path, and affects the embed'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: rel-host
 created_at: '2026-09-19T06:00:11.845Z'
-updated_at: '2026-09-19T06:00:11.845Z'
+updated_at: '2026-09-19T06:00:30.394Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
