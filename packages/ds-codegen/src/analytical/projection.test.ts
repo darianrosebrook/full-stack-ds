@@ -844,6 +844,116 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     expect(claimedByTheRemovedMap.filter((k) => named.includes(k))).toEqual(["cartesian|position|length", "cartesian|position|area", "polar|position|length"]);
   });
 
+  it("HOST STANDING: the host is read, recorded at its own path, and a retained pair stays retained", () => {
+    const child = corpusPart("cartesian|position|length");
+    const j = judgeComposite({
+      structure,
+      inventory: EXPERIMENT_TARGET,
+      composite: {
+      combinator: "embed",
+      host: corpusPart("cartesian|position|length"),
+      budget: ["length"],
+      cellBaseline: "zero",
+      part: { kind: "program", program: child },
+      } as Composite,
+    });
+    expect(j.verdict.kind, "the existing cell-budget control is preserved").toBe("retained");
+    // The host is an OPERAND and it is on the record, at a path no part can take.
+    const paths = j.parts.map((x) => x.path.join("."));
+    expect(paths).toContain("host");
+    expect(paths).toContain("0");
+    const hostEntry = j.parts.find((x) => x.path.join(".") === "host")!;
+    expect(hostEntry.verdict.kind).toBe("retained");
+    expect(new Set(paths).size, "no path names two operands").toBe(paths.length);
+  });
+
+  it("HOST STANDING: an unimplemented HOST makes the embed unsupported, and the child is still reported", () => {
+    const j = judgeComposite({
+      structure,
+      inventory: EXPERIMENT_TARGET,
+      composite: {
+      combinator: "embed",
+      host: { ...corpusPart("cartesian|position|length"), task: "trend" },
+      budget: ["length"],
+      cellBaseline: "zero",
+      part: { kind: "program", program: corpusPart("cartesian|position|length") },
+      } as Composite,
+    });
+    expect(j.verdict.kind).toBe("unsupported");
+    if (j.verdict.kind !== "unsupported") return;
+    // Attributed to the HOST, not to the part: a supported child must not hide a
+    // host that has no standing.
+    expect(j.verdict.from).toBe("host");
+    expect(j.verdict.obligation).toBe("invariant:position-non-meaningful");
+    // ...and the child's own disposition is still on the record.
+    const child = j.parts.find((x) => x.path.join(".") === "0")!;
+    expect(child.verdict.kind, "the child was retained and the record says so").toBe("retained");
+  });
+
+  it("HOST STANDING: a CONTRADICTED host refuses the embed with the host's own cause", () => {
+    const hostProgram = refusedPart();
+    const judgment = judgeOperation(structure, hostProgram.operation) as OperationJudgment;
+    const hostCauses = judgment.kind === "refused" ? judgment.causes : [];
+    expect(hostCauses.length).toBeGreaterThan(0);
+
+    const j = judgeComposite({
+      structure,
+      inventory: EXPERIMENT_TARGET,
+      composite: {
+      combinator: "embed",
+      host: hostProgram,
+      budget: ["length"],
+      cellBaseline: "zero",
+      part: { kind: "program", program: corpusPart("cartesian|position|length") },
+      } as Composite,
+    });
+    expect(j.verdict.kind).toBe("refused");
+    if (j.verdict.kind !== "refused") return;
+    expect(j.verdict.from).toBe("host");
+    expect(j.verdict.causes).toEqual(hostCauses);
+    expect(j.parts.find((x) => x.path.join(".") === "host")!.verdict.kind).toBe("refused");
+  });
+
+  it("HOST STANDING: a faulty host and a faulty child are BOTH on the record", () => {
+    const j = judgeComposite({
+      structure,
+      inventory: EXPERIMENT_TARGET,
+      composite: {
+      combinator: "embed",
+      host: refusedPart(),
+      budget: ["length"],
+      cellBaseline: "zero",
+      part: { kind: "program", program: { ...corpusPart("cartesian|position|length"), task: "trend" } },
+      } as Composite,
+    });
+    // The host is read first, so its fault is the composite's verdict...
+    expect(j.verdict.kind).toBe("refused");
+    expect(j.verdict.kind === "refused" && j.verdict.from).toBe("host");
+    // ...and the child's origin is NOT erased by it.
+    const byPath = new Map(j.parts.map((x) => [x.path.join("."), x.verdict.kind]));
+    expect(byPath.get("host")).toBe("refused");
+    expect(byPath.get("0")).toBe("unsupported");
+  });
+
+  it("HOST STANDING: the host is not required to be tabular, because no cause names one", () => {
+    // The correction establishes the host's STANDING and invents no host
+    // constraint. A cartesian host is read, retained, and does not refuse.
+    const j = judgeComposite({
+      structure,
+      inventory: EXPERIMENT_TARGET,
+      composite: {
+      combinator: "embed",
+      host: corpusPart("cartesian|position|length"),
+      budget: ["length"],
+      cellBaseline: "zero",
+      part: { kind: "program", program: corpusPart("cartesian|position|length") },
+      } as Composite,
+    });
+    expect(j.verdict.kind).toBe("retained");
+    expect(COMPOSITION_NON_CLAIMS.join(" ")).toContain("not required to be a tabular projection");
+    expect(COMPOSITION_NON_CLAIMS.join(" ")).toContain("for STANDING and not for its channels");
+  });
+
   it("states what the generated catalogue does NOT establish", () => {
     expect(CATALOGUE_NON_CLAIMS.length).toBeGreaterThanOrEqual(4);
     for (const nc of CATALOGUE_NON_CLAIMS) expect(nc.trim().length).toBeGreaterThan(40);
