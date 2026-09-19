@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts COMPOSITION COVERAGE: the ratio-measure refusal is recorded as an ADMISSION outcome, and the reference branch is exercised over an authored fact set (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
     recorded_at: "2026-09-19T06:27:24.065Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "projection.test.ts COMPOSITION COVERAGE: semi-additive along the partition empties it, and the same measure across another column does not (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
+    recorded_at: "2026-09-19T06:27:24.696Z"
