@@ -72,3 +72,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts COMPOSITION COVERAGE: semi-additive along the partition empties it, and the same measure across another column does not (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
     recorded_at: "2026-09-19T06:27:24.696Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "projection.test.ts COMPOSITION COVERAGE: an omitted partition leaves the set unestablished, carried under invariant:exhaustive (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
+    recorded_at: "2026-09-19T06:27:25.348Z"
