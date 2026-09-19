@@ -71,3 +71,9 @@ evidence:
     recorded_at: "2026-09-19T19:10:18.351Z"
     artifact_path: docs/domain-realization-comparison.md
     commit_sha: "6801775fa33db753e0a08c2dd7a52d0900007fcf"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: docs/domain-realization-comparison.md supplies ten admission questions and a twelve-field append-only row template for another domain
+    recorded_at: "2026-09-19T19:10:42.121Z"
+    artifact_path: docs/domain-realization-comparison.md
+    commit_sha: "6801775fa33db753e0a08c2dd7a52d0900007fcf"
