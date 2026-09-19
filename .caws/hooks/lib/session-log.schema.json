@@ -1,0 +1,1413 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://caws.dev/schemas/session-log.schema.json",
+  "title": "CAWS Session Log Artifact",
+  "description": "CAWS-MANAGED-HOOK hook_pack=shared hook_pack_version=87 caws_min_major=11 edit_stance: YOURS TO EDIT. This is a starting schema, not a locked one — extend it as your session-log contract grows. JSON carries the managed marker in this description field because JSON has no comment syntax; the marker is only how caws init finds the file it can offer updates for, not a keep-out sign. JSON artifacts stored under .caws/sessions/<session-id>/ by .caws/hooks/session-log.sh and its renderer.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/turnArtifact"
+    },
+    {
+      "$ref": "#/$defs/sessionMetadataArtifact"
+    },
+    {
+      "$ref": "#/$defs/sessionPointerArtifact"
+    },
+    {
+      "$ref": "#/$defs/legacySessionIndexArtifact"
+    },
+    {
+      "$ref": "#/$defs/legacyHandoffArtifact"
+    }
+  ],
+  "$defs": {
+    "stringOrNull": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "turnUsage": {
+      "type": "object",
+      "description": "API cost of one turn (or, on the session artifact, of the whole session). requests counts UNIQUE (message id, request id) pairs: Claude Code writes one transcript row per assistant content block and repeats the same usage block on each, so a row count would roughly double every figure. Token classes are the four billed classes; a class the harness omits reads as 0, but a harness that reports no usage at all omits this object entirely.",
+      "required": [
+        "requests",
+        "input",
+        "cache_read",
+        "cache_write",
+        "output",
+        "models"
+      ],
+      "properties": {
+        "requests": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "input": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_read": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_write": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "description": "Distinct models seen, in first-seen order."
+        }
+      },
+      "additionalProperties": false
+    },
+    "timestampLike": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "UTC ISO-8601 or hook-provided local timestamp string."
+    },
+    "pathString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fileRefs": {
+      "type": "object",
+      "required": [
+        "edited",
+        "read"
+      ],
+      "properties": {
+        "edited": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pathString"
+          }
+        },
+        "read": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pathString"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "commandRef": {
+      "type": "object",
+      "required": [
+        "command"
+      ],
+      "properties": {
+        "turn": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "command": {
+          "type": "string"
+        },
+        "output_preview": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "output": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_error": {
+          "type": "boolean"
+        },
+        "duration_s": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "ts": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provenance": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "execution": {
+          "enum": [
+            "not_observed"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "searchRef": {
+      "type": "object",
+      "properties": {
+        "turn": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "ts": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "execution": {
+          "enum": [
+            "not_observed"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "agentRef": {
+      "type": "object",
+      "properties": {
+        "turn": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tool": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "subagent_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prompt_preview": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ts": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "output": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "output_preview": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "duration_s": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "decisionRef": {
+      "type": "object",
+      "description": "A heuristic-extracted decision, emitted by extract_heuristic_fields as {statement, source}.",
+      "required": [
+        "statement"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "artifactRef": {
+      "type": "object",
+      "description": "The renderer emits three artifact shapes, all keyed by type: file_edit/file_write carry `path`; git_commit/test_run carry `command`; plan carries `content`. Only `type` is universal.",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "turn": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "type": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "command": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "ts": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "execution": {
+          "enum": [
+            "not_observed"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "refs": {
+      "type": "object",
+      "required": [
+        "files",
+        "searches",
+        "commands",
+        "agents",
+        "artifacts"
+      ],
+      "properties": {
+        "files": {
+          "$ref": "#/$defs/fileRefs"
+        },
+        "searches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/searchRef"
+          }
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/commandRef"
+          }
+        },
+        "agents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/agentRef"
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "timelineItem": {
+      "type": "object",
+      "description": "One ordered event of the turn. Variants are discriminated by `kind`: reasoning carries `text`; tool_call carries the tool-specific fields below (Bash: command/description/run_in_background; Edit: file/old_string/new_string with *_length + *_truncated; Write: file/content_preview/content_length; Agent: prompt/subagent_type/isolation; Skill: skill/args; ExitPlanMode: plan; codex exec: input_raw/input_length/input_truncated/inner_actions); interjection carries `text` (mid-turn user steering, inline at arrival position); user_shell carries a !-command the USER ran (command/stdout/stderr, entity-unescaped, input+output rows merged into one item; a trailing `! git push` is recorded on the turn whose work it shipped); audit_action and context_authority are hook-derived. Truncation contract: any clipped field X carries X_truncated=true and X_length = the ORIGINAL length (output uses output_truncated/output_length); Bash/Agent/Task outputs are never truncated.",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "reasoning",
+            "tool_call",
+            "tool_output",
+            "interjection",
+            "user_shell",
+            "audit_action",
+            "context_authority"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ts": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "result_ts": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "provenance": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tool": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tool_use_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_error": {
+          "type": "boolean"
+        },
+        "duration_s": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Tool name on tool_call items."
+        },
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "tool_use id pairing a call with its result."
+        },
+        "command": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Bash tool_call or user_shell command, carried in full."
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "run_in_background": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "output": {
+          "type": [
+            "string",
+            "null",
+            "array",
+            "object"
+          ],
+          "description": "Tool result. Complete for Bash/Agent/Task; other tools clip per the truncation contract. Usually a string, but tools whose results are structured content blocks (tool_reference lists from EnterWorktree/TaskCreate/SendMessage/MCP tools, etc.) pass through as the raw array/object \u2014 code over this field must handle both."
+        },
+        "output_length": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "ORIGINAL result length before any clipping."
+        },
+        "output_truncated": {
+          "type": "boolean"
+        },
+        "file": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "cwd-relative path on Edit/Write/Read tool_calls."
+        },
+        "old_string": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "old_string_length": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "old_string_truncated": {
+          "type": "boolean"
+        },
+        "new_string": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "new_string_length": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "new_string_truncated": {
+          "type": "boolean"
+        },
+        "content_preview": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content_length": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "prompt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Agent dispatch prompt (clipped, unflagged: preview only)."
+        },
+        "subagent_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "isolation": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "skill": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "args": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "plan": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "query": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "input_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "input_length": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "input_truncated": {
+          "type": "boolean"
+        },
+        "inner_actions": {
+          "type": "array"
+        },
+        "stdout": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "user_shell output, html-entity-unescaped."
+        },
+        "stderr": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "hook_contexts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hookContext"
+          },
+          "description": "Hook contexts attached to this specific tool call (in addition to the turn-level hook_contexts array)."
+        },
+        "source_harness": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "contextAuthority": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attachment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sections": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "hookContext": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "hook_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "hook_event": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tool_use_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "additional_context": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "context_authority": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/contextAuthority"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "exit_code": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "duration_ms": {
+          "type": [
+            "number",
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "ts": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tool_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stdout": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stderr": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provenance": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "observation_boundary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "delivery": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "invocation_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "runtime_digest": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "adapter_exit_code": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "turnArtifact": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "turn",
+        "status",
+        "refs",
+        "timeline"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 2
+        },
+        "turn": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ts_start": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "ts_end": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "user": {
+          "$ref": "#/$defs/stringOrNull"
+        },
+        "user_ts": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "turn_summary": {
+          "$ref": "#/$defs/stringOrNull"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "blocked",
+            "error",
+            "rewound"
+          ],
+          "description": "rewound outranks the outcome statuses: the user rewound past this turn, so whatever it produced (including an error) was discarded."
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/decisionRef"
+          }
+        },
+        "next_action": {
+          "$ref": "#/$defs/stringOrNull"
+        },
+        "blocking_issue": {
+          "$ref": "#/$defs/stringOrNull"
+        },
+        "refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "hook_contexts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hookContext"
+          }
+        },
+        "timeline": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/timelineItem"
+          }
+        },
+        "context": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/turnContext"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Absent on artifacts rendered before 2026-08-19."
+        },
+        "ended_by": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "user_interrupt_tool",
+                "user_interrupt_generation",
+                "user_interrupt"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "How the turn ended when it did not end normally \u2014 the user pressed escape mid-action ('[Request interrupted' event), the strongest steering signal a session records. user_interrupt_tool = the user vetoed a specific action the agent proposed ('for tool use'); user_interrupt_generation = the user cut the reply off. null/absent = the agent finished on its own. user_interrupt is the legacy collapsed value: still accepted so artifacts written before the split keep validating, never emitted now."
+        },
+        "usage": {
+          "$ref": "#/$defs/turnUsage",
+          "description": "Absent \u2014 not zero-filled \u2014 when the harness transcript records no usage, so 'not measured' never reads as 'cost nothing'."
+        },
+        "rewound_from": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The turn number this turn replaced: the user rewound past that turn and re-sent on the same conversational slot. Absent when the turn is not a rewind."
+        },
+        "rewind_kind": {
+          "type": "string",
+          "enum": [
+            "same_prompt",
+            "edited_prompt"
+          ],
+          "description": "Whether the re-sent prompt was byte-identical to the one it replaced or edited. Present exactly when rewound_from is."
+        },
+        "interjections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/interjection"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "sessionMetadataArtifact": {
+      "type": "object",
+      "required": [
+        "session_id",
+        "started_at",
+        "local_time",
+        "model",
+        "source",
+        "branch",
+        "head_sha",
+        "dirty_files",
+        "project",
+        "transcript_path"
+      ],
+      "properties": {
+        "session_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "started_at": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "local_time": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "model": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "branch": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "head_sha": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "dirty_files": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            }
+          ]
+        },
+        "project": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "transcript_path": {
+          "type": "string"
+        },
+        "ended": {
+          "type": "object",
+          "description": "Written by the SessionEnd handler when the session terminates. Absent on a session still running, or one whose harness fires no SessionEnd.",
+          "required": [
+            "reason",
+            "ts"
+          ],
+          "properties": {
+            "reason": {
+              "$ref": "#/$defs/nonEmptyString",
+              "description": "The harness's own reason string (claude-code: clear | logout | prompt_input_exit | other), recorded verbatim rather than mapped, so a new harness value is preserved instead of collapsed."
+            },
+            "ts": {
+              "$ref": "#/$defs/timestampLike"
+            }
+          },
+          "additionalProperties": false
+        },
+        "usage": {
+          "$ref": "#/$defs/turnUsage",
+          "description": "Sum of the rendered turn usage blocks, sealed at SessionEnd. Absent when no turn recorded usage."
+        }
+      },
+      "additionalProperties": true
+    },
+    "sessionPointerArtifact": {
+      "type": "object",
+      "required": [
+        "session_id",
+        "repo_root",
+        "last_seen_at"
+      ],
+      "properties": {
+        "session_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "repo_root": {
+          "$ref": "#/$defs/pathString"
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "last_seen_at": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "hook_event": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "gitSnapshot": {
+      "type": "object",
+      "required": [
+        "branch",
+        "head_sha",
+        "start_sha",
+        "dirty_files"
+      ],
+      "properties": {
+        "branch": {
+          "type": "string"
+        },
+        "head_sha": {
+          "type": "string"
+        },
+        "start_sha": {
+          "type": "string"
+        },
+        "dirty_files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "type": "string"
+        },
+        "log": {
+          "type": "string"
+        },
+        "diff_stat": {
+          "type": "string"
+        },
+        "diff_excerpt": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "turnIndexEntry": {
+      "type": "object",
+      "required": [
+        "turn",
+        "path",
+        "status"
+      ],
+      "properties": {
+        "turn": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^turn-[0-9]{3}\\.json$"
+        },
+        "ts_start": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "status": {
+          "type": "string"
+        },
+        "user_preview": {
+          "$ref": "#/$defs/stringOrNull"
+        },
+        "summary_preview": {
+          "$ref": "#/$defs/stringOrNull"
+        },
+        "reasoning_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tool_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "edited_preview": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "legacyIndexes": {
+      "type": "object",
+      "required": [
+        "files",
+        "searches",
+        "commands",
+        "agents",
+        "artifacts"
+      ],
+      "properties": {
+        "files": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "edited_in": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "read_in": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "searches": {
+          "type": "array"
+        },
+        "commands": {
+          "type": "array"
+        },
+        "agents": {
+          "type": "array"
+        },
+        "artifacts": {
+          "type": "array"
+        }
+      },
+      "additionalProperties": true
+    },
+    "sessionEvent": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "task_id": {
+          "$ref": "#/$defs/stringOrNull"
+        },
+        "preview": {
+          "$ref": "#/$defs/stringOrNull"
+        },
+        "raw": {
+          "$ref": "#/$defs/stringOrNull"
+        },
+        "ts": {
+          "$ref": "#/$defs/timestampLike"
+        }
+      },
+      "additionalProperties": true
+    },
+    "legacySessionIndexArtifact": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "session_id",
+        "started_at",
+        "cwd",
+        "model",
+        "branch",
+        "head_sha",
+        "turn_index",
+        "indexes",
+        "git"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 2
+        },
+        "session_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "started_at": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "cwd": {
+          "$ref": "#/$defs/pathString"
+        },
+        "model": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "head_sha": {
+          "type": "string"
+        },
+        "start_sha": {
+          "type": "string"
+        },
+        "transcript_path": {
+          "type": "string"
+        },
+        "turn_index": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/turnIndexEntry"
+          }
+        },
+        "indexes": {
+          "$ref": "#/$defs/legacyIndexes"
+        },
+        "session_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sessionEvent"
+          }
+        },
+        "git": {
+          "$ref": "#/$defs/gitSnapshot"
+        }
+      },
+      "additionalProperties": true
+    },
+    "continuation": {
+      "type": "object",
+      "required": [
+        "recent_turns",
+        "blocking_issues",
+        "next_actions",
+        "decisions",
+        "files_of_interest",
+        "commands_of_interest",
+        "agent_reports",
+        "session_events"
+      ],
+      "properties": {
+        "recent_turns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "turn",
+              "path",
+              "status"
+            ],
+            "properties": {
+              "turn": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "path": {
+                "type": "string",
+                "pattern": "^turn-[0-9]{3}\\.json$"
+              },
+              "status": {
+                "type": "string"
+              },
+              "summary": {
+                "$ref": "#/$defs/stringOrNull"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "blocking_issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "next_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "files_of_interest": {
+          "type": "array"
+        },
+        "commands_of_interest": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/commandRef"
+          }
+        },
+        "agent_reports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/agentRef"
+          }
+        },
+        "session_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sessionEvent"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "legacyHandoffArtifact": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "generated_at",
+        "session_id",
+        "model",
+        "session_file",
+        "transcript_path",
+        "continuation",
+        "git"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 2
+        },
+        "generated_at": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "session_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "model": {
+          "type": "string"
+        },
+        "session_file": {
+          "type": "string",
+          "const": "session.json"
+        },
+        "transcript_path": {
+          "type": "string"
+        },
+        "continuation": {
+          "$ref": "#/$defs/continuation"
+        },
+        "git": {
+          "$ref": "#/$defs/gitSnapshot"
+        }
+      },
+      "additionalProperties": true
+    },
+    "turnContext": {
+      "type": "object",
+      "description": "Session-scoped self-identification embedded in every turn so the file can be interpreted off-machine with no sibling files. branch/head_sha/dirty_files are the repo state at the MOST RECENT render of the session (session-log.sh reads them live), not per-turn history; start_sha is the session-start anchor carried from .meta.json. Deliberately no render timestamp: a volatile field would defeat the renderer's byte-identical write skip.",
+      "required": [
+        "session_id",
+        "project",
+        "cwd"
+      ],
+      "properties": {
+        "session_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "project": {
+          "type": "string"
+        },
+        "cwd": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "session_started_at": {
+          "$ref": "#/$defs/timestampLike"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "head_sha": {
+          "type": "string"
+        },
+        "start_sha": {
+          "type": "string"
+        },
+        "dirty_files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lineage": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "parent_session_id",
+                "source",
+                "authority",
+                "source_path"
+              ],
+              "properties": {
+                "parent_session_id": {
+                  "type": "string"
+                },
+                "source": {
+                  "const": "transcript_metadata"
+                },
+                "authority": {
+                  "const": "none"
+                },
+                "source_path": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "interjection": {
+      "type": "object",
+      "description": "A user message sent mid-turn (queued_command attachment with origin.kind=human). Text is normalized: the legacy <user>...</user> wrapper is stripped. Each interjection ALSO appears inline in the timeline as a kind=interjection item at its arrival position; this array is the index.",
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "ts": {
+          "$ref": "#/$defs/timestampLike"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
