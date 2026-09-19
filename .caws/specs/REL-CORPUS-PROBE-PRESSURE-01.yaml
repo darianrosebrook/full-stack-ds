@@ -2,9 +2,11 @@ id: REL-CORPUS-PROBE-PRESSURE-01
 title: 'The five corpus probes are run through the real projection path, and each shape''s actual distinction is shown to survive rather than collapsing to a convenient scalar'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'All five corpus probes are run through the real entry point; three reach the projection rules and two are stopped at admission by the sum-only evaluator, each reported with its reason.'
 created_at: '2026-09-19T09:20:10.165Z'
-updated_at: '2026-09-19T09:20:20.964Z'
+updated_at: '2026-09-19T09:26:26.021Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
