@@ -20,7 +20,11 @@ scope:
     - 'docs/current-implementation-snapshot.md'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'A nested component root (an fsds.X node inside another occurrence''s children or slot content) is a new ownership context: nothing it supplies discharges the enclosing occurrence''s obligations.'
+  - 'Part-ref delivery mirrors the renderer''s subcomponent routing: fsds.X.<region> delivers to the enclosing occurrence only when that occurrence''s component is X; a part ref under a different component renders an orphan subcomponent element and supplies nothing.'
+  - 'The audit failure-message prefix [USAGE-REQUIRED-SLOT-MISSING] <Component>[<frame>] is retained so the existing catalog marker for card-actions-slot-required keeps matching without a catalog change.'
+  - 'The flat collectSuppliedRegions walker is replaced in place — no dead code, no second region vocabulary; deriveRequiredRegionObligations and its narrowing semantics are unchanged.'
+  - 'Component-owned anchors, generated-API requiredness, and runtime content inspection remain out of scope.'
 acceptance:
   - id: A1
     given: 'a frame with an outer and an inner occurrence of the same component where only the inner occurrence supplies its required region'
