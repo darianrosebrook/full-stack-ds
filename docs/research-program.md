@@ -4,7 +4,7 @@ authority: architecture
 status: active
 title: The Research Program: Normal Form Across Domains
 owner: "@darianrosebrook"
-updated: 2026-09-06
+updated: 2026-09-19
 governs:
   - src/views/Home.tsx
   - src/views/ArchitectureView.tsx
@@ -58,6 +58,13 @@ Godot, and Figma live **inside one cell** — the components row — as the
 adversarial realization matrix for that one experiment. They are not the
 taxonomy of the research.
 
+The durable [domain realization comparison](domain-realization-comparison.md)
+expands the component, iconography, and analytical rows through one stable
+record: authority, normalized substrate, composition, realizations,
+conservation, residue, refusal, evidence, current boundary, and integration
+edges. It also defines the admission questions and row template for a future
+domain.
+
 ### Where each row lives
 
 - **Components.** `<!-- component-count -->52` contracts, one rendered
@@ -97,8 +104,11 @@ taxonomy of the research.
   derivation algebra: a derivation is a typed operator whose result is itself a
   relation, stated by one locus (`OPERATOR_LAWS`) and re-earning its coordinates
   by quotient and subtraction rather than by inspection. That slice's close
-  condition is open. The projection space and realizations are deliberately not
-  yet built. Doctrine:
+  condition is open. A bounded stage-three experiment now enumerates projection
+  programs for one admitted analytical authority and lowers exactly two declared
+  topologies into readback and metric representations. That experiment does not
+  ratify a stage-two coordinate, establish a general projection system, measure
+  realization-level residue, or close the stage-two subtraction. Doctrine:
   [analytical relation doctrine](architecture/analytical-relation-doctrine.md).
 - **Documentation/showcase.** Component evidence pages derive anatomy, props,
   states, accessibility, usage, A2UI, token information, preview state, and
@@ -169,13 +179,12 @@ authoritative for all of it. In one line each: components are the only family
 proven end-to-end (emit → rail → runtime); tokens are CI-gated through build,
 validation, contrast, and resolvability; iconography is drift-gated through
 build and ledger; analytical relations have a ratified L0–L2 kernel, a built L3
-derivation algebra under an open close condition, and deliberately absent
-projections; the documentation/showcase surfaces are implemented and
+derivation algebra under an open close condition, and a bounded stage-three
+enumeration/lowering experiment whose two representations do not raise the
+ratification boundary; the documentation/showcase surfaces are implemented and
 consumption-guarded; the evidence machinery is CI-gated; target packs are a
-metadata-only extension seam. Where a domain has nothing built yet, that is
-named rather than disguised — the analytical realization stage is deliberately
-empty until a projection engine exists, because presenting one would claim
-progress the kernel has not earned.
+metadata-only extension seam. Experimental machinery is named without being
+promoted to general realization evidence.
 
 ## The falsification watch
 

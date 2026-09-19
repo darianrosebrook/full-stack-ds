@@ -18,6 +18,12 @@ The claim is domain-shaped, not component-shaped. React, Vue, Svelte, Angular, L
 
 The full normal-form claim, evidence status, and falsification conditions are written down in [`docs/normal-form.md`](docs/normal-form.md). The consumer-facing stance — strict internal invariants, boring external affordances, and admitted override surfaces — is named in [`docs/architecture/consumer-projection-doctrine.md`](docs/architecture/consumer-projection-doctrine.md).
 
+The [domain realization comparison](docs/domain-realization-comparison.md)
+maps the separate component, iconography, and analytical authorities through a
+common comparison record. It identifies the live icon-to-component integration,
+the analytical lane's current separation from ComponentIR, and the admission
+questions for adding another governed domain.
+
 ## What this is
 
 The design system is the existence proof, not the project. It is a **contract testing ground**: every component is defined by a JSON contract that describes its anatomy, props, variants, states, styles, tokens, accessibility, types, and behavior. From that contract and its sidecars, the codegen emits framework-idiomatic component sources, behavior primitives, tests, styles, barrels, descriptors, and documentation projections.

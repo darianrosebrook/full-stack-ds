@@ -6,7 +6,8 @@ This package is the source surface for symbolic icon leaves such as
 `fsds.icon.placeholder`. Component contracts and usage-style composition trees
 should reference those leaves by stable name and size. Target emitters decide
 how the icon becomes a framework-native import, SVG symbol, Android vector,
-React Native component, Swift resource, Kotlin resource, or Figma vector.
+React Native component, Swift resource, or Kotlin resource. Figma currently
+carries component descriptor metadata without vector geometry.
 
 ## Authority Model
 
@@ -15,6 +16,39 @@ React Native component, Swift resource, Kotlin resource, or Figma vector.
 - Vector path data is the governed payload.
 - Platform names and target projections are derived from the contract.
 - Generated output under `generated/` is scratch and must not be committed.
+
+## Consumption by component codegen
+
+Iconography and component contracts remain separate authorities. The icon
+contract owns glyph identity and geometry; a component contract owns where the
+glyph appears and which component prop selects it.
+
+The live route is:
+
+1. An `anatomy.dom[].iconGlyph` directive on an SVG node binds `nameFrom`
+   and, optionally, `sizeFrom` to component props.
+2. The semantic validation pass loads canonical names from the committed icon
+   corpus. `validateContractIconRefs` rejects an unknown literal supplied
+   through a component reference, and the usage validator applies the same
+   known-name authority to authored usage compositions.
+3. IR construction converts the directive into `IconGlyphIR`; it does not copy
+   vector paths into the component contract.
+4. The Web DOM emitters import `resolveIcon` from this package, choose the
+   nearest authored size variant, and lower its path records without branching
+   on an icon or component name. SwiftUI and Compose generate target-native
+   glyph catalogs from the same icon corpus.
+
+The standalone iconography build also emits React Native components. The
+generated `@full-stack-ds/react-native` Icon component does not currently
+consume them: its emitter clears the `iconGlyph` fact and produces an empty
+inner View. The Figma component descriptor carries Icon props and metadata but
+does not carry vector geometry. Those are named component-realization gaps, not
+evidence that the icon corpus failed to emit its standalone target artifacts.
+
+This integration makes iconography an input to component realization without
+making either corpus a second authority over the other. See the
+[domain realization comparison](../../docs/domain-realization-comparison.md)
+for the repository-wide authority and residue map.
 
 ## Commands
 
@@ -67,4 +101,3 @@ adjudication, because a generated artifact's provenance is known a priori.
 `build/ledger.mjs` is the target-agnostic core (hashing, rows, dedup join,
 gate). `build/ledger-components.mjs` drives that same core over a component
 framework target, demonstrating the substrate is not icon-shaped.
-
