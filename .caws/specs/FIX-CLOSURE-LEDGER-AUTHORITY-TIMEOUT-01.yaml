@@ -24,9 +24,14 @@ invariants:
   - 'A timeout stays a failed verification attempt: this change adjusts the test''s operating budget, not any analytical ratification status or the paused research program.'
 acceptance:
   - id: A1
-    given: 'the ledger-authority test which runs checkClosures for five identities in one callback, now carrying an explicit finite local timeout of 30000ms'
-    when: 'the closure suite runs'
-    then: 'all 70 tests pass with unchanged assertions and count (five identities, exact moved-key matchers, only-problem check intact)'
+    given: >-
+      the five heavy analytical tests that timed out at the 5s default across the
+      three retained 2026-09-19 runs (closure ledger-authority x2 contexts, closure
+      oracle-separated-pair, closure restamp, erasure-audit refute, subtraction
+      presence-witness), each an inspected multi-derivation or population-search
+      workload, each now carrying an explicit finite local timeout of 30000ms
+    when: 'the affected suites run'
+    then: 'all tests pass with unchanged assertions and counts (closure 70/70 and the full root suite green)'
   - id: A2
     given: 'a cold-clone gate context of the kind that twice timed this test out at the 5s default'
     when: 'the targeted full-profile mutation baseline runs root-tests in its clean clone'
