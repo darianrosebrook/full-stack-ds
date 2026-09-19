@@ -36,6 +36,7 @@ docs/
   README.md                              # This file (exempt from frontmatter rules)
   current-implementation-snapshot.md     # Claim ledger — the freshness authority
   codegen-authority.md                   # Codegen layer authority doctrine
+  domain-realization-comparison.md       # Extensible authority/projection comparison
   normal-form.md                         # The seven properties of compositional systems
   research-program.md                    # The domain table + what counts as a result
   document_governance.md                 # Frontmatter + location rules (enforced advisory)
