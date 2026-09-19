@@ -51,3 +51,7 @@ evidence:
     status: pass
     evidence_ref: "OHLC: the temporal axis is carried as interval and the cyclic-only channel is refused for it (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1035 tests green))"
     recorded_at: "2026-09-19T09:34:57.275Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "OHLC: all four co-registered ratio measures plus volume are independently lawful, so the shape is not collapsed to one representative (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1035 tests green))"
+    recorded_at: "2026-09-19T09:34:57.782Z"
