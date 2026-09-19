@@ -833,7 +833,7 @@ const A = (s: RelationalStructure) => meteredPart(s, "meter_a");
 const B = (s: RelationalStructure) => meteredPart(s, "meter_b");
 
 const runComposite = (composite: Composite, s: RelationalStructure = structure): CompositeVerdict =>
-  judgeComposite({ structure: s, inventory: EXPERIMENT_TARGET, composite });
+  judgeComposite({ structure: s, inventory: EXPERIMENT_TARGET, composite }).verdict;
 
 const KG = metered(UNIT_KG, UNIT_KG);
 const MISMATCHED = metered(UNIT_KG, UNIT_SECOND);
@@ -972,12 +972,147 @@ describe("M3 composition: the parts decide first, and the combinator rule decide
     expect(d!.id).toBe("E1_EMBED_TREND_WITHIN_BUDGET");
     const v = CASES.E1_EMBED_TREND_WITHIN_BUDGET!();
     // Not a budget refusal: the experiment never reaches the budget, because the
-    // trend task is not enumerated. If this ever becomes `refused` with the embed
-    // cause the finding above has been silently overtaken and must be re-derived.
-    expect(v.kind).toBe("unproven");
-    expect(v.kind === "unproven" && v.obligation).toBe("invariant:position-non-meaningful");
-    expect(v.kind === "unproven" && v.from).toBe("part");
+    // trend task is not implemented on this path. If this ever becomes `refused`
+    // with the embed cause the finding above has been silently overtaken and must
+    // be re-derived.
+    //
+    // RECOVERY MOVED THIS FROM `unproven` TO `unsupported`, and that is the point
+    // of the recovery: a task the path does not implement is not a premise that
+    // went missing.
+    expect(v.kind).toBe("unsupported");
+    expect(v.kind === "unsupported" && v.obligation).toBe("invariant:position-non-meaningful");
+    expect(v.kind === "unsupported" && v.from).toBe("part");
+    expect(v.kind === "unsupported" && v.task).toBe("trend");
     expect("notEnumerated" in TASK_INVARIANTS.trend).toBe(true);
+  });
+
+  it("RECOVERY: an unimplemented part is UNSUPPORTED -- not unproven, not refused, not merely absent", () => {
+    const trendPart: Program = { ...corpusPart("cartesian|position|length"), task: "trend" };
+    const j = judgeComposite({ structure, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [{ kind: "program", program: trendPart }], sharing: {} } });
+    expect(j.verdict.kind).toBe("unsupported");
+    if (j.verdict.kind !== "unsupported") return;
+    expect(j.verdict.task, "the part's own question is named").toBe("trend");
+    expect(j.verdict.resultKind).toBe("relation");
+    expect(j.verdict.obligation, "what would have to be built is named").toBe("invariant:position-non-meaningful");
+    expect(j.verdict.from).toBe("part");
+    // The three are different shapes, and this asserts the difference rather
+    // than a string that happens to differ.
+    expect(["unproven", "refused", "retained"]).not.toContain(j.verdict.kind);
+  });
+
+  it("RECOVERY: a missing analytical premise keeps its obligation through the composite", () => {
+    const unknown = withGrain("unknown");
+    const j = judgeComposite({ structure: unknown, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [{ kind: "program", program: corpusPart("cartesian|position|length") }], sharing: {} } });
+    expect(j.verdict.kind).toBe("unproven");
+    expect(j.verdict.kind === "unproven" && j.verdict.obligation).toBe("grain:declared");
+    expect(j.verdict.kind === "unproven" && j.verdict.from).toBe("part");
+  });
+
+  it("RECOVERY: a demonstrated contradiction keeps the PART's cause and the PART's location", () => {
+    const part = refusedPart();
+    const judgment = judgeOperation(structure, part.operation) as OperationJudgment;
+    const partCauses = judgment.kind === "refused" ? judgment.causes : [];
+    expect(partCauses.length).toBeGreaterThan(0);
+
+    const j = judgeComposite({ structure, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [{ kind: "program", program: part }], sharing: {} } });
+    expect(j.verdict.kind).toBe("refused");
+    if (j.verdict.kind !== "refused") return;
+    expect(j.verdict.causes).toEqual(partCauses);
+    expect(j.verdict.from).toBe("part");
+    // The recorded origin is the part's own, at its own path.
+    const origin = j.parts.find((x) => x.path.join(".") === "0")!;
+    expect(origin.verdict.kind).toBe("refused");
+    expect(origin.verdict.kind === "refused" && origin.verdict.causes).toEqual(partCauses);
+  });
+
+  it("RECOVERY: parts in SEVERAL dispositions are ALL reported, so no origin is erased", () => {
+    const trendPart: Program = { ...corpusPart("cartesian|position|length"), task: "trend" };
+    // The declared grain is NOT withheld here: an unknown grain makes every
+    // candidate unproven before the rules are consulted, which would mask the
+    // contradiction and collapse three dispositions into two.
+    const j = judgeComposite({
+      structure,
+      inventory: EXPERIMENT_TARGET,
+      composite: {
+        combinator: "layer",
+        parts: [
+          { kind: "program", program: trendPart },
+          { kind: "program", program: refusedPart() },
+          { kind: "program", program: corpusPart("cartesian|position|length") },
+        ],
+        sharing: { length: "shared", position: "shared", text: "shared" },
+      },
+    });
+
+    // The composite's own verdict is ONE thing: the first fault.
+    expect(j.verdict.kind).toBe("unsupported");
+    // ...and every part's disposition is still on the record, including the two
+    // the aggregate verdict does not name.
+    expect(j.parts.map((x) => [x.path.join("."), x.verdict.kind])).toEqual([
+      ["0", "unsupported"],
+      ["1", "refused"],
+      ["2", "retained"],
+    ]);
+    const [unsupportedPart, refusedPartVerdict, retainedPart] = j.parts.map((x) => x.verdict);
+    expect(unsupportedPart!.kind === "unsupported" && unsupportedPart!.obligation).toBe("invariant:position-non-meaningful");
+    expect(refusedPartVerdict!.kind === "refused" && refusedPartVerdict!.causes.length).toBeGreaterThan(0);
+    expect(retainedPart!.kind).toBe("retained");
+  });
+
+  it("RECOVERY: an unproven part is distinguishable from an unsupported one in the same record", () => {
+    const trendPart: Program = { ...corpusPart("cartesian|position|length"), task: "trend" };
+    const j = judgeComposite({
+      structure: withGrain("unknown"),
+      inventory: EXPERIMENT_TARGET,
+      composite: { combinator: "layer", parts: [{ kind: "program", program: trendPart }, { kind: "program", program: corpusPart("cartesian|position|length") }], sharing: { length: "shared", position: "shared", text: "shared" } },
+    });
+    // Both parts are non-retained, and they are non-retained for DIFFERENT
+    // reasons that the record keeps apart.
+    expect(j.parts.map((x) => [x.path.join("."), x.verdict.kind, x.verdict.kind === "unproven" ? x.verdict.obligation : x.verdict.kind === "unsupported" ? x.verdict.obligation : ""])).toEqual([
+      ["0", "unsupported", "invariant:position-non-meaningful"],
+      ["1", "unproven", "grain:declared"],
+    ]);
+  });
+
+  it("RECOVERY: a nested composite's disposition reaches the outer tree with its origins intact", () => {
+    // The inner layer is refused by its OWN rule; the outer facet must attribute
+    // that to its part and must not rewrite the cause.
+    const inner: Composite = layerOver(KG, {});
+    const j = judgeComposite({ structure: KG, inventory: EXPERIMENT_TARGET, composite: facetOver(inner, { length: "free", text: "free" }) });
+    expect(j.verdict.kind).toBe("refused");
+    expect(j.verdict.kind === "refused" && j.verdict.from).toBe("part");
+    expect(j.verdict.kind === "refused" && j.verdict.causes).toEqual(["REL_LAYER_SCALE_UNSHARED"]);
+    // The inner tree's origins are present at their own paths, not flattened.
+    const paths = j.parts.map((x) => x.path.join("."));
+    expect(paths).toContain("0.0");
+    expect(paths).toContain("0.1");
+    expect(paths).toContain("0");
+    // The record entry at the PART's own path holds the inner composite's verdict
+    // VERBATIM, so its attribution is the inner combinator's — the inner layer
+    // refused by its own rule. The outer `verdict.from` above says the OUTER
+    // facet refused because a part arrived faulted. Both attributions are on the
+    // record, which is the point: re-attributing the inner entry too would erase
+    // where the rule that fired actually lives.
+    const inner0 = j.parts.find((x) => x.path.join(".") === "0")!;
+    expect(inner0.verdict.kind).toBe("refused");
+    expect(inner0.verdict.kind === "refused" && inner0.verdict.from).toBe("combinator");
+    // Judging the inner composite on its own returns exactly what the record
+    // carries at its path, so the nesting lost nothing on the way out.
+    const innerAlone = judgeComposite({ structure: KG, inventory: EXPERIMENT_TARGET, composite: inner });
+    expect(innerAlone.verdict).toEqual(inner0.verdict);
+  });
+
+  it("RECOVERY: a part the composer cannot certify is CARRIED, never refused by a helper's false", () => {
+    // A program whose measure channel cannot carry the result's transformation
+    // is not certified. That is not a contradiction and this composer has no
+    // named cause for it, so it must not manufacture one.
+    const uncertifiable: Program = { ...corpusPart("cartesian|position|length"), measure: "hue" };
+    expect(relationProgramIsSound(uncertifiable, facts, "magnitude-comparison", EXPERIMENT_TARGET)).toBe(false);
+    const j = judgeComposite({ structure, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [{ kind: "program", program: uncertifiable }], sharing: {} } });
+    expect(j.verdict.kind, "an uncertified part is not a contradiction").toBe("unproven");
+    if (j.verdict.kind !== "unproven") return;
+    expect(j.verdict.obligation).toBe("part:uncertified");
+    expect(j.verdict.detail, "the premises that were not met are named").toContain("does not carry a ratio measure");
   });
 
   it("no combinator cause is invented: all four are declared by the doctrine's own diagnostic table", () => {

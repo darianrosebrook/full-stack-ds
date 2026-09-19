@@ -232,7 +232,7 @@
       {
         "id": "E1_EMBED_TREND_WITHIN_BUDGET",
         "expected": "retained",
-        "actual": "unproven (obligation invariant:position-non-meaningful, from the part)",
+        "actual": "unsupported (obligation invariant:position-non-meaningful, from the part)",
         "finding": "The expectation was derived from the doctrine, which says a cell with position only can serve a trend task. The substrate cannot admit it, because this experiment's task table records `trend` as NOT ENUMERATED (it is the same entry that makes `magnitude-comparison` and `composition` the only enumerable quantitative tasks apart from `topology`). So the doctrine's own worked example for `embed` is unreachable here, and the reason is the BOUNDED TASK TABLE rather than the channel budget: the refusal is not that trend exceeds the cell, it is that the experiment declines to type trend at all. Recorded as a disagreement rather than repaired, because repairing it means deciding what the trend invariant requires, which is a task-table decision this slice has no authority to make."
       }
     ],
@@ -255,6 +255,12 @@
         "previousRepresentationFailure": "It could not distinguish 'this composite's own combinator rule refused it' from 'a part arrived refused', which is the exact question invariant 13 turns on. The outer composite reported the inner layer's attribution as its own.",
         "separatingCase": "U3, which the pre-commit had already fixed at `causeFrom: part`. The cause was right and the attribution was wrong, so a check that only compared causes would have passed it.",
         "repair": "A part's refusal is re-attributed to the part at each level while its CAUSE and detail are carried unaltered. The inner verdict's own attribution is recoverable by judging the inner composite alone, so nothing is lost."
+      },
+      {
+        "id": "RECOVERY_RETARGETED_THE_PART_READER_AND_THE_DISPOSITION_CHANGED",
+        "what": "The parked part reader consulted the task table first and returned `unproven` for a task the path does not implement. Recovery retargets it onto the support decision, so the same case now returns `unsupported`.",
+        "whyItIsNotAnExpectationChange": "The frozen `expected` block is untouched and still says `retained`; the case still disagrees. Only the recorded ACTUAL moved, and it moved because absent implementation is now reported as absent implementation rather than as a missing premise.",
+        "whatItCosts": "The composer no longer maps a bare `false` from the soundness helper onto a refusal. A part the composer cannot certify is CARRIED under `part:uncertified` with the premises that were not met, because refusing it would be a helper's `false` standing in for a contradiction."
       }
     ],
     "outcomes": {
@@ -266,7 +272,7 @@
       "F1_FACET_SHARED_POLICY": "retained, cross-panel-comparability induced",
       "F2_FACET_POLICY_UNDECLARED": "refused REL_FACET_SCALE_POLICY_UNDECLARED",
       "F3_FACET_FREE_POLICY": "retained, cross-panel-comparability withheld and nothing else moved",
-      "E1_EMBED_TREND_WITHIN_BUDGET": "unproven invariant:position-non-meaningful -- SEE disagreements",
+      "E1_EMBED_TREND_WITHIN_BUDGET": "unsupported invariant:position-non-meaningful -- SEE disagreements",
       "E2_EMBED_MAGNITUDE_BEYOND_BUDGET": "refused REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET",
       "S1_LAYER_PART_REFUSED": "refused, from the part, carrying the part's own cause",
       "N1_LAYER_OF_FACET_CONTRADICTION": "refused REL_LAYER_SCALE_UNSHARED",
