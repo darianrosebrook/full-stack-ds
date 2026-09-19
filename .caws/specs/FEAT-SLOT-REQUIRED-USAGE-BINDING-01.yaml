@@ -58,3 +58,10 @@ evidence:
     command: pnpm exec vitest run src/lib/render-usage.test.tsx
     exit_code: 0
     commit_sha: e630302919da
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Live corpus green under the obligation: pnpm exec vitest run src/lib/render-usage.test.tsx = 68/68 at e6303029 (the sweep carries an obligationsSeen>0 guard so it cannot trivially pass — it observes the two Field.control frame obligations). Census basis (tmp/slot-required-feasibility.mjs): exactly 2 consumer-supplied required obligations corpus-wide (Field.control x2 frames, both supplied); 23 component-owned required:true anchors correctly excluded by deriveRequiredRegionObligations. Worktree gates at 66da7a16 pre-merge: governed:rail exit 0 (overall pass), pnpm test 305 files/4279 tests, test:frameworks exit 0, lint/typecheck/generate:check clean, mutation selfcheck PASS."
+    recorded_at: "2026-09-19T18:05:13.704Z"
+    command: "pnpm exec vitest run src/lib/render-usage.test.tsx && pnpm exec vitest run packages/ds-codegen/src/usage-composition.test.ts"
+    exit_code: 0
+    commit_sha: e630302919da
