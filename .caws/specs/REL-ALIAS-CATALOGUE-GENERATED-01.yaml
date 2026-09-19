@@ -8,7 +8,9 @@ updated_at: '2026-09-19T04:57:36.710Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/projection.ts (the generated catalogue; the hand-authored FORM_ALIASES map leaves)'
+    - 'packages/ds-codegen/src/analytical/corpus-integrity.ts (the pack loader reads the declared form regions)'
+    - 'packages/ds-contracts/analytical-pack/form-regions.json (the declared regions: vocabulary, not truth)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -18,27 +20,30 @@ scope:
     - 'packages/ds-contracts/analytical-fixtures'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'THE CATALOGUE IS DERIVED, NOT AUTHORED. What the pack declares is the REGION each name asserts; what the catalogue contains is which retained programs that region selects HERE. A name whose region selects nothing is an unsatisfied assertion, never an entry.'
+  - 'The catalogue is never a source of truth. It is computed FROM the enumeration, so an alias cannot admit, refuse or undecide a program; emptying it or respelling every name leaves the lawful membership bit-identical.'
+  - 'No form name appears below L4. The names live in the governed pack, and the projected module names the generated catalogue without containing a single form name.'
+  - 'A name the hand-authored map claimed and the space does not retain is REPORTED. The generated catalogue is compared against what the map asserted, and a disagreement is a finding rather than a silent re-baseline.'
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'A retained enumeration over the entered basis and the pack''s declared form regions.'
+    when: 'The catalogue is generated and each entry compared with the retained membership.'
     then: 'given a retained enumeration and the pack''s declared form regions; when the catalogue is generated; then every entry names a non-empty set of programs the enumerator actually retained, and names exactly those the region selects'
   - id: A2
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The same enumeration, with the catalogue emptied and with every name respelled.'
+    when: 'The lawful membership is computed in each regime and compared.'
     then: 'given the same enumeration; when the catalogue is emptied, and when every name is respelled; then the lawful membership is identical, so the catalogue does not participate in admissibility'
   - id: A3
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'An inventory from which a capability the regions depend on has been removed.'
+    when: 'The catalogue is regenerated over it.'
     then: 'given an inventory with a capability removed; when the catalogue is regenerated; then the names whose region lost its members leave the entries and are reported as unsatisfied assertions with the region and the reason'
   - id: A4
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The projected module''s source text.'
+    when: 'It is searched for every declared form name.'
     then: 'given the projected module; when it is searched for a form name; then no form name appears in it, because the names live in the pack and the catalogue is derived'
   - id: A5
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The generated catalogue and the six regions the hand-authored map named.'
+    when: 'They are compared region by region.'
     then: 'given the generated catalogue over the entered basis; when it is compared with the catalogue the hand-authored map claimed; then every region the map named that the enumeration does not retain is reported rather than carried'
 non_functional: {}
 contracts:
