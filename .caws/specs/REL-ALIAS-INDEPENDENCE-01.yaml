@@ -45,3 +45,8 @@ contracts:
   - name: 'alias-independence'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts ALIAS INDEPENDENCE: the search outcome is identical with the layer REMOVED and the loader throws on that directory (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1027 tests green))"
+    recorded_at: "2026-09-19T06:41:26.672Z"
