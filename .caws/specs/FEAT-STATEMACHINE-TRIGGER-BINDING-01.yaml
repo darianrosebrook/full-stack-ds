@@ -1,0 +1,47 @@
+id: FEAT-STATEMACHINE-TRIGGER-BINDING-01
+title: 'Bind stateMachine transition events to declared trigger referents'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-19T10:51:14.185Z'
+updated_at: '2026-09-19T10:51:14.185Z'
+created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
+blast_radius:
+  modules:
+    - 'ds-codegen-semantic-gate'
+    - 'ds-contracts-schema'
+    - 'contract-oracle-mutation'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/component.contract.schema.json'
+    - 'packages/ds-contracts/components/Tabs/Tabs.contract.json'
+    - 'packages/ds-codegen/src/contract.ts'
+    - 'packages/ds-codegen/src/validation/semantic.ts'
+    - 'packages/ds-codegen/src/validation/semantic.test.ts'
+    - 'scripts/contract-oracle-mutation/catalog.mjs'
+    - 'docs/current-implementation-snapshot.md'
+    - 'docs/normal-form.md'
+    - 'README.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'a contract whose stateMachine transition event resolves to no channel key, events key, prop name, dismissal trigger, a11y.keyboard id, part-qualified form, or closed DOM platform event'
+    when: 'generate:check semantic validation runs'
+    then: 'it fails with pointer /stateMachine/transitions/<i>/event and code STATEMACHINE_TRIGGER_UNRESOLVED'
+  - id: A2
+    given: 'the live corpus after Tabs keyboard entries gain stable interaction ids'
+    when: 'pnpm run generate:check runs inside the spec worktree'
+    then: 'it exits 0 with all 17 declared transition events resolving and no new issues'
+  - id: A3
+    given: 'the catalog mutant dialog-state-machine-open-event-reveal (event open to reveal) and the merged rule'
+    when: 'the targeted full-profile mutation measurement runs at the committed HEAD'
+    then: 'the mutant is detected at the structural stage and the catalog disposition records detected'
+non_functional: {}
+contracts:
+  - name: 'state-machine-trigger-binding'
+    type: contract-test
+    path: 'packages/ds-codegen/src/validation/semantic.test.ts'
