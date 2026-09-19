@@ -2,9 +2,10 @@ id: FEAT-STATEMACHINE-TRIGGER-BINDING-01
 title: 'Bind stateMachine transition events to declared trigger referents'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: statemachine-trigger-binding
 created_at: '2026-09-19T10:51:14.185Z'
-updated_at: '2026-09-19T10:51:14.185Z'
+updated_at: '2026-09-19T10:52:05.287Z'
 created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
 blast_radius:
   modules:
