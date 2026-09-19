@@ -3,7 +3,6 @@ title: 'Give the closure ledger-authority test a finite local timeout'
 risk_tier: 3
 mode: fix
 lifecycle_state: active
-worktree: closure-timeout
 created_at: '2026-09-19T20:10:50.023Z'
 updated_at: '2026-09-19T20:20:12.648Z'
 created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
