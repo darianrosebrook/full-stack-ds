@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 27
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -37,11 +37,16 @@ parse_hook_input
 TRANSCRIPT_PATH="$HOOK_TRANSCRIPT_PATH"
 [ -n "$TRANSCRIPT_PATH" ] && [ -f "$TRANSCRIPT_PATH" ] || exit 0
 
+# CAWS-HOOKPACK-HOME-UNSET-ROOT-AUTHORITY-ALIAS-001: no HOME means this
+# best-effort lookup has nowhere to look, not a namespace at "/". Skip
+# rather than resolve "${CAWS_VENDOR_DIR}/.pending-plan-snapshots" at root.
+[ -n "${HOME:-}" ] || exit 0
+
 # FLAG: session-level pending plan snapshots list.
 # This path uses CAWS_VENDOR_DIR for surface-neutrality.
 # For claude-code: ~/.claude/.pending-plan-snapshots (CAWS_VENDOR_DIR=.claude)
 # For other surfaces: ~/${CAWS_VENDOR_DIR}/.pending-plan-snapshots
-PENDING="$HOME/${CAWS_VENDOR_DIR}/.pending-plan-snapshots"
+PENDING="${HOME}/${CAWS_VENDOR_DIR}/.pending-plan-snapshots"
 [ -f "$PENDING" ] || exit 0
 
 while IFS= read -r snapshot; do
