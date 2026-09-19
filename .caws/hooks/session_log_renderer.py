@@ -30,8 +30,10 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -947,13 +949,91 @@ def build_git_snapshot(cwd: str, start_sha: str, branch: str, head_sha: str, dir
     return snapshot
 
 
+TURN_NAME = re.compile(r"turn-\d+\.(json|txt)$")
+FAILURE_MARKER = ".render-failed.json"
+
+
 def cleanup_generated_outputs(log_dir: Path) -> None:
     for path in log_dir.iterdir():
         if path.name in {"session.txt", "session.json", "handoff.json"}:
             path.unlink(missing_ok=True)
             continue
-        if re.match(r"turn-\d+\.(json|txt)$", path.name):
+        if TURN_NAME.match(path.name):
             path.unlink(missing_ok=True)
+
+
+def retained_generation(log_dir: Path) -> list[str]:
+    """The turn files currently on disk, which are the evidence to protect."""
+    if not log_dir.is_dir():
+        return []
+    return sorted(p.name for p in log_dir.iterdir() if TURN_NAME.match(p.name))
+
+
+def record_failure(log_dir: Path, kind: str, reason: str, retained: list[str]) -> None:
+    """
+    Leave a marker when a render could not refresh the record.
+
+    Retaining the previous bytes is not enough on its own: old bytes that look
+    like a fresh generation are worse than an obvious gap, because a reader
+    cannot tell that the session's record stopped advancing. The marker names the
+    failure and the generation it left in place.
+    """
+    marker = {
+        "kind": kind,
+        "reason": reason,
+        "failed_at": datetime.now().astimezone().isoformat(),
+        "retained_generation": retained,
+        "retained_count": len(retained),
+        "note": "The turn files present are the PREVIOUS generation. Nothing was published by the failing attempt.",
+    }
+    try:
+        (log_dir / FAILURE_MARKER).write_text(json.dumps(marker, indent=2) + "\n", encoding="utf-8")
+    except OSError:
+        pass
+
+
+def clear_failure(log_dir: Path) -> None:
+    try:
+        (log_dir / FAILURE_MARKER).unlink(missing_ok=True)
+    except OSError:
+        pass
+
+
+def publish_generation(log_dir: Path, payloads: list[dict[str, Any]]) -> None:
+    """
+    Build the replacement completely, then retire the previous generation.
+
+    THE ORDER IS THE REPAIR. `cleanup_generated_outputs` used to run first, so a
+    missing transcript, an unsupported format or a parser exception deleted the
+    last available record and published nothing in its place. The replacement is
+    now staged, serialized and re-read before anything is removed, and the swap
+    happens only once it exists on disk.
+    """
+    staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=log_dir))
+    try:
+        for payload in payloads:
+            name = f"turn-{payload['turn']:03d}.json"
+            (staging / name).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        staged = sorted(p.name for p in staging.iterdir())
+        if len(staged) != len(payloads):
+            raise RuntimeError(f"staged {len(staged)} of {len(payloads)} turn files")
+        for name in staged:
+            json.loads((staging / name).read_text(encoding="utf-8"))
+        # OVERWRITE FIRST, SWEEP LAST. Each replacement is an atomic rename onto
+        # a name that usually already exists, so a failure part-way through
+        # leaves a directory that still holds a generation rather than an empty
+        # one. Only files the new generation does NOT contain are removed, and
+        # only once every replacement is in place.
+        for name in staged:
+            os.replace(staging / name, log_dir / name)
+        keep = set(staged)
+        for name in retained_generation(log_dir):
+            if name not in keep:
+                (log_dir / name).unlink(missing_ok=True)
+        for legacy in ("session.txt", "session.json", "handoff.json"):
+            (log_dir / legacy).unlink(missing_ok=True)
+    finally:
+        shutil.rmtree(staging, ignore_errors=True)
 
 
 def render_session(
@@ -981,17 +1061,36 @@ def render_session(
     # per-tool `is_error`/`duration_s` fields — a continuing agent reads the
     # turn files directly instead of a re-projected handoff.
     output_dir = Path(log_dir)
-    cleanup_generated_outputs(output_dir)
+    retained = retained_generation(output_dir)
 
     if not transcript_path or not os.path.isfile(transcript_path):
-        return
+        # AN EXPLICIT POLICY, because the two cases are not the same thing. A
+        # session that never had a transcript has nothing to protect and is not a
+        # failure. A session whose record CANNOT BE REFRESHED while a previous
+        # generation is on disk IS one: the bytes stay, and the marker says why
+        # they stopped advancing.
+        if retained:
+            record_failure(output_dir, "no-transcript", f"transcript {transcript_path!r} is not a readable file", retained)
+            return 1
+        # Nothing to protect and nothing to say: an unused session leaves no
+        # marker, so a real failure is not diluted by noise from empty ones.
+        return 0
 
-    turns, _session_events = accumulate_turns(parse_transcript_events(transcript_path), cwd)
-    turn_payloads = [build_turn_payload(turn, idx + 1) for idx, turn in enumerate(turns)]
-
-    for payload in turn_payloads:
-        target = output_dir / f"turn-{payload['turn']:03d}.json"
-        target.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    try:
+        turns, _session_events = accumulate_turns(parse_transcript_events(transcript_path), cwd)
+        turn_payloads = [build_turn_payload(turn, idx + 1) for idx, turn in enumerate(turns)]
+        if turn_payloads:
+            publish_generation(output_dir, turn_payloads)
+        else:
+            # Parsed successfully and produced no substantive turns. Distinct
+            # from an unavailable transcript: the generation is empty ON PURPOSE,
+            # so retiring the previous one is the result rather than a loss.
+            cleanup_generated_outputs(output_dir)
+        clear_failure(output_dir)
+        return 0
+    except Exception as exc:  # noqa: BLE001 - the marker is the report
+        record_failure(output_dir, "render-failed", f"{type(exc).__name__}: {exc}", retained)
+        return 1
 
 
 def main() -> int:
@@ -999,7 +1098,7 @@ def main() -> int:
         print("usage: session_log_renderer.py <log_dir> <cwd> <session_id> <started_at> <model> <branch> <head_sha> <dirty_count> <start_sha> <transcript_path>", file=sys.stderr)
         return 1
 
-    render_session(
+    return render_session(
         log_dir=sys.argv[1],
         cwd=sys.argv[2],
         session_id=sys.argv[3],
@@ -1011,7 +1110,6 @@ def main() -> int:
         start_sha=sys.argv[9],
         transcript_path=sys.argv[10],
     )
-    return 0
 
 
 if __name__ == "__main__":
