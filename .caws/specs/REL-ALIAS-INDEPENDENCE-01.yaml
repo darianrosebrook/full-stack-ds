@@ -2,9 +2,11 @@ id: REL-ALIAS-INDEPENDENCE-01
 title: 'The alias layer is consumed only by the catalogue: the search outcome is identical with it removed, renamed and blanked'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'The alias layer is consumed by the catalogue path only: the full normalized search outcome is identical with the layer removed, renamed and blanked, and the loader is shown to fail on the directory the search is indifferent to.'
 created_at: '2026-09-19T06:33:55.628Z'
-updated_at: '2026-09-19T06:34:07.337Z'
+updated_at: '2026-09-19T06:41:40.280Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
