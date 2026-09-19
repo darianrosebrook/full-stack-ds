@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 24
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -87,7 +87,7 @@ if [[ -n "$HITS" ]]; then
   MSG="scan-secrets: possible secret detected in '$(basename "$FILE_PATH")':
 $(printf '%b' "$HITS")
 Do not commit credentials. Use environment variables or a secrets manager. (Advisory — allowed.)"
-  emit_additional_context "$MSG" "PostToolUse"
+  emit_additional_context "$MSG" "PreToolUse"
 fi
 
 exit 0
