@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts ALIAS INDEPENDENCE: renamed and blanked regions change the catalogue and not the search (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1027 tests green))"
     recorded_at: "2026-09-19T06:41:27.612Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts ALIAS INDEPENDENCE: the normalized outcome compared in full - population support retained refused-with-causes undecided-with-obligations (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1027 tests green))"
+    recorded_at: "2026-09-19T06:41:28.615Z"
