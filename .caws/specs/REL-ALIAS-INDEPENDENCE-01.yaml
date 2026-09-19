@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts ALIAS INDEPENDENCE: the normalized outcome compared in full - population support retained refused-with-causes undecided-with-obligations (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1027 tests green))"
     recorded_at: "2026-09-19T06:41:28.615Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "projection.test.ts ALIAS INDEPENDENCE: catalogueFor throws on the removed directory while the search does not (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1027 tests green))"
+    recorded_at: "2026-09-19T06:41:29.712Z"
