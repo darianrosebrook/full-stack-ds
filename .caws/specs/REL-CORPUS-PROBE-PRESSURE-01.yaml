@@ -8,7 +8,7 @@ updated_at: '2026-09-19T09:20:10.165Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts (the corpus-probe controls)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -16,23 +16,26 @@ scope:
     - 'packages/ds-codegen/src/analytical'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'A FIXTURE EXISTING IS NOT THE SUBSTRATE REACHING IT. All five probes are adjudicated at L0-L2 and none has ever been enumerated, so each is run through the real entry point and its disposition recorded rather than inferred.'
+  - 'EACH SHAPE PRESSURES ITS ACTUAL DISTINCTION. The test is not that a probe enumerates but that the distinction the shape exists to carry survives projection instead of being reduced to a convenient scalar.'
+  - 'AN UNREACHED PROBE IS REPORTED. A shape this substrate cannot bind is recorded with its reason, because a silently skipped probe reads as a passed one.'
+  - 'No new cause, operator or representation is added. The slice runs what the substrate already has over fixtures the corpus already declares.'
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'Each of the five FX_P_ fixtures and its own aggregate assertion.'
+    when: 'Each is bound and enumerated through the real entry point.'
     then: 'given each of the five FX_P_ fixtures that M3 names as its corpus pressure, when its own admitted assertion is bound and enumerated, then its disposition is recorded through the real entry point rather than asserted from the fixture''s existence'
   - id: A2
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The OHLC probe''s result and its declaration.'
+    when: 'The projected facts are read against what the declaration states.'
     then: 'given the OHLC probe, when its result is projected, then the temporal-interval grain and co-registered ratio measures are carried as the declaration states them and are not reduced to a single convenient scalar'
   - id: A3
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'Each shape and its scalar reduction.'
+    when: 'A control is run that must fail when the distinction is dropped.'
     then: 'given each shape, when a control separates the shape''s real distinction from its scalar reduction, then the control fails when the distinction is dropped'
   - id: A4
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'A probe whose operation cannot be bound or whose task is unsupported.'
+    when: 'The run reports it.'
     then: 'given a probe the substrate cannot reach, when the run completes, then it is reported as unreached with the reason rather than skipped silently'
 non_functional: {}
 contracts:
