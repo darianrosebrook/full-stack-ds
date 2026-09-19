@@ -59,3 +59,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-codegen/src/validation/semantic.test.ts
     exit_code: 0
     commit_sha: e8db220185fc
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "pnpm run generate:check at the landed revision e8db2201 (post-merge f58b0c6b): exit 0, all 52 component contracts VALID, zero DRIFT. Pre-check enumeration (tmp/statemachine-trigger-precheck.mjs, canonical checkout): 17 stateMachine transition events corpus-wide; 13 resolve against pre-existing declarations (Dialog/Sheet via open prop, close events key, escape/overlayClick dismissal triggers, animationend DOM platform set; Tabs tab.click via anatomy part) and exactly the 4 Tabs keyboard-alias triggers (arrow.next, arrow.prev, home, end) resolve via the newly added a11y.keyboard ids — the rule greens the corpus with no other contract change, which is the A2 condition (no new issues)."
+    recorded_at: "2026-09-19T11:24:29.625Z"
+    command: "pnpm run tokens:build && pnpm run generate:check"
+    exit_code: 0
+    commit_sha: e8db220185fc
