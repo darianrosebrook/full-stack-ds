@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RECOVERY: parts in SEVERAL dispositions are ALL reported, so no origin is erased (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1012 tests green))"
     recorded_at: "2026-09-19T04:52:12.485Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "projection.test.ts RECOVERY: a nested composite's disposition reaches the outer tree with its origins intact (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1012 tests green))"
+    recorded_at: "2026-09-19T04:52:12.973Z"
