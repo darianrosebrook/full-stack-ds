@@ -55,3 +55,8 @@ contracts:
   - name: 'judgment-conservation'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts CONSERVATION: the composer consumes the SAME atomic classification the enumerator does (keyed / omitted partition / forbidden partition) (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1029 tests green))"
+    recorded_at: "2026-09-19T07:21:34.507Z"
