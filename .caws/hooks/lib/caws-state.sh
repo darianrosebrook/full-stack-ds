@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 8,16
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -475,9 +475,16 @@ export CAWS_NODE_GLOB_TO_SCOPE_REGEXP='function globToRegExp(pattern) {
   //   **  -> .+       (cross-segment, matches nested dirs)
   //   *   -> [^/]*    (single-segment, does NOT cross "/")
   //   ?   -> .        (any single char)
-  // Finally anchor with ^ and $ so the pattern must match the whole
-  // relative path rather than appear as a substring.
-  var escaped = String(pattern).replace(/[.+^${}()|[\]\\]/g, "\\$&");
+  // CLAIM-ORACLE-DIRECTORY-CONTAINMENT-001: a scope entry denotes a path AND
+  // everything beneath it. Trailing slashes are stripped so "dir/" and "dir"
+  // agree; the result is anchored with a containment suffix that requires a
+  // "/" boundary ("dir" matches "dir/x" but never "directory"); and an entry
+  // that is empty after stripping compiles to a never-matching pattern rather
+  // than claiming or excluding everything. This string and the copy in
+  // worktree-claim-oracle.cjs MUST answer identically (parity is tested).
+  var p = String(pattern).replace(/\/+$/, "");
+  if (p === "") return /(?!)/;
+  var escaped = p.replace(/[.+^${}()|[\]\\]/g, "\\$&");
   var body = escaped.replace(/\*\*/g, ".+").replace(/\*/g, "[^/]*").replace(/\?/g, ".");
-  return new RegExp("^" + body + "$");
+  return new RegExp("^" + body + "(?:/.*)?$");
 }'
