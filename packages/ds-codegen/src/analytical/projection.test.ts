@@ -52,6 +52,7 @@ import {
   enumerate,
   evaluateOperation,
   lawfulRelationPrograms,
+  partitionAdmitsSummation,
   IMPLEMENTED_TASKS,
   RESULT_KINDS,
   projectionSupport,
@@ -74,7 +75,7 @@ import {
   inducedClaims,
   unitsCommensurable,
 } from "./projection.js";
-import type { Composite, CompositeVerdict, OperationJudgment, AggregateAssertionDecl, Program, TargetInventory } from "./projection.js";
+import type { Composite, CompositeVerdict, OperationJudgment, AggregateAssertionDecl, Program, ResultFacts, TargetInventory } from "./projection.js";
 import type { RelationalStructure, UnitDecl } from "./relation-model.js";
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -954,6 +955,124 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     expect(COMPOSITION_NON_CLAIMS.join(" ")).toContain("for STANDING and not for its channels");
   });
 
+  it("COMPOSITION COVERAGE: the reference takes the partition and agrees with the enumerator in every regime", () => {
+    // A measure is declared over a two-column grain so a partition can be chosen
+    // that the measure IS additive along and one it is NOT.
+    const composedStructure = (additivity: unknown) =>
+      ({
+        relations: {
+          m: {
+            grain: ["bucket", "item"],
+            fields: {
+              bucket: { transformation: "nominal" },
+              item: { transformation: "nominal" },
+              level: { transformation: "ratio", ...(additivity ? { additivity } : {}) },
+            },
+          },
+        },
+      }) as unknown as RelationalStructure;
+    const composed = (additivity: unknown) => {
+      const s = composedStructure(additivity);
+      const op = bindOperation(s, { relation: "m", field: "level", op: "sum", along: ["item"] });
+      const adm = admitOperation(s, op);
+      if (adm.kind !== "admitted") throw new Error(`authored composition basis is not admitted: ${JSON.stringify(adm)}`);
+      return { s, op, facts: adm.facts };
+    };
+    const compare = (basis: ReturnType<typeof composed>, partition?: string) => {
+      const e = enumerate({ structure: basis.s, admitted: basis.op, task: "composition", inventory: EXPERIMENT_TARGET, partitionDimension: partition as never });
+      const reference = lawfulRelationPrograms(basis.facts, "composition", EXPERIMENT_TARGET, partition).map((x) => `${x.coordinate}|${x.dimension}|${x.measure}`).sort();
+      return { e, reference, actual: relationMembership(e) };
+    };
+
+    // additive over the declared partition: the two AGREE, and non-trivially.
+    const additive = composed({ kind: "additive" });
+    const ok = compare(additive, "bucket");
+    expect(ok.reference.length).toBeGreaterThan(0);
+    expect(ok.actual).toEqual(ok.reference);
+
+    // A DECLARED CONTRADICTION empties the lawful set in BOTH, for the reason the
+    // declaration gives — derived in the reference, not read off the enumerator.
+    const nonAdditive = composed({ kind: "non-additive" });
+    expect(partitionAdmitsSummation(nonAdditive.facts, "bucket")).toEqual({
+      kind: "refused",
+      cause: "REL_ADDITIVITY_SUM_SEMIADDITIVE",
+      detail: "the measure is declared non-additive, so no partition of it is summable",
+    });
+    const na = compare(nonAdditive, "bucket");
+    expect(na.reference).toEqual([]);
+    expect(na.actual).toEqual([]);
+    expect(na.e.refused.some((r) => r.cause === "REL_ADDITIVITY_SUM_SEMIADDITIVE")).toBe(true);
+    // Not EVERY refusal is the additivity one: a channel the capacity table
+    // refuses is refused before the composition block is reached, and saying
+    // otherwise would overstate what this control establishes.
+    expect(na.e.refused.some((r) => r.cause !== "REL_ADDITIVITY_SUM_SEMIADDITIVE")).toBe(true);
+
+    // A RATIO MEASURE NEVER REACHES PROJECTION. The ENGINE refuses the sum at
+    // ADMISSION, so this is an admission outcome and NOT a projection-narrowing
+    // result — counting it as one would credit the projection layer with a
+    // judgment it never made. The reference's own branch is exercised over an
+    // AUTHORED fact set describing such a result, so the derivation is covered
+    // by more than the path the enumerator happens to take.
+    const ratioStructure = composedStructure({ kind: "ratio-measure" });
+    expect(() => composed({ kind: "ratio-measure" })).toThrow(/forbid/);
+    const ratioFacts: ResultFacts = { ...additive.facts, measure: { ...additive.facts.measure, additivityKind: "ratio-measure" } };
+    expect(partitionAdmitsSummation(ratioFacts, "bucket").kind).toBe("refused");
+    const ratioDecision = partitionAdmitsSummation(ratioFacts, "bucket");
+    expect(ratioDecision.kind === "refused" && ratioDecision.cause).toBe("REL_RATIO_MEASURE_AVERAGED");
+    expect(lawfulRelationPrograms(ratioFacts, "composition", EXPERIMENT_TARGET, "bucket")).toEqual([]);
+    expect(ratioStructure.relations.m).toBeDefined();
+
+    // SEMI-ADDITIVE: empty over the dimension it is not additive along, and NOT
+    // empty over one it is. The pair is what makes the condition decisive.
+    const semi = composed({ kind: "semi-additive", nonAdditiveAlong: ["bucket"] });
+    const along = compare(semi, "bucket");
+    expect(along.reference).toEqual([]);
+    expect(along.actual).toEqual([]);
+    expect(along.e.refused.some((r) => r.cause === "REL_ADDITIVITY_SUM_SEMIADDITIVE")).toBe(true);
+    // ...and the SAME measure is untouched when the partition is the other column.
+    expect(lawfulRelationPrograms({ ...semi.facts, resultGrain: ["item"] }, "composition", EXPERIMENT_TARGET, "item").length).toBeGreaterThan(0);
+
+    // AN OMITTED PARTITION IS UNESTABLISHED, NOT EMPTY BY DECISION.
+    const absent = compare(additive, undefined);
+    expect(partitionAdmitsSummation(additive.facts, undefined).kind).toBe("unproven");
+    expect(absent.reference).toEqual([]);
+    expect(absent.actual).toEqual([]);
+    expect(absent.e.undecided.length, "the candidates that reach the composition block are CARRIED").toBeGreaterThan(0);
+    // Refusals still exist, and NONE of them is the composition one: with the
+    // partition omitted nothing is refused FOR LACK OF EXHAUSTIVENESS, it is
+    // carried. A capacity refusal is a different thing and still fires.
+    expect(absent.e.refused.every((r) => r.cause !== "REL_ADDITIVITY_SUM_SEMIADDITIVE")).toBe(true);
+    expect(absent.e.undecided.every((u) => u.obligation === "invariant:exhaustive")).toBe(true);
+  });
+
+  it("COMPOSITION COVERAGE: a key dimension channel is lawful in neither, off position", () => {
+    const keyed = {
+      relations: {
+        m: {
+          grain: ["bucket", "item"],
+          fields: {
+            bucket: { transformation: "nominal", key: true },
+            item: { transformation: "nominal" },
+            level: { transformation: "ratio" },
+          },
+        },
+      },
+    } as unknown as RelationalStructure;
+    const op = bindOperation(keyed, { relation: "m", field: "level", op: "sum", along: ["item"] });
+    const adm = admitOperation(keyed, op);
+    if (adm.kind !== "admitted") throw new Error("unreachable");
+    expect(adm.facts.dimension.key, "the group column is a key, so a key IS NOT A CATEGORY").toBe(true);
+
+    const e = enumerate({ structure: keyed, admitted: op, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, partitionDimension: "bucket" });
+    const reference = lawfulRelationPrograms(adm.facts, "magnitude-comparison", EXPERIMENT_TARGET).map((x) => `${x.coordinate}|${x.dimension}|${x.measure}`).sort();
+    // The restriction is load-bearing: without it the reference would expect
+    // non-positional dimensions the enumerator refuses outright.
+    expect(e.refused.some((r) => r.cause === "REL_KEY_ENCODED_TO_CHANNEL")).toBe(true);
+    expect(e.refused.filter((r) => r.cause === "REL_KEY_ENCODED_TO_CHANNEL").every((r) => r.program.dimension !== "position")).toBe(true);
+    expect(relationMembership(e)).toEqual(reference);
+    expect(reference.every((k) => k.split("|")[1] === "position")).toBe(true);
+  });
+
   it("states what the generated catalogue does NOT establish", () => {
     expect(CATALOGUE_NON_CLAIMS.length).toBeGreaterThanOrEqual(4);
     for (const nc of CATALOGUE_NON_CLAIMS) expect(nc.trim().length).toBeGreaterThan(40);
@@ -965,8 +1084,8 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     expect(RELATION_REFERENCE_NON_CLAIMS.length).toBeGreaterThanOrEqual(6);
     const joined = RELATION_REFERENCE_NON_CLAIMS.join(" ");
     // The scope boundary the broad signature would otherwise hide.
-    expect(joined).toContain("MAGNITUDE COMPARISON");
-    expect(joined).toContain("composition");
+    expect(joined).toContain("SHARED AXIOM");
+    expect(joined).toContain("STILL NOT COVERED");
     // The shared premises, stated as shared rather than as independence.
     expect(joined).toContain("SHARED PREMISE");
     expect(joined).toContain("inducedClaims");
