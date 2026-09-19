@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts CONSERVATION: the atomic operand carries its request, and supplying the partition makes the same operand certifiable (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1029 tests green))"
     recorded_at: "2026-09-19T07:21:35.081Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts CONSERVATION: the mixed-unit facet is refused in BOTH panel orders (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1029 tests green))"
+    recorded_at: "2026-09-19T07:21:35.671Z"
