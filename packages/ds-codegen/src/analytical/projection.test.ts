@@ -1414,6 +1414,71 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     expect(loadFormDeclarations().length).toBeGreaterThan(0);
   });
 
+  it("CORPUS PRESSURE: every probe M3 names is RUN, and an unreachable one is reported with its reason", () => {
+    // A fixture existing is not the substrate reaching it. All five are
+    // adjudicated at L0-L2; none had ever been put through this entry point.
+    const probes = ["FX_P_CATEGORICAL_VS_RATIO", "FX_P_GRAPH_ISOLATED_NODE", "FX_P_HIERARCHY", "FX_P_BINNED_INTERVAL", "FX_P_OHLC"];
+    const oracle = loadOracle();
+    const run = (id: string) => {
+      const fixture = oracle.fixtures.get(id);
+      if (!fixture) return { id, reached: false, reason: "not in the oracle" };
+      const s = fixture.structure as RelationalStructure;
+      const aggregate = fixture.assertions.find((a) => a.kind === "aggregate") as AggregateAssertionDecl | undefined;
+      if (!aggregate) return { id, reached: false, reason: "no aggregate assertion to bind" };
+      const op = bindOperation(s, aggregate);
+      // ADMISSION THROWS on a refusal, so an unreachable probe arrives as an
+      // exception rather than a value. Catching it here is what keeps a probe
+      // that never ran from reading as one that ran and found nothing.
+      let admission: ReturnType<typeof admitOperation>;
+      try {
+        admission = admitOperation(s, op, fixture.evidence);
+      } catch (err) {
+        return { id, reached: false, reason: (err as Error).message };
+      }
+      if (admission.kind !== "admitted") return { id, reached: false, reason: `${admission.kind}: ${(admission as { reason: string }).reason}` };
+      const e = enumerate({ structure: s, admitted: op, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, partitionDimension: admission.facts.resultGrain[0] });
+      return { id, reached: true, retained: relationMembership(e) };
+    };
+    const results = probes.map(run);
+    for (const r of results) expect(r.reason ?? "reached", `${r.id} must report a disposition`).toBeTruthy();
+
+    // THREE reach the projection rules; TWO are stopped BEFORE them, by the
+    // executable contract rather than by anything analytical.
+    expect(results.filter((r) => r.reached).map((r) => r.id)).toEqual(["FX_P_CATEGORICAL_VS_RATIO", "FX_P_HIERARCHY", "FX_P_BINNED_INTERVAL"]);
+    const stopped = results.filter((r) => !r.reached);
+    expect(stopped.map((r) => r.id)).toEqual(["FX_P_GRAPH_ISOLATED_NODE", "FX_P_OHLC"]);
+    // ...and each unreached one names WHY, so it cannot read as a passed probe.
+    expect(stopped[0]!.reason).toMatch(/names count/);
+    expect(stopped[1]!.reason).toMatch(/names min/);
+    // The reached three are not vacuous: each retains something.
+    for (const r of results.filter((x) => x.reached)) expect(r.retained!.length).toBeGreaterThan(0);
+  });
+
+  it("CORPUS PRESSURE: the OHLC declaration carries the doctrine's distinction, and the EVALUATOR is what stops it", () => {
+    // Doctrine line 206: temporal-interval grain; four co-registered ratio
+    // measures under low <= {open, close} <= high; lane coordinate; two layered
+    // range marks; a derived nominal -> hue. The DECLARATION carries the first
+    // part of that faithfully, with no form concept: the relation is named for
+    // what it holds, not for a chart type.
+    const fixture = loadOracle().fixtures.get("FX_P_OHLC")!;
+    const s = fixture.structure as RelationalStructure;
+    expect(s.relations.candles!.grain).toEqual(["symbol", "period"]);
+    const fields = s.relations.candles!.fields!;
+    expect(fields.period!.transformation, "the temporal column is an INTERVAL, not an instant").toBe("interval");
+    expect(fields.period!.temporality).toBeDefined();
+    for (const measure of ["open", "high", "low", "close"]) {
+      expect(fields[measure]!.transformation, `${measure} is a co-registered ratio measure`).toBe("ratio");
+    }
+
+    // WHAT STOPS IT IS NOT A PROJECTION RULE. The refusal is the evaluator's
+    // sum-only contract and it fires at ADMISSION, so no candidate was ever
+    // considered. The distinction survived the declaration and died at the
+    // executable boundary — a different repair from a missing projection rule.
+    const aggregate = fixture.assertions.find((a) => a.kind === "aggregate") as AggregateAssertionDecl;
+    expect(aggregate.op, "the corpus asks for min, not sum").toBe("min");
+    expect(() => admitOperation(s, bindOperation(s, aggregate), fixture.evidence)).toThrow(/the executable contract is sum, and this operation names min/);
+  });
+
   it("states what the generated catalogue does NOT establish", () => {
     expect(CATALOGUE_NON_CLAIMS.length).toBeGreaterThanOrEqual(4);
     for (const nc of CATALOGUE_NON_CLAIMS) expect(nc.trim().length).toBeGreaterThan(40);
