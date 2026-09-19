@@ -59,3 +59,8 @@ contracts:
   - name: 'relation-proof-scope'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts M2: TASK AGREEMENT the checker certifies the question the PROGRAM declares (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 992 tests green))"
+    recorded_at: "2026-09-19T04:37:33.787Z"
