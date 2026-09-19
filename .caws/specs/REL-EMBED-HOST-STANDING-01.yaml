@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts HOST STANDING: the host is read recorded at its own path and a retained pair stays retained (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1023 tests green))"
     recorded_at: "2026-09-19T06:09:44.409Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "projection.test.ts HOST STANDING: an unimplemented HOST makes the embed unsupported and the child is still reported (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1023 tests green))"
+    recorded_at: "2026-09-19T06:09:44.921Z"
