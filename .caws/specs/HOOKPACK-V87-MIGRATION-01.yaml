@@ -2,9 +2,11 @@ id: HOOKPACK-V87-MIGRATION-01
 title: 'Migrate CAWS hook pack v47 to v87'
 risk_tier: 2
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Migrated claude-code to the machine hook runtime and brought the project pack to v87; 70 of 74 managed paths clean, 4 deliberately excluded.'
 created_at: '2026-09-19T05:18:57.618Z'
-updated_at: '2026-09-19T06:11:06.651Z'
+updated_at: '2026-09-19T06:11:25.098Z'
 created_by_session: 'd1d85455-7273-417f-b3ab-18165f672d38'
 blast_radius:
   modules:
