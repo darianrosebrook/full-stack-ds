@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 4,8,13
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -47,8 +47,8 @@ parse_hook_input
 if [[ -f "$SCRIPT_DIR/lib/caws-state.sh" ]] && source "$SCRIPT_DIR/lib/caws-state.sh" && command -v _realpath >/dev/null 2>&1; then
   :
 else
-  echo "[worktree-write-guard] CAWS hook infrastructure incomplete: lib/caws-state.sh is missing or did not load — cannot evaluate worktree-claim isolation. Failing CLOSED (refusing the write). Restore the shared hook libs with: caws init --adopt" >&2
-  printf '{"decision":"block","reason":"CAWS worktree-write-guard: cannot load lib/caws-state.sh, so cross-worktree write isolation cannot be evaluated. Failing closed. Restore the hook pack: caws init --adopt"}\n'
+  echo "[worktree-write-guard] CAWS hook infrastructure incomplete: lib/caws-state.sh is missing or did not load — cannot evaluate worktree-claim isolation. Failing CLOSED (refusing the write). Restore the shared hook libs with: caws init adapters install" >&2
+  printf '{"decision":"block","reason":"CAWS worktree-write-guard: cannot load lib/caws-state.sh, so cross-worktree write isolation cannot be evaluated. Failing closed. Restore the hook pack: caws init adapters install"}\n'
   exit 2
 fi
 # shellcheck source=lib/agent-surface.sh
@@ -58,13 +58,19 @@ fi
 if [[ -f "$SCRIPT_DIR/lib/agent-surface.sh" ]]; then
   source "$SCRIPT_DIR/lib/agent-surface.sh"
 else
-  echo "[worktree-write-guard] CAWS hook infrastructure incomplete: lib/agent-surface.sh is missing. Failing CLOSED (refusing the write). Restore the shared hook libs with: caws init --adopt" >&2
-  printf '{"decision":"block","reason":"CAWS worktree-write-guard: cannot load lib/agent-surface.sh. Failing closed. Restore the hook pack: caws init --adopt"}\n'
+  echo "[worktree-write-guard] CAWS hook infrastructure incomplete: lib/agent-surface.sh is missing. Failing CLOSED (refusing the write). Restore the shared hook libs with: caws init adapters install" >&2
+  printf '{"decision":"block","reason":"CAWS worktree-write-guard: cannot load lib/agent-surface.sh. Failing closed. Restore the hook pack: caws init adapters install"}\n'
   exit 2
 fi
 # shellcheck source=lib/emit.sh
 # Use caws_source_lib so a vendor override is preferred over the shared default.
 caws_source_lib emit.sh 2>/dev/null || true
+if [[ -f "$SCRIPT_DIR/lib/ask-capability.sh" ]]; then
+  source "$SCRIPT_DIR/lib/ask-capability.sh"
+else
+  echo "[CAWS guard] Missing lib/ask-capability.sh; cannot establish a human approval boundary." >&2
+  exit 2
+fi
 # shellcheck source=lib/guard-message.sh
 [[ -f "$SCRIPT_DIR/lib/guard-message.sh" ]] && source "$SCRIPT_DIR/lib/guard-message.sh"
 # shellcheck source=lib/session-id.sh
@@ -242,16 +248,17 @@ if [[ -n "$FILE_PATH" ]]; then
             _WG_ID="CAWS worktree-write-guard"
             command -v guard_identity >/dev/null 2>&1 && _WG_ID="$(guard_identity worktree-write-guard)"
             _WP_REASON="[$_WG_ID] This write targets worktree payload (.caws/worktrees/...) and ownership could not be confirmed ($_ORACLE_OUT). Approve only if you are the owning session; otherwise route the edit through the owning worktree's session."
-            if [[ "${CAWS_GUARD_NO_ASK:-0}" == "1" ]] || ! command -v emit_ask >/dev/null 2>&1; then
+            if caws_guard_cannot_ask; then
               echo "$_WP_REASON" >&2
-              echo "  (ask-incapable harness — degraded to block; no silent allow)" >&2
+              echo "  (approval unavailable or automatically satisfied (mode=${HOOK_PERMISSION_MODE:-default}); blocked)" >&2
               exit 2
             fi
             emit_ask "$_WP_REASON"
             exit 0 ;;
         esac
       fi
-      exit 0 ;;
+      echo "[worktree-write-guard] ownership oracle unavailable for worktree payload; blocked" >&2
+      exit 2 ;;
   esac
 
   # Shared unconditional allowlist (lib/write-allowlist.sh). Returns 0 if the
@@ -293,6 +300,38 @@ CURRENT_BRANCH=$(caws_current_branch "$AGENT_DIR")  # HOOK-LIB-CONSOLIDATION-001
 WORKTREE_BASE="$PROJECT_DIR/.caws/worktrees"
 
 if [[ -n "$AGENT_DIR" ]] && [[ "$AGENT_DIR" == "$WORKTREE_BASE"/* ]]; then
+  # Being in a worktree does not authorize edits to a different canonical claim.
+  case "$FILE_PATH" in /*) _CANON_TARGET="$(_realpath "$FILE_PATH")" ;;
+    *) _CANON_TARGET="$(_realpath "$AGENT_DIR/$FILE_PATH")" ;; esac
+  case "$_CANON_TARGET" in "$WORKTREE_BASE"/*) exit 0 ;; esac
+  case "$_CANON_TARGET" in
+    "$PROJECT_DIR"/*)
+      _OWN_WT="${AGENT_DIR#"$WORKTREE_BASE"/}"; _OWN_WT="${_OWN_WT%%/*}"
+      _SELF="$(CAWS_ORACLE_PROJECT_DIR="$PROJECT_DIR" CAWS_ORACLE_CURRENT_BRANCH="" \
+        CAWS_ORACLE_REL_PATH="$WORKTREE_BASE/$_OWN_WT/.ownership-probe" \
+        node "$CAWS_CLAIM_ORACLE" 2>&1 || true)"
+      _CLAIMS="$(CAWS_ORACLE_PROJECT_DIR="$PROJECT_DIR" CAWS_ORACLE_CURRENT_BRANCH="" \
+        CAWS_ORACLE_REL_PATH="$_CANON_TARGET" node "$CAWS_CLAIM_ORACLE" 2>&1 || true)"
+      case "$_CLAIMS" in
+        pass:*) exit 0 ;;
+        block_claimed:*)
+          IFS=',' read -ra _PAIRS <<< "${_CLAIMS#*:}"
+          for _PAIR in "${_PAIRS[@]}"; do
+            if [[ "${_PAIR%%:*}" != "$_OWN_WT" || "$_SELF" != "pass:owner-self:$_OWN_WT" ]]; then
+              echo "[worktree-write-guard] BLOCKED canonical path '$_CANON_TARGET': claimed:$_PAIR. Worktree cwd does not confer this claim." >&2
+              exit 2
+            fi
+          done
+          exit 0 ;;
+        degraded_no_yaml:*)
+          echo "[worktree-write-guard] advisory: canonical scope claim check SKIPPED (js-yaml unavailable)." >&2
+          exit 0 ;;
+        *)
+          _WHY="[worktree-write-guard] canonical ownership could not be established: $_CLAIMS"
+          if caws_guard_cannot_ask; then echo "$_WHY" >&2; exit 2; fi
+          emit_ask "$_WHY"; exit 0 ;;
+      esac ;;
+  esac
   exit 0
 fi
 
@@ -500,11 +539,7 @@ _guard_risk_reason() {
   printf '%s %s Approve to edit on the base branch, or %s.' "$head" "$body" "$redirect"
 }
 
-_guard_no_ask() {
-  [[ "${CAWS_GUARD_NO_ASK:-0}" == "1" ]] && return 0
-  command -v emit_ask >/dev/null 2>&1 || return 0
-  return 1
-}
+_guard_no_ask() { caws_guard_cannot_ask; }
 
 case "${SPEC_CONTENTION_CHECK:-}" in
   claimed:*)
@@ -542,7 +577,7 @@ _RISK_REASON="$(_guard_risk_reason "$_WG_ASK_ID: base-branch write on '$CURRENT_
 if _guard_no_ask; then
   echo "[worktree-write-guard.sh] BLOCKED: $_RISK_REASON" >&2
   echo "" >&2
-  echo "(ask-incapable harness: CAWS_GUARD_NO_ASK=$CAWS_GUARD_NO_ASK or emit_ask unavailable — falling back to a hard block so the write is not silently allowed.)" >&2
+  echo "(ask-incapable harness: mode=${HOOK_PERMISSION_MODE:-default}, CAWS_GUARD_NO_ASK=${CAWS_GUARD_NO_ASK:-0}, or emit_ask unavailable — falling back to a hard block so the write is not silently allowed.)" >&2
   echo "Do NOT edit ${CAWS_HOOKS_DIR:-.caws/hooks}/ or guard state to bypass this. Ask the user if a base-branch edit is genuinely needed." >&2
   exit 2
 fi
