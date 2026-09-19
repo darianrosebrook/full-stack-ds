@@ -2,9 +2,11 @@ id: REL-JUDGMENT-CONSERVATION-01
 title: 'Analytical judgments are conserved across the M2-M3 boundary: the composer consumes the same atomic classification, and a scale summary preserves what its parent rules need'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'All seven criteria carry evidence: the composer consumes the validated atomic request, scale compatibility is computed over every relevant pair, the alias control reaches the environment the search uses with a mutant that fails it, and the catalogue keeps the enumeration''s own support, refusal and obligation evidence.'
 created_at: '2026-09-19T07:12:00.571Z'
-updated_at: '2026-09-19T08:59:50.499Z'
+updated_at: '2026-09-19T09:13:37.561Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
