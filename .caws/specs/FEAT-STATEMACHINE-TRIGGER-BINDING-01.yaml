@@ -50,3 +50,12 @@ contracts:
   - name: 'state-machine-trigger-binding'
     type: contract-test
     path: 'packages/ds-codegen/src/validation/semantic.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Semantic Rule 6b unit suite at packages/ds-codegen/src/validation/semantic.test.ts (58/58 green at e8db2201). The red test asserts the exact coded issue {pointer: /stateMachine/transitions/0/event, message: [STATEMACHINE_TRIGGER_UNRESOLVED] trigger \"reveal\" ...} for an event resolving to no declared referent; eight further cases pin each resolution class (channel key, events key, prop name, dismissal trigger, keyboard id, part-qualified, DOM platform) plus two negative shapes (undeclared part in part-qualified form; bare-string keyboard entry not an id carrier). Falsification outside fixtures: perturbing the committed Dialog contract transitions[0].event open→reveal makes pnpm run generate:check exit 1 with DRIFT Dialog.contract.json and that exact pointer (observed live in the spec worktree, then re-proven mechanically by the A3 mutation run at the landed revision)."
+    recorded_at: "2026-09-19T11:24:20.036Z"
+    test_nodeid: "packages/ds-codegen/src/validation/semantic.test.ts::validateContractSemantics — cross-reference rules > stateMachine trigger resolution (Rule 6b, FEAT-STATEMACHINE-TRIGGER-BINDING-01) > flags a transition event resolving to no declared referent, with the exact coded message"
+    command: pnpm exec vitest run packages/ds-codegen/src/validation/semantic.test.ts
+    exit_code: 0
+    commit_sha: e8db220185fc
