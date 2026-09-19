@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: slot-required-usage-binding
 created_at: '2026-09-19T17:21:21.422Z'
-updated_at: '2026-09-19T17:22:06.445Z'
+updated_at: '2026-09-19T17:23:35.416Z'
 created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
 blast_radius:
   modules:
@@ -24,6 +24,7 @@ scope:
     - 'docs/current-implementation-snapshot.md'
     - 'docs/normal-form.md'
     - 'README.md'
+    - packages/ds-codegen/src/contract.ts
   out: []
 invariants:
   - 'Obligation scope is consumer-supplied regions only: anatomy.dom named slot regions plus public subcomponents (the same set deriveUsageComposition projects). Component-owned required:true anchors (e.g. Checkbox.input, Popover.trigger anchors) are excluded — they carry the anchor-presence sense, which this slice does not adjudicate.'
