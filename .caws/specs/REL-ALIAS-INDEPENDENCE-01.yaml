@@ -50,3 +50,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts ALIAS INDEPENDENCE: the search outcome is identical with the layer REMOVED and the loader throws on that directory (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1027 tests green))"
     recorded_at: "2026-09-19T06:41:26.672Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "projection.test.ts ALIAS INDEPENDENCE: renamed and blanked regions change the catalogue and not the search (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1027 tests green))"
+    recorded_at: "2026-09-19T06:41:27.612Z"
