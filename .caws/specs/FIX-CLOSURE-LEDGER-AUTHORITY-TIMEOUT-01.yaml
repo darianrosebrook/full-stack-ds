@@ -22,6 +22,7 @@ invariants:
   - 'The budget is local to this one test: no global/testTimeout config change, no runner retries, no coverage reduction. The five identities, the exact moved-key drift matchers, and the only-problem length check are byte-unchanged.'
   - 'The 30000ms budget is finite and derived from retained successful durations (758/1018/1301ms across three local runs) with headroom for the observed ~5x cold-clone contention factor; it remains far below the mutation runner''s 20-minute stage timeout, so a genuine hang still fails.'
   - 'A timeout stays a failed verification attempt: this change adjusts the test''s operating budget, not any analytical ratification status or the paused research program.'
+  - 'The budget extension is bounded to the five tests with retained timeout observations AND inspected heavy workloads; a sixth test earns a budget only from its own retained timeout, never prophylactically.'
 acceptance:
   - id: A1
     given: >-
