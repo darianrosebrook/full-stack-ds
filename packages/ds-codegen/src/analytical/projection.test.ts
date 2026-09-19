@@ -2016,4 +2016,51 @@ describe("M3 composition: the parts decide first, and the combinator rule decide
     for (const nonClaim of COMPOSITION_NON_CLAIMS) expect(nonClaim.trim().length).toBeGreaterThan(40);
     expect(COMPOSITION_NON_CLAIMS.join(" ")).toContain("partition");
   });
+
+  it("OHLC: the relation IS reached without widening the evaluator, and its interval axis keeps its scale", () => {
+    // The probe's own assertion asks for `min`, which this evaluator does not
+    // perform, so the relation was previously unreachable. Binding an operation
+    // it CAN perform over the relation's own ratio measures exercises the SHAPE
+    // without changing what the bounded experiment executes.
+    const s = loadOracle().fixtures.get("FX_P_OHLC")!.structure as RelationalStructure;
+    expect(s.relations.candles!.grain).toEqual(["symbol", "period"]);
+    const measures = ["open", "high", "low", "close", "volume"];
+    const results = measures.map((field) => {
+      const op = bindOperation(s, { relation: "candles", field, op: "sum", along: ["symbol"] });
+      const admission = admitOperation(s, op);
+      if (admission.kind !== "admitted") throw new Error(`${field} is not admitted: ${JSON.stringify(admission)}`);
+      const e = enumerate({ structure: s, admitted: op, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, partitionDimension: admission.facts.resultGrain[0] });
+      return { field, facts: admission.facts, e };
+    });
+
+    // EVERY CO-REGISTERED MEASURE IS INDEPENDENTLY LAWFUL, so the shape is not
+    // collapsed to one convenient representative.
+    for (const r of results) {
+      expect(r.e.retained.length, `${r.field} must reach the projection rules`).toBeGreaterThan(0);
+      expect(r.facts.dimension.field).toBe("period");
+      expect(r.facts.dimension.transformation, "the temporal axis is an INTERVAL, not an instant").toBe("interval");
+      expect(r.facts.dimension.cyclic).toBe(false);
+    }
+
+    // THE INTERVAL AXIS KEEPS ITS SCALE: the cyclic-only channel is REFUSED for
+    // it on every measure, and no retained program assigns angle to it.
+    for (const r of results) {
+      expect(r.e.refused.some((x) => x.program.dimension === "angle" && x.cause === "REL_CYCLIC_ANGLE_NONCYCLIC"), `${r.field} must refuse the cyclic-only channel for an interval axis`).toBe(true);
+      expect(r.e.retained.some((p) => p.dimension === "angle")).toBe(false);
+    }
+
+    // THE CONTROL: when the temporal column IS cyclic the channel becomes
+    // AVAILABLE and lawful, so the refusal is about interval-ness and not about
+    // the channel being unusable. Without this the control would be evidence
+    // about `angle` rather than about the scale.
+    const cyclic = { relations: { candles: { ...s.relations.candles!, fields: { ...s.relations.candles!.fields!, period: { transformation: "ordinal", cyclic: true } } } } } as unknown as RelationalStructure;
+    const cyclicOp = bindOperation(cyclic, { relation: "candles", field: "close", op: "sum", along: ["symbol"] });
+    const cyclicAdmission = admitOperation(cyclic, cyclicOp);
+    expect(cyclicAdmission.kind).toBe("admitted");
+    if (cyclicAdmission.kind !== "admitted") return;
+    expect(cyclicAdmission.facts.dimension.cyclic).toBe(true);
+    const cyclicEnum = enumerate({ structure: cyclic, admitted: cyclicOp, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, partitionDimension: cyclicAdmission.facts.resultGrain[0] });
+    expect(cyclicEnum.refused.some((x) => x.program.dimension === "angle" && x.cause === "REL_CYCLIC_ANGLE_NONCYCLIC")).toBe(false);
+    expect(relationMembership(cyclicEnum).some((k) => k.split("|")[1] === "angle")).toBe(true);
+  });
 });
