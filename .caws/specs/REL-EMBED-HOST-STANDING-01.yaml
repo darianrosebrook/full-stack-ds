@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts HOST STANDING: a CONTRADICTED host refuses the embed with the host's own cause (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1023 tests green))"
     recorded_at: "2026-09-19T06:09:45.437Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "projection.test.ts HOST STANDING: a faulty host and a faulty child are BOTH on the record (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1023 tests green))"
+    recorded_at: "2026-09-19T06:09:46.446Z"
