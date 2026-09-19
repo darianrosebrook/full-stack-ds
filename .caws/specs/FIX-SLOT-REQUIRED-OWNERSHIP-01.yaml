@@ -2,9 +2,11 @@ id: FIX-SLOT-REQUIRED-OWNERSHIP-01
 title: 'Preserve occurrence ownership in the required-region usage audit'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'required-region audit now preserves occurrence ownership: nested roots are own contexts, part-ref delivery is component-matched, violations name the owing occurrence; catalog kill re-confirmed unchanged at 814979d9'
 created_at: '2026-09-19T18:45:52.868Z'
-updated_at: '2026-09-19T18:46:35.053Z'
+updated_at: '2026-09-19T19:32:57.699Z'
 created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
 blast_radius:
   modules:
