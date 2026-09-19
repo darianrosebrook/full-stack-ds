@@ -61,3 +61,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RECOVERY: a missing analytical premise keeps its obligation through the composite (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1012 tests green))"
     recorded_at: "2026-09-19T04:52:11.526Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts RECOVERY: a demonstrated contradiction keeps the PART's cause and the PART's location (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1012 tests green))"
+    recorded_at: "2026-09-19T04:52:12.001Z"
