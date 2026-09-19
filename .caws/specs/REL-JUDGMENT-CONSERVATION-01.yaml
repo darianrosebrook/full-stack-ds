@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts CONSERVATION: the mixed-unit facet is refused in BOTH panel orders (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1029 tests green))"
     recorded_at: "2026-09-19T07:21:35.671Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "projection.test.ts CONSERVATION: a commensurable nesting stays lawful (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1029 tests green))"
+    recorded_at: "2026-09-19T07:21:36.371Z"
