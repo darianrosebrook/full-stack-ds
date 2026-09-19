@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 8,16
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -30,9 +30,11 @@ ensure_hook_runtime_path() {
 
   local latest_node_bin=""
 
-  if [[ -d "$HOME/.nvm/versions/node" ]]; then
+  # CAWS-HOOKPACK-HOME-UNSET-ROOT-AUTHORITY-ALIAS-001: no HOME means nowhere
+  # to look for an nvm install, not a namespace at "/.nvm/versions/node".
+  if [[ -n "${HOME:-}" ]] && [[ -d "${HOME}/.nvm/versions/node" ]]; then
     latest_node_bin=$(
-      find "$HOME/.nvm/versions/node" -maxdepth 4 -type f -name node 2>/dev/null \
+      find "${HOME}/.nvm/versions/node" -maxdepth 4 -type f -name node 2>/dev/null \
         | sed 's#/node$##' \
         | sort -V \
         | tail -n 1
