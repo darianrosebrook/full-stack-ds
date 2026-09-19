@@ -52,3 +52,10 @@ evidence:
     command: pnpm exec vitest run packages/ds-codegen/src/usage-composition.test.ts
     exit_code: 0
     commit_sha: b3e3bdedae86
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Live corpus green under per-occurrence checking: pnpm exec vitest run src/lib/render-usage.test.tsx = 68/68 at b3e3bded, the ownership sweep carrying a totalObligations>0 guard (observes Field.control). Ownership census (tmp/slot-ownership-census.mjs): 4 obligated occurrences corpus-wide — the two Field frame roots plus two Field occurrences nested inside other components' frames, all supplying control; 0 violations. The stricter check genuinely covers more than the pre-fix audit, which never checked nested occurrences. Worktree gates at 3479e25a pre-merge: governed:rail exit 0, pnpm test 305 files/4283 tests, test:frameworks exit 0, lint/typecheck/generate:check/selfcheck clean."
+    recorded_at: "2026-09-19T19:32:11.934Z"
+    command: pnpm exec vitest run src/lib/render-usage.test.tsx
+    exit_code: 0
+    commit_sha: b3e3bdedae86
