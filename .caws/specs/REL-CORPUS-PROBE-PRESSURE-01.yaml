@@ -47,3 +47,7 @@ evidence:
     status: pass
     evidence_ref: "CORPUS PRESSURE: every probe M3 names is RUN, three reach the projection rules and two are stopped before them (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1034 tests green))"
     recorded_at: "2026-09-19T09:26:23.467Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "CORPUS PRESSURE: the OHLC declaration carries interval grain and four co-registered ratio measures with no form concept (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1034 tests green))"
+    recorded_at: "2026-09-19T09:26:24.007Z"
