@@ -43,3 +43,12 @@ contracts:
   - name: 'slot-required-ownership'
     type: contract-test
     path: 'packages/ds-codegen/src/usage-composition.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Ownership unit suite at packages/ds-codegen/src/usage-composition.test.ts (14/14 at b3e3bded). The decisive pair: a nested outer+inner Card frame where both supply their own actions yields zero violations; removing ONLY the outer's actions yields exactly one violation {component: Card, path: /fsds.Card, region: actions, supplied: []} — the inner occurrence is not reported. Further controls: a Card.actions part ref held under a Field child delivers nothing (outer still violated, supplied: []); an obligated Field nested inside a Card frame is checked at path /fsds.Card/children[0]/fsds.Field; slot-map content is its own ownership context (inner Field in outer Field's control content reported, outer clean). This is the review-demonstrated false pass, now dead: the flat collector was replaced in place by findRequiredRegionViolations."
+    recorded_at: "2026-09-19T19:32:10.327Z"
+    test_nodeid: "packages/ds-codegen/src/usage-composition.test.ts::findRequiredRegionViolations — occurrence ownership > reports the OUTER occurrence when only the inner occurrence supplies (the ownership false-pass counterexample)"
+    command: pnpm exec vitest run packages/ds-codegen/src/usage-composition.test.ts
+    exit_code: 0
+    commit_sha: b3e3bdedae86
