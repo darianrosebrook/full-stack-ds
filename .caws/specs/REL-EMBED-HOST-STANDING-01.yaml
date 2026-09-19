@@ -56,3 +56,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts HOST STANDING: an unimplemented HOST makes the embed unsupported and the child is still reported (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1023 tests green))"
     recorded_at: "2026-09-19T06:09:44.921Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts HOST STANDING: a CONTRADICTED host refuses the embed with the host's own cause (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1023 tests green))"
+    recorded_at: "2026-09-19T06:09:45.437Z"
