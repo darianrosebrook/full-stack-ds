@@ -1091,7 +1091,13 @@ describe("the ledger carries the authority its claims were verified under", () =
     expect(Object.keys(liveAuthority()).sort()).toEqual(["coordinateBasisDigest", "erasureAuthorityDigest", "quotientSchemaVersion", "ruleDigest", "witnessAuthorityDigest"]);
   });
 
-  it("a ledger authored under a different authority is refused, not re-read -- for EACH identity, though every derivation still agrees", () => {
+  // Five checkClosures re-derivations in one callback measured 758–1301ms
+  // locally but exceeded the 5s default twice in cold-clone gate contexts
+  // (mutation-runner baseline and pre-push) under parallel load — a ~5x
+  // contention factor. 30s is finite, local to this test only, and stays far
+  // below the runner's 20-minute stage budget, so a genuine hang still fails.
+  // Assertions are unchanged (FIX-CLOSURE-LEDGER-AUTHORITY-TIMEOUT-01).
+  it("a ledger authored under a different authority is refused, not re-read -- for EACH identity, though every derivation still agrees", { timeout: 30_000 }, () => {
     // Before this, such a ledger passed: every claim was re-derived and agreed,
     // and nothing recorded that the agreement was under a different executor.
     // Every identity, not only the erasure one: a compared set missing a key is
