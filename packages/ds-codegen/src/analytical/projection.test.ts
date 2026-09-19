@@ -54,6 +54,8 @@ import {
   metricConsumer,
   relationMembership,
   relationProgramIsSound,
+  relationProgramUncertified,
+  RELATION_REFERENCE_NON_CLAIMS,
   produce,
   programObserver,
   readbackConsumer,
@@ -527,7 +529,47 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
   it("SOUNDNESS: every retained program satisfies the declared premises", () => {
     const e = run(structure);
     expect(e.retained.length).toBeGreaterThan(0);
-    for (const p of e.retained) expect(relationProgramIsSound(p, facts, "magnitude-comparison", EXPERIMENT_TARGET), `${programKey(p)} is unsound`).toBe(true);
+    for (const p of e.retained) {
+      expect(relationProgramUncertified(p, facts, "magnitude-comparison", EXPERIMENT_TARGET), `${programKey(p)} is uncertified`).toEqual([]);
+      expect(relationProgramIsSound(p, facts, "magnitude-comparison", EXPERIMENT_TARGET), `${programKey(p)} is unsound`).toBe(true);
+    }
+  });
+
+  it("TASK AGREEMENT: the checker certifies the question the PROGRAM declares, not one it is handed", () => {
+    // The graph helper was corrected for exactly this. The relation helper
+    // certified `cartesian|position|length` while the program declared
+    // `topology`, because the task arrived as a separate argument nothing
+    // required to agree with the program.
+    const declared = run(structure).retained[0]!;
+    expect(declared.task).toBe("magnitude-comparison");
+    expect(relationProgramIsSound(declared, facts, "magnitude-comparison", EXPERIMENT_TARGET)).toBe(true);
+
+    const relabelled = { ...declared, task: "topology" as const };
+    expect(relationProgramIsSound(relabelled, facts, "magnitude-comparison", EXPERIMENT_TARGET)).toBe(false);
+    expect(relationProgramUncertified(relabelled, facts, "magnitude-comparison", EXPERIMENT_TARGET).join(" ")).toContain("declares the topology task");
+    // ...and it is not certified under its own label either, because the relation
+    // path does not implement topology at all.
+    expect(relationProgramIsSound(relabelled, facts, "topology", EXPERIMENT_TARGET)).toBe(false);
+    expect(relationProgramUncertified(relabelled, facts, "topology", EXPERIMENT_TARGET).join(" ")).toContain("does not implement the topology task");
+  });
+
+  it("NOT CERTIFIED IS NOT ILLEGAL: the helper reports WHICH premise failed, and never a contradiction", () => {
+    // `false` from this helper means the check did not certify. Only the engine's
+    // own judgment names a contradiction, and nothing here may stand in for it.
+    const bad = { ...run(structure).retained[0]!, measure: "hue" as const };
+    const unmet = relationProgramUncertified(bad, facts, "magnitude-comparison", EXPERIMENT_TARGET);
+    expect(unmet.length).toBeGreaterThan(0);
+    expect(unmet.join(" "), "a channel that cannot carry the measure").toContain("does not carry a ratio measure");
+    // The premise is stated independently here rather than read off the failure.
+    expect(CAPACITY.hue.carries).toEqual(["nominal"]);
+    // A premise that holds reports nothing, so an empty list is a positive result.
+    expect(relationProgramUncertified(run(structure).retained[0]!, facts, "magnitude-comparison", EXPERIMENT_TARGET)).toEqual([]);
+    // And an unsupported task is reported as absent implementation, not as a
+    // long list of violated premises.
+    expect(relationProgramUncertified(bad, facts, "distribution", EXPERIMENT_TARGET)).toEqual([
+      "the program declares the magnitude-comparison task and this check is about distribution",
+      "the relation path does not implement the distribution task (invariant:declared-closure)",
+    ]);
   });
 
   it("BOUNDED COMPLETENESS: the retained membership equals an INDEPENDENTLY derived set", () => {
@@ -588,15 +630,113 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     expect(relationMembership(run(withExtra))).toEqual(relationMembership(run(structure)));
   });
 
-  it("ZERO, ONE and MULTIPLE lawful results, and unproven kept distinct from contradiction", () => {
+  it("ZERO, ONE and MULTIPLE lawful results are asserted by EXACT MEMBERSHIP", () => {
     const none = { ...EXPERIMENT_TARGET, channels: [] as never[] };
-    expect(run(structure, none as typeof EXPERIMENT_TARGET).retained).toEqual([]);
-    const single = { ...EXPERIMENT_TARGET, channels: ["position", "text"] as never[] };
-    expect(relationMembership(run(structure, single as typeof EXPERIMENT_TARGET)).length).toBeGreaterThan(0);
-    expect(run(structure).retained.length).toBeGreaterThan(relationMembership(run(structure, single as typeof EXPERIMENT_TARGET)).length);
-    // A missing premise is CARRIED; a contradiction is REFUSED.
-    expect(enumerate({ structure: withGrain("unknown"), admitted, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET }).retained).toEqual([]);
+    expect(relationMembership(run(structure, none as typeof EXPERIMENT_TARGET))).toEqual([]);
+
+    // A GENUINE singleton. The previous control restricted the channels but left
+    // every coordinate space in place, so `position` and `text` were hosted by
+    // BOTH cartesian and lane and the "one" inventory returned four programs; the
+    // assertion could not tell, because it only asked for non-empty and smaller.
+    const single = { id: "singleton", spaces: ["cartesian"], channels: ["position", "length"] } as unknown as typeof EXPERIMENT_TARGET;
+    const one = relationMembership(run(structure, single));
+    expect(one).toEqual(["cartesian|position|length"]);
+    // The restriction really is a restriction: the same channels over every space
+    // are not a singleton, which is what the old control actually built.
+    const sameChannelsEverySpace = { ...EXPERIMENT_TARGET, channels: ["position", "length"] as never[] };
+    expect(relationMembership(run(structure, sameChannelsEverySpace as typeof EXPERIMENT_TARGET)).length).toBeGreaterThan(1);
+
+    const many = relationMembership(run(structure));
+    expect(many.length).toBeGreaterThan(1);
+    // The reference agrees at all three cardinalities, so this is a membership
+    // result and not three counts that happen to differ.
+    for (const [inventory, expected] of [
+      [none, []],
+      [single, ["cartesian|position|length"]],
+      [EXPERIMENT_TARGET, many],
+    ] as Array<[typeof EXPERIMENT_TARGET, string[]]>) {
+      expect(relationMembership(run(structure, inventory))).toEqual(
+        lawfulRelationPrograms(facts, "magnitude-comparison", inventory).map((x) => `${x.coordinate}|${x.dimension}|${x.measure}`).sort(),
+      );
+      expect(relationMembership(run(structure, inventory))).toEqual(expected);
+    }
+  });
+
+  it("UNSUPPORTED, UNPROVEN and CONTRADICTED stay three different things through the REAL entry point", () => {
+    // Unsupported: no implementation, so no candidate space was searched.
+    const unsupported = enumerate({ structure, admitted, task: "distribution", inventory: EXPERIMENT_TARGET });
+    expect(unsupported.support.supported).toBe(false);
+    expect(unsupported.population.considered).toBe(0);
+    expect(unsupported.refused).toEqual([]);
+
+    // Unproven: a premise is missing, so every candidate is CARRIED with its
+    // obligation and nothing is refused and nothing is retained.
+    const unproven = enumerate({ structure: withGrain("unknown"), admitted, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET });
+    expect(unproven.support.supported).toBe(true);
+    expect(unproven.retained).toEqual([]);
+    expect(unproven.refused).toEqual([]);
+    expect(unproven.undecided.length).toBeGreaterThan(0);
+    expect(unproven.undecided.every((u) => u.obligation === "grain:declared")).toBe(true);
+
+    // Contradicted: the entry point REFUSES, carrying the corpus's own cause.
+    expect(() => enumerate({ structure, admitted: { ...admitted, relation: "does_not_exist" }, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET })).toThrow(/does not declare/);
     expect(() => admitOperation(structure, { ...admitted, relation: "does_not_exist" })).toThrow(/does not declare/);
+
+    // The three are distinguishable from each other by their own shapes, which is
+    // the property that would be lost if any were reported as an empty result.
+    expect([unsupported.support.supported, unproven.undecided.length > 0, true]).toEqual([false, true, true]);
+  });
+
+  it("GENERATOR OMISSION: a suppressed lawful candidate is a MISSING MEMBER against the reference", () => {
+    const reference = lawfulRelationPrograms(facts, "magnitude-comparison", EXPERIMENT_TARGET).map((x) => `${x.coordinate}|${x.dimension}|${x.measure}`).sort();
+    const generated = relationMembership(run(structure));
+    expect(generated).toEqual(reference);
+
+    // The generator is mutated at its OUTPUT boundary: one known lawful candidate
+    // is suppressed and nothing else changes.
+    const victim = "cartesian|position|length";
+    expect(reference).toContain(victim);
+    const mutated = generated.filter((k) => k !== victim);
+
+    // The EXPECTATION is the reference, which never calls `enumerate` and is not
+    // recomputed from the mutated result. The omission shows up as a missing
+    // member, and the mutated set alone would still look self-consistent: a
+    // subset with no duplicates and no spurious entries.
+    expect(reference.filter((k) => !mutated.includes(k))).toEqual([victim]);
+    expect(mutated.filter((k) => !reference.includes(k))).toEqual([]);
+    expect(new Set(mutated).size).toBe(mutated.length);
+    expect(mutated).not.toEqual(reference);
+  });
+
+  it("INVALID EXTRA: a candidate violating one independently stated premise is IDENTIFIED, not merely absent", () => {
+    // The premise is stated here, from the capacity table's own declaration,
+    // rather than read off the generator's output.
+    expect(CAPACITY.hue.carries).toEqual(["nominal"]);
+    const invalid: Program = { ...run(structure).retained[0]!, measure: "hue" };
+    const unmet = relationProgramUncertified(invalid, facts, "magnitude-comparison", EXPERIMENT_TARGET);
+    expect(unmet.join(" ")).toContain("does not carry a ratio measure");
+
+    // Injected into the generator's output, it is an EXTRA relative to the
+    // reference — and the checker names it rather than letting it pass.
+    const reference = lawfulRelationPrograms(facts, "magnitude-comparison", EXPERIMENT_TARGET).map((x) => `${x.coordinate}|${x.dimension}|${x.measure}`).sort();
+    const injected = [...relationMembership(run(structure)), programKey(invalid)].sort();
+    expect(injected.filter((k) => !reference.includes(k))).toEqual([programKey(invalid)]);
+    expect(relationProgramIsSound(invalid, facts, "magnitude-comparison", EXPERIMENT_TARGET)).toBe(false);
+  });
+
+  it("states what the retained relation proof does NOT establish", () => {
+    expect(RELATION_REFERENCE_NON_CLAIMS.length).toBeGreaterThanOrEqual(6);
+    const joined = RELATION_REFERENCE_NON_CLAIMS.join(" ");
+    // The scope boundary the broad signature would otherwise hide.
+    expect(joined).toContain("MAGNITUDE COMPARISON");
+    expect(joined).toContain("composition");
+    // The shared premises, stated as shared rather than as independence.
+    expect(joined).toContain("SHARED PREMISE");
+    expect(joined).toContain("inducedClaims");
+    // And the two distinctions this slice exists to keep.
+    expect(joined).toContain("NOT thereby analytically illegal");
+    expect(joined).toContain("ALIAS INDEPENDENCE IS NOT IDENTIFIER RENAMING");
+    for (const nonClaim of RELATION_REFERENCE_NON_CLAIMS) expect(nonClaim.trim().length).toBeGreaterThan(40);
   });
 
   it("states its excluded population rather than reporting an empty lawful set", () => {
