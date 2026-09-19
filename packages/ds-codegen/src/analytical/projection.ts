@@ -2739,3 +2739,23 @@ export const CATALOGUE_NON_CLAIMS: readonly string[] = [
   "Generation establishes that every entry names a retained program and that no entry is read back into the search. It does not establish that the declared regions are the RIGHT regions, or that the vocabulary is complete.",
   "An unsatisfied name is a report about the pack's assertion and this result together. It is not a judgment that the asserted projection is unlawful in general.",
 ];
+
+/**
+ * WHAT THE CORPUS-PROBE AND OHLC RUNS DO NOT ESTABLISH.
+ *
+ * These exist because the first reading of those runs inverted the experiment:
+ * it took results obtained by asking an EASIER question and treated them as
+ * evidence about the harder one. A scope boundary limits what a run establishes;
+ * it does not establish what the substrate is allowed to express.
+ */
+export const OHLC_PROBE_NON_CLAIMS: readonly string[] = [
+  "A SUCCESSFUL EXECUTION OF A TRANSFORMED QUESTION IS NOT A SUCCESSFUL EXPRESSION OF THE ORIGINAL QUESTION. Binding `sum` over each measure asks five familiar scalar questions; it is not evidence that OHLC's defining relationships survive projection or composition.",
+  "The five measures are NOT shown to be a co-registered object. Co-registration is a relationship between quantities belonging to one identified observation, and asking each field an independent scalar question cannot establish it. Independently valid scalar fields are not a valid joint object.",
+  "The corpus-probe census is an EXECUTION-BOUNDARY census. It reports which fixtures reach the entry point and why the others do not. It is not evidence that any fixture's characteristic analytical structure survives: a successful hierarchy sum is not evidence that parent-child structure survives, and a successful count-field sum is not evidence that unequal-bin density or interval closure survives.",
+  "The result carrier drops `temporality.kind`. The declared distinction between an interval and an instant observation is LOST at the projection boundary, so a check of the measurement-transformation class does not establish that the temporal distinction survives.",
+  "SERIES IDENTITY IS NOT SHOWN TO SURVIVE. The shipped fixture holds one symbol across two periods, so summing across symbols happens to preserve each numeric value there. On that population the loss of series identity is invisible; it does not make aggregation meaning-preserving for the source-grain question.",
+  "The bounds relationship (`low <= {open, close} <= high`) is NOT expressed. The fixture declares the fields but the assertion grammar does not bind a cross-field expression, and field names cannot supply the rule without becoming hidden domain knowledge. A derived direction comparison is likewise unexpressed.",
+  "The bounded evaluator's restriction to `sum` is an IMPLEMENTATION scope boundary, not an architectural invariant. Adding `min` or `count` is not the next step merely because the fixture runner refuses those assertions; they arrive when a preserved analytical question requires them.",
+  "`partitionAdmitsSummation` answers an ADDITIVITY question. Naming a partition dimension and establishing additivity do not establish that the actual parts are exhaustive and mutually exclusive, and the two premises must not be described as discharged by one helper.",
+];
+

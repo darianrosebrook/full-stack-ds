@@ -35,6 +35,7 @@ import {
   loadFormDeclarations,
   regionMatches,
   CATALOGUE_NON_CLAIMS,
+  OHLC_PROBE_NON_CLAIMS,
   FORM_REGIONS_FILE,
   LEDGER,
   LOWERING_SUPPORT,
@@ -1414,9 +1415,13 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     expect(loadFormDeclarations().length).toBeGreaterThan(0);
   });
 
-  it("CORPUS PRESSURE: every probe M3 names is RUN, and an unreachable one is reported with its reason", () => {
-    // A fixture existing is not the substrate reaching it. All five are
-    // adjudicated at L0-L2; none had ever been put through this entry point.
+  it("CORPUS PROBE CENSUS: every probe M3 names is RUN, and an unreachable one is reported with its reason", () => {
+    // AN EXECUTION-BOUNDARY CENSUS, NOT A PRESERVATION RESULT. A fixture existing
+    // is not the substrate reaching it, and reaching the entry point is not the
+    // fixture's characteristic structure surviving. This selects each fixture's
+    // first aggregate assertion and asks for magnitude comparison; it does not
+    // invoke the combinators, evaluate the rows, or recover a representation.
+    // See OHLC_PROBE_NON_CLAIMS for what that leaves unestablished.
     const probes = ["FX_P_CATEGORICAL_VS_RATIO", "FX_P_GRAPH_ISOLATED_NODE", "FX_P_HIERARCHY", "FX_P_BINNED_INTERVAL", "FX_P_OHLC"];
     const oracle = loadOracle();
     const run = (id: string) => {
@@ -2017,11 +2022,18 @@ describe("M3 composition: the parts decide first, and the combinator rule decide
     expect(COMPOSITION_NON_CLAIMS.join(" ")).toContain("partition");
   });
 
-  it("OHLC: the relation IS reached without widening the evaluator, and its interval axis keeps its scale", () => {
-    // The probe's own assertion asks for `min`, which this evaluator does not
-    // perform, so the relation was previously unreachable. Binding an operation
-    // it CAN perform over the relation's own ratio measures exercises the SHAPE
-    // without changing what the bounded experiment executes.
+  it("OHLC: each ratio measure independently admits and enumerates under a SCALAR question", () => {
+    // WHAT THIS IS. An execution-boundary probe. The fixture's own assertion asks
+    // for `min`, which this evaluator does not perform, so the relation was
+    // unreachable; binding an operation it CAN perform shows the declared fields
+    // reach the scalar path.
+    //
+    // WHAT THIS IS NOT, and the earlier interpretation of this test was withdrawn:
+    // it is NOT evidence that OHLC's defining relationships survive projection.
+    // Each measure is asked a familiar scalar question, separately. Nothing here
+    // constructs a multi-measure object, calls a combinator, evaluates the rows,
+    // or recovers a representation. Five independently admitted measures do not
+    // establish a co-registered object, a bound, or temporal support.
     const s = loadOracle().fixtures.get("FX_P_OHLC")!.structure as RelationalStructure;
     expect(s.relations.candles!.grain).toEqual(["symbol", "period"]);
     const measures = ["open", "high", "low", "close", "volume"];
@@ -2033,26 +2045,24 @@ describe("M3 composition: the parts decide first, and the combinator rule decide
       return { field, facts: admission.facts, e };
     });
 
-    // EVERY CO-REGISTERED MEASURE IS INDEPENDENTLY LAWFUL, so the shape is not
-    // collapsed to one convenient representative.
+    // Each declared ratio field reaches the scalar rules, and the result is not
+    // vacuous. This is the whole of the positive claim.
     for (const r of results) {
       expect(r.e.retained.length, `${r.field} must reach the projection rules`).toBeGreaterThan(0);
       expect(r.facts.dimension.field).toBe("period");
-      expect(r.facts.dimension.transformation, "the temporal axis is an INTERVAL, not an instant").toBe("interval");
+      expect(r.facts.dimension.transformation, "the measurement-transformation class is interval").toBe("interval");
       expect(r.facts.dimension.cyclic).toBe(false);
     }
 
-    // THE INTERVAL AXIS KEEPS ITS SCALE: the cyclic-only channel is REFUSED for
-    // it on every measure, and no retained program assigns angle to it.
+    // THE CYCLIC-LICENCE CONTRAST, NARROWED. The refusal IS evidence that the
+    // cyclic only-licence is applied to this result's group column. It is NOT
+    // evidence that temporal intervals are preserved or interpreted: the control
+    // below changes THREE declarations at once and cannot isolate which one moved
+    // the outcome.
     for (const r of results) {
-      expect(r.e.refused.some((x) => x.program.dimension === "angle" && x.cause === "REL_CYCLIC_ANGLE_NONCYCLIC"), `${r.field} must refuse the cyclic-only channel for an interval axis`).toBe(true);
+      expect(r.e.refused.some((x) => x.program.dimension === "angle" && x.cause === "REL_CYCLIC_ANGLE_NONCYCLIC"), `${r.field} must refuse the cyclic-only channel`).toBe(true);
       expect(r.e.retained.some((p) => p.dimension === "angle")).toBe(false);
     }
-
-    // THE CONTROL: when the temporal column IS cyclic the channel becomes
-    // AVAILABLE and lawful, so the refusal is about interval-ness and not about
-    // the channel being unusable. Without this the control would be evidence
-    // about `angle` rather than about the scale.
     const cyclic = { relations: { candles: { ...s.relations.candles!, fields: { ...s.relations.candles!.fields!, period: { transformation: "ordinal", cyclic: true } } } } } as unknown as RelationalStructure;
     const cyclicOp = bindOperation(cyclic, { relation: "candles", field: "close", op: "sum", along: ["symbol"] });
     const cyclicAdmission = admitOperation(cyclic, cyclicOp);
@@ -2062,5 +2072,44 @@ describe("M3 composition: the parts decide first, and the combinator rule decide
     const cyclicEnum = enumerate({ structure: cyclic, admitted: cyclicOp, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET, partitionDimension: cyclicAdmission.facts.resultGrain[0] });
     expect(cyclicEnum.refused.some((x) => x.program.dimension === "angle" && x.cause === "REL_CYCLIC_ANGLE_NONCYCLIC")).toBe(false);
     expect(relationMembership(cyclicEnum).some((k) => k.split("|")[1] === "angle")).toBe(true);
+  });
+
+  it("OHLC: the TEMPORAL fact is LOST at the result boundary, recorded as a loss rather than claimed as preserved", () => {
+    // The fixture declares TWO separate facts: `transformation: interval` (a
+    // measurement-transformation class) and `temporality.kind: interval` (the
+    // observation concerns an interval, not an instant). They are different
+    // claims and the model keeps them apart.
+    const s = loadOracle().fixtures.get("FX_P_OHLC")!.structure as RelationalStructure;
+    expect(s.relations.candles!.fields!.period!.transformation).toBe("interval");
+    expect(s.relations.candles!.fields!.period!.temporality).toEqual({ kind: "interval" });
+
+    // `resultFactsOf` carries the transformation class and `cyclic`, and NOT the
+    // temporal kind. Changing ONLY the temporal kind therefore leaves the facts a
+    // projection consumer sees bit-identical — so an assertion that checks the
+    // transformation class does NOT establish that the interval/instant
+    // distinction survives. This reproduces the review's finding as a control
+    // rather than as prose.
+    const asInstant = { relations: { candles: { ...s.relations.candles!, fields: { ...s.relations.candles!.fields!, period: { ...s.relations.candles!.fields!.period!, temporality: { kind: "instant" } } } } } } as unknown as RelationalStructure;
+    const op = (st: RelationalStructure) => bindOperation(st, { relation: "candles", field: "close", op: "sum", along: ["symbol"] });
+    const a = admitOperation(s, op(s));
+    const b = admitOperation(asInstant, op(asInstant));
+    if (a.kind !== "admitted" || b.kind !== "admitted") throw new Error("unreachable");
+    expect(a.facts.dimension).toEqual(b.facts.dimension);
+    expect(a.facts.measure).toEqual(b.facts.measure);
+    // The fact is gone, not merely equal: nothing on the facts carries it.
+    expect(Object.keys(a.facts.dimension)).not.toContain("temporality");
+    // NON-CLAIM: this records a LOSS. It does not propose the transport, and it
+    // does not make the interval/instant distinction available downstream.
+  });
+
+  it("states what the OHLC and corpus-probe results do NOT establish", () => {
+    const joined = OHLC_PROBE_NON_CLAIMS.join(" ").toLowerCase();
+    expect(OHLC_PROBE_NON_CLAIMS.length).toBeGreaterThanOrEqual(5);
+    for (const nc of OHLC_PROBE_NON_CLAIMS) expect(nc.trim().length).toBeGreaterThan(60);
+    // The inversion the review named, stated where a reader of this file meets it.
+    expect(joined).toContain("transformed question");
+    expect(joined).toContain("co-registered");
+    expect(joined).toContain("temporality");
+    expect(joined).toContain("series identity");
   });
 });
