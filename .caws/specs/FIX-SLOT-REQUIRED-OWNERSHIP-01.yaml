@@ -59,3 +59,10 @@ evidence:
     command: pnpm exec vitest run src/lib/render-usage.test.tsx
     exit_code: 0
     commit_sha: b3e3bdedae86
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Targeted full-profile mutation measurement executed by this session at landed HEAD (gitignored-and-reproducible report per runner convention at tmp/contract-oracle-mutation/814979d9abe3-2026-09-19T19-11-21-720Z/report.md; regenerate with the cited command): exit 0. Read back from the report: Baseline passed (all 18 stages); card-actions-slot-required detected at root-tests/mixed-test, Evidence marker found, Disposition match, zero mismatches — with NO catalog change, exactly the acceptance condition (the retained [USAGE-REQUIRED-SLOT-MISSING] Card[completed-with-note] message prefix was also verified directly by perturbing the Card contract in the worktree and observing the failure message before restoring byte-exact). Provenance note: the first attempt (b3e3bded dir) aborted with a red BASELINE — an unrelated analytical-kernel test (closure.test.ts ledger-authority case) hit vitest's 5s timeout in the cold clean clone, the runner's documented flake class; the retry's baseline passed all stages. Non-claim: the kill still binds the consumer-supply sense only; anchor-presence and generated APIs untouched."
+    recorded_at: "2026-09-19T19:32:31.306Z"
+    command: "pnpm run audit:contract-oracle-mutations -- --profile=full --only=card-actions-slot-required"
+    exit_code: 0
+    commit_sha: "814979d9abe3"
