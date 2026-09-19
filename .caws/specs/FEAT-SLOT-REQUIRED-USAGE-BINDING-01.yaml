@@ -3,7 +3,6 @@ title: 'Bind consumer-supplied required slots to usage-frame obligations'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: slot-required-usage-binding
 created_at: '2026-09-19T17:21:21.422Z'
 updated_at: '2026-09-19T17:23:35.416Z'
 created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
