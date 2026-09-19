@@ -2,9 +2,10 @@ id: REL-COMPOSITION-REFERENCE-01
 title: 'The independently derived lawful set covers the composition task: it receives the partition and derives the additivity and key-channel conditions itself'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: rel-compref
 created_at: '2026-09-19T06:16:56.413Z'
-updated_at: '2026-09-19T06:16:56.413Z'
+updated_at: '2026-09-19T06:17:08.154Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
