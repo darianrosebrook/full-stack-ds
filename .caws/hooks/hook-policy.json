@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "surfaces": {
+    "default": {
+      "extensions": {
+        "post_tool_use": [
+          {
+            "handler": "doc-frontmatter-check.sh",
+            "before": "plan-transcript-snapshot.sh",
+            "reason": "Repo-local handler enforcing verified_at_commit doc frontmatter; enabled in this repo before the machine-runtime migration and restored here because the stock chain ships it commented out."
+          }
+        ]
+      },
+      "handlers": {
+        "doc-frontmatter-check.sh": ".caws/hooks/doc-frontmatter-check.sh"
+      },
+      "libraries": {
+        "heredoc.sh": ".caws/hooks/lib/heredoc.sh"
+      }
+    }
+  }
+}

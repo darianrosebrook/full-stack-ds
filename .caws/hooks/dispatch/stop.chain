@@ -1,0 +1,4 @@
+# caws hook chain v1 surface=default event=stop policy-sha256=646c78c82ffbbc5d05c54f9eb6c4170295ed9c3e6e1efdb7f35456ad55967bec pack=87
+plan-transcript-finalize.sh
+session-log.sh
+agent-stop.sh

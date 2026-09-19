@@ -1,0 +1,9 @@
+# caws hook chain v1 surface=default event=post_tool_use policy-sha256=646c78c82ffbbc5d05c54f9eb6c4170295ed9c3e6e1efdb7f35456ad55967bec pack=87
+naming-check.sh
+god-object-check.sh
+shortcut-language-check.sh
+duplicate-export-check.sh
+loc-delta-check.sh
+doc-frontmatter-check.sh	.caws/hooks/doc-frontmatter-check.sh
+plan-transcript-snapshot.sh
+session-log.sh
