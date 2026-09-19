@@ -796,6 +796,11 @@ export function enumerateGraph(input: GraphEnumerationInput): GraphEnumeration {
  *
  * A candidate the implementation never generates therefore appears as a MISSING
  * MEMBER rather than as a smaller count that still looks self-consistent.
+ *
+ * ITS SCOPE IS MAGNITUDE COMPARISON OVER THE STOCK RESULT, and the shared
+ * premises are named in `RELATION_REFERENCE_NON_CLAIMS`. Extending it to
+ * `composition` means adding the partition and the additivity conditions it does
+ * not receive, not widening the signature.
  */
 export function lawfulRelationPrograms(
   facts: ResultFacts,
@@ -834,28 +839,79 @@ export function lawfulRelationPrograms(
 /** The retained set as comparable membership, so a control names programs and not a count. */
 export const relationMembership = (e: Enumeration) => e.retained.map((p) => `${p.coordinate}|${p.dimension}|${p.measure}`).sort();
 
-/** The premises a retained relation program must satisfy. */
-export function relationProgramIsSound(p: Program, facts: ResultFacts, task: Task, inventory: TargetInventory): boolean {
-  // `false` here means "not a lawful program", which is the right answer for an
-  // unimplemented task only because no such program exists to be lawful. Callers
-  // that need to distinguish that from a judgment call `projectionSupport`.
+/**
+ * THE PREMISES A RELATION PROGRAM MUST SATISFY, reported one by one.
+ *
+ * An empty list means this checker CERTIFIED the program. A non-empty list says
+ * which premise it could not establish — and that is the whole point of the
+ * structured form: a bare `false` means "not certified", NOT "analytically
+ * illegal". The engine's own judgment is the only thing that says illegal, and
+ * absent implementation is neither. A consumer that needs to tell those apart
+ * keeps this list, the `SupportDecision` and the admission result; collapsing
+ * them into one Boolean is the mistake this shape exists to prevent.
+ */
+export function relationProgramUncertified(p: Program, facts: ResultFacts, task: Task, inventory: TargetInventory): string[] {
+  const unmet: string[] = [];
+  // THE DECLARED TASK AND THE QUERIED TASK MUST AGREE. A program carries its own
+  // task, and a checker handed a different one would certify a question the
+  // program does not ask — the graph helper was corrected for exactly this, and
+  // the relation helper certified `cartesian|position|length` while the program
+  // declared `topology`.
+  if (p.task !== task) {
+    unmet.push(`the program declares the ${p.task} task and this check is about ${task}`);
+  }
   const support = projectionSupport("relation", task);
-  if (!support.supported) return false;
-  const spec = { requires: support.requires };
-  return (
-    inventory.spaces.includes(p.coordinate) &&
-    inventory.channels.includes(p.dimension) &&
-    inventory.channels.includes(p.measure) &&
-    p.dimension !== p.measure &&
-    CAPACITY[p.dimension].spaces.includes(p.coordinate) &&
-    CAPACITY[p.measure].spaces.includes(p.coordinate) &&
-    CAPACITY[p.dimension].carries.includes(facts.dimension.transformation) &&
-    CAPACITY[p.measure].carries.includes(facts.measure.transformation) &&
-    (!CAPACITY[p.dimension].requiresCyclicOrWhole || facts.dimension.cyclic) &&
-    (!CAPACITY[p.measure].requiresCyclicOrWhole || facts.measure.cyclic) &&
-    spec.requires.every((c) => inducedClaims(p, facts).includes(c))
-  );
+  if (!support.supported) {
+    unmet.push(`the relation path does not implement the ${task} task (${support.obligation})`);
+    return unmet;
+  }
+  if (!inventory.spaces.includes(p.coordinate)) unmet.push(`${p.coordinate} is not a coordinate of this inventory`);
+  if (!inventory.channels.includes(p.dimension)) unmet.push(`${p.dimension} is not a channel of this inventory`);
+  if (!inventory.channels.includes(p.measure)) unmet.push(`${p.measure} is not a channel of this inventory`);
+  if (p.dimension === p.measure) unmet.push("the dimension and the measure are the same channel");
+  if (!CAPACITY[p.dimension].spaces.includes(p.coordinate)) unmet.push(`${p.coordinate} does not host the ${p.dimension} channel`);
+  if (!CAPACITY[p.measure].spaces.includes(p.coordinate)) unmet.push(`${p.coordinate} does not host the ${p.measure} channel`);
+  if (!CAPACITY[p.dimension].carries.includes(facts.dimension.transformation)) {
+    unmet.push(`the ${p.dimension} channel does not carry a ${facts.dimension.transformation} dimension`);
+  }
+  if (!CAPACITY[p.measure].carries.includes(facts.measure.transformation)) {
+    unmet.push(`the ${p.measure} channel does not carry a ${facts.measure.transformation} measure`);
+  }
+  if (CAPACITY[p.dimension].requiresCyclicOrWhole && !facts.dimension.cyclic) {
+    unmet.push(`the ${p.dimension} channel is licensed only by a cyclic or whole dimension and this result's group column is neither`);
+  }
+  if (CAPACITY[p.measure].requiresCyclicOrWhole && !facts.measure.cyclic) {
+    unmet.push(`the ${p.measure} channel is licensed only by a cyclic or whole measure and this result's aggregate is neither`);
+  }
+  const induced = inducedClaims(p, facts);
+  for (const claim of support.requires) {
+    if (!induced.includes(claim)) {
+      unmet.push(`the ${task} task requires ${claim} and this assignment induces ${induced.join(", ") || "nothing"}`);
+    }
+  }
+  return unmet;
 }
+
+/** The Boolean face of `relationProgramUncertified`: certified, or not. */
+export function relationProgramIsSound(p: Program, facts: ResultFacts, task: Task, inventory: TargetInventory): boolean {
+  return relationProgramUncertified(p, facts, task, inventory).length === 0;
+}
+
+/**
+ * WHAT THE RETAINED RELATION PROOF DOES AND DOES NOT ESTABLISH.
+ *
+ * Stated rather than left to the helper signature, because a signature that
+ * accepts any `Task` reads as a general oracle and this one is not.
+ */
+export const RELATION_REFERENCE_NON_CLAIMS: readonly string[] = [
+  "The reference is written for MAGNITUDE COMPARISON over the stock result. Its signature accepts any task, but it takes no composition partition and enforces none of the composition-specific additivity conditions, so `projectionSupport('relation','composition')` returning supported does NOT mean this reference assesses composition.",
+  "SHARED PREMISE: the capacity table and the task table are axioms on BOTH sides. Agreement between the reference and the enumerator is evidence about candidate construction and assessment WITHIN those tables, and never about the tables themselves.",
+  "SHARED PREMISE: the reference calls the production `inducedClaims`. It therefore cannot expose an error that the claim function and the enumerator make together, so every claim-bearing distinction the bounded proof rests on needs an independently justified expectation of its own.",
+  "DERIVED, not shared: the membership set is constructed without calling `enumerate`, so a candidate the generator omits appears as a MISSING MEMBER rather than as a smaller count that still looks self-consistent.",
+  "IMPLEMENTATION SUPPORT AND VERIFICATION COVERAGE ARE DIFFERENT QUESTIONS. `projectionSupport` says whether a path implements a task; it does not say whether this reference assesses it, and the first does not imply the second.",
+  "A program this reference excludes is NOT thereby analytically illegal. `relationProgramUncertified` names the premises that were not established; only the analytical engine's own judgment names a contradiction.",
+  "ALIAS INDEPENDENCE IS NOT IDENTIFIER RENAMING. Renaming a declaration and rebinding the operation shows the reference does not dispatch on spelling; it does not show that an aliasing surface exists or that aliases are generated from the enumerator.",
+];
 
 /* ------------------------------- M2: soundness, completeness, sensitivity */
 
