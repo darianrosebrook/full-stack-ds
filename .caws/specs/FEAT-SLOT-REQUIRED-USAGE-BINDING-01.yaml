@@ -1,0 +1,46 @@
+id: FEAT-SLOT-REQUIRED-USAGE-BINDING-01
+title: 'Bind consumer-supplied required slots to usage-frame obligations'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-19T17:21:21.422Z'
+updated_at: '2026-09-19T17:21:21.422Z'
+created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
+blast_radius:
+  modules:
+    - 'ds-codegen-usage-composition'
+    - 'showcase-usage-audit'
+    - 'contract-oracle-mutation'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/component.contract.schema.json'
+    - 'packages/ds-codegen/src/usage-composition.ts'
+    - 'packages/ds-codegen/src/usage-composition.test.ts'
+    - 'src/lib/render-usage.test.tsx'
+    - 'scripts/contract-oracle-mutation/catalog.mjs'
+    - 'docs/current-implementation-snapshot.md'
+    - 'docs/normal-form.md'
+    - 'README.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'a curated usage frame that omits a consumer-supplied region whose contract slot declares required:true'
+    when: 'the root usage audit runs'
+    then: 'it fails naming [USAGE-REQUIRED-SLOT-MISSING] with the component, frame, and region'
+  - id: A2
+    given: 'the live corpus (two Field.control obligations; 23 component-owned required anchors excluded)'
+    when: 'the audit and the usage-composition unit suite run'
+    then: 'zero violations and all tests pass'
+  - id: A3
+    given: 'the catalog mutant card-actions-slot-required (required false to true) and the merged audit'
+    when: 'the targeted full-profile mutation measurement runs at committed HEAD'
+    then: 'the mutant is detected at the root-tests stage with the authored marker and the catalog disposition records detected'
+non_functional: {}
+contracts:
+  - name: 'slot-required-usage-binding'
+    type: contract-test
+    path: 'packages/ds-codegen/src/usage-composition.test.ts'
