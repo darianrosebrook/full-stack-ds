@@ -1,7 +1,7 @@
 <!--
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 22
+# hook_pack_version: 23
 # caws_min_major: 11
 # lineage_refs: 8,11,16,17,19,22,23,24,27
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -37,7 +37,7 @@ it unmanaged; only deleting the header does.) See [`CLAUDE.md`](./CLAUDE.md)
 
 ## How the pack runs
 
-Claude Code reads `.claude/settings.json` at session start and invokes four
+Claude Code reads `.claude/settings.json` at session start and invokes five
 dispatchers under `caws_dispatch/`. Each reads stdin once via
 `lib/parse-input.sh`, then fans out to a registered handler list via
 `lib/run-handlers.sh`.
@@ -48,6 +48,7 @@ dispatchers under `caws_dispatch/`. Each reads stdin once via
 | `caws_dispatch/post_tool_use.sh` | `PostToolUse` | Write, Edit, Bash, ExitPlanMode | 60 s |
 | `caws_dispatch/session_start.sh` | `SessionStart` | — | 30 s |
 | `caws_dispatch/stop.sh` | `Stop` | — | 30 s |
+| `caws_dispatch/session_end.sh` | `SessionEnd` | — | 10 s |
 
 `session-log.sh` is additionally wired on `PreCompact` so transcripts survive
 context compaction.
@@ -72,6 +73,7 @@ Handlers self-filter on `$HOOK_TOOL_NAME`; a non-matching tool is a cheap exit 0
 | `scope-guard.sh` | Write, Edit, Bash | Blocks edits outside the bound spec's `scope.in`; in union mode (no binding) checks all active specs. Applies progressive strikes via the `guard-strikes.sh` library. |
 | `worktree-write-guard.sh` | Write, Edit | Blocks base-branch writes when worktrees are active; refuses `<worktree>/.caws/specs/*` writes (canonical authority); routes `.caws/worktrees/<name>/*` payload writes through `lib/worktree-claim-oracle.cjs` so a foreign session's write hard-blocks. |
 | `bash-write-guard.sh` | Bash | Extracts mutation targets (redirection, `tee`, `sed -i`, `perl -pi`, `truncate`, `touch`, `rm`, `mv`, `cp`, `dd of=`, git path-restore) and routes each through the same `worktree-claim-oracle.cjs` — a Bash mutation of a foreign worktree's payload blocks at the same boundary as a foreign Write/Edit. |
+| `worktree-pin-guard.sh` | Bash | **OPT-IN** (Entry 41): pins a session whose project root is inside `.caws/worktrees/<name>` to that worktree — refuses commands whose working directory resolves outside it, blocks `git -C` / leading-`cd` git redirects to the canonical checkout or another worktree, and RELEASES the pin with an advisory when the pinned directory no longer exists (merge/destroy deleted it), so a session that merges its own worktree is never bricked. `caws worktree merge`/`destroy`/`create`/`ensure` stay reachable as the sanctioned exit/re-point verbs. |
 | `protected-paths.sh` | Write, Edit | Blocks hook **scripts** under `.claude/hooks/` (`*.sh`/`*.py`/`*.cjs`, exit 1) and strike-state `.claude/logs/guard-strikes-*.json` (exit 2). Documentation (`*.md`) under `.claude/hooks/` is admitted; every other extension stays blocked (fail-closed). |
 | `scan-secrets.sh` | Write, Edit, Bash | Advisory (exit 0): warns via `additionalContext` when a target path matches common secret-bearing patterns (`.env*`, `*.pem`, `*.key`, SSH/cloud config dirs). Does not block. |
 | `quiet-merge.sh` | Bash | Must run **last** — emits `updatedInput`. Rewrites `caws worktree merge`/`destroy` to `cd <repo-root> && <cmd> 2>/dev/null | tail -3` so the CWD survives the directory being destroyed mid-command, and trims verbose output. |
@@ -88,10 +90,12 @@ Handlers self-filter on `$HOOK_TOOL_NAME`; a non-matching tool is a cheap exit 0
 | `plan-transcript-snapshot.sh` | ExitPlanMode | Snapshots the conversation transcript next to the plan when a plan is presented; companion to `plan-transcript-finalize.sh`. |
 
 `quality-check.sh` and `validate-spec.sh` exist in the pack but are **commented
-out** of the PostToolUse handler list (opt-in). Wire them in
-`caws_dispatch/post_tool_use.sh` if you want them.
+out** of the PostToolUse handler list (opt-in), and `worktree-pin-guard.sh` is
+**commented out** of the PreToolUse handler list (opt-in — a session-level
+worktree pin is a repo policy choice; see failure-lineage Entry 41). Wire them
+in `dispatch/post_tool_use.sh` / `dispatch/pre_tool_use.sh` if you want them.
 
-## SessionStart / Stop handlers
+## SessionStart / Stop / SessionEnd handlers
 
 | Handler | Event | What it does |
 |---|---|---|
@@ -99,10 +103,30 @@ out** of the PostToolUse handler list (opt-in). Wire them in
 | `agent-register.sh` | SessionStart | Registers the session into the `.caws/leases/` liveness substrate via `caws agents register`. Non-blocking. |
 | `agent-stop.sh` | Stop | Marks the lease stopped on clean exit via `caws agents stop`. Best-effort — a crashed session never reaches Stop; heartbeat TTL is the primary liveness signal. |
 | `plan-transcript-finalize.sh` | Stop | Overwrites each pending plan snapshot with the final turn-end transcript. |
+| `session-log.sh` | SessionEnd | Seals `.meta.json` with `ended: {reason, ts}` and the session's aggregate token usage. |
 
 `audit.sh` runs on both PreToolUse and PostToolUse, appending a per-tool-call
 audit entry. `session-log.sh` runs on PostToolUse and `PreCompact`, writing the
 per-turn narrative and structured transcripts via `session_log_renderer.py`.
+
+## Session-log diagnostic signals
+
+The renderer records three signals that describe *how* a turn ran, on top of
+what it did. They are diagnostic, not governance — nothing gates on them:
+
+| Field | Where | Meaning |
+|---|---|---|
+| `usage` | turn + `.meta.json` | Per-turn `{requests, input, cache_read, cache_write, output, models}`, one entry per API response, deduplicated by `(message_id, request_id)` across the whole session. Summed into `.meta.json` at SessionEnd. |
+| `rewound_from` / `rewind_kind` | turn | The earlier turn number this prompt replaced, and whether the retry was a `same_prompt` or an `edited_prompt`. The superseded turn's `status` becomes `rewound`. |
+| `ended_by` | turn | Splits a user interrupt into `user_interrupt_tool` (stopped a tool call) vs `user_interrupt_generation` (stopped the reply). |
+
+Absent is meaningful: a harness that reports no usage renders **no** `usage`
+key rather than a zero-filled one, so "not measured" stays distinguishable from
+"measured zero".
+
+These live in `.caws/sessions/` because raw harness transcripts are not durable
+— Claude Code's `cleanupPeriodDays` purges them on its own schedule, and a purge
+takes the only record of a session's cost and steering history with it.
 
 ## Shared libraries (`lib/`) — sourced, not wired
 
@@ -111,7 +135,7 @@ These are **not** handlers in any dispatcher list. Other hooks `source` them.
 | Library | Sourced by | Provides |
 |---|---|---|
 | `lib/parse-input.sh` | every handler / dispatcher | parses the tool-call JSON into `HOOK_*` env vars |
-| `lib/run-handlers.sh` | the four dispatchers | the handler fan-out loop + exit-code aggregation |
+| `lib/run-handlers.sh` | the five dispatchers | the handler fan-out loop + exit-code aggregation |
 | `lib/caws-state.sh` | state-reading hooks | v10/v11 dual-shape registry + canonical-root resolution |
 | `lib/emit.sh` | hooks that emit envelopes | the three Claude Code hook-output envelope shapes |
 | `lib/guard-message.sh` | the write/exec guards | stable, greppable guard-identity + remediation strings |
