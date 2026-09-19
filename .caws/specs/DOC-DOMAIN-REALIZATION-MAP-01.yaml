@@ -52,3 +52,10 @@ contracts:
   - name: 'domain-realization-map'
     type: behavior
     path: 'docs/domain-realization-comparison.md'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "docs/domain-realization-comparison.md defines the shared vocabulary and two comparison matrices for authority, substrate, composition, projections, residue, refusal, evidence, falsification boundary, and maturity"
+    recorded_at: "2026-09-19T19:09:06.944Z"
+    artifact_path: docs/domain-realization-comparison.md
+    commit_sha: "6801775fa33db753e0a08c2dd7a52d0900007fcf"
