@@ -1,0 +1,43 @@
+id: DOC-AGENT-SURFACE-ALIGNMENT-01
+title: 'Align agent surfaces and README with live gates, targets, and hook wiring'
+risk_tier: 3
+mode: doc
+lifecycle_state: draft
+created_at: '2026-09-19T18:21:22.584Z'
+updated_at: '2026-09-19T18:21:22.584Z'
+created_by_session: 'session-4b070819-4f40-4bdf-a1e9-de0ae128bf47'
+blast_radius:
+  modules:
+    - 'agent-instructions (AGENTS.md, CLAUDE.md)'
+    - 'readme orientation surface (README.md)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'README.md'
+    - 'AGENTS.md'
+    - 'CLAUDE.md'
+  out: []
+invariants:
+  - 'Docs-only slice: no file outside README.md, AGENTS.md, and CLAUDE.md changes'
+  - 'Marker-governed values (<!-- ... -->) keep their shape and derived correctness; docs:check-claims stays green'
+  - 'No guard weakened and no capability claim added beyond live state established at 81adf667'
+acceptance:
+  - id: A1
+    given: 'the machine-runtime hook wiring (user-level ~/.codex/hooks.json) and the retired repo-level .codex/hooks.json'
+    when: 'AGENTS.md documents the Codex hook surface'
+    then: 'it names the user-level launcher wiring and the empty repo-level block, and no longer claims the repo .codex/hooks.json wires the pack'
+  - id: A2
+    given: 'ci.yml "Generated artifacts are committed" and .githooks/pre-push drift-diff paths'
+    when: 'AGENTS.md and CLAUDE.md describe the CI drift diff and native-target non-claims'
+    then: 'both cover the six rail-admitted src trees plus the SwiftUI and Compose generated roots, and neither claims native targets are outside CI drift diffs'
+  - id: A3
+    given: 'fsds.targets.json and packages/ds-codegen/src/registry.ts'
+    when: '--target=all composition is documented'
+    then: 'AGENTS.md, CLAUDE.md, and README.md enumerate unity and godot among the registered targets'
+  - id: A4
+    given: 'the live packages/ tree, the pre-push/CI audit inventory, and scripts/dead-slot-audit/audit.mjs'
+    when: 'layouts and summaries are rendered'
+    then: 'packages blocks list all 17 package dirs, the audit inventory covers all ten gated audit families, the dead-slots description matches the audit header, README lists carrier-reachability-audit among ledger dirs, and docs:check-claims and docs:check-links pass on the merged tree'
+non_functional: {}
+contracts: []
