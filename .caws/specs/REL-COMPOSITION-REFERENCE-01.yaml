@@ -60,3 +60,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts COMPOSITION COVERAGE: the reference takes the partition and agrees with the enumerator in every regime (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
     recorded_at: "2026-09-19T06:27:22.774Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "projection.test.ts COMPOSITION COVERAGE: non-additive measure empties the lawful set in both, with the corpus's cause (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
+    recorded_at: "2026-09-19T06:27:23.382Z"
