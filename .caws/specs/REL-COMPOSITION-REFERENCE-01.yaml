@@ -55,3 +55,8 @@ contracts:
   - name: 'composition-reference'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts COMPOSITION COVERAGE: the reference takes the partition and agrees with the enumerator in every regime (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
+    recorded_at: "2026-09-19T06:27:22.774Z"
