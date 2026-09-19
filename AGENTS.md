@@ -32,8 +32,8 @@ pnpm run build
 # Codegen (default target = react)
 pnpm run generate                              # React only
 pnpm run generate -- --target=all              # Every registered target in fsds.targets.json
-                                               #   (<!-- web-framework-count -->5 web + react-native + figma + swiftui + jetpack-compose;
-                                               #    swiftui/compose emit only their allowlisted components)
+                                               #   (<!-- web-framework-count -->5 web + react-native + figma + swiftui + jetpack-compose + unity + godot;
+                                               #    swiftui/compose/unity/godot emit only their allowlisted components)
 pnpm run generate -- --target=vue,svelte       # Subset
 pnpm run generate -- Switch                    # Single component
 pnpm run generate -- --target=all Switch Dialog
@@ -108,6 +108,10 @@ pnpm run audit:dead-slots                      # Zero-gap component token consum
 pnpm run audit:pseudo-state                    # Declared state styling vs. realized CSS
 pnpm run audit:state-suppression               # Declared suppression vs. honoured in CSS
 pnpm run audit:token-resolvability             # Token references that never resolve
+pnpm run audit:custom-regions                  # Every occupied @custom region stays ledgered
+pnpm run audit:motion-realization              # Reduced-motion reach + dangling motion token refs
+pnpm run audit:carrier-reachability            # Authored CSS carriers the IR never produces / unconsumed variant carriers
+pnpm run audit:variant-realization             # Declared variant styling vs. realized CSS carriers
 
 # Doc gates
 pnpm run docs:check-claims                     # Marked doc values match their derived authority
@@ -149,7 +153,7 @@ over writing a bare count.
 
 ### Pre-push hook tracks CI, but is change-scoped — CI is authoritative
 
-`.githooks/pre-push` runs the same gate families as `.github/workflows/ci.yml` — install, lint, typecheck, the token gates, `generate:check`, `docs:check-claims`, tests, `governed:rail`, the iconography ledger, and the six derived-obligation audits. Activate per-clone with `git config core.hooksPath .githooks` (the `prepare` script attempts this automatically).
+`.githooks/pre-push` runs the same gate families as `.github/workflows/ci.yml` — install, lint, typecheck, the token gates, `generate:check`, `docs:check-claims` + `docs:check-links`, tests, `governed:rail` plus the committed-byte drift diff and compose↔RN token parity, the iconography ledger, the SwiftUI semantic-defaults check, the ten realization/ledger audits (behavior, a11y, dead-slots, pseudo-state, state-suppression, token-resolvability, custom-regions, motion-realization, carrier-reachability, variant-realization), and the analytical derived-artifact checks. Activate per-clone with `git config core.hooksPath .githooks` (the `prepare` script attempts this automatically).
 
 It is **not** a step-for-step mirror. `scripts/prepush-scope.mjs` derives a per-push flag set from the changed paths and the hook skips families whose inputs did not change (`PREPUSH_FULL=1` forces the full sequence). The hook's own header states it "can over-skip relative to CI but never silently skips a step whose input changed; CI is authoritative." So a green pre-push means *the lanes your change touched* passed — it is not a proof that CI will pass. Do not `--no-verify` to dodge gate failures — fix the underlying issue.
 
@@ -167,14 +171,19 @@ Non-trivial work is governed by a CAWS spec so its provenance is recorded. The f
 
 **Do not** hand-edit `.caws/specs/*` lifecycle fields, `.caws/events.jsonl`, or `.caws/worktrees.json` — use the CLI. **Do not** `caws specs close` *before* merging and then also run `caws worktree merge` — the double-close is mutually exclusive and fails; the one path is the flow above (`--no-close` merge → evidence → manual close). Never weaken a guard to get past it.
 
-### CAWS runtime hooks govern every session (`.codex/hooks/`)
+### CAWS runtime hooks govern every session (`.caws/hooks/`)
 
-Separate from the git pre-push hook above, this repo installs the **CAWS Codex hook pack** under `.codex/hooks/`. These fire on `PreToolUse` / `PostToolUse` / `SessionStart` / `Stop` / `PreCompact` (wired in `.codex/hooks.json` → `codex/hooks/caws_dispatch/`) and actively gate your work — some **block** tool calls. The ones most likely to stop you:
+Separate from the git pre-push hook above, CAWS guards gate your work on every session — some **block** tool calls. Two tiers serve them, and which one runs depends on the agent surface:
+
+- **codex runs from the machine runtime.** The launcher at `~/.caws/bin/caws-hook` is registered in the *user-level* `~/.codex/hooks.json` (six events: `session_start` / `pre_tool_use` / `post_tool_use` / `stop` / `pre_compact` / `session_end`, each `--system`). This repo's `.codex/hooks.json` carries **no** CAWS hook block — the project-level registrations are retired; the wiring lives at the user level.
+- **Project-wired surfaces still execute `.caws/hooks/dispatch/*.sh` directly** — the DSH bridge is the live example. The executable pack lives under `.caws/hooks/`; `.codex/hooks/` retains the vendored copies. An installed machine runtime does not make the project pack inert — do not let it rot.
+
+Run `caws hooks list` to see the effective chain per event — it shells the launcher, so what it prints is what executes. `caws doctor` reports residual project wiring and pack staleness. The guards most likely to stop you:
 
 - **block-dangerous.sh** (`Bash`) — denies catastrophic commands and arms a sticky per-session **danger latch** on `ask:confirm`; once latched, all mutating commands block until the user runs `reset-danger-latch.sh`.
 - **scope-guard.sh** (`Write`/`Edit`) — out-of-scope edits escalate by **strike** (advise → ask → block); fix with `caws specs amend-scope`, clear stale strikes with `reset-strikes.sh`.
 - **worktree-guard.sh** / **worktree-write-guard.sh** / **bash-write-guard.sh** — block history-rewriting git and cross-worktree / claimed-path writes via the shared claim oracle.
-- **protected-paths.sh** — hard-blocks `Write`/`Edit` under `.codex/hooks/*` and to strike-state files.
+- **protected-paths.sh** — hard-blocks `Write`/`Edit` under the hook-pack directories and to strike-state files (`*.md` there is admitted).
 
 **Full reference (every active hook, the dormant ones, escape hatches, state-file locations): [`.codex/hooks/README.md`](.codex/hooks/README.md).** Hook scripts are CAWS-managed (`do_not_edit_directly`) — change them via `caws init`, never by editing in place, and never weaken a guard to get past it.
 
@@ -231,7 +240,12 @@ packages/
         swift/  jetpack-compose/                  # explicit-only builtin targets, outside the rail
       validation/       # Admission rail (required-mode, manifest, per-framework checks)
   ds-react/  ds-vue/  ds-svelte/  ds-angular/  ds-lit/       # Generated framework packages
+  ds-react-native/      # Generated RN package — rail-admitted, in the CI drift diff
+  ds-swiftui/  ds-jetpack-compose/  # Generated native packages, outside the admission rail
+  ds-swift-smoke/  ds-compose-smoke/  # Fixtures for the two native compile lanes
+  ds-unity/  ds-godot/  # Local engine pilots (UPM / Godot addon), excluded from the pnpm workspace
   ds-tokens/            # DTCG token source, build, validation, contrast, usage gates
+  ds-iconography/       # Icon authoring source + emission ledger
   ds-figma-plugin/      # Consumes generated figma descriptors
 
 src/                    # React showcase app (Vite) — <!-- src-top-level-dir-count -->12 top-level dirs
@@ -263,7 +277,7 @@ React Native carries only the subset that has a native meaning — today `create
 
 ### Generated artifact admission rail
 
-The rail binds emitted bytes to four evidence rungs: artifact, contract, codegen-source, environment. `pnpm run governed:rail` regenerates everything and then verifies in required mode; the verifier emits typed `RAIL_*` diagnostic codes when integrity claims drift. CI also runs `git diff --exit-code` over the **six** generated `src/` trees after the rail (the five web packages plus `packages/ds-react-native/src`) — proves the regenerated bytes were already committed.
+The rail binds emitted bytes to four evidence rungs: artifact, contract, codegen-source, environment. `pnpm run governed:rail` regenerates everything and then verifies in required mode; the verifier emits typed `RAIL_*` diagnostic codes when integrity claims drift. CI also runs `git diff --exit-code` after the rail over the six rail-admitted generated `src/` trees (the five web packages plus `packages/ds-react-native/src`) **plus** the registered SwiftUI generated roots and the Jetpack Compose components root — proves the regenerated bytes were already committed. Native drift coverage does not make SwiftUI or Compose members of the admission rail.
 
 The emission manifest at `packages/ds-codegen/.emission-manifest.json` is **gitignored** runtime state. It is "what the last `generate` run produced on this machine." Schema migrations are regenerate-driven (no data migration) — a stale manifest triggers `RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH`, repair is `pnpm run generate -- --target=all`.
 
@@ -323,7 +337,7 @@ When reasoning or writing docs/comments, do not over-claim:
 
 - The rail proves **artifact↔contract↔codegen↔env binding**, not determinism, not visual quality, not a11y adequacy, not full environment attestation.
 - The runtime fact rail (Playwright, `e2e/runtime-rail.spec.ts`) proves narrow facts — default and non-default CSS-var fallbacks, and iteration DOM shape — for Progress/Truncate/ShowMore/OTP/Calendar/Shuttle/Walkthrough/Select across **all five** web frameworks including Angular. The one Angular exclusion is the Select callback-capture interaction test, which is skipped because `angular-preview` uses a synthesized-host pipeline rather than the shared `config-entry.ts` callback bus — not because Angular preview is unproven. It does not prove cross-framework behavioral parity beyond DOM shape, or visual quality. Screenshot baselines are darwin-only and skip under `CI=true` — CI runs OS-agnostic fact assertions.
-- React Native is a **rail-admitted default target**: it is in `admission-descriptor.ts`, `--target=all` and `governed:rail` emit and verify it, and CI's generated-tree diff covers `packages/ds-react-native/src`. It is not recon. SwiftUI and Jetpack Compose *are* explicit-only builtin targets outside rail verification and outside CI drift diffs — SwiftUI emits its allowlisted <!-- target-component-count:swiftui -->52 of the <!-- component-count -->52 corpus contracts and Compose emits its allowlisted <!-- target-component-count:jetpack-compose -->52, both compiled by dedicated CI native lanes over hand-authored example consumers, which proves compilation, not component correctness.
+- React Native is a **rail-admitted default target**: it is in `admission-descriptor.ts`, `--target=all` and `governed:rail` emit and verify it, and CI's generated-tree diff covers `packages/ds-react-native/src`. It is not recon. SwiftUI and Jetpack Compose *are* explicit-only builtin targets outside rail verification — their generated roots are still covered by CI's committed-byte drift diff, and drift coverage is not admission — SwiftUI emits its allowlisted <!-- target-component-count:swiftui -->52 of the <!-- component-count -->52 corpus contracts and Compose emits its allowlisted <!-- target-component-count:jetpack-compose -->52, both compiled by dedicated CI native lanes over hand-authored example consumers, which proves compilation, not component correctness.
 - Web DOM is the only family proven end-to-end (emit → rail → runtime). It is **not** the only admitted executable family.
 - `@full-stack-ds/*` packages are **workspace-only**; not published to npm.
 - Local target packs are metadata-only (`LOCAL_TARGET_PACK_EXECUTION_STATUS` in `target-packs/local.ts`) until an executable local-loader slice lands. Note `fsds.targets.json` currently declares **no** local packs — all <!-- registered-target-count -->11 registered targets are `kind: "builtin"`.
