@@ -2,65 +2,7 @@
   "env": {
     "CAWS_QUIET": "1"
   },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash|Read|Write|Edit|Glob|Grep|NotebookEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR=\"$CLAUDE_PROJECT_DIR\" \"$CLAUDE_PROJECT_DIR\"/.caws/hooks/dispatch/pre_tool_use.sh",
-            "timeout": 45
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit|Bash|ExitPlanMode",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR=\"$CLAUDE_PROJECT_DIR\" \"$CLAUDE_PROJECT_DIR\"/.caws/hooks/dispatch/post_tool_use.sh",
-            "timeout": 60
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR=\"$CLAUDE_PROJECT_DIR\" \"$CLAUDE_PROJECT_DIR\"/.caws/hooks/dispatch/session_start.sh",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR=\"$CLAUDE_PROJECT_DIR\" \"$CLAUDE_PROJECT_DIR\"/.caws/hooks/dispatch/stop.sh",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR=\"$CLAUDE_PROJECT_DIR\" \"$CLAUDE_PROJECT_DIR\"/.caws/hooks/dispatch/pre_compact.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ]
-  },
+  "hooks": {},
   "permissions": {
     "allow": [
       "Read",
