@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { bundle } from "../types/bundle";
 import { UsageExamples } from "../views/sections/UsageExamples";
 import {
-  collectSuppliedRegions,
+  findRequiredRegionViolations,
   deriveRequiredRegionObligations,
 } from "../../packages/ds-codegen/src/usage-composition";
 
@@ -185,31 +185,44 @@ describe("usage sidecar render projection", () => {
     expect(document.body.querySelector('[data-fsds-component="spinner"]')).toBeTruthy();
   });
 
-  it("supplies every consumer-supplied required region in every curated frame", () => {
+  it("supplies every consumer-supplied required region in every curated frame occurrence", () => {
     // slots[].required binding (FEAT-SLOT-REQUIRED-USAGE-BINDING-01): for
     // consumer-supplied regions (named slots + public subcomponents), a
     // curated frame omitting a required region demonstrates an invalid
     // composition. Component-owned anchors (the anchor-presence sense) and
     // the root host anchor are excluded by deriveRequiredRegionObligations.
-    let obligationsSeen = 0;
+    //
+    // FIX-SLOT-REQUIRED-OWNERSHIP-01: the check is per OCCURRENCE. A nested
+    // component root is its own ownership context — its supply never
+    // discharges the enclosing occurrence — and part-ref delivery requires
+    // the enclosing occurrence's component to match. Obligated occurrences
+    // nested inside other components' frames are checked too.
+    const obligationsByComponent = new Map<string, ReturnType<typeof deriveRequiredRegionObligations>>();
+    const obligationsFor = (name: string) => {
+      let cached = obligationsByComponent.get(name);
+      if (!cached) {
+        const entry = bundle.components.find((c) => c.name === name);
+        cached = entry ? deriveRequiredRegionObligations(entry.contract as never) : [];
+        obligationsByComponent.set(name, cached);
+      }
+      return cached;
+    };
     for (const entry of bundle.components) {
       if (!entry.usage.length) continue;
-      const required = deriveRequiredRegionObligations(entry.contract as never);
-      if (!required.length) continue;
-      obligationsSeen += required.length;
       for (const frame of entry.usage) {
-        const supplied = collectSuppliedRegions(frame.tree);
-        for (const { region } of required) {
+        const violations = findRequiredRegionViolations(frame.tree, obligationsFor);
+        for (const v of violations) {
           expect(
-            supplied.has(region),
-            `[USAGE-REQUIRED-SLOT-MISSING] ${entry.name}[${frame.name}]: required region "${region}" not supplied (supplied: ${[...supplied].sort().join(", ") || "none"})`,
+            false,
+            `[USAGE-REQUIRED-SLOT-MISSING] ${entry.name}[${frame.name}]: ${v.component} at ${v.path} missing required region "${v.region}" (supplied: ${v.supplied.join(", ") || "none"})`,
           ).toBe(true);
         }
       }
     }
     // The sweep must observe real obligations (Field.control) so it cannot
     // trivially pass by finding none.
-    expect(obligationsSeen).toBeGreaterThan(0);
+    const totalObligations = [...obligationsByComponent.values()].reduce((sum, obs) => sum + obs.length, 0);
+    expect(totalObligations).toBeGreaterThan(0);
   });
 
 });
