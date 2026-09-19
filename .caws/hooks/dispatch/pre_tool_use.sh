@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 8,11,17,19,22,23,24,26
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -119,6 +119,12 @@ HANDLERS=(
   # foreign Write/Edit. Runs after worktree-write-guard (file-tool authority)
   # since the two cover disjoint tool surfaces.
   bash-write-guard.sh
+  # worktree-pin-guard.sh (OPT-IN — Entry 41, CAWS-DEFECT-WORKTREE-ISOLATION-
+  # PIN-RELEASE-01): pins a session whose project root is inside a worktree to
+  # that worktree, refuses commands whose working directory resolves outside
+  # it, and RELEASES the pin when the pinned directory no longer exists (so a
+  # session that merges its own worktree is never bricked). Not wired by
+  # default: it is a broad session-level cwd enforcement; uncomment to adopt.
   protected-paths.sh
   scan-secrets.sh
   # quiet-merge.sh MUST be the last interceptor: it emits
@@ -128,4 +134,36 @@ HANDLERS=(
   quiet-merge.sh
 )
 
-run_handlers --short-circuit-on-block "${HANDLERS[@]}"
+# CAWS-REPO-HOOK-POLICY-PROJECT-WIRED-01: a repo may commit a compiled chain
+# sidecar (dispatch/pre_tool_use.chain, written by `caws hooks compile` from
+# .caws/hooks/hook-policy.json) that REPLACES the array above. This is the
+# project-wired counterpart of the machine launcher's policy tier — without it
+# a repo's committed policy would govern only the two machine-routed surfaces
+# and silently not the five wired to this dispatcher.
+#
+# The array above is left INTACT rather than regenerated: rewriting it would
+# put this managed pack file permanently in `managed_drift`, so `caws init`
+# would refuse every future upstream dispatcher fix.
+#
+# Absent sidecar -> stock array, one stat. Absent lib -> stock array, via the
+# `declare -F` guard, so a partially upgraded pack still dispatches. A
+# MALFORMED sidecar is the one case that does not degrade: caws_local_chain
+# blocks and exits 2 rather than running a partial guard chain.
+if [[ -f "$HOOKS_DIR/lib/local-chain.sh" ]]; then
+  # shellcheck source=../lib/local-chain.sh
+  source "$HOOKS_DIR/lib/local-chain.sh"
+fi
+if declare -F caws_local_chain >/dev/null 2>&1 && caws_local_chain pre_tool_use; then
+  HANDLERS=(${CAWS_LOCAL_CHAIN[@]+"${CAWS_LOCAL_CHAIN[@]}"})
+fi
+
+# CAWS-HOOKPACK-DISPATCH-EMPTY-HANDLERS-CRASH-001: guard the count before
+# expanding "${HANDLERS[@]}" -- on bash 3.2 (macOS default /bin/bash),
+# expanding an empty array under `set -u` throws "unbound variable" rather
+# than a normal empty expansion. HANDLERS is a static literal today, but this
+# keeps the invariant true if it ever becomes filterable like post_tool_use.sh.
+if (( ${#HANDLERS[@]} > 0 )); then
+  run_handlers --short-circuit-on-block "${HANDLERS[@]}"
+else
+  run_handlers --short-circuit-on-block
+fi
