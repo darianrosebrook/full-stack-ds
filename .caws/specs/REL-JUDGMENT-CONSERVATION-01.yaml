@@ -81,3 +81,7 @@ evidence:
     status: pass
     evidence_ref: "A6: the DEFAULT loader meets the removed layer in the search's own environment, the search is unmoved there, and a deliberately alias-dependent mutant FAILS the control (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1032 tests green))"
     recorded_at: "2026-09-19T09:13:29.384Z"
+  - criterion_id: A7
+    status: pass
+    evidence_ref: "A7: a region report carries refused candidates with their causes and undecided candidates with their obligations, keeps its support decision when unsupported, and says not-in-space without inventing a cause (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1032 tests green))"
+    recorded_at: "2026-09-19T09:13:29.888Z"
