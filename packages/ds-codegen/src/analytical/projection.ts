@@ -2307,19 +2307,125 @@ export const compositeClaimSet = (v: CompositeVerdict): string[] => (v.kind === 
 /** The channels a composite presents, sorted. */
 export const compositeChannels = (v: CompositeVerdict): string[] => (v.kind === "retained" ? v.channels : []);
 
-/* --------------------------------------------------- form names, quarantined */
+/* --------------------------------------- the catalogue of names, GENERATED */
 
 /**
- * Humans need a word for what fell out. This map is the ONLY place a form name
- * appears in this module, it is consulted by nobody in the enumeration path,
- * and `projection.test.ts` checks that the denylist appears nowhere else in
- * this file. Invariant 1 is enforced structurally, not by intention.
+ * WHAT A NAME ASSERTS ABOUT A PROJECTION.
+ *
+ * The doctrine is exact about this: requesting a form is an assertion of its
+ * preconditions, and the catalogue is generated from the projection space and
+ * the pack — it is never a source of truth. So the pack declares REGIONS, and
+ * what a name actually names is computed from the live enumeration.
  */
-export const FORM_ALIASES: Record<string, string> = {
-  "cartesian|position|length": "colloquially, a bar",
-  "cartesian|position|area": "colloquially, a bubble",
-  "tabular|position|text": "colloquially, a table",
-  "polar|position|length": "colloquially, a radial bar",
-  "polar|hue|angle": "colloquially, a pie",
-  "tabular|position|luminance": "colloquially, a heat map",
+export type FormRegion = { coordinate?: CoordinateSpace; dimension?: Channel; measure?: Channel };
+
+/** A name and the region it asserts. Vocabulary, and it lives in the pack. */
+export type FormDeclaration = { name: string; colloquial: string; asserts: FormRegion };
+
+export type CatalogueEntry = { name: string; colloquial: string; asserts: FormRegion; programs: string[] };
+
+/**
+ * A name whose region selected nothing here. Kept as its OWN result rather than
+ * dropped, because an assertion that cannot be discharged is a thing to report:
+ * the system discharges a form's preconditions, fails and names the
+ * precondition, or reports the premise it cannot yet decide.
+ */
+export type CatalogueUnsatisfied = {
+  name: string;
+  colloquial: string;
+  asserts: FormRegion;
+  reason: "not-in-space" | "not-lawful-here";
+  detail: string;
 };
+
+export type AliasCatalogue = { entries: CatalogueEntry[]; unsatisfied: CatalogueUnsatisfied[] };
+
+export const FORM_REGIONS_FILE = "analytical-pack/form-regions.json";
+
+export function loadFormDeclarations(contractsDir: string = CONTRACTS_DIR): FormDeclaration[] {
+  const parsed = JSON.parse(fs.readFileSync(path.join(contractsDir, FORM_REGIONS_FILE), "utf-8")) as { regions?: FormDeclaration[] };
+  if (!Array.isArray(parsed.regions)) throw new Error(`${FORM_REGIONS_FILE} declares no regions array`);
+  return parsed.regions;
+}
+
+/** Whether a program's point satisfies every constraint the region states. */
+export const regionMatches = (region: FormRegion, p: { coordinate: CoordinateSpace; dimension: Channel; measure: Channel }): boolean =>
+  (region.coordinate === undefined || region.coordinate === p.coordinate) &&
+  (region.dimension === undefined || region.dimension === p.dimension) &&
+  (region.measure === undefined || region.measure === p.measure);
+
+/**
+ * Whether ANY point the inventory can host satisfies the region, ignoring the
+ * basis entirely. This is what separates "not a projection this target has" from
+ * "a projection this target has and this result does not license" — two
+ * different failures that a single `unsatisfied` list would conflate.
+ */
+function regionIsInSpace(region: FormRegion, inventory: TargetInventory): boolean {
+  for (const coordinate of inventory.spaces) {
+    for (const dimension of inventory.channels) {
+      for (const measure of inventory.channels) {
+        if (dimension === measure) continue;
+        if (!regionMatches(region, { coordinate, dimension, measure })) continue;
+        if (!CAPACITY[dimension].spaces.includes(coordinate)) continue;
+        if (!CAPACITY[measure].spaces.includes(coordinate)) continue;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Generate the catalogue FROM an enumeration and the pack's declared regions.
+ *
+ * The enumeration is an INPUT, which is the structural reason a name cannot
+ * admit, refuse or undecide a program: there is no path from this function back
+ * into the search, and an entry exists only because the search already retained
+ * the program it names. A region that selects nothing becomes an unsatisfied
+ * assertion with the reason, never an entry.
+ */
+export function generateAliasCatalogue(
+  declarations: readonly FormDeclaration[],
+  e: Enumeration,
+  inventory: TargetInventory,
+): AliasCatalogue {
+  const retained = e.retained.map((p) => ({ coordinate: p.coordinate, dimension: p.dimension, measure: p.measure, key: `${p.coordinate}|${p.dimension}|${p.measure}` }));
+  const entries: CatalogueEntry[] = [];
+  const unsatisfied: CatalogueUnsatisfied[] = [];
+  for (const d of [...declarations].sort((a, b) => a.name.localeCompare(b.name))) {
+    const programs = retained.filter((p) => regionMatches(d.asserts, p)).map((p) => p.key).sort();
+    if (programs.length > 0) {
+      entries.push({ name: d.name, colloquial: d.colloquial, asserts: d.asserts, programs });
+      continue;
+    }
+    const inSpace = regionIsInSpace(d.asserts, inventory);
+    unsatisfied.push({
+      name: d.name,
+      colloquial: d.colloquial,
+      asserts: d.asserts,
+      reason: inSpace ? "not-lawful-here" : "not-in-space",
+      detail: inSpace
+        ? "the inventory can host this region, and the enumerator retains no program over this result that satisfies it"
+        : "the inventory hosts no such point at all: no coordinate it offers hosts both channels with those transformations",
+    });
+  }
+  return { entries, unsatisfied };
+}
+
+/** The catalogue for an enumeration, read from the pack's declared regions. */
+export function catalogueFor(e: Enumeration, inventory: TargetInventory, contractsDir: string = CONTRACTS_DIR): AliasCatalogue {
+  return generateAliasCatalogue(loadFormDeclarations(contractsDir), e, inventory);
+}
+
+/**
+ * THE NAMES A HUMAN WOULD REACH FOR, and why this module does not contain them.
+ * A form name lives in the governed pack and reaches a reader only through the
+ * generated catalogue above, so invariant 1 is enforced structurally: there is
+ * no literal here to check, because there is no literal here.
+ */
+export const CATALOGUE_NON_CLAIMS: readonly string[] = [
+  "The catalogue is generated PER ENUMERATION. A name is in it because the search retained a program matching its region over THIS result, so a name absent here is not absent in general.",
+  "A region that states a subset of coordinate, dimension and measure constrains only what it states; the catalogue does not claim a region is the smallest one naming those programs.",
+  "Generation establishes that every entry names a retained program and that no entry is read back into the search. It does not establish that the declared regions are the RIGHT regions, or that the vocabulary is complete.",
+  "An unsatisfied name is a report about the pack's assertion and this result together. It is not a judgment that the asserted projection is unlawful in general.",
+];

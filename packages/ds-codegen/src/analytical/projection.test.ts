@@ -29,7 +29,12 @@ import {
   CAPACITY,
   CONSUMER_POPULATION,
   EXPERIMENT_TARGET,
-  FORM_ALIASES,
+  catalogueFor,
+  generateAliasCatalogue,
+  loadFormDeclarations,
+  regionMatches,
+  CATALOGUE_NON_CLAIMS,
+  FORM_REGIONS_FILE,
   LEDGER,
   LOWERING_SUPPORT,
   METRIC_UNITS_PER_VALUE,
@@ -169,13 +174,16 @@ describe("A1 — the operation is validated, and the projection reads the RESULT
     expect(enumeration.retained.length + enumeration.refused.length + enumeration.undecided.length).toBe(disposed);
   });
 
-  it("keeps a form name out of the enumeration path", () => {
+  it("keeps a form name out of the module ENTIRELY, because the names live in the pack", () => {
+    // This used to slice the source at `export const FORM_ALIASES` and check only
+    // what came before it, which left the quarantine as the one place a name was
+    // allowed. The map is gone and the names are in the governed pack, so the
+    // check now covers the WHOLE module and there is nothing to slice around.
     const src = fs.readFileSync(path.resolve(HERE, "projection.ts"), "utf-8");
-    const withoutAliases = src.slice(0, src.indexOf("export const FORM_ALIASES"));
-    const withoutComments = withoutAliases.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/\/\/.*$/gm, " ");
+    const withoutComments = src.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/\/\/.*$/gm, " ");
     const hits = DENYLIST.denylist.filter((name) => new RegExp(`\\b${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(withoutComments));
     expect(hits, `form names reached the module: ${hits.join(", ")}`).toEqual([]);
-    expect(Object.keys(FORM_ALIASES).length).toBeGreaterThan(0);
+    expect(src.includes("FORM_ALIASES"), "the hand-authored map is gone").toBe(false);
   });
 
   it("emits only causes the doctrine's catalogue names", () => {
@@ -729,6 +737,118 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     const injected = [...relationMembership(run(structure)), programKey(invalid)].sort();
     expect(injected.filter((k) => !reference.includes(k))).toEqual([programKey(invalid)]);
     expect(relationProgramIsSound(invalid, facts, "magnitude-comparison", EXPERIMENT_TARGET)).toBe(false);
+  });
+
+  it("GENERATED: every catalogue entry names a program the enumerator ACTUALLY retained", () => {
+    const declarations = loadFormDeclarations();
+    expect(declarations.length).toBeGreaterThan(0);
+    const catalogue = generateAliasCatalogue(declarations, enumeration, EXPERIMENT_TARGET);
+    const retained = relationMembership(enumeration);
+    expect(catalogue.entries.length).toBeGreaterThan(0);
+    for (const entry of catalogue.entries) {
+      expect(entry.programs.length, `${entry.name} names nothing`).toBeGreaterThan(0);
+      for (const key of entry.programs) expect(retained, `${entry.name} names ${key}, which is not retained`).toContain(key);
+    }
+    // The entries name exactly the programs their regions select from the
+    // retained set — derived, not asserted.
+    for (const entry of catalogue.entries) {
+      expect(entry.programs).toEqual(retained.filter((k) => regionMatches(entry.asserts, { coordinate: k.split("|")[0] as never, dimension: k.split("|")[1] as never, measure: k.split("|")[2] as never })));
+    }
+    // And every retained program is named or not, but no entry names a program
+    // outside the retained set, which is the only direction that could lie.
+    expect(catalogue.entries.flatMap((e) => e.programs).filter((k) => !retained.includes(k))).toEqual([]);
+  });
+
+  it("NOT A SOURCE OF TRUTH: the search is identical with the catalogue emptied, respelled and reordered", () => {
+    const declarations = loadFormDeclarations();
+    const baseline = relationMembership(enumeration);
+    const variants = [
+      [],
+      declarations.map((d, i) => ({ ...d, name: `renamed-${i}`, colloquial: `renamed ${i}` })),
+      [...declarations].reverse(),
+      declarations.map((d) => ({ ...d, asserts: {} })),
+    ];
+    for (const variant of variants) {
+      const catalogue = generateAliasCatalogue(variant, enumeration, EXPERIMENT_TARGET);
+      // The catalogue changes; the SEARCH does not, because it is the input.
+      expect(catalogue.entries.length + catalogue.unsatisfied.length).toBe(variant.length);
+      expect(relationMembership(enumeration)).toEqual(baseline);
+    }
+    // The structural reason, checked rather than asserted: nothing the
+    // enumeration path exports mentions the catalogue.
+    const src = fs.readFileSync(path.resolve(HERE, "projection.ts"), "utf-8");
+    for (const fn of ["export function enumerate(", "export function enumerateGraph(", "export function lawfulRelationPrograms(", "export function relationProgramIsSound("]) {
+      const body = src.slice(src.indexOf(fn));
+      const end = body.indexOf("\n}");
+      expect(body.slice(0, end), `${fn} reaches for the catalogue`).not.toContain("catalogue");
+    }
+  });
+
+  it("TRACKS THE SPACE: a name whose region loses its members leaves the entries and is REPORTED", () => {
+    const declarations = loadFormDeclarations();
+    const full = generateAliasCatalogue(declarations, enumeration, EXPERIMENT_TARGET);
+    const namedUnderFull = full.entries.map((e) => e.name).sort();
+    expect(namedUnderFull.length).toBeGreaterThan(0);
+
+    // Removing the measure channel one name's region requires removes exactly
+    // that name, and the removal is DERIVED from the regenerated enumeration
+    // rather than declared anywhere.
+    const withoutArea = { ...EXPERIMENT_TARGET, channels: EXPERIMENT_TARGET.channels.filter((c) => c !== "area") };
+    const reduced = enumerate({ structure, admitted, task: "magnitude-comparison", inventory: withoutArea, partitionDimension: BASIS.resultGrain });
+    const after = generateAliasCatalogue(declarations, reduced, withoutArea);
+    const namedAfter = after.entries.map((e) => e.name).sort();
+    expect(namedUnderFull.filter((n) => !namedAfter.includes(n))).toEqual(["bubble"]);
+    const lost = after.unsatisfied.find((u) => u.name === "bubble")!;
+    // The reason is `not-in-space`, and that is the honest one: the channel the
+    // region names is no longer a channel THIS inventory offers, so the region is
+    // not a point it hosts. `not-lawful-here` is reserved for a region the
+    // inventory CAN host that this result does not license — the `pie` case
+    // below — and conflating the two would lose which of the two failed.
+    expect(lost.reason).toBe("not-in-space");
+    expect(lost.detail.length).toBeGreaterThan(20);
+    expect(after.entries.length + after.unsatisfied.length).toBe(declarations.length);
+  });
+
+  it("DISTINGUISHES a region the target cannot host from one this result does not license", () => {
+    const declarations = loadFormDeclarations();
+    const catalogue = generateAliasCatalogue(declarations, enumeration, EXPERIMENT_TARGET);
+    const byName = new Map(catalogue.unsatisfied.map((u) => [u.name, u]));
+    // Position is hosted by cartesian, polar, lane and geographic, and NOT by the
+    // tabular space, so a region asserting position there is not a point this
+    // target has at all.
+    expect(CAPACITY.position.spaces).not.toContain("tabular");
+    expect(byName.get("table")?.reason).toBe("not-in-space");
+    expect(byName.get("heat map")?.reason).toBe("not-in-space");
+    // Angle is hosted by polar, so that region IS a point this target has; the
+    // entered result simply is not cyclic, so the enumerator refuses it.
+    expect(CAPACITY.angle.spaces).toContain("polar");
+    expect(CAPACITY.angle.requiresCyclicOrWhole).toBe(true);
+    expect(byName.get("pie")?.reason).toBe("not-lawful-here");
+    expect(catalogue.unsatisfied.length).toBe(3);
+  });
+
+  it("CONFRONTS the removed hand-authored map: every region it claimed that the space does not hold is REPORTED", () => {
+    // The map that used to live in this module, preserved verbatim as the claim
+    // being checked. It could not be checked before, because nothing generated
+    // it: a keyed-by-space-point catalogue makes no contact with any enumeration.
+    const claimedByTheRemovedMap: string[] = ["cartesian|position|length", "cartesian|position|area", "tabular|position|text", "polar|position|length", "polar|hue|angle", "tabular|position|luminance"];
+    const catalogue = catalogueFor(enumeration, EXPERIMENT_TARGET);
+    const named = catalogue.entries.flatMap((e) => e.programs);
+    const unheld = claimedByTheRemovedMap.filter((k) => !named.includes(k));
+    expect(unheld, "three of the six claims name no retained program").toEqual(["tabular|position|text", "polar|hue|angle", "tabular|position|luminance"]);
+    // Every one of them is REPORTED rather than dropped silently.
+    for (const key of unheld) {
+      expect(catalogue.unsatisfied.some((u) => regionMatches(u.asserts, { coordinate: key.split("|")[0] as never, dimension: key.split("|")[1] as never, measure: key.split("|")[2] as never }))).toBe(true);
+    }
+    // And the other three are named, so this is not a catalogue that names nothing.
+    expect(claimedByTheRemovedMap.filter((k) => named.includes(k))).toEqual(["cartesian|position|length", "cartesian|position|area", "polar|position|length"]);
+  });
+
+  it("states what the generated catalogue does NOT establish", () => {
+    expect(CATALOGUE_NON_CLAIMS.length).toBeGreaterThanOrEqual(4);
+    for (const nc of CATALOGUE_NON_CLAIMS) expect(nc.trim().length).toBeGreaterThan(40);
+    expect(CATALOGUE_NON_CLAIMS.join(" ")).toContain("PER ENUMERATION");
+    expect(FORM_REGIONS_FILE).toBe("analytical-pack/form-regions.json");
   });
 
   it("states what the retained relation proof does NOT establish", () => {
