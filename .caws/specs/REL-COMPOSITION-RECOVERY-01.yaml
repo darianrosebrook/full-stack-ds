@@ -1,0 +1,49 @@
+id: REL-COMPOSITION-RECOVERY-01
+title: 'Composition recovers on the repaired disposition contract: a part that cannot be answered is not a part that was answered wrongly'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-19T04:44:25.808Z'
+updated_at: '2026-09-19T04:44:25.808Z'
+created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a composite whose part declares a task the relation path does not implement; when the composite is judged; then that part''s disposition is UNSUPPORTED and is identifiable as such rather than reported as unproven or refused'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a composite whose part''s operation is unproven; when the composite is judged; then the part retains its obligation through the composite'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a composite whose part''s operation the analytical rules contradict; when the composite is judged; then the composite is refused from the part and carries the part''s own named cause'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a composite whose parts are in several different dispositions; when it is judged; then every part''s disposition is reported so that no origin is erased by the aggregate verdict'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a nested composite; when it is judged; then the inner disposition reaches the outer with its cause, and the outer attributes the refusal to its part rather than to a rule of its own'
+non_functional: {}
+contracts:
+  - name: 'composite-part-disposition'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
+  - name: 'composition-precommit'
+    type: schema
+    path: 'packages/ds-contracts/analytical-fixtures/composition-precommit.json'
