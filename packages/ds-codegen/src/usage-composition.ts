@@ -54,6 +54,98 @@ export function parseUsageRef(ref: string): ParsedUsageRef | null {
   };
 }
 
+/**
+ * Regions a curated usage frame supplies with composition content, across
+ * both composition dialects: node-level `slots` maps (Field-style, where the
+ * frame routes regions through the generated slots prop) and part-suffixed
+ * refs (`fsds.Card.actions` children trees). Frame-data-level only — never
+ * DOM-inferred (FEAT-SLOT-REQUIRED-USAGE-BINDING-01).
+ */
+export function collectSuppliedRegions(frameTree: unknown): Set<string> {
+  const supplied = new Set<string>();
+  visitUsageNode(frameTree, supplied);
+  return supplied;
+}
+
+function visitUsageNode(node: unknown, out: Set<string>): void {
+  if (!node || typeof node !== "object" || Array.isArray(node)) return;
+  for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
+    if (!key.startsWith("fsds.")) continue;
+    const rest = key.slice("fsds.".length);
+    const dot = rest.indexOf(".");
+    if (dot > 0) out.add(rest.slice(dot + 1));
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      const record = value as Record<string, unknown>;
+      collectSlotEntries(record.slots, out);
+      const props = record.props;
+      if (props && typeof props === "object" && !Array.isArray(props)) {
+        const propsRecord = props as Record<string, unknown>;
+        collectSlotEntries(propsRecord.slots, out);
+        const children = propsRecord.children;
+        if (Array.isArray(children)) children.forEach((child) => visitUsageNode(child, out));
+        else visitUsageNode(children, out);
+      }
+    }
+  }
+}
+
+function collectSlotEntries(slots: unknown, out: Set<string>): void {
+  if (!slots || typeof slots !== "object" || Array.isArray(slots)) return;
+  for (const [region, content] of Object.entries(slots as Record<string, unknown>)) {
+    if (content !== undefined && content !== null && content !== false && content !== "") {
+      out.add(region);
+    }
+  }
+}
+
+export interface RequiredRegionObligation {
+  component: string;
+  region: string;
+}
+
+/**
+ * Consumer-supplied regions whose contract slot declares `required: true` —
+ * every curated usage frame must supply them (enforced by the showcase usage
+ * audit). "Consumer-supplied" is deliberately NARROWER than the frame-ref
+ * validator's public-subcomponent set (which also admits surface anchors,
+ * table tags, and compound roles for `fsds.X.Y` reference validity): only
+ * anatomy.dom named slot nodes and explicit `subcomponent: true` parts are
+ * regions a composing consumer targets. Component-owned required anchors
+ * (the anchor-presence sense, e.g. `Checkbox.input`) and the `root` host
+ * anchor are excluded (FEAT-SLOT-REQUIRED-USAGE-BINDING-01).
+ */
+export function deriveRequiredRegionObligations(
+  contract: ComponentContract,
+): RequiredRegionObligation[] {
+  const consumerSupplied = new Set<string>();
+  const visitDom = (node: unknown): void => {
+    if (!node || typeof node !== "object" || Array.isArray(node)) return;
+    const record = node as Record<string, unknown>;
+    if (record.tag === "slot" && typeof record.name === "string") {
+      consumerSupplied.add(record.name);
+    }
+    const children = record.children;
+    if (Array.isArray(children)) children.forEach(visitDom);
+    else if (children && typeof children === "object") visitDom(children);
+  };
+  const anatomy = contract.anatomy;
+  if (anatomy && !Array.isArray(anatomy)) visitDom(anatomy.dom);
+  for (const [part, details] of Object.entries(anatomy && !Array.isArray(anatomy) ? anatomy.details ?? {} : {})) {
+    if (details && typeof details === "object" && (details as { subcomponent?: unknown }).subcomponent === true) {
+      consumerSupplied.add(part);
+    }
+  }
+
+  const obligations: RequiredRegionObligation[] = [];
+  for (const [slot, meta] of Object.entries(contract.slots ?? {})) {
+    if (!meta || typeof meta !== "object" || (meta as { required?: unknown }).required !== true) continue;
+    if (slot === "root") continue;
+    if (!consumerSupplied.has(slot)) continue;
+    obligations.push({ component: contract.name, region: slot });
+  }
+  return obligations;
+}
+
 export function deriveUsageComposition(
   contract: ComponentContract,
 ): UsageCompositionIR {
