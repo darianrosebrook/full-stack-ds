@@ -46,3 +46,10 @@ evidence:
     command: pnpm test
     exit_code: 0
     commit_sha: "84703ada"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Cold-clone gate context verified: targeted full-profile mutation measurement at landed HEAD 108818a8 (report tmp/contract-oracle-mutation/108818a8daad-2026-09-19T20-48-23-701Z/report.md, gitignored-and-reproducible per runner convention; regenerate with the cited command) exited 0 with Baseline: passed — the clean-clone root-tests stage ran the full suite including all five budgeted tests under fresh install with no shared cache, the exact operating condition of the original b3e3bded baseline timeout. The run additionally re-confirmed the card-actions-slot-required kill (root-tests/mixed-test, marker found, disposition match) — its third consecutive confirmation."
+    recorded_at: "2026-09-19T21:07:21.406Z"
+    command: "pnpm run audit:contract-oracle-mutations -- --profile=full --only=card-actions-slot-required"
+    exit_code: 0
+    commit_sha: "108818a8daad"
