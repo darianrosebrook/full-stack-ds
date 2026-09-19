@@ -1961,11 +1961,37 @@ export type PartReading = {
 
 export type CompositeRefusal = { kind: "refused"; causes: string[]; from: "part" | "combinator"; detail: string };
 export type CompositeObligation = { kind: "unproven"; obligation: string; from: "part" | "combinator"; detail: string };
+/**
+ * A part asking a question this path does not implement. This is its OWN arm,
+ * not an obligation and not a refusal: absent implementation is neither a
+ * missing premise nor a contradiction, and folding it into either is the
+ * collapse the support decision exists to prevent.
+ */
+export type CompositeUnsupported = {
+  kind: "unsupported";
+  resultKind: ResultKind;
+  task: Task;
+  obligation: string;
+  detail: string;
+  from: "part" | "combinator";
+};
 
 /** What a PART can be. A part has no combinator of its own; a composite does. */
-export type PartVerdict = PartReading | CompositeRefusal | CompositeObligation;
+export type PartVerdict = PartReading | CompositeUnsupported | CompositeRefusal | CompositeObligation;
 
-export type CompositeVerdict = (PartReading & { combinator: Combinator }) | CompositeRefusal | CompositeObligation;
+export type CompositeVerdict = (PartReading & { combinator: Combinator }) | CompositeUnsupported | CompositeRefusal | CompositeObligation;
+
+/**
+ * The composite's own disposition AND every part disposition reached in the
+ * tree, each at the path that produced it. The record is not a convenience: a
+ * composite holding parts in several different states must report ALL of them,
+ * so that the aggregate verdict is a conclusion drawn from the origins rather
+ * than a summary that replaces them.
+ */
+export type CompositeJudgment = {
+  verdict: CompositeVerdict;
+  parts: Array<{ path: number[]; verdict: PartVerdict }>;
+};
 
 export type CompositeInput = {
   structure: RelationalStructure;
@@ -2022,23 +2048,29 @@ export function unitsCommensurable(a: UnitDecl | undefined, b: UnitDecl | undefi
   return shares ? "yes" : "no";
 }
 
-function readPart(part: CompositePart, input: CompositeInput): PartVerdict {
-  if (part.kind === "composite") return judgeComposite({ ...input, composite: part.composite });
+/** Read an ATOMIC part. Composite parts are recursed by `judgeCompositeAt`. */
+function readPart(part: Extract<CompositePart, { kind: "program" }>, input: CompositeInput): PartVerdict {
   const { program } = part;
-  const spec = TASK_INVARIANTS[program.task];
-  if ("notEnumerated" in spec) {
-    return unprovenComposition(
-      spec.notEnumerated,
-      "part",
-      `the part declares the ${program.task} task, which this experiment does not enumerate, so what it preserves is not established`,
-    );
+  // SUPPORT IS DECIDED FIRST, before the task table is read and before the
+  // operation is judged. Consulting `TASK_INVARIANTS` first is what made an
+  // unimplemented task an `unproven`, and that let "we did not build this" read
+  // as "this premise is missing".
+  const support = projectionSupport("relation", program.task);
+  if (!support.supported) {
+    return { kind: "unsupported", resultKind: "relation", task: program.task, obligation: support.obligation, detail: support.detail, from: "part" };
   }
   const judgment = judgeOperation(input.structure, program.operation, input.evidence);
   if (judgment.kind === "refused") return refusedComposition(judgment.causes, "part", judgment.reason);
   if (judgment.kind === "unproven") return unprovenComposition(judgment.obligation, "part", judgment.reason);
   const facts = judgment.facts;
-  if (!relationProgramIsSound(program, facts, program.task, input.inventory)) {
-    return refusedComposition([], "part", "the part is not a program the enumerator retains: one of its own premises is unsatisfied");
+  const unmet = relationProgramUncertified(program, facts, program.task, input.inventory);
+  if (unmet.length > 0) {
+    // NOT CERTIFIED IS NOT ILLEGAL, and it is not a cause either. This composer
+    // has no named diagnostic for a premise it could not establish, so the part
+    // is CARRIED with the premises that were not met. Refusing here would be
+    // exactly the substitution this project keeps having to undo: a bare `false`
+    // from a soundness helper standing in for a contradiction.
+    return unprovenComposition("part:uncertified", "part", `the part is not one this composer can certify: ${unmet.join("; ")}`);
   }
   const channels = [program.dimension, program.measure].sort();
   const units: Partial<Record<Channel, UnitDecl>> = {};
@@ -2220,31 +2252,53 @@ function judgeEmbed(c: EmbedComposite, part: PartReading): CompositeVerdict {
  * own cause — reaches the caller before any combinator rule has had a chance to
  * replace it with a composite-shaped one.
  */
-export function judgeComposite(input: CompositeInput): CompositeVerdict {
+export function judgeComposite(input: CompositeInput): CompositeJudgment {
+  return judgeCompositeAt(input, []);
+}
+
+function judgeCompositeAt(input: CompositeInput, path: number[]): CompositeJudgment {
   const { composite } = input;
   const parts = composite.combinator === "embed" ? [composite.part] : composite.parts;
   const readings: PartReading[] = [];
-  for (const part of parts) {
-    const reading = readPart(part, input);
-    // ATTRIBUTION IS RE-STATED AT EACH LEVEL, deliberately. `from` answers "was
-    // this composite refused by its own combinator rule, or did a part arrive
-    // already refused?" — which is the question the compositional invariant
-    // turns on. Propagating a nested verdict's own `from` unchanged would make
-    // an outer composite appear to have refused by a rule it does not have,
-    // while propagating its cause unchanged is what keeps the fault named at
-    // the place it occurred.
-    if (reading.kind === "refused") return { ...reading, from: "part" };
-    if (reading.kind === "unproven") return { ...reading, from: "part" };
-    readings.push(reading);
+  const record: Array<{ path: number[]; verdict: PartVerdict }> = [];
+  let fault: CompositeVerdict | undefined;
+
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i]!;
+    const here = [...path, i];
+    let verdict: PartVerdict;
+    if (part.kind === "composite") {
+      const inner = judgeCompositeAt({ ...input, composite: part.composite }, here);
+      // The inner tree's origins are carried out, not summarised away.
+      record.push(...inner.parts);
+      verdict = inner.verdict;
+    } else {
+      verdict = readPart(part, input);
+    }
+    record.push({ path: here, verdict });
+
+    if (verdict.kind === "retained") {
+      readings.push(verdict);
+      continue;
+    }
+    // EVERY PART IS READ, even after one has faulted, so a composite holding
+    // several faults reports all of them. Only the FIRST becomes the composite's
+    // own verdict, and the rest stay visible in `parts` rather than vanishing.
+    if (!fault) {
+      // ATTRIBUTION IS RE-STATED AT EACH LEVEL, deliberately. `from` answers "was
+      // this composite refused by its own combinator rule, or did a part arrive
+      // already faulted?" — the question the compositional invariant turns on.
+      // Propagating a nested verdict's own `from` unchanged would make an outer
+      // composite appear to have refused by a rule it does not have, while
+      // propagating its cause unchanged keeps the fault named where it occurred.
+      fault = { ...verdict, from: "part" };
+    }
   }
-  switch (composite.combinator) {
-    case "layer":
-      return judgeLayer(composite, readings);
-    case "facet":
-      return judgeFacet(composite, readings);
-    case "embed":
-      return judgeEmbed(composite, readings[0]!);
-  }
+
+  if (fault) return { verdict: fault, parts: record };
+  const verdict =
+    composite.combinator === "layer" ? judgeLayer(composite, readings) : composite.combinator === "facet" ? judgeFacet(composite, readings) : judgeEmbed(composite, readings[0]!);
+  return { verdict, parts: record };
 }
 
 /** A composite's claims, sorted, for a control that names them rather than counting. */
