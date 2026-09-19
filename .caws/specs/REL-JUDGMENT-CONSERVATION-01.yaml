@@ -77,3 +77,7 @@ evidence:
     status: pass
     evidence_ref: "CONSERVATION: missing vs incompatible vs free distinguished; and a KNOWN incompatibility survives an unrelated missing declaration in all six panel orders (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1030 tests green))"
     recorded_at: "2026-09-19T09:02:50.723Z"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "A6: the DEFAULT loader meets the removed layer in the search's own environment, the search is unmoved there, and a deliberately alias-dependent mutant FAILS the control (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1032 tests green))"
+    recorded_at: "2026-09-19T09:13:29.384Z"
