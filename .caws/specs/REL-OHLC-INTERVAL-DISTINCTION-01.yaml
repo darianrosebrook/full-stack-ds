@@ -1,0 +1,41 @@
+id: REL-OHLC-INTERVAL-DISTINCTION-01
+title: 'The OHLC relation is exercised through the projection layer without widening the evaluator, and its interval temporal axis is not reduced to a convenient scalar'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-19T09:30:09.918Z'
+updated_at: '2026-09-19T09:30:09.918Z'
+created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the FX_P_OHLC relation and an operation this evaluator CAN perform over one of its co-registered ratio measures, when the result is enumerated, then the projection layer reaches it and its disposition is recorded'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given that result, when its facts are read, then the temporal column is carried as an interval and the cyclic-only channel is refused for it rather than permitted'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the four co-registered ratio measures, when each is bound in turn, then each is a lawful measure, so the shape is not reduced to a single convenient scalar'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a control where the temporal column IS cyclic, when the same operation is enumerated, then the cyclic channel becomes available, so the refusal is about interval-ness and not about the channel being unusable'
+non_functional: {}
+contracts:
+  - name: 'ohlc-interval-distinction'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
