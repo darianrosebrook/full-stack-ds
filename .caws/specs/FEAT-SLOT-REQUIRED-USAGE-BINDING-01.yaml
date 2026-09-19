@@ -65,3 +65,10 @@ evidence:
     command: "pnpm exec vitest run src/lib/render-usage.test.tsx && pnpm exec vitest run packages/ds-codegen/src/usage-composition.test.ts"
     exit_code: 0
     commit_sha: e630302919da
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Targeted full-profile mutation measurement executed by this session at the landed revision (gitignored-and-reproducible report per runner convention at tmp/contract-oracle-mutation/e630302919da-2026-09-19T17-45-02-604Z/report.md; regenerate with the cited command): exit 0. Read back from the report: Baseline passed (all 18 stages green in a clean clone of e6303029); the mutant passed generate-check/generate-all/admission/typecheck-all (correct — the semantic gate does not consume slot flags) and went red at root-tests in 143.7s; expected/actual detector root-tests/mixed-test; Evidence marker found ([USAGE-REQUIRED-SLOT-MISSING] Card[completed-with-note] — names the authored assertion); Disposition match; Detected 1/1, survived 0; disposition/marker/provenance mismatches all 0. The catalog flip (survived->detected) is backed by measurement at HEAD. Non-claim: the kill binds the consumer-supply sense to curated-frame obligations; the anchor-presence sense and generated APIs are unchanged."
+    recorded_at: "2026-09-19T18:05:22.493Z"
+    command: "pnpm run audit:contract-oracle-mutations -- --profile=full --only=card-actions-slot-required"
+    exit_code: 0
+    commit_sha: e630302919da
