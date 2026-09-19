@@ -53,3 +53,7 @@ evidence:
     status: pass
     evidence_ref: "OHLC: the cyclic-licence contrast is narrowed and does not stand in for temporal-extent preservation (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1037 tests green))"
     recorded_at: "2026-09-19T10:10:00.812Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "CORPUS PROBE CENSUS: described as an execution-boundary census, not as structure surviving projection (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1037 tests green))"
+    recorded_at: "2026-09-19T10:10:01.323Z"
