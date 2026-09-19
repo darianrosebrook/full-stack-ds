@@ -49,3 +49,7 @@ evidence:
     status: pass
     evidence_ref: "OHLC: the TEMPORAL fact is LOST at the result boundary - changing only temporality.kind leaves the projection facts identical (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1037 tests green))"
     recorded_at: "2026-09-19T10:10:00.308Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "OHLC: the cyclic-licence contrast is narrowed and does not stand in for temporal-extent preservation (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1037 tests green))"
+    recorded_at: "2026-09-19T10:10:00.812Z"
