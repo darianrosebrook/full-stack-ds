@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: (new in shared-core-001)
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -44,7 +44,8 @@
 #                         passes the command through unrewritten).
 #   CAWS_INSTRUCTION_FILES — space-separated root instruction filenames the
 #                         harness reads at the repo root (e.g. "CLAUDE.md" for
-#                         claude-code, "AGENTS.md" for codex/opencode/zcode).
+#                         claude-code, "AGENTS.override.md AGENTS.md" for codex,
+#                         and "AGENTS.md" for opencode/zcode).
 #                         Used by worktree-write-guard.sh's allowlist so a
 #                         session editing its harness's doctrine file does not
 #                         trip the base-branch write guard. The unknown-surface
@@ -139,9 +140,12 @@ _caws_to_git_root() {
   local root
   root="$(cd "$d" 2>/dev/null && git rev-parse --show-toplevel 2>/dev/null || true)"
   [[ -n "$root" ]] && printf '%s\n' "$root"
+  return 0
 }
 
 if [[ -z "${CAWS_PROJECT_DIR:-}" ]]; then
+  # A registry vendor name is not a project root. Complete root resolution
+  # regardless of which libraries the caller has already sourced.
   _CAWS_VENDOR_DIR_CANDIDATE=""
   if [[ -n "${CLAUDE_PROJECT_DIR:-}" ]]; then
     _CAWS_VENDOR_DIR_CANDIDATE="$CLAUDE_PROJECT_DIR"
@@ -177,6 +181,9 @@ export CAWS_AGENT_SURFACE
 # ---------------------------------------------------------------------------
 # 3. Derive per-surface values.
 # ---------------------------------------------------------------------------
+# Capture an explicitly preset CAWS_AGENT_PROCESS_NAMES BEFORE the case arms
+# overwrite it (see the preserve block after the case).
+_CAWS_AGENT_PROCESS_NAMES_PRESET="${CAWS_AGENT_PROCESS_NAMES:-}"
 case "$CAWS_AGENT_SURFACE" in
   claude-code)
     CAWS_VENDOR_DIR=".claude"
@@ -190,7 +197,7 @@ case "$CAWS_AGENT_SURFACE" in
     CAWS_PLATFORM_FLAG="codex"
     # Codex has no PreToolUse "ask" decision; map ask -> deny.
     CAWS_PERMISSION_VOCAB="deny"
-    CAWS_INSTRUCTION_FILES="AGENTS.md"
+    CAWS_INSTRUCTION_FILES="AGENTS.override.md AGENTS.md"
     CAWS_AGENT_PROCESS_NAMES="codex"
     ;;
   cursor)
@@ -289,11 +296,115 @@ case "$CAWS_AGENT_SURFACE" in
     ;;
 esac
 
+# Every live agent process name any surface arm above can resolve to. The
+# test-harness attestation (3a) filters against this set, so a process serving
+# a real session can never become a kill target under test. Adding a surface
+# arm without extending this list silently re-opens
+# CAWS-DEFECT-BATS-TRAP-KILLS-LIVE-AGENT-01; tests/hooks/bats/agent-surface.bats
+# enumerates the arms and fails closed when one is missing here.
+CAWS_AGENT_LIVE_PROCESS_NAMES="claude codex cursor windsurf opencode dsh \
+zcode-cli zcode-host-local-1 zcode-host-local-2 zcode-host-local-3 \
+kimi-code kimi qwen qwen-code"
+
+# ---------------------------------------------------------------------------
+# 3a. CAWS-DEFECT-BATS-TRAP-KILLS-LIVE-AGENT-01: test-harness attestation.
+#
+# The guards are executed two ways. Under a real harness the hook env is
+# harness-owned and the guard's ancestors are the session's own processes —
+# which is exactly what makes the identity-verified SIGTERM sound. Under the
+# bats suite the guard is exec'd as a CHILD OF THE AGENT'S OWN BASH TOOL, so
+# both of those premises invert: the env is agent-reachable, and walking the
+# ancestry finds the live `claude` process running the tests. A latch armed in
+# one test plus a denied attempt in the next then escalates to a real SIGTERM
+# against the developer's session. Temp-dir isolation does not cover this: it
+# scopes where the sentinel FILE lands, not whose PID the walk resolves.
+#
+# The attestation is a marker inside the resolved project's .caws/hooks/. That
+# location is the gate, not the filename: protected-paths.sh refuses agent
+# Write/Edit under .caws/hooks/, and `caws init` never emits this file — so an
+# agent cannot mint the attestation in a governed repo, while a mktemp fixture
+# creates it freely. It grants exactly one thing (do not aim the kill at a live
+# agent), never a block, strike or latch bypass.
+# ---------------------------------------------------------------------------
+_CAWS_TEST_HARNESS=0
+if [[ -n "${CAWS_PROJECT_DIR:-}" && "$CAWS_PROJECT_DIR" != "." &&
+      -f "$CAWS_PROJECT_DIR/.caws/hooks/.test-harness" ]]; then
+  _CAWS_TEST_HARNESS=1
+fi
+export CAWS_TEST_HARNESS="$_CAWS_TEST_HARNESS"
+
+# Preserve an explicitly preset CAWS_AGENT_PROCESS_NAMES over the surface
+# default (DANGER-LATCH-QUARANTINE-TRAP-001): operators steer ancestor-identity
+# resolution this way. Under a real harness the hook env is harness-owned (an
+# agent's Bash-tool env cannot reach it), so this is an operator control, not
+# an agent-controllable kill-steer.
+if [[ -n "${_CAWS_AGENT_PROCESS_NAMES_PRESET:-}" ]]; then
+  CAWS_AGENT_PROCESS_NAMES="$_CAWS_AGENT_PROCESS_NAMES_PRESET"
+fi
+
+# Under the attestation, no live agent-surface name may remain a kill target.
+# A test may aim the trap only at a sacrificial process it spawned itself;
+# trap_resolve_agent_identity treats an empty list as "identity unresolvable,
+# hold the kill".
+#
+# The two arms differ only in loudness, and deliberately. Clearing the SURFACE
+# DEFAULT is the ordinary attested case, so it is silent: guards emit their
+# decision envelope on stdout while bats merges stderr into the same capture,
+# and a chatty lib here corrupts every JSON assertion in the suite. Dropping a
+# name an explicit PRESET supplied is a caller being overruled, so it says so.
+if [[ "$_CAWS_TEST_HARNESS" == "1" ]]; then
+  if [[ -z "${_CAWS_AGENT_PROCESS_NAMES_PRESET:-}" ]]; then
+    CAWS_AGENT_PROCESS_NAMES=""
+  elif [[ -n "${CAWS_AGENT_PROCESS_NAMES:-}" ]]; then
+    _CAWS_SAFE_NAMES=""
+    for _caws_name in $CAWS_AGENT_PROCESS_NAMES; do
+      case " $CAWS_AGENT_LIVE_PROCESS_NAMES " in
+        *" $_caws_name "*)
+          printf '[agent-surface.sh] test harness: refusing live agent process name as trap target: %s\n' \
+            "$_caws_name" >&2
+          ;;
+        *) _CAWS_SAFE_NAMES="${_CAWS_SAFE_NAMES:+$_CAWS_SAFE_NAMES }$_caws_name" ;;
+      esac
+    done
+    CAWS_AGENT_PROCESS_NAMES="$_CAWS_SAFE_NAMES"
+    unset _CAWS_SAFE_NAMES _caws_name
+  fi
+fi
+export CAWS_AGENT_PROCESS_NAMES CAWS_AGENT_LIVE_PROCESS_NAMES
+
+# ---------------------------------------------------------------------------
+# 3b. DANGER-LATCH-QUARANTINE-TRAP-001: per-surface kill-escalation enablement.
+#
+# When a quarantined session makes a further non-read-only attempt, the trap
+# may terminate the session's agent process (SIGTERM) — but ONLY on surfaces
+# where one process == one session. Hosts where a single server process serves
+# many sessions/threads (DSH server, Cursor/Windsurf IDE hosts, opencode
+# server) must NOT kill: the PID names the shared host, not the offender.
+# An operator can force either way by presetting CAWS_TRAP_KILL in the env
+# (the `:-` default form keeps a preset env value authoritative).
+# ---------------------------------------------------------------------------
+case "$CAWS_AGENT_SURFACE" in
+  claude-code|codex|zcode|kimi-code|qwen-code) _CAWS_TRAP_KILL_DEFAULT=1 ;;
+  *) _CAWS_TRAP_KILL_DEFAULT=0 ;;
+esac
+# Under the test-harness attestation the DEFAULT flips off, so a test that
+# never mentions the trap cannot fire one. A test that is specifically
+# exercising escalation still presets CAWS_TRAP_KILL=1 and is still bounded by
+# the live-name filter in 3a — the two controls are independent on purpose.
+if [[ "$_CAWS_TEST_HARNESS" == "1" ]]; then
+  _CAWS_TRAP_KILL_DEFAULT=0
+fi
+: "${CAWS_TRAP_KILL:=$_CAWS_TRAP_KILL_DEFAULT}"
+export CAWS_TRAP_KILL
+
 # ---------------------------------------------------------------------------
 # 4. Derive CAWS_LOG_DIR from the resolved project dir and vendor dir.
 # ---------------------------------------------------------------------------
 if [[ -n "${CAWS_PROJECT_DIR:-}" && "${CAWS_PROJECT_DIR}" != "." ]]; then
   CAWS_LOG_DIR="${CAWS_PROJECT_DIR}/${CAWS_VENDOR_DIR}/logs"
+  if [[ "${CAWS_SYSTEM_RUNTIME:-0}" == "1" && -n "${CAWS_MACHINE_LOG_DIR:-}" ]]; then
+    CAWS_LOG_DIR="$CAWS_MACHINE_LOG_DIR"
+  fi
 else
   # Project dir is "." (relative fallback) or empty — use a relative path.
   # Individual hooks that need an absolute log dir must resolve cwd themselves.
@@ -396,6 +507,44 @@ caws_source_lib() {
   local basename="${1:-}"
   [[ -z "$basename" ]] && return 1
 
+  # An adopted project declares intentional local overrides explicitly. Old
+  # vendored adapter copies are not allowed to shadow the machine runtime.
+  # This branch is entered only by the machine launcher; legacy dispatch keeps
+  # its existing resolution order below.
+  if [[ "${CAWS_MACHINE_RUNTIME:-}" == 1 ]]; then
+    local _machine_local
+    _machine_local="$(python3 -c 'import json,os,sys; p=json.loads(os.environ.get("CAWS_MACHINE_LIBRARIES", "{}")); print(p.get(sys.argv[1], ""))' "$basename")" || return 1
+    if [[ -n "$_machine_local" ]]; then
+      source "${CAWS_MACHINE_POLICY_ROOT}/${_machine_local}"
+      return $?
+    fi
+    # CAWS-HOOKPACK-HOME-UNSET-ROOT-AUTHORITY-ALIAS-001: only probe the
+    # machine-user override when a real home is known. With both CAWS_HOME
+    # and HOME absent, defaulting to "" would resolve this to
+    # /surfaces/.../lib/<basename> at the filesystem root and, if a file
+    # happened to exist there, SOURCE it as a trusted override -- an absent
+    # home must mean this tier is unavailable, not rooted at "/".
+    local _machine_home=""
+    if [[ -n "${CAWS_HOME:-}" ]]; then
+      _machine_home="$CAWS_HOME"
+    elif [[ -n "${HOME:-}" ]]; then
+      _machine_home="${HOME}/.caws"
+    fi
+    if [[ -n "$_machine_home" ]]; then
+      local _machine_user="${_machine_home}/surfaces/${CAWS_AGENT_SURFACE}/lib/${basename}"
+      if [[ -f "$_machine_user" ]]; then
+        source "$_machine_user"
+        return $?
+      fi
+    fi
+    if [[ -f "${CAWS_MACHINE_ADAPTER_LIB_DIR}/${basename}" ]]; then
+      source "${CAWS_MACHINE_ADAPTER_LIB_DIR}/${basename}"
+      return $?
+    fi
+    source "${CAWS_SHARED_LIB_DIR}/${basename}"
+    return $?
+  fi
+
   # Determine shared lib dir: prefer the exported env var, fall back to
   # locating it relative to this file (lib/ sibling).
   local _shared_lib
@@ -415,6 +564,19 @@ caws_source_lib() {
     # shellcheck disable=SC1090
     source "$_vendor_override"
     return $?
+  fi
+
+  # 1.5. USER tier (CAWS-DESIGN-GLOBAL-IDENTITY-HOME-001 A3): the machine
+  # owner's per-harness override in the global home. Inert by default —
+  # absent until the owner creates it; removing the file restores the
+  # true-to-caws shared fallback. Repo overrides keep winning over it.
+  if [[ -n "${CAWS_AGENT_SURFACE:-}" && -n "${HOME:-}" ]]; then
+    local _user_override="${HOME}/.caws/surfaces/${CAWS_AGENT_SURFACE}/lib/${basename}"
+    if [[ -f "$_user_override" ]]; then
+      # shellcheck disable=SC1090
+      source "$_user_override"
+      return $?
+    fi
   fi
 
   # 2. Shared fallback
