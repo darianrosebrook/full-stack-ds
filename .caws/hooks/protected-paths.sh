@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 8,16,23
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -76,16 +76,35 @@ parse_hook_input
 # the enforcement.
 [[ -f "$SCRIPT_DIR/lib/guard-message.sh" ]] && source "$SCRIPT_DIR/lib/guard-message.sh"
 
+# Which write channel is this call arriving on?
+#
+# CAWS-PROTECTED-PATHS-BASH-CHANNEL-001: protection is a property of the PATH,
+# not of the tool that reaches it. Keying this guard on Write|Edit alone left
+# the entire shell channel open — `echo x > .caws/hooks/protected-paths.sh`,
+# `sed -i` over a guard, `rm .caws/hooks/lib/write-allowlist.sh` were all
+# admitted, so a guard could be disarmed by choosing a different tool. The
+# other pre_tool_use handlers do not close it either: bash-write-guard.sh
+# delegates admission to caws_is_write_allowlisted, which returns 0
+# (unconditionally allowed) for `.caws/*`, and block-dangerous.sh protects one
+# filename under the vendor hooks dir, not the pack's own install directory.
+#
+# Both channels are adjudicated by _protected_adjudicate below. Two matchers
+# for one resource diverge, and the permissive one becomes the bypass — the
+# failure shape CAWS-GUARD-ALLOWLIST-SYNC-001 already names.
 case "$HOOK_TOOL_NAME" in
-  Write|Edit) ;;
+  Write|Edit) PROTECTED_CHANNEL="file" ;;
+  Bash) PROTECTED_CHANNEL="bash" ;;
   *) exit 0 ;;
 esac
 
-if [[ -z "$HOOK_FILE_PATH" ]]; then
+if [[ "$PROTECTED_CHANNEL" == "file" && -z "$HOOK_FILE_PATH" ]]; then
+  exit 0
+fi
+if [[ "$PROTECTED_CHANNEL" == "bash" && -z "${HOOK_COMMAND:-}" ]]; then
   exit 0
 fi
 
-FILE_PATH="$HOOK_FILE_PATH"
+FILE_PATH="${HOOK_FILE_PATH:-}"
 
 # Match against every directory the shared pack actually installs guard
 # scripts into: the pack's own install dir (.caws/hooks/, always — this is
@@ -98,6 +117,29 @@ FILE_PATH="$HOOK_FILE_PATH"
 _hooks_prefix_match() {
   # Returns 0 (true) if FILE_PATH is under the shared pack's install
   # directory or a vendor-surface hooks dir.
+  # The system runtime's executables, adapters, policy overrides and reprieves
+  # have the same boundary as the former project hook directory. CLI-mediated
+  # installation/configuration is separate from an agent's direct file edit.
+  #
+  # CAWS-HOOKPACK-HOME-UNSET-ROOT-AUTHORITY-ALIAS-001: only derive machine_home
+  # when a real home is known. With both CAWS_HOME and HOME absent, defaulting
+  # to "" would make every machine_home/* pattern below a top-level absolute
+  # prefix (e.g. "/bin/"*), matching unrelated real paths on the filesystem.
+  # No home means no machine-home tier to match against, not a tier rooted at "/".
+  local machine_home=""
+  if [[ -n "${CAWS_HOME:-}" ]]; then
+    machine_home="$CAWS_HOME"
+  elif [[ -n "${HOME:-}" ]]; then
+    machine_home="${HOME}/.caws"
+  fi
+  if [[ -n "$machine_home" ]]; then
+    [[ "$FILE_PATH" == "$machine_home/bin/"* ]] && return 0
+    [[ "$FILE_PATH" == "$machine_home/lib/"* ]] && return 0
+    [[ "$FILE_PATH" == "$machine_home/surfaces/"* ]] && return 0
+    [[ "$FILE_PATH" == "$machine_home/state/projects/"* ]] && return 0
+    [[ "$FILE_PATH" == "$machine_home/state/adapter-runtime.json" ]] && return 0
+    [[ "$FILE_PATH" == "$machine_home/state/sessions/"*/guard-reprieve-* ]] && return 0
+  fi
   [[ "$FILE_PATH" == */.caws/hooks/* ]] || \
   [[ "$FILE_PATH" == ".caws/hooks/"* ]] || \
   [[ "$FILE_PATH" == */"${CAWS_VENDOR_DIR}"/hooks/* ]] || \
@@ -110,6 +152,9 @@ _strikes_match() {
   [[ "$FILE_PATH" == "${CAWS_VENDOR_DIR}/logs/guard-strikes-"*.json ]]
 }
 
+# The single adjudication both channels run, over whatever FILE_PATH currently
+# holds. Blocks by exiting 2; returns 0 when the path is not protected.
+_protected_adjudicate() {
 if _hooks_prefix_match; then
   # Check if it's a doc (*.md) — docs are admitted.
   case "$FILE_PATH" in
@@ -117,7 +162,12 @@ if _hooks_prefix_match; then
       # Documentation under the hooks dir (CLAUDE.md, README.md, ...) is not a
       # guard artifact. Admit it — the doctrine protects executable guards, not
       # the docs describing them (CAWS-PROTECTED-PATHS-DOCS-NOT-SCRIPTS-001).
-      exit 0
+      #
+      # `return 0`, not `exit 0`: on the Bash channel one command can name
+      # several targets, and admitting a doc must not stop the loop before it
+      # has adjudicated the rest — `sed -i s/x/y/ hooks/README.md hooks/g.sh`
+      # would otherwise pass on the strength of its first operand.
+      return 0
       ;;
     *)
       # Everything else under the hooks dir is a guard artifact (*.sh, *.py,
@@ -151,5 +201,37 @@ if _strikes_match; then
   fi
   exit 2
 fi
+
+return 0
+}
+
+if [[ "$PROTECTED_CHANNEL" == "file" ]]; then
+  _protected_adjudicate
+  exit 0
+fi
+
+# ── Bash channel ───────────────────────────────────────────────────────────
+# Reuse the shared mutation-target recognizer rather than re-deriving which
+# commands write: a private parser here would drift from the one the write
+# guards use, and the looser of the two becomes the bypass.
+#
+# Fail CLOSED on a missing lib, matching this guard's agent-surface.sh posture
+# above. A guard whose whole job is keeping hook files un-editable must not
+# quietly stop adjudicating a channel when a dependency disappears.
+if [[ -r "$SCRIPT_DIR/lib/bash-mutation-targets.sh" ]]; then
+  # shellcheck source=lib/bash-mutation-targets.sh
+  source "$SCRIPT_DIR/lib/bash-mutation-targets.sh"
+fi
+if ! declare -F caws_bash_mutation_candidates >/dev/null 2>&1; then
+  echo "[protected-paths] CAWS hook infrastructure incomplete: lib/bash-mutation-targets.sh is missing or did not load — cannot extract Bash mutation targets, so a shell write to a protected hook path cannot be detected. Failing CLOSED. Restore the shared hook libs with: caws init adapters install" >&2
+  printf '{"decision":"block","reason":"CAWS protected-paths: cannot load lib/bash-mutation-targets.sh, so Bash-channel protected-path matching cannot run. Failing closed. Restore the hook pack: caws init adapters install"}\n'
+  exit 2
+fi
+
+while IFS= read -r _candidate; do
+  [[ -n "$_candidate" ]] || continue
+  FILE_PATH="$_candidate"
+  _protected_adjudicate
+done < <(caws_bash_mutation_candidates "$HOOK_COMMAND")
 
 exit 0
