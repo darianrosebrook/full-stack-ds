@@ -22,7 +22,7 @@ invariants:
   - 'A PART THAT CANNOT BE ANSWERED IS NOT A PART THAT WAS ANSWERED WRONGLY. The part reader consults the support decision BEFORE any candidate or rule, so an unimplemented task reaches the composite as UNSUPPORTED and never as unproven or refused.'
   - 'The composite report does not erase origins. Every part carries its own disposition in the judgement, so a composite holding parts in several different states reports all of them and the composite verdict is a conclusion drawn from them rather than a summary that replaces them.'
   - 'A part fault keeps its own cause and its own location. A composite refuses FROM THE PART with the cause the part carried, and a nested composite re-attributes the refusal to the part at each level without rewriting the cause.'
-  - 'Recovery does not weaken the pre-commit. The parked expectations are carried over unedited, and a disagreement is adjudicated in the ledger rather than resolved by changing the expectation.''
+  - 'Recovery does not weaken the pre-commit. The parked expectations are carried over unedited, and a disagreement is adjudicated in the ledger rather than resolved by changing the expectation.'
 acceptance:
   - id: A1
     given: 'A composite one of whose parts declares a task the relation path does not implement.'
