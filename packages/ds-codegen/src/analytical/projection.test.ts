@@ -55,6 +55,7 @@ import {
   lawfulRelationPrograms,
   partitionAdmitsSummation,
   classifyAtomicProgram,
+  partitionBindingFault,
   IMPLEMENTED_TASKS,
   RESULT_KINDS,
   projectionSupport,
@@ -1216,7 +1217,68 @@ describe("M2 — the RELATION-valued candidate space: soundness, completeness, s
     const semiOp = bindOperation(semi, { relation: "m", field: "level", op: "sum", along: ["item"] });
     const semiProgram: Program = { ...compProgram, operation: semiOp };
     expect(asLayer(semiProgram, semi, "bucket")).toBe("refused");
-    expect(asLayer(semiProgram, semi, "item")).not.toBe("refused");
+    // THE PREVIOUS "FAVORABLE" ALTERNATIVE WAS AN INVALID REQUEST. `item` is the
+    // column the operation SUMMED AWAY, so it is not a column of the result and
+    // is not a partition of anything. Carrying the spelling of a premise does not
+    // establish its applicability, and BOTH consumers now refuse it the same way.
+    expect(() => asLayer(semiProgram, semi, "item")).toThrow(/not a column of the result/);
+    expect(() => asLayer(semiProgram, semi, "does_not_exist")).toThrow(/not a column of the result/);
+    // ...and the enumerator refuses the same two requests, through one validator.
+    expect(() => enumerate({ structure: semi, admitted: semiOp, task: "composition", inventory: EXPERIMENT_TARGET, partitionDimension: "item" })).toThrow(/not a column of the result/);
+    // The basis result's grain is [date]; `product` is the column the admitted
+    // operation summed away, so it is not a column of the RESULT.
+    expect(facts.resultGrain).toEqual(["date"]);
+    expect(partitionBindingFault(facts, "product")).toBeDefined();
+    expect(partitionBindingFault(facts, "does_not_exist")).toBeDefined();
+    expect(partitionBindingFault(facts, BASIS.resultGrain)).toBeUndefined();
+    expect(partitionBindingFault(facts, undefined)).toBeUndefined();
+    // A VALID favorable alternative still exists, on a structure where the
+    // measure IS additive along the partition.
+    expect(asLayer({ ...compProgram, operation: compOp }, compStruct, "bucket")).toBe("retained");
+  });
+
+  it("CONSERVATION: a known incompatibility survives an unrelated missing declaration, in EVERY order", () => {
+    const KG: UnitDecl = { units: ["kg"] };
+    const SEC: UnitDecl = { units: ["s"] };
+    const three = {
+      ...structure,
+      relations: {
+        ...structure.relations,
+        meter_a: { grain: ["bucket"], fields: { bucket: { transformation: "nominal" }, reading: { transformation: "ratio", unit: KG } } },
+        meter_b: { grain: ["bucket"], fields: { bucket: { transformation: "nominal" }, reading: { transformation: "ratio", unit: SEC } } },
+        meter_c: { grain: ["bucket"], fields: { bucket: { transformation: "nominal" }, reading: { transformation: "ratio" } } },
+      },
+    } as unknown as RelationalStructure;
+    const p3 = (rel: string): Program => meteredPart(three, rel);
+    const facetOf3 = (rels: string[]): Composite => ({
+      combinator: "facet",
+      parts: rels.map((r) => ({ kind: "program", program: p3(r) })),
+      partition: "bucket",
+      policy: { length: "shared", text: "shared" },
+    });
+    const j3 = (rels: string[]) => judgeComposite({ structure: three, inventory: EXPERIMENT_TARGET, composite: facetOf3(rels) }).verdict;
+
+    // THE KNOWN kg/seconds CONTRADICTION IS PRESENT IN EVERY INPUT. Establishment
+    // needs all pairs compatible; refutation needs ONE witness, and an unrelated
+    // missing declaration cannot undo it. Comparing each panel with the FIRST one
+    // hid the contradiction whenever the undeclared panel came first.
+    const orders = [["meter_a", "meter_b", "meter_c"], ["meter_c", "meter_a", "meter_b"], ["meter_a", "meter_c", "meter_b"], ["meter_b", "meter_a", "meter_c"], ["meter_b", "meter_c", "meter_a"], ["meter_c", "meter_b", "meter_a"]];
+    for (const order of orders) {
+      const v = j3(order);
+      expect(v.kind, `order ${order.join(",")} must not hide the known contradiction`).toBe("refused");
+      expect(v.kind === "refused" && v.causes).toEqual(["REL_UNIT_INCOMMENSURABLE_SHARED_SCALE"]);
+    }
+    // A missing-only set is still UNPROVEN rather than refused, so the pair
+    // distinction is preserved in both directions.
+    const allMissing = [
+      { ...three, relations: { ...three.relations, meter_a: { grain: ["bucket"], fields: { bucket: { transformation: "nominal" }, reading: { transformation: "ratio" } } } } },
+    ][0] as unknown as RelationalStructure;
+    const missingOnly = judgeComposite({
+      structure: allMissing,
+      inventory: EXPERIMENT_TARGET,
+      composite: { combinator: "facet", parts: [{ kind: "program", program: meteredPart(allMissing, "meter_a") }, { kind: "program", program: meteredPart(allMissing, "meter_c") }], partition: "bucket", policy: { length: "shared", text: "shared" } },
+    }).verdict;
+    expect(missingOnly.kind).toBe("unproven");
   });
 
   it("CONSERVATION: a scale summary cannot hide an incompatible unit from its parent", () => {

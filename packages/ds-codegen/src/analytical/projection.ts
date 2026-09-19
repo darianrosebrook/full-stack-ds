@@ -590,11 +590,8 @@ export function enumerate(input: EnumerationInput): Enumeration {
   // the operation summed away, or a name that exists nowhere, is an invalid
   // binding: it is refused here rather than slipping past the additivity check
   // into the favorable branch.
-  if (input.partitionDimension !== undefined && admission.kind === "admitted" && !admission.facts.resultGrain.includes(input.partitionDimension)) {
-    throw new Error(
-      `the declared composition partition ${input.partitionDimension} is not a column of the result [${admission.facts.resultGrain.join(", ")}]; a projection of the result cannot partition by it`,
-    );
-  }
+  const bindingFault = admission.kind === "admitted" ? partitionBindingFault(admission.facts, input.partitionDimension) : undefined;
+  if (bindingFault) throw new Error(bindingFault);
   // SUPPORT IS DECIDED FIRST. An unimplemented task returns its own disposition
   // with an empty population and NO refusals: a refusal carries an analytical
   // cause, and there is no rule to name for a rule that was never written.
@@ -854,6 +851,21 @@ export function enumerateGraph(input: GraphEnumerationInput): GraphEnumeration {
  * `RELATION_REFERENCE_NON_CLAIMS`, and what is still NOT covered is named there
  * too rather than implied by a passing comparison.
  */
+/**
+ * WHETHER THE DECLARED PARTITION IDENTIFIES A PARTITION OF THIS RESULT.
+ *
+ * CARRYING THE SPELLING OF A PREMISE DOES NOT ESTABLISH ITS APPLICABILITY. A
+ * complete request includes the bindings that give its premises meaning: `item`
+ * names a column the operation SUMMED AWAY, and a name identifying no column at
+ * all is not a partition of anything this result can be divided by. Both
+ * consumers call THIS, so neither can accept a request the other rejects.
+ */
+export function partitionBindingFault(facts: ResultFacts, partitionDimension: string | undefined): string | undefined {
+  if (partitionDimension === undefined) return undefined;
+  if (facts.resultGrain.includes(partitionDimension)) return undefined;
+  return `the declared composition partition ${partitionDimension} is not a column of the result [${facts.resultGrain.join(", ")}]; a projection of the result cannot partition by it`;
+}
+
 /**
  * WHETHER THE RESULT'S MEASURE ADMITS SUMMATION OVER THE DECLARED PARTITION.
  *
@@ -2213,6 +2225,11 @@ function readPart(part: Extract<CompositePart, { kind: "program" }>, input: Comp
   if (judgment.kind === "refused") return refusedComposition(judgment.causes, "part", judgment.reason);
   if (judgment.kind === "unproven") return unprovenComposition(judgment.obligation, "part", judgment.reason);
   const facts = judgment.facts;
+  // AN INAPPLICABLE REQUEST IS NOT A JUDGMENT, so it is not a verdict either:
+  // both consumers refuse it the same way. Accepting it here while the enumerator
+  // throws is the drift this boundary exists to remove.
+  const bindingFault = partitionBindingFault(facts, part.request?.partitionDimension);
+  if (bindingFault) throw new Error(bindingFault);
   const classification = classifyAtomicProgram(program, facts, program.task, input.inventory, part.request?.partitionDimension);
   if (classification.kind === "refused") return refusedComposition([classification.cause], "part", classification.detail);
   if (classification.kind === "unproven") return unprovenComposition(classification.obligation, "part", classification.detail);
@@ -2276,12 +2293,25 @@ function mergeReadings(parts: PartReading[]): PartReading {
     });
     if (metric.length < 2) continue;
     void declared;
-    const verdicts: Array<"yes" | "no" | "unknown"> = [];
-    for (let i = 1; i < metric.length; i++) verdicts.push(unitsCommensurable(metric[0]!.units[ch], metric[i]!.units[ch]));
-    if (verdicts.includes("no")) {
+    // EVERY RELEVANT PAIR, not every participant against the first. Establishment
+    // needs the universal condition — all pairs compatible — while refutation
+    // needs ONE applicable witness, and an unrelated missing declaration cannot
+    // undo a contradiction that was already observed. Comparing each participant
+    // with `metric[0]` made a known kg/seconds incompatibility vanish whenever an
+    // undeclared panel happened to be ordered first.
+    let incompatible = false;
+    let unknown = false;
+    for (let i = 0; i < metric.length; i++) {
+      for (let j = i + 1; j < metric.length; j++) {
+        const verdict = unitsCommensurable(metric[i]!.units[ch], metric[j]!.units[ch]);
+        if (verdict === "no") incompatible = true;
+        else if (verdict === "unknown") unknown = true;
+      }
+    }
+    if (incompatible) {
       unitConflict.add(ch);
       unitUnestablished.delete(ch);
-    } else if (verdicts.includes("unknown") && !unitConflict.has(ch)) {
+    } else if (unknown && !unitConflict.has(ch)) {
       unitUnestablished.add(ch);
     }
   }
