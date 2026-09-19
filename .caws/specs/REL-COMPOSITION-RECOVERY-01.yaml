@@ -52,3 +52,8 @@ contracts:
   - name: 'composition-precommit'
     type: schema
     path: 'packages/ds-contracts/analytical-fixtures/composition-precommit.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts RECOVERY: an unimplemented part is UNSUPPORTED -- not unproven, not refused (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1012 tests green))"
+    recorded_at: "2026-09-19T04:52:11.041Z"
