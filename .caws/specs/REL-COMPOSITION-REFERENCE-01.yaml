@@ -64,3 +64,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts COMPOSITION COVERAGE: non-additive measure empties the lawful set in both, with the corpus's cause (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
     recorded_at: "2026-09-19T06:27:23.382Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts COMPOSITION COVERAGE: the ratio-measure refusal is recorded as an ADMISSION outcome, and the reference branch is exercised over an authored fact set (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files green))"
+    recorded_at: "2026-09-19T06:27:24.065Z"
