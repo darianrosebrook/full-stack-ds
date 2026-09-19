@@ -2,7 +2,7 @@
 /*
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 47
+# hook_pack_version: 87
 # caws_min_major: 11
 # lineage_refs: 4,8,13,20,32
 # edit_stance: YOURS TO EDIT. This is a starting hook, not a locked one — shape it
@@ -147,9 +147,28 @@ function lifecycle(s) {
 
 function globToRegExp(pattern) {
   // ** -> .+ (cross-segment); * -> [^/]* (single-segment); ? -> . ; anchored.
-  var escaped = String(pattern).replace(/[.+^${}()|[\]\\]/g, '\\$&');
+  //
+  // CLAIM-ORACLE-DIRECTORY-CONTAINMENT-001 (ported from consumer hardening
+  // STERLING-CLAIM-ORACLE-DIRECTORY-CONTAINMENT-01): a scope entry denotes a
+  // path AND everything beneath it. Previously this anchored '^...$' with no
+  // containment suffix, so the common directory-shaped entry 'pkg/dir/'
+  // compiled to /^pkg\/dir\/$/ and matched ONLY that literal string — a real
+  // file under it ('pkg/dir/file.py') returned pass:unclaimed and every
+  // file-level mutation inside an actively-claimed directory was admitted.
+  // Directory entries carry no glob, so nothing expanded and the exactness was
+  // invisible. Trailing slashes are stripped first so 'dir/' and 'dir' agree.
+  //
+  // The '(?:/.*)?' suffix requires a '/' boundary: 'pkg/dir' matches
+  // 'pkg/dir' and 'pkg/dir/x', but NOT 'pkg/directory'. An exact file entry
+  // keeps matching that file (a suffix under a file path cannot exist), so
+  // file-shaped scope.in entries are unaffected.
+  var p = String(pattern).replace(/\/+$/, '');
+  // An empty pattern would otherwise compile to a regex matching the empty
+  // path; derive no claim from it rather than claiming anything.
+  if (p === '') return /(?!)/;
+  var escaped = p.replace(/[.+^${}()|[\]\\]/g, '\\$&');
   var body = escaped.replace(/\*\*/g, '.+').replace(/\*/g, '[^/]*').replace(/\?/g, '.');
-  return new RegExp('^' + body + '$');
+  return new RegExp('^' + body + '(?:/.*)?$');
 }
 
 // owner session id of a registry entry, or null.
