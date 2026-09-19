@@ -904,6 +904,15 @@ export interface ComponentContract {
   stateMachine?: {
     description?: string;
     transitions?: Array<{
+      /**
+       * Trigger name. Semantic validation (Rule 6b in validation/semantic.ts,
+       * FEAT-STATEMACHINE-TRIGGER-BINDING-01) requires it to resolve to a
+       * declared referent: a channels key, an events key, a prop name, a
+       * dismissal.triggers[].event, an a11y.keyboard[].id, a
+       * "<part>.<verb>" form whose part is in anatomy.parts, or a member of
+       * the closed DOM platform set. `from`/`to` are separately bound to
+       * states.dimensions by Rule 6.
+       */
       event: string;
       from?: string;
       to: string;
@@ -949,6 +958,13 @@ export interface ComponentContract {
           action: string;
           when?: string;
           mode?: string;
+          /**
+           * Stable interaction identifier (FEAT-STATEMACHINE-TRIGGER-BINDING-01).
+           * Several physical keys may share one id when they name the same
+           * semantic trigger (ArrowRight and ArrowDown are both "arrow.next").
+           * stateMachine transition events resolve against these ids.
+           */
+          id?: string;
           /**
            * Closed realization vocabulary (FEAT-A11Y-COMPOSITE-KEYBOARD-01).
            * When present, the Semantic IR lowers this entry into an emitted

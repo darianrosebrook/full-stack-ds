@@ -382,34 +382,40 @@
       {
         "key": "ArrowLeft",
         "action": "Move focus to the previous tab (horizontal orientation).",
-        "when": "tab"
+        "when": "tab",
+        "id": "arrow.prev"
       },
       {
         "key": "ArrowRight",
         "action": "Move focus to the next tab (horizontal orientation).",
-        "when": "tab"
+        "when": "tab",
+        "id": "arrow.next"
       },
       {
         "key": "ArrowUp",
         "action": "Move focus to the previous tab (vertical orientation).",
         "when": "tab",
-        "mode": "vertical"
+        "mode": "vertical",
+        "id": "arrow.prev"
       },
       {
         "key": "ArrowDown",
         "action": "Move focus to the next tab (vertical orientation).",
         "when": "tab",
-        "mode": "vertical"
+        "mode": "vertical",
+        "id": "arrow.next"
       },
       {
         "key": "Home",
         "action": "Move focus to the first tab.",
-        "when": "tab"
+        "when": "tab",
+        "id": "home"
       },
       {
         "key": "End",
         "action": "Move focus to the last tab.",
-        "when": "tab"
+        "when": "tab",
+        "id": "end"
       },
       {
         "key": "Enter",

@@ -2508,7 +2508,8 @@
       "additionalProperties": false,
       "properties": {
         "event": {
-          "type": "string"
+          "type": "string",
+          "description": "Trigger name. Semantic validation requires it to resolve to a declared referent: a channels key, an events key, a prop name, a dismissal.triggers[].event, an a11y.keyboard[].id, a \"<part>.<verb>\" form whose part is declared in anatomy.parts, or a member of the closed DOM platform set (animationend, transitionend). FEAT-STATEMACHINE-TRIGGER-BINDING-01."
         },
         "from": {
           "description": "Source state(s). Accepts a single state name or an array of names for shared-target transitions (e.g. both 'hover' and 'focus' transitioning to 'visible' without duplicating entries).",
@@ -2596,6 +2597,10 @@
               "type": "string",
               "description": "State condition required for this binding (e.g. \"openness=expanded\")."
             },
+            "id": {
+              "type": "string",
+              "description": "Stable interaction identifier for this binding (e.g. \"arrow.next\" shared by ArrowRight and ArrowDown). stateMachine transition events may resolve to this id when the semantic trigger spans several physical keys (FEAT-STATEMACHINE-TRIGGER-BINDING-01)."
+            },
             "behavior": {
               "type": "string",
               "enum": [
@@ -2628,6 +2633,10 @@
             },
             "then": {
               "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "description": "Stable interaction identifier, as in the structured-ours form; stateMachine transition events may resolve to it."
             }
           }
         }

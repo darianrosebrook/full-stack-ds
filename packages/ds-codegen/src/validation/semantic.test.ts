@@ -210,7 +210,7 @@ describe("validateContractSemantics — cross-reference rules", () => {
       },
       stateMachine: {
         transitions: [
-          { event: "open", from: "openness=collapsed", to: "openness=expanded" },
+          { event: "animationend", from: "openness=collapsed", to: "openness=expanded" },
         ],
       },
     } as Partial<ComponentContract>);
@@ -228,13 +228,120 @@ describe("validateContractSemantics — cross-reference rules", () => {
       // so the test exercises the wire shape.
       stateMachine: {
         transitions: [
-          { event: "toggle", from: ["openness=closed", "openness=phantom"] as unknown as string, to: "openness=expanded" },
+          { event: "animationend", from: ["openness=closed", "openness=phantom"] as unknown as string, to: "openness=expanded" },
         ],
       },
     } as Partial<ComponentContract>);
     const issues = validateContractSemantics(c);
     expect(issueAt(issues, "/stateMachine/transitions/0/from/1")).toBe(true);
     expect(issueAt(issues, "/stateMachine/transitions/0/from/0")).toBe(false);
+  });
+
+  describe("stateMachine trigger resolution (Rule 6b, FEAT-STATEMACHINE-TRIGGER-BINDING-01)", () => {
+  it("flags a transition event resolving to no declared referent, with the exact coded message", () => {
+    const c = base({
+      stateMachine: {
+        transitions: [{ event: "reveal", to: "openness=open" }],
+      },
+    } as Partial<ComponentContract>);
+    const issues = validateContractSemantics(c);
+    expect(issues).toContainEqual({
+      pointer: "/stateMachine/transitions/0/event",
+      message:
+        '[STATEMACHINE_TRIGGER_UNRESOLVED] trigger "reveal" resolves to no declared referent ' +
+        '(expected a channels key, events key, prop name, dismissal trigger, a11y.keyboard id, ' +
+        '"<part>.<verb>" with a declared part, or a DOM platform event)',
+    });
+  });
+
+  it("resolves an event naming a channel key", () => {
+    const c = base({
+      layer: "composer",
+      props: {
+        styled: {
+          members: [
+            { name: "value", type: "string", description: "Controlled value" },
+            { name: "onValueChange", type: "(v: string) => void", description: "cb" },
+          ],
+        },
+      },
+      channels: { selection: { value: "value", onChange: "onValueChange" } },
+      focus: { strategy: "auto" },
+      stateMachine: { transitions: [{ event: "selection", to: "selection=selected" }] },
+    } as Partial<ComponentContract>);
+    expect(validateContractSemantics(c)).toEqual([]);
+  });
+
+  it("resolves an event naming an events key", () => {
+    const c = base({
+      events: { close: { payload: [], returns: "void" } },
+      stateMachine: { transitions: [{ event: "close", to: "openness=closed" }] },
+    } as Partial<ComponentContract>);
+    expect(validateContractSemantics(c)).toEqual([]);
+  });
+
+  it("resolves an event naming a prop (Dialog's `open` shape)", () => {
+    const c = base({
+      props: {
+        styled: { members: [{ name: "open", type: "boolean", description: "Controlled openness" }] },
+      },
+      stateMachine: { transitions: [{ event: "open", to: "openness=opening" }] },
+    } as Partial<ComponentContract>);
+    expect(validateContractSemantics(c)).toEqual([]);
+  });
+
+  it("resolves an event naming a dismissal trigger", () => {
+    const c = base({
+      dismissal: { triggers: [{ event: "escape" }, { event: "overlayClick" }] },
+      stateMachine: { transitions: [{ event: "overlayClick", to: "openness=closing" }] },
+    } as Partial<ComponentContract>);
+    expect(validateContractSemantics(c)).toEqual([]);
+  });
+
+  it("resolves an event naming an a11y.keyboard interaction id (Tabs' alias shape)", () => {
+    const c = base({
+      anatomy: { parts: ["root", "tab"] },
+      a11y: {
+        keyboard: [
+          { key: "ArrowRight", action: "Next tab", when: "tab", id: "arrow.next" },
+          { key: "ArrowDown", action: "Next tab (vertical)", when: "tab", id: "arrow.next" },
+        ],
+      },
+      stateMachine: { transitions: [{ event: "arrow.next", to: "selection=selected" }] },
+    } as Partial<ComponentContract>);
+    expect(validateContractSemantics(c)).toEqual([]);
+  });
+
+  it("resolves a part-qualified event whose part is declared (Tabs' tab.click shape)", () => {
+    const c = base({
+      anatomy: { parts: ["root", "tab"] },
+      stateMachine: { transitions: [{ event: "tab.click", to: "selection=selected" }] },
+    } as Partial<ComponentContract>);
+    expect(validateContractSemantics(c)).toEqual([]);
+  });
+
+  it("resolves a closed DOM platform event", () => {
+    const c = base({
+      stateMachine: { transitions: [{ event: "animationend", to: "openness=open" }] },
+    } as Partial<ComponentContract>);
+    expect(validateContractSemantics(c)).toEqual([]);
+  });
+
+  it("flags a part-qualified event whose part is NOT declared — the part check is not just shape", () => {
+    const c = base({
+      anatomy: { parts: ["root"] },
+      stateMachine: { transitions: [{ event: "phantom.click", to: "selection=selected" }] },
+    } as Partial<ComponentContract>);
+    expect(issueAt(validateContractSemantics(c), "/stateMachine/transitions/0/event")).toBe(true);
+  });
+
+  it("does not treat a bare-string keyboard entry as an id carrier", () => {
+    const c = base({
+      a11y: { keyboard: ["ArrowRight"] },
+      stateMachine: { transitions: [{ event: "ArrowRight", to: "selection=selected" }] },
+    } as Partial<ComponentContract>);
+    expect(issueAt(validateContractSemantics(c), "/stateMachine/transitions/0/event")).toBe(true);
+  });
   });
 
   it("flags anatomy.dom binding referencing a missing channel", () => {

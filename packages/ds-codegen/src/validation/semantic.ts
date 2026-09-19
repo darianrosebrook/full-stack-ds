@@ -26,6 +26,13 @@
  *           second, unverifiable authority over a line count)
  *         - stateMachine.transitions[*].{from,to} ⊆ states (when
  *           dimensional form is used).
+ *         - stateMachine.transitions[*].event resolves to a declared
+ *           trigger referent: a channels key, an events key, a prop
+ *           name, a dismissal trigger, an a11y.keyboard id, a
+ *           "<part>.<verb>" form with a declared part, or a member of
+ *           the closed DOM platform set (FEAT-STATEMACHINE-TRIGGER-BINDING-01;
+ *           name-resolution only — it does not adjudicate trigger
+ *           semantics or kinds).
  *
  *   (2) Layer-conditional rules: certain fields must be present (or
  *       must be absent) given the contract's authored layer.
@@ -236,6 +243,41 @@ export function validateContractSemantics(
             message: `references state "${tr.to}" not declared in states.dimensions (expect "<dimension>=<value>" form)`,
           });
         }
+      }
+    }
+  }
+
+  // --- Rule 6b: stateMachine.transitions[*].event resolves to a declared
+  // trigger (FEAT-STATEMACHINE-TRIGGER-BINDING-01). Name-resolution only:
+  // the rule proves the trigger names something the contract declares, not
+  // that the realization consumes it — transition realization stays with a
+  // future interaction/motion rail.
+  {
+    const eventNames = new Set(Object.keys(contract.events ?? {}));
+    const dismissalTriggerEvents = collectDismissalTriggerEvents(contract);
+    const keyboardInteractionIds = collectKeyboardInteractionIds(contract);
+    for (const [index, tr] of (contract.stateMachine?.transitions ?? []).entries()) {
+      if (!tr || typeof tr !== "object") continue;
+      const ev = tr.event;
+      if (typeof ev !== "string" || ev.length === 0) continue;
+      const partQualified =
+        PART_QUALIFIED_TRIGGER.test(ev) && parts.has(ev.split(".")[0] as string);
+      const resolves =
+        channelNames.has(ev) ||
+        eventNames.has(ev) ||
+        propNames.has(ev) ||
+        dismissalTriggerEvents.has(ev) ||
+        keyboardInteractionIds.has(ev) ||
+        partQualified ||
+        DOM_PLATFORM_TRIGGER_EVENTS.has(ev);
+      if (!resolves) {
+        issues.push({
+          pointer: `/stateMachine/transitions/${index}/event`,
+          message:
+            `[STATEMACHINE_TRIGGER_UNRESOLVED] trigger "${ev}" resolves to no declared ` +
+            'referent (expected a channels key, events key, prop name, dismissal trigger, ' +
+            'a11y.keyboard id, "<part>.<verb>" with a declared part, or a DOM platform event)',
+        });
       }
     }
   }
@@ -628,6 +670,47 @@ function collectPropNames(contract: ComponentContract): Set<string> {
     }
   }
   return names;
+}
+
+/**
+ * Closed DOM platform-event vocabulary a stateMachine trigger may name
+ * without a contract-declared referent (FEAT-STATEMACHINE-TRIGGER-BINDING-01).
+ * Grows only by demonstrated corpus need, mirroring the closed-projection
+ * doctrine — never speculatively.
+ */
+const DOM_PLATFORM_TRIGGER_EVENTS: ReadonlySet<string> = new Set([
+  "animationend",
+  "transitionend",
+]);
+
+/** "<part>.<verb>" trigger form, e.g. "tab.click". */
+const PART_QUALIFIED_TRIGGER = /^([A-Za-z][\w-]*)\.([A-Za-z]\w*)$/;
+
+/** Dismissal trigger event names, tolerant of the legacy flat-string form. */
+function collectDismissalTriggerEvents(contract: ComponentContract): Set<string> {
+  const names = new Set<string>();
+  const d = contract.dismissal as unknown;
+  if (Array.isArray(d)) {
+    for (const t of d) {
+      if (typeof t === "string") names.add(t);
+    }
+  } else if (d && typeof d === "object" && Array.isArray((d as { triggers?: unknown }).triggers)) {
+    for (const t of (d as { triggers: Array<{ event?: unknown }> }).triggers) {
+      if (t && typeof t === "object" && typeof t.event === "string") names.add(t.event);
+    }
+  }
+  return names;
+}
+
+/** Stable interaction ids declared on structured a11y.keyboard entries. */
+function collectKeyboardInteractionIds(contract: ComponentContract): Set<string> {
+  const ids = new Set<string>();
+  for (const entry of contract.a11y?.keyboard ?? []) {
+    if (entry && typeof entry === "object" && typeof entry.id === "string") {
+      ids.add(entry.id);
+    }
+  }
+  return ids;
 }
 
 /**
