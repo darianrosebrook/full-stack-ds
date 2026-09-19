@@ -8,7 +8,7 @@ updated_at: '2026-09-19T09:30:09.918Z'
 created_by_session: 'session-81b74ef5-48d2-46ae-a53d-880593255530'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts (the OHLC interval-distinction controls)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -16,23 +16,26 @@ scope:
     - 'packages/ds-codegen/src/analytical'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'THE EVALUATOR IS NOT WIDENED. The probe is exercised by binding an operation this evaluator CAN perform over one of the relation''s own co-registered ratio measures. Changing what the bounded experiment executes would be a scope change.'
+  - 'THE TEMPORAL AXIS KEEPS ITS SCALE. A period declared as an interval is not an instant and not a cyclic quantity, so the cyclic-only channel must stay refused for it. Reducing the axis to something the channel table happens to accept is the convenient-scalar failure the doctrine names.'
+  - 'CO-REGISTRATION IS A DEGREE OF FREEDOM. Each of the ratio measures is bound in turn and each is lawful, so the shape is not collapsed to one representative measure.'
+  - 'A CONTROL DISTINGUISHES INTERVAL-NESS FROM UNUSABILITY. The cyclic channel must become available when the temporal column IS cyclic, or the refusal would be evidence about the channel rather than about the scale.'
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The FX_P_OHLC relation and an operation over one of its ratio measures.'
+    when: 'Admission and enumeration are run.'
     then: 'given the FX_P_OHLC relation and an operation this evaluator CAN perform over one of its co-registered ratio measures, when the result is enumerated, then the projection layer reaches it and its disposition is recorded'
   - id: A2
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'The admitted result''s facts.'
+    when: 'The dimension''s transformation and the channel dispositions are read.'
     then: 'given that result, when its facts are read, then the temporal column is carried as an interval and the cyclic-only channel is refused for it rather than permitted'
   - id: A3
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'Each of the four co-registered ratio measures bound in turn.'
+    when: 'Each is enumerated.'
     then: 'given the four co-registered ratio measures, when each is bound in turn, then each is a lawful measure, so the shape is not reduced to a single convenient scalar'
   - id: A4
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'A control whose temporal column is cyclic.'
+    when: 'The same operation is enumerated over it.'
     then: 'given a control where the temporal column IS cyclic, when the same operation is enumerated, then the cyclic channel becomes available, so the refusal is about interval-ness and not about the channel being unusable'
 non_functional: {}
 contracts:
