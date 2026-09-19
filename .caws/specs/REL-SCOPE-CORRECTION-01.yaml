@@ -40,3 +40,8 @@ contracts:
   - name: 'scope-correction'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.test.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "OHLC: each ratio measure independently admits and enumerates under a SCALAR question; co-registration and temporal-preservation interpretations withdrawn (pnpm exec vitest run packages/ds-codegen/src/analytical (22 files, 1037 tests green))"
+    recorded_at: "2026-09-19T10:09:59.815Z"
