@@ -1,3 +1,9 @@
+// @vitest-environment jsdom
+// The runtime under test binds DOM listeners on real host elements; three
+// tests observe document-level behavior (disabled/aria-disabled blocking,
+// listener disposal). The codegen package's coverage config runs node by
+// default (no React); this file is the DOM-observing exception.
+// FIX-CODEGEN-COVERAGE-ENV-01
 import { describe, expect, it, vi } from "vitest";
 import ts from "typescript";
 import { INTERACTION_RUNTIME_SOURCE } from "./interaction-runtime.js";
