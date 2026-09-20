@@ -28,3 +28,11 @@ acceptance:
     then: 'the coverage gate completes (all ten suites), unblocked by the CI-history fix that first exposed this latent failure'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Local coverage lane at worktree commit ddcf58c9 (tokens built per worktree requirement — the one intermediate red was the missing composed token graph, not the change): pnpm run test:coverage:codegen exit 0, 148/148 files, 2679/2679 tests, thresholds intact. Focused pre-fix check: the three DOM-observing tests failed with ReferenceError document is not defined under the package config (node), and passed 10/10 with the file-scoped pragma. No test or assertion modified; the package's node default is untouched."
+    recorded_at: "2026-09-20T03:31:09.708Z"
+    command: "pnpm run test:coverage:codegen"
+    exit_code: 0
+    commit_sha: ddcf58c9
