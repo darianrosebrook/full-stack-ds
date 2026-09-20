@@ -1,0 +1,44 @@
+id: CONTRACT-TYPENAME-LEAK-STRICT-01
+title: 'Close the ReactNode contract type-name leak: structural node vocabulary + strict semantic check'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-20T02:42:56.188Z'
+updated_at: '2026-09-20T02:42:56.188Z'
+created_by_session: 'session-09e1a35a-cdfa-4924-a17b-88aa8509f680'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/component.contract.schema.json'
+    - 'packages/ds-contracts/components'
+    - 'packages/ds-codegen/src/ir.ts'
+    - 'packages/ds-codegen/src/contract.ts'
+    - 'packages/ds-codegen/src/cli.ts'
+    - 'packages/ds-codegen/src/validation'
+    - 'packages/ds-codegen/src/frameworks'
+    - 'packages/ds-react/src'
+    - 'packages/ds-vue/src'
+    - 'packages/ds-svelte/src'
+    - 'packages/ds-angular/src'
+    - 'packages/ds-lit/src'
+    - 'packages/ds-react-native/src'
+    - 'packages/ds-swiftui'
+    - 'packages/ds-jetpack-compose'
+    - 'docs'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given contracts use a framework-neutral structural node vocabulary and generate:check enforces a type-name-leak check; when a contract authors a React-admitted type name on its authored surface or the corpus is regenerated; then generate:check fails on any authored React type name, the 9 migrated contracts regenerate across all targets, and governed:rail passes'
+non_functional: {}
+contracts:
+  - name: 'component.contract.schema.json'
+    type: schema
+    path: 'packages/ds-contracts/component.contract.schema.json'
