@@ -15,6 +15,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # The doc-freshness check (docs:check-claims) resolves each doc's
+          # verified_at_commit via rev-parse and checks ancestry via
+          # merge-base — a depth-1 checkout makes every historical stamp
+          # unresolvable and fails the job before tests or the rail run.
+          # Full history keeps the check's real stale-stamp sensitivity.
+          # FIX-CI-HISTORY-PROVISIONING-01
+          fetch-depth: 0
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
