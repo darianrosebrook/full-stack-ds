@@ -1,0 +1,30 @@
+id: FIX-CODEGEN-COVERAGE-ENV-01
+title: 'Run interaction-runtime tests under jsdom in the codegen coverage suite'
+risk_tier: 3
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-20T02:53:10.079Z'
+updated_at: '2026-09-20T02:53:10.079Z'
+created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
+blast_radius:
+  modules:
+    - 'ds-codegen-tests'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/interaction-runtime.test.ts'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'interaction-runtime.test.ts, whose DOM-observing tests (blocks a disabled host, blocks a aria-disabled host, disposes only its own listeners) use document.createElement and fail with ReferenceError under the codegen package''s node environment'
+    when: 'the file carries the @vitest-environment jsdom pragma and pnpm run test:coverage:codegen runs'
+    then: 'the whole codegen coverage suite passes with thresholds intact and the root jsdom suite is unchanged'
+  - id: A2
+    given: 'the pushed revision'
+    when: 'the real CI coverage job executes'
+    then: 'the coverage gate completes (all ten suites), unblocked by the CI-history fix that first exposed this latent failure'
+non_functional: {}
+contracts: []
