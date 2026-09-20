@@ -36,3 +36,10 @@ evidence:
     command: gh run view 35486027929 --repo darianrosebrook/full-stack-ds
     exit_code: 0
     commit_sha: "171b64aff0b5"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "The same real run reached AND completed the downstream checks: all five jobs succeeded (gate; Coverage thresholds; Runtime visual proof rail — previously skipped behind the gate failure; both native compile rails). Run conclusion: success on 171b64af. The downstream execution is the completion evidence, not the YAML edit; the run additionally exposed and then (with FIX-CODEGEN-COVERAGE-ENV-01) repaired a latent coverage failure that the depth-1 gate failure had been masking since 2026-09-05."
+    recorded_at: "2026-09-20T03:31:09.127Z"
+    command: gh run view 35486027929 --repo darianrosebrook/full-stack-ds --json jobs
+    exit_code: 0
+    commit_sha: "171b64aff0b5"
