@@ -2,9 +2,11 @@ id: FIX-CI-HISTORY-PROVISIONING-01
 title: 'Provision git history for CI''s doc-freshness check'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'gate job now has full history; real run 35486027929 green across all five jobs including previously-skipped runtime rail'
 created_at: '2026-09-20T02:16:30.086Z'
-updated_at: '2026-09-20T02:17:08.164Z'
+updated_at: '2026-09-20T03:32:02.903Z'
 created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
 blast_radius:
   modules:
