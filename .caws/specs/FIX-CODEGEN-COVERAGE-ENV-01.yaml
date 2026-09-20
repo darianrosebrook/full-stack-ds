@@ -16,7 +16,7 @@ scope:
     - 'packages/ds-codegen/src/interaction-runtime.test.ts'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The pragma is scoped to this one file: the codegen package''s node environment for the rest of its suite is unchanged, and no test or assertion is modified.'
 acceptance:
   - id: A1
     given: 'interaction-runtime.test.ts, whose DOM-observing tests (blocks a disabled host, blocks a aria-disabled host, disposes only its own listeners) use document.createElement and fail with ReferenceError under the codegen package''s node environment'
