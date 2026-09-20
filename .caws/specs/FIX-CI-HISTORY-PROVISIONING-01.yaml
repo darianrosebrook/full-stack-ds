@@ -28,3 +28,11 @@ acceptance:
     then: 'the run proceeds into and reports the downstream checks (tests, rail, drift diff) - downstream execution on a real run, not the YAML edit, is the completion evidence'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Real workflow run 35486027929 on pushed HEAD 171b64af (watched to completion via gh): the gate job (Validate, lint, typecheck, test) succeeded — docs:check-claims executed with full history and produced no unresolvable-stamp findings (the prior run 35470980084 on fe50628e failed this same step with eleven 'does not resolve to a commit' findings under depth-1). Stale-sensitivity retained: the checker's own self-test fixtures (fresh-pass/stale-fail/ledgered-pass) execute inside docs:check-claims and passed within the green gate; no rule weakened, no baseline invented, no restamps."
+    recorded_at: "2026-09-20T03:31:08.340Z"
+    command: gh run view 35486027929 --repo darianrosebrook/full-stack-ds
+    exit_code: 0
+    commit_sha: "171b64aff0b5"
