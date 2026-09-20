@@ -13,7 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "../contract.js";
-import { validateContractSemantics, validateTextOverflow } from "./semantic.js";
+import { validateContractSemantics, validateFrameworkTypeNames, validateTextOverflow } from "./semantic.js";
 
 function issueAt(issues: { pointer: string }[], pointer: string): boolean {
   return issues.some((i) => i.pointer === pointer);
@@ -758,5 +758,79 @@ describe("validateContractSemantics — textOverflow.line ⊆ prop names (Rule 8
     } as Partial<ComponentContract>);
     const issues = validateTextOverflow(c, new Set(["lines"]));
     expect(issues).toEqual([]);
+  });
+});
+
+describe("validateFrameworkTypeNames — Rule 9 (CONTRACT-TYPENAME-LEAK-STRICT-01)", () => {
+  it("raises no issues for a clean contract using structural propType + node-ref vocabulary", () => {
+    const c = base({
+      props: {
+        styled: {
+          members: [
+            { name: "action", propType: { kind: "node", of: "content" }, description: "" },
+            { name: "count", type: "number", description: "" },
+          ] as never,
+        },
+      },
+      a2ui: { category: "x", children: { allowed: true, slot: "children", accepts: ["string", "node-ref"] } },
+    } as Partial<ComponentContract>);
+    expect(validateFrameworkTypeNames(c as ComponentContract)).toEqual([]);
+  });
+
+  it("flags a legacy prop type naming ReactNode (word-boundary, inside a union)", () => {
+    const c = base({
+      props: {
+        styled: {
+          members: [{ name: "action", type: "ReactNode | string", description: "" }] as never,
+        },
+      },
+    } as Partial<ComponentContract>);
+    const issues = validateContractSemantics(c as ComponentContract);
+    expect(issueAt(issues, "/props/styled/members/0/type")).toBe(true);
+    expect(issues.find((i) => i.pointer === "/props/styled/members/0/type")?.message).toMatch(
+      /FRAMEWORK_TYPE_NAME_LEAK.*ReactNode/,
+    );
+  });
+
+  it("flags a a2ui.children.accepts entry naming ReactNode", () => {
+    const c = base({
+      a2ui: { category: "x", children: { allowed: true, slot: "children", accepts: ["string", "ReactNode"] } },
+    } as Partial<ComponentContract>);
+    const issues = validateContractSemantics(c as ComponentContract);
+    expect(issueAt(issues, "/a2ui/children/accepts/1")).toBe(true);
+  });
+
+  it("flags a dataModel entity field naming ReactNode but not neutral vocabulary", () => {
+    const leaky = base({
+      dataModel: { entities: { Item: { fields: { icon: "ReactNode", label: "string" } } } },
+    } as Partial<ComponentContract>);
+    const issues = validateFrameworkTypeNames(leaky as ComponentContract);
+    expect(issues).toHaveLength(1);
+    expect(issues[0].pointer).toBe("/dataModel/entities/Item/fields/icon");
+
+    const clean = base({
+      dataModel: { entities: { Item: { fields: { icon: "node-ref", label: "string" } } } },
+    } as Partial<ComponentContract>);
+    expect(validateFrameworkTypeNames(clean as ComponentContract)).toEqual([]);
+  });
+
+  it("flags React-namespace-qualified and synthetic-event names on prop types", () => {
+    const c = base({
+      props: {
+        styled: {
+          members: [
+            { name: "a", type: "React.ReactNode", description: "" },
+            { name: "b", type: "(e: SyntheticEvent) => void", description: "" },
+            { name: "c", type: "HTMLButtonElement | null", description: "" },
+          ] as never,
+        },
+      },
+    } as Partial<ComponentContract>);
+    const issues = validateFrameworkTypeNames(c as ComponentContract);
+    expect(issues.map((i) => i.pointer)).toEqual([
+      "/props/styled/members/0/type",
+      "/props/styled/members/1/type",
+      "/props/styled/members/2/type",
+    ]);
   });
 });

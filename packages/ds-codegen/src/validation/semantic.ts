@@ -85,6 +85,7 @@
  */
 
 import type { ComponentContract, ContractDomNode } from "../contract.js";
+import { REACT_ADMITTED_TYPES } from "../frameworks/react/admitted-types.js";
 import type { ValidationIssue } from "../validate.js";
 
 /**
@@ -454,6 +455,87 @@ export function validateContractSemantics(
 
   // --- Rule 8: textOverflow.line prop ⊆ prop names -------------------
   issues.push(...validateTextOverflow(contract, propNames));
+
+  // --- Rule 9: no framework type-name leak on authored surface -------
+  issues.push(...validateFrameworkTypeNames(contract));
+
+  return issues;
+}
+
+/**
+ * Rule 9 (CONTRACT-TYPENAME-LEAK-STRICT-01): the authored contract surface
+ * must not name framework-realization types. `ReactNode`, `SyntheticEvent`,
+ * `HTMLButtonElement`, … belong to the emitter layer; a contract reaching
+ * for one is leaking realization detail into the source of truth.
+ *
+ * The checked surfaces are every place a contract authors a type *name*:
+ *   - legacy TS-string `type` on prop members (designed/constrained/styled
+ *     buckets) — the structural `propType` alternative is framework-neutral
+ *     by construction, so it is exempt;
+ *   - `a2ui.children.accepts` entries — the A2UI vocabulary is
+ *     `string|number|boolean|enum|node-ref|icon-ref` plus component refs;
+ *   - `dataModel.entities[*].fields` values (documentation TS strings).
+ *
+ * This rule runs in `generate:check` (via `--check-semantics`) and, unlike
+ * the CLI's `surfaceTypeDiagnostics`, does NOT filter by the React
+ * admission set when React is an active target — admitting a name for the
+ * React emitter never makes it authored vocabulary.
+ */
+export function validateFrameworkTypeNames(
+  contract: ComponentContract,
+): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+  const pattern = new RegExp(
+    [...REACT_ADMITTED_TYPES]
+      .sort((a, b) => b.length - a.length)
+      .map((n) => `\\b${n.replaceAll(".", "\\.")}\\b`)
+      .join("|"),
+  );
+  const leak = (s: string): string | null => s.match(pattern)?.[0] ?? null;
+
+  for (const bucket of ["designed", "constrained", "styled"] as const) {
+    const members = contract.props?.[bucket]?.members ?? [];
+    for (const [index, member] of members.entries()) {
+      if (!member.type) continue;
+      const hit = leak(member.type);
+      if (hit) {
+        issues.push({
+          pointer: `/props/${bucket}/members/${index}/type`,
+          message:
+            `[FRAMEWORK_TYPE_NAME_LEAK] prop "${member.name}" is typed with the framework name ` +
+            `"${hit}". Framework-realization type names are emitter-layer vocabulary. ` +
+            `Use the structural \`propType\` form (e.g. { "kind": "node", "of": "content" }) ` +
+            `or a contract-declared \`types\` alias instead.`,
+        });
+      }
+    }
+  }
+
+  for (const [index, entry] of (contract.a2ui?.children?.accepts ?? []).entries()) {
+    const hit = leak(entry);
+    if (hit) {
+      issues.push({
+        pointer: `/a2ui/children/accepts/${index}`,
+        message:
+          `[FRAMEWORK_TYPE_NAME_LEAK] a2ui.children.accepts entry "${hit}" names a framework type. ` +
+          `Use the A2UI value-kind vocabulary ("node-ref" / "icon-ref") instead.`,
+      });
+    }
+  }
+
+  for (const [entity, def] of Object.entries(contract.dataModel?.entities ?? {})) {
+    for (const [field, value] of Object.entries(def?.fields ?? {})) {
+      const hit = leak(value);
+      if (hit) {
+        issues.push({
+          pointer: `/dataModel/entities/${entity}/fields/${field}`,
+          message:
+            `[FRAMEWORK_TYPE_NAME_LEAK] dataModel entity "${entity}" field "${field}" names the ` +
+            `framework type "${hit}". Use neutral vocabulary ("node-ref", "string", a contract alias).`,
+        });
+      }
+    }
+  }
 
   return issues;
 }
