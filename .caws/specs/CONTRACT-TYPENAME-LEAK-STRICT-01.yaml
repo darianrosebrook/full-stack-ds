@@ -8,7 +8,9 @@ updated_at: '2026-09-20T02:42:56.188Z'
 created_by_session: 'session-09e1a35a-cdfa-4924-a17b-88aa8509f680'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - ds-contracts (schema + component corpus)
+    - ds-codegen (IR, CLI, semantic validation)
+    - generated framework/native package sources (regeneration output)
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -31,7 +33,9 @@ scope:
     - 'docs'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - Authored contract surface (prop types, children.accepts, callback field maps) contains no React-admitted type name; ReactNode et al appear only as emitter-lowered images of structural IR nodes.
+  - generate:check fails (not warns) when an authored contract references a React-admitted type name, independent of which targets are active — no admission filtering in the semantic gate.
+  - Regenerated output across all targets is byte-stable except where the structural vocabulary deliberately changes it; governed:rail and the CI committed-byte drift diff stay green.
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
