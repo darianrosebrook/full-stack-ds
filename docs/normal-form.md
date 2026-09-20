@@ -4,8 +4,8 @@ authority: architecture
 status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
-updated: 2026-09-19
-verified_at_commit: e6303029
+updated: 2026-09-20
+verified_at_commit: ea2e13f2
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json
