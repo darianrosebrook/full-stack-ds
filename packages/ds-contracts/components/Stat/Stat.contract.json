@@ -113,7 +113,7 @@
       "accepts": [
         "string",
         "number",
-        "ReactNode"
+        "node-ref"
       ]
     }
   }

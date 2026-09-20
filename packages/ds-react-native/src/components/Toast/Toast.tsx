@@ -19,7 +19,7 @@ export interface ToastProps {
   title?: string;
   variant?: ToastVariant;
   politeness?: ToastPoliteness;
-  action?: unknown;
+  action?: ReactNode;
   duration?: number | null;
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;

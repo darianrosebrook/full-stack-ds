@@ -195,7 +195,7 @@
       "allowed": true,
       "slot": "children",
       "accepts": [
-        "ReactNode"
+        "node-ref"
       ]
     }
   },

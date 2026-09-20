@@ -126,7 +126,7 @@
       "required": false,
       "description": "Optional action slot rendered next to the toast description (e.g. an undo button).",
       "defaultExpr": null,
-      "nodeKind": null
+      "nodeKind": "node-ref"
     },
     {
       "name": "duration",
