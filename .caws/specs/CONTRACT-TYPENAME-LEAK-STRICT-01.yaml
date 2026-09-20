@@ -49,3 +49,8 @@ contracts:
   - name: 'component.contract.schema.json'
     type: schema
     path: 'packages/ds-contracts/component.contract.schema.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "On landed main (merge 4fa6070f): pnpm run generate:check exits 0 (52/52 contracts, zero React-admitted type names remain on authored surface — corpus grep for ReactNode under packages/ds-contracts/components returns nothing). Falsification: re-inserting \"ReactNode\" into Card.contract.json a2ui.children.accepts made generate:check exit 1 with DRIFT Card.contract.json + [/a2ui/children/accepts/0: FRAMEWORK_TYPE_NAME_LEAK ...]; reverted and gate re-green. Rule unit tests: vitest run src/validation/semantic.test.ts (63 tests incl. 5 Rule 9 cases: clean structural propType, legacy union leak, accepts leak, dataModel leak vs neutral node-ref, React.ReactNode/SyntheticEvent/HTMLButtonElement word-boundary) + src/prop-surface-inventory.test.ts (9, migration ratchet now includes Toast). Full gates in worktree pre-merge: governed:rail exit 0; pnpm test 4288/4288; test:frameworks 87 files/175 tests exit 0; lint + typecheck clean; caws gates run --spec OK. Intentional output deltas committed: RN Toast action unknown->ReactNode, figma Toast nodeKind null->node-ref; web-target output byte-identical. Not covered: types-alias bodies, channel/event signature strings, props.hook members are outside Rule 9's scanned surfaces; style-literal platforms annotation deliberately not treated as a leak (declared platform axis)."
+    recorded_at: "2026-09-20T03:14:56.011Z"
