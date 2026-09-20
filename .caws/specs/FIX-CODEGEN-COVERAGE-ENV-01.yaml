@@ -36,3 +36,10 @@ evidence:
     command: "pnpm run test:coverage:codegen"
     exit_code: 0
     commit_sha: ddcf58c9
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Real CI run 35486027929 on 171b64af: Coverage thresholds job succeeded (all ten suites) — the exact job that failed on 2fc481d8 (35484504759) with the three ReferenceError failures this pragma repairs."
+    recorded_at: "2026-09-20T03:31:10.301Z"
+    command: gh run view 35486027929 --repo darianrosebrook/full-stack-ds --json jobs
+    exit_code: 0
+    commit_sha: "171b64aff0b5"
