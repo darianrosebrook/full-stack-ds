@@ -3,7 +3,6 @@ title: 'Provision git history for CI''s doc-freshness check'
 risk_tier: 3
 mode: fix
 lifecycle_state: active
-worktree: ci-history
 created_at: '2026-09-20T02:16:30.086Z'
 updated_at: '2026-09-20T02:17:08.164Z'
 created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
