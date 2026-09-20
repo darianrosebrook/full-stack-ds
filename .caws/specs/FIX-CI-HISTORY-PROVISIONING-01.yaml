@@ -16,7 +16,7 @@ scope:
     - '.github/workflows/ci.yml'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The freshness check itself is untouched: no weakened rule, no baseline entries invented for unresolvable commits, no restamps to HEAD. With history available, a genuinely stale stamp must still fail.'
 acceptance:
   - id: A1
     given: 'the main gate job''s checkout with fetch-depth: 0 and the pushed revision'
