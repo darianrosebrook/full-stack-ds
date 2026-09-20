@@ -2,9 +2,11 @@ id: CONTRACT-TYPENAME-LEAK-STRICT-01
 title: 'Close the ReactNode contract type-name leak: structural node vocabulary + strict semantic check'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Contract authored surface carries no framework type names; semantic Rule 9 fails generate:check on any leak; 9 contracts migrated; all gates green'
 created_at: '2026-09-20T02:42:56.188Z'
-updated_at: '2026-09-20T03:14:07.851Z'
+updated_at: '2026-09-20T03:15:04.788Z'
 created_by_session: 'session-09e1a35a-cdfa-4924-a17b-88aa8509f680'
 blast_radius:
   modules:
