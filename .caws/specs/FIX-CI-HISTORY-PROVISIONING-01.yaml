@@ -1,0 +1,30 @@
+id: FIX-CI-HISTORY-PROVISIONING-01
+title: 'Provision git history for CI''s doc-freshness check'
+risk_tier: 3
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-20T02:16:30.086Z'
+updated_at: '2026-09-20T02:16:30.086Z'
+created_by_session: 'session-8e785c23-806e-4b0b-8d1f-534c73921cef'
+blast_radius:
+  modules:
+    - 'governed-ci'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - '.github/workflows/ci.yml'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'the main gate job''s checkout with fetch-depth: 0 and the pushed revision'
+    when: 'the real workflow run executes docs:check-claims'
+    then: 'the verification stamps resolve (no does-not-resolve findings) and the checker''s stale-stamp self-tests still run inside the same invocation, retaining sensitivity'
+  - id: A2
+    given: 'the same real workflow run'
+    when: 'docs:check-claims passes'
+    then: 'the run proceeds into and reports the downstream checks (tests, rail, drift diff) - downstream execution on a real run, not the YAML edit, is the completion evidence'
+non_functional: {}
+contracts: []
