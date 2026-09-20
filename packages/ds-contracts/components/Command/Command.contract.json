@@ -339,7 +339,7 @@
           "value": "string",
           "label": "string",
           "description?": "string",
-          "icon?": "ReactNode",
+          "icon?": "node-ref",
           "disabled?": "boolean",
           "onSelect": "(value: string) => void"
         }

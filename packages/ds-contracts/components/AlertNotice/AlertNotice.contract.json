@@ -207,7 +207,7 @@
       "slot": "children",
       "accepts": [
         "string",
-        "ReactNode"
+        "node-ref"
       ]
     }
   }

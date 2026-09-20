@@ -167,7 +167,7 @@
         },
         {
           "name": "action",
-          "type": "ReactNode",
+          "propType": { "kind": "node", "of": "content" },
           "description": "Optional action slot rendered next to the toast description (e.g. an undo button)."
         },
         {

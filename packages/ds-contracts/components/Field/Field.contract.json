@@ -340,7 +340,7 @@
       "allowed": false,
       "slot": "control",
       "accepts": [
-        "ReactNode"
+        "node-ref"
       ]
     }
   }
