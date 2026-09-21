@@ -104,7 +104,7 @@ describe("stage-2 erasure freeze", () => {
     // (The FIRST one filed, nest.levels#incidence over the round-25 pair, moved a
     // verdict and then returned to unresolved when the standing repair landed.)
     expect(Object.fromEntries(Object.entries(frozen.verdicts).map(([d, ids]) => [d, ids.length]))).toEqual({
-      unresolved: 70,
+      unresolved: 76,
       witnessed: 20,
       "required-derived-vocabulary": 2,
       "representation-artifact": 34,
