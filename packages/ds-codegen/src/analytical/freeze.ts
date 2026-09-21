@@ -350,6 +350,67 @@ export function carriedSupersession(prior: Stage2Freeze, check: FreezeCheck = ch
   return erasureUnmoved || imagePreserving ? prior.supersedes : undefined;
 }
 
+/**
+ * An AUTHORED transition statement: explicit input to the record operation.
+ * The recorder validates it against the measured movement and the retained
+ * predecessor — it never manufactures, filters, or reuses an explanation.
+ */
+export interface TransitionStatement {
+  identity: string;
+  from: string;
+  to: string;
+  reason: string;
+}
+
+/**
+ * Validate an authored transition against the retained predecessor and the
+ * computed successor, and return it in canonical (sorted) form.
+ *
+ * EXHAUSTIVE AND ENDPOINT-BOUND: the authored identities must cover exactly
+ * the authorities that moved — an unexplained movement is refused, and an
+ * explanation for an authority that did not move is refused — and each
+ * explanation is bound to the endpoint values the two records actually carry.
+ * An explanation of one transition cannot discharge a different one.
+ */
+export function acceptTransition(
+  prior: { authority?: unknown },
+  recorded: { authority?: unknown },
+  authored: readonly TransitionStatement[],
+): TransitionStatement[] {
+  const was = (prior.authority ?? {}) as unknown as Record<string, string | undefined>;
+  const now = (recorded.authority ?? {}) as unknown as Record<string, string | undefined>;
+  const moved = Object.keys(now)
+    .filter((k) => was[k] !== now[k])
+    .sort();
+  const explained = authored.map((t) => t.identity).sort();
+  const unexplained = moved.filter((k) => !explained.includes(k));
+  const unmovable = explained.filter((k) => !moved.includes(k));
+  if (unexplained.length > 0 || unmovable.length > 0) {
+    throw new Error(
+      "freeze: the authored transition does not match the measured movement — " +
+        (unexplained.length ? `unexplained movements: ${unexplained.join(", ")}. ` : "") +
+        (unmovable.length ? `authored for authorities that did not move: ${unmovable.join(", ")}. ` : "") +
+        "The statement must cover exactly the authorities that moved.",
+    );
+  }
+  for (const t of authored) {
+    if (t.from !== was[t.identity]) {
+      throw new Error(
+        `freeze: the authored transition for ${t.identity} states a predecessor (${t.from.slice(0, 12)}…) the retained prior record does not carry (${String(was[t.identity]).slice(0, 12)}…) — the explanation is bound to the wrong movement`,
+      );
+    }
+    if (t.to !== now[t.identity]) {
+      throw new Error(
+        `freeze: the authored transition for ${t.identity} states a successor (${t.to.slice(0, 12)}…) the computed record does not carry (${String(now[t.identity]).slice(0, 12)}…) — the explanation does not describe this record`,
+      );
+    }
+    if (!t.reason || t.reason.trim().length < 40) {
+      throw new Error(`freeze: the authored transition for ${t.identity} carries no substantive reason`);
+    }
+  }
+  return [...authored].sort((a, b) => a.identity.localeCompare(b.identity));
+}
+
 export interface FreezeDivergence {
   /** `<coordinate>`, `census:<id>`, `verdict:<id>` or `authority:<identity>` — the readable class. */
   key: string;
@@ -528,23 +589,6 @@ export function checkFreeze(
 
 const invokedDirectly = process.argv[1] !== undefined && import.meta.url.endsWith(path.basename(process.argv[1]));
 if (invokedDirectly) {
-  /**
-   * A MULTI-AUTHORITY transition record. A supersession absorbs exactly one
-   * authority's movement, so a change that moves several at once cannot state
-   * itself that way. This block records each moved identity with its exact
-   * endpoints and an authored reason, so an explanation of ONE transition
-   * cannot discharge a DIFFERENT one: the endpoints bind the reason to the
-   * movement it explains.
-   */
-  const TRANSITION_REASONS: Record<string, string> = {
-    coordinateBasisDigest:
-      "The census basis grew by design: the bounds declaration added field.bounds.lower and field.bounds.upper as reference coordinates, so the coordinate-set digest moved with the schema. No coordinate left and none was re-keyed.",
-    ruleDigest:
-      "The erasure rule moved with the holder-targeting repair: a presence erasure on a slot required by its holder now executes at the holder. The behavioural effect is authored in SUPERSESSION_EFFECT.delete-holder.",
-    erasureAuthorityDigest:
-      "The erasure authority moved with the same holder-targeting repair; this is the movement a single-authority supersession would have stated had the others not moved with it.",
-  };
-
   if (process.argv.includes("--record")) {
     const prior = fs.existsSync(FREEZE_FILE) ? loadFreeze() : undefined;
     const scoped = process.argv.includes("--rescope") ? undefined : prior?.fixtures;
@@ -554,27 +598,28 @@ if (invokedDirectly) {
     const superseding = process.argv.includes("--supersede") && prior !== undefined;
     const supersedes = superseding ? supersessionOf(prior!) : prior ? carriedSupersession(prior) : undefined;
     const recorded = computeFreeze(superseding ? {} : (prior?.adjudicated ?? {}), scoped, supersedes);
-    // Where this record supersedes nothing (the multi-authority shape), bind the
-    // transition explicitly: each moved identity carries its exact endpoints and
-    // an authored reason. Supersession and transition are mutually exclusive.
-    if (!supersedes && prior) {
+    // The transition statement is EXPLICIT INPUT: --transition <file> carries
+    // the authored set of moved identities, their retained predecessor and
+    // computed successor endpoints, and a reason per movement. The recorder
+    // validates it and refuses anything that does not match exactly — it never
+    // manufactures, filters, or reuses an explanation.
+    const transitionFlag = process.argv.indexOf("--transition");
+    if (transitionFlag !== -1) {
+      const authored = JSON.parse(fs.readFileSync(path.resolve(process.argv[transitionFlag + 1]!), "utf-8")) as TransitionStatement[];
+      (recorded as { transitions?: TransitionStatement[] }).transitions = acceptTransition(prior!, recorded, authored);
+    } else if (prior) {
       const was = (prior.authority ?? {}) as unknown as Record<string, string | undefined>;
       const now = recorded.authority as unknown as Record<string, string>;
       const moved = Object.keys(now).filter((k) => was[k] !== now[k]);
-      if (moved.length > 1) {
-        const reasons = TRANSITION_REASONS;
-        (recorded as { transitions?: unknown }).transitions = moved
-          .filter((k) => reasons[k] !== undefined)
-          .map((k) => ({ identity: k, from: was[k], to: now[k], reason: reasons[k] }));
-      } else {
-        // No NEW multi-authority movement: the prior transition statement is
-        // still the statement of the erasure behaviour this record carries, so
-        // it is carried forward the way a supersession is. Dropping it here
-        // would silently delete the only account of what the last behavioural
-        // change did.
-        const carried = (prior as { transitions?: unknown }).transitions;
-        if (carried !== undefined) (recorded as { transitions?: unknown }).transitions = carried;
+      if (moved.length > 0) {
+        throw new Error(
+          `freeze: ${moved.length} authority movement(s) are unexplained (${moved.join(", ")}) — ` +
+            "author a transition statement and pass --transition <file>, or adjudicate the keys individually.",
+        );
       }
+      // No new movement: the prior transition is historical provenance.
+      const carried = (prior as { transitions?: TransitionStatement[] }).transitions;
+      if (carried !== undefined) (recorded as { transitions?: TransitionStatement[] }).transitions = carried;
     }
     fs.writeFileSync(FREEZE_FILE, `${JSON.stringify(recorded, null, 2)}\n`);
     console.log(`freeze: recorded ${FREEZE_FILE}`);
