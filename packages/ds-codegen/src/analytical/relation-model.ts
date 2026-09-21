@@ -210,6 +210,14 @@ export const Field = z
     temporality: Temporality.optional(),
     /** The declared whole: fixed for the field, or the row's value of another field. */
     whole: z.union([z.literal("fixed"), z.strictObject({ perRow: Name })]).optional(),
+    /**
+     * A declared field-to-field BOUNDS relationship: this field's value lies
+     * between the named sibling fields' values, row by row. Generic over any
+     * three fields of the relation; nothing names a form. Adjudicated as
+     * INSTANCE evidence — supplied rows that violate it carry the
+     * `bounds:row-consistent` obligation, and absent rows carry nothing.
+     */
+    bounds: z.strictObject({ lower: Name, upper: Name }).optional(),
     base: z.literal(true).optional(),
     additivity: Additivity.optional(),
     permits: Permits.optional(),

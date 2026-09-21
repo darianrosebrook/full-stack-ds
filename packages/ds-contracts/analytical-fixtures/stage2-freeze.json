@@ -1,14 +1,14 @@
 {
   "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label.",
   "digests": {
-    "fixtures.jsonl": "0f39e8f2d87d4c9e677d1ac48759dbbc50eb4354ccdccca156b7e8095b7b2e9b"
+    "fixtures.jsonl": "317507a6a81a65dedc8c8b1cb8a97ee795e378c4c95773e407993478e7d8c193"
   },
   "authority": {
-    "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
-    "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
+    "coordinateBasisDigest": "1196a0f0bd79fc2bcbfe4366c133ca1a4d97305f779b667b6dc3106caf7ca163",
+    "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "31627ef1ba9385fab9d6c8e793cd6895322df473ffdbcb4f1527017e00600fa3"
+    "ruleDigest": "94e63ed497c089cbca605d4613ac7f788137ddf6e8ed107e4d33c58798f5700f"
   },
   "fixtures": [
     "FX_SURVEY_MEAN_SATISFACTION",
@@ -58,7 +58,6 @@
     "FX_S_ADVERSARIAL_NAMES",
     "FX_P_CATEGORICAL_VS_RATIO",
     "FX_P_BINNED_INTERVAL",
-    "FX_P_OHLC",
     "FX_P_HIERARCHY",
     "FX_P_GRAPH_ISOLATED_NODE",
     "FX_H_PAYROLL",
@@ -94,7 +93,15 @@
     "FX_T_FLOW_ROWS_LEAKING",
     "FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT",
     "FX_H_ORDERS_FLATTENED_DROPS_REGION",
-    "FX_H_ROUTES_CONSERVED_ONE_EDGE_UNREADABLE"
+    "FX_H_ROUTES_CONSERVED_ONE_EDGE_UNREADABLE",
+    "FX_H_DAILY_ROLLUP_INVENTS_MARGIN",
+    "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT",
+    "FX_H_SALES_NESTED_DROPS_STATE",
+    "FX_H_READINGS_BINNED_DROPS_TEMP",
+    "FX_H_SHARES_NORMALIZED_ON_ABSENT_FIELD",
+    "FX_H_READINGS_BINNED_KEEPS_TEMP",
+    "FX_P_OHLC_PAIR",
+    "FX_P_OHLC"
   ],
   "verdicts": {
     "unresolved": [
@@ -112,6 +119,10 @@
       "field.additivity.kind:additive~semi-additive",
       "field.additivity.kind:semi-additive~non-additive",
       "field.additivity.kind:semi-additive~ratio-measure",
+      "field.bounds.lower#incidence",
+      "field.bounds.lower#present",
+      "field.bounds.upper#incidence",
+      "field.bounds.upper#present",
       "field.temporality.grain:day~<absent>",
       "field.temporality.grain:month~<absent>",
       "observation.null:absent~<absent>",
@@ -235,660 +246,689 @@
   },
   "erasure": {
     "relation.grain": {
-      "reach": 84,
-      "digest": "63a88833674a6306203141eb2e48ad04cadc58ce7ef6f3974d01ea688118c488"
+      "reach": 91,
+      "digest": "43294a07af947374371aa65f7697809062c281b3785649ab1b8926e588328a51"
     },
     "field.transformation": {
-      "reach": 84,
-      "digest": "fbdaf67bdfd74fe1f9300fdedab1cb342a792a514af5be1f752c73bd6fc2f6ac"
+      "reach": 91,
+      "digest": "6a52e589c214c17eb08f3558fa4c927f5e4cdc5c8d19da06ebd3e8bcca247b65"
     },
     "field.transformation:nominal~ordinal": {
-      "reach": 83,
-      "digest": "9974dc0f28e2cc8392f385ca376bc07c462f85b7ccbd6310e6ca34a63450ba96"
+      "reach": 90,
+      "digest": "12d59747fb9a1e3f7d4094aa90c8aedf6afa781b902154a345cd9e5bfe4169e6"
     },
     "field.transformation:nominal~interval": {
-      "reach": 83,
-      "digest": "124f1bcd63f4a1d840c1c4a4d9e4638db3b12fc857ef7789623a763e7f7dcbe3"
+      "reach": 90,
+      "digest": "6fa8e32fc6081ae5b5adb434bda298e598dffa3ce054a78e1df577b3a6518c92"
     },
     "field.transformation:nominal~ratio": {
-      "reach": 84,
-      "digest": "a25df87b298a5886f010a134ef724bc839eadd0561db602c5f7e83384194c820"
+      "reach": 91,
+      "digest": "95801620efb45c1087ab0efdfe85fc72ab422bb74ff3c393171b818577df5982"
     },
     "field.transformation:ordinal~interval": {
-      "reach": 26,
-      "digest": "c724fcbc4479be03f938f59e318f42b7c7b18f8f308d4fbd36bf16735924b38e"
+      "reach": 29,
+      "digest": "caf3961e9df69831843738f0eb7790916189e3ba7925344d3255b7e6c5adad34"
     },
     "field.transformation:ordinal~ratio": {
-      "reach": 76,
-      "digest": "65647942a30765d950a814726b6c7ed2829d355431dc492d08ceea8c1497786f"
+      "reach": 83,
+      "digest": "1adf77ab829be0cabc1316459b1cc50b12ba5e23f079a2ebcf79bc9b4d96b721"
     },
     "field.transformation:interval~ratio": {
-      "reach": 76,
-      "digest": "f83f4cd5244773ea0545f1e370c5be8cbaaaeb82a2bef80762e30b6c260018e9"
+      "reach": 83,
+      "digest": "3d10b35074ab15b2200d855f81879b58b1a4d68f41a7ee694e3daef9b9f421b6"
     },
     "field.cyclic": {
       "reach": 3,
-      "digest": "42a8649efbcb0a9adbff207043709fee1a94ed3e064219f0788d7d3948538714"
+      "digest": "8e38d2648c544e9a4947b52d8951c20158a91a1781739cc18546018618044b2d"
     },
     "field.proportion": {
       "reach": 7,
-      "digest": "be9e3f979f8a5799ad6b36a971cc09fbd85fcf6b03eb6133cd3128c15c4e5bbc"
+      "digest": "70fc8b4e573cdf589b9bdc486e3ea312da8c21f2a0eda395e71690bbed31fd37"
     },
     "field.index": {
       "reach": 3,
-      "digest": "0b1ff6cc81d60d7bf880b375a8967b1fe619696d7a502c49ed4c6c0c37526c1e"
+      "digest": "b7756b0df2cb8c31d469a6d46a2db614aa78ecc2d0de6dd71671739b7737e7da"
     },
     "field.key": {
-      "reach": 67,
-      "digest": "d1c8662f13693ae4c9575daa2257672a148df44966c5cbeb0a425d785fb738b9"
+      "reach": 73,
+      "digest": "7025e4693fa185fd0ee74cd9dccf5e1f52bf8046c292c4d1d9ea02581af80309"
     },
     "field.unit.units": {
       "reach": 3,
-      "digest": "94e771bcb08b4eea1acceaab61c712624f602cb669f9d17b31492c6a0c965905"
+      "digest": "53553280a854d447c639b17aacf52b06404be7a3bf49de1273c5c058e7c8362e"
     },
     "field.unit.perRow": {
       "reach": 5,
-      "digest": "bf7ce0441d7379494391ff3b20a3d249b130e607cf72dcb10ab8db31e915e589"
+      "digest": "78dfab0a9ae60aa688124b9ba9f1a8baa82ee926fe653b11dc989947754b60cd"
     },
     "field.unit.conversions": {
       "reach": 2,
-      "digest": "7590320ad99d3bf23ee81b13a031bc18bede75b60c5b580bba7a44922a70b332"
+      "digest": "a8162249389529e9c7f5404336232c62f85587a60cd9fb861ab9ae765e6464f3"
     },
     "field.temporality#present": {
-      "reach": 18,
-      "digest": "65146cf34aa19c44195b8844d54a4ad14e92fa8776c1c990c9b2e790502e94c8"
+      "reach": 19,
+      "digest": "32ae5bd5eace39d013acae9252a92258cee0819ef782ac27ad3780a9018b8c92"
     },
     "field.temporality.kind": {
-      "reach": 18,
-      "digest": "d675a98e56279c08f37aea278dc56cc54e899aac5b8d43beaf4262f959afc6d2"
+      "reach": 19,
+      "digest": "c0402f7dbb49d21e12a8d6817bb5c8b744094408c831ebfff16600e885f0146d"
     },
     "field.temporality.kind:instant~interval": {
-      "reach": 18,
-      "digest": "743f6e3d4287f2cacc810e32fdc177172479b6af0c39eb7d07b45c49516056d1"
+      "reach": 19,
+      "digest": "10d371f11c28ff87f09800a1a45d6b91f2821a7b7698c7e3a30d7dd3959ed553"
     },
     "field.temporality.grain": {
       "reach": 2,
-      "digest": "14199285178f746331617936c2edc31e786005cf8687e6967aed06142a4c87ca"
+      "digest": "dd0b26cdef9f21f2cbe96ee141ff059bcf21da5a60bc8fda0e6d1d660c3c0ac2"
     },
     "field.temporality.grain:day~month": {
       "reach": 2,
-      "digest": "2fba70361d8a231381ed71ccb1f9baacbf371565f8491cad627baac8aaacd8b8"
+      "digest": "7c31d9993152d8d350875b9c323ec48e3898e2c67efed6b66cbf870084606b4a"
     },
     "field.temporality.grain:day~<absent>": {
       "reach": 2,
-      "digest": "c99fb19fb86a0cb6d47e893741555c61e6093e1a366a1ae616a656327a6ee669"
+      "digest": "96b7fc6679ef726eff70678b5d68cfe0e834f749ad043c4ec833d5c0ead3c019"
     },
     "field.temporality.grain:month~<absent>": {
       "reach": 1,
-      "digest": "18dbf504dfb89605f0fc540ce4c89eee8b4f55817a651a9aca8d982f6de3288d"
+      "digest": "2304831b62f484adde2c85093c4e483b6e737c710844ab4a0394238564c229b6"
     },
     "field.whole": {
       "reach": 2,
-      "digest": "5caa80cda94adbf9781d542b763561d037b7c3d0c6ec23f46ba4413d9c82d612"
+      "digest": "4c8948d057aafca3b857e88e07dd83b4ce8990fd8486053fa2cde27ea25b50bd"
     },
     "field.whole.perRow": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "field.whole.perRow#incidence": {
       "reach": 4,
-      "digest": "354f5ed91813a572e05180c34bca90a45faa54c5a24ffbb69bae894b1b707192"
+      "digest": "862df8dcb0201cd9aba4d1cfdf4b781a6dcf32c920c9d3f6b3b8ecbdd369a7e9"
+    },
+    "field.bounds.lower": {
+      "reach": 0,
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
+    },
+    "field.bounds.lower#present": {
+      "reach": 1,
+      "digest": "a50a0cf7942b913faa2895d4a3125e288137250d1afc7392d6aede651f30643f"
+    },
+    "field.bounds.lower#incidence": {
+      "reach": 1,
+      "digest": "698501995ea3cacfec3cc4f8d6967aff5ab9195e13f4a4d214f96d12739b4bb1"
+    },
+    "field.bounds.upper": {
+      "reach": 0,
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
+    },
+    "field.bounds.upper#present": {
+      "reach": 1,
+      "digest": "a50a0cf7942b913faa2895d4a3125e288137250d1afc7392d6aede651f30643f"
+    },
+    "field.bounds.upper#incidence": {
+      "reach": 1,
+      "digest": "34daa9f848a989f46baf532ebde2222ecc5606e71107ba513d85e66f7266a1c5"
     },
     "field.base": {
       "reach": 1,
-      "digest": "742b4b3c81daf9da8d269746f208a4a75d3430f53f413e0e27f35fed01ecba2a"
+      "digest": "4deda5ded72dd4d6148ac15e9687d8034119f8aa73f36f64ce8fcbe29572bd02"
     },
     "field.additivity#present": {
       "reach": 8,
-      "digest": "80ab9d6260cdd86283acf347b20490be322c09863aaf34c66e7f191790612e32"
+      "digest": "96377b8f27e7862f1bd7ef53ec3596e80db4591946bc182150520ecfe676d734"
     },
     "field.additivity.kind": {
       "reach": 8,
-      "digest": "f03d687bf585e53f8e0a1aa9c083d13c725a0890fe7bac02f1ae0427419b1e2f"
+      "digest": "071d318c26388241cdc950ff673c70b4bb269c541e37438b2f5e863333bdb2c3"
     },
     "field.additivity.kind:additive~semi-additive": {
       "reach": 4,
-      "digest": "6caa70dcae62f456b0801db7060a917b9221061062a9a695d02c9bd28dfbb4d6"
+      "digest": "4a7d9b4d567377d622b7824ea0ded5f970d5b6bb9a4ad2cb17c9b03c748cc372"
     },
     "field.additivity.kind:additive~non-additive": {
       "reach": 2,
-      "digest": "c6c59d1d36a667715708a0eca0f9c0de6832465c79ae11cce048591b577df4a0"
+      "digest": "2c55b17f32defe70c773530cd7cfc028a1224b3fe33a5a539844a31027cd5b28"
     },
     "field.additivity.kind:additive~ratio-measure": {
       "reach": 4,
-      "digest": "7374dba2120f088a35cc7cb95d1e70457f7277488f807a36f1ddf8e0b0c41035"
+      "digest": "89aa6b9c564ca08c1c6758aa6f94e27030fec1d45b7b63774cc689f60929e58a"
     },
     "field.additivity.kind:semi-additive~non-additive": {
       "reach": 4,
-      "digest": "f7781b311e8908325627bcef369c3a79a7c3df4400b4b7d6dfd50fc3a770f59d"
+      "digest": "3daa5868e65e3ed9af274a7e74fa5900d2cc6b45e6887e29ce8c7cb0526f3d77"
     },
     "field.additivity.kind:semi-additive~ratio-measure": {
       "reach": 6,
-      "digest": "6ba995c1320a85ce04b9a0e17d7fa79300f9a5832780701cc285f067d59c3282"
+      "digest": "d6e0288549587fbfc11f8bd52ce7c93ffcef5cda83faacf52acd95a6a33e1095"
     },
     "field.additivity.kind:non-additive~ratio-measure": {
       "reach": 4,
-      "digest": "4b5e0e102f57cef4760ffab4206a5e00b2ce4127859eea4181cc1d692387843e"
+      "digest": "f176a488805b5f199d21e8b447b70b521ac5b7480582bbcf0c5eb4721b093eaf"
     },
     "field.additivity.semi-additive.nonAdditiveAlong": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "field.additivity.semi-additive.nonAdditiveAlong#arity": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "field.additivity.semi-additive.nonAdditiveAlong#incidence": {
       "reach": 3,
-      "digest": "db9035c2b7308769a6cf15d08a348cd98806051123ad08c86d90f5e0c56f73e7"
+      "digest": "bfb6553993b2f1cbfde5ca6d2c9a62e132c07aa3e5917d6a4442d4aaedc22700"
     },
     "field.permits.null": {
       "reach": 12,
-      "digest": "5678d8ffee47b4611e4b951bf295c18500e730ac9ba213e0fa47bffca437d29a"
+      "digest": "6ae7da9a62a9986364b2fcc1d6325d27375767fb90e45e646c83a4aba7ad9df8"
     },
     "field.permits.uncertainty": {
       "reach": 5,
-      "digest": "bae03b0a5d1aabe2aa46d55f97b4f0169df964be1281d7a94de8691c6eabff04"
+      "digest": "f6a622e0bd174b02cf9897c2580024723703239390aa54351d49ab8d0528f077"
     },
     "relation.derivedBy#present": {
-      "reach": 21,
-      "digest": "1e3dea7564f7bcf053caf5223d6f0dac269d2a541128314ba8838dea7221d8fa"
+      "reach": 27,
+      "digest": "4cc7e6271a53f3a676169db16ee9f84b5a64c3a2dbb3904de25cbd35dea15b58"
     },
     "relation.derivedBy.kind": {
-      "reach": 21,
-      "digest": "80fcb36603b778516657a743c4c8dd248e9c1107d3128f83d3bfa7515666c2d9"
+      "reach": 27,
+      "digest": "f10e899c1c2ac99f2d8aff0fa07bfb723f0d5017bac9e2ca4af41e8db55e2164"
     },
     "relation.derivedBy.kind:aggregate-to-grain~join": {
-      "reach": 7,
-      "digest": "b767f0bb893096fb485a8a302efa57f544895e922a19278b7c1ac4308ab60bf8"
+      "reach": 9,
+      "digest": "aa81492cd4e8893b2f6138084074c864f2d3b0232346ef7b72e64780971a0d48"
     },
     "relation.derivedBy.kind:aggregate-to-grain~nest": {
-      "reach": 6,
-      "digest": "c97d89449a7b6ef8eb1f5bbed737c6bb7b29cb9e66c3db05d5a078d5805252ab"
+      "reach": 8,
+      "digest": "beca4f4cae602fcf07634de39f5e5b90de2824443edf9b450aa7835499e61fda"
     },
     "relation.derivedBy.kind:aggregate-to-grain~bin": {
-      "reach": 6,
-      "digest": "1798cc9d746ba3dcf26d04d966858bc2cd9e5e5e0dc0e4cde7edb9aec541884c"
+      "reach": 9,
+      "digest": "be2748224280e8ba556d89f1f0cc43a4c25606513e5e17fe8fd0499f7353d001"
     },
     "relation.derivedBy.kind:aggregate-to-grain~normalize": {
-      "reach": 6,
-      "digest": "726459d6f727c2d327df621e1559cc0c9c2a118d35c6b0b0f8cf560b21fe5fc1"
+      "reach": 8,
+      "digest": "f33966b36c6ae37f246d15cb9caaa8f365580d2785b490a9764af92cd00fdc7c"
     },
     "relation.derivedBy.kind:aggregate-to-grain~project": {
-      "reach": 8,
-      "digest": "96418335fcce9bd6279de9f03c66c86df30b8a5cdef4823322dfeda3b3bf15b6"
+      "reach": 9,
+      "digest": "cf58e357569d1c58e6abf7020cca22454079fccce45ceac1426f9fb246c86230"
     },
     "relation.derivedBy.kind:aggregate-to-grain~graph": {
-      "reach": 10,
-      "digest": "335a96ec75164df9abef626d237f0339c65cfd3519f36044e757c3e87213c4c6"
+      "reach": 11,
+      "digest": "f958e62604e036d248b6d9c91cf2a011f82dbace0b39ff03218bacac98e23d6e"
     },
     "relation.derivedBy.kind:join~nest": {
-      "reach": 7,
-      "digest": "b0f77d4659e290da8d029605d9d8ff0619bfb78f1d04c74c4c45b9ed8d141a96"
+      "reach": 9,
+      "digest": "3b9d10e7011fc281376ad7335469086b95f75f0ff26cb88cc1088d1e326c626d"
     },
     "relation.derivedBy.kind:join~bin": {
-      "reach": 5,
-      "digest": "1145704b7489bbe967bc00f41688ab9525b5cc6401e5950e731a2d153190c624"
+      "reach": 8,
+      "digest": "e270650ce772619572f3dcffe99c751064712df0d82e49e8c715209bfb234edb"
     },
     "relation.derivedBy.kind:join~normalize": {
-      "reach": 5,
-      "digest": "45a66d8f5058e6d266d456eb4d71440fe6ea9565f931a4be4a4338c775666e85"
+      "reach": 7,
+      "digest": "67d8895493f840371bfeba2a42d16572f1cee4e658b6cc1f8ec892181bb523e5"
     },
     "relation.derivedBy.kind:join~project": {
-      "reach": 7,
-      "digest": "2f4a3a3fe03c49eee9953f6150e663867ee1896f5dc8e6413dc68feef9159203"
+      "reach": 8,
+      "digest": "848e648e066e20d46c207a472cfa35e94b1fb5361733d6f329408ed40c093d71"
     },
     "relation.derivedBy.kind:join~graph": {
-      "reach": 9,
-      "digest": "9a8e8fd279a908794e1b2e5340e41bf9f7e5112bd841a8f88c91747c47880ed2"
+      "reach": 10,
+      "digest": "cdc1fe652b62511aba7d524bebab5f06a6690319597f38c23207aa26dd49f5f7"
     },
     "relation.derivedBy.kind:nest~bin": {
-      "reach": 6,
-      "digest": "9dc55f0373a97955d86d043bbfabc047ca66e805ca771ebe69164bcae11f27d9"
+      "reach": 9,
+      "digest": "9fdf5ba0608d260ebc072594b0dcb47377f9ee84a83269b40ccff21df4b7d848"
     },
     "relation.derivedBy.kind:nest~normalize": {
-      "reach": 6,
-      "digest": "aa30cdd178cd509040be668352a38486ff83babbbf3ce0712552be8af6dc763e"
+      "reach": 8,
+      "digest": "20e66e989141d64890df44cde53a628b15930f16a574bb2fa433ebc9228a2dae"
     },
     "relation.derivedBy.kind:nest~project": {
-      "reach": 6,
-      "digest": "deb6e65bad0a0f766d84108605ee083e8416f49327d206cd388cd8759d3817fe"
+      "reach": 7,
+      "digest": "3f0f800485670eee622d9be703b2def497b368bd189a297b46bc275754f615ff"
     },
     "relation.derivedBy.kind:nest~graph": {
-      "reach": 10,
-      "digest": "4bf7fc55528a0ab7f1dc58df1c4f0462926eb22088fd08100db8103c1d78df36"
+      "reach": 11,
+      "digest": "fc72092b56f6b48a5e25a7e928e91ebf896b1b30cc7e94021a01c332bd8d247f"
     },
     "relation.derivedBy.kind:bin~normalize": {
-      "reach": 4,
-      "digest": "f030d61478752f7b7dc8f56ed459b0a2b615378e625cd40b9f387bee266317aa"
+      "reach": 7,
+      "digest": "e47260eb6c6b9f829c15f8281f7ce3b4765ba7e7ef2a51bcfaafcf73e808687c"
     },
     "relation.derivedBy.kind:bin~project": {
-      "reach": 6,
-      "digest": "6cd63c95b4c61b568fc2ca82e8ca4668e2dd55ea10f0952b1a48e7c8a2d56f8e"
+      "reach": 8,
+      "digest": "f18738d1b53f15d326a41674b74296728d776960286941b9906db151b436cf8c"
     },
     "relation.derivedBy.kind:bin~graph": {
-      "reach": 8,
-      "digest": "92633decd22e3a4965b575469855980d92c0d1652389e6081fd2015f7a4e12c1"
+      "reach": 10,
+      "digest": "d9b58dff94739d1aec98967a7a792fdebd21070b7045734fe528c03a2d2c6bf9"
     },
     "relation.derivedBy.kind:normalize~project": {
-      "reach": 6,
-      "digest": "a248b36b955cdc0194b1140d268fe1f039f19d088444243fd56a341e91eda416"
+      "reach": 7,
+      "digest": "318170a62eeaacf8589d7132f3d60b751bdc21126f1afe8b3d4e578ce63aae8c"
     },
     "relation.derivedBy.kind:normalize~graph": {
-      "reach": 8,
-      "digest": "c7cd532cd813858a5be1ff158c9a4aba85ae032e970cde18aedc8bdc1c122f50"
+      "reach": 9,
+      "digest": "3071e340a6533ffcbbf7361b3aceb80b91f5b4e66571cad229a3d6fc2ae39a7b"
     },
     "relation.derivedBy.kind:project~graph": {
       "reach": 10,
-      "digest": "a70f24045c04b140ae6493e35ad1ffa377ecb8e93ead312dc7a5f2a9c2915000"
+      "digest": "6bcd822298cb89fb78b858cf69014d3d5c0cec0899cf13c082f8acf0114a0cec"
     },
     "relation.derivedBy.aggregate-to-grain.from": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.aggregate-to-grain.from#incidence": {
       "reach": 2,
-      "digest": "86dc69cd9e6ea565e54e313df396a826029db800a7ded2b4761b2440e34179af"
+      "digest": "407611355162a7b47fa261c9c8c496aa389ce90c7f501a59453116d47a3649ab"
     },
     "relation.derivedBy.aggregate-to-grain.toGrain": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.aggregate-to-grain.toGrain#arity": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.aggregate-to-grain.toGrain#order": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.aggregate-to-grain.toGrain#incidence": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.join.from": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.join.from#incidence": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.join.with": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.join.with#incidence": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.join.cardinality": {
-      "reach": 3,
-      "digest": "e8c631a810a234a623f0b0acb5dfd6d4b04dc57ef2e42f1ec5f5c8635bcd5840"
+      "reach": 4,
+      "digest": "1b57ac0839ff8794a83650174e83c2427387e88afb549be8db4abc429649648f"
     },
     "relation.derivedBy.join.cardinality:one-to-one~one-to-many": {
       "reach": 3,
-      "digest": "2b7cafdeb7f7534fd96cf8033321d6725abb370e15b2b23679ed0433a013c63d"
+      "digest": "6fe21624fcbb2c42d4f9fcdc2c2436f77dffa0e7706404807eb48d8d6e46c882"
     },
     "relation.derivedBy.join.cardinality:one-to-one~many-to-one": {
-      "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "reach": 1,
+      "digest": "efed83834adafb2431accd817d6706b1b0676c4648c79b810a74f98f5e84a9e1"
     },
     "relation.derivedBy.join.cardinality:one-to-one~many-to-many": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.join.cardinality:one-to-many~many-to-one": {
-      "reach": 3,
-      "digest": "67cb1c304093818b6e2504632d5d273c1e0b86a27662aa8834f7895d4612aa03"
+      "reach": 4,
+      "digest": "5e6861340804757d7003881a9559b31a147699bd1b7d9e8afda8584ef23fbcd5"
     },
     "relation.derivedBy.join.cardinality:one-to-many~many-to-many": {
       "reach": 3,
-      "digest": "3bedf58892bb0e0de6687d6abfd9baf2c838b895009cecd52027abb10cafdf1d"
+      "digest": "c8fdb0b3dbdb50e63443a824af8724213611e9bb619d9a593dbdfca96ca27406"
     },
     "relation.derivedBy.join.cardinality:many-to-one~many-to-many": {
-      "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "reach": 1,
+      "digest": "9b8540eda4199058ecd6adcff9f3d9a00a0d973b3275eabb9929fb962175286f"
     },
     "relation.derivedBy.nest.from": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.nest.from#incidence": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.nest.levels": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.nest.levels#arity": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.nest.levels#order": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.nest.levels#incidence": {
-      "reach": 2,
-      "digest": "d8393bea028f7ad8722a4565c0ae6356ef80e571a9e0120d58e3f46a76c54247"
+      "reach": 3,
+      "digest": "a95ac0e2788d2c48c1bcf54a295237cc7f89a444f31b34d802c5c289bed61134"
     },
     "relation.derivedBy.bin.from": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.bin.from#incidence": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.bin.field": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.bin.field#incidence": {
-      "reach": 2,
-      "digest": "9edf609fbccb32956c948c534a8e71df3d93f9691b8199d8b106632fc3d92344"
+      "reach": 4,
+      "digest": "2f4ba81ef64a26c232f73c85a2d4e2e4a6df4f26e99f40c173f8a573e3a35f6b"
     },
     "relation.derivedBy.bin.closure": {
-      "reach": 1,
-      "digest": "d335042cf2739e92ccef5508924ad5d3e07b9ec01c0e44906489dde5fc18da1a"
+      "reach": 3,
+      "digest": "6bcebc6c6a7d5ac928649b012fee40530154d8c982c50822855b5a2a9d895c2b"
     },
     "relation.derivedBy.bin.closure:left-closed~right-closed": {
-      "reach": 1,
-      "digest": "45aa07a2285e561e619266ac0381bfb2792ca8de8fe6e429122c9af0551d079d"
+      "reach": 3,
+      "digest": "6ffdbcc9a2825cc7d16a662549d62142e2ce6663483a0df637a8aa0b972ea73f"
     },
     "relation.derivedBy.bin.closure:left-closed~<absent>": {
-      "reach": 1,
-      "digest": "d335042cf2739e92ccef5508924ad5d3e07b9ec01c0e44906489dde5fc18da1a"
+      "reach": 3,
+      "digest": "6bcebc6c6a7d5ac928649b012fee40530154d8c982c50822855b5a2a9d895c2b"
     },
     "relation.derivedBy.bin.closure:right-closed~<absent>": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.normalize.from": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.normalize.from#incidence": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.normalize.field": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.normalize.field#incidence": {
-      "reach": 2,
-      "digest": "9e4084030ff5fd503df44fae0835f260520248c3e21eb54fabbf8d7637d28cad"
+      "reach": 3,
+      "digest": "d4180e5d85bef9f29a6314b4fedf40649b6f7853d960c6ad3eecaf0f53ee2dfa"
     },
     "relation.derivedBy.project.from": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.project.from#incidence": {
       "reach": 2,
-      "digest": "4927a43f56d8a9253377ceb73d0a1955ec7cf0a07ad707ca13bb5c28270e2809"
+      "digest": "a76608b89e07b2a436b6c806d357a8ea024be7d254bc3f5378990162491ed53e"
     },
     "relation.derivedBy.project.keep": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.project.keep#arity": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.project.keep#incidence": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.graph.from": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.graph.from#incidence": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.graph.edgeFrom": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.graph.edgeFrom#incidence": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.graph.edgeTo": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.graph.edgeTo#incidence": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.graph.value": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "relation.derivedBy.graph.value#present": {
       "reach": 6,
-      "digest": "3f00e86b15152e7ae5c01370464425172ff133f540b900bf879698a72318294c"
+      "digest": "7d00f4f2374370f5ba78ddc3d22fcd9d33c5cf896f72b5a3b62b61a17e61e8ea"
     },
     "relation.derivedBy.graph.value#incidence": {
       "reach": 6,
-      "digest": "e936eff3009c8c08a78427697a8c6d743530790997fd66746b38a0bb8b091a6d"
+      "digest": "215506180f3e34d0e4f616902134066c706abf88ab677b90e2f7a8bbd71b90b9"
     },
     "relation.derivedBy.graph.requiresConservation": {
       "reach": 6,
-      "digest": "f81a580572bb064996294c150050d369c0e0a76833c7f4cce157d55ca6fc04f2"
+      "digest": "be9563cc0fb4ba377ba021f374b3d2c0b3cfe07614d7573328141bf922b39689"
     },
     "structure.peers#present": {
       "reach": 4,
-      "digest": "7f5e8e48f4f026ed22d241fd735e604f908d57cfdc43eb2a49823cec145db4fe"
+      "digest": "55ddda1b2cede569612f3aeb18ebd133952f2f567d174bcdb1efe3901a58a106"
     },
     "structure.peers[]": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "structure.peers[]#present": {
       "reach": 4,
-      "digest": "7f5e8e48f4f026ed22d241fd735e604f908d57cfdc43eb2a49823cec145db4fe"
+      "digest": "55ddda1b2cede569612f3aeb18ebd133952f2f567d174bcdb1efe3901a58a106"
     },
     "structure.peers[]#arity": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "structure.peers[]#incidence": {
       "reach": 2,
-      "digest": "595e29a40882e89f9762c6eff608c5328bce5a7c5504be1372585f91f63bd1cc"
+      "digest": "2307e277c17fd06ce295b210d706c87bb13806f95dfb5ab8427c881d99e381bf"
     },
     "assertion.kind": {
-      "reach": 84,
-      "digest": "e3e3ea52fcb5eb765d7c0c7dc5f6eaa6891cd3adae4edd1a7440622e4a60ee91"
+      "reach": 91,
+      "digest": "20128558b5197c078e5d93f9ba1bee054181ffe9cfb37a2f847bab57942b8ad6"
     },
     "assertion.kind:aggregate~ratio-comparison": {
-      "reach": 84,
-      "digest": "1bbae1c0041cabe7ff0fa9a253098b961d0c843aa7ecd26081ddb5281990c4b1"
+      "reach": 91,
+      "digest": "6579d71eae6303ef9415c0d65e747d05f08dca05fbee66cc37c93625bbb10d81"
     },
     "assertion.aggregate.relation": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "assertion.aggregate.relation#incidence": {
-      "reach": 82,
-      "digest": "c902678cc9b523324b0d06b9ce05b01fc60e82ab1ed7e8a184fcc6bcdaaecb01"
+      "reach": 89,
+      "digest": "decb5979f056ada834616ec7702e5eadd6ea6d8e5cb958bb8fdf9995c6c1b507"
     },
     "assertion.aggregate.field": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "assertion.aggregate.field#incidence": {
-      "reach": 82,
-      "digest": "5d719edd12ff73ece0e3b0cd5e89a4b8526d5a6bf87463fa42381abd8c43ec31"
+      "reach": 89,
+      "digest": "4d5be7a4a1f6a197e6ea1fd87a91a4f9b760ee79946614dd4d4e4b884713ba9c"
     },
     "assertion.aggregate.op": {
-      "reach": 82,
-      "digest": "eb31faae55095af6fc4bc2a68e292082c15ec29445f03a75a5034ab406f909d6"
+      "reach": 89,
+      "digest": "4d2b626dd674488b7f32b42165d3fda908478cbcbb631bf441813d79dc9b03b2"
     },
     "assertion.aggregate.op:sum~mean": {
-      "reach": 54,
-      "digest": "cbbf0358836bcb2832db6eb4a0127bc37e27d09ac955387d5b77be46eea1e84f"
+      "reach": 55,
+      "digest": "1f0c01f62eeb180e3033282479bb090d1859c88dfeeb1433f63703d33b9234a6"
     },
     "assertion.aggregate.op:sum~count": {
-      "reach": 44,
-      "digest": "5b2efe22208c5972f96142f8c23756310c473f15ca09704e36839901da0b1250"
+      "reach": 45,
+      "digest": "4740f60f973422895f7fb53d89d095a3503eb64de553da48a6566c22a14fd666"
     },
     "assertion.aggregate.op:sum~min": {
-      "reach": 63,
-      "digest": "691fa7aeca5e27ace75dbbad2041903bd991d2a49fd2d15b0bd9bcb6120875df"
+      "reach": 70,
+      "digest": "b5718867eadcc2bb6310930b25af826192076824460df00a3c55fe674fc6e299"
     },
     "assertion.aggregate.op:mean~count": {
       "reach": 25,
-      "digest": "2fdeeaefaecad30656661eca3b23b076542b543d905eed9464d99f10cedc9361"
+      "digest": "bff50e8d41570ddd83aa6c1e65b635021168c18ed808a37cc4682045d37f2d00"
     },
     "assertion.aggregate.op:mean~min": {
-      "reach": 44,
-      "digest": "79afe8d48ae7483dd8e924c28f12bb4c8619091fecf8e910e64794db72c2fa0d"
+      "reach": 50,
+      "digest": "826cc0c88ed153840288e607937ec6e84d27edb08c3095c3f65aee5a675eeecd"
     },
     "assertion.aggregate.op:count~min": {
-      "reach": 33,
-      "digest": "f89bb8c51cf5d22375f2e5fd0227120f82510d6d7556c877a0050d9b295cccb7"
+      "reach": 39,
+      "digest": "77c0a7cda65607d346465c06677e029bfdb98aef4216c8703406558bf2c2203d"
     },
     "assertion.aggregate.along": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "assertion.aggregate.along#present": {
-      "reach": 6,
-      "digest": "0a20bfd9c9194c136d6ef91269f966949b2628f3edb6c0bfd17c4169e6d0220c"
+      "reach": 7,
+      "digest": "997325a41b37e2f9e2263aa3dc9ee1ec293a35dd9cac84e2ce7724e6100571ec"
     },
     "assertion.aggregate.along#arity": {
       "reach": 1,
-      "digest": "97c2b817223d046539ddc834bef2fc46764fafbb467718fc53fdec6595a27f0f"
+      "digest": "5b627ca0924a6f312cae73ee73d2b8fae78537cf10d53066b5b5233d55be3d9d"
     },
     "assertion.aggregate.along#incidence": {
-      "reach": 6,
-      "digest": "6c1092bf3dcb719b43bb26e0c91bf799fc7d472e3696bc5bae5bf332b83fa399"
+      "reach": 7,
+      "digest": "7363261663e186b738e315097d2b92044c0a6244f18d8e18c66308b893a7cdc6"
     },
     "assertion.aggregate.nulls": {
       "reach": 7,
-      "digest": "96a893ab004b1e1bc4a8bdc4660f1963e52551c15be85732bb8bbc68870aecfd"
+      "digest": "31642eb3da0268b930b738818d62f6c81716f2323a4b74fb43b3f3c0c4105c5b"
     },
     "assertion.aggregate.nulls:exclude~as-zero": {
       "reach": 6,
-      "digest": "f5566c7a546018bbead5da9b1252f1b39abdfdd3632aebea5e6224e0f0274616"
+      "digest": "50783acebe71ac568e8943e8749f81c77f114b07faccf90a2da72d2e7c56adfd"
     },
     "assertion.aggregate.nulls:exclude~as-observed": {
       "reach": 5,
-      "digest": "b3d06f490104c423d58f121cc9b7fc93cfec96cb170080efe0ba287f6b65e221"
+      "digest": "e48cc1e03a3b07b6067e08aeff266d3df987ad86a36448fea94433a11aad8596"
     },
     "assertion.aggregate.nulls:as-zero~as-observed": {
       "reach": 3,
-      "digest": "04cb2269ff6ab15edb40390df73741130cdb6ddc0d0918d0ddae759ce8bac841"
+      "digest": "7683de2ce3449d1ed6983ee4970301a6471cd79fdc3bff20c3061fd97695f4e3"
     },
     "assertion.aggregate.nulls:exclude~<absent>": {
       "reach": 4,
-      "digest": "7cfcf3972f19d7219369b007e76ca8728bdaa5c3a866e78260a2be2802f98b17"
+      "digest": "0f5cc04ea9e9f15f1c977335137558efa5dcc33a7a2f4175ab59174955190dd8"
     },
     "assertion.aggregate.nulls:as-zero~<absent>": {
       "reach": 2,
-      "digest": "c92233ecf1e89a450b5ad894b7a2b9502a5e1f9dfe2abe8931abf681eecc4d0d"
+      "digest": "16d014e2969ce976a14bfe25544ee1267447264bc513af701a610bb5980ca3dd"
     },
     "assertion.aggregate.nulls:as-observed~<absent>": {
       "reach": 1,
-      "digest": "b4eaea1c106514215e4064cc8128836a68de573a0f0af0bb68183a00b0fe06da"
+      "digest": "2e7bfd2968a039347c2ae06cf1213e27e8b79e063c507758f3fdc56570b35b52"
     },
     "assertion.aggregate.uncertainty": {
       "reach": 3,
-      "digest": "462abdbc0e5b2b4b696c58dfa3ad7500f7ea545a53e0139535ee698f8f8bea88"
+      "digest": "1053486a009eb706225ee75daded03730fa0e83578a5794b154e799e1711c8ef"
     },
     "assertion.ratio-comparison.relation": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "assertion.ratio-comparison.relation#incidence": {
       "reach": 2,
-      "digest": "ca02992826bb61c706989570bf130999a128acdeeee32f9f472f4f2df9b2d414"
+      "digest": "933957dc65b916a7e5e0991cea8ab3f8426fd164f6a09306e025cd2ba6acd319"
     },
     "assertion.ratio-comparison.field": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "assertion.ratio-comparison.field#incidence": {
       "reach": 2,
-      "digest": "d12cb63bc497172bbbb41814057a51039309708fa3f9c58476ce1d4d45d26e16"
+      "digest": "90f40faa5d7221791ee57a228100490329e5e1cc8eccdb9faff0c7a2364ccf3a"
     },
     "evidence.rows.*#present": {
-      "reach": 24,
-      "digest": "a4f2843787dc96506776b5c567a4cdcf2aa34fb23949c99b654be0146089e333"
+      "reach": 25,
+      "digest": "77ef8b4a86910b6a239e62748bfeebaa41a861c94c3df9c9c612942d0ba265b0"
     },
     "observation.value": {
-      "reach": 24,
-      "digest": "2ff27b88cffe447608db3e6ef076881d89cc0b33669e5938358ff656ddc9866a"
+      "reach": 25,
+      "digest": "e54724b8cdd062bf29260d41e3e49bc105e1e1cfcea0d7b39cde8269c2590514"
     },
     "observation.unit": {
       "reach": 3,
-      "digest": "1870fa8ac061154e43f207ccddf38a7dc910c5335b879682fbb9129230bafa16"
+      "digest": "3e9b002ff8c11fc13c5e29360a3583cd70814f0e9fbee371210d8bbfcb8261c4"
     },
     "observation.null": {
       "reach": 10,
-      "digest": "6c883bbb26fe1da6259c1b8bf33098db5a6854751388991bd01aa49d6b2b6d80"
+      "digest": "82f94c12a39662bc36b2bf4151538b03a67d954b65c0012d769f27866a80a373"
     },
     "observation.null:absent~censored": {
       "reach": 8,
-      "digest": "6e3923a7a50d499624c8474fb548f0dcafd01f1efe76bccca631f69edb37f83d"
+      "digest": "bfd9f4809f752c1a11eb365039d6a891f6475bb20b51bc8ab26d92f365855671"
     },
     "observation.null:absent~suppressed": {
       "reach": 6,
-      "digest": "2ab2908e4b210a5b991cd32f5ed4debf4c7a99cc26f09a3f339f37ed3f882d50"
+      "digest": "35c8ddfb5c7a7ffe94e2a87a65b8db3d4db172cad0e30ce9643bfa1acbf0a8cf"
     },
     "observation.null:censored~suppressed": {
       "reach": 6,
-      "digest": "d5cd5533a78606bb640c61aa0d5db3e35208704abbcd8630c4c72bf6ce080e2e"
+      "digest": "8ffab4cde68873e2546be70f3b701ab5b178aa78622088f5ac6c63b6338f4a0a"
     },
     "observation.null:absent~<absent>": {
       "reach": 4,
-      "digest": "900e873b90e5c42eb26aa99af0efe534de426af82ee28fc48b522b793bd6bff7"
+      "digest": "081808cdb0d8674b8421dd2c20cdd51320c6c2227aa0a4217e39f14ff2799b39"
     },
     "observation.null:censored~<absent>": {
       "reach": 4,
-      "digest": "eaa96c3b0db9bd8660693261f9fe349ea1f9fa9e1e1361d67e55d13e229ac914"
+      "digest": "a1f35e48c29a7f84be87fbaebef4d8c850eb653a75dde1a87f81f8db41897a56"
     },
     "observation.null:suppressed~<absent>": {
       "reach": 2,
-      "digest": "70ed84d004178ba3f44c656f02d86a4370e762d61f830da788b727e77557bc7a"
+      "digest": "2109744fc13d6fdb863b7ab083d3a92fac2cdeb3481a17368a049867d08e3fc6"
     },
     "evidence.grainWitness": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "evidence.grainWitness#present": {
       "reach": 3,
-      "digest": "1d44a76405fc32e910997476db493d74e9359a7d280d67c9decaf193524e4c87"
+      "digest": "019c9afe3ca10865d3793ac14f723be0f92be266343842608df7d2c58e1e6c31"
     },
     "evidence.grainWitness#arity": {
       "reach": 0,
-      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+      "digest": "6e9127c52689634c8c015ac275ba1a34fb23aebab0a7fcbc1961c6bf98600b6a"
     },
     "evidence.grainWitness#incidence": {
       "reach": 3,
-      "digest": "8480529aa7d9acd895107f26caee42523671fa63165896e875ae0a68161fca91"
+      "digest": "ac2b33686388371249f8077e0d59216917c3eff773d94b7c9622857f4a19ef65"
     }
   },
   "adjudicated": {},
-  "supersedes": {
-    "erasureAuthorityDigest": "a4c8464653836b7b5f3e979ce3404b412d1e14baa6344c42a22213e2cf9573ad",
-    "divergences": [
-      {
-        "operation": "forget-reference-arity",
-        "coordinates": 1,
-        "effect": "A MIRRORED slot truncates to the mirror's length, a fact read at execution time, rather than the static minItems floor: the law says this list equals the result-side spelling, so how long it may be is a fact about the other side of the equation. `keep#arity` is the case, and it is corpus-dead for the mirror's own reason -- every corpus keep already equals fieldNames(out), so the cut is the identity throughout. The cut keeps the FIRST names, so an arity erasure never rewrites occupants; and it only ever shortens, which is stated rather than hidden: a short break of the equation cannot be repaired by cutting."
-      },
-      {
-        "operation": "forget-reference-incidence",
-        "coordinates": 2,
-        "effect": "Declared MIRRORS: where the law writes one binding TWICE (sameSet(out.grain, d.toGrain), sameSet(fieldNames(out), d.keep)), the operand map now declares the result-side spelling, the census carries it onto the locator, and the canonical rebind takes the MIRROR as the pool -- so the image satisfies the law's equation by construction instead of searching the input's namespace for a name the law would accept. The measurement that dissolved the planned census change: the equation holds in EVERY corpus declaration, unlawful ones included, so the mirror rebind is the identity throughout and `toGrain#incidence` and `keep#incidence` are corpus-dead -- no two admissible fixtures can differ only in a mirrored operand, because the law slaves it to the other side. An authored equation break is the moving case, and the mirror REPAIRS it, which is the collision the witness machinery needs. No verdict moved: no witness names either coordinate."
-      }
-    ]
-  }
+  "transitions": [
+    {
+      "identity": "coordinateBasisDigest",
+      "from": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
+      "to": "1196a0f0bd79fc2bcbfe4366c133ca1a4d97305f779b667b6dc3106caf7ca163",
+      "reason": "The census basis grew by design: the bounds declaration added field.bounds.lower and field.bounds.upper as reference coordinates, so the coordinate-set digest moved with the schema. No coordinate left and none was re-keyed."
+    },
+    {
+      "identity": "erasureAuthorityDigest",
+      "from": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
+      "to": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
+      "reason": "The erasure authority moved with the same holder-targeting repair; this is the movement a single-authority supersession would have stated had the others not moved with it."
+    },
+    {
+      "identity": "ruleDigest",
+      "from": "31627ef1ba9385fab9d6c8e793cd6895322df473ffdbcb4f1527017e00600fa3",
+      "to": "94e63ed497c089cbca605d4613ac7f788137ddf6e8ed107e4d33c58798f5700f",
+      "reason": "The erasure rule moved with the holder-targeting repair: a presence erasure on a slot required by its holder now executes at the holder. The behavioural effect is authored in SUPERSESSION_EFFECT.delete-holder."
+    }
+  ]
 }

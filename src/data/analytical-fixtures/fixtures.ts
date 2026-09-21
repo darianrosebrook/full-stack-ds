@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: packages/ds-contracts/analytical-fixtures/fixtures.jsonl
-// Source sha256: 0f39e8f2d87d4c9e677d1ac48759dbbc50eb4354ccdccca156b7e8095b7b2e9b
+// Source sha256: 317507a6a81a65dedc8c8b1cb8a97ee795e378c4c95773e407993478e7d8c193
 // Regenerate:    node scripts/sync-analytical-fixtures.mjs
 // Answer-free by construction: this dump carries fixtures only — no corpus
 // case ids, verdicts, diagnostics, obligations, bindings, or holdouts. The
@@ -4633,7 +4633,11 @@ export const FIXTURES: AnalyticalFixture[] = [
               }
             },
             "open": {
-              "transformation": "ratio"
+              "transformation": "ratio",
+              "bounds": {
+                "lower": "low",
+                "upper": "high"
+              }
             },
             "high": {
               "transformation": "ratio"
@@ -4642,7 +4646,11 @@ export const FIXTURES: AnalyticalFixture[] = [
               "transformation": "ratio"
             },
             "close": {
-              "transformation": "ratio"
+              "transformation": "ratio",
+              "bounds": {
+                "lower": "low",
+                "upper": "high"
+              }
             },
             "volume": {
               "transformation": "ratio"

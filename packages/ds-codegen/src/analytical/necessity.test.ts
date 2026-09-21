@@ -194,7 +194,7 @@ describe("C0 — provenance of the two censuses", () => {
     // which the holder-presence coordinate and the `kind` member pairs already
     // carry between them, so sixteen inherited-only presence facets were
     // derived conjunctions rather than degrees of freedom.
-    expect(count(kernel)).toEqual({ leaves: 36, pairs: 55, references: 25 });
+    expect(count(kernel)).toEqual({ leaves: 38, pairs: 55, references: 27 });
     // Accounted THREE ways, not two: ratified, on the pending ledger, or
     // suspended by the codomain adjudication. The third is a coordinate whose
     // witness the instrument change invalidated — it is still accounted for,
@@ -2816,6 +2816,8 @@ describe("C8 — the census is derived, exhaustive and exactly-once", () => {
       "assertion.ratio-comparison.relation",
       "evidence.grainWitness",
       "field.additivity.semi-additive.nonAdditiveAlong",
+      "field.bounds.lower",
+      "field.bounds.upper",
       "field.whole.perRow",
       "relation.derivedBy.aggregate-to-grain.from",
       "relation.derivedBy.aggregate-to-grain.toGrain",

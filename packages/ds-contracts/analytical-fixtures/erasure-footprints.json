@@ -1,25 +1,25 @@
 {
   "$comment": "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
   "digests": {
-    "fixtures.jsonl": "0f39e8f2d87d4c9e677d1ac48759dbbc50eb4354ccdccca156b7e8095b7b2e9b",
+    "fixtures.jsonl": "317507a6a81a65dedc8c8b1cb8a97ee795e378c4c95773e407993478e7d8c193",
     "witnesses.json": "db2bffcdffb729188da6e1fe054c879e1bd9db5b4aa89e1fbff6630ae87ca57b",
-    "closures-stage2.json": "529636f38134c5ece936bcd94829a27ac6ca8f3aa47fe5220d0dece797760321"
+    "closures-stage2.json": "4c9ef5cd2041266f05838f1f5e78c01beaa7ad17664fec820bf09c6e58b6a389"
   },
   "authority": {
-    "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
-    "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
+    "coordinateBasisDigest": "1196a0f0bd79fc2bcbfe4366c133ca1a4d97305f779b667b6dc3106caf7ca163",
+    "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "31627ef1ba9385fab9d6c8e793cd6895322df473ffdbcb4f1527017e00600fa3"
+    "ruleDigest": "94e63ed497c089cbca605d4613ac7f788137ddf6e8ed107e4d33c58798f5700f"
   },
-  "footprintBasisDigest": "335b6be7c2cfa3321074d97fd6c8a34b0a0501f2844e61f9ca841e222564483d",
+  "footprintBasisDigest": "f6d8cbe17bf9c70c6fc67a3e8698bfc1cb531903b604f1d772e257008324bf94",
   "quotientSchemaVersion": 1,
   "specimens": {
     "corpus": 91,
     "stimuli": 37,
-    "synthesized": 85,
-    "total": 213,
-    "populationDigest": "dea423e9dd7f0a6cab346c5ea09fdb7afdf9e939df4e3490f840e9379636161d"
+    "synthesized": 90,
+    "total": 218,
+    "populationDigest": "4cb3b1bddeecf6944073d1e36ce73f3013ee439cf97fc8b0934d1713203d7d98"
   },
   "unbuilt": [
     {
@@ -535,11 +535,11 @@
   "scopes": {
     "sourceLanguageDeparture": {
       "specimens": 128,
-      "populationDigest": "86889b306cb15db55e173a97d83cea390d8b609414633602d489e497965babcf"
+      "populationDigest": "9564fd4b73732038706e34d74b34622562801dbc7a7430c68ef544bcf4e3aa9f"
     },
     "quotientLanguageInvalid": {
-      "specimens": 213,
-      "populationDigest": "dea423e9dd7f0a6cab346c5ea09fdb7afdf9e939df4e3490f840e9379636161d"
+      "specimens": 218,
+      "populationDigest": "4cb3b1bddeecf6944073d1e36ce73f3013ee439cf97fc8b0934d1713203d7d98"
     }
   },
   "footprints": {
@@ -700,6 +700,24 @@
     ],
     "field.base": [
       "field.base"
+    ],
+    "field.bounds.lower#incidence": [
+      "field.bounds.lower#incidence"
+    ],
+    "field.bounds.lower#present": [
+      "field.bounds.lower#incidence",
+      "field.bounds.lower#present",
+      "field.bounds.upper#incidence",
+      "field.bounds.upper#present"
+    ],
+    "field.bounds.upper#incidence": [
+      "field.bounds.upper#incidence"
+    ],
+    "field.bounds.upper#present": [
+      "field.bounds.lower#incidence",
+      "field.bounds.lower#present",
+      "field.bounds.upper#incidence",
+      "field.bounds.upper#present"
     ],
     "field.cyclic": [
       "field.cyclic"

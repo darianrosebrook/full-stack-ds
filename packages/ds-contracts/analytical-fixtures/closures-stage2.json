@@ -1064,10 +1064,10 @@
     }
   ],
   "authority": {
-    "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
-    "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
+    "coordinateBasisDigest": "1196a0f0bd79fc2bcbfe4366c133ca1a4d97305f779b667b6dc3106caf7ca163",
+    "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "31627ef1ba9385fab9d6c8e793cd6895322df473ffdbcb4f1527017e00600fa3"
+    "ruleDigest": "94e63ed497c089cbca605d4613ac7f788137ddf6e8ed107e4d33c58798f5700f"
   }
 }

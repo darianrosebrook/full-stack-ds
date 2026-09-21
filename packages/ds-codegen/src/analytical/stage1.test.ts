@@ -13,7 +13,7 @@ import { casesAdjudicableAt, checkFixtureLedger, loadCorpusInput, loadLedgerInpu
 import { DIAG, OBLIGATION, RULES, judge } from "./engines.js";
 import { OPERATOR_LAWS } from "./derivation.js";
 import { assertionKey, canonicalJudgment, codesOf, termsOf, type Judgment } from "./judgment.js";
-import { RULE_SOURCES } from "./necessity.js";
+import { RULE_SOURCES, loadOracle } from "./necessity.js";
 import { alphaRename, renameSubject } from "./alpha-rename.js";
 import { normalizeObservation, type Fixture, type RelationalStructure } from "./structure.js";
 
@@ -509,5 +509,98 @@ describe("A11 — the five probes express in the closed grammar", () => {
   });
   it("every probe is admissible under its own assertion", () => {
     for (const id of probes) expect(canonicalJudgment(judgeFixture(fx(id))), id).toBe(ADMISSIBLE);
+  });
+});
+
+/* ---------------------------------------------------------------------------
+ * REL-FIELD-BOUNDS-01 — A GENERIC DECLARED SIBLING-BOUNDS RELATIONSHIP
+ *
+ * The agreed scope: row[lower] <= row[bounded] <= row[upper], declared on the
+ * field, observed over SUPPLIED rows as an obligation with NO diagnostic
+ * (the owner's diagnostic decision is separate and outstanding), and silent
+ * when instance evidence is absent. These controls are the acceptance bar;
+ * they are deliberately narrow and must not be read as advertising unit
+ * conversion, partial observations, or downstream projection consumption.
+ * ------------------------------------------------------------------------- */
+
+describe("REL-FIELD-BOUNDS-01 — declared sibling bounds", () => {
+  const structure = (bounds: { lower: string; upper: string } | null, fields?: Record<string, unknown>) =>
+    ({
+      relations: {
+        r: {
+          grain: ["k"],
+          fields: {
+            k: { transformation: "nominal" },
+            low: { transformation: "ratio" },
+            close: { transformation: "ratio", ...(bounds ? { bounds } : {}) },
+            high: { transformation: "ratio" },
+            ...(fields ?? {}),
+          },
+        },
+      },
+    }) as never as Parameters<typeof judge>[0];
+  const assertions = [{ kind: "aggregate", relation: "r", field: "close", op: "sum" }] as never;
+  const rows = { r: [{ k: "a", low: 1, close: 5, high: 10 }] };
+  const run = (s: Parameters<typeof judge>[0], evidence?: unknown) =>
+    JSON.parse(canonicalJudgment(judge(s, assertions, evidence as never))) as {
+      status: string;
+      diagnostics: unknown[];
+      obligations: Array<[string, string, string, string, string]>;
+    };
+
+  it("A1: the declaration validates through the real schema path and appears in the emitted schema", () => {
+    // The pair fixture carries the declaration through loadOracle's real parse;
+    // the emitted relation schema is drift-gated by `analytical:check-schemas`.
+    const fx = loadOracle().fixtures.get("FX_P_OHLC_PAIR")!;
+    const close = (fx.structure as unknown as { relations: { candles: { fields: Record<string, { bounds?: unknown }> } } }).relations.candles.fields.close;
+    expect(close.bounds).toEqual({ lower: "low", upper: "high" });
+  });
+
+  it("A2: satisfying supplied rows are admissible with NO bounds obligation", () => {
+    const out = run(structure({ lower: "low", upper: "high" }), { rows });
+    expect(out.status).toBe("admissible");
+    expect(out.obligations.filter((o) => o[0] === "bounds:row-consistent")).toEqual([]);
+  });
+
+  it("A3: violating rows carry the obligation with the COMPLETE occurrence — subject, assertion, engine, evidence class — and no diagnostic", () => {
+    const out = run(structure({ lower: "low", upper: "high" }), { rows: { r: [{ k: "a", low: 1, close: 50, high: 10 }] } });
+    expect(out.status).toBe("unproven");
+    expect(out.diagnostics).toEqual([]);
+    expect(out.obligations).toContainEqual(["bounds:row-consistent", "r.close", "aggregate:sum", "field-bounds", "instance"]);
+  });
+
+  it("A4: a valid declaration with NO rows emits no bounds obligation — absent evidence is not proof of consistency", () => {
+    const out = run(structure({ lower: "low", upper: "high" }), undefined);
+    expect(out.status).toBe("admissible");
+    expect(out.obligations.filter((o) => o[0] === "bounds:row-consistent")).toEqual([]);
+  });
+
+  it("A5: consistent renaming of fields, references and row keys preserves the judgment, including attribution", () => {
+    const renamed = {
+      relations: { r: { grain: ["kk"], fields: {
+        kk: { transformation: "nominal" },
+        lo: { transformation: "ratio" },
+        mid: { transformation: "ratio", bounds: { lower: "lo", upper: "hi" } },
+        hi: { transformation: "ratio" } } } },
+    } as never as Parameters<typeof judge>[0];
+    const renamedAssertions = [{ kind: "aggregate", relation: "r", field: "mid", op: "sum" }] as never;
+    const a = JSON.parse(canonicalJudgment(judge(structure({ lower: "low", upper: "high" }), assertions, { rows: { r: [{ k: "a", low: 1, close: 50, high: 10 }] } } as never)));
+    const b = JSON.parse(canonicalJudgment(judge(renamed, renamedAssertions, { rows: { r: [{ kk: "a", lo: 1, mid: 50, hi: 10 }] } } as never)));
+    const mod = (j: typeof a) => JSON.parse(JSON.stringify(j).replaceAll('"r.mid"', '"r.close"'));
+    expect(mod(b)).toEqual(a);
+  });
+
+  it("an unresolved bound reference is a MALFORMED DECLARATION, refused with no rows — row content cannot authorize it later", () => {
+    const bad = structure({ lower: "typo_low", upper: "high" });
+    expect(() => run(bad, undefined)).toThrow(/bounds\.lower.*does not declare/);
+  });
+
+  it("the same unresolved reference is refused even when a supplied row coincidentally carries that property", () => {
+    const bad = structure({ lower: "typo_low", upper: "high" }, { typo_low: { transformation: "nominal" } });
+    // re-adding the property to FIELDS would resolve it; the control is a row
+    // carrying an undeclared property, which must NOT resolve the reference.
+    const rowOnly = structure({ lower: "typo_low", upper: "high" });
+    expect(() => run(rowOnly, { rows: { r: [{ k: "a", low: 1, close: 5, high: 10, typo_low: 0 }] } } as never)).toThrow(/bounds\.lower.*does not declare/);
+    expect(bad).toBeDefined();
   });
 });

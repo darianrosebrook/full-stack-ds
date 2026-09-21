@@ -52,6 +52,13 @@ export const OBLIGATION = {
   UNIT_COMMENSURABLE: "unit:commensurable",
   NULL_MISSING_MECHANISM: "null:missing-mechanism",
   CONSERVATION: "invariant:conservation",
+  /**
+   * A declared field-to-field bounds relationship that SUPPLIED rows violate.
+   * An obligation rather than a diagnostic: naming a contradiction needs an
+   * owner-licensed cause, so a measured violation stands as an unresolved
+   * premise until the table gains one.
+   */
+  BOUNDS_ROW_CONSISTENT: "bounds:row-consistent",
 } as const;
 
 /**

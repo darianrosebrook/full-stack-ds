@@ -1231,8 +1231,8 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(64);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 23, "member-absence": 8, leaf: 5, "member-pair": 28 });
+    expect(unresolved.length).toBe(68);
+    expect(tally(unresolved)).toEqual({ "reference-topology": 25, "member-absence": 8, leaf: 7, "member-pair": 28 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
@@ -1258,7 +1258,10 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // 31-37) moved it out of unresolved for one round; the footprint-aware
     // classifier put it back, because its erasure takes the sibling ORDER facet
     // of a surviving list and so does not ratify primitive standing.
-    expect(topology.length).toBe(23);
+    // 25: the two bounds#incidence facets opened by REL-FIELD-BOUNDS-01 join
+    // them unresolved — nothing witnesses them yet, and their first consumer is
+    // the bounds:row-consistent obligation.
+    expect(topology.length).toBe(25);
     // Fourteen, not sixteen: two of the sixteen were witnessed -- `relation.derivedBy.nest.levels#order`
     // by REL-TOPOLOGY-AUTHORED-STIMULUS-01 and `relation.derivedBy.aggregate-to-grain.toGrain#order` by
     // REL-ORDER-FACET-SEMANTICS-01 -- so neither is unresolved and neither is counted here, while the
@@ -1281,8 +1284,14 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     // carriers, so it left this count alone and moved the closures' composite diagnosis instead
     // (the `affected` list above grows by the two `normalize~X` carriers). The grain
     // witness coordinate returned to unresolved when its fabricated pair was retired, and
-    // it blocks no carrier either, so this count is back to 49.
-    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(49);
+    // it blocks no carrier either, so this count is back to 49. The bounds
+    // slice\'s two #incidence facets join the UNRESOLVED set but block no
+    // carrier (nothing witnesses them and no closure depends on them yet), so
+    // the non-blocking count rises by FOUR: 49 -> 53. The bounds slice\'s four
+    // unresolved facets (#present and #incidence on lower and upper) block no
+    // carrier — nothing witnesses them and no closure depends on them yet — and
+    // the two bare bounds references are excluded (they are not coordinates).
+    expect(unresolved.filter((id) => !dependents.has(id)).length).toBe(53);
   });
 });
 

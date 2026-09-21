@@ -542,8 +542,8 @@ describe("a PRESENCE witness needs a pair the erasure is a no-op on one side of"
     const s = specimens();
     const oracle = loadOracle();
     const rowless = s.fixtures.filter((f) => (f as unknown as { evidence?: { rows?: unknown } }).evidence?.rows === undefined);
-    expect(rowless.length).toBe(162);
-    expect(rowless.filter((f) => oracle.outcomeOf(f.id)).length).toBe(129);
+    expect(rowless.length).toBe(163);
+    expect(rowless.filter((f) => oracle.outcomeOf(f.id)).length).toBe(130);
     expect(presencePairs()).not.toContain("evidence.rows.*#present");
   });
 });

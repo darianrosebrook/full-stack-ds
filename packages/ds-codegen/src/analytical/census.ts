@@ -337,7 +337,12 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     if (!locators.has(c.leaf)) locators.set(c.leaf, locator);
     const operation = operationFor(c, requiredLeaves);
     if (!operation) return;
-    plans.set(c.id, { id: c.id, locator, operation, representationEffects: [] });
+    let planLocator = locator;
+    if (c.id.endsWith("#present") && operation.kind === "delete-holder" && requiredLeaves.has(c.leaf) && locator.steps.length > 1 && locator.steps[locator.steps.length - 1]!.kind === "prop") {
+      const holder = locator.steps.slice(0, -1);
+      planLocator = { ...locator, path: holder.map((s) => ("name" in s ? s.name : "[]")).join("."), steps: holder };
+    }
+    plans.set(c.id, { id: c.id, locator: planLocator, operation, representationEffects: [] });
     for (const u of unionStack) {
       const deps = branchDependents.get(u) ?? new Set<string>();
       deps.add(c.id);
@@ -404,6 +409,7 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     const id = label(rawPath);
     if (id === "id" || seen.has(id)) return;
     seen.add(id);
+    if (!optional.self) requiredLeaves.add(id);
     const r = role(rawPath);
     emit({ id, kind: "reference", leaf: id, role: r }, rawPath, steps, arityFloor, operand);
     // Presence is a degree of freedom the spelling is not — but only where it
