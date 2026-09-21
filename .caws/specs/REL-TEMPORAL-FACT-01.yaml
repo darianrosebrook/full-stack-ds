@@ -44,3 +44,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts: the declared TEMPORAL kind is CARRIED at the result boundary (a.facts.dimension.temporality equals the declaration) (vitest run packages/ds-codegen/src/analytical, 22 files 1037 tests green)"
     recorded_at: "2026-09-21T00:56:33.052Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "projection.test.ts: same test - aRest equals bRest, so the difference is attributable to temporality alone (vitest run packages/ds-codegen/src/analytical, 22 files 1037 tests green)"
+    recorded_at: "2026-09-21T00:56:33.528Z"
