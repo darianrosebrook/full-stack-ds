@@ -52,3 +52,8 @@ contracts:
   - name: 'field-bounds-declaration'
     type: schema
     path: 'packages/ds-codegen/src/analytical/relation-model.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "stage1.test.ts REL-FIELD-BOUNDS-01 A1: the declaration validates through the real schema path via FX_P_OHLC_PAIR and the emitted schemas are drift-gated (vitest analytical 1048/1048; typecheck lint rail root frameworks green)"
+    recorded_at: "2026-09-21T14:50:01.778Z"
