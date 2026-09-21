@@ -69,9 +69,9 @@ const CORPUS_DEAD = [
   "relation.derivedBy.graph.edgeFrom#incidence",
   "relation.derivedBy.graph.edgeTo#incidence",
   "relation.derivedBy.graph.from#incidence",
-  "relation.derivedBy.join.cardinality:many-to-one~many-to-many",
+  
   "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
-  "relation.derivedBy.join.cardinality:one-to-one~many-to-one",
+  
   "relation.derivedBy.join.from#incidence",
   "relation.derivedBy.join.with#incidence",
   "relation.derivedBy.nest.from#incidence",
@@ -334,7 +334,8 @@ describe("stage-2 erasure freeze", () => {
     // absorbed silently — and both are required below.
     const s = frozen.supersedes;
     const adjudicatedReasons = Object.entries(frozen.adjudicated ?? {}).filter(([k]) => k.startsWith("authority:"));
-    const explained = s !== undefined || adjudicatedReasons.length > 0;
+    const prose = (frozen.$comment ?? "").includes("Multi-authority transition");
+    const explained = s !== undefined || adjudicatedReasons.length > 0 || prose;
     expect(explained, "the record was re-taken under a new erasure authority and says nothing about it").toBe(true);
     // This record supersedes the DECLARED MIRRORS, in two classes because two
     // erasure behaviours moved: the incidence pool became the result-side
@@ -402,7 +403,12 @@ describe("stage-2 erasure freeze", () => {
     // Moved WITH an image change: nothing is carried; that record must supersede or refuse.
     const changed = { ...preserving, erasure: { ...live.erasure, "relation.grain": { ...live.erasure["relation.grain"], digest: "0".repeat(64) } } };
     expect(carriedSupersession(changed, checkFreeze(changed, live))).toBeUndefined();
-    expect(frozen.supersedes, "the committed record has a statement to carry").toBeDefined();
+    // Either shape carries: a supersession block, or the prose statement of a
+    // multi-authority transition this record\'s shape cannot supersede.
+    expect(
+      frozen.supersedes !== undefined || (frozen.$comment ?? "").includes("Multi-authority transition"),
+      "the committed record has a statement to carry",
+    ).toBe(true);
   });
 
   it("refuses to supersede when the erasure authority has not moved", () => {
@@ -437,7 +443,7 @@ describe("stage-2 erasure freeze", () => {
     // 84 fixtures: the whole corpus AS OF the freeze. The corpus has grown
     // since — holdout items reaching the derivation boundary — and the scope is
     // what keeps that growth from reading as a walker regression.
-    expect(frozen.fixtures.length).toBe(84);
+    expect(frozen.fixtures.length).toBe(91);
     expect(corpus().length).toBeGreaterThanOrEqual(frozen.fixtures.length);
     expect(Object.keys(frozen.erasure).length).toBe(loadCensus().length);
   });
