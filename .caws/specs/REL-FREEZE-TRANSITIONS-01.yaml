@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "freeze.test.ts: refuses reusing the complete old transition against a LATER different multi-authority movement (freeze.test.ts 33/33; analytical 1056/1056; root 4307; rail typecheck lint frameworks green)"
     recorded_at: "2026-09-21T18:20:14.077Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "freeze.ts record main: a plain re-record with no new movement carries the prior transition as historical provenance (freeze.test.ts 33/33; analytical 1056/1056; root 4307; rail typecheck lint frameworks green)"
+    recorded_at: "2026-09-21T18:20:14.581Z"
