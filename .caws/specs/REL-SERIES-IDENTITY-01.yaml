@@ -58,3 +58,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RESTART piece 2: the aggregate path blindness is RECORDED AS A LOSS (vitest analytical 1041/1041, rail+root+frameworks green)"
     recorded_at: "2026-09-21T01:53:09.894Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 2: the bounds violation cannot obtain standing and no bounds check is added (vitest analytical 1041/1041, rail+root+frameworks green)"
+    recorded_at: "2026-09-21T01:53:10.331Z"
