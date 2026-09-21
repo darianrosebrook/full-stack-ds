@@ -2,9 +2,11 @@ id: REL-TEMPORAL-FACT-01
 title: 'The declared temporal fact survives the projection boundary instead of being dropped'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'The projection boundary transports the declared temporal kind, with the isolation control the pause record said was missing.'
 created_at: '2026-09-21T00:48:33.941Z'
-updated_at: '2026-09-21T00:48:52.084Z'
+updated_at: '2026-09-21T00:56:34.748Z'
 created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
 blast_radius:
   modules:
