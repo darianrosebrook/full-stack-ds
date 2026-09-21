@@ -1,5 +1,5 @@
 {
-  "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label.",
+  "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label. Multi-authority transition (bounds slice): this record was taken after the census grew two leaves (field.bounds.lower/upper) and the erasure rule began targeting the holder for required-child presence — three authorities moved in one change, which a supersession cannot state (it absorbs one authority's movement). The transition is stated here rather than silently absorbed; the behavioural effect is authored in SUPERSESSION_EFFECT.delete-holder.",
   "digests": {
     "fixtures.jsonl": "317507a6a81a65dedc8c8b1cb8a97ee795e378c4c95773e407993478e7d8c193"
   },
@@ -906,8 +906,5 @@
       "digest": "ac2b33686388371249f8077e0d59216917c3eff773d94b7c9622857f4a19ef65"
     }
   },
-  "adjudicated": {
-    "authority:coordinateBasisDigest": "The census basis grew by design: the bounds declaration added field.bounds.lower and field.bounds.upper as leaves, so the coordinate-set digest moved with the schema. No coordinate left and none was re-keyed; the growth is the declared extension this record exists to carry.",
-    "authority:ruleDigest": "The erasure rule moved with the holder-targeting repair: a presence erasure on a slot required by its holder now executes at the holder. That is the behavioural change this supersession states, recorded here so the transition is adjudicated rather than absorbed."
-  }
+  "adjudicated": {}
 }
