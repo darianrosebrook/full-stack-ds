@@ -239,7 +239,7 @@
     "field.bounds.upper#present"
    ],
    "law": "a whole optional declaration is forgotten by deletion; a required declaration cannot be forgotten by deletion",
-   "disposition": "UNCLASSIFIED (delete-holder:scalar>absent:legacy-invalid): this divergence needs an individual reading before the ledger can carry it",
+   "disposition": "legacy deleted the required child and left the holder missing a property the schema demands -- a source-invalid image -- while the new plan deletes the HOLDER, which is the only state in which a required child's presence varies. The legacy image asserted a partial declaration the representation cannot express; the new image is the lawful forgetting of the coordinate's degree of freedom.",
    "sample": {
     "plan": "field.bounds.lower#present",
     "specimen": "FX_P_OHLC_PAIR",
