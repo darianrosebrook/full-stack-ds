@@ -8,7 +8,8 @@ updated_at: '2026-09-21T00:48:33.941Z'
 created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/projection.ts (temporality carried onto the projection facts)'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts (the isolation control the pause record said was missing)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -17,19 +18,21 @@ scope:
     - 'packages/ds-contracts/analytical-fixtures'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The projection boundary TRANSPORTS declared facts; it does not interpret them and it does not drop them. Carrying temporality.kind asserts nothing about duration or extent: the consumer that needs an extent still has to obtain it, and an absent extent stays absent.'
+  - 'A default must not be invented for a fact the declaration does not carry. No temporality on the field means no temporal fact on the projection facts, never an implicit instant.'
+  - 'The isolation control is the point of the slice: a change to temporality ALONE must move the facts, so the earlier control result (changing it moved nothing) is inverted rather than merely asserted against.'
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'An admitted operation over a structure whose group or measure field declares a temporality kind.'
+    when: 'The projection facts are derived and inspected.'
     then: 'given an admitted operation whose group or measure field declares temporality; when the projection facts are derived; then the temporality kind is carried on the facts'
   - id: A2
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'Two admitted operations differing only in the declared temporality kind of the group field.'
+    when: 'Both fact sets are derived and compared.'
     then: 'given two otherwise identical admitted operations whose group fields differ only in temporality kind; when their projection facts are compared; then the facts differ and the difference is attributable to temporality alone'
   - id: A3
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
+    given: 'An admitted operation over a field declaring no temporality.'
+    when: 'The projection facts are inspected.'
     then: 'given a field that declares no temporality; when the projection facts are derived; then no temporal fact is asserted rather than a default being invented'
 non_functional: {}
 contracts:
