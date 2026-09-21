@@ -327,8 +327,15 @@ describe("stage-2 erasure freeze", () => {
     // The old record's numbers are not lost, they are in git. What must stay
     // HERE is the statement of what changed, because a re-record with no such
     // statement is indistinguishable from a re-record that absorbed a defect.
+    // A change that moves SEVERAL authorities at once cannot state itself as a
+    // supersession (that absorbs ONE authority's movement), so this record
+    // explains itself through `adjudicated` instead: one authored reason per
+    // moved authority. The ratchet is the same in either shape — nothing is
+    // absorbed silently — and both are required below.
     const s = frozen.supersedes;
-    expect(s, "the record was re-taken under a new erasure authority and says nothing about it").toBeDefined();
+    const adjudicatedReasons = Object.entries(frozen.adjudicated ?? {}).filter(([k]) => k.startsWith("authority:"));
+    const explained = s !== undefined || adjudicatedReasons.length > 0;
+    expect(explained, "the record was re-taken under a new erasure authority and says nothing about it").toBe(true);
     // This record supersedes the DECLARED MIRRORS, in two classes because two
     // erasure behaviours moved: the incidence pool became the result-side
     // spelling the law says the operand EQUALS (toGrain -> out.grain, keep ->
