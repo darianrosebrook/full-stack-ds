@@ -2200,3 +2200,45 @@ describe("RESTART piece 2: series identity through the consumer", () => {
     // builds the generic declared-expression mechanism that adjudicates it.
   });
 });
+
+/* ---------------------------------------------------------------------------
+ * RESTART piece 4 — OBSERVE THE THING PRODUCED (REL-OBSERVED-OUTPUT-01)
+ *
+ * Piece 2 detected the close-swap through `evaluateOperation` — the rows. The
+ * charter's fourth requirement is detection through the PRODUCED
+ * representation's decoder, which receives the output ALONE: a decoder that
+ * needed the rows would be re-evaluation passing as preservation.
+ * ------------------------------------------------------------------------- */
+
+describe("RESTART piece 4: the swap is observed in the thing produced", () => {
+  const loaded = loadOracle().fixtures.get("FX_P_OHLC_PAIR")!;
+  const s = loaded.structure as RelationalStructure;
+  const rows = (loaded.evidence as { rows: { candles: Array<Record<string, number | string>> } }).rows.candles;
+  const swapClose = (rs: Array<Record<string, number | string>>): Array<Record<string, number | string>> =>
+    rs.map((r) => (r.symbol === "AAA" ? { ...r, close: rs.find((x) => x.period === r.period && x.symbol === "BBB")!.close } : { ...r, close: rs.find((x) => x.period === r.period && x.symbol === "AAA")!.close }));
+
+  const identityOp = bindOperation(s, { relation: "candles", field: "close", op: "sum", along: ["period"] });
+  const aggregateOp = bindOperation(s, { relation: "candles", field: "close", op: "sum", along: ["symbol"] });
+  const produceFor = (op: typeof identityOp, rs: Array<Record<string, number | string>>) => produce(evaluateOperation(op, rs), 1);
+  const decode = (o: ReturnType<typeof produce>["readback"]) => decodeReadback(o).map((e) => `${e.key}:${e.value}`).sort();
+
+  it("the produced readback decodes to one entry per symbol, from the output alone", () => {
+    const entries = decodeReadback(produceFor(identityOp, rows).readback);
+    expect(entries.map((e) => e.key).sort()).toEqual(["AAA", "BBB"]);
+  });
+
+  it("the SWAP is visible in the produced output: same decode path, different per-symbol entries", () => {
+    const before = decode(produceFor(identityOp, rows).readback);
+    const after = decode(produceFor(identityOp, swapClose(rows)).readback);
+    expect(before).not.toEqual(after);
+    expect(before[0]).toContain("AAA");
+  });
+
+  it("the aggregate binding decodes IDENTICALLY on both populations — the blindness, recorded", () => {
+    const before = decode(produceFor(aggregateOp, rows).readback);
+    const after = decode(produceFor(aggregateOp, swapClose(rows)).readback);
+    expect(after).toEqual(before);
+    // NON-CLAIM: this records the aggregate path's loss at the OUTPUT layer. It
+    // does not repair it, and it does not claim series identity for this binding.
+  });
+});
