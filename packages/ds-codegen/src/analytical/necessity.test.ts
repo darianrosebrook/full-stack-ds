@@ -2816,6 +2816,8 @@ describe("C8 — the census is derived, exhaustive and exactly-once", () => {
       "assertion.ratio-comparison.relation",
       "evidence.grainWitness",
       "field.additivity.semi-additive.nonAdditiveAlong",
+      "field.bounds.lower",
+      "field.bounds.upper",
       "field.whole.perRow",
       "relation.derivedBy.aggregate-to-grain.from",
       "relation.derivedBy.aggregate-to-grain.toGrain",
