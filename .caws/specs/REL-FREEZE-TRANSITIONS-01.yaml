@@ -45,3 +45,8 @@ contracts:
   - name: 'freeze-transitions'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/freeze.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "freeze.test.ts REL-FREEZE-TRANSITIONS-01: accepts the reviewed bounds transition with exact identities endpoints and authored reasons (freeze.test.ts 33/33; analytical 1056/1056; root 4307; rail typecheck lint frameworks green)"
+    recorded_at: "2026-09-21T18:20:12.548Z"
