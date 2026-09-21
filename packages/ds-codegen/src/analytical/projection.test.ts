@@ -2074,7 +2074,7 @@ describe("M3 composition: the parts decide first, and the combinator rule decide
     expect(relationMembership(cyclicEnum).some((k) => k.split("|")[1] === "angle")).toBe(true);
   });
 
-  it("OHLC: the TEMPORAL fact is LOST at the result boundary, recorded as a loss rather than claimed as preserved", () => {
+  it("OHLC: the declared TEMPORAL kind is CARRIED at the result boundary, and changing it ALONE moves the facts", () => {
     // The fixture declares TWO separate facts: `transformation: interval` (a
     // measurement-transformation class) and `temporality.kind: interval` (the
     // observation concerns an interval, not an instant). They are different
@@ -2083,23 +2083,37 @@ describe("M3 composition: the parts decide first, and the combinator rule decide
     expect(s.relations.candles!.fields!.period!.transformation).toBe("interval");
     expect(s.relations.candles!.fields!.period!.temporality).toEqual({ kind: "interval" });
 
-    // `resultFactsOf` carries the transformation class and `cyclic`, and NOT the
-    // temporal kind. Changing ONLY the temporal kind therefore leaves the facts a
-    // projection consumer sees bit-identical — so an assertion that checks the
-    // transformation class does NOT establish that the interval/instant
-    // distinction survives. This reproduces the review's finding as a control
-    // rather than as prose.
+    // THE INVERTED CONTROL. This used to record a LOSS: changing ONLY the
+    // temporal kind left the facts bit-identical, so nothing downstream could
+    // see the interval/instant distinction. The boundary now TRANSPORTS the
+    // declared kind, so the same one-declaration change moves the facts, and
+    // moves them at exactly that coordinate: everything else on the dimension
+    // stays equal.
     const asInstant = { relations: { candles: { ...s.relations.candles!, fields: { ...s.relations.candles!.fields!, period: { ...s.relations.candles!.fields!.period!, temporality: { kind: "instant" } } } } } } as unknown as RelationalStructure;
     const op = (st: RelationalStructure) => bindOperation(st, { relation: "candles", field: "close", op: "sum", along: ["symbol"] });
     const a = admitOperation(s, op(s));
     const b = admitOperation(asInstant, op(asInstant));
     if (a.kind !== "admitted" || b.kind !== "admitted") throw new Error("unreachable");
-    expect(a.facts.dimension).toEqual(b.facts.dimension);
-    expect(a.facts.measure).toEqual(b.facts.measure);
-    // The fact is gone, not merely equal: nothing on the facts carries it.
-    expect(Object.keys(a.facts.dimension)).not.toContain("temporality");
-    // NON-CLAIM: this records a LOSS. It does not propose the transport, and it
-    // does not make the interval/instant distinction available downstream.
+    expect(a.facts.dimension.temporality).toEqual({ kind: "interval" });
+    expect(b.facts.dimension.temporality).toEqual({ kind: "instant" });
+    expect(a.facts.dimension).not.toEqual(b.facts.dimension);
+    const { temporality: _ta, ...aRest } = a.facts.dimension;
+    const { temporality: _tb, ...bRest } = b.facts.dimension;
+    expect(aRest, "the difference is attributable to temporality ALONE").toEqual(bRest);
+    // The measure arm carries the measure field's own declaration, and summing
+    // does not invent one where the field declares none.
+    expect(a.facts.measure.temporality).toBeUndefined();
+
+    // AND ABSENCE STAYS ABSENT: a field with no temporality contributes no
+    // temporal fact, so no consumer can read a default instant out of it.
+    const undeclared = { relations: { candles: { ...s.relations.candles!, fields: { ...s.relations.candles!.fields!, period: { transformation: "interval" as const } } } } } as unknown as RelationalStructure;
+    const c = admitOperation(undeclared, op(undeclared));
+    if (c.kind !== "admitted") throw new Error("unreachable");
+    expect("temporality" in c.facts.dimension).toBe(false);
+    expect(c.facts.dimension.transformation).toBe("interval");
+    // NON-CLAIM: carrying the kind is TRANSPORT, not interpretation. It does not
+    // establish that a consumer can obtain an extent or a duration, and it does
+    // not widen what `transformation: "interval"` ever meant.
   });
 
   it("states what the OHLC and corpus-probe results do NOT establish", () => {
