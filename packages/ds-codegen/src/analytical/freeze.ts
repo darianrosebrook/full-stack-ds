@@ -216,6 +216,13 @@ const SUPERSESSION_EFFECT: Record<string, string> = {
     "The old rewrite of `from` to `into` touched only the fixtures carrying `from`, which is why reach was small and why two merges of overlapping pairs",
     "did not compose. Reach grows to every fixture carrying any member of the saturated class.",
   ].join(" "),
+  "delete-holder": [
+    "A presence erasure on a slot REQUIRED by its holder now deletes the HOLDER rather than the slot. Reach is unchanged in kind — the same fixtures are",
+    "touched — but the erased representation is lawful where it used to violate the holder's required list: deleting `bounds.lower` alone left a `bounds`",
+    "object missing a property the schema demands, so the coordinate's erasure produced an image the representation cannot express. The child's presence",
+    "varies exactly when its holder is absent, so the holder is the state the erasure identifies. First exercised by the bounds declaration; the requiredness",
+    "of a reference slot is now recorded the way a leaf's always was.",
+  ].join(" "),
   "forget-value": [
     "A required leaf becomes a typed hole instead of being deleted. Reach is unchanged — the same fixtures are touched — and the erased representation",
     "differs at every one, because the slot now exists and says `forgotten` where it used to be absent. Deleting it produced images the representation",
