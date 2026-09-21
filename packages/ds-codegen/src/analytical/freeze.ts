@@ -566,6 +566,14 @@ if (invokedDirectly) {
         (recorded as { transitions?: unknown }).transitions = moved
           .filter((k) => reasons[k] !== undefined)
           .map((k) => ({ identity: k, from: was[k], to: now[k], reason: reasons[k] }));
+      } else {
+        // No NEW multi-authority movement: the prior transition statement is
+        // still the statement of the erasure behaviour this record carries, so
+        // it is carried forward the way a supersession is. Dropping it here
+        // would silently delete the only account of what the last behavioural
+        // change did.
+        const carried = (prior as { transitions?: unknown }).transitions;
+        if (carried !== undefined) (recorded as { transitions?: unknown }).transitions = carried;
       }
     }
     fs.writeFileSync(FREEZE_FILE, `${JSON.stringify(recorded, null, 2)}\n`);
