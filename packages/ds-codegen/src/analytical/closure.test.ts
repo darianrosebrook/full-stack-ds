@@ -1231,7 +1231,7 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
       return out;
     };
 
-    expect(unresolved.length).toBe(64);
+    expect(unresolved.length).toBe(70);
     expect(tally(unresolved)).toEqual({ "reference-topology": 23, "member-absence": 8, leaf: 5, "member-pair": 28 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the

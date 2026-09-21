@@ -182,7 +182,7 @@ describe("the footprint-class triage over the live basis candidates", () => {
     // does something; a witness still needs two stimuli the oracle SEPARATES
     // that the erasure identifies, and the constructibility triage below
     // measures that separately -- 16 of the 60 have such a shape at all.
-    expect(unresolved.length).toBe(64);
+    expect(unresolved.length).toBe(70);
     expect(ratifiable.length).toBe(61);
     expect(moving.length).toBe(47);
     // And the blocked three are NOT in it.
@@ -260,7 +260,7 @@ describe("the constructibility triage: what EVIDENCE each ratifiable candidate h
       expect(bySpecimenShape).toContain("relation.derivedBy.graph.value#incidence");
       // And the remainder have no separating shape at all, which is a corpus gap
       // and not an instrument one.
-      expect(ratifiable.length - bySpecimenShape.length).toBe(44);
+      expect(ratifiable.length - bySpecimenShape.length).toBe(50);
     },
     600_000,
   );

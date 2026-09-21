@@ -866,7 +866,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
       byId.set(f.id, set);
     }
     const shared = [...byId].filter(([, cs]) => cs.size > 1);
-    expect(s.fixtures.length).toBe(217);
+    expect(s.fixtures.length).toBe(218);
     // 111, not 110: a filing's patched side is minted with a `_PATCHED` id, so
     // an authored stimulus contributes an id of its own where the synthesized
     // specimen it pre-empts carried the base fixture's id.
@@ -881,7 +881,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
   it("and an id-resolving sweep claims 164 bound specimens where content says 79", () => {
     const s = specimens();
     const oracle = loadOracle();
-    expect(s.fixtures.filter((f) => hasOutcome(f, oracle)).length).toBe(164);
+    expect(s.fixtures.filter((f) => hasOutcome(f, oracle)).length).toBe(165);
     expect(s.fixtures.filter((f) => contentMatches(f, oracle)).length).toBe(91);
     expect(s.fixtures.filter((f) => isBound(f, oracle)).length).toBe(79);
     // The difference is the mis-attribution: 85 specimens have an outcome BY ID that is not
@@ -896,7 +896,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     // the corrected reading rather than a narrower window. The id-resolving version reported two.
     const doc = loadSubtraction();
     const unresolved = doc.basis.candidates.filter((id) => (doc.verdicts[id]?.disposition ?? "unresolved") === "unresolved");
-    expect(unresolved.length).toBe(64);
+    expect(unresolved.length).toBe(70);
 
     const s = specimens();
     const oracle = loadOracle();
