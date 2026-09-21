@@ -65,3 +65,7 @@ evidence:
     status: pass
     evidence_ref: "stage1.test.ts A3: violating rows carry the complete occurrence bounds:row-consistent r.close aggregate:sum field-bounds instance with NO diagnostic (vitest analytical 1048/1048; typecheck lint rail root frameworks green)"
     recorded_at: "2026-09-21T14:50:02.749Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "stage1.test.ts A4: a valid declaration with NO rows emits no bounds obligation (vitest analytical 1048/1048; typecheck lint rail root frameworks green)"
+    recorded_at: "2026-09-21T14:50:03.231Z"
