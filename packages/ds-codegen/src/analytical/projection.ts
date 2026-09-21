@@ -32,7 +32,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { RelationalStructure as RelationalStructureSchema } from "./relation-model.js";
-import type { AggregateOp, FieldDecl, RelationDecl, RelationalStructure, Transformation, UnitDecl } from "./relation-model.js";
+import type { AggregateOp, FieldDecl, RelationDecl, RelationalStructure, TemporalityDecl, Transformation, UnitDecl } from "./relation-model.js";
 import type { GraphResult } from "./graph-projection.js";
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
@@ -236,6 +236,10 @@ function resultFactsOf(op: BoundOperation, rel: RelationDecl, field: FieldDecl, 
       key: groupField.key === true,
       cyclic: groupField.cyclic === true,
       ...(groupField.unit ? { unit: groupField.unit } : {}),
+      // Carried only where declared. A field with no temporality contributes no
+      // temporal fact, and nothing downstream may read a default out of its
+      // absence.
+      ...(groupField.temporality ? { temporality: groupField.temporality } : {}),
     },
     measure: {
       field: resultFieldName(op),
@@ -244,6 +248,7 @@ function resultFactsOf(op: BoundOperation, rel: RelationDecl, field: FieldDecl, 
       nonAdditiveAlong: field.additivity?.kind === "semi-additive" ? field.additivity.nonAdditiveAlong : [],
       cyclic: field.cyclic === true,
       ...(field.unit ? { unit: field.unit } : {}),
+      ...(field.temporality ? { temporality: field.temporality } : {}),
     },
   };
 }
@@ -338,7 +343,21 @@ export type ResultFacts = {
   sourceRelation: string;
   sourceGrain: unknown;
   resultGrain: string[];
-  dimension: { field: string; transformation: Transformation; key: boolean; cyclic: boolean; unit?: UnitDecl };
+  dimension: {
+    field: string;
+    transformation: Transformation;
+    key: boolean;
+    cyclic: boolean;
+    unit?: UnitDecl;
+    /**
+     * The declared temporal kind of the RESULT's group column, carried from the
+     * field declaration. TRANSPORT, not interpretation: an `interval` kind here
+     * says the observation extends over its period; it does not say the consumer
+     * can obtain an extent or a duration, and an absent declaration stays absent
+     * rather than defaulting to an instant.
+     */
+    temporality?: TemporalityDecl;
+  };
   measure: {
     field: string;
     transformation: Transformation;
@@ -353,6 +372,8 @@ export type ResultFacts = {
      * unproven rather than false.
      */
     unit?: UnitDecl;
+    /** The measure field's declared temporal kind, carried on the same terms as the dimension's. */
+    temporality?: TemporalityDecl;
   };
 };
 
@@ -2752,7 +2773,7 @@ export const OHLC_PROBE_NON_CLAIMS: readonly string[] = [
   "A SUCCESSFUL EXECUTION OF A TRANSFORMED QUESTION IS NOT A SUCCESSFUL EXPRESSION OF THE ORIGINAL QUESTION. Binding `sum` over each measure asks five familiar scalar questions; it is not evidence that OHLC's defining relationships survive projection or composition.",
   "The five measures are NOT shown to be a co-registered object. Co-registration is a relationship between quantities belonging to one identified observation, and asking each field an independent scalar question cannot establish it. Independently valid scalar fields are not a valid joint object.",
   "The corpus-probe census is an EXECUTION-BOUNDARY census. It reports which fixtures reach the entry point and why the others do not. It is not evidence that any fixture's characteristic analytical structure survives: a successful hierarchy sum is not evidence that parent-child structure survives, and a successful count-field sum is not evidence that unequal-bin density or interval closure survives.",
-  "The result carrier drops `temporality.kind`. The declared distinction between an interval and an instant observation is LOST at the projection boundary, so a check of the measurement-transformation class does not establish that the temporal distinction survives.",
+  "The result carrier TRANSPORTS `temporality.kind` but does not interpret it. An `interval` kind on the facts says the observation extends over its grain; it does NOT establish that a consumer can obtain an extent or a duration, and `transformation: \"interval\"` never stood for temporal support. A field declaring no temporality contributes no temporal fact, and no default may be read out of that absence.",
   "SERIES IDENTITY IS NOT SHOWN TO SURVIVE. The shipped fixture holds one symbol across two periods, so summing across symbols happens to preserve each numeric value there. On that population the loss of series identity is invisible; it does not make aggregation meaning-preserving for the source-grain question.",
   "The bounds relationship (`low <= {open, close} <= high`) is NOT expressed. The fixture declares the fields but the assertion grammar does not bind a cross-field expression, and field names cannot supply the rule without becoming hidden domain knowledge. A derived direction comparison is likewise unexpressed.",
   "The bounded evaluator's restriction to `sum` is an IMPLEMENTATION scope boundary, not an architectural invariant. Adding `min` or `count` is not the next step merely because the fixture runner refuses those assertions; they arrive when a preserved analytical question requires them.",

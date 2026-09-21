@@ -16,7 +16,10 @@
       "field": "date",
       "transformation": "interval",
       "key": false,
-      "cyclic": false
+      "cyclic": false,
+      "temporality": {
+        "kind": "instant"
+      }
     },
     "measure": {
       "field": "sum(on_hand)",
@@ -1579,7 +1582,10 @@
       "field": "date",
       "transformation": "interval",
       "key": false,
-      "cyclic": false
+      "cyclic": false,
+      "temporality": {
+        "kind": "instant"
+      }
     },
     "measure": {
       "field": "sum(on_hand)",
