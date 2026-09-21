@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "stage1.test.ts A4: a valid declaration with NO rows emits no bounds obligation (vitest analytical 1048/1048; typecheck lint rail root frameworks green)"
     recorded_at: "2026-09-21T14:50:03.231Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "stage1.test.ts A5: consistent renaming of fields references and row keys preserves the judgment including attribution (vitest analytical 1048/1048; typecheck lint rail root frameworks green)"
+    recorded_at: "2026-09-21T14:50:03.698Z"
