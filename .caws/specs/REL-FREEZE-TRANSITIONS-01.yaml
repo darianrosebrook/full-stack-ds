@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "freeze.test.ts: refuses an authored transition with one ALTERED successor endpoint (freeze.test.ts 33/33; analytical 1056/1056; root 4307; rail typecheck lint frameworks green)"
     recorded_at: "2026-09-21T18:20:13.036Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "freeze.test.ts: refuses when a moved authority has NO authored entry, nothing silently filtered (freeze.test.ts 33/33; analytical 1056/1056; root 4307; rail typecheck lint frameworks green)"
+    recorded_at: "2026-09-21T18:20:13.560Z"
