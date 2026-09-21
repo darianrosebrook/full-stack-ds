@@ -27,7 +27,9 @@ export type Engine =
   | "dimensional"
   | "declaration-missing"
   | "derivation-typing"
-  | "task-invariant";
+  | "task-invariant"
+  /** Field-to-field bounds over supplied rows (instance evidence). */
+  | "field-bounds";
 
 export interface OccurrenceBase {
   subject: string;

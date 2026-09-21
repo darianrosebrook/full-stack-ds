@@ -348,6 +348,43 @@
             }
           ]
         },
+        "bounds": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "lower": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/definitions/name"
+                    },
+                    {
+                      "$ref": "#/definitions/quotientMarker"
+                    }
+                  ]
+                },
+                "upper": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/definitions/name"
+                    },
+                    {
+                      "$ref": "#/definitions/quotientMarker"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "lower",
+                "upper"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "$ref": "#/definitions/quotientMarker"
+            }
+          ]
+        },
         "base": {
           "anyOf": [
             {

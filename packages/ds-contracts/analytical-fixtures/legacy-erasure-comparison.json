@@ -8,14 +8,14 @@
  "population": {
   "corpus": 91,
   "stimuli": 37,
-  "synthesized": 85,
-  "total": 213,
-  "membershipDigest": "335b6be7c2cfa3321074d97fd6c8a34b0a0501f2844e61f9ca841e222564483d"
+  "synthesized": 89,
+  "total": 217,
+  "membershipDigest": "9b3a1feb301ff900ad8a614549696b688575d700da95aab885d16cd1e442a093"
  },
  "coordinates": {
-  "legacy": 165,
-  "new": 160,
-  "both": 160,
+  "legacy": 171,
+  "new": 166,
+  "both": 166,
   "onlyLegacy": [
    "assertion.aggregate.along#order",
    "evidence.grainWitness#order",
@@ -25,14 +25,14 @@
   ],
   "onlyNew": []
  },
- "pairs": 35145,
+ "pairs": 37107,
  "agree": {
-  "count": 24786,
-  "digest": "7ad8b6da87d07e05718f1009594493e8c3fcbe945435b61fc18a03163f48cdfc"
+  "count": 26120,
+  "digest": "73172281e60e98d325f5e771a9cc9c1e3caeb8d93d49d263d8a9f6352d6049f6"
  },
  "classes": {
   "new-no-plan": {
-   "count": 5325,
+   "count": 5859,
    "plans": [
     "assertion.aggregate.along",
     "assertion.aggregate.field",
@@ -41,6 +41,8 @@
     "assertion.ratio-comparison.relation",
     "evidence.grainWitness",
     "field.additivity.semi-additive.nonAdditiveAlong",
+    "field.bounds.lower",
+    "field.bounds.upper",
     "field.whole.perRow",
     "relation.derivedBy.aggregate-to-grain.from",
     "relation.derivedBy.aggregate-to-grain.toGrain",
@@ -69,7 +71,7 @@
    }
   },
   "only-legacy-coordinate": {
-   "count": 1065,
+   "count": 1085,
    "plans": [
     "assertion.aggregate.along#order",
     "evidence.grainWitness#order",
@@ -86,7 +88,7 @@
    }
   },
   "merge-enum-members:scalar>class:legacy-valid": {
-   "count": 2443,
+   "count": 2487,
    "plans": [
     "assertion.aggregate.nulls:as-zero~as-observed",
     "assertion.aggregate.nulls:exclude~as-observed",
@@ -155,7 +157,7 @@
    }
   },
   "forget-value:absent>hole:legacy-invalid": {
-   "count": 945,
+   "count": 961,
    "plans": [
     "assertion.aggregate.op",
     "assertion.kind",
@@ -215,7 +217,7 @@
    }
   },
   "forget-value:absent>hole:legacy-valid": {
-   "count": 49,
+   "count": 53,
    "plans": [
     "field.additivity.kind",
     "field.temporality.kind"
@@ -228,6 +230,20 @@
     "diff": [
      ".structure.relations.regions.fields.gdp_per_capita.additivity.kind: (absent) -> {\"@q\":\"forgotten\",\"by\":[\"field.additivity.kind\"]}"
     ]
+   }
+  },
+  "new-image-not-quotient-legal": {
+   "count": 10,
+   "plans": [
+    "field.bounds.lower#present",
+    "field.bounds.upper#present"
+   ],
+   "law": "a whole optional declaration is forgotten by deletion; a required declaration cannot be forgotten by deletion",
+   "disposition": "the new image is not quotient-legal: the new path must answer for this record",
+   "sample": {
+    "plan": "field.bounds.lower#present",
+    "specimen": "FX_P_OHLC_PAIR",
+    "diff": []
    }
   },
   "forget-reference-incidence:scalar>scalar:legacy-valid": {
@@ -921,7 +937,7 @@
   [
    "assertion.aggregate.along",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -1314,6 +1330,34 @@
    "assertion.aggregate.along",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -2412,7 +2456,7 @@
   [
    "assertion.aggregate.along#order",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "only-legacy-coordinate"
   ],
@@ -2805,6 +2849,34 @@
    "assertion.aggregate.along#order",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "only-legacy-coordinate"
   ],
@@ -3903,7 +3975,7 @@
   [
    "assertion.aggregate.field",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -4296,6 +4368,34 @@
    "assertion.aggregate.field",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -5576,8 +5676,8 @@
   [
    "assertion.aggregate.op",
    "FX_P_OHLC_PAIR",
-   "bf4f38f0d89d",
-   "9f33e3610420",
+   "07b043527942",
+   "3ca9b08b4199",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -5970,6 +6070,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "0782b4b44c36",
    "f147d2266d9a",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_P_OHLC_PAIR",
+   "695b0498c3a1",
+   "acb7b9ada238",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_P_OHLC_PAIR",
+   "a2aec89bf2f8",
+   "982dcc67d9d7",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_P_OHLC_PAIR",
+   "9b577d65d534",
+   "bc73d6a1df37",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_P_OHLC_PAIR",
+   "d25fef7582d7",
+   "13ab86551d9f",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -8705,8 +8833,8 @@
   [
    "assertion.aggregate.op:sum~count",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
-   "2bb3d4911137",
+   "7cff84cc852e",
+   "e6d1c8f1b7ad",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -8854,6 +8982,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
    "87c63d7cdd29",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~count",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "7b901b3b63d0",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~count",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "7913385ee7af",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~count",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "c09c105abb3f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~count",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
+   "9feb947aa3dd",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -9342,8 +9498,8 @@
   [
    "assertion.aggregate.op:sum~mean",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
-   "ccfc28c69224",
+   "7cff84cc852e",
+   "52e4cf3ca85b",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -9631,6 +9787,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
    "01f11bf6e231",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "48e0affae069",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "b1c25deb9989",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "55efb3e9d419",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
+   "d22b994671ed",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -10343,8 +10527,8 @@
   [
    "assertion.aggregate.op:sum~min",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
-   "095c12d87c2b",
+   "7cff84cc852e",
+   "26f8d26e6d8c",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -10597,6 +10781,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
    "67dbea95fb62",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "6f58fcc32439",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "37e92decfd13",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "64a07c8bb761",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
+   "ac2b31e91b52",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -11533,7 +11745,7 @@
   [
    "assertion.aggregate.relation",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -11926,6 +12138,34 @@
    "assertion.aggregate.relation",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -13024,8 +13264,8 @@
   [
    "assertion.kind",
    "FX_P_OHLC_PAIR",
-   "e7214f52d42e",
-   "932d1a027abc",
+   "f7517e6ef230",
+   "592df611573d",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -13418,6 +13658,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "cfa4cd64874f",
    "073f8c600d44",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_P_OHLC_PAIR",
+   "7f59582cb190",
+   "98aa2e804b65",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_P_OHLC_PAIR",
+   "484d60ef74a4",
+   "1ed4af076df9",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_P_OHLC_PAIR",
+   "c2cf0220fb67",
+   "3f3a57ec12b8",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_P_OHLC_PAIR",
+   "8f22327f343c",
+   "63dde1beae25",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -14515,8 +14783,8 @@
   [
    "assertion.kind:aggregate~ratio-comparison",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
-   "7e42dad2dcc3",
+   "7cff84cc852e",
+   "b89662c05f5f",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -14909,6 +15177,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
    "797212daad9f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "b93262c99757",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "eba24c0c529f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "9ed8ce72563f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
+   "79c764b191e8",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -16006,7 +16302,7 @@
   [
    "assertion.ratio-comparison.field",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -16399,6 +16695,34 @@
    "assertion.ratio-comparison.field",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -17497,7 +17821,7 @@
   [
    "assertion.ratio-comparison.relation",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -17890,6 +18214,34 @@
    "assertion.ratio-comparison.relation",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -18988,7 +19340,7 @@
   [
    "evidence.grainWitness",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -19381,6 +19733,34 @@
    "evidence.grainWitness",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -20479,7 +20859,7 @@
   [
    "evidence.grainWitness#order",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "only-legacy-coordinate"
   ],
@@ -20872,6 +21252,34 @@
    "evidence.grainWitness#order",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "only-legacy-coordinate"
   ],
@@ -22558,7 +22966,7 @@
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -22951,6 +23359,34 @@
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -24049,7 +24485,7 @@
   [
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "only-legacy-coordinate"
   ],
@@ -24442,6 +24878,34 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "only-legacy-coordinate"
   ],
@@ -24915,6 +25379,3114 @@
    "only-legacy-coordinate"
   ],
   [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "69b821a27f54",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_LIKERT_MEAN_CODE",
+   "6e1456647d22",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_TEMP_RATIO_COMPARISON",
+   "b3b16a700a6c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_TEMP_SUM",
+   "86594bd5b415",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_REGION_MAX",
+   "b2470b526e5a",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_LOGIN_HOUR_MEAN",
+   "d1de3b6a17f6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_USER_ID_SUM",
+   "3e3717a42647",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_EVENT_AT_SUM",
+   "b5f3b664a080",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_STOCK_SUM_ALONG_DATE",
+   "7426b83bbe8e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
+   "83f0deec4a32",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SHARE_SUM_ACROSS_MARKETS",
+   "1ccf8afaa706",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SALES_SUM_MIXED_UNITS_DECLARED",
+   "68d92569d9e5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PCT_MEAN_NO_WHOLE",
+   "4ef94db6cedb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_INDEX_MEAN_NO_BASE",
+   "38585c135968",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_MASS_SUM_UNHANDLED_ERROR",
+   "c350f424d0dc",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+   "eb27b17c2729",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN",
+   "0635c9acd126",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SALES_SUM_PERROW_UNIT_NO_ROWS",
+   "a23e4fc98365",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS",
+   "8f918674932d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_SURVEY_MEAN_RATIO_SCORE",
+   "5cfa76bd4005",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_TEMP_KELVIN_RATIO_COMPARISON",
+   "f4d0ef52b825",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_TEMP_MEAN",
+   "9680487b3fb5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_ORDINAL_MAX",
+   "949c58974d4d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_LOGIN_HOUR_COUNT",
+   "1323942c6310",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_USER_ID_COUNT",
+   "4d065d06c450",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_DURATION_SUM",
+   "4e4dd62e026b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT",
+   "597ea35116b7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_GDP_PER_CAPITA_REDERIVE",
+   "632fe0a8f207",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_SHARE_SUM_WITHIN_MARKET",
+   "152d10c8971c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_SALES_SUM_WITH_CONVERSIONS",
+   "9533b07dfe2c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_PCT_MEAN_WITH_WHOLE",
+   "629d2b751698",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_INDEX_MEAN_WITH_BASE",
+   "a9c170666d86",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_MASS_SUM_PROPAGATE",
+   "4e50a20e99a8",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED",
+   "9ec7e426c833",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "095631b6422c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_GRAIN_WITNESS_DUPLICATE_ROWS",
+   "207a5795d53a",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_CURRENCY_ROWS_ONE_UNIT",
+   "4f955b0dccb6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_CURRENCY_ROWS_MIXED",
+   "2ded7d142ba4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_SUPPRESSED_ROWS_CLEAN",
+   "7f8556ffa7e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_SUPPRESSED_ROWS_AS_ZERO",
+   "f6d7069c5801",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_S_TWO_CURRENCY_SUMS_TWO_UNKNOWN_GRAINS",
+   "0401e27f9294",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_S_MIXED_FAULT",
+   "731bbc562ad4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_S_HETEROGENEOUS_OBSERVATIONS",
+   "5d3b78e60733",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_S_RENAME_ORIGINAL",
+   "52eaad6d6753",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_S_ADVERSARIAL_NAMES",
+   "3b4e977882a9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_P_CATEGORICAL_VS_RATIO",
+   "fc05fcc801f6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_P_BINNED_INTERVAL",
+   "d237f7fe8a83",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_P_HIERARCHY",
+   "99cb51fd866c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_P_GRAPH_ISOLATED_NODE",
+   "396319971f15",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_PAYROLL",
+   "16ad7b4d7edf",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_SENSOR_NETWORK",
+   "a661e5444c7b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_LEDGER_MULTI_CURRENCY_ROWS",
+   "6fc99ba3781c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_CENSUS_CELLS_WITNESSED",
+   "0428579748c0",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_MARKET_SHARE_ROLLUP",
+   "2e3bcf1f7f91",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_CLINICAL_TRIAL",
+   "b76578810418",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_KPI_INDEX_AND_RATE",
+   "91f6892f5569",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_INVENTORY_VALUE_UNKNOWN_UNIT",
+   "4fcdb45ff7bc",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_S_ALONG_IDENTITY",
+   "df8fd3dce307",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SHARE_OF_AVERAGE_SCORE",
+   "c3355d76dce6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "bb60e07225ee",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_ORDER_COUNT_AFTER_LINE_JOIN",
+   "c9a1907c4b30",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "c81acef3588b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_READINGS_BINNED_NO_CLOSURE",
+   "19b01fcfd319",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_CELLS_SUM_SUPPRESSED_AS_ZERO",
+   "30e711e9e928",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
+   "9d9333065a01",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "3e125c3e87dc",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_FLOW_DECLARED_CONSERVED_NO_ROWS",
+   "d148d3128fb4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS",
+   "dd4173678792",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PROJECT_DROPS_NEST_LEVEL",
+   "a47b10128c07",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_SHARE_OF_ADDITIVE_TOTAL",
+   "2e1587dfb685",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_LINE_QTY_SUMMED_AFTER_JOIN",
+   "806fde0209b3",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+   "5e13f6bf657b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_READINGS_BINNED_LEFT_CLOSED",
+   "f06b491e6eea",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_CELLS_SUM_EXCLUDING_SUPPRESSED",
+   "66c7b2e9246d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN",
+   "c206013458ab",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_FLOW_EDGES_BALANCED",
+   "50090e61df77",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_PEERS_AGGREGATE_TO_ONE_TARGET",
+   "128268e0a9fd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_PROJECT_KEEPS_NEST_LEVELS",
+   "3900a0937a58",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_FLOW_ROWS_BALANCED",
+   "3d98701f037b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_FLOW_ROWS_LEAKING",
+   "00906052fe67",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT",
+   "14adccbd552e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_ORDERS_FLATTENED_DROPS_REGION",
+   "93a8d4ece100",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_ROUTES_CONSERVED_ONE_EDGE_UNREADABLE",
+   "b59395d49de3",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_DAILY_ROLLUP_INVENTS_MARGIN",
+   "9871afe82135",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT",
+   "a1dc193cfb74",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_SALES_NESTED_DROPS_STATE",
+   "ce3cebb150d6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_READINGS_BINNED_DROPS_TEMP",
+   "f8ef403760ab",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_SHARES_NORMALIZED_ON_ABSENT_FIELD",
+   "fde446052cda",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_H_READINGS_BINNED_KEEPS_TEMP",
+   "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_P_OHLC_PAIR",
+   "7cff84cc852e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS_PATCHED",
+   "812a71a2e309",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_SUPPRESSED_ROWS_AS_ZERO_PATCHED",
+   "b0c1e0099f37",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED_PATCHED",
+   "8b453ad700cb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED_PATCHED",
+   "69bce8b6e8fd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_USER_ID_COUNT_PATCHED",
+   "2bbee359f8fa",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_TEMP_SUM_PATCHED",
+   "0ee6c3d23a1b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "aa2fb0e70fed",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "ab3fe73867b0",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_STOCK_SUM_ALONG_DATE_PATCHED",
+   "7a05f8515792",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_USER_ID_SUM_PATCHED",
+   "bf782bde0a43",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_USER_ID_SUM_PATCHED",
+   "6216230c5f2e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS_PATCHED",
+   "29773068be19",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_DURATION_SUM_PATCHED",
+   "b4a75e83777f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_REGION_MAX_PATCHED",
+   "c52012efc12c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_SHARE_SUM_WITHIN_MARKET_PATCHED",
+   "f91a2cd0f546",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "c79f374c4471",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "86480456f0e8",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "45512079b429",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "9d6b27ee8779",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_READINGS_BINNED_NO_CLOSURE_PATCHED",
+   "dfb8d5d34da3",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN_PATCHED",
+   "2ff2ff8aeb13",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
+   "0e978e44c688",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
+   "a1e25454c9f9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
+   "1a0cde1901ab",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_STOCK_SUM_ALONG_DATE_PATCHED",
+   "acd6cd8c68da",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "fc6b62f532b9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "92ec089a0ad2",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "8d30b9085eb6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "e9d145359bd2",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "ee9a59acda03",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "8125fa1f08e5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "dc622888898c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "f35bfd71f474",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "bd0579a3b00d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "54efc62a75f3",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "ad7ced84ce54",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SALES_SUM_PERROW_UNIT_NO_ROWS",
+   "f854fbda8ce6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "70e5c16d26f8",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_EVENT_AT_SUM",
+   "1e5017702d75",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_EVENT_AT_SUM",
+   "2d4d275412b6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_EVENT_AT_SUM",
+   "0ec4e86f0db2",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "5813beb1803b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SHARE_SUM_ACROSS_MARKETS",
+   "dcd8d29ebc99",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SHARE_SUM_ACROSS_MARKETS",
+   "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "9167ce07229c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "3f5664adb509",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_STOCK_SUM_ALONG_DATE",
+   "d159165c4a1b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_STOCK_SUM_ALONG_DATE",
+   "0396fd577757",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_MASS_SUM_UNHANDLED_ERROR",
+   "44eb8173adae",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+   "92977c1e1fde",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "abc92c70026d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SHARE_OF_AVERAGE_SCORE",
+   "ddb7edc4ece9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "f5093e657f14",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "2c1a247deaec",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "0e9348ef4b9d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "d0556c88027d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "4dda7dfd4d79",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "f7d93d2c3af9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "9651e0a0b179",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "282dce926d64",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "3f93c2ed2062",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "4c6125a89284",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "a771b6996d1f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "9fd1889a7d14",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "f56bec96a13f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "47c1b3b25b7e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_READINGS_BINNED_NO_CLOSURE",
+   "d4d613866127",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_READINGS_BINNED_NO_CLOSURE",
+   "5dc9e0f13a29",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_READINGS_BINNED_NO_CLOSURE",
+   "a5afa96eecec",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_READINGS_BINNED_NO_CLOSURE",
+   "c05416e98c08",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SHARE_OF_AVERAGE_SCORE",
+   "cb18815fef00",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SHARE_OF_AVERAGE_SCORE",
+   "17b9ed4d4bbf",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PROJECT_DROPS_NEST_LEVEL",
+   "e1e5c00eb44f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PROJECT_DROPS_NEST_LEVEL",
+   "09bfb625b470",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PROJECT_DROPS_NEST_LEVEL",
+   "c544e3d5864a",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PROJECT_DROPS_NEST_LEVEL",
+   "aaec6f5a39cf",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "15c139a33113",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "9a71bea4986d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "3a4419be61af",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "3a8ed7b6a5a7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "10822c536d4d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "62d338c96918",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "f2237aae2f0f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "6a88c96b0f34",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "32254db7761e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
+   "3a59d22d6aee",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
+   "f7a4c4de455f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "9ba9aced9c3b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "5486c73c914a",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "f40bc6c6e39c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "0a3c9443f758",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "60df58fbd2b4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "78a6ae7179c0",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "c130a9a212ea",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "8892e2c731bb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "401dc29ecbd4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "b471387352dd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "e83e8108520a",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "11a314b835f4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "9a35568f7723",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_TEMP_RATIO_COMPARISON",
+   "a29c535fffcf",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_TEMP_RATIO_COMPARISON",
+   "731aa553cc5b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_TEMP_RATIO_COMPARISON",
+   "4af142802ef2",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+   "80a7a3f61be1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+   "df8bf0832652",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+   "b15d6bf04dc8",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_CURRENCY_ROWS_ONE_UNIT",
+   "32b2bc12f95c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_CURRENCY_ROWS_ONE_UNIT",
+   "688e52bd38e8",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_CURRENCY_ROWS_ONE_UNIT",
+   "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "7c97e7ce96d4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower#present",
+   "FX_P_OHLC_PAIR",
+   "83cfd1406e2b",
+   "83cfd1406e2b",
+   "new-image-not-quotient-legal"
+  ],
+  [
+   "field.bounds.lower#present",
+   "FX_P_OHLC_PAIR",
+   "83cfd1406e2b",
+   "83cfd1406e2b",
+   "new-image-not-quotient-legal"
+  ],
+  [
+   "field.bounds.lower#present",
+   "FX_P_OHLC_PAIR",
+   "83cfd1406e2b",
+   "83cfd1406e2b",
+   "new-image-not-quotient-legal"
+  ],
+  [
+   "field.bounds.lower#present",
+   "FX_P_OHLC_PAIR",
+   "089691230e18",
+   "089691230e18",
+   "new-image-not-quotient-legal"
+  ],
+  [
+   "field.bounds.lower#present",
+   "FX_P_OHLC_PAIR",
+   "4b229a102dc8",
+   "4b229a102dc8",
+   "new-image-not-quotient-legal"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "69b821a27f54",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_LIKERT_MEAN_CODE",
+   "6e1456647d22",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_TEMP_RATIO_COMPARISON",
+   "b3b16a700a6c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_TEMP_SUM",
+   "86594bd5b415",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_REGION_MAX",
+   "b2470b526e5a",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_LOGIN_HOUR_MEAN",
+   "d1de3b6a17f6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_USER_ID_SUM",
+   "3e3717a42647",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_EVENT_AT_SUM",
+   "b5f3b664a080",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_STOCK_SUM_ALONG_DATE",
+   "7426b83bbe8e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN",
+   "83f0deec4a32",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SHARE_SUM_ACROSS_MARKETS",
+   "1ccf8afaa706",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SALES_SUM_MIXED_UNITS_DECLARED",
+   "68d92569d9e5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PCT_MEAN_NO_WHOLE",
+   "4ef94db6cedb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_INDEX_MEAN_NO_BASE",
+   "38585c135968",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_MASS_SUM_UNHANDLED_ERROR",
+   "c350f424d0dc",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+   "eb27b17c2729",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN",
+   "0635c9acd126",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SALES_SUM_PERROW_UNIT_NO_ROWS",
+   "a23e4fc98365",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS",
+   "8f918674932d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_SURVEY_MEAN_RATIO_SCORE",
+   "5cfa76bd4005",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_TEMP_KELVIN_RATIO_COMPARISON",
+   "f4d0ef52b825",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_TEMP_MEAN",
+   "9680487b3fb5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_ORDINAL_MAX",
+   "949c58974d4d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_LOGIN_HOUR_COUNT",
+   "1323942c6310",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_USER_ID_COUNT",
+   "4d065d06c450",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_DURATION_SUM",
+   "4e4dd62e026b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT",
+   "597ea35116b7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_GDP_PER_CAPITA_REDERIVE",
+   "632fe0a8f207",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_SHARE_SUM_WITHIN_MARKET",
+   "152d10c8971c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_SALES_SUM_WITH_CONVERSIONS",
+   "9533b07dfe2c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_PCT_MEAN_WITH_WHOLE",
+   "629d2b751698",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_INDEX_MEAN_WITH_BASE",
+   "a9c170666d86",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_MASS_SUM_PROPAGATE",
+   "4e50a20e99a8",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED",
+   "9ec7e426c833",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "095631b6422c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_GRAIN_WITNESS_DUPLICATE_ROWS",
+   "207a5795d53a",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_CURRENCY_ROWS_ONE_UNIT",
+   "4f955b0dccb6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_CURRENCY_ROWS_MIXED",
+   "2ded7d142ba4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_SUPPRESSED_ROWS_CLEAN",
+   "7f8556ffa7e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_SUPPRESSED_ROWS_AS_ZERO",
+   "f6d7069c5801",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_S_TWO_CURRENCY_SUMS_TWO_UNKNOWN_GRAINS",
+   "0401e27f9294",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_S_MIXED_FAULT",
+   "731bbc562ad4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_S_HETEROGENEOUS_OBSERVATIONS",
+   "5d3b78e60733",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_S_RENAME_ORIGINAL",
+   "52eaad6d6753",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_S_ADVERSARIAL_NAMES",
+   "3b4e977882a9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_P_CATEGORICAL_VS_RATIO",
+   "fc05fcc801f6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_P_BINNED_INTERVAL",
+   "d237f7fe8a83",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_P_HIERARCHY",
+   "99cb51fd866c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_P_GRAPH_ISOLATED_NODE",
+   "396319971f15",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_PAYROLL",
+   "16ad7b4d7edf",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_SENSOR_NETWORK",
+   "a661e5444c7b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_LEDGER_MULTI_CURRENCY_ROWS",
+   "6fc99ba3781c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_CENSUS_CELLS_WITNESSED",
+   "0428579748c0",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_MARKET_SHARE_ROLLUP",
+   "2e3bcf1f7f91",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_CLINICAL_TRIAL",
+   "b76578810418",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_KPI_INDEX_AND_RATE",
+   "91f6892f5569",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_INVENTORY_VALUE_UNKNOWN_UNIT",
+   "4fcdb45ff7bc",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_S_ALONG_IDENTITY",
+   "df8fd3dce307",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SHARE_OF_AVERAGE_SCORE",
+   "c3355d76dce6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "bb60e07225ee",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_ORDER_COUNT_AFTER_LINE_JOIN",
+   "c9a1907c4b30",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "c81acef3588b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_READINGS_BINNED_NO_CLOSURE",
+   "19b01fcfd319",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_CELLS_SUM_SUPPRESSED_AS_ZERO",
+   "30e711e9e928",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
+   "9d9333065a01",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "3e125c3e87dc",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_FLOW_DECLARED_CONSERVED_NO_ROWS",
+   "d148d3128fb4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS",
+   "dd4173678792",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PROJECT_DROPS_NEST_LEVEL",
+   "a47b10128c07",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_SHARE_OF_ADDITIVE_TOTAL",
+   "2e1587dfb685",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_LINE_QTY_SUMMED_AFTER_JOIN",
+   "806fde0209b3",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX",
+   "5e13f6bf657b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_READINGS_BINNED_LEFT_CLOSED",
+   "f06b491e6eea",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_CELLS_SUM_EXCLUDING_SUPPRESSED",
+   "66c7b2e9246d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN",
+   "c206013458ab",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_FLOW_EDGES_BALANCED",
+   "50090e61df77",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_PEERS_AGGREGATE_TO_ONE_TARGET",
+   "128268e0a9fd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_PROJECT_KEEPS_NEST_LEVELS",
+   "3900a0937a58",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_FLOW_ROWS_BALANCED",
+   "3d98701f037b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_FLOW_ROWS_LEAKING",
+   "00906052fe67",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_ORDERS_FLATTENED_REINTERPRETS_AMOUNT",
+   "14adccbd552e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_ORDERS_FLATTENED_DROPS_REGION",
+   "93a8d4ece100",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_ROUTES_CONSERVED_ONE_EDGE_UNREADABLE",
+   "b59395d49de3",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_DAILY_ROLLUP_INVENTS_MARGIN",
+   "9871afe82135",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT",
+   "a1dc193cfb74",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_SALES_NESTED_DROPS_STATE",
+   "ce3cebb150d6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_READINGS_BINNED_DROPS_TEMP",
+   "f8ef403760ab",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_SHARES_NORMALIZED_ON_ABSENT_FIELD",
+   "fde446052cda",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_H_READINGS_BINNED_KEEPS_TEMP",
+   "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_P_OHLC_PAIR",
+   "7cff84cc852e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS_PATCHED",
+   "812a71a2e309",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_SUPPRESSED_ROWS_AS_ZERO_PATCHED",
+   "b0c1e0099f37",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED_PATCHED",
+   "8b453ad700cb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_SURVIVAL_MEAN_EXCLUDE_CENSORED_PATCHED",
+   "69bce8b6e8fd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_USER_ID_COUNT_PATCHED",
+   "2bbee359f8fa",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_TEMP_SUM_PATCHED",
+   "0ee6c3d23a1b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "af8c244c5fe6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "27240bc0a677",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS_PATCHED",
+   "aa2fb0e70fed",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "ab3fe73867b0",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "7268d90cd5e7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_STOCK_SUM_ALONG_PRODUCT_PATCHED",
+   "2b76d0f7fc89",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_STOCK_SUM_ALONG_DATE_PATCHED",
+   "7a05f8515792",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_USER_ID_SUM_PATCHED",
+   "bf782bde0a43",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_USER_ID_SUM_PATCHED",
+   "6216230c5f2e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS_PATCHED",
+   "29773068be19",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_DURATION_SUM_PATCHED",
+   "b4a75e83777f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_REGION_MAX_PATCHED",
+   "c52012efc12c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_SHARE_SUM_WITHIN_MARKET_PATCHED",
+   "f91a2cd0f546",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "c79f374c4471",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "86480456f0e8",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS_PATCHED",
+   "01db90256a5f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY_PATCHED",
+   "ab14d40bedcb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "45512079b429",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "9d6b27ee8779",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN_PATCHED",
+   "6b93f9b16afd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_READINGS_BINNED_NO_CLOSURE_PATCHED",
+   "dfb8d5d34da3",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SHARE_OF_AVERAGE_SCORE_PATCHED",
+   "c92ef63abd04",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "168bff7d68ca",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_N_NESTED_SUBTOTAL_AT_PREFIX_PATCHED",
+   "46e0eac08163",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_ORDERS_ROLLUP_UNKNOWN_GRAIN_PATCHED",
+   "2ff2ff8aeb13",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PEERS_AGGREGATE_TO_DIFFERENT_TARGETS_PATCHED",
+   "521a8c49b3d1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
+   "0e978e44c688",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
+   "a1e25454c9f9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PROJECT_DROPS_NEST_LEVEL_PATCHED",
+   "1a0cde1901ab",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_STOCK_SUM_ALONG_DATE_PATCHED",
+   "acd6cd8c68da",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_GDP_PER_CAPITA_ROLLUP_MEAN_PATCHED",
+   "fc6b62f532b9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "92ec089a0ad2",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "8d30b9085eb6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "e9d145359bd2",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "ee9a59acda03",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "8125fa1f08e5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "dc622888898c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "f35bfd71f474",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "bd0579a3b00d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "54efc62a75f3",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "ad7ced84ce54",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SALES_SUM_PERROW_UNIT_NO_ROWS",
+   "f854fbda8ce6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "70e5c16d26f8",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_EVENT_AT_SUM",
+   "1e5017702d75",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_EVENT_AT_SUM",
+   "2d4d275412b6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_EVENT_AT_SUM",
+   "0ec4e86f0db2",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "5813beb1803b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SHARE_SUM_ACROSS_MARKETS",
+   "dcd8d29ebc99",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SHARE_SUM_ACROSS_MARKETS",
+   "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "9167ce07229c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "3f5664adb509",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_STOCK_SUM_ALONG_DATE",
+   "d159165c4a1b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_STOCK_SUM_ALONG_DATE",
+   "0396fd577757",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_MASS_SUM_UNHANDLED_ERROR",
+   "44eb8173adae",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+   "92977c1e1fde",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "abc92c70026d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SHARE_OF_AVERAGE_SCORE",
+   "ddb7edc4ece9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "f5093e657f14",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "2c1a247deaec",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "0e9348ef4b9d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "d0556c88027d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "4dda7dfd4d79",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "f7d93d2c3af9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "9651e0a0b179",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "282dce926d64",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "3f93c2ed2062",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_ORDER_REVENUE_SUMMED_AFTER_LINE_JOIN",
+   "4c6125a89284",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "a771b6996d1f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "9fd1889a7d14",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "f56bec96a13f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_NESTED_SUBTOTAL_OFF_HIERARCHY",
+   "47c1b3b25b7e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_READINGS_BINNED_NO_CLOSURE",
+   "d4d613866127",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_READINGS_BINNED_NO_CLOSURE",
+   "5dc9e0f13a29",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_READINGS_BINNED_NO_CLOSURE",
+   "a5afa96eecec",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_READINGS_BINNED_NO_CLOSURE",
+   "c05416e98c08",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SHARE_OF_AVERAGE_SCORE",
+   "cb18815fef00",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SHARE_OF_AVERAGE_SCORE",
+   "17b9ed4d4bbf",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PROJECT_DROPS_NEST_LEVEL",
+   "e1e5c00eb44f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PROJECT_DROPS_NEST_LEVEL",
+   "09bfb625b470",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PROJECT_DROPS_NEST_LEVEL",
+   "c544e3d5864a",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PROJECT_DROPS_NEST_LEVEL",
+   "aaec6f5a39cf",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "15c139a33113",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "9a71bea4986d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "3a4419be61af",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "3a8ed7b6a5a7",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "10822c536d4d",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "62d338c96918",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "f2237aae2f0f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_FLOW_EDGES_LEAK_AT_MIDDLE_NODE",
+   "6a88c96b0f34",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "32254db7761e",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
+   "3a59d22d6aee",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
+   "f7a4c4de455f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "9ba9aced9c3b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "5486c73c914a",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "f40bc6c6e39c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "0a3c9443f758",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "60df58fbd2b4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "78a6ae7179c0",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "c130a9a212ea",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "8892e2c731bb",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "401dc29ecbd4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "b471387352dd",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "e83e8108520a",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "11a314b835f4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "9a35568f7723",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_TEMP_RATIO_COMPARISON",
+   "a29c535fffcf",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_TEMP_RATIO_COMPARISON",
+   "731aa553cc5b",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_TEMP_RATIO_COMPARISON",
+   "4af142802ef2",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+   "80a7a3f61be1",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+   "df8bf0832652",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_SURVIVAL_MEAN_WITH_CENSORED_ROWS",
+   "b15d6bf04dc8",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_CURRENCY_ROWS_ONE_UNIT",
+   "32b2bc12f95c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_CURRENCY_ROWS_ONE_UNIT",
+   "688e52bd38e8",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_CURRENCY_ROWS_ONE_UNIT",
+   "9b1c44bd4e73",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "0a78eccc3d93",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
+   "FX_T_GRAIN_WITNESS_UNIQUE_ROWS",
+   "7c97e7ce96d4",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper#present",
+   "FX_P_OHLC_PAIR",
+   "afee89ddef91",
+   "afee89ddef91",
+   "new-image-not-quotient-legal"
+  ],
+  [
+   "field.bounds.upper#present",
+   "FX_P_OHLC_PAIR",
+   "98b90320eee9",
+   "98b90320eee9",
+   "new-image-not-quotient-legal"
+  ],
+  [
+   "field.bounds.upper#present",
+   "FX_P_OHLC_PAIR",
+   "02a2176bea20",
+   "02a2176bea20",
+   "new-image-not-quotient-legal"
+  ],
+  [
+   "field.bounds.upper#present",
+   "FX_P_OHLC_PAIR",
+   "afee89ddef91",
+   "afee89ddef91",
+   "new-image-not-quotient-legal"
+  ],
+  [
+   "field.bounds.upper#present",
+   "FX_P_OHLC_PAIR",
+   "afee89ddef91",
+   "afee89ddef91",
+   "new-image-not-quotient-legal"
+  ],
+  [
    "field.temporality.grain:day~month",
    "FX_PEERS_AT_DAY_AND_MONTH_GRAIN",
    "7d2484f60c91",
@@ -25078,8 +28650,8 @@
   [
    "field.temporality.kind",
    "FX_P_OHLC_PAIR",
-   "3cf352dbe7b3",
-   "8c266d5794e3",
+   "030ff77ca043",
+   "2e3ae91a634f",
    "forget-value:absent>hole:legacy-valid"
   ],
   [
@@ -25200,6 +28772,34 @@
    "a0cd9cf59a05",
    "ea8ca1ab4bc3",
    "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.temporality.kind",
+   "FX_P_OHLC_PAIR",
+   "19677cb1c23e",
+   "0460c95e5d4d",
+   "forget-value:absent>hole:legacy-valid"
+  ],
+  [
+   "field.temporality.kind",
+   "FX_P_OHLC_PAIR",
+   "c55ae0889080",
+   "07a223135341",
+   "forget-value:absent>hole:legacy-valid"
+  ],
+  [
+   "field.temporality.kind",
+   "FX_P_OHLC_PAIR",
+   "9bc8eea72d90",
+   "77d5c8c2fa0b",
+   "forget-value:absent>hole:legacy-valid"
+  ],
+  [
+   "field.temporality.kind",
+   "FX_P_OHLC_PAIR",
+   "92f96549ce4f",
+   "ab0aadc984a5",
+   "forget-value:absent>hole:legacy-valid"
   ],
   [
    "field.temporality.kind",
@@ -25379,8 +28979,8 @@
   [
    "field.temporality.kind:instant~interval",
    "FX_P_OHLC_PAIR",
-   "a8d688b2e80f",
-   "8e1f4a41764f",
+   "1b9eb1748694",
+   "3c29d4e93fe0",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -25500,6 +29100,34 @@
    "FX_EVENT_AT_SUM",
    "0ec4e86f0db2",
    "7d0dff4992f5",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.temporality.kind:instant~interval",
+   "FX_P_OHLC_PAIR",
+   "3d18078ea0fc",
+   "77b48f52ee9c",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.temporality.kind:instant~interval",
+   "FX_P_OHLC_PAIR",
+   "a73b7eccc059",
+   "e41a120947e9",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.temporality.kind:instant~interval",
+   "FX_P_OHLC_PAIR",
+   "f30fd73c0ba0",
+   "c70e9f987f65",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.temporality.kind:instant~interval",
+   "FX_P_OHLC_PAIR",
+   "dedcf6ffd615",
+   "57364239ffe1",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -26184,8 +29812,8 @@
   [
    "field.transformation",
    "FX_P_OHLC_PAIR",
-   "4e1f50f5e46c",
-   "f09b4cfcdda7",
+   "bdf6d46e8565",
+   "f18dc7c5c2f4",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -26578,6 +30206,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "317bff425bbe",
    "5c75b6f88d5f",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_P_OHLC_PAIR",
+   "a6990563ff5b",
+   "f043321e3390",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_P_OHLC_PAIR",
+   "4a7d0b8b05f5",
+   "b540253618e2",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_P_OHLC_PAIR",
+   "9a6c65b67274",
+   "7e7ca5664233",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_P_OHLC_PAIR",
+   "f94ce6241d51",
+   "67db67802173",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -27619,8 +31275,8 @@
   [
    "field.transformation:interval~ratio",
    "FX_P_OHLC_PAIR",
-   "969ae1170a66",
-   "e5cb18b0a472",
+   "0be34e76fda0",
+   "67d1273ff544",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -27936,6 +31592,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f6fecb5e0925",
    "93b163563fda",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_P_OHLC_PAIR",
+   "5e055e520676",
+   "180a7d0b57f3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_P_OHLC_PAIR",
+   "fef00aec0b86",
+   "1950395aed92",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_P_OHLC_PAIR",
+   "8074ed1d496b",
+   "7b3703532cb8",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_P_OHLC_PAIR",
+   "2cdb8432af5e",
+   "5ff8f3a12c6f",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -28907,8 +32591,8 @@
   [
    "field.transformation:nominal~interval",
    "FX_P_OHLC_PAIR",
-   "21bc9c721c10",
-   "e1c719c1206b",
+   "669a1479b723",
+   "76e1692efef7",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -29287,6 +32971,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
    "1e8e6434ac81",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_P_OHLC_PAIR",
+   "ea5670fed38a",
+   "1864d6615605",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_P_OHLC_PAIR",
+   "a8a0f1261e8b",
+   "b848a04ee076",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_P_OHLC_PAIR",
+   "606ff914fd42",
+   "39fe57925996",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_P_OHLC_PAIR",
+   "483b43ae08a5",
+   "c8c496ea353a",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -30377,8 +34089,8 @@
   [
    "field.transformation:nominal~ordinal",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
-   "42628089c141",
+   "7cff84cc852e",
+   "27430ebdadc2",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -30757,6 +34469,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
    "3e65628456e1",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "fefa9ae1cf64",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "68ae353cb1ad",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "c4ae9f8b45ea",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
+   "04d269163d40",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -31854,8 +35594,8 @@
   [
    "field.transformation:nominal~ratio",
    "FX_P_OHLC_PAIR",
-   "4d758479c1bd",
-   "26767738cd67",
+   "270abf7babf0",
+   "89619bab0b15",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -32234,6 +35974,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "5f23ff562b03",
    "7f1813ea31f9",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_P_OHLC_PAIR",
+   "0d0b15512fb9",
+   "2d9ae65a6553",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_P_OHLC_PAIR",
+   "65090cd61fb2",
+   "31d84bf76a09",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_P_OHLC_PAIR",
+   "590c8e1f35d7",
+   "7382941692cf",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_P_OHLC_PAIR",
+   "7c05bff7b4d7",
+   "9717def104d7",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -32897,8 +36665,8 @@
   [
    "field.transformation:ordinal~interval",
    "FX_P_OHLC_PAIR",
-   "fb116c99cb53",
-   "419df0a25642",
+   "42819c7b4236",
+   "f5b4830aa639",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33046,6 +36814,34 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "5813beb1803b",
    "3de7f441b7d3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~interval",
+   "FX_P_OHLC_PAIR",
+   "a7aeb89dba3f",
+   "8f455078c1ec",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~interval",
+   "FX_P_OHLC_PAIR",
+   "f2eb20af375b",
+   "3de0ec6616eb",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~interval",
+   "FX_P_OHLC_PAIR",
+   "637e3228d252",
+   "1e4a73693004",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~interval",
+   "FX_P_OHLC_PAIR",
+   "f3add9d9957f",
+   "7cae06022d9e",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33772,8 +37568,8 @@
   [
    "field.transformation:ordinal~ratio",
    "FX_P_OHLC_PAIR",
-   "910ea5c6fcf6",
-   "536ec7be91e5",
+   "dd8742746984",
+   "073d5ded618c",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -34117,6 +37913,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "59badc20c759",
    "14f4a22745b3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_P_OHLC_PAIR",
+   "ff2b3c868be3",
+   "caaabae67c55",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_P_OHLC_PAIR",
+   "becb57e1d3e0",
+   "44f0de2adb67",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_P_OHLC_PAIR",
+   "750c5f2126b8",
+   "e1fe189b7b85",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_P_OHLC_PAIR",
+   "899b598fccad",
+   "db072015bd32",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -35193,7 +39017,7 @@
   [
    "field.whole.perRow",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -35586,6 +39410,34 @@
    "field.whole.perRow",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -36992,7 +40844,7 @@
   [
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -37385,6 +41237,34 @@
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -38630,7 +42510,7 @@
   [
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -39023,6 +42903,34 @@
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -40310,7 +44218,7 @@
   [
    "relation.derivedBy.bin.field",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -40703,6 +44611,34 @@
    "relation.derivedBy.bin.field",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -41864,7 +45800,7 @@
   [
    "relation.derivedBy.bin.from",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -42257,6 +46193,34 @@
    "relation.derivedBy.bin.from",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -43425,7 +47389,7 @@
   [
    "relation.derivedBy.graph.edgeFrom",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -43818,6 +47782,34 @@
    "relation.derivedBy.graph.edgeFrom",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -45007,7 +48999,7 @@
   [
    "relation.derivedBy.graph.edgeTo",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -45400,6 +49392,34 @@
    "relation.derivedBy.graph.edgeTo",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -46589,7 +50609,7 @@
   [
    "relation.derivedBy.graph.from",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -46982,6 +51002,34 @@
    "relation.derivedBy.graph.from",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -48178,7 +52226,7 @@
   [
    "relation.derivedBy.graph.value",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -48571,6 +52619,34 @@
    "relation.derivedBy.graph.value",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -50033,7 +54109,7 @@
   [
    "relation.derivedBy.join.from",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -50426,6 +54502,34 @@
    "relation.derivedBy.join.from",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -51594,7 +55698,7 @@
   [
    "relation.derivedBy.join.with",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -51987,6 +56091,34 @@
    "relation.derivedBy.join.with",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -57607,7 +61739,7 @@
   [
    "relation.derivedBy.nest.from",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -58000,6 +62132,34 @@
    "relation.derivedBy.nest.from",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -59280,7 +63440,7 @@
   [
    "relation.derivedBy.nest.levels",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -59673,6 +63833,34 @@
    "relation.derivedBy.nest.levels",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -61128,7 +65316,7 @@
   [
    "relation.derivedBy.normalize.field",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -61521,6 +65709,34 @@
    "relation.derivedBy.normalize.field",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -62668,7 +66884,7 @@
   [
    "relation.derivedBy.normalize.from",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -63061,6 +67277,34 @@
    "relation.derivedBy.normalize.from",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -64222,7 +68466,7 @@
   [
    "relation.derivedBy.project.from",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -64615,6 +68859,34 @@
    "relation.derivedBy.project.from",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -65769,7 +70041,7 @@
   [
    "relation.derivedBy.project.keep",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -66162,6 +70434,34 @@
    "relation.derivedBy.project.keep",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -67358,7 +71658,7 @@
   [
    "relation.derivedBy.project.keep#order",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "only-legacy-coordinate"
   ],
@@ -67751,6 +72051,34 @@
    "relation.derivedBy.project.keep#order",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "only-legacy-coordinate"
   ],
@@ -68849,8 +73177,8 @@
   [
    "relation.grain",
    "FX_P_OHLC_PAIR",
-   "02be7bcb143f",
-   "3a7c0fe8fd4c",
+   "b6aa6878d0cd",
+   "e97a4ea31889",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -69243,6 +73571,34 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "e3b9db55eef6",
    "b403e04d2b2b",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_P_OHLC_PAIR",
+   "652994e023d6",
+   "826a578218d9",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_P_OHLC_PAIR",
+   "74fb806437d7",
+   "c4fdcec0e3c3",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_P_OHLC_PAIR",
+   "8035e84e3ddd",
+   "ce6a5859334b",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_P_OHLC_PAIR",
+   "ba74aed42272",
+   "a99950f89b7d",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -70340,7 +74696,7 @@
   [
    "structure.peers[]",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "new-no-plan"
   ],
@@ -70733,6 +75089,34 @@
    "structure.peers[]",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "new-no-plan"
   ],
@@ -71943,7 +76327,7 @@
   [
    "structure.peers[]#order",
    "FX_P_OHLC_PAIR",
-   "0a1c1550fb8f",
+   "7cff84cc852e",
    "-",
    "only-legacy-coordinate"
   ],
@@ -72336,6 +76720,34 @@
    "structure.peers[]#order",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_P_OHLC_PAIR",
+   "e33c172e87b5",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_P_OHLC_PAIR",
+   "c2a034d9fed9",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_P_OHLC_PAIR",
+   "53f0a32cc89c",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_P_OHLC_PAIR",
+   "40e813eb72d3",
    "-",
    "only-legacy-coordinate"
   ],

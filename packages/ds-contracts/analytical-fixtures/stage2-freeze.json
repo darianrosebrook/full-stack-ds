@@ -1,14 +1,14 @@
 {
   "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label.",
   "digests": {
-    "fixtures.jsonl": "0f39e8f2d87d4c9e677d1ac48759dbbc50eb4354ccdccca156b7e8095b7b2e9b"
+    "fixtures.jsonl": "317507a6a81a65dedc8c8b1cb8a97ee795e378c4c95773e407993478e7d8c193"
   },
   "authority": {
-    "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
-    "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
+    "coordinateBasisDigest": "18d6e11f6e2269f07761640c8efa343f6390bbd89ae7073993b2d51487bb0864",
+    "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "31627ef1ba9385fab9d6c8e793cd6895322df473ffdbcb4f1527017e00600fa3"
+    "ruleDigest": "7cda6d94ee2919ba5b1ae7036880dd0fb188dd74337414ce992a0cd88681dece"
   },
   "fixtures": [
     "FX_SURVEY_MEAN_SATISFACTION",
@@ -333,6 +333,30 @@
     "field.whole.perRow#incidence": {
       "reach": 4,
       "digest": "354f5ed91813a572e05180c34bca90a45faa54c5a24ffbb69bae894b1b707192"
+    },
+    "field.bounds.lower": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "field.bounds.lower#present": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "field.bounds.lower#incidence": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "field.bounds.upper": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "field.bounds.upper#present": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
+    },
+    "field.bounds.upper#incidence": {
+      "reach": 0,
+      "digest": "5b5911daf09366616752c82033400c37f8bf5baa3224e2f7c24900dc084c43be"
     },
     "field.base": {
       "reach": 1,
@@ -875,20 +899,5 @@
       "digest": "8480529aa7d9acd895107f26caee42523671fa63165896e875ae0a68161fca91"
     }
   },
-  "adjudicated": {},
-  "supersedes": {
-    "erasureAuthorityDigest": "a4c8464653836b7b5f3e979ce3404b412d1e14baa6344c42a22213e2cf9573ad",
-    "divergences": [
-      {
-        "operation": "forget-reference-arity",
-        "coordinates": 1,
-        "effect": "A MIRRORED slot truncates to the mirror's length, a fact read at execution time, rather than the static minItems floor: the law says this list equals the result-side spelling, so how long it may be is a fact about the other side of the equation. `keep#arity` is the case, and it is corpus-dead for the mirror's own reason -- every corpus keep already equals fieldNames(out), so the cut is the identity throughout. The cut keeps the FIRST names, so an arity erasure never rewrites occupants; and it only ever shortens, which is stated rather than hidden: a short break of the equation cannot be repaired by cutting."
-      },
-      {
-        "operation": "forget-reference-incidence",
-        "coordinates": 2,
-        "effect": "Declared MIRRORS: where the law writes one binding TWICE (sameSet(out.grain, d.toGrain), sameSet(fieldNames(out), d.keep)), the operand map now declares the result-side spelling, the census carries it onto the locator, and the canonical rebind takes the MIRROR as the pool -- so the image satisfies the law's equation by construction instead of searching the input's namespace for a name the law would accept. The measurement that dissolved the planned census change: the equation holds in EVERY corpus declaration, unlawful ones included, so the mirror rebind is the identity throughout and `toGrain#incidence` and `keep#incidence` are corpus-dead -- no two admissible fixtures can differ only in a mirrored operand, because the law slaves it to the other side. An authored equation break is the moving case, and the mirror REPAIRS it, which is the collision the witness machinery needs. No verdict moved: no witness names either coordinate."
-      }
-    ]
-  }
+  "adjudicated": {}
 }

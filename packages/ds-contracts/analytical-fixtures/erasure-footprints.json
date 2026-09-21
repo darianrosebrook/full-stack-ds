@@ -1,27 +1,35 @@
 {
   "$comment": "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
   "digests": {
-    "fixtures.jsonl": "0f39e8f2d87d4c9e677d1ac48759dbbc50eb4354ccdccca156b7e8095b7b2e9b",
+    "fixtures.jsonl": "317507a6a81a65dedc8c8b1cb8a97ee795e378c4c95773e407993478e7d8c193",
     "witnesses.json": "db2bffcdffb729188da6e1fe054c879e1bd9db5b4aa89e1fbff6630ae87ca57b",
     "closures-stage2.json": "529636f38134c5ece936bcd94829a27ac6ca8f3aa47fe5220d0dece797760321"
   },
   "authority": {
-    "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
-    "erasureAuthorityDigest": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
+    "coordinateBasisDigest": "18d6e11f6e2269f07761640c8efa343f6390bbd89ae7073993b2d51487bb0864",
+    "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "31627ef1ba9385fab9d6c8e793cd6895322df473ffdbcb4f1527017e00600fa3"
+    "ruleDigest": "7cda6d94ee2919ba5b1ae7036880dd0fb188dd74337414ce992a0cd88681dece"
   },
-  "footprintBasisDigest": "335b6be7c2cfa3321074d97fd6c8a34b0a0501f2844e61f9ca841e222564483d",
+  "footprintBasisDigest": "9b3a1feb301ff900ad8a614549696b688575d700da95aab885d16cd1e442a093",
   "quotientSchemaVersion": 1,
   "specimens": {
     "corpus": 91,
     "stimuli": 37,
-    "synthesized": 85,
-    "total": 213,
-    "populationDigest": "dea423e9dd7f0a6cab346c5ea09fdb7afdf9e939df4e3490f840e9379636161d"
+    "synthesized": 89,
+    "total": 217,
+    "populationDigest": "7d4723583e540fb67560a825c253ff81baed5998e0ef313e024ecf64c26457e4"
   },
   "unbuilt": [
+    {
+      "coordinate": "field.bounds.lower#present",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
+    {
+      "coordinate": "field.bounds.upper#present",
+      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
+    },
     {
       "coordinate": "field.additivity.kind",
       "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
@@ -519,6 +527,18 @@
       "specimen": "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT"
     },
     {
+      "coordinate": "field.bounds.lower#present",
+      "specimens": 1,
+      "error": "/structure/relations/candles/fields/open/bounds must have required property 'lower'",
+      "specimen": "FX_P_OHLC_PAIR"
+    },
+    {
+      "coordinate": "field.bounds.upper#present",
+      "specimens": 1,
+      "error": "/structure/relations/candles/fields/open/bounds must have required property 'upper'",
+      "specimen": "FX_P_OHLC_PAIR"
+    },
+    {
       "coordinate": "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
       "specimens": 1,
       "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
@@ -531,15 +551,28 @@
       "specimen": "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT"
     }
   ],
-  "quotientLanguageInvalid": [],
+  "quotientLanguageInvalid": [
+    {
+      "coordinate": "field.bounds.lower#present",
+      "specimens": 5,
+      "error": "/structure/relations/candles/fields/open/bounds must have required property 'lower'",
+      "specimen": "FX_P_OHLC_PAIR"
+    },
+    {
+      "coordinate": "field.bounds.upper#present",
+      "specimens": 5,
+      "error": "/structure/relations/candles/fields/open/bounds must have required property 'upper'",
+      "specimen": "FX_P_OHLC_PAIR"
+    }
+  ],
   "scopes": {
     "sourceLanguageDeparture": {
       "specimens": 128,
-      "populationDigest": "86889b306cb15db55e173a97d83cea390d8b609414633602d489e497965babcf"
+      "populationDigest": "9564fd4b73732038706e34d74b34622562801dbc7a7430c68ef544bcf4e3aa9f"
     },
     "quotientLanguageInvalid": {
-      "specimens": 213,
-      "populationDigest": "dea423e9dd7f0a6cab346c5ea09fdb7afdf9e939df4e3490f840e9379636161d"
+      "specimens": 217,
+      "populationDigest": "7d4723583e540fb67560a825c253ff81baed5998e0ef313e024ecf64c26457e4"
     }
   },
   "footprints": {
@@ -700,6 +733,20 @@
     ],
     "field.base": [
       "field.base"
+    ],
+    "field.bounds.lower#incidence": [
+      "field.bounds.lower#incidence"
+    ],
+    "field.bounds.lower#present": [
+      "field.bounds.lower#incidence",
+      "field.bounds.lower#present"
+    ],
+    "field.bounds.upper#incidence": [
+      "field.bounds.upper#incidence"
+    ],
+    "field.bounds.upper#present": [
+      "field.bounds.upper#incidence",
+      "field.bounds.upper#present"
     ],
     "field.cyclic": [
       "field.cyclic"
@@ -1143,6 +1190,14 @@
     {
       "destroys": "field.temporality.kind:instant~interval",
       "supported": "field.temporality.kind"
+    },
+    {
+      "destroys": "field.bounds.lower#incidence",
+      "supported": "field.bounds.lower#present"
+    },
+    {
+      "destroys": "field.bounds.upper#incidence",
+      "supported": "field.bounds.upper#present"
     },
     {
       "destroys": "relation.derivedBy.kind:bin~normalize",

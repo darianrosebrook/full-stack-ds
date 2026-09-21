@@ -192,6 +192,22 @@
             }
           ]
         },
+        "bounds": {
+          "type": "object",
+          "properties": {
+            "lower": {
+              "$ref": "#/definitions/name"
+            },
+            "upper": {
+              "$ref": "#/definitions/name"
+            }
+          },
+          "required": [
+            "lower",
+            "upper"
+          ],
+          "additionalProperties": false
+        },
         "base": {
           "type": "boolean",
           "const": true

@@ -353,7 +353,43 @@ export const derivationTyping: Rule = {
   },
 };
 
-export const RULES: readonly Rule[] = [meaningfulness, additivity, dimensional, declarationMissing, derivationTyping];
+/**
+ * A declared field-to-field BOUNDS relationship, checked over SUPPLIED rows.
+ *
+ * Instance evidence only: rows that cannot be read as numbers for all three
+ * fields are skipped rather than guessed about, no rows means no check, and a
+ * violation carries an OBLIGATION rather than a diagnostic — the substrate can
+ * name the unresolved premise without claiming the contradiction, which needs
+ * an owner-licensed cause. The declaration is generic over any three sibling
+ * fields; nothing here names a form.
+ */
+export const fieldBounds: Rule = {
+  name: "field-bounds",
+  apply(ctx, out) {
+    const E = "meaningfulness";
+    const { relation, relationName, rows } = ctx;
+    if (!rows || rows.length === 0) return;
+    for (const [name, decl] of Object.entries(relation.fields ?? {})) {
+      const b = decl.bounds;
+      if (!b) continue;
+      // A row participates only when all three fields read as plain numbers;
+      // anything else is absent evidence, never a guessed comparison.
+      const reads = (r: Record<string, Observation>): { v: number; lo: number; up: number } | undefined => {
+        const v = r[name]?.value ?? r[name];
+        const lo = r[b.lower]?.value ?? r[b.lower];
+        const up = r[b.upper]?.value ?? r[b.upper];
+        return typeof v === "number" && typeof lo === "number" && typeof up === "number" ? { v, lo, up } : undefined;
+      };
+      const violators = rows.filter((r) => {
+        const t = reads(r);
+        return t !== undefined && !(t.lo <= t.v && t.v <= t.up);
+      });
+      if (violators.length > 0) oblig(out, ctx, E, OBLIGATION.BOUNDS_ROW_CONSISTENT, "instance", `${relationName}.${name}`);
+    }
+  },
+};
+
+export const RULES: readonly Rule[] = [meaningfulness, additivity, dimensional, declarationMissing, derivationTyping, fieldBounds];
 
 /** Judge a structure under one or more assertions with the available evidence. */
 export function judge(
