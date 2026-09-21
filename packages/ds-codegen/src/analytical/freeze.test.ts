@@ -10,7 +10,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { loadCensus } from "./census.js";
-import { carriedSupersession, checkFreeze, computeFreeze, corpus, loadFreeze, supersessionOf, type Stage2Freeze } from "./freeze.js";
+import { carriedSupersession, checkFreeze, computeFreeze, corpus, loadFreeze, supersessionOf, type Stage2Freeze, acceptTransition } from "./freeze.js";
 
 const frozen = loadFreeze();
 // Scoped to the fixtures the freeze was taken over. Unscoped, a later fixture
@@ -472,5 +472,53 @@ describe("stage-2 erasure freeze", () => {
   it("reports a fixture that LEAVES the scope, which is a finding rather than growth", () => {
     const r = checkFreeze({ ...frozen, fixtures: [...frozen.fixtures, "FX_NEVER_EXISTED"] }, live);
     expect(r.divergences.map((d) => d.key)).toContain("fixture:FX_NEVER_EXISTED");
+  });
+});
+
+/* ---------------------------------------------------------------------------
+ * REL-FREEZE-TRANSITIONS-01 — transitions are explicit authored input
+ *
+ * The owner's review refuted the auto-computing producer: it attached a stored
+ * explanation to whatever endpoints it measured, filtered unexplained
+ * authorities instead of refusing them, and the checker never looked. The
+ * contract is now: the authored statement is explicit input, exhaustive and
+ * endpoint-bound, and the recorder refuses anything else.
+ * ------------------------------------------------------------------------- */
+
+describe("REL-FREEZE-TRANSITIONS-01 — transitions are explicit authored input", () => {
+  const OLD = "a".repeat(64);
+  const NEW = "b".repeat(64);
+  const THIRD = "c".repeat(64);
+  const prior = { authority: { coordinateBasisDigest: OLD, ruleDigest: OLD, erasureAuthorityDigest: OLD } };
+  const recorded = { authority: { coordinateBasisDigest: NEW, ruleDigest: NEW, erasureAuthorityDigest: NEW } };
+  const reviewed = [
+    { identity: "coordinateBasisDigest", from: OLD, to: NEW, reason: "The census basis grew by design: the bounds declaration added two reference coordinates, so the coordinate-set digest moved with the schema." },
+    { identity: "ruleDigest", from: OLD, to: NEW, reason: "The erasure rule moved with the holder-targeting repair: a presence erasure on a slot required by its holder now executes at the holder." },
+    { identity: "erasureAuthorityDigest", from: OLD, to: NEW, reason: "The erasure authority moved with the same holder-targeting repair; this is the movement a single-authority supersession would have stated had the others not moved with it." },
+  ];
+
+  it("accepts the reviewed bounds transition: exact identities, endpoints and authored reasons", () => {
+    const accepted = acceptTransition(prior, recorded, reviewed);
+    expect(accepted.map((t) => t.identity)).toEqual(["coordinateBasisDigest", "erasureAuthorityDigest", "ruleDigest"]);
+  });
+
+  it("refuses an authored transition with one ALTERED successor endpoint", () => {
+    const altered = reviewed.map((t) => (t.identity === "ruleDigest" ? { ...t, to: THIRD } : t));
+    expect(() => acceptTransition(prior, recorded, altered)).toThrow(/does not describe this record/);
+  });
+
+  it("refuses when a moved authority has NO authored entry — nothing is silently filtered", () => {
+    const incomplete = reviewed.filter((t) => t.identity !== "ruleDigest");
+    expect(() => acceptTransition(prior, recorded, incomplete)).toThrow(/unexplained movements: ruleDigest/);
+  });
+
+  it("refuses reusing the complete old transition against a LATER, different multi-authority movement", () => {
+    const later = { authority: { coordinateBasisDigest: NEW, ruleDigest: THIRD, erasureAuthorityDigest: THIRD } };
+    expect(() => acceptTransition(prior, later, reviewed)).toThrow(/does not describe this record|bound to the wrong movement/);
+  });
+
+  it("refuses an explanation for an authority that did not move", () => {
+    const unmovedPrior = { authority: { coordinateBasisDigest: NEW, ruleDigest: NEW, erasureAuthorityDigest: NEW } };
+    expect(() => acceptTransition(unmovedPrior, recorded, reviewed)).toThrow(/authored for authorities that did not move/);
   });
 });
