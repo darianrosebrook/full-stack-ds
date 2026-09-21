@@ -2,9 +2,10 @@ id: REL-TEMPORAL-FACT-01
 title: 'The declared temporal fact survives the projection boundary instead of being dropped'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: temporal-fact
 created_at: '2026-09-21T00:48:33.941Z'
-updated_at: '2026-09-21T00:48:33.941Z'
+updated_at: '2026-09-21T00:48:52.084Z'
 created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
 blast_radius:
   modules:
