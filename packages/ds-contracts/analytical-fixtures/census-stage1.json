@@ -1813,6 +1813,18 @@
       "role": "schema"
     },
     {
+      "id": "field.bounds.lower",
+      "kind": "leaf",
+      "leaf": "field.bounds.lower",
+      "role": "schema"
+    },
+    {
+      "id": "field.bounds.upper",
+      "kind": "leaf",
+      "leaf": "field.bounds.upper",
+      "role": "schema"
+    },
+    {
       "id": "relationship.from.relation",
       "kind": "reference",
       "leaf": "relationship.from.relation",
