@@ -3,7 +3,7 @@
   "digests": {
     "fixtures.jsonl": "317507a6a81a65dedc8c8b1cb8a97ee795e378c4c95773e407993478e7d8c193",
     "witnesses.json": "db2bffcdffb729188da6e1fe054c879e1bd9db5b4aa89e1fbff6630ae87ca57b",
-    "closures-stage2.json": "11bac5d5417f8f7009990d7c55c1c5936d32939f444f61c14076f02f1a608429"
+    "closures-stage2.json": "aec2090ec6caba5352eb536ee975466a58e046be6ecaa8c975075ce17de2b790"
   },
   "authority": {
     "coordinateBasisDigest": "aa4dacf33d2046b9430aa7fd5e265635aa4c9e80e985858933c9c42772deecbc",
