@@ -866,12 +866,12 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
       byId.set(f.id, set);
     }
     const shared = [...byId].filter(([, cs]) => cs.size > 1);
-    expect(s.fixtures.length).toBe(213);
+    expect(s.fixtures.length).toBe(217);
     // 111, not 110: a filing's patched side is minted with a `_PATCHED` id, so
     // an authored stimulus contributes an id of its own where the synthesized
     // specimen it pre-empts carried the base fixture's id.
     expect(byId.size).toBe(113);
-    expect(shared.length).toBe(26);
+    expect(shared.length).toBe(27);
     // Not one of them is a benign repeat: every shared id carries two or more DIFFERENT fixtures.
     expect(shared.every(([, cs]) => cs.size > 1)).toBe(true);
     expect(Math.max(...shared.map(([, cs]) => cs.size))).toBe(30);
