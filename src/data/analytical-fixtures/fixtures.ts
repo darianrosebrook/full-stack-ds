@@ -1,6 +1,6 @@
 // GENERATED FILE — do not edit by hand.
 // Source: packages/ds-contracts/analytical-fixtures/fixtures.jsonl
-// Source sha256: fce9f0b1cc553969fa6c4400a6aaed1db23eb532ee2811dab7f611019f6556e8
+// Source sha256: 0f39e8f2d87d4c9e677d1ac48759dbbc50eb4354ccdccca156b7e8095b7b2e9b
 // Regenerate:    node scripts/sync-analytical-fixtures.mjs
 // Answer-free by construction: this dump carries fixtures only — no corpus
 // case ids, verdicts, diagnostics, obligations, bindings, or holdouts. The
@@ -4700,6 +4700,77 @@ export const FIXTURES: AnalyticalFixture[] = [
             "low": 20.1,
             "close": 20.9,
             "volume": 910
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "FX_P_OHLC",
+    "structure": {
+      "relations": {
+        "candles": {
+          "grain": [
+            "symbol",
+            "period"
+          ],
+          "fields": {
+            "symbol": {
+              "transformation": "nominal"
+            },
+            "period": {
+              "transformation": "interval",
+              "temporality": {
+                "kind": "interval"
+              }
+            },
+            "open": {
+              "transformation": "ratio"
+            },
+            "high": {
+              "transformation": "ratio"
+            },
+            "low": {
+              "transformation": "ratio"
+            },
+            "close": {
+              "transformation": "ratio"
+            },
+            "volume": {
+              "transformation": "ratio"
+            }
+          }
+        }
+      }
+    },
+    "assertions": [
+      {
+        "kind": "aggregate",
+        "relation": "candles",
+        "field": "high",
+        "op": "min"
+      }
+    ],
+    "evidence": {
+      "rows": {
+        "candles": [
+          {
+            "symbol": "FSDS",
+            "period": "2026-09-01",
+            "open": 10.2,
+            "high": 10.9,
+            "low": 9.8,
+            "close": 10.6,
+            "volume": 1200
+          },
+          {
+            "symbol": "FSDS",
+            "period": "2026-09-02",
+            "open": 10.6,
+            "high": 11.4,
+            "low": 10.5,
+            "close": 11.1,
+            "volume": 1750
           }
         ]
       }

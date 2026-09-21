@@ -6,11 +6,11 @@
   "analyticalDir": "packages/ds-codegen/src/analytical"
  },
  "population": {
-  "corpus": 90,
+  "corpus": 91,
   "stimuli": 37,
   "synthesized": 85,
-  "total": 212,
-  "membershipDigest": "e976aafcfa1b4685ff71a18c9fbaebf03f9acb29f0f47d5425b82489581da5d8"
+  "total": 213,
+  "membershipDigest": "335b6be7c2cfa3321074d97fd6c8a34b0a0501f2844e61f9ca841e222564483d"
  },
  "coordinates": {
   "legacy": 165,
@@ -25,14 +25,14 @@
   ],
   "onlyNew": []
  },
- "pairs": 34980,
+ "pairs": 35145,
  "agree": {
-  "count": 24667,
-  "digest": "3a0cbd55062e72358326c7dadd3e4f871457b0e06d8e3f6ff4563036b3398088"
+  "count": 24786,
+  "digest": "7ad8b6da87d07e05718f1009594493e8c3fcbe945435b61fc18a03163f48cdfc"
  },
  "classes": {
   "new-no-plan": {
-   "count": 5300,
+   "count": 5325,
    "plans": [
     "assertion.aggregate.along",
     "assertion.aggregate.field",
@@ -69,7 +69,7 @@
    }
   },
   "only-legacy-coordinate": {
-   "count": 1060,
+   "count": 1065,
    "plans": [
     "assertion.aggregate.along#order",
     "evidence.grainWitness#order",
@@ -86,7 +86,7 @@
    }
   },
   "merge-enum-members:scalar>class:legacy-valid": {
-   "count": 2432,
+   "count": 2443,
    "plans": [
     "assertion.aggregate.nulls:as-zero~as-observed",
     "assertion.aggregate.nulls:exclude~as-observed",
@@ -155,7 +155,7 @@
    }
   },
   "forget-value:absent>hole:legacy-invalid": {
-   "count": 941,
+   "count": 945,
    "plans": [
     "assertion.aggregate.op",
     "assertion.kind",
@@ -215,7 +215,7 @@
    }
   },
   "forget-value:absent>hole:legacy-valid": {
-   "count": 48,
+   "count": 49,
    "plans": [
     "field.additivity.kind",
     "field.temporality.kind"
@@ -626,13 +626,6 @@
   ],
   [
    "assertion.aggregate.along",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.along",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -922,6 +915,20 @@
    "assertion.aggregate.along",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -2110,13 +2117,6 @@
   ],
   [
    "assertion.aggregate.along#order",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "assertion.aggregate.along#order",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -2406,6 +2406,20 @@
    "assertion.aggregate.along#order",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "only-legacy-coordinate"
   ],
@@ -3594,13 +3608,6 @@
   ],
   [
    "assertion.aggregate.field",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.field",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -3890,6 +3897,20 @@
    "assertion.aggregate.field",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -5260,13 +5281,6 @@
   ],
   [
    "assertion.aggregate.op",
-   "FX_P_OHLC",
-   "df2ee598ac14",
-   "858089bd441f",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.aggregate.op",
    "FX_P_HIERARCHY",
    "464e216c9918",
    "8801f2e1b816",
@@ -5557,6 +5571,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "8a21610e3276",
    "8c893d5be9b8",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_P_OHLC_PAIR",
+   "bf4f38f0d89d",
+   "9f33e3610420",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
+   "FX_P_OHLC",
+   "df2ee598ac14",
+   "858089bd441f",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -6436,13 +6464,6 @@
   ],
   [
    "assertion.aggregate.op:count~min",
-   "FX_P_OHLC",
-   "e3cc08d78731",
-   "28cf0625c95f",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:count~min",
    "FX_P_GRAPH_ISOLATED_NODE",
    "396319971f15",
    "c392706036c6",
@@ -6663,6 +6684,13 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "226ec5d376d1",
    "4ad74e2b7603",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:count~min",
+   "FX_P_OHLC",
+   "e3cc08d78731",
+   "28cf0625c95f",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -7563,13 +7591,6 @@
   ],
   [
    "assertion.aggregate.op:mean~min",
-   "FX_P_OHLC",
-   "f004139015cd",
-   "a8ae0d29f936",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:mean~min",
    "FX_H_PAYROLL",
    "b008845c7877",
    "756ed3658121",
@@ -7783,6 +7804,13 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "a4c2a6f71305",
    "be691ed76c3c",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~min",
+   "FX_P_OHLC",
+   "f004139015cd",
+   "a8ae0d29f936",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -8676,6 +8704,13 @@
   ],
   [
    "assertion.aggregate.op:sum~count",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "2bb3d4911137",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~count",
    "FX_CELLS_SUM_PERMITS_SUPPRESSED_NO_ROWS_PATCHED",
    "812a71a2e309",
    "dd1d3fe61581",
@@ -9302,6 +9337,13 @@
    "FX_N_CELLS_SUM_EXCLUDING_SUPPRESSED",
    "66c7b2e9246d",
    "995440fe42cf",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "ccfc28c69224",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -10020,13 +10062,6 @@
   ],
   [
    "assertion.aggregate.op:sum~min",
-   "FX_P_OHLC",
-   "a04c3fb81dd7",
-   "5fa5149cf538",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.aggregate.op:sum~min",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "5390484527f9",
@@ -10303,6 +10338,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "bb8b43612026",
    "33d05caa2128",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "095c12d87c2b",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~min",
+   "FX_P_OHLC",
+   "a04c3fb81dd7",
+   "5fa5149cf538",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -11189,13 +11238,6 @@
   ],
   [
    "assertion.aggregate.relation",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.aggregate.relation",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -11485,6 +11527,20 @@
    "assertion.aggregate.relation",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -12673,13 +12729,6 @@
   ],
   [
    "assertion.kind",
-   "FX_P_OHLC",
-   "51e892fdd234",
-   "139575dbe9f2",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "assertion.kind",
    "FX_P_HIERARCHY",
    "6e4e8ce3574e",
    "9087fc50a4b8",
@@ -12970,6 +13019,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "acabfbc3f93f",
    "34146c074280",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_P_OHLC_PAIR",
+   "e7214f52d42e",
+   "932d1a027abc",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_P_OHLC",
+   "51e892fdd234",
+   "139575dbe9f2",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -14157,13 +14220,6 @@
   ],
   [
    "assertion.kind:aggregate~ratio-comparison",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "f49c3b571c12",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "assertion.kind:aggregate~ratio-comparison",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "6207693f155c",
@@ -14454,6 +14510,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
    "9ab64d0a44e3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "7e42dad2dcc3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
+   "f49c3b571c12",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -15641,13 +15711,6 @@
   ],
   [
    "assertion.ratio-comparison.field",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.field",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -15937,6 +16000,20 @@
    "assertion.ratio-comparison.field",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -17125,13 +17202,6 @@
   ],
   [
    "assertion.ratio-comparison.relation",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "assertion.ratio-comparison.relation",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -17421,6 +17491,20 @@
    "assertion.ratio-comparison.relation",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -18609,13 +18693,6 @@
   ],
   [
    "evidence.grainWitness",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "evidence.grainWitness",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -18905,6 +18982,20 @@
    "evidence.grainWitness",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -20093,13 +20184,6 @@
   ],
   [
    "evidence.grainWitness#order",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "evidence.grainWitness#order",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -20389,6 +20473,20 @@
    "evidence.grainWitness#order",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "only-legacy-coordinate"
   ],
@@ -22165,13 +22263,6 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -22461,6 +22552,20 @@
    "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -23649,13 +23754,6 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong#order",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -23945,6 +24043,20 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "only-legacy-coordinate"
   ],
@@ -24902,13 +25014,6 @@
   ],
   [
    "field.temporality.kind",
-   "FX_P_OHLC",
-   "10960355616c",
-   "9a0ab6b16b3e",
-   "forget-value:absent>hole:legacy-valid"
-  ],
-  [
-   "field.temporality.kind",
    "FX_H_PAYROLL",
    "470b4431a9b6",
    "1b66427bc992",
@@ -24969,6 +25074,20 @@
    "9524d3e3650a",
    "55636acca04c",
    "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.temporality.kind",
+   "FX_P_OHLC_PAIR",
+   "3cf352dbe7b3",
+   "8c266d5794e3",
+   "forget-value:absent>hole:legacy-valid"
+  ],
+  [
+   "field.temporality.kind",
+   "FX_P_OHLC",
+   "10960355616c",
+   "9a0ab6b16b3e",
+   "forget-value:absent>hole:legacy-valid"
   ],
   [
    "field.temporality.kind",
@@ -25196,13 +25315,6 @@
   ],
   [
    "field.temporality.kind:instant~interval",
-   "FX_P_OHLC",
-   "a9940454161d",
-   "cc9211026f15",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.temporality.kind:instant~interval",
    "FX_H_PAYROLL",
    "8084651e1024",
    "cb7d2faf8927",
@@ -25262,6 +25374,20 @@
    "FX_N_PEERS_AT_ONE_TEMPORAL_GRAIN",
    "c206013458ab",
    "ffc1762303fa",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.temporality.kind:instant~interval",
+   "FX_P_OHLC_PAIR",
+   "a8d688b2e80f",
+   "8e1f4a41764f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.temporality.kind:instant~interval",
+   "FX_P_OHLC",
+   "a9940454161d",
+   "cc9211026f15",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -25763,13 +25889,6 @@
   ],
   [
    "field.transformation",
-   "FX_P_OHLC",
-   "775858b6b3ff",
-   "e827ae7a6463",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "field.transformation",
    "FX_P_HIERARCHY",
    "0bac20de45f7",
    "8a1d656077f7",
@@ -26060,6 +26179,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "981d4ea1b572",
    "66e2cdceccda",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_P_OHLC_PAIR",
+   "4e1f50f5e46c",
+   "f09b4cfcdda7",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_P_OHLC",
+   "775858b6b3ff",
+   "e827ae7a6463",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -27191,13 +27324,6 @@
   ],
   [
    "field.transformation:interval~ratio",
-   "FX_P_OHLC",
-   "b694bbc2ae66",
-   "09153fd10733",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:interval~ratio",
    "FX_P_HIERARCHY",
    "8229710a6dfc",
    "6af72e12a5b7",
@@ -27488,6 +27614,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "5a1b6d8303be",
    "0c1b86520d0f",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_P_OHLC_PAIR",
+   "969ae1170a66",
+   "e5cb18b0a472",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:interval~ratio",
+   "FX_P_OHLC",
+   "b694bbc2ae66",
+   "09153fd10733",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -28472,13 +28612,6 @@
   ],
   [
    "field.transformation:nominal~interval",
-   "FX_P_OHLC",
-   "6fd2ad45241c",
-   "d7a5a5884778",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~interval",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "ca135e454c60",
@@ -28769,6 +28902,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "08f5d83701d7",
    "72f11e45c5b7",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_P_OHLC_PAIR",
+   "21bc9c721c10",
+   "e1c719c1206b",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
+   "FX_P_OHLC",
+   "6fd2ad45241c",
+   "d7a5a5884778",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -29935,13 +30082,6 @@
   ],
   [
    "field.transformation:nominal~ordinal",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "94ba6fe54fcd",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ordinal",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "6e524720f7bf",
@@ -30232,6 +30372,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
    "daff22bf45f3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "42628089c141",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
+   "94ba6fe54fcd",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -31405,13 +31559,6 @@
   ],
   [
    "field.transformation:nominal~ratio",
-   "FX_P_OHLC",
-   "6f2f5ac9fee8",
-   "3acfc600a4d6",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:nominal~ratio",
    "FX_P_HIERARCHY",
    "80656f0c6a46",
    "c1f41dc078ce",
@@ -31702,6 +31849,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d70f5a9e6b29",
    "399b57b78cda",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_P_OHLC_PAIR",
+   "4d758479c1bd",
+   "26767738cd67",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
+   "FX_P_OHLC",
+   "6f2f5ac9fee8",
+   "3acfc600a4d6",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -32665,13 +32826,6 @@
   ],
   [
    "field.transformation:ordinal~interval",
-   "FX_P_OHLC",
-   "74a81f186238",
-   "0d52d269a33e",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:ordinal~interval",
    "FX_H_PAYROLL",
    "16ad7b4d7edf",
    "513b9993c7a2",
@@ -32738,6 +32892,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "937de8c43e19",
    "cf0954dcffd8",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~interval",
+   "FX_P_OHLC_PAIR",
+   "fb116c99cb53",
+   "419df0a25642",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~interval",
+   "FX_P_OHLC",
+   "74a81f186238",
+   "0d52d269a33e",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -33309,13 +33477,6 @@
   ],
   [
    "field.transformation:ordinal~ratio",
-   "FX_P_OHLC",
-   "f41c150efb43",
-   "1d0882885451",
-   "merge-enum-members:scalar>class:legacy-valid"
-  ],
-  [
-   "field.transformation:ordinal~ratio",
    "FX_P_HIERARCHY",
    "9bbbfa914218",
    "a5f97157e597",
@@ -33606,6 +33767,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "e31cd0dbddb0",
    "b5e7617aaf4a",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_P_OHLC_PAIR",
+   "910ea5c6fcf6",
+   "536ec7be91e5",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_P_OHLC",
+   "f41c150efb43",
+   "1d0882885451",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -34723,13 +34898,6 @@
   ],
   [
    "field.whole.perRow",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "field.whole.perRow",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -35019,6 +35187,20 @@
    "field.whole.perRow",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -36515,13 +36697,6 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.from",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.from",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -36811,6 +36986,20 @@
    "relation.derivedBy.aggregate-to-grain.from",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -38146,13 +38335,6 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.toGrain",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -38442,6 +38624,20 @@
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -39819,13 +40015,6 @@
   ],
   [
    "relation.derivedBy.bin.field",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.field",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -40115,6 +40304,20 @@
    "relation.derivedBy.bin.field",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -41366,13 +41569,6 @@
   ],
   [
    "relation.derivedBy.bin.from",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.bin.from",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -41662,6 +41858,20 @@
    "relation.derivedBy.bin.from",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -42920,13 +43130,6 @@
   ],
   [
    "relation.derivedBy.graph.edgeFrom",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeFrom",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -43216,6 +43419,20 @@
    "relation.derivedBy.graph.edgeFrom",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -44495,13 +44712,6 @@
   ],
   [
    "relation.derivedBy.graph.edgeTo",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.edgeTo",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -44791,6 +45001,20 @@
    "relation.derivedBy.graph.edgeTo",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -46070,13 +46294,6 @@
   ],
   [
    "relation.derivedBy.graph.from",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.from",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -46366,6 +46583,20 @@
    "relation.derivedBy.graph.from",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -47652,13 +47883,6 @@
   ],
   [
    "relation.derivedBy.graph.value",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.graph.value",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -47948,6 +48172,20 @@
    "relation.derivedBy.graph.value",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -49500,13 +49738,6 @@
   ],
   [
    "relation.derivedBy.join.from",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.from",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -49796,6 +50027,20 @@
    "relation.derivedBy.join.from",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -51054,13 +51299,6 @@
   ],
   [
    "relation.derivedBy.join.with",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.join.with",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -51350,6 +51588,20 @@
    "relation.derivedBy.join.with",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -57060,13 +57312,6 @@
   ],
   [
    "relation.derivedBy.nest.from",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.from",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -57356,6 +57601,20 @@
    "relation.derivedBy.nest.from",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -58726,13 +58985,6 @@
   ],
   [
    "relation.derivedBy.nest.levels",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.nest.levels",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -59022,6 +59274,20 @@
    "relation.derivedBy.nest.levels",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -60567,13 +60833,6 @@
   ],
   [
    "relation.derivedBy.normalize.field",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.field",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -60863,6 +61122,20 @@
    "relation.derivedBy.normalize.field",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -62100,13 +62373,6 @@
   ],
   [
    "relation.derivedBy.normalize.from",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.normalize.from",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -62396,6 +62662,20 @@
    "relation.derivedBy.normalize.from",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -63647,13 +63927,6 @@
   ],
   [
    "relation.derivedBy.project.from",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.from",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -63943,6 +64216,20 @@
    "relation.derivedBy.project.from",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -65187,13 +65474,6 @@
   ],
   [
    "relation.derivedBy.project.keep",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "relation.derivedBy.project.keep",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -65483,6 +65763,20 @@
    "relation.derivedBy.project.keep",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -66769,13 +67063,6 @@
   ],
   [
    "relation.derivedBy.project.keep#order",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "relation.derivedBy.project.keep#order",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -67065,6 +67352,20 @@
    "relation.derivedBy.project.keep#order",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "only-legacy-coordinate"
   ],
@@ -68253,13 +68554,6 @@
   ],
   [
    "relation.grain",
-   "FX_P_OHLC",
-   "d5b93218b7f6",
-   "06c8fe1a4c39",
-   "forget-value:absent>hole:legacy-invalid"
-  ],
-  [
-   "relation.grain",
    "FX_P_HIERARCHY",
    "1d8e7bf4a148",
    "59b820de093c",
@@ -68550,6 +68844,20 @@
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "e5c25f97f3ea",
    "5afa188157b4",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_P_OHLC_PAIR",
+   "02be7bcb143f",
+   "3a7c0fe8fd4c",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
+   "FX_P_OHLC",
+   "d5b93218b7f6",
+   "06c8fe1a4c39",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -69737,13 +70045,6 @@
   ],
   [
    "structure.peers[]",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "new-no-plan"
-  ],
-  [
-   "structure.peers[]",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -70033,6 +70334,20 @@
    "structure.peers[]",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "new-no-plan"
   ],
@@ -71333,13 +71648,6 @@
   ],
   [
    "structure.peers[]#order",
-   "FX_P_OHLC",
-   "d22efbf3bb86",
-   "-",
-   "only-legacy-coordinate"
-  ],
-  [
-   "structure.peers[]#order",
    "FX_P_HIERARCHY",
    "99cb51fd866c",
    "-",
@@ -71629,6 +71937,20 @@
    "structure.peers[]#order",
    "FX_H_READINGS_BINNED_KEEPS_TEMP",
    "d0b174a1e46c",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_P_OHLC_PAIR",
+   "0a1c1550fb8f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_P_OHLC",
+   "d22efbf3bb86",
    "-",
    "only-legacy-coordinate"
   ],

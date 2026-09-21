@@ -1,7 +1,7 @@
 {
   "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label.",
   "digests": {
-    "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766"
+    "fixtures.jsonl": "0f39e8f2d87d4c9e677d1ac48759dbbc50eb4354ccdccca156b7e8095b7b2e9b"
   },
   "authority": {
     "coordinateBasisDigest": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
