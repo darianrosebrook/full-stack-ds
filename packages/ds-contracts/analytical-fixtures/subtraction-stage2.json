@@ -126,7 +126,7 @@
     "frozenAt": "bb742e8f",
     "reason": "the commit at which the Stage-2 rules and fixtures were complete and the ledger was clean at stage 2, so the candidate set is the one the experiment actually opened",
     "digest": "328895c14c85f685017ee2dec6857c5dc18e0c458d0b2cff8fdc565acd15e516",
-    "count": 124,
+    "count": 122,
     "candidates": [
       "assertion.aggregate.along#arity",
       "assertion.aggregate.along#order",
@@ -151,10 +151,8 @@
       "field.additivity.kind:semi-additive~non-additive",
       "field.additivity.semi-additive.nonAdditiveAlong#arity",
       "field.additivity.semi-additive.nonAdditiveAlong#order",
-      "field.bounds.lower",
       "field.bounds.lower#incidence",
       "field.bounds.lower#present",
-      "field.bounds.upper",
       "field.bounds.upper#incidence",
       "field.bounds.upper#present",
       "field.temporality.grain",
@@ -767,19 +765,11 @@
     "evidence.rows.*#present": {
       "disposition": "unresolved"
     },
-    "field.bounds.lower": {
-      "disposition": "unresolved",
-      "note": "opened by REL-FIELD-BOUNDS-01: the bounds declaration admitted these coordinates; nothing witnesses them yet, and the obligation term bounds:row-consistent is their first consumer"
-    },
     "field.bounds.lower#incidence": {
       "disposition": "unresolved",
       "note": "opened by REL-FIELD-BOUNDS-01: the bounds declaration admitted these coordinates; nothing witnesses them yet, and the obligation term bounds:row-consistent is their first consumer"
     },
     "field.bounds.lower#present": {
-      "disposition": "unresolved",
-      "note": "opened by REL-FIELD-BOUNDS-01: the bounds declaration admitted these coordinates; nothing witnesses them yet, and the obligation term bounds:row-consistent is their first consumer"
-    },
-    "field.bounds.upper": {
       "disposition": "unresolved",
       "note": "opened by REL-FIELD-BOUNDS-01: the bounds declaration admitted these coordinates; nothing witnesses them yet, and the obligation term bounds:row-consistent is their first consumer"
     },

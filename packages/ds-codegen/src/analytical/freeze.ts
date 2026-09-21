@@ -187,7 +187,7 @@ export function computeFreeze(
   const fixtures = over === undefined ? all : over.map((id) => byId.get(id)).filter((f): f is Fixture => f !== undefined);
   return {
     $comment:
-      "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label. Multi-authority transition (REL-FIELD-BOUNDS-01): the census grew two leaves and the erasure rule began holder-targeting required-child presence — three authorities moved in one change, which a supersession cannot state; the behavioural effect is authored in SUPERSESSION_EFFECT.delete-holder.",
+      "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label.",
     digests: Object.fromEntries(Object.entries(INPUTS).map(([k, p]) => [k, shaFile(p)])),
     authority: authorityBlock(),
     fixtures: fixtures.map((f) => f.id),
@@ -528,6 +528,23 @@ export function checkFreeze(
 
 const invokedDirectly = process.argv[1] !== undefined && import.meta.url.endsWith(path.basename(process.argv[1]));
 if (invokedDirectly) {
+  /**
+   * A MULTI-AUTHORITY transition record. A supersession absorbs exactly one
+   * authority's movement, so a change that moves several at once cannot state
+   * itself that way. This block records each moved identity with its exact
+   * endpoints and an authored reason, so an explanation of ONE transition
+   * cannot discharge a DIFFERENT one: the endpoints bind the reason to the
+   * movement it explains.
+   */
+  const TRANSITION_REASONS: Record<string, string> = {
+    coordinateBasisDigest:
+      "The census basis grew by design: the bounds declaration added field.bounds.lower and field.bounds.upper as reference coordinates, so the coordinate-set digest moved with the schema. No coordinate left and none was re-keyed.",
+    ruleDigest:
+      "The erasure rule moved with the holder-targeting repair: a presence erasure on a slot required by its holder now executes at the holder. The behavioural effect is authored in SUPERSESSION_EFFECT.delete-holder.",
+    erasureAuthorityDigest:
+      "The erasure authority moved with the same holder-targeting repair; this is the movement a single-authority supersession would have stated had the others not moved with it.",
+  };
+
   if (process.argv.includes("--record")) {
     const prior = fs.existsSync(FREEZE_FILE) ? loadFreeze() : undefined;
     const scoped = process.argv.includes("--rescope") ? undefined : prior?.fixtures;
@@ -536,10 +553,22 @@ if (invokedDirectly) {
     // with the record they belonged to rather than being carried forward.
     const superseding = process.argv.includes("--supersede") && prior !== undefined;
     const supersedes = superseding ? supersessionOf(prior!) : prior ? carriedSupersession(prior) : undefined;
-    fs.writeFileSync(
-      FREEZE_FILE,
-      `${JSON.stringify(computeFreeze(superseding ? {} : (prior?.adjudicated ?? {}), scoped, supersedes), null, 2)}\n`,
-    );
+    const recorded = computeFreeze(superseding ? {} : (prior?.adjudicated ?? {}), scoped, supersedes);
+    // Where this record supersedes nothing (the multi-authority shape), bind the
+    // transition explicitly: each moved identity carries its exact endpoints and
+    // an authored reason. Supersession and transition are mutually exclusive.
+    if (!supersedes && prior) {
+      const was = (prior.authority ?? {}) as unknown as Record<string, string | undefined>;
+      const now = recorded.authority as unknown as Record<string, string>;
+      const moved = Object.keys(now).filter((k) => was[k] !== now[k]);
+      if (moved.length > 1) {
+        const reasons = TRANSITION_REASONS;
+        (recorded as { transitions?: unknown }).transitions = moved
+          .filter((k) => reasons[k] !== undefined)
+          .map((k) => ({ identity: k, from: was[k], to: now[k], reason: reasons[k] }));
+      }
+    }
+    fs.writeFileSync(FREEZE_FILE, `${JSON.stringify(recorded, null, 2)}\n`);
     console.log(`freeze: recorded ${FREEZE_FILE}`);
     for (const d of supersedes?.divergences ?? []) console.log(`  supersedes ${d.coordinates} ${d.operation} divergence(s)`);
   } else if (process.argv.includes("--check")) {

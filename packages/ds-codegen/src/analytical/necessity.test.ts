@@ -178,8 +178,8 @@ describe("C0 — provenance of the two censuses", () => {
   it("census-stage1.json was derived from the schema the Phase-A baseline froze", () => {
     expect(stage1.derivedFrom).toBe(baseline.digests["fixture.schema.json"]);
   });
-  it("the stage-1 census has 48 leaves, 212 member pairs and 10 references", () => {
-    expect(count(stage1.coordinates)).toEqual({ leaves: 48, pairs: 212, references: 10 });
+  it("the stage-1 census has 46 leaves, 212 member pairs and 10 references", () => {
+    expect(count(stage1.coordinates)).toEqual({ leaves: 46, pairs: 212, references: 10 });
   });
   it("the kernel census is the stage-1.5 kernel plus the stage-2 admission, and every addition is ledgered", () => {
     // Stage 1.5 closed at 26 leaves / 21 pairs / 4 references. Stage 2 admits

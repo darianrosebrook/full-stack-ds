@@ -366,8 +366,22 @@ export const derivationTyping: Rule = {
 export const fieldBounds: Rule = {
   name: "field-bounds",
   apply(ctx, out) {
-    const E = "meaningfulness";
+    const E = "field-bounds";
     const { relation, relationName, rows } = ctx;
+    // RESOLUTION PRECEDES OBSERVATION. A bound naming no declared sibling is a
+    // malformed declaration, not unreadable evidence: row content cannot
+    // authorize a reference the declaration does not carry, so it is refused
+    // before any row is read — the boundary convention an assertion naming a
+    // nonexistent relation meets.
+    for (const [name, decl] of Object.entries(relation.fields ?? {})) {
+      const b = decl.bounds;
+      if (!b) continue;
+      for (const [slot, endpoint] of [["lower", b.lower], ["upper", b.upper]] as const) {
+        if (!(endpoint in (relation.fields ?? {}))) {
+          throw new Error(`the bounds declaration on ${relationName}.${name} names ${endpoint} at bounds.${slot}, which the relation does not declare; the declaration is malformed and no judgment is manufactured for it`);
+        }
+      }
+    }
     if (!rows || rows.length === 0) return;
     for (const [name, decl] of Object.entries(relation.fields ?? {})) {
       const b = decl.bounds;

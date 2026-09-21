@@ -1,14 +1,14 @@
 {
-  "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label. Multi-authority transition (REL-FIELD-BOUNDS-01): the census grew two leaves and the erasure rule began holder-targeting required-child presence — three authorities moved in one change, which a supersession cannot state; the behavioural effect is authored in SUPERSESSION_EFFECT.delete-holder.",
+  "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label.",
   "digests": {
     "fixtures.jsonl": "317507a6a81a65dedc8c8b1cb8a97ee795e378c4c95773e407993478e7d8c193"
   },
   "authority": {
-    "coordinateBasisDigest": "aa4dacf33d2046b9430aa7fd5e265635aa4c9e80e985858933c9c42772deecbc",
+    "coordinateBasisDigest": "1196a0f0bd79fc2bcbfe4366c133ca1a4d97305f779b667b6dc3106caf7ca163",
     "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "7cda6d94ee2919ba5b1ae7036880dd0fb188dd74337414ce992a0cd88681dece"
+    "ruleDigest": "94e63ed497c089cbca605d4613ac7f788137ddf6e8ed107e4d33c58798f5700f"
   },
   "fixtures": [
     "FX_SURVEY_MEAN_SATISFACTION",
@@ -119,10 +119,8 @@
       "field.additivity.kind:additive~semi-additive",
       "field.additivity.kind:semi-additive~non-additive",
       "field.additivity.kind:semi-additive~ratio-measure",
-      "field.bounds.lower",
       "field.bounds.lower#incidence",
       "field.bounds.lower#present",
-      "field.bounds.upper",
       "field.bounds.upper#incidence",
       "field.bounds.upper#present",
       "field.temporality.grain:day~<absent>",

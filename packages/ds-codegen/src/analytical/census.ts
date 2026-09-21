@@ -339,7 +339,8 @@ export function deriveCensusWithSignatures(schema: Node): CensusDerivation {
     if (!operation) return;
     let planLocator = locator;
     if (c.id.endsWith("#present") && operation.kind === "delete-holder" && requiredLeaves.has(c.leaf) && locator.steps.length > 1 && locator.steps[locator.steps.length - 1]!.kind === "prop") {
-      planLocator = { ...locator, path: locator.path.replace(/\.[^.]+$/, ""), steps: locator.steps.slice(0, -1) };
+      const holder = locator.steps.slice(0, -1);
+      planLocator = { ...locator, path: holder.map((s) => ("name" in s ? s.name : "[]")).join("."), steps: holder };
     }
     plans.set(c.id, { id: c.id, locator: planLocator, operation, representationEffects: [] });
     for (const u of unionStack) {
