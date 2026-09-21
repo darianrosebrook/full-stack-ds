@@ -50,6 +50,8 @@ export interface FieldDef {
   unit?: UnitSpec;
   temporality?: Temporality;
   whole?: "fixed" | { perRow: string };
+  /** A declared field-to-field bounds relationship: this field\'s value lies between the named siblings, row by row. */
+  bounds?: { lower: string; upper: string };
   base?: true;
   additivity?: Additivity;
   permits?: Permits;
