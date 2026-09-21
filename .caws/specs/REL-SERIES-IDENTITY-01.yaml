@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RESTART piece 2: the SWAP moves each symbol row while per-period sums over symbol are bit-identical (vitest analytical 1041/1041, rail+root+frameworks green)"
     recorded_at: "2026-09-21T01:53:09.468Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 2: the aggregate path blindness is RECORDED AS A LOSS (vitest analytical 1041/1041, rail+root+frameworks green)"
+    recorded_at: "2026-09-21T01:53:09.894Z"
