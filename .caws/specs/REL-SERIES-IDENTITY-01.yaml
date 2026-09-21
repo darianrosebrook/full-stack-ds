@@ -1,0 +1,42 @@
+id: REL-SERIES-IDENTITY-01
+title: 'Series identity survives the projection consumer: two symbols stay distinguishable and the close-swap pair separates'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-21T01:06:26.216Z'
+updated_at: '2026-09-21T01:06:26.216Z'
+created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a fixture with two symbols over the same periods; when the identity binding sums over period leaving symbol as the result grain; then the consumer output carries one row per symbol with that symbol''s values'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the close-swapped fixture; when the identity consumer runs; then each symbol''s row differs while every per-period sum over symbol is bit-identical'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given both fixtures under the aggregate binding that sums over symbol; when enumerations are compared; then the retained sets are identical, recorded as the loss rather than repaired'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the swapped fixture''s bounds violation; when standing is sought; then it cannot obtain standing because no machine-readable bounds binding exists, and none is added here'
+non_functional: {}
+contracts:
+  - name: 'series-identity'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
