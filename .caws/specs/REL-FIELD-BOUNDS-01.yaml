@@ -57,3 +57,7 @@ evidence:
     status: pass
     evidence_ref: "stage1.test.ts REL-FIELD-BOUNDS-01 A1: the declaration validates through the real schema path via FX_P_OHLC_PAIR and the emitted schemas are drift-gated (vitest analytical 1048/1048; typecheck lint rail root frameworks green)"
     recorded_at: "2026-09-21T14:50:01.778Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "stage1.test.ts A2: satisfying supplied rows are admissible with NO bounds obligation (vitest analytical 1048/1048; typecheck lint rail root frameworks green)"
+    recorded_at: "2026-09-21T14:50:02.270Z"
