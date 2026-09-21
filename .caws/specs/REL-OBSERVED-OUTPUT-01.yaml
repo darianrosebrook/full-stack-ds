@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RESTART piece 4: the aggregate binding decodes IDENTICALLY on both populations, recorded as the blindness (vitest analytical 1051/1051; typecheck lint rail root frameworks green on the branch)"
     recorded_at: "2026-09-21T15:38:15.785Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: decodeReadback receives the readback output alone; the decode path never touches rows or the evaluator (projection.test.ts piece-4 describe) (vitest analytical 1051/1051; typecheck lint rail root frameworks green on the branch)
+    recorded_at: "2026-09-21T15:38:16.301Z"
