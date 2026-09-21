@@ -1,0 +1,41 @@
+id: REL-OBSERVED-OUTPUT-01
+title: 'The close-swap is observed through the produced readback: the decoder sees the output alone'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-21T15:06:46.102Z'
+updated_at: '2026-09-21T15:06:46.102Z'
+created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the identity binding over the pair fixture; when the readback is produced and decoded; then the decoder recovers one entry per symbol with that symbol''s value from the output alone'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the close-swapped population; when the same production and decode run; then the decoded per-symbol entries differ from the uns swapped run'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the aggregate binding that sums over symbol; when both populations are produced and decoded; then the decoded entries are identical, recorded as the aggregate path''s blindness'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the decoder; when it runs; then it receives the output alone and never the rows or the evaluator'
+non_functional: {}
+contracts:
+  - name: 'observed-output'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
