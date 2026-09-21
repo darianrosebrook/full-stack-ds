@@ -1,6 +1,6 @@
 {
   "$comment": "Pre-removal coordinate census of the stage-1 kernel, derived by census.ts from the emitted fixture schema at the end of REL-FIELD-ALGEBRA-02 Phase A (derivedFrom = that schema's sha256, which baseline-stage1.json also records). Every coordinate here is dispositioned by necessity.test.ts as ratified (a witness in witnesses.json) or not-yet-admitted (an entry in removals.json).",
-  "derivedFrom": "6c3a7dd3d59b14148c5e2b04e87a0e4dec98ba0860784a4f987ac2608a486fec",
+  "derivedFrom": "fb96b85e1def733463b3b5d4e143935fd2e4277a42de9ba05d466e806c606004",
   "coordinates": [
     {
       "id": "relation.grain",
