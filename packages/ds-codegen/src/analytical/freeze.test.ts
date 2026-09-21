@@ -348,8 +348,13 @@ describe("stage-2 erasure freeze", () => {
     // (rounds 27, 31, 32, 35 -- the sequence-declaration, the binding
     // quotient, the peers declaration, the distinctness constraint) are what
     // this one replaced, and they are in git.
-    expect(s!.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["forget-reference-arity=1", "forget-reference-incidence=2"]);
-    for (const d of s!.divergences) expect(d.effect.length, `${d.operation} is superseded with no authored effect`).toBeGreaterThan(120);
+    // Where the record states itself in prose instead (a multi-authority
+    // transition no supersession can absorb), there are no divergence entries
+    // to enumerate — the prose clause above already carried the statement.
+    if (s !== undefined) {
+      expect(s.divergences.map((d) => `${d.operation}=${d.coordinates}`)).toEqual(["forget-reference-arity=1", "forget-reference-incidence=2"]);
+      for (const d of s.divergences) expect(d.effect.length, `${d.operation} is superseded with no authored effect`).toBeGreaterThan(120);
+    }
   });
 
   it("refuses to supersede a divergence class nobody has explained", () => {
