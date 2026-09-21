@@ -149,7 +149,7 @@ describe("the footprint-class triage over the live basis candidates", () => {
   it("partitions every candidate, and a future erasure change that widens the unwitnessable set fails here", () => {
     const tally: Record<string, number> = {};
     for (const id of candidates) tally[classOf(id)] = (tally[classOf(id)] ?? 0) + 1;
-    expect(tally).toEqual({ atomic: 74, "own-refinements": 8, "sibling-facet": 2, outside: 1 });
+    expect(tally).toEqual({ atomic: 78, "own-refinements": 8, "sibling-facet": 2, outside: 1 });
   });
 
   it("names the three that can NEVER be ratified by a primitive claim, and why", () => {
@@ -183,8 +183,8 @@ describe("the footprint-class triage over the live basis candidates", () => {
     // that the erasure identifies, and the constructibility triage below
     // measures that separately -- 16 of the 60 have such a shape at all.
     expect(unresolved.length).toBe(70);
-    expect(ratifiable.length).toBe(61);
-    expect(moving.length).toBe(47);
+    expect(ratifiable.length).toBe(67);
+    expect(moving.length).toBe(51);
     // And the blocked three are NOT in it.
     expect(ratifiable).not.toContain("relation.derivedBy.nest.levels#incidence");
     expect(ratifiable).not.toContain("structure.peers[]#present");

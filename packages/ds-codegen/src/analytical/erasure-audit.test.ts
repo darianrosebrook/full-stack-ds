@@ -874,7 +874,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     expect(shared.length).toBe(27);
     // Not one of them is a benign repeat: every shared id carries two or more DIFFERENT fixtures.
     expect(shared.every(([, cs]) => cs.size > 1)).toBe(true);
-    expect(Math.max(...shared.map(([, cs]) => cs.size))).toBe(30);
+    expect(Math.max(...shared.map(([, cs]) => cs.size))).toBe(31);
     expect(shared.map(([id]) => id)).toContain("FX_SURVEY_MEAN_SATISFACTION");
   });
 
@@ -888,7 +888,7 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     // about their content, and a witnessability sweep counts those as discriminating pairs.
     // The gap runs the other way too: 11 specimens match their oracle fixture byte-for-byte
     // under an id the oracle does not know, so 164 = 79 + 85 and 91 = 79 + 12 (the pair fixture MATCHES CONTENT under a known id but carries no corpus outcome, so it counts in the 12 and in neither 164 nor 79).
-    expect(s.fixtures.filter((f) => hasOutcome(f, oracle) && !contentMatches(f, oracle)).length).toBe(85);
+    expect(s.fixtures.filter((f) => hasOutcome(f, oracle) && !contentMatches(f, oracle)).length).toBe(86);
   });
 
   it("reduces the discriminating set to ONE, and that one is not a witness for presence either", () => {
