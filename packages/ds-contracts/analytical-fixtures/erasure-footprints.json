@@ -3,33 +3,25 @@
   "digests": {
     "fixtures.jsonl": "317507a6a81a65dedc8c8b1cb8a97ee795e378c4c95773e407993478e7d8c193",
     "witnesses.json": "db2bffcdffb729188da6e1fe054c879e1bd9db5b4aa89e1fbff6630ae87ca57b",
-    "closures-stage2.json": "529636f38134c5ece936bcd94829a27ac6ca8f3aa47fe5220d0dece797760321"
+    "closures-stage2.json": "11bac5d5417f8f7009990d7c55c1c5936d32939f444f61c14076f02f1a608429"
   },
   "authority": {
-    "coordinateBasisDigest": "18d6e11f6e2269f07761640c8efa343f6390bbd89ae7073993b2d51487bb0864",
+    "coordinateBasisDigest": "aa4dacf33d2046b9430aa7fd5e265635aa4c9e80e985858933c9c42772deecbc",
     "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
     "ruleDigest": "7cda6d94ee2919ba5b1ae7036880dd0fb188dd74337414ce992a0cd88681dece"
   },
-  "footprintBasisDigest": "9b3a1feb301ff900ad8a614549696b688575d700da95aab885d16cd1e442a093",
+  "footprintBasisDigest": "f6d8cbe17bf9c70c6fc67a3e8698bfc1cb531903b604f1d772e257008324bf94",
   "quotientSchemaVersion": 1,
   "specimens": {
     "corpus": 91,
     "stimuli": 37,
-    "synthesized": 89,
-    "total": 217,
-    "populationDigest": "7d4723583e540fb67560a825c253ff81baed5998e0ef313e024ecf64c26457e4"
+    "synthesized": 90,
+    "total": 218,
+    "populationDigest": "4cb3b1bddeecf6944073d1e36ce73f3013ee439cf97fc8b0934d1713203d7d98"
   },
   "unbuilt": [
-    {
-      "coordinate": "field.bounds.lower#present",
-      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
-    },
-    {
-      "coordinate": "field.bounds.upper#present",
-      "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
-    },
     {
       "coordinate": "field.additivity.kind",
       "reason": "the locator resolves to no slot, or the base binds too few names; erasing it produces a schema-invalid representation"
@@ -527,18 +519,6 @@
       "specimen": "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT"
     },
     {
-      "coordinate": "field.bounds.lower#present",
-      "specimens": 1,
-      "error": "/structure/relations/candles/fields/open/bounds must have required property 'lower'",
-      "specimen": "FX_P_OHLC_PAIR"
-    },
-    {
-      "coordinate": "field.bounds.upper#present",
-      "specimens": 1,
-      "error": "/structure/relations/candles/fields/open/bounds must have required property 'upper'",
-      "specimen": "FX_P_OHLC_PAIR"
-    },
-    {
       "coordinate": "relation.derivedBy.join.cardinality:one-to-one~many-to-many",
       "specimens": 1,
       "error": "/structure/relations/order_lines/derivedBy must have required property 'toGrain'",
@@ -551,28 +531,15 @@
       "specimen": "FX_H_ORDERS_JOINED_INVENTS_DISCOUNT"
     }
   ],
-  "quotientLanguageInvalid": [
-    {
-      "coordinate": "field.bounds.lower#present",
-      "specimens": 5,
-      "error": "/structure/relations/candles/fields/open/bounds must have required property 'lower'",
-      "specimen": "FX_P_OHLC_PAIR"
-    },
-    {
-      "coordinate": "field.bounds.upper#present",
-      "specimens": 5,
-      "error": "/structure/relations/candles/fields/open/bounds must have required property 'upper'",
-      "specimen": "FX_P_OHLC_PAIR"
-    }
-  ],
+  "quotientLanguageInvalid": [],
   "scopes": {
     "sourceLanguageDeparture": {
       "specimens": 128,
       "populationDigest": "9564fd4b73732038706e34d74b34622562801dbc7a7430c68ef544bcf4e3aa9f"
     },
     "quotientLanguageInvalid": {
-      "specimens": 217,
-      "populationDigest": "7d4723583e540fb67560a825c253ff81baed5998e0ef313e024ecf64c26457e4"
+      "specimens": 218,
+      "populationDigest": "4cb3b1bddeecf6944073d1e36ce73f3013ee439cf97fc8b0934d1713203d7d98"
     }
   },
   "footprints": {
@@ -739,12 +706,16 @@
     ],
     "field.bounds.lower#present": [
       "field.bounds.lower#incidence",
-      "field.bounds.lower#present"
+      "field.bounds.lower#present",
+      "field.bounds.upper#incidence",
+      "field.bounds.upper#present"
     ],
     "field.bounds.upper#incidence": [
       "field.bounds.upper#incidence"
     ],
     "field.bounds.upper#present": [
+      "field.bounds.lower#incidence",
+      "field.bounds.lower#present",
       "field.bounds.upper#incidence",
       "field.bounds.upper#present"
     ],
@@ -1190,14 +1161,6 @@
     {
       "destroys": "field.temporality.kind:instant~interval",
       "supported": "field.temporality.kind"
-    },
-    {
-      "destroys": "field.bounds.lower#incidence",
-      "supported": "field.bounds.lower#present"
-    },
-    {
-      "destroys": "field.bounds.upper#incidence",
-      "supported": "field.bounds.upper#present"
     },
     {
       "destroys": "relation.derivedBy.kind:bin~normalize",

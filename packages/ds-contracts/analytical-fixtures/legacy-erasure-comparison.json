@@ -8,9 +8,9 @@
  "population": {
   "corpus": 91,
   "stimuli": 37,
-  "synthesized": 89,
-  "total": 217,
-  "membershipDigest": "9b3a1feb301ff900ad8a614549696b688575d700da95aab885d16cd1e442a093"
+  "synthesized": 90,
+  "total": 218,
+  "membershipDigest": "f6d8cbe17bf9c70c6fc67a3e8698bfc1cb531903b604f1d772e257008324bf94"
  },
  "coordinates": {
   "legacy": 171,
@@ -25,14 +25,14 @@
   ],
   "onlyNew": []
  },
- "pairs": 37107,
+ "pairs": 37278,
  "agree": {
-  "count": 26120,
-  "digest": "73172281e60e98d325f5e771a9cc9c1e3caeb8d93d49d263d8a9f6352d6049f6"
+  "count": 26244,
+  "digest": "5c0ca9f934402b62b8072284cfc3fe7020a11e09ea90bd01345fe3819a7234b2"
  },
  "classes": {
   "new-no-plan": {
-   "count": 5859,
+   "count": 5886,
    "plans": [
     "assertion.aggregate.along",
     "assertion.aggregate.field",
@@ -71,7 +71,7 @@
    }
   },
   "only-legacy-coordinate": {
-   "count": 1085,
+   "count": 1090,
    "plans": [
     "assertion.aggregate.along#order",
     "evidence.grainWitness#order",
@@ -88,7 +88,7 @@
    }
   },
   "merge-enum-members:scalar>class:legacy-valid": {
-   "count": 2487,
+   "count": 2496,
    "plans": [
     "assertion.aggregate.nulls:as-zero~as-observed",
     "assertion.aggregate.nulls:exclude~as-observed",
@@ -157,7 +157,7 @@
    }
   },
   "forget-value:absent>hole:legacy-invalid": {
-   "count": 961,
+   "count": 965,
    "plans": [
     "assertion.aggregate.op",
     "assertion.kind",
@@ -232,18 +232,21 @@
     ]
    }
   },
-  "new-image-not-quotient-legal": {
-   "count": 10,
+  "delete-holder:scalar>absent:legacy-invalid": {
+   "count": 12,
    "plans": [
     "field.bounds.lower#present",
     "field.bounds.upper#present"
    ],
    "law": "a whole optional declaration is forgotten by deletion; a required declaration cannot be forgotten by deletion",
-   "disposition": "the new image is not quotient-legal: the new path must answer for this record",
+   "disposition": "UNCLASSIFIED (delete-holder:scalar>absent:legacy-invalid): this divergence needs an individual reading before the ledger can carry it",
    "sample": {
     "plan": "field.bounds.lower#present",
     "specimen": "FX_P_OHLC_PAIR",
-    "diff": []
+    "diff": [
+     ".structure.relations.candles.fields.close.bounds.upper: \"high\" -> (absent)",
+     ".structure.relations.candles.fields.open.bounds.upper: \"high\" -> (absent)"
+    ]
    }
   },
   "forget-reference-incidence:scalar>scalar:legacy-valid": {
@@ -1330,6 +1333,13 @@
    "assertion.aggregate.along",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.along",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -2854,6 +2864,13 @@
   ],
   [
    "assertion.aggregate.along#order",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "assertion.aggregate.along#order",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -4368,6 +4385,13 @@
    "assertion.aggregate.field",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.field",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -6074,6 +6098,13 @@
   ],
   [
    "assertion.aggregate.op",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "2f2678654a97",
+   "f49b792c95c6",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.aggregate.op",
    "FX_P_OHLC_PAIR",
    "695b0498c3a1",
    "acb7b9ada238",
@@ -7454,6 +7485,13 @@
   [
    "assertion.aggregate.op:mean~count",
    "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "13e8eb930b01",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~count",
+   "FX_SURVEY_MEAN_SATISFACTION",
    "9167ce07229c",
    "4dc1d958d272",
    "merge-enum-members:scalar>class:legacy-valid"
@@ -8177,6 +8215,13 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "5813beb1803b",
    "c64e161fb394",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:mean~min",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "0a899b6834c9",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -9787,6 +9832,13 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
    "01f11bf6e231",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.aggregate.op:sum~mean",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "a67ccbf1d6a9",
+   "5dded51b4a42",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -12143,6 +12195,13 @@
   ],
   [
    "assertion.aggregate.relation",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.aggregate.relation",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -13658,6 +13717,13 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "cfa4cd64874f",
    "073f8c600d44",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "assertion.kind",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "afc30a979da8",
+   "688b31c53639",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -15181,6 +15247,13 @@
   ],
   [
    "assertion.kind:aggregate~ratio-comparison",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "0b2cba82a0db",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "assertion.kind:aggregate~ratio-comparison",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "b93262c99757",
@@ -16700,6 +16773,13 @@
   ],
   [
    "assertion.ratio-comparison.field",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.field",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -18219,6 +18299,13 @@
   ],
   [
    "assertion.ratio-comparison.relation",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "assertion.ratio-comparison.relation",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -19733,6 +19820,13 @@
    "evidence.grainWitness",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "evidence.grainWitness",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -21252,6 +21346,13 @@
    "evidence.grainWitness#order",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "evidence.grainWitness#order",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "only-legacy-coordinate"
   ],
@@ -23364,6 +23465,13 @@
   ],
   [
    "field.additivity.semi-additive.nonAdditiveAlong",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -24878,6 +24986,13 @@
    "field.additivity.semi-additive.nonAdditiveAlong#order",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "field.additivity.semi-additive.nonAdditiveAlong#order",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "only-legacy-coordinate"
   ],
@@ -26402,6 +26517,13 @@
   ],
   [
    "field.bounds.lower",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.lower",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -26901,36 +27023,43 @@
    "field.bounds.lower#present",
    "FX_P_OHLC_PAIR",
    "83cfd1406e2b",
-   "83cfd1406e2b",
-   "new-image-not-quotient-legal"
+   "0a1c1550fb8f",
+   "delete-holder:scalar>absent:legacy-invalid"
+  ],
+  [
+   "field.bounds.lower#present",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "05c0b625112f",
+   "69b821a27f54",
+   "delete-holder:scalar>absent:legacy-invalid"
   ],
   [
    "field.bounds.lower#present",
    "FX_P_OHLC_PAIR",
    "83cfd1406e2b",
-   "83cfd1406e2b",
-   "new-image-not-quotient-legal"
+   "0a1c1550fb8f",
+   "delete-holder:scalar>absent:legacy-invalid"
   ],
   [
    "field.bounds.lower#present",
    "FX_P_OHLC_PAIR",
    "83cfd1406e2b",
-   "83cfd1406e2b",
-   "new-image-not-quotient-legal"
+   "0a1c1550fb8f",
+   "delete-holder:scalar>absent:legacy-invalid"
   ],
   [
    "field.bounds.lower#present",
    "FX_P_OHLC_PAIR",
    "089691230e18",
-   "089691230e18",
-   "new-image-not-quotient-legal"
+   "0a1c1550fb8f",
+   "delete-holder:scalar>absent:legacy-invalid"
   ],
   [
    "field.bounds.lower#present",
    "FX_P_OHLC_PAIR",
    "4b229a102dc8",
-   "4b229a102dc8",
-   "new-image-not-quotient-legal"
+   "0a1c1550fb8f",
+   "delete-holder:scalar>absent:legacy-invalid"
   ],
   [
    "field.bounds.upper",
@@ -27956,6 +28085,13 @@
   ],
   [
    "field.bounds.upper",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.bounds.upper",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -28455,36 +28591,43 @@
    "field.bounds.upper#present",
    "FX_P_OHLC_PAIR",
    "afee89ddef91",
-   "afee89ddef91",
-   "new-image-not-quotient-legal"
+   "0a1c1550fb8f",
+   "delete-holder:scalar>absent:legacy-invalid"
+  ],
+  [
+   "field.bounds.upper#present",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "98f81f5eb45f",
+   "69b821a27f54",
+   "delete-holder:scalar>absent:legacy-invalid"
   ],
   [
    "field.bounds.upper#present",
    "FX_P_OHLC_PAIR",
    "98b90320eee9",
-   "98b90320eee9",
-   "new-image-not-quotient-legal"
+   "0a1c1550fb8f",
+   "delete-holder:scalar>absent:legacy-invalid"
   ],
   [
    "field.bounds.upper#present",
    "FX_P_OHLC_PAIR",
    "02a2176bea20",
-   "02a2176bea20",
-   "new-image-not-quotient-legal"
+   "0a1c1550fb8f",
+   "delete-holder:scalar>absent:legacy-invalid"
   ],
   [
    "field.bounds.upper#present",
    "FX_P_OHLC_PAIR",
    "afee89ddef91",
-   "afee89ddef91",
-   "new-image-not-quotient-legal"
+   "0a1c1550fb8f",
+   "delete-holder:scalar>absent:legacy-invalid"
   ],
   [
    "field.bounds.upper#present",
    "FX_P_OHLC_PAIR",
    "afee89ddef91",
-   "afee89ddef91",
-   "new-image-not-quotient-legal"
+   "0a1c1550fb8f",
+   "delete-holder:scalar>absent:legacy-invalid"
   ],
   [
    "field.temporality.grain:day~month",
@@ -30206,6 +30349,13 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "317bff425bbe",
    "5c75b6f88d5f",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "field.transformation",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "6047987d8396",
+   "97f877e80079",
    "forget-value:absent>hole:legacy-invalid"
   ],
   [
@@ -32975,6 +33125,13 @@
   ],
   [
    "field.transformation:nominal~interval",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "da18b37eb18e",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~interval",
    "FX_P_OHLC_PAIR",
    "ea5670fed38a",
    "1864d6615605",
@@ -34469,6 +34626,13 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
    "3e65628456e1",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ordinal",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "cad8a54eecc1",
+   "e049fd24154b",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -35978,6 +36142,13 @@
   ],
   [
    "field.transformation:nominal~ratio",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "7925677132e8",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:nominal~ratio",
    "FX_P_OHLC_PAIR",
    "0d0b15512fb9",
    "2d9ae65a6553",
@@ -36814,6 +36985,13 @@
    "FX_SURVEY_MEAN_SATISFACTION",
    "5813beb1803b",
    "3de7f441b7d3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~interval",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "53725d0b8fae",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -37913,6 +38091,13 @@
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "59badc20c759",
    "14f4a22745b3",
+   "merge-enum-members:scalar>class:legacy-valid"
+  ],
+  [
+   "field.transformation:ordinal~ratio",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "bde5df47b139",
    "merge-enum-members:scalar>class:legacy-valid"
   ],
   [
@@ -39410,6 +39595,13 @@
    "field.whole.perRow",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "field.whole.perRow",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -41242,6 +41434,13 @@
   ],
   [
    "relation.derivedBy.aggregate-to-grain.from",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.from",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -42903,6 +43102,13 @@
    "relation.derivedBy.aggregate-to-grain.toGrain",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.aggregate-to-grain.toGrain",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -44616,6 +44822,13 @@
   ],
   [
    "relation.derivedBy.bin.field",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.field",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -46193,6 +46406,13 @@
    "relation.derivedBy.bin.from",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.bin.from",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -47782,6 +48002,13 @@
    "relation.derivedBy.graph.edgeFrom",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeFrom",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -49397,6 +49624,13 @@
   ],
   [
    "relation.derivedBy.graph.edgeTo",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.edgeTo",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -51002,6 +51236,13 @@
    "relation.derivedBy.graph.from",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.from",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -52619,6 +52860,13 @@
    "relation.derivedBy.graph.value",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.graph.value",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -54507,6 +54755,13 @@
   ],
   [
    "relation.derivedBy.join.from",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.from",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -56091,6 +56346,13 @@
    "relation.derivedBy.join.with",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.join.with",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -62137,6 +62399,13 @@
   ],
   [
    "relation.derivedBy.nest.from",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.from",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -63833,6 +64102,13 @@
    "relation.derivedBy.nest.levels",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.nest.levels",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -65714,6 +65990,13 @@
   ],
   [
    "relation.derivedBy.normalize.field",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.field",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -67277,6 +67560,13 @@
    "relation.derivedBy.normalize.from",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.normalize.from",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -68864,6 +69154,13 @@
   ],
   [
    "relation.derivedBy.project.from",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.from",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -70434,6 +70731,13 @@
    "relation.derivedBy.project.keep",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "relation.derivedBy.project.keep",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -72056,6 +72360,13 @@
   ],
   [
    "relation.derivedBy.project.keep#order",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "relation.derivedBy.project.keep#order",
    "FX_P_OHLC_PAIR",
    "e33c172e87b5",
    "-",
@@ -73575,6 +73886,13 @@
   ],
   [
    "relation.grain",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "a58c62042724",
+   "f7f2dcd0493b",
+   "forget-value:absent>hole:legacy-invalid"
+  ],
+  [
+   "relation.grain",
    "FX_P_OHLC_PAIR",
    "652994e023d6",
    "826a578218d9",
@@ -75089,6 +75407,13 @@
    "structure.peers[]",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "new-no-plan"
+  ],
+  [
+   "structure.peers[]",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "new-no-plan"
   ],
@@ -76720,6 +77045,13 @@
    "structure.peers[]#order",
    "FX_SHARE_SUM_ACROSS_MARKETS",
    "f0d325c1428f",
+   "-",
+   "only-legacy-coordinate"
+  ],
+  [
+   "structure.peers[]#order",
+   "FX_SURVEY_MEAN_SATISFACTION",
+   "53527ef19ec6",
    "-",
    "only-legacy-coordinate"
   ],
