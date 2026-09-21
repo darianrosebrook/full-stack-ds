@@ -125,7 +125,7 @@
   "basis": {
     "frozenAt": "bb742e8f",
     "reason": "the commit at which the Stage-2 rules and fixtures were complete and the ledger was clean at stage 2, so the candidate set is the one the experiment actually opened",
-    "digest": "328895c14c85f685017ee2dec6857c5dc18e0c458d0b2cff8fdc565acd15e516",
+    "digest": "1cf13534360d59994d79a43cfebb0d56efc90fe8ce6d552d91a05bd95fcafaf8",
     "count": 122,
     "candidates": [
       "assertion.aggregate.along#arity",
