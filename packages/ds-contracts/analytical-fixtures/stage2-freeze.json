@@ -875,7 +875,10 @@
       "digest": "8480529aa7d9acd895107f26caee42523671fa63165896e875ae0a68161fca91"
     }
   },
-  "adjudicated": {},
+  "adjudicated": {
+    "authority:coordinateBasisDigest": "The census basis grew by design: the bounds declaration added field.bounds.lower and field.bounds.upper as leaves, so the coordinate-set digest moved with the schema. No coordinate left and none was re-keyed; the growth is the declared extension this record exists to carry.",
+    "authority:ruleDigest": "The erasure rule moved with the holder-targeting repair: a presence erasure on a slot required by its holder now executes at the holder. That is the behavioural change this supersession states, recorded here so the transition is adjudicated rather than absorbed."
+  },
   "supersedes": {
     "erasureAuthorityDigest": "a4c8464653836b7b5f3e979ce3404b412d1e14baa6344c42a22213e2cf9573ad",
     "divergences": [
