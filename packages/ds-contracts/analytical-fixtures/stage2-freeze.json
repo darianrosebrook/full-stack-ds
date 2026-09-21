@@ -1,5 +1,5 @@
 {
-  "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label. Multi-authority transition (bounds slice): this record was taken after the census grew two leaves (field.bounds.lower/upper) and the erasure rule began targeting the holder for required-child presence — three authorities moved in one change, which a supersession cannot state (it absorbs one authority's movement). The transition is stated here rather than silently absorbed; the behavioural effect is authored in SUPERSESSION_EFFECT.delete-holder.",
+  "$comment": "Stage-2 erasure freeze, recorded before the erasure-plan authority replaced the hand-maintained quotient walker. `erasure` is what each coordinate's erasure does to the corpus (reach = fixtures changed; digest = sha256 over every erased fixture's canonical form, in corpus order); `verdicts` is the subtraction population resting on it. Compared against, not refreshed: a divergence is a finding, and `adjudicated` must carry a reason for each accepted one. Distinct from baseline-stage1.json, which freezes engine judgments and cannot see a walk that stops reaching a label.",
   "digests": {
     "fixtures.jsonl": "317507a6a81a65dedc8c8b1cb8a97ee795e378c4c95773e407993478e7d8c193"
   },
@@ -119,6 +119,12 @@
       "field.additivity.kind:additive~semi-additive",
       "field.additivity.kind:semi-additive~non-additive",
       "field.additivity.kind:semi-additive~ratio-measure",
+      "field.bounds.lower",
+      "field.bounds.lower#incidence",
+      "field.bounds.lower#present",
+      "field.bounds.upper",
+      "field.bounds.upper#incidence",
+      "field.bounds.upper#present",
       "field.temporality.grain:day~<absent>",
       "field.temporality.grain:month~<absent>",
       "observation.null:absent~<absent>",
