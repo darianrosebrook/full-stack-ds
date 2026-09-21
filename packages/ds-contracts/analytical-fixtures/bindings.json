@@ -97,6 +97,9 @@
       "FX_P_OHLC",
       "FX_P_HIERARCHY",
       "FX_P_GRAPH_ISOLATED_NODE"
+    ],
+    "stage3": [
+      "FX_P_OHLC_PAIR"
     ]
   },
   "holdout": [

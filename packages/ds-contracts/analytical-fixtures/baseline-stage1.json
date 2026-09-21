@@ -102,7 +102,6 @@
     "FX_H_READINGS_BINNED_DROPS_TEMP": "{\"status\":\"illegal\",\"diagnostics\":[],\"obligations\":[],\"derivations\":[[\"diagnostic\",\"REL_DERIVATION_RESULT_NOT_DERIVABLE\",\"bucketed\",\"bin(left-closed)\",\"derivation-typing\",\"schema\"]]}",
     "FX_H_SHARES_NORMALIZED_ON_ABSENT_FIELD": "{\"status\":\"illegal\",\"diagnostics\":[],\"obligations\":[],\"derivations\":[[\"diagnostic\",\"REL_DERIVATION_RESULT_NOT_DERIVABLE\",\"scaled\",\"normalize\",\"derivation-typing\",\"schema\"]]}",
     "FX_H_READINGS_BINNED_KEEPS_TEMP": "{\"status\":\"admissible\",\"diagnostics\":[],\"obligations\":[],\"derivations\":[]}",
-    "FX_P_OHLC_PAIR": "{\"status\":\"admissible\",\"diagnostics\":[],\"obligations\":[],\"derivations\":[]}",
     "FX_P_OHLC": "{\"status\":\"admissible\",\"diagnostics\":[],\"obligations\":[],\"derivations\":[]}"
   }
 }
