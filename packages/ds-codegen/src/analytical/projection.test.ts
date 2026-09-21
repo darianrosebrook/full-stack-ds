@@ -2127,3 +2127,76 @@ describe("M3 composition: the parts decide first, and the combinator rule decide
     expect(joined).toContain("series identity");
   });
 });
+
+/* ---------------------------------------------------------------------------
+ * RESTART SLICE, PIECE 2 — SERIES IDENTITY (REL-SERIES-IDENTITY-01)
+ *
+ * The charter's identity row: two symbols stay distinguishable at the declared
+ * period grain THROUGH THE ACTUAL CONSUMER. The separating pair is the swap:
+ * each symbol's close is given to the other, so per-period sums over symbol are
+ * bit-identical while each symbol's own row moves. The aggregate path's
+ * blindness to that is the LOSS, recorded below, not repaired here.
+ * ------------------------------------------------------------------------- */
+
+describe("RESTART piece 2: series identity through the consumer", () => {
+  const loaded = loadOracle().fixtures.get("FX_P_OHLC_PAIR")!;
+  const s = loaded.structure as RelationalStructure;
+  const rows = (loaded.evidence as { rows: { candles: Row[] } }).rows.candles;
+  const swapClose = (rs: Row[]): Row[] =>
+    rs.map((r) => (r.symbol === "AAA" ? { ...r, close: rs.find((x) => x.period === r.period && x.symbol === "BBB")!.close } : { ...r, close: rs.find((x) => x.period === r.period && x.symbol === "AAA")!.close }));
+
+  const identityOp = bindOperation(s, { relation: "candles", field: "close", op: "sum", along: ["period"] });
+  const aggregateOp = bindOperation(s, { relation: "candles", field: "close", op: "sum", along: ["symbol"] });
+
+  it("the identity binding keeps SYMBOL as the result grain and the consumer emits one row per symbol", () => {
+    expect(identityOp.resultGrain).toEqual(["symbol"]);
+    const adm = admitOperation(s, identityOp);
+    expect(adm.kind).toBe("admitted");
+    const out = evaluateOperation(identityOp, rows);
+    expect(out.groups.map((g) => g.key).sort()).toEqual(["AAA", "BBB"]);
+    // Each row carries THAT symbol's own values, not a total.
+    const aaa = out.groups.find((g) => g.key === "AAA")!.value;
+    const bbb = out.groups.find((g) => g.key === "BBB")!.value;
+    expect(aaa).toBeCloseTo(10.6 + 11.1, 10);
+    expect(bbb).toBeCloseTo(20.3 + 20.9, 10);
+    expect(aaa).not.toBeCloseTo(out.total, 10);
+  });
+
+  it("the SWAP moves each symbol's row while every per-period sum over symbol is bit-identical", () => {
+    const swapped = swapClose(rows);
+    const identity = evaluateOperation(identityOp, rows);
+    const identityAfter = evaluateOperation(identityOp, swapped);
+    expect(identity.groups.map((g) => `${g.key}:${g.value}`).sort()).not.toEqual(identityAfter.groups.map((g) => `${g.key}:${g.value}`).sort());
+    // The aggregate that sums AWAY symbol cannot see the swap at all.
+    const before = evaluateOperation(aggregateOp, rows);
+    const after = evaluateOperation(aggregateOp, swapped);
+    expect(after.groups).toEqual(before.groups);
+    expect(after.total).toBe(before.total);
+  });
+
+  it("the aggregate path's blindness to the swap is RECORDED AS A LOSS, not repaired", () => {
+    const swappedStructure = s; // the structure is unchanged; only rows differ
+    const a = enumerate({ structure: swappedStructure, admitted: aggregateOp, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET });
+    expect(relationMembership(a).length).toBeGreaterThan(0);
+    // The retained set does not depend on the row values at all — which is the
+    // point: no enumeration over the summation-away binding can distinguish the
+    // original from the swapped population. That is a measured loss of series
+    // identity at this boundary, and the bounds mechanism that WOULD separate
+    // them is piece 3, not this slice.
+    const same = enumerate({ structure: swappedStructure, admitted: aggregateOp, task: "magnitude-comparison", inventory: EXPERIMENT_TARGET });
+    expect(relationMembership(same)).toEqual(relationMembership(a));
+  });
+
+  it("the swap's BOUNDS VIOLATION cannot obtain standing here, and no bounds check is added", () => {
+    const swapped = swapClose(rows);
+    // AAA.close becomes 20.3 against low 10.0 high 10.9: a violation of
+    // low <= close <= high. No machine-readable binding exists, so no judgment
+    // names it — assert exactly that, rather than smuggling one in.
+    const violator = swapped.find((r) => r.symbol === "AAA")!;
+    expect(violator.close as number).toBeGreaterThan(violator.high as number);
+    const adm = admitOperation(s, identityOp);
+    expect(adm.kind).toBe("admitted");
+    // NON-CLAIM: "cannot obtain standing" is the charter's disjunction. Piece 3
+    // builds the generic declared-expression mechanism that adjudicates it.
+  });
+});
