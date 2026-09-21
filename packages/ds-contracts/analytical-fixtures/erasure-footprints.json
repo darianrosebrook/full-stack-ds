@@ -1,7 +1,7 @@
 {
   "$comment": "Measured semantic footprints. q is in the footprint of P iff E_q(s) = E_q(t) implies E_P(s) = E_P(t): a COARSENING relation, claimed from locators and operations and then falsified against specimens, never derived by string prefix on coordinate ids. (The earlier reading, `erasing q after P changes nothing`, is recorded in the module doc as rejected: it over-reports on merges.) `dead` names erasures no specimen distinguishes, which is a fact about the specimen set and not a verdict on the coordinate. `sourceLanguageDeparture` counts images that are not unmodified source declarations and is usually expected; `quotientLanguageInvalid` counts images that are not legal quotient images and is always a defect. The witness audit CLASSIFIES; it moves no standing, because a witness whose footprint exceeds what it declares is an adjudication, one at a time.",
   "digests": {
-    "fixtures.jsonl": "668e8b6d41911a0bf81ae94e6b1e0c9f88f4437f9faff45e287fdd6c90cb5766",
+    "fixtures.jsonl": "0f39e8f2d87d4c9e677d1ac48759dbbc50eb4354ccdccca156b7e8095b7b2e9b",
     "witnesses.json": "db2bffcdffb729188da6e1fe054c879e1bd9db5b4aa89e1fbff6630ae87ca57b",
     "closures-stage2.json": "529636f38134c5ece936bcd94829a27ac6ca8f3aa47fe5220d0dece797760321"
   },
@@ -12,14 +12,14 @@
     "quotientSchemaVersion": 1,
     "ruleDigest": "31627ef1ba9385fab9d6c8e793cd6895322df473ffdbcb4f1527017e00600fa3"
   },
-  "footprintBasisDigest": "e976aafcfa1b4685ff71a18c9fbaebf03f9acb29f0f47d5425b82489581da5d8",
+  "footprintBasisDigest": "335b6be7c2cfa3321074d97fd6c8a34b0a0501f2844e61f9ca841e222564483d",
   "quotientSchemaVersion": 1,
   "specimens": {
-    "corpus": 90,
+    "corpus": 91,
     "stimuli": 37,
     "synthesized": 85,
-    "total": 212,
-    "populationDigest": "e4661c24c5077f4d4114c7b51c53c3ed9ebe63d07cfb64d625ae8ac8395e9ab1"
+    "total": 213,
+    "populationDigest": "dea423e9dd7f0a6cab346c5ea09fdb7afdf9e939df4e3490f840e9379636161d"
   },
   "unbuilt": [
     {
@@ -154,73 +154,73 @@
   "sourceLanguageDeparture": [
     {
       "coordinate": "assertion.kind",
-      "specimens": 127,
+      "specimens": 128,
       "error": "/assertions/0/kind must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.kind:aggregate~ratio-comparison",
-      "specimens": 127,
+      "specimens": 128,
       "error": "/assertions/0/kind must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation",
-      "specimens": 127,
+      "specimens": 128,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~ratio",
-      "specimens": 127,
+      "specimens": 128,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "relation.grain",
-      "specimens": 127,
+      "specimens": 128,
       "error": "/structure/relations/survey/grain must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~interval",
-      "specimens": 126,
+      "specimens": 127,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:nominal~ordinal",
-      "specimens": 126,
+      "specimens": 127,
       "error": "/structure/relations/survey/fields/respondent/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.aggregate.op",
-      "specimens": 125,
+      "specimens": 126,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "field.transformation:interval~ratio",
-      "specimens": 118,
+      "specimens": 119,
       "error": "/structure/relations/readings/fields/temp/transformation must be string",
       "specimen": "FX_TEMP_RATIO_COMPARISON"
     },
     {
       "coordinate": "field.transformation:ordinal~ratio",
-      "specimens": 117,
+      "specimens": 118,
       "error": "/structure/relations/survey/fields/satisfaction/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
     {
       "coordinate": "assertion.aggregate.op:sum~min",
-      "specimens": 98,
+      "specimens": 99,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_TEMP_SUM"
     },
     {
       "coordinate": "assertion.aggregate.op:sum~mean",
-      "specimens": 77,
+      "specimens": 78,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
@@ -232,7 +232,7 @@
     },
     {
       "coordinate": "assertion.aggregate.op:sum~count",
-      "specimens": 59,
+      "specimens": 60,
       "error": "/assertions/0/op must be string",
       "specimen": "FX_TEMP_SUM"
     },
@@ -250,7 +250,7 @@
     },
     {
       "coordinate": "field.transformation:ordinal~interval",
-      "specimens": 35,
+      "specimens": 36,
       "error": "/structure/relations/survey/fields/satisfaction/transformation must be string",
       "specimen": "FX_SURVEY_MEAN_SATISFACTION"
     },
@@ -262,13 +262,13 @@
     },
     {
       "coordinate": "field.temporality.kind",
-      "specimens": 30,
+      "specimens": 31,
       "error": "/structure/relations/events/fields/at/temporality/kind must be string",
       "specimen": "FX_EVENT_AT_SUM"
     },
     {
       "coordinate": "field.temporality.kind:instant~interval",
-      "specimens": 30,
+      "specimens": 31,
       "error": "/structure/relations/events/fields/at/temporality/kind must be string",
       "specimen": "FX_EVENT_AT_SUM"
     },
@@ -534,12 +534,12 @@
   "quotientLanguageInvalid": [],
   "scopes": {
     "sourceLanguageDeparture": {
-      "specimens": 127,
-      "populationDigest": "c2e46345a17c6b3354df31a2bafc2bb97965094bbfb22b1abf3d3cc22fc8af7a"
+      "specimens": 128,
+      "populationDigest": "86889b306cb15db55e173a97d83cea390d8b609414633602d489e497965babcf"
     },
     "quotientLanguageInvalid": {
-      "specimens": 212,
-      "populationDigest": "e4661c24c5077f4d4114c7b51c53c3ed9ebe63d07cfb64d625ae8ac8395e9ab1"
+      "specimens": 213,
+      "populationDigest": "dea423e9dd7f0a6cab346c5ea09fdb7afdf9e939df4e3490f840e9379636161d"
     }
   },
   "footprints": {

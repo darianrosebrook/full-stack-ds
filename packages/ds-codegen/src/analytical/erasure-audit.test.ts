@@ -33,7 +33,7 @@ describe("the committed footprint report", () => {
 
   it("is measured over the corpus, every authored stimulus, and synthesized separating pairs", () => {
     const s = specimens();
-    expect(s.corpus).toBe(90);
+    expect(s.corpus).toBe(91);
     // Without the authored stimuli, a coordinate whose only evidence is a
     // patched pair reads as dead — the exact misreading this lane prevents.
     expect(s.stimuli).toBeGreaterThan(0);
@@ -448,7 +448,9 @@ describe("the terminal invariant is measured over the population the report name
       };
       // A scope admitting it saw fewer than the population it names.
       expect(bend((x) => { x.scopes.quotientLanguageInvalid.specimens = 112; }), `${side}: wrong scope count`).toEqual([
-        expect.stringContaining("measured over 112 of 212 specimens"),
+        // The scope check fires FIRST and names the population it did not check,
+        // so the mutation surfaces as the terminal-invariant scope complaint.
+        expect.stringContaining("measured over 112 of 213 specimens"),
       ]);
       // No named population at all: coverage could only be compared by count.
       expect(bend((x) => { delete (x.specimens as unknown as Record<string, unknown>).populationDigest; }), `${side}: no named population`).toEqual([
@@ -613,7 +615,7 @@ describe("the terminal invariant is measured over the population the report name
     // A null recorded scope must not suppress detection of a changed current one.
     const suppressed = run((r, l) => { r.scopes.sourceLanguageDeparture = null; l.scopes.sourceLanguageDeparture.populationDigest = "0".repeat(64); });
     expectProblem(suppressed, "RECORDED", "sourceLanguageDeparture scope is not a scope", "null scope beside a changed current digest");
-    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 127 authored", "source count 999");
+    expectProblem(run((r) => { r.scopes.sourceLanguageDeparture.specimens = 999; }), "RECORDED", "sourceLanguageDeparture scope covers 999 specimens, not the 128 authored", "source count 999");
     expectProblem(run((r) => { r.specimens.total = 0; r.scopes.quotientLanguageInvalid.specimens = 0; }), "RECORDED", "specimens.total 0 is not corpus + stimuli + synthesized", "total 0 beside unchanged components");
 
     // BOTH-SIDES corruptions of the fields that only had equality comparisons.
@@ -852,11 +854,11 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
       byId.set(f.id, set);
     }
     const shared = [...byId].filter(([, cs]) => cs.size > 1);
-    expect(s.fixtures.length).toBe(212);
+    expect(s.fixtures.length).toBe(213);
     // 111, not 110: a filing's patched side is minted with a `_PATCHED` id, so
     // an authored stimulus contributes an id of its own where the synthesized
     // specimen it pre-empts carried the base fixture's id.
-    expect(byId.size).toBe(112);
+    expect(byId.size).toBe(113);
     expect(shared.length).toBe(26);
     // Not one of them is a benign repeat: every shared id carries two or more DIFFERENT fixtures.
     expect(shared.every(([, cs]) => cs.size > 1)).toBe(true);
@@ -868,12 +870,12 @@ describe("the specimen population shares ids, so a sweep must bind outcomes by C
     const s = specimens();
     const oracle = loadOracle();
     expect(s.fixtures.filter((f) => hasOutcome(f, oracle)).length).toBe(164);
-    expect(s.fixtures.filter((f) => contentMatches(f, oracle)).length).toBe(90);
+    expect(s.fixtures.filter((f) => contentMatches(f, oracle)).length).toBe(91);
     expect(s.fixtures.filter((f) => isBound(f, oracle)).length).toBe(79);
     // The difference is the mis-attribution: 85 specimens have an outcome BY ID that is not
     // about their content, and a witnessability sweep counts those as discriminating pairs.
     // The gap runs the other way too: 11 specimens match their oracle fixture byte-for-byte
-    // under an id the oracle does not know, so 164 = 79 + 85 and 90 = 79 + 11.
+    // under an id the oracle does not know, so 164 = 79 + 85 and 91 = 79 + 12 (the pair fixture MATCHES CONTENT under a known id but carries no corpus outcome, so it counts in the 12 and in neither 164 nor 79).
     expect(s.fixtures.filter((f) => hasOutcome(f, oracle) && !contentMatches(f, oracle)).length).toBe(85);
   });
 

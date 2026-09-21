@@ -78,6 +78,7 @@ const bindings = JSON.parse(fs.readFileSync(path.join(FIXTURES_DIR, "bindings.js
   cases: Record<string, string>;
   neighbours: Record<string, string>;
   triads: Record<string, { absent: string; satisfying: string; hostile: string }>;
+  special: Record<string, string | string[]>;
   holdout: string[];
 };
 const isCoordinate = (c: Coordinate) => c.kind !== "reference";
@@ -2710,6 +2711,12 @@ describe("C6 — conservation: the Phase-A ledger equals the live ledger modulo 
       ...Object.values(bindings.neighbours),
       ...Object.values(bindings.triads).flatMap((t) => [t.absent, t.satisfying, t.hostile]),
       ...bindings.holdout,
+      // ...and the SPECIAL section counts for the same reason holdout does: the
+      // orphan check raises LEDGER_FIXTURE_ORPHAN for a fixture no section
+      // references, and its walk already includes every special.* entry. Omitting
+      // it here restated that rule more narrowly than the production check
+      // enforces it — the same narrowing the holdout line below was added to fix.
+      ...Object.values(bindings.special).flat(),
     ]);
     for (const id of added) expect(bound.has(id), `${id} is not bound by any ledger section`).toBe(true);
   });
