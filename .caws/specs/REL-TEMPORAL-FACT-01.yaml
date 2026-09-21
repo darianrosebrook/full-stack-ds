@@ -1,0 +1,38 @@
+id: REL-TEMPORAL-FACT-01
+title: 'The declared temporal fact survives the projection boundary instead of being dropped'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-21T00:48:33.941Z'
+updated_at: '2026-09-21T00:48:33.941Z'
+created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given an admitted operation whose group or measure field declares temporality; when the projection facts are derived; then the temporality kind is carried on the facts'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given two otherwise identical admitted operations whose group fields differ only in temporality kind; when their projection facts are compared; then the facts differ and the difference is attributable to temporality alone'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a field that declares no temporality; when the projection facts are derived; then no temporal fact is asserted rather than a default being invented'
+non_functional: {}
+contracts:
+  - name: 'projection-temporal-fact'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
