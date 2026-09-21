@@ -8,7 +8,7 @@ updated_at: '2026-09-21T18:07:47.437Z'
 created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/freeze.ts (the acceptTransition contract and the record main)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -16,7 +16,9 @@ scope:
     - 'packages/ds-codegen/src/analytical'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'EXHAUSTIVE AND ENDPOINT-BOUND: the authored transition must cover exactly the authorities that moved — an unexplained movement is refused and an explanation for an unmoved authority is refused — and each explanation is bound to the retained predecessor endpoint and the computed successor endpoint. An explanation of one transition cannot discharge another.'
+  - 'THE RECORDER NEVER AUTHORS: reasons are explicit input, not a reusable map inside the recorder. A plain re-record with no new movement carries the prior transition as historical provenance.'
+  - 'SUPERCESION IS UNCHANGED: the single-erasure-authority path keeps its existing contract.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
