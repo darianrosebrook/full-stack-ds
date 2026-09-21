@@ -45,3 +45,8 @@ contracts:
   - name: 'series-identity'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 2: the identity binding keeps SYMBOL as the result grain (one row per symbol) (vitest analytical 1041/1041, rail+root+frameworks green)"
+    recorded_at: "2026-09-21T01:53:09.035Z"
