@@ -8,7 +8,7 @@ updated_at: '2026-09-21T15:06:46.102Z'
 created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts (the produced-output controls for the pair fixture)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -16,7 +16,9 @@ scope:
     - 'packages/ds-codegen/src/analytical'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'THE DECODER SEES THE OUTPUT ALONE: preservation is observed through the produced representation, never by re-evaluating rows or by reconstructing the answer from the evaluator.'
+  - 'The aggregate binding that sums away symbol decodes IDENTICALLY on both populations, and that blindness is RECORDED AS A LOSS rather than repaired here.'
+  - 'This control is narrow: it establishes that the swap is observable in the thing produced. It does not establish co-registration, temporal support, or bounds adjudication.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
