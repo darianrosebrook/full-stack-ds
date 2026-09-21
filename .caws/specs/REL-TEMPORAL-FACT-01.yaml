@@ -39,3 +39,8 @@ contracts:
   - name: 'projection-temporal-fact'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts: the declared TEMPORAL kind is CARRIED at the result boundary (a.facts.dimension.temporality equals the declaration) (vitest run packages/ds-codegen/src/analytical, 22 files 1037 tests green)"
+    recorded_at: "2026-09-21T00:56:33.052Z"
