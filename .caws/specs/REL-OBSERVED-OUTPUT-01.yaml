@@ -41,3 +41,8 @@ contracts:
   - name: 'observed-output'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 4: the produced readback decodes to one entry per symbol from the output alone (vitest analytical 1051/1051; typecheck lint rail root frameworks green on the branch)"
+    recorded_at: "2026-09-21T15:38:14.711Z"
