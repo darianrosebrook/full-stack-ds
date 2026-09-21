@@ -79,7 +79,7 @@ import {
   inducedClaims,
   unitsCommensurable,
 } from "./projection.js";
-import type { Composite, CompositePart, CompositeVerdict, Enumeration, OperationJudgment, AggregateAssertionDecl, Program, ResultFacts, TargetInventory } from "./projection.js";
+import type { Composite, CompositePart, CompositeVerdict, Enumeration, OperationJudgment, AggregateAssertionDecl, Program, ResultFacts, Row, TargetInventory } from "./projection.js";
 import type { RelationalStructure, UnitDecl } from "./relation-model.js";
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);

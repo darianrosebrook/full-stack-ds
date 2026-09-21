@@ -78,6 +78,7 @@ const bindings = JSON.parse(fs.readFileSync(path.join(FIXTURES_DIR, "bindings.js
   cases: Record<string, string>;
   neighbours: Record<string, string>;
   triads: Record<string, { absent: string; satisfying: string; hostile: string }>;
+  special: Record<string, string | string[]>;
   holdout: string[];
 };
 const isCoordinate = (c: Coordinate) => c.kind !== "reference";

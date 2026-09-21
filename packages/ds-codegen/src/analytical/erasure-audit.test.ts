@@ -447,8 +447,10 @@ describe("the terminal invariant is measured over the population the report name
         return say(r, l).filter((p) => p.includes(side));
       };
       // A scope admitting it saw fewer than the population it names.
-      expect(bend((x) => { x.scopes.quotientLanguageInvalid.specimens = 112; // stale: the live scope covers 113 }), `${side}: wrong scope count`).toEqual([
-        expect.stringContaining("measured over 113 of 213 specimens"),
+      expect(bend((x) => { x.scopes.quotientLanguageInvalid.specimens = 112; }), `${side}: wrong scope count`).toEqual([
+        // The scope check fires FIRST and names the population it did not check,
+        // so the mutation surfaces as the terminal-invariant scope complaint.
+        expect.stringContaining("measured over 112 of 213 specimens"),
       ]);
       // No named population at all: coverage could only be compared by count.
       expect(bend((x) => { delete (x.specimens as unknown as Record<string, unknown>).populationDigest; }), `${side}: no named population`).toEqual([
