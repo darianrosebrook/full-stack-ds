@@ -2,9 +2,11 @@ id: REL-OBSERVED-OUTPUT-01
 title: 'The close-swap is observed through the produced readback: the decoder sees the output alone'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'The close-swap is observed through the produced readback whose decoder receives the output alone; the aggregate path''s blindness is recorded.'
 created_at: '2026-09-21T15:06:46.102Z'
-updated_at: '2026-09-21T15:07:13.412Z'
+updated_at: '2026-09-21T15:38:17.108Z'
 created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
 blast_radius:
   modules:
