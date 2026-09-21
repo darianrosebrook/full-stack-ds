@@ -8,7 +8,9 @@ updated_at: '2026-09-21T01:58:48.764Z'
 created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/relation-model.ts (the bounds declaration, in the whole/perRow family)'
+    - 'packages/ds-codegen/src/analytical/engines.ts (the instance obligation over supplied rows)'
+    - 'packages/ds-contracts/analytical-fixtures/fixtures.jsonl (FX_P_OHLC_PAIR declares its bounds)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -18,7 +20,10 @@ scope:
     - 'src/data/analytical-fixtures'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'GENERIC, NOT ARTIFACT-SPECIFIC: the declaration is over any three sibling fields and no layer below L4 names OHLC, a candle, or any form.'
+  - 'STANDING WITHOUT AUTHORITY: violating rows carry the obligation term bounds:row-consistent and NO diagnostic, because an illegal judgment needs an owner-licensed cause. The weaker claim is deliberate and stated: measured violation reads as an unresolved premise until the owner upgrades the term to a diagnostic.'
+  - 'INSTANCE EVIDENCE ONLY: no rows means no check and no obligation — absent evidence is not contradiction.'
+  - 'ALPHA-INDEPENDENCE: renaming the three fields together changes nothing.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
