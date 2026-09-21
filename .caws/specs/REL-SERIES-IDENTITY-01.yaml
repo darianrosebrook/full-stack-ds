@@ -8,7 +8,8 @@ updated_at: '2026-09-21T01:06:26.216Z'
 created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-contracts/analytical-fixtures/fixtures.jsonl (FX_P_OHLC_PAIR, the two-symbol separating pair)'
+    - 'packages/ds-codegen/src/analytical/projection.test.ts (the identity consumer controls)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -17,7 +18,10 @@ scope:
     - 'packages/ds-contracts/analytical-fixtures'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'IDENTITY IS OBSERVED THROUGH THE CONSUMER, not through the declaration: the output carries one row per symbol with that symbol own values.'
+  - 'The separating pair is the SWAP, executed: per-period sums over symbol are bit-identical while each symbol own row moves. The aggregate-path blindness to the swap is RECORDED AS A LOSS, never repaired by adding a bounds check here.'
+  - 'The bounds violation cannot obtain standing in this slice because no machine-readable bounds binding exists. Building one is piece 3 and requires a generic declared-expression mechanism, never an OHLC-named branch.'
+  - 'The single-result-grain constraint is met by summing over period (resultGrain [symbol]), which is what keeps identity; summing over symbol is the control, not the construction.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
