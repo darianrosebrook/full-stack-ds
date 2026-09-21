@@ -3,7 +3,6 @@ title: 'A declared field-to-field bounds relationship is carried, and supplied r
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: field-bounds
 created_at: '2026-09-21T01:58:48.764Z'
 updated_at: '2026-09-21T14:49:09.488Z'
 created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
