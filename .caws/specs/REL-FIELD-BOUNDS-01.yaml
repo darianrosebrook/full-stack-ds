@@ -1,0 +1,47 @@
+id: REL-FIELD-BOUNDS-01
+title: 'A declared field-to-field bounds relationship is carried, and supplied rows that violate it leave a named obligation'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-21T01:58:48.764Z'
+updated_at: '2026-09-21T01:58:48.764Z'
+created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'src/data/analytical-fixtures'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a field declaring bounds over two sibling fields; when the schema is emitted and parsed; the declaration validates and appears in the emitted schema'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given rows satisfying the declared bounds; when the structure is judged; the judgment is admissible with no bounds obligation'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given supplied rows violating the declared bounds; when the structure is judged with rows; the bounds:row-consistent obligation is carried, naming the field, and no diagnostic is emitted'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the bounds declaration and no rows; when the structure is judged; no bounds obligation is emitted, because instance evidence is absent rather than contradictory'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the same three fields renamed everywhere together; when the judgment is compared; nothing changes'
+non_functional: {}
+contracts:
+  - name: 'field-bounds-declaration'
+    type: schema
+    path: 'packages/ds-codegen/src/analytical/relation-model.ts'
