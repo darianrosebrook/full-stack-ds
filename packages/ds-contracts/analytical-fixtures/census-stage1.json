@@ -1814,14 +1814,12 @@
     },
     {
       "id": "field.bounds.lower",
-      "kind": "leaf",
-      "leaf": "field.bounds.lower",
+      "kind": "reference",
       "role": "schema"
     },
     {
       "id": "field.bounds.upper",
-      "kind": "leaf",
-      "leaf": "field.bounds.upper",
+      "kind": "reference",
       "role": "schema"
     },
     {

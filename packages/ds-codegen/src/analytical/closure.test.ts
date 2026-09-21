@@ -1232,7 +1232,7 @@ describe("what actually blocks the closures, decomposed by coordinate kind", () 
     };
 
     expect(unresolved.length).toBe(70);
-    expect(tally(unresolved)).toEqual({ "reference-topology": 25, "member-absence": 8, leaf: 7, "member-pair": 28 });
+    expect(tally(unresolved)).toEqual({ "reference-topology": 25, "member-absence": 8, leaf: 7, "member-pair": 28, reference: 2 });
 
     // EVERY blocked closure depends on at least one reference-topology facet, and sixteen of the
     // twenty-two on NOTHING ELSE. So those facets are the keystone: settle them and obligation 8
