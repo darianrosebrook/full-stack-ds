@@ -36,6 +36,7 @@ import type { AggregateOp, FieldDecl, RelationDecl, RelationalStructure, Tempora
 import type { GraphResult } from "./graph-projection.js";
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
+import { QUALIFIED_DIAG } from "./codes.js";
 import { CONTRACTS_DIR, loadOracle } from "./necessity.js";
 
 /* ------------------------------------------------------------------ types */
@@ -2791,14 +2792,26 @@ export const OHLC_PROBE_NON_CLAIMS: readonly string[] = [
  * it the codomain it actually requires.
  *
  * The qualified result carries:
- *   - the source relation identity and its DECLARED grain;
+ *   - the source relation identity and its DECLARED grain — each grain member
+ *     must name a field the relation declares; an undeclared member is a
+ *     malformed declaration refused at this boundary, because a key built from
+ *     `row[missing] ?? ""` would manufacture a binding out of an absence;
  *   - observations keyed STRUCTURALLY by the complete grain (field + value
  *     pairs, never a concatenated string);
  *   - only the fields the declared relationships admit for this request;
  *   - the declared field facts (bounds, temporality) needed downstream;
- *   - a POPULATION-SCOPED judgment naming each observation that falsifies a
- *     declared relationship, with no diagnostic for satisfying or unreadable
- *     observations and none for other observations' violations.
+ *   - a POPULATION-SCOPED, THREE-VALUED judgment (see `QualifiedStanding`):
+ *     readable falsifications are named per observation; an unreadable
+ *     participating value leaves the relationship UNEVALUATED — a named
+ *     evidence gap, never an admission; and no observation's fact implicates
+ *     another observation, another field, or the task.
+ *
+ * REALIZATION IS SEPARATED FROM QUALIFICATION: a qualified result is a lawful
+ * analytical object on its own. Realizing it requires a SELECTED program from
+ * the family's declared lowering set, and the artifact is produced only by
+ * lowering that selection (`selectQualifiedProgram` →
+ * `lowerSelectedProgram`). Selection is a fact about the request and the
+ * declared lowerings — never about how many observations a result carries.
  * ------------------------------------------------------------------------- */
 
 export interface QualifiedObservation {
@@ -2813,8 +2826,31 @@ export interface QualifiedFieldFacts {
   temporality?: { kind: string };
 }
 
+/**
+ * The three-valued qualification standing, evidence-classed like the corpus
+ * judge's admissible / illegal / unproven — but this is the QUALIFIED result
+ * family's own vocabulary, not the corpus judgment:
+ *
+ *   - `qualified`    — every applicable declared relationship was evaluated
+ *                      over readable evidence and none falsified;
+ *   - `contradicted` — at least one readable observation falsifies an
+ *                      applicable declared relationship
+ *                      (`QUALIFIED_DIAG.BOUNDS_ROW_VIOLATED`);
+ *   - `unproven`     — at least one applicable declared relationship could not
+ *                      be evaluated: a participating value was unreadable.
+ *                      Missing evidence is not contradiction, and it is not
+ *                      admission either — the unresolved premise is preserved
+ *                      as a named gap.
+ *
+ * The summary standing is scoped to the relation + supplied population pair;
+ * the facts that compose it stay attached to their own observations, so a
+ * later task can decide whether a contradiction is relevant to the claim it
+ * proposes.
+ */
+export type QualifiedStanding = "qualified" | "contradicted" | "unproven";
+
 export interface QualifiedBoundsViolation {
-  code: "REL_FIELD_BOUNDS_VIOLATED";
+  code: typeof QUALIFIED_DIAG.BOUNDS_ROW_VIOLATED;
   /** The violated relationship: `relation.field`. */
   subject: string;
   field: string;
@@ -2826,14 +2862,35 @@ export interface QualifiedBoundsViolation {
   key: ReadonlyArray<{ field: string; value: string }>;
 }
 
+/**
+ * One unevaluated relationship: a participating value the bounds judgment
+ * needed was unreadable, so the relationship neither holds nor is violated ON
+ * THIS OBSERVATION. This is the missing-evidence fact that keeps an unreadable
+ * population from being observationally equivalent to a verified one.
+ */
+export interface QualifiedEvidenceGap {
+  /** The unevaluated relationship: `relation.field`. */
+  subject: string;
+  /** The participating field whose value was unreadable: the bounded field or one of its declared endpoints. */
+  participant: string;
+  /** The index into `observations` of the observation carrying the gap. */
+  observation: number;
+  /** The structured grain binding of that observation. */
+  key: ReadonlyArray<{ field: string; value: string }>;
+}
+
 export interface QualifiedRelationResult {
   relation: string;
   grain: readonly string[];
   observations: readonly QualifiedObservation[];
   fieldFacts: Readonly<Record<string, QualifiedFieldFacts>>;
   judgment: {
-    admissible: boolean;
+    /** Population-scoped summary: `contradicted` if any observation falsifies, else `unproven` if any relationship went unevaluated, else `qualified`. */
+    standing: QualifiedStanding;
+    /** The contradicted facts, each attached to its own observation. */
     boundsViolations: readonly QualifiedBoundsViolation[];
+    /** The unproven facts, each attached to its own observation. */
+    evidenceGaps: readonly QualifiedEvidenceGap[];
   };
 }
 
@@ -2842,9 +2899,10 @@ export interface QualifiedRelationResult {
  *
  * Every declared non-grain field is admitted; the declared relationships
  * (bounds, temporality) travel as field facts; the judgment is scoped to the
- * supplied population — readable falsifications are named per observation,
- * unreadable participating values are absent evidence rather than contradiction,
- * and no observation\\'s violation implicates another\\'s.
+ * supplied population — readable falsifications are named per observation, an
+ * unreadable participating value leaves its relationship unevaluated as a
+ * named evidence gap under an `unproven` standing (never an admission), and no
+ * observation\\'s fact implicates another\\'s.
  */
 export function qualifyRelation(
   structure: RelationalStructure,
@@ -2856,6 +2914,16 @@ export function qualifyRelation(
   if (!Array.isArray(rel.grain) || rel.grain.length === 0) throw new Error(`qualify: relation ${relationName} declares no grain, so no source-grain observation can be keyed`);
   const grain = rel.grain as readonly string[];
   const fields = (rel.fields ?? {}) as Record<string, Record<string, unknown>>;
+  // RESOLUTION PRECEDES OBSERVATION, grain edition: a grain member naming no
+  // declared field would silently build keys from `row[g] ?? ""` — a binding
+  // manufactured out of an absence. A supplied value cannot authorize an
+  // undeclared reference, so the declaration is refused before any
+  // observation or judgment exists.
+  for (const g of grain) {
+    if (!(g in fields)) {
+      throw new Error(`the grain of ${relationName} names ${g}, which the relation does not declare; the declaration is malformed and no qualified result is manufactured for it`);
+    }
+  }
   const admitted = Object.keys(fields).filter((f) => !grain.includes(f));
 
   const observations: { key: { field: string; value: string }[]; values: Record<string, number | string> }[] = [];
@@ -2871,8 +2939,9 @@ export function qualifyRelation(
     }
   }
 
-  // RESOLUTION PRECEDES OBSERVATION: a bound naming no declared sibling field is
-  // a malformed declaration, refused before any observation or judgment exists.
+  // RESOLUTION PRECEDES OBSERVATION, bounds edition: a bound naming no declared
+  // sibling field is a malformed declaration, refused before any observation or
+  // judgment exists.
   for (const [name, decl] of Object.entries(fields)) {
     const b = (decl as Record<string, unknown>).bounds as { lower: string; upper: string } | undefined;
     if (!b) continue;
@@ -2893,20 +2962,38 @@ export function qualifyRelation(
     if (Object.keys(facts).length > 0) fieldFacts[name] = facts;
   }
 
-  // THE BOUNDS JUDGMENT: readable falsifications only.
+  // THE BOUNDS JUDGMENT: three-valued, per observation, per relationship.
+  // A readable falsification is a violation. An unreadable PARTICIPATING value
+  // (the bounded field or one of its endpoints) leaves THIS relationship
+  // unevaluated on THIS observation — a named evidence gap, not an admission
+  // and not a contradiction. One observation's fact never implicates another's.
   const boundsViolations: QualifiedBoundsViolation[] = [];
+  const evidenceGaps: QualifiedEvidenceGap[] = [];
   for (const [fieldName, facts] of Object.entries(fieldFacts)) {
     if (!facts.bounds) continue;
     const { lower, upper } = facts.bounds;
+    const subject = `${relationName}.${fieldName}`;
     observations.forEach((obs, idx) => {
-      const v = obs.values[fieldName];
-      const lo = obs.values[lower];
-      const up = obs.values[upper];
-      if (typeof v !== "number" || typeof lo !== "number" || typeof up !== "number") return;
+      const participants: ReadonlyArray<readonly [string, unknown]> = [
+        [fieldName, obs.values[fieldName]],
+        [lower, obs.values[lower]],
+        [upper, obs.values[upper]],
+      ];
+      let unreadable = false;
+      for (const [participant, raw] of participants) {
+        if (typeof raw !== "number") {
+          unreadable = true;
+          evidenceGaps.push({ subject, participant, observation: idx, key: obs.key });
+        }
+      }
+      if (unreadable) return;
+      const v = obs.values[fieldName] as number;
+      const lo = obs.values[lower] as number;
+      const up = obs.values[upper] as number;
       if (!(lo <= v && v <= up)) {
         boundsViolations.push({
-          code: "REL_FIELD_BOUNDS_VIOLATED" as const,
-          subject: `${relationName}.${fieldName}`,
+          code: QUALIFIED_DIAG.BOUNDS_ROW_VIOLATED,
+          subject,
           field: fieldName, lower, upper,
           observation: idx,
           key: obs.key,
@@ -2915,29 +3002,147 @@ export function qualifyRelation(
     });
   }
 
+  const standing: QualifiedStanding =
+    boundsViolations.length > 0 ? "contradicted" : evidenceGaps.length > 0 ? "unproven" : "qualified";
+
   return {
     relation: relationName,
     grain,
     observations,
     fieldFacts,
-    judgment: { admissible: boundsViolations.length === 0, boundsViolations },
+    judgment: { standing, boundsViolations, evidenceGaps },
   };
 }
 
 /**
- * Project a qualified relation result into a produced readback artifact.
- *
- * Selection matters: a qualified result with NO observations has no supported
- * lowering (there is nothing to realize), so no artifact is produced. A
- * supported result\\'s artifact carries the observations and the judgment — a
- * truthful readback of problematic data is not a certification that the bounds
- * hold, and the consumer sees the diagnostics alongside the data.
+ * What a consumer asks the qualified-result family to realize. The family
+ * declares its lowering set explicitly (`DECLARED_QUALIFIED_LOWERINGS`); a
+ * request outside it is unsupported — not an error in the result, and not a
+ * silent fallback to some other lowering. `readback` is the one declared
+ * intent today.
  */
-export function projectQualifiedRelation(
-  q: QualifiedRelationResult,
-): { kind: "readback"; observations: QualifiedRelationResult["observations"]; judgment: QualifiedRelationResult["judgment"] } | { kind: "refused"; reason: string } {
-  if (q.observations.length === 0) {
-    return { kind: "refused", reason: `the qualified relation ${q.relation} carries no observations, so there is nothing to realize` };
+export interface QualifiedIntent {
+  kind: string;
+}
+
+/**
+ * The declared lowering set of the qualified-result family. SELECTION IS A
+ * DECLARED-LOWERING FACT: support comes from this set and the request, never
+ * from how many observations a result happens to carry. A zero-observation
+ * result is a lawful result with no instance to realize; a populated result
+ * matched to an undeclared intent is lawful but unsupported. Both distinctions
+ * are observable, and neither is derived from `observations.length`.
+ */
+const DECLARED_QUALIFIED_LOWERINGS: readonly string[] = ["readback"];
+
+/**
+ * The selected program: the ONE qualified result this slice will realize,
+ * bound to the intent it was selected for. It is constructible only by
+ * selection, so no lowering entry point can accept an unselected request — and
+ * the lowering never reconstructs the result or re-reads source rows. It
+ * cannot: the rows are not part of a qualified result.
+ */
+export interface QualifiedProgram {
+  readonly result: QualifiedRelationResult;
+  readonly intent: QualifiedIntent;
+}
+
+export type QualifiedProgramSelection =
+  | { kind: "selected"; program: QualifiedProgram }
+  | { kind: "unsupported"; reason: string }
+  | { kind: "nothing-to-realize"; reason: string };
+
+/**
+ * Select the program for one qualified result under one request:
+ *
+ *   - the request names no declared lowering → `unsupported` (a lawful result
+ *     this family realizes nothing for);
+ *   - the request is declared and the result carries no observations →
+ *     `nothing-to-realize` (no instance exists);
+ *   - otherwise → `selected`, carrying the program the lowering consumes.
+ */
+export function selectQualifiedProgram(q: QualifiedRelationResult, intent: QualifiedIntent): QualifiedProgramSelection {
+  if (!DECLARED_QUALIFIED_LOWERINGS.includes(intent.kind)) {
+    return { kind: "unsupported", reason: `the qualified-result family declares no lowering for the requested ${intent.kind} intent; the qualified relation ${q.relation} is lawful but unsupported for it` };
   }
-  return { kind: "readback", observations: q.observations, judgment: q.judgment };
+  if (q.observations.length === 0) {
+    return { kind: "nothing-to-realize", reason: `the qualified relation ${q.relation} carries no observations, so there is no instance to realize` };
+  }
+  return { kind: "selected", program: { result: q, intent } };
+}
+
+/** The produced readback artifact: the qualified result's content, carried. */
+export interface QualifiedReadbackArtifact {
+  kind: "readback";
+  relation: string;
+  grain: readonly string[];
+  observations: QualifiedRelationResult["observations"];
+  fieldFacts: QualifiedRelationResult["fieldFacts"];
+  judgment: QualifiedRelationResult["judgment"];
+}
+
+/**
+ * Lower a SELECTED program into the readback artifact. The parameter type
+ * makes an unselected request unrepresentable: a program exists only on the
+ * `selected` branch, so no artifact can be produced off the selection path.
+ * The artifact carries the judgment — a truthful readback of problematic data
+ * is not a certification that the bounds hold; the consumer sees the standing
+ * and the scoped diagnostics alongside the data.
+ */
+export function lowerSelectedProgram(program: QualifiedProgram): QualifiedReadbackArtifact {
+  const q = program.result;
+  return { kind: "readback", relation: q.relation, grain: q.grain, observations: q.observations, fieldFacts: q.fieldFacts, judgment: q.judgment };
+}
+
+/**
+ * The orchestration entry: selection, then — only on a selection — lowering.
+ * An unsupported request and an empty population return their selection kinds;
+ * no artifact exists on those paths.
+ */
+export function projectQualifiedRelation(q: QualifiedRelationResult, intent: QualifiedIntent = { kind: "readback" }): QualifiedProgramSelection | QualifiedReadbackArtifact {
+  const selection = selectQualifiedProgram(q, intent);
+  return selection.kind === "selected" ? lowerSelectedProgram(selection.program) : selection;
+}
+
+/** What the output-only decoder recovers from the artifact alone. */
+export interface DecodedQualifiedReadback {
+  relation: string;
+  grain: readonly string[];
+  observations: ReadonlyArray<{ key: ReadonlyArray<{ field: string; value: string }>; values: Readonly<Record<string, number | string>> }>;
+  /** The declared bounds relationships, by field: what a contradiction would violate. */
+  boundsFacts: Readonly<Record<string, { lower: string; upper: string }>>;
+  /** The declared temporalities, by field: carried, not interpreted. */
+  temporalityFacts: Readonly<Record<string, { kind: string }>>;
+  standing: QualifiedStanding;
+  /** Indices of the observations carrying a bounds violation. */
+  contradicted: readonly number[];
+  /** Indices of the observations carrying an evidence gap. */
+  unproven: readonly number[];
+}
+
+/**
+ * Recover the analytical content from the produced artifact ALONE — no rows,
+ * no evaluator, no qualified-result reference. The recovery is SUBSTANTIVE:
+ * structured grain bindings, admitted values, the declared relationship facts
+ * a claim needs, and the standing with its per-observation scope. Mutating an
+ * association or the standing in the artifact therefore alters what a consumer
+ * recovers — the decoder reads the artifact; it does not re-derive it.
+ */
+export function decodeQualifiedReadback(artifact: QualifiedReadbackArtifact): DecodedQualifiedReadback {
+  const boundsFacts: Record<string, { lower: string; upper: string }> = {};
+  const temporalityFacts: Record<string, { kind: string }> = {};
+  for (const [name, facts] of Object.entries(artifact.fieldFacts)) {
+    if (facts.bounds) boundsFacts[name] = { ...facts.bounds };
+    if (facts.temporality) temporalityFacts[name] = { ...facts.temporality };
+  }
+  return {
+    relation: artifact.relation,
+    grain: [...artifact.grain],
+    observations: artifact.observations.map((o) => ({ key: o.key.map((k) => ({ ...k })), values: { ...o.values } })),
+    boundsFacts,
+    temporalityFacts,
+    standing: artifact.judgment.standing,
+    contradicted: artifact.judgment.boundsViolations.map((v) => v.observation),
+    unproven: artifact.judgment.evidenceGaps.map((g) => g.observation),
+  };
 }

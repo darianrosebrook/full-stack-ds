@@ -8,15 +8,17 @@
  * a cycle, and a vocabulary duplicated across both would let the two drift into
  * emitting the same defect under two spellings.
  *
- * Every code here must appear in the doctrine's diagnostic catalogue and be
- * carried by a corpus case; `checkCorpus` enforces both directions between the
- * catalogue and the corpus, and the fixture ledger enforces that each has a
- * fixture and a legal near-neighbour. Nothing may be added here speculatively.
+ * `DIAG` below is the corpus judge's catalogue-carried vocabulary: every code
+ * in it must appear in the doctrine's diagnostic catalogue and be carried by a
+ * corpus case; `checkCorpus` enforces both directions between the catalogue
+ * and the corpus, and the fixture ledger enforces that each has a fixture and
+ * a legal near-neighbour. Nothing may be added here speculatively. The
+ * boundary-owned blocks (`DERIVATION_DIAG`, `QUALIFIED_DIAG`) deliberately sit
+ * outside that rule — see their own statements. A `REL_*` spelling alone
+ * therefore does NOT imply catalogue membership.
  */
 
 export const DIAG = {
-  // field-bounds
-  FIELD_BOUNDS_VIOLATED: "REL_FIELD_BOUNDS_VIOLATED",
   // meaningfulness
   ORDINAL_MEAN: "REL_MEANINGFULNESS_ORDINAL_MEAN",
   INTERVAL_RATIO: "REL_MEANINGFULNESS_INTERVAL_RATIO",
@@ -81,4 +83,26 @@ export const DERIVATION_DIAG = {
   RESULT_NOT_DERIVABLE: "REL_DERIVATION_RESULT_NOT_DERIVABLE",
   /** The derivation graph has a cycle, so no relation in it is grounded. */
   CYCLE: "REL_DERIVATION_CYCLIC",
+} as const;
+
+/**
+ * Codes the QUALIFIED SOURCE-GRAIN boundary owns.
+ *
+ * `BOUNDS_ROW_VIOLATED` is not in the doctrine catalogue and carries no corpus
+ * case, on the same line `DERIVATION_DIAG` draws — but for a different reason,
+ * so it is named separately rather than folded in: the corpus-level judge
+ * (`engines.ts`) never emits it. It is the qualified-result contract's own
+ * vocabulary, emitted only by `projection.ts`'s qualified path when a READABLE
+ * observation falsifies an APPLICABLE declared field-to-field bounds
+ * relationship (the narrow observed-counterexample semantics the owner
+ * licensed; an unreadable participant is missing evidence, never this code).
+ * Its semantic authority is this declaration plus the qualified-result
+ * contract in `projection.ts`, NOT the doctrine's diagnostic catalogue — a
+ * consumer must not assume that a `REL_*` code always means a catalogue
+ * member, and must not re-add a catalogue row to make the documentation
+ * symmetric. Nothing may be added here speculatively.
+ */
+export const QUALIFIED_DIAG = {
+  /** A readable observation falsifies an applicable declared bounds relationship. */
+  BOUNDS_ROW_VIOLATED: "REL_FIELD_BOUNDS_VIOLATED",
 } as const;
