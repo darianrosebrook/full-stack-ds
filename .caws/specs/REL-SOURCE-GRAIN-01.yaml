@@ -1,0 +1,59 @@
+id: REL-SOURCE-GRAIN-01
+title: 'A qualified source-grain relational observation survives judgment, selection, lowering and output-only recovery'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-22T00:17:51.672Z'
+updated_at: '2026-09-22T00:17:51.672Z'
+created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/analytical'
+    - 'packages/ds-contracts/analytical-fixtures'
+    - 'docs/architecture/analytical-relation-doctrine.md'
+    - 'src/data/analytical-fixtures'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the pair fixture population; when the relation is qualified at its declared grain; then four distinct structured observations are recovered with their associated values'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a readable observation that falsifies a declared bounds relationship; when the qualified judgment runs; then REL_FIELD_BOUNDS_VIOLATED is carried for that observation and field, with no diagnostic for satisfying or unreadable observations'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the baseline, the cross-symbol swap and the margin-preserving perturbation; when each is produced through admission, selection and lowering; then the judgments distinguish all three from the evidence the path actually consumes'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the produced readback; when it is decoded; then the required tuples and associations are recovered without rows or evaluator access, and mutating an association in the artifact is detected'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a relation whose grain or bounds declaration is malformed; when the orchestration runs; then no artifact is produced'
+  - id: A6
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a consistent rename of the relation, grain fields, participating fields, bounds references and rows, plus a row reorder; when the normalized result is compared; then it is equivalent modulo that rename and reorder'
+  - id: A7
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given a field declaring temporality; when the qualified result is built; then the declared kind is carried and an undeclared field carries none, with no duration or extent invented'
+non_functional: {}
+contracts:
+  - name: 'qualified-relation'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/projection.ts'
+  - name: 'bounds-diagnostic'
+    type: behavior
+    path: 'packages/ds-codegen/src/analytical/engines.ts'
