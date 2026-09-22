@@ -103,3 +103,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A7: standing is conserved' — contradicted member: facet refused with [REL_FIELD_BOUNDS_VIOLATED] attributed from part, panels undefined; unproven member: facet unproven from part, panels undefined; no clean panels either way. Run on landed main@04774acc: vitest analytical 1095/1095."
     recorded_at: "2026-09-22T15:38:32.397Z"
+  - criterion_id: A8
+    status: pass
+    evidence_ref: "projection.test.ts 'A8: scale policy is orthogonal' — shared vs free yield identical normalized panels/ranges while only the cross-panel-comparability claim and the profile differ. Run on landed main@04774acc: vitest analytical 1095/1095."
+    recorded_at: "2026-09-22T15:38:32.864Z"
