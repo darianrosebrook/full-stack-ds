@@ -2732,3 +2732,202 @@ describe("RESTART piece 6: layer co-registration by source-grain identity", () =
     ).toThrow(/not typed by this boundary/);
   });
 });
+
+/* ---------------------------------------------------------------------------
+ * RESTART piece 7 — BOUNDED-RANGE COMPOSITION (REL-BOUNDED-RANGE-COMPOSITION-01)
+ *
+ * The question: can the EXISTING generic bounds declarations induce a
+ * range-with-members structure under `layer`, without adding a new semantic
+ * field? The fixture below carries NO range object, NO endpoint roles and NO
+ * ordering hint — three fields declare the same {lower, upper} sibling pair
+ * under neutral spellings, and the group must be DERIVED from that carried
+ * declaration at composition. The real corpus fixture appears only as a
+ * second witness, never as a branch.
+ * ------------------------------------------------------------------------- */
+
+describe("RESTART piece 7: bounded-range composition from existing bounds authority", () => {
+  const neutral = {
+    relations: {
+      readings: {
+        grain: ["station", "day"],
+        fields: {
+          station: { transformation: "nominal" },
+          day: { transformation: "interval", temporality: { kind: "interval" } },
+          floor: { transformation: "ratio" },
+          ceiling: { transformation: "ratio" },
+          ceiling2: { transformation: "ratio" },
+          value_a: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling" } },
+          value_b: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling" } },
+          value_c: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling" } },
+        },
+      },
+    },
+  } as unknown as RelationalStructure;
+  // The topology variant: value_b declares a DIFFERENT upper endpoint. Every
+  // other spelling is identical.
+  const topoVariant = {
+    relations: {
+      readings: {
+        grain: ["station", "day"],
+        fields: {
+          station: { transformation: "nominal" },
+          day: { transformation: "interval", temporality: { kind: "interval" } },
+          floor: { transformation: "ratio" },
+          ceiling: { transformation: "ratio" },
+          ceiling2: { transformation: "ratio" },
+          value_a: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling" } },
+          value_b: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling2" } },
+          value_c: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling" } },
+        },
+      },
+    },
+  } as unknown as RelationalStructure;
+
+  const rows = [
+    { station: "S1", day: "d1", floor: 5, ceiling: 20, ceiling2: 25, value_a: 10, value_b: 12, value_c: 11 },
+    { station: "S1", day: "d2", floor: 6, ceiling: 21, ceiling2: 26, value_a: 11, value_b: 14, value_c: 13 },
+    { station: "S2", day: "d1", floor: 4, ceiling: 19, ceiling2: 24, value_a: 9, value_b: 13, value_c: 10 },
+    { station: "S2", day: "d2", floor: 7, ceiling: 22, ceiling2: 27, value_a: 12, value_b: 15, value_c: 14 },
+  ];
+  const shortRows = rows.filter((r) => r.day !== "d2");
+  const unreadable = rows.map((r, i) => (i === 0 ? { ...r, value_a: "N/A" } : r));
+  const violated = rows.map((r, i) => (i === 3 ? { ...r, value_a: (r.ceiling as number) + 1 } : r));
+
+  const qualifiedOver = (structure: RelationalStructure, rs: Array<Record<string, unknown>>) => qualifyRelation(structure, "readings", rs);
+  const view = (result: ReturnType<typeof qualifiedOver>, field: string, channel: "length" | "hue" | "text" | "order"): CompositePart => ({ kind: "qualified", result, field, channel });
+  const composeViews = (structure: RelationalStructure, parts: CompositePart[]) =>
+    judgeComposite({ structure, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts, sharing: {} } });
+  const rangesOf = (v: CompositeVerdict) => (v.kind === "retained" ? v.ranges ?? [] : undefined);
+
+  it("A1: two co-registered bounded views derive exactly one normalized range group, from the carried declarations alone", () => {
+    const j = composeViews(neutral, [view(qualifiedOver(neutral, rows), "value_a", "length"), view(qualifiedOver(neutral, rows), "value_b", "hue")]);
+    expect(j.verdict.kind).toBe("retained");
+    expect(rangesOf(j.verdict)).toEqual([{ lower: "floor", upper: "ceiling", members: ["value_a", "value_b"] }]);
+  });
+
+  it("A1: endpoint views ride along without contributing groups, and the group survives them", () => {
+    const q = qualifiedOver(neutral, rows);
+    const j = composeViews(neutral, [view(q, "floor", "text"), view(q, "ceiling", "order"), view(qualifiedOver(neutral, rows), "value_a", "length"), view(qualifiedOver(neutral, rows), "value_b", "hue")]);
+    expect(j.verdict.kind).toBe("retained");
+    // The endpoint fields declare no bounds of their own, so they group
+    // nothing; the members' shared pair still composes exactly one group.
+    expect(rangesOf(j.verdict)).toEqual([{ lower: "floor", upper: "ceiling", members: ["value_a", "value_b"] }]);
+  });
+
+  it("A2: co-registration remains the prerequisite — mismatched populations compose no range from shared endpoint names", () => {
+    const j = composeViews(neutral, [view(qualifiedOver(neutral, rows), "value_a", "length"), view(qualifiedOver(neutral, shortRows), "value_b", "hue")]);
+    expect(j.verdict.kind).toBe("unproven");
+    if (j.verdict.kind !== "unproven") return;
+    expect(j.verdict.obligation).toBe("grain:coregistered");
+    // No range was composed: the fields were not joined merely because their
+    // declarations mention the same endpoint names.
+    expect(rangesOf(j.verdict)).toBeUndefined();
+  });
+
+  it("A3: the topology determines membership — a changed upper moves ONLY that member out, and sharing a lower alone groups nothing", () => {
+    // value_b's upper reference points at ceiling2; value_a and value_c still
+    // declare {floor, ceiling}.
+    const j = composeViews(
+      topoVariant,
+      [view(qualifiedOver(topoVariant, rows), "value_a", "length"), view(qualifiedOver(topoVariant, rows), "value_b", "hue"), view(qualifiedOver(topoVariant, rows), "value_c", "text")],
+    );
+    expect(j.verdict.kind).toBe("retained");
+    // ONLY value_b left the group: the surviving pair composes the group, and
+    // the same-lower singleton composes nothing.
+    expect(rangesOf(j.verdict)).toEqual([{ lower: "floor", upper: "ceiling", members: ["value_a", "value_c"] }]);
+  });
+
+  it("A4: range identity is structural — a consistent rename yields the equivalent normalized group", () => {
+    const renamed = {
+      relations: {
+        samples: {
+          grain: ["site", "date"],
+          fields: {
+            site: { transformation: "nominal" },
+            date: { transformation: "interval", temporality: { kind: "interval" } },
+            base: { transformation: "ratio" },
+            cap: { transformation: "ratio" },
+            cap2: { transformation: "ratio" },
+            first_value: { transformation: "ratio", bounds: { lower: "base", upper: "cap" } },
+            second_value: { transformation: "ratio", bounds: { lower: "base", upper: "cap" } },
+            third_value: { transformation: "ratio", bounds: { lower: "base", upper: "cap" } },
+          },
+        },
+      },
+    } as unknown as RelationalStructure;
+    const renamedRows = rows.map((r) => ({ site: r.station, date: r.day, base: r.floor, cap: r.ceiling, cap2: r.ceiling2, first_value: r.value_a, second_value: r.value_b, third_value: r.value_c }));
+    const q = qualifyRelation(renamed, "samples", renamedRows);
+    const j = composeViews(renamed, [view(q, "first_value", "length"), view(q, "second_value", "hue"), view(q, "third_value", "text")]);
+    expect(j.verdict.kind).toBe("retained");
+    expect(rangesOf(j.verdict)).toEqual([{ lower: "base", upper: "cap", members: ["first_value", "second_value", "third_value"] }]);
+  });
+
+  it("A5: a missing participating observation is conserved — no silent intersection into a smaller valid range", () => {
+    // value_b's operand lacks one observation the others carry: even though
+    // every SURVIVING row would line up, the premise stays unresolved and no
+    // range is composed.
+    const j = composeViews(neutral, [view(qualifiedOver(neutral, rows), "value_a", "length"), view(qualifiedOver(neutral, shortRows), "value_b", "hue"), view(qualifiedOver(neutral, rows), "value_c", "text")]);
+    expect(j.verdict.kind).toBe("unproven");
+    expect(rangesOf(j.verdict)).toBeUndefined();
+  });
+
+  it("A6: standing is conserved — a contradicted or unproven member never becomes a clean retained range", () => {
+    const unprovenJ = composeViews(neutral, [view(qualifiedOver(neutral, unreadable), "value_a", "length"), view(qualifiedOver(neutral, rows), "value_b", "hue")]);
+    expect(unprovenJ.verdict.kind).toBe("unproven");
+    if (unprovenJ.verdict.kind === "unproven") expect(unprovenJ.verdict.from).toBe("part");
+    expect(rangesOf(unprovenJ.verdict)).toBeUndefined();
+
+    const refusedJ = composeViews(neutral, [view(qualifiedOver(neutral, violated), "value_a", "length"), view(qualifiedOver(neutral, rows), "value_b", "hue")]);
+    expect(refusedJ.verdict.kind).toBe("refused");
+    if (refusedJ.verdict.kind === "refused") {
+      expect(refusedJ.verdict.causes).toEqual([QUALIFIED_DIAG.BOUNDS_ROW_VIOLATED]);
+      expect(refusedJ.verdict.from).toBe("part");
+    }
+    expect(rangesOf(refusedJ.verdict)).toBeUndefined();
+  });
+
+  it("A7: the derived group says what the declaration says — lower, upper, members, nothing stronger", () => {
+    const j = composeViews(neutral, [view(qualifiedOver(neutral, rows), "value_a", "length"), view(qualifiedOver(neutral, rows), "value_b", "hue"), view(qualifiedOver(neutral, rows), "value_c", "text")]);
+    expect(j.verdict.kind).toBe("retained");
+    const ranges = rangesOf(j.verdict)!;
+    expect(ranges).toHaveLength(1);
+    const group = ranges[0]!;
+    // Exact shape: three fields, no order/direction/start/end vocabulary.
+    expect(Object.keys(group).sort()).toEqual(["lower", "members", "upper"]);
+    // Member order is the canonical sort — an artifact of comparison, never a
+    // semantic claim.
+    expect(group.members).toEqual([...group.members].sort());
+    expect(JSON.stringify(j.verdict)).not.toContain("start");
+    expect(JSON.stringify(j.verdict)).not.toContain("direction");
+    expect(JSON.stringify(j.verdict)).not.toContain("increasing");
+  });
+
+  it("A8: the derivation lives in judgeComposite, flips only for the generic reason, and conserves the existing rules — with the corpus fixture as second witness", () => {
+    // Minimally changed neighbor: the SAME spellings and populations, one
+    // member's upper reference moved — the range differs for exactly that.
+    const lawful = composeViews(neutral, [view(qualifiedOver(neutral, rows), "value_a", "length"), view(qualifiedOver(neutral, rows), "value_b", "hue")]);
+    const changed = composeViews(topoVariant, [view(qualifiedOver(topoVariant, rows), "value_a", "length"), view(qualifiedOver(topoVariant, rows), "value_b", "hue")]);
+    expect(rangesOf(lawful.verdict)).toHaveLength(1);
+    expect(rangesOf(changed.verdict)).toHaveLength(0);
+
+    // Existing rules are conserved: two views sharing ONE channel still hit
+    // the layer's shared-scale rule first — a derivable range does not bypass it.
+    const sameChannel = composeViews(neutral, [view(qualifiedOver(neutral, rows), "value_a", "length"), view(qualifiedOver(neutral, rows), "value_b", "length")]);
+    expect(sameChannel.verdict.kind).toBe("refused");
+    if (sameChannel.verdict.kind === "refused") expect(sameChannel.verdict.causes).toEqual(["REL_LAYER_SCALE_UNSHARED"]);
+
+    // Second witness: the REAL corpus fixture derives the same generic group
+    // under its own spellings, through the same spelling-blind rule.
+    const load = loadOracle().fixtures.get("FX_P_OHLC_PAIR")!;
+    const ohlcStructure = load.structure as RelationalStructure;
+    const ohlcRows = (load.evidence as { rows: { candles: Array<Record<string, unknown>> } }).rows.candles;
+    const ohlcQ = qualifyRelation(ohlcStructure, "candles", ohlcRows);
+    const ohlcJ = judgeComposite({
+      structure: ohlcStructure,
+      inventory: EXPERIMENT_TARGET,
+      composite: { combinator: "layer", parts: [view(ohlcQ, "open", "length"), view(ohlcQ, "close", "hue")], sharing: {} },
+    });
+    expect(ohlcJ.verdict.kind).toBe("retained");
+    expect(rangesOf(ohlcJ.verdict)).toEqual([{ lower: "low", upper: "high", members: ["close", "open"] }]);
+  });
+});
