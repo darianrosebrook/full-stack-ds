@@ -63,8 +63,8 @@ contracts:
 evidence:
   - criterion_id: A1
     status: pass
-    evidence_ref: placeholder-A1
-    recorded_at: "2026-09-22T13:54:44.579Z"
+    evidence_ref: "projection.test.ts RESTART piece 7 'A1: two co-registered bounded views derive exactly one normalized range group' — two-view and four-view compositions both retained with ranges exactly [{lower: floor, upper: ceiling, members: [value_a, value_b]}], derived from the carried declarations; the fixture carries no range object and no form name. Run on landed main@0cc625f5: vitest analytical 1085/1085."
+    recorded_at: "2026-09-22T13:55:10.529Z"
   - criterion_id: A2
     status: pass
     evidence_ref: placeholder-A2
