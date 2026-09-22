@@ -92,3 +92,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A6: output-only recovery is substantive' — decodeQualifiedReadback recovers relation, grain bindings, admitted values, declared bounds facts, temporalities, standing and per-observation contradicted/unproven scopes, equal to the qualified result's content; targeted mutations of a key/value association, an admitted value, and the standing each alter the recovery; hostile population's contradicted facts arrive with their observation keys. Run on landed main@5967ed73: vitest analytical 1068/1068."
     recorded_at: "2026-09-22T03:24:03.770Z"
+  - criterion_id: A7
+    status: pass
+    evidence_ref: "projection.test.ts 'A7: a malformed bounds reference is refused at qualification' AND 'A7: a malformed grain member is refused at the same boundary' — grain ['symbol','does_not_exist'] refuses /does not declare/ before any qualified result exists, closing the row[g] ?? \"\" key-manufacturing gap; malformed bounds reference unchanged. Run on landed main@5967ed73: vitest analytical 1068/1068."
+    recorded_at: "2026-09-22T03:24:04.224Z"
