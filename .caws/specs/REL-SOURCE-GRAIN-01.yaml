@@ -73,3 +73,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RESTART piece 5 A2: the baseline is admissible, BOTH hostile populations produce REL_FIELD_BOUNDS_VIOLATED through the same qualification (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
     recorded_at: "2026-09-22T00:51:15.917Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 5 A3: the produced artifact carries observations and judgment, a value-to-key association mutation is detected (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
+    recorded_at: "2026-09-22T00:51:16.438Z"
