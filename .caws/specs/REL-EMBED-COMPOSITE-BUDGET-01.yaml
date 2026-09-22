@@ -75,8 +75,8 @@ evidence:
     recorded_at: "2026-09-22T17:29:11.835Z"
   - criterion_id: A2
     status: pass
-    evidence_ref: PLACEHOLDER-A2
-    recorded_at: "2026-09-22T17:29:00.059Z"
+    evidence_ref: "projection.test.ts 'A2: the retained verdict preserves the inner composite's structure unreconstructed' — outer verdict panels, population, channels and transformations deep-equal the inner facet judgment's; nothing is flattened. Run on landed main@5754a432: vitest analytical 1106/1106."
+    recorded_at: "2026-09-22T17:29:12.333Z"
   - criterion_id: A3
     status: pass
     evidence_ref: PLACEHOLDER-A3
