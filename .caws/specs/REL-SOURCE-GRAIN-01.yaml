@@ -85,3 +85,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RESTART piece 5 A5: the declared temporal kind is carried and an undeclared field carries none (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
     recorded_at: "2026-09-22T00:51:17.556Z"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "projection.test.ts applicability: a malformed bounds reference is refused at qualification (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
+    recorded_at: "2026-09-22T00:51:18.074Z"
