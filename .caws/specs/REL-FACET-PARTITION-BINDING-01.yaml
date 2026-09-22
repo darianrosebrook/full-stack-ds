@@ -74,3 +74,8 @@ contracts:
   - name: 'facet-partition-vocabulary'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/codes.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 8 'A1: the facet derives panel membership from the carried bindings, and each panel binds the inner layer's range unreconstructed' — nested layer→facet retained; panels exactly S1/S2 with their structured keys, each carrying ranges [{floor, ceiling, [value_a, value_b]}] read off the inner layer's verdict. Run on landed main@04774acc: vitest analytical 1095/1095."
+    recorded_at: "2026-09-22T15:38:21.316Z"
