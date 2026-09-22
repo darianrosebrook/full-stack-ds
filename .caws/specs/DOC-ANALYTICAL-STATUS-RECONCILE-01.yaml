@@ -51,3 +51,7 @@ evidence:
     status: pass
     evidence_ref: "docs/current-implementation-snapshot.md analytical row (landed main@b05d933e): grep -c finds REL-SOURCE-GRAIN-02, REL-COMPOSITION-COREGISTRATION-01, REL-BOUNDED-RANGE-COMPOSITION-01, REL-FACET-PARTITION-BINDING-01 each once, each with its own NON-CLAIM sentence (qualified-family vocabulary not ratifying stage-2; co-registration is reference not further property; range says lower/upper/members only; aggregate-family facets keep partition unadjudicated and per-panel standing is not built)."
     recorded_at: "2026-09-22T17:17:48.407Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Same row: status cell now reads 'implemented / oracle-gated, ratification bounded to L0-L2; M3 composition is PARTIAL — layer and facet compose qualified source-grain operands (each with lawful/unlawful neighbours and a nested path), while embed still returns unproven for a sub-composite part'; the boundary is cited where it lives (projection.ts judgeEmbed), and the open stage-2 subtraction is retained with the statement that composition success does not discharge it. Verified by grep: 'M3 composition is PARTIAL' appears once."
+    recorded_at: "2026-09-22T17:17:48.871Z"
