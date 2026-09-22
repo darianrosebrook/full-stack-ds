@@ -2,9 +2,10 @@ id: REL-FACET-PARTITION-BINDING-01
 title: 'M3 facet composition: partition binding derives exact source-grain panels from carried identity'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: facet-01
 created_at: '2026-09-22T15:12:44.634Z'
-updated_at: '2026-09-22T15:12:44.634Z'
+updated_at: '2026-09-22T15:13:24.078Z'
 created_by_session: 'session-bd42da68-ec3b-4aed-b4b4-701f8fc1b865'
 blast_radius:
   modules:
