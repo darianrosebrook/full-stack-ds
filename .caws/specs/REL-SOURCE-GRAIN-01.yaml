@@ -26,7 +26,7 @@ invariants:
   - 'THE DIAGNOSTIC IS SCOPED: REL_FIELD_BOUNDS_VIOLATED fires only for a readable observation that falsifies an APPLICABLE declared bounds relationship. A malformed reference is a declaration refusal; an unreadable value is missing evidence; no rows is no instance finding; one observation violation does not invalidate other observations, other fields or every task.'
   - 'THE PATH IS ONE: admission, selection, lowering and the produced artifact consume the SAME qualified result and the SAME population. No independently admitted object, no produce shortcut, no re-evaluation of rows to manufacture the output.'
   - 'TEMPORAL TRANSPORT NOT INTERPRETATION: a declared kind is carried; an undeclared field carries none; no extent or duration is invented.'
-  - 'NO FORM LORE: nothing in the qualified path names OHLC, a candle or any form. The declaration\'s field names are the only spelling the code sees.'
+  - 'NO FORM LORE: nothing in the qualified path names OHLC, a candle or any form. The field names in the declaration are the only spelling the code sees.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
