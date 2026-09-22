@@ -46,3 +46,7 @@ evidence:
     status: pass
     evidence_ref: "examples/spatial-console/web/e2e/verify-runtime.mjs checks 'A1 panel-{lighting,motion,telemetry} drawn as a texture' (panel px 255,255,255 vs background 13,15,20; 15/15 over 7 runs); DevTools MCP screenshot of flagged Chrome at DPR 2"
     recorded_at: "2026-09-22T21:55:49.197Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "verify-runtime.mjs: after oblique orbit drag, trusted clicks at mesh-projected points drive React Switch/RadioGroup, Vue RadioGroup/ToggleSwitch, Lit Button (lampIntensity 0, lampColor #cfe3ff, sceneShape box, rotation halted, selection null); negative control at unprojected layout point does not toggle; DevTools MCP content-quad clicks set speed=medium and shape=box"
+    recorded_at: "2026-09-22T21:56:06.934Z"
