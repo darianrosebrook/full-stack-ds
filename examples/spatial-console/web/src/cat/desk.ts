@@ -124,7 +124,7 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   const gl = renderer.getContext() as WebGL2RenderingContext;
 
   const scene = new THREE.Scene();
