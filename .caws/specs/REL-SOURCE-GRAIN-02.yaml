@@ -84,3 +84,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A4: the artifact is produced only by lowering a selected program' — program.result is the qualified result by identity (not a copy), lowerSelectedProgram's parameter type makes an unselected request unrepresentable, and through the orchestration unsupported/empty requests return selection kinds, never a readback artifact. Run on landed main@5967ed73: vitest analytical 1068/1068."
     recorded_at: "2026-09-22T03:23:48.025Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "projection.test.ts 'A5: one object flows end to end' — mutating the source population AFTER qualification (close := 99999) leaves the artifact identical to the pre-mutation lowering: the selected program consumed the qualified result and cannot re-read rows. Run on landed main@5967ed73: vitest analytical 1068/1068."
+    recorded_at: "2026-09-22T03:23:48.494Z"
