@@ -107,3 +107,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A8: scale policy is orthogonal' — shared vs free yield identical normalized panels/ranges while only the cross-panel-comparability claim and the profile differ. Run on landed main@04774acc: vitest analytical 1095/1095."
     recorded_at: "2026-09-22T15:38:32.864Z"
+  - criterion_id: A9
+    status: pass
+    evidence_ref: "projection.test.ts 'A9: alpha invariance' — consistent rename of relation, grain fields, partition coordinate, range fields, references and rows: panels equivalent, keys carry only the renamed grain spellings (site/date), ranges carry renamed endpoint/member spellings (base/cap, first_value/second_value). Run on landed main@04774acc: vitest analytical 1095/1095."
+    recorded_at: "2026-09-22T15:38:33.321Z"
