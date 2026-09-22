@@ -69,3 +69,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RESTART piece 5 A1: four distinct structured observations with their own values (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
     recorded_at: "2026-09-22T00:51:15.407Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 5 A2: the baseline is admissible, BOTH hostile populations produce REL_FIELD_BOUNDS_VIOLATED through the same qualification (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
+    recorded_at: "2026-09-22T00:51:15.917Z"
