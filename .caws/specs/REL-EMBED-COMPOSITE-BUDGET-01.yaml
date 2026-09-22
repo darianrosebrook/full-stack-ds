@@ -101,3 +101,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A8: reordering source observations leaves the embed judgment equivalent' — reordered input yields byte-equal serialized panels on the embedded facet composite. Run on landed main@5754a432: vitest analytical 1106/1106."
     recorded_at: "2026-09-22T17:29:24.635Z"
+  - criterion_id: A9
+    status: pass
+    evidence_ref: "projection.test.ts 'A9: alpha invariance' — consistent rename of relation/grain/fields/partition/rows: embed retained with panels S1/S2 and renamed range {base, cap, [first_value, second_value]}. Run on landed main@5754a432: vitest analytical 1106/1106."
+    recorded_at: "2026-09-22T17:29:25.071Z"
