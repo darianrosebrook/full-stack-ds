@@ -112,8 +112,8 @@ evidence:
     recorded_at: "2026-09-22T17:30:04.168Z"
   - criterion_id: A9
     status: pass
-    evidence_ref: "projection.test.ts 'A9: alpha invariance' — consistent rename of relation/grain/fields/partition/rows: embed retained with panels S1/S2 and renamed range {base, cap, [first_value, second_value]}. Run on landed main@5754a432: vitest analytical 1106/1106."
-    recorded_at: "2026-09-22T17:29:25.071Z"
+    evidence_ref: "projection.test.ts 'A10: second witness' — the OHLC-derived faceted bounded-range composition embeds through the same implementation: retained, panels AAA/BBB, each carrying {low, high, [close, open]}, no form vocabulary. Run on landed main@5754a432: vitest analytical 1106/1106."
+    recorded_at: "2026-09-22T17:30:04.622Z"
   - criterion_id: A10
     status: pass
     evidence_ref: "projection.test.ts 'A10: second witness' — the OHLC-derived faceted bounded-range composition embeds through the same implementation: retained, panels AAA/BBB, each carrying {low, high, [close, open]}, no form vocabulary. Run on landed main@5754a432: vitest analytical 1106/1106."
