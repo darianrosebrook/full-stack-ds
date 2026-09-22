@@ -80,9 +80,13 @@ import {
   unitsCommensurable,
   qualifyRelation,
   projectQualifiedRelation,
+  selectQualifiedProgram,
+  lowerSelectedProgram,
+  decodeQualifiedReadback,
 } from "./projection.js";
 import type { Composite, CompositePart, CompositeVerdict, Enumeration, OperationJudgment, AggregateAssertionDecl, Program, ResultFacts, Row, TargetInventory } from "./projection.js";
 import type { RelationalStructure, UnitDecl } from "./relation-model.js";
+import { QUALIFIED_DIAG } from "./codes.js";
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const DOCTRINE = path.resolve(HERE, "../../../../docs/architecture/analytical-relation-doctrine.md");
@@ -2247,13 +2251,22 @@ describe("RESTART piece 4: the swap is observed in the thing produced", () => {
 });
 
 /* ---------------------------------------------------------------------------
- * RESTART piece 5 — THE SOURCE-GRAIN INTEGRATION (REL-SOURCE-GRAIN-01)
+ * RESTART piece 5 — THE SOURCE-GRAIN RESULT FAMILY (REL-SOURCE-GRAIN-02)
  *
  * The decisive falsifier: a margin-preserving perturbation (+1, −1, −1, +1 on
  * the four closes) violates every declared bound while BOTH aggregate views —
  * by symbol and by period — remain bit-identical. The qualified relation
  * result carries the joint observation so the judgment sees what the margins
  * discard.
+ *
+ * This slice conserves judgment and realization: standing is three-valued
+ * (qualified / contradicted / unproven) with the diagnostics scoped to their
+ * own observations; realization runs through a SELECTED program from the
+ * declared lowering set; the artifact is produced only by lowering that
+ * selection; and the output-only decoder recovers what the artifact alone
+ * carries. The controls are the compact adversarial set: baseline, cross-symbol
+ * swap, margin-preserving perturbation, unreadable-value neighbour, rename,
+ * row-order.
  * ------------------------------------------------------------------------- */
 
 describe("RESTART piece 5: the source-grain qualified relation", () => {
@@ -2268,6 +2281,13 @@ describe("RESTART piece 5: the source-grain qualified relation", () => {
     return rs.map((r) => { const v = deltas[i++ % deltas.length]!; return { ...r, close: (r.close as number) + v }; });
   };
   const q = (rs?: Array<Record<string, unknown>>) => qualifyRelation(struct, "candles", rs ?? pop);
+  // The unreadable-value NEIGHBOUR: one participating value unreadable, every
+  // other row readable and within bounds. `relabel` makes ONLY that value
+  // readable again — the evidence-availability-only change.
+  const unreadable = pop.map((r, i) => (i === 0 ? { ...r, close: "NOT_A_NUMBER" } : r));
+  const relabel = unreadable.map((r, i) => (i === 0 ? { ...r, close: pop[0]!.close } : r));
+  // A ONE-ROW violator: only observation 0 is pushed past its own high.
+  const oneRowViolation = pop.map((r, i) => (i === 0 ? { ...r, close: (r.high as number) + 1 } : r));
 
   it("A1: four distinct structured (symbol, period) observations with their own values", () => {
     const r = q();
@@ -2281,22 +2301,83 @@ describe("RESTART piece 5: the source-grain qualified relation", () => {
     }
   });
 
-  it("A2: the baseline is admissible; BOTH hostile populations produce REL_FIELD_BOUNDS_VIOLATED through the same qualification", () => {
+  it("A1: the four populations stand qualified, contradicted, contradicted and unproven — and evidence availability alone moves only standing/evidence facts", () => {
     const baseline = q();
-    expect(baseline.judgment.admissible).toBe(true);
+    expect(baseline.judgment.standing).toBe("qualified");
     expect(baseline.judgment.boundsViolations).toEqual([]);
+    expect(baseline.judgment.evidenceGaps).toEqual([]);
 
     const swapped = q(swapClose(pop));
-    expect(swapped.judgment.admissible).toBe(false);
+    expect(swapped.judgment.standing).toBe("contradicted");
     expect(swapped.judgment.boundsViolations.length).toBeGreaterThan(0);
     for (const v of swapped.judgment.boundsViolations) {
-      expect(v.code).toBe("REL_FIELD_BOUNDS_VIOLATED");
-      expect(v.subject).toContain("candles");
+      expect(v.code).toBe(QUALIFIED_DIAG.BOUNDS_ROW_VIOLATED);
+      expect(v.subject).toBe("candles.close");
     }
 
     const perturbed = q(marginPerturb(pop));
-    expect(perturbed.judgment.admissible).toBe(false);
+    expect(perturbed.judgment.standing).toBe("contradicted");
     expect(perturbed.judgment.boundsViolations.length).toBeGreaterThan(0);
+
+    const gapped = q(unreadable);
+    expect(gapped.judgment.standing).toBe("unproven");
+    // Missing evidence is NOT contradiction and NOT admission: a named gap, no violation.
+    expect(gapped.judgment.boundsViolations).toEqual([]);
+    expect(gapped.judgment.evidenceGaps.length).toBeGreaterThan(0);
+    for (const g of gapped.judgment.evidenceGaps) {
+      expect(g.subject).toBe("candles.close");
+      expect(g.observation).toBe(0);
+      expect(g.key).toEqual([{ field: "symbol", value: pop[0]!.symbol as string }, { field: "period", value: pop[0]!.period as string }]);
+    }
+
+    // Making ONLY the unreadable value readable moves the standing and the
+    // evidence facts — and nothing else: the relation, grain bindings and
+    // field facts are identical, and the only admitted-value difference is the
+    // one field whose availability changed, on the one observation that
+    // carried it.
+    const relabeled = q(relabel);
+    expect(relabeled.judgment.standing).toBe("qualified");
+    expect(relabeled.judgment.evidenceGaps).toEqual([]);
+    expect(relabeled.fieldFacts).toEqual(gapped.fieldFacts);
+    expect(relabeled.grain).toEqual(gapped.grain);
+    expect(relabeled.relation).toBe(gapped.relation);
+    expect(relabeled.observations.map((o) => o.key)).toEqual(gapped.observations.map((o) => o.key));
+    expect(relabeled.observations.length).toBe(gapped.observations.length);
+    for (let i = 0; i < relabeled.observations.length; i++) {
+      const a = relabeled.observations[i]!.values;
+      const b = gapped.observations[i]!.values;
+      if (i === 0) {
+        expect(Object.keys(a)).toEqual(Object.keys(b));
+        expect(a.close).not.toBe(b.close);
+      } else {
+        expect(a).toEqual(b);
+      }
+    }
+  });
+
+  it("A2: a violation is scoped to its own observation — unrelated rows decode as uncontradicted", () => {
+    const mixed = q(oneRowViolation);
+    expect(mixed.judgment.standing).toBe("contradicted");
+    expect(mixed.judgment.boundsViolations.length).toBe(1);
+    const v = mixed.judgment.boundsViolations[0]!;
+    expect(v.observation).toBe(0);
+    expect(v.field).toBe("close");
+    expect(v.subject).toBe("candles.close");
+    expect(v.key).toEqual([{ field: "symbol", value: pop[0]!.symbol as string }, { field: "period", value: pop[0]!.period as string }]);
+
+    // The artifact carries the scoped diagnostics; only observation 0 is
+    // contradicted, and no observation is unproven.
+    const artifact = projectQualifiedRelation(mixed);
+    expect(artifact.kind).toBe("readback");
+    if (artifact.kind !== "readback") return;
+    const decoded = decodeQualifiedReadback(artifact);
+    expect(decoded.standing).toBe("contradicted");
+    expect(decoded.contradicted).toEqual([0]);
+    expect(decoded.unproven).toEqual([]);
+    // The other three rows are present with their own values, untouched by the
+    // one row's contradiction.
+    expect(decoded.observations.length).toBe(4);
+    expect(decoded.observations[1]!.values).toEqual(mixed.observations[1]!.values);
   });
 
   it("the margin-preserving perturbation violates bounds while BOTH aggregate views remain identical", () => {
@@ -2309,43 +2390,132 @@ describe("RESTART piece 5: the source-grain qualified relation", () => {
     expect(afterP.total).toBe(beforeP.total);
   });
 
-  it("A3: the produced artifact carries the observations and judgment, and a value-to-key association mutation is detected from the artifact alone", () => {
+  it("A3: selection is a declared-lowering fact — unsupported, nothing-to-realize, selected — never derived from observation count", () => {
+    const populated = q();
+    const empty = qualifyRelation(struct, "candles", []);
+
+    // A lawful populated result under an intent no declared lowering serves:
+    // unsupported, and the orchestration produces no artifact for it.
+    const unsupported = selectQualifiedProgram(populated, { kind: "aggregate" });
+    expect(unsupported.kind).toBe("unsupported");
+    expect(projectQualifiedRelation(populated, { kind: "aggregate" }).kind).toBe("unsupported");
+
+    // The declared intent over a zero-observation result: nothing-to-realize,
+    // again with no artifact.
+    const nothing = selectQualifiedProgram(empty, { kind: "readback" });
+    expect(nothing.kind).toBe("nothing-to-realize");
+    expect(projectQualifiedRelation(empty).kind).toBe("nothing-to-realize");
+
+    // The declared intent over populated results: selected — and the standing
+    // does not move it. Baseline, both hostile populations and the unreadable
+    // neighbour are ALL selected under the same request: evidence availability
+    // changes standing, never selection.
+    expect(selectQualifiedProgram(populated, { kind: "readback" }).kind).toBe("selected");
+    expect(selectQualifiedProgram(q(marginPerturb(pop)), { kind: "readback" }).kind).toBe("selected");
+    expect(selectQualifiedProgram(q(swapClose(pop)), { kind: "readback" }).kind).toBe("selected");
+    expect(selectQualifiedProgram(q(unreadable), { kind: "readback" }).kind).toBe("selected");
+  });
+
+  it("A4: the artifact is produced only by lowering a selected program; the program is the qualified result itself", () => {
     const r = q();
+    const selection = selectQualifiedProgram(r, { kind: "readback" });
+    expect(selection.kind).toBe("selected");
+    if (selection.kind !== "selected") return;
+    // The program consumes the ONE qualified result — identity, not a copy or
+    // a reconstruction.
+    expect(selection.program.result).toBe(r);
+
+    const lowered = lowerSelectedProgram(selection.program);
+    expect(lowered.kind).toBe("readback");
+    expect(lowered.relation).toBe("candles");
+    expect(lowered.observations).toEqual(r.observations);
+    expect(lowered.judgment).toEqual(r.judgment);
+
+    // Through the orchestration the same path is the only artifact producer:
+    // unsupported requests and empty populations return their selection kinds.
     const artifact = projectQualifiedRelation(r);
     expect(artifact.kind).toBe("readback");
-    if (artifact.kind !== "readback") return;
-    // Decode from the artifact ALONE: the four tuples and their values.
-    expect(artifact.observations.length).toBe(4);
-    // Mutate a value-to-key association inside the artifact.
-    const mutated = JSON.parse(JSON.stringify(artifact.observations)) as Array<{ key: Array<{ field: string; value: string }>; values: Record<string, number | string> }>;
-    mutated[0]!.values["close"] = 999;
-    expect(mutated).not.toEqual(artifact.observations);
   });
 
-  it("A4: selection matters — a qualified result with NO observations produces no artifact", () => {
-    const empty = qualifyRelation(struct, "candles", []);
-    const proj = projectQualifiedRelation(empty);
-    expect(proj.kind).toBe("refused");
+  it("A5: one object flows end to end — mutating the source rows after qualification cannot change the artifact", () => {
+    const localRows = pop.map((r) => ({ ...r }));
+    const r = qualifyRelation(struct, "candles", localRows);
+    const before = projectQualifiedRelation(r);
+
+    // Mutate the SOURCE POPULATION after qualification. The selected program
+    // consumed the qualified result; the rows are not part of it, so the
+    // lowering cannot see this.
+    localRows[0]!.close = 99999;
+    const after = projectQualifiedRelation(r);
+    expect(after).toEqual(before);
+    expect(after).toEqual(projectQualifiedRelation(r));
   });
 
-  it("A5: the declared temporal kind is carried and an undeclared field carries none", () => {
+  it("applicability: the declared temporal kind is carried and an undeclared field carries none", () => {
     const r = q();
     expect(r.fieldFacts.period?.temporality?.kind).toBeDefined();
     expect(r.fieldFacts.close?.temporality).toBeUndefined();
   });
 
-  it("applicability: a malformed bounds reference is refused at qualification, not carried as a diagnostic", () => {
+  it("A7: a malformed bounds reference is refused at qualification, not carried as a diagnostic", () => {
     const bad = { ...struct, relations: { candles: { ...struct.relations.candles!, fields: { ...struct.relations.candles!.fields!, close: { transformation: "ratio", bounds: { lower: "typo_low", upper: "high" } } } } } } as unknown as RelationalStructure;
     expect(() => qualifyRelation(bad, "candles", pop)).toThrow(/does not declare/);
   });
 
-  it("applicability: an unreadable participating value produces no bounds violation — missing evidence, not contradiction", () => {
-    const unreadable = pop.map((r, i) => (i === 0 ? { ...r, close: "NOT_A_NUMBER" } : r));
-    const r = q(unreadable);
-    expect(r.judgment.boundsViolations).toEqual([]);
+  it("A7: a malformed grain member is refused at the same boundary — a supplied-or-absent row value cannot authorize the reference", () => {
+    const badGrain = { ...struct, relations: { candles: { ...struct.relations.candles!, grain: ["symbol", "does_not_exist"], fields: { ...struct.relations.candles!.fields! } } } } as unknown as RelationalStructure;
+    expect(() => qualifyRelation(badGrain, "candles", pop)).toThrow(/does not declare/);
   });
 
-  it("A7: a consistent rename of relation, grain, fields, bounds references and rows preserves the qualified result", () => {
+  it("A6: output-only recovery is substantive — keys, values, relationship facts and standing come from the artifact alone, and targeted mutations alter the recovery", () => {
+    const r = q();
+    const artifact = projectQualifiedRelation(r);
+    expect(artifact.kind).toBe("readback");
+    if (artifact.kind !== "readback") return;
+    const decoded = decodeQualifiedReadback(artifact);
+
+    // The recovery EQUALS the qualified result's content — not merely a
+    // different array: bindings, values, facts and standing all match.
+    expect(decoded.relation).toBe("candles");
+    expect(decoded.grain).toEqual(["symbol", "period"]);
+    expect(decoded.observations).toEqual(r.observations.map((o) => ({ key: o.key.map((k) => ({ ...k })), values: { ...o.values } })));
+    expect(decoded.boundsFacts.close).toEqual(r.fieldFacts.close?.bounds);
+    expect(decoded.boundsFacts.close).toBeDefined();
+    expect(decoded.temporalityFacts.period).toEqual(r.fieldFacts.period?.temporality);
+    expect(decoded.standing).toBe(r.judgment.standing);
+    expect(decoded.contradicted).toEqual([]);
+    expect(decoded.unproven).toEqual([]);
+
+    // Mutating a key/value association INSIDE the artifact alters what a
+    // consumer recovers — the decoder reads the artifact; it does not re-derive.
+    const mutatedAssociation = JSON.parse(JSON.stringify(artifact)) as typeof artifact;
+    mutatedAssociation.observations[0]!.key[1]!.value = "MUTATED";
+    const recoveredAssociation = decodeQualifiedReadback(mutatedAssociation);
+    expect(recoveredAssociation.observations[0]!.key[1]!.value).toBe("MUTATED");
+    expect(recoveredAssociation.observations).not.toEqual(decoded.observations);
+
+    // Mutating a VALUE alters the recovery too.
+    const mutatedValue = JSON.parse(JSON.stringify(artifact)) as { observations: Array<{ key: Array<{ field: string; value: string }>; values: Record<string, number | string> }> };
+    mutatedValue.observations[1]!.values["close"] = 999;
+    expect(decodeQualifiedReadback(mutatedValue as unknown as typeof artifact).observations).not.toEqual(decoded.observations);
+
+    // Mutating the STANDING alters the recovery: standing is carried content,
+    // not a property of the decoder's mood.
+    const mutatedStanding = JSON.parse(JSON.stringify(artifact)) as typeof artifact;
+    mutatedStanding.judgment.standing = "contradicted";
+    expect(decodeQualifiedReadback(mutatedStanding).standing).toBe("contradicted");
+
+    // The same decode path carries the scoped diagnostics of a hostile
+    // population: the contradicted facts arrive with their observation keys.
+    const hostile = projectQualifiedRelation(q(marginPerturb(pop)));
+    expect(hostile.kind).toBe("readback");
+    if (hostile.kind !== "readback") return;
+    const hostileDecoded = decodeQualifiedReadback(hostile);
+    expect(hostileDecoded.standing).toBe("contradicted");
+    expect(hostileDecoded.contradicted.length).toBeGreaterThan(0);
+  });
+
+  it("A8: a consistent rename of relation, grain, fields, bounds references and rows preserves the qualified result", () => {
     const renamed = {
       relations: { s: { grain: ["ss", "pp"], fields: {
         ss: { transformation: "nominal" }, pp: { transformation: "interval", temporality: { kind: "interval" } },
@@ -2360,8 +2530,10 @@ describe("RESTART piece 5: the source-grain qualified relation", () => {
     const renamedReordered = [renamedRows[2]!, renamedRows[0]!, renamedRows[3]!, renamedRows[1]!];
     const a = qualifyRelation(renamed, "s", renamedRows);
     const b = qualifyRelation(renamed, "s", renamedReordered);
-    // The judgments are equivalent (no violations in either).
-    expect(a.judgment.admissible).toBe(b.judgment.admissible);
+    // The judgments are equivalent (qualified in either: no violations, no gaps).
+    expect(a.judgment.standing).toBe(b.judgment.standing);
+    expect(a.judgment.boundsViolations).toEqual(b.judgment.boundsViolations);
+    expect(a.judgment.evidenceGaps).toEqual(b.judgment.evidenceGaps);
     // The observations are the same set modulo the rename and reorder.
     const norm = (r: typeof a) => r.observations.map((o) => JSON.stringify(o)).sort();
     expect(norm(b)).toEqual(norm(a));
