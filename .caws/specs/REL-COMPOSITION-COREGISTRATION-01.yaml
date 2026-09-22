@@ -88,3 +88,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A6: a consistent rename of relation, fields, bounds references, rows and views yields equivalent normalized verdicts' — lawful and refusal paths both equivalent under the rename by normalized fields (kind, causes/obligation vocabulary, attribution, channels); detail prose differs by spelling and is excluded. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
     recorded_at: "2026-09-22T04:19:22.645Z"
+  - criterion_id: A7
+    status: pass
+    evidence_ref: "projection.test.ts 'A7: the precommitted positional mutants are killed in opposite directions' — key-positional mutant refuses the LAWFUL reordered pair (false refusal) while the real rule retains it; cardinality-only mutant accepts the UNLAWFUL key-changed pair (false acceptance, cardinality asserted equal) while the real rule refuses it. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
+    recorded_at: "2026-09-22T04:19:23.192Z"
