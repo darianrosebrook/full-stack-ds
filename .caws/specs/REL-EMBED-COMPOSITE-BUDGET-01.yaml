@@ -2,9 +2,10 @@ id: REL-EMBED-COMPOSITE-BUDGET-01
 title: 'M3 embed composition: a composed analytical object is typed against a cell budget from its complete outward reading'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: embed-01
 created_at: '2026-09-22T17:19:36.799Z'
-updated_at: '2026-09-22T17:19:36.799Z'
+updated_at: '2026-09-22T17:19:53.288Z'
 created_by_session: 'session-bd42da68-ec3b-4aed-b4b4-701f8fc1b865'
 blast_radius:
   modules:
