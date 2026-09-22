@@ -25,7 +25,7 @@ if (!support.supported) {
       (frame) =>
         new Promise<void>((resolve) => {
           frame.addEventListener("load", () => resolve(), { once: true });
-          frame.src = "/site.html";
+          frame.src = `/site.html?device=${frame.id.replace("screen-", "")}`;
         }),
     ),
   );

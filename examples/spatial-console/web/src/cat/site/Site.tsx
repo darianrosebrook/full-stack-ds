@@ -14,6 +14,7 @@ import {
   TextField,
 } from "@full-stack-ds/react";
 import type { SiteStore } from "../site-store";
+import { DeviceKeyboard } from "./DeviceKeyboard";
 
 const WORD_GOAL = 50;
 
@@ -21,7 +22,7 @@ function wordCount(text: string): number {
   return text.trim() ? text.trim().split(/\s+/).length : 0;
 }
 
-export function Site({ store }: { store: SiteStore }) {
+export function Site({ store, onScreenKeyboard = false }: { store: SiteStore; onScreenKeyboard?: boolean }) {
   const state = useSyncExternalStore(store.subscribe, store.get);
   const words = wordCount(state.draft);
   const longestRun = Math.max(0, ...(state.draft.match(/(.)\1*/g) ?? []).map((run) => run.length));
@@ -102,6 +103,7 @@ export function Site({ store }: { store: SiteStore }) {
           </Card>
         </aside>
       </main>
+      {onScreenKeyboard && <DeviceKeyboard />}
     </div>
   );
 }

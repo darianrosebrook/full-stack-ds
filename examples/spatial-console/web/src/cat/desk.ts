@@ -305,8 +305,14 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
   body.position.set(0, 0.6, 0.9);
   cat.add(body);
 
+  // Chest: a fur mass bridging head and body that the shoulders sit inside,
+  // so the arms' shoulder ends stay buried however far the cat leans.
+  const chest = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), fur);
+  chest.scale.set(0.9, 0.5, 0.62);
+  chest.position.set(0, 1.0, -0.45);
+  cat.add(chest);
   // Shoulders are in the cat's frame, so they travel with a lean.
-  const catShoulder = (side: number) => new THREE.Vector3(side * 0.62 - 0.05, 1.05, -0.7);
+  const catShoulder = (side: number) => new THREE.Vector3(side * 0.5, 1.02, -0.5);
   const makePaw = (side: "left" | "right"): PawState => {
     const sign = side === "left" ? -1 : 1;
     const restKey = side === "left" ? "KeyF" : "KeyJ";
@@ -392,10 +398,17 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     pawFor(device).target.copy(screenWorld(screens[device], x, y));
   };
 
-  // Typing on a tablet or phone: the paw taps along the focused field, at the
-  // key's place across the keyboard, so a key-mash walks across the field.
+  // Typing on a tablet or phone: the paw taps the key on the device's
+  // on-screen keyboard. A key that keyboard lacks (digits, modifiers) is
+  // tapped along the focused field at its place across a keyboard instead.
   const typeOnScreen = (device: "tablet" | "phone", code: string) => {
     const doc = screens[device].contentDocument!;
+    const onScreenKey = doc.querySelector(`[data-device-keyboard][data-open] [data-key-code="${code}"]`);
+    if (onScreenKey) {
+      const r = onScreenKey.getBoundingClientRect();
+      tapScreen(device, r.left + r.width / 2, r.top + r.height / 2);
+      return;
+    }
     const field = doc.activeElement && doc.activeElement !== doc.body ? doc.activeElement.getBoundingClientRect() : null;
     const s = screenFor(device);
     const cell = keyCell(code);

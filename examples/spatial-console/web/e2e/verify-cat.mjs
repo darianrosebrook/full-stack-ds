@@ -162,8 +162,8 @@ try {
   // the right paw. Clicking the draft field there focuses it, and typing
   // taps along that field instead of slapping laptop keys.
   const handheld = [
-    { id: "screen-tablet", device: "tablet", paw: "left", leanSign: -1, text: "hi" },
-    { id: "screen-phone", device: "phone", paw: "right", leanSign: 1, text: "yo" },
+    { id: "screen-tablet", device: "tablet", paw: "left", leanSign: -1, text: "hi", clickKey: { code: "KeyO", char: "o" } },
+    { id: "screen-phone", device: "phone", paw: "right", leanSign: 1, text: "yo", clickKey: { code: "Period", char: "." } },
   ];
   for (const h of handheld) {
     const at = await page.evaluate((id) => {
@@ -188,44 +188,94 @@ try {
         hover.mode === h.device && hover.dx < 0.03 && hover.dz < 0.03,
       hover);
 
+    const keyboardState = () => page.evaluate(() => Object.fromEntries(
+      ["screen-laptop", "screen-tablet", "screen-phone"].map((id) => {
+        const kb = document.getElementById(id).contentDocument.querySelector("[data-device-keyboard]");
+        if (!kb) return [id, "absent"];
+        const r = kb.getBoundingClientRect();
+        const vh = document.getElementById(id).contentWindow.innerHeight;
+        // Open = flagged open and fully on-screen, docked to the bottom.
+        return [id, kb.hasAttribute("data-open") && Math.abs(r.bottom - vh) < 1 ? "open" : r.top >= vh - 1 ? "hidden" : "moving"];
+      })));
+    const keyboardBefore = await keyboardState();
+
     const slapBefore = await page.evaluate(() => window.__typingCat.lastSlap()?.at ?? null);
     await page.mouse.click(at.window.x, at.window.y);
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(450);
     const click = await page.evaluate((id) => ({
       tap: window.__typingCat.lastTap(),
       focusedHere: document.getElementById(id).contentDocument.activeElement?.getAttribute("name") ?? null,
     }), h.id);
+    const keyboardFocused = await keyboardState();
+    check(`A5 clicking the ${h.device}'s field taps it with the ${h.paw} paw and focuses it there`,
+      click.tap?.device === h.device && click.tap?.paw === h.paw && click.focusedHere === "draft", click);
+    const others = handheld.filter((o) => o.id !== h.id).map((o) => o.id);
+    check(`A5 focusing the ${h.device}'s field slides up its on-screen keyboard (no other device's, none on the laptop)`,
+      keyboardBefore[h.id] === "hidden" && keyboardFocused[h.id] === "open" &&
+        others.every((o) => keyboardFocused[o] === "hidden") && keyboardFocused["screen-laptop"] === "absent",
+      { before: keyboardBefore, focused: keyboardFocused });
+
     await page.keyboard.press("End");
+    await page.waitForTimeout(150);
     const draftBefore = await page.evaluate(() => window.__typingCat.store.get().draft);
     const taps = [];
     for (const ch of h.text) {
       await page.keyboard.press(ch);
       await page.waitForTimeout(220);
-      taps.push(await page.evaluate(([id, paw]) => {
+      taps.push(await page.evaluate(([id, paw, code]) => {
         const c = window.__typingCat;
         const tap = c.lastTap();
-        const field = document.getElementById(id).contentDocument.querySelector("input[name=draft]").getBoundingClientRect();
+        const key = document.getElementById(id).contentDocument.querySelector(`[data-key-code="${code}"]`).getBoundingClientRect();
         const want = c.screenWorld(document.getElementById(id), tap.x, tap.y);
         const got = c.pawWorld(paw);
         return {
-          device: tap.device, paw: tap.paw,
-          onField: tap.x >= field.left && tap.x <= field.right && tap.y >= field.top && tap.y <= field.bottom,
+          code, device: tap.device, paw: tap.paw,
+          onKey: tap.x >= key.left && tap.x <= key.right && tap.y >= key.top && tap.y <= key.bottom,
           dx: +Math.abs(got.x - want.x).toFixed(4), dz: +Math.abs(got.z - want.z).toFixed(4),
         };
-      }, [h.id, h.paw]));
+      }, [h.id, h.paw, `Key${ch.toUpperCase()}`]));
     }
-    const after = await page.evaluate(() => ({
+    const afterTyping = await page.evaluate(() => ({
       draft: window.__typingCat.store.get().draft,
       slapAt: window.__typingCat.lastSlap()?.at ?? null,
       laptopField: document.getElementById("screen-laptop").contentDocument.querySelector("input[name=draft]").value,
     }));
-    check(`A5 clicking the ${h.device}'s field taps it with the ${h.paw} paw and focuses it there`,
-      click.tap?.device === h.device && click.tap?.paw === h.paw && click.focusedHere === "draft", click);
-    check(`A5 typing on the ${h.device} is tapped out by the ${h.paw} paw along its field, lands in the site, and slaps no laptop key`,
-      taps.every((t) => t.device === h.device && t.paw === h.paw && t.onField && t.dx < 0.03 && t.dz < 0.03) &&
-        after.draft === draftBefore + h.text && after.laptopField === after.draft && after.slapAt === slapBefore,
-      { taps, draftBefore, ...after });
+    check(`A5 typing on the ${h.device} is tapped out by the ${h.paw} paw on its on-screen keys, lands in the site, and slaps no laptop key`,
+      taps.every((t) => t.device === h.device && t.paw === h.paw && t.onKey && t.dx < 0.03 && t.dz < 0.03) &&
+        afterTyping.draft === draftBefore + h.text && afterTyping.laptopField === afterTyping.draft && afterTyping.slapAt === slapBefore,
+      { taps, draftBefore, ...afterTyping });
     await shot(page, `04-${h.device}`);
+
+    // Clicking a key where the device draws it types it; the field keeps focus.
+    const keyAt = await page.evaluate(([id, code]) => {
+      const frame = document.getElementById(id);
+      const r = frame.contentDocument.querySelector(`[data-key-code="${code}"]`).getBoundingClientRect();
+      return window.__typingCat.screenPoint(frame, r.left + r.width / 2, r.top + r.height / 2);
+    }, [h.id, h.clickKey.code]);
+    await page.mouse.click(keyAt.x, keyAt.y);
+    await page.waitForTimeout(250);
+    const afterKeyClick = await page.evaluate((id) => ({
+      draft: window.__typingCat.store.get().draft,
+      focusedHere: document.getElementById(id).contentDocument.activeElement?.getAttribute("name") ?? null,
+      tap: window.__typingCat.lastTap(),
+    }), h.id);
+    check(`A5 clicking the ${h.device}'s drawn '${h.clickKey.char}' key types it, taps it with the ${h.paw} paw, and keeps the field focused`,
+      afterKeyClick.draft === afterTyping.draft + h.clickKey.char && afterKeyClick.focusedHere === "draft" &&
+        afterKeyClick.tap?.paw === h.paw && afterKeyClick.tap?.device === h.device,
+      afterKeyClick);
+
+    // Tapping away from the field blurs it, and the keyboard slides away.
+    const awayAt = await page.evaluate((id) => {
+      const frame = document.getElementById(id);
+      const r = frame.contentDocument.querySelector(".site__brand").getBoundingClientRect();
+      return window.__typingCat.screenPoint(frame, r.left + r.width / 2, r.top + r.height / 2);
+    }, h.id);
+    await page.mouse.click(awayAt.x, awayAt.y);
+    await page.waitForTimeout(450);
+    const blurred = await page.evaluate((id) => document.getElementById(id).contentDocument.activeElement?.getAttribute("name") ?? null, h.id);
+    const keyboardBlurred = await keyboardState();
+    check(`A5 tapping away from the ${h.device}'s field blurs it and the keyboard slides away`,
+      blurred !== "draft" && keyboardBlurred[h.id] === "hidden", { blurredFocus: blurred, keyboard: keyboardBlurred });
   }
 
   // Back over the laptop, the cat straightens up.

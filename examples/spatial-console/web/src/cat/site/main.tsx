@@ -5,4 +5,11 @@ import "./site.css";
 import { resolveSiteStore } from "../site-store";
 import { Site } from "./Site";
 
-createRoot(document.getElementById("root") as HTMLElement).render(<Site store={resolveSiteStore()} />);
+// The desk loads each frame with ?device=laptop|tablet|phone; handheld
+// devices get an on-screen keyboard.
+const device = new URLSearchParams(location.search).get("device") ?? "laptop";
+document.documentElement.dataset.device = device;
+
+createRoot(document.getElementById("root") as HTMLElement).render(
+  <Site store={resolveSiteStore()} onScreenKeyboard={device === "tablet" || device === "phone"} />,
+);
