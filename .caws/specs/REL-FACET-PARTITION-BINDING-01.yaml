@@ -87,3 +87,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A3: row order is irrelevant' — reordering the input before qualification leaves normalized panels equal, while the precommitted positional mutant (panel value = index % 2) provably changes under the same reorder and never names the carried coordinate value. Run on landed main@04774acc: vitest analytical 1095/1095."
     recorded_at: "2026-09-22T15:38:22.399Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "projection.test.ts 'A4: partition identity is sensitive' — moving one observation's station to S3 puts exactly that key in the S3 panel, removes exactly it from S2, and leaves the S1 panel byte-identical. Run on landed main@04774acc: vitest analytical 1095/1095."
+    recorded_at: "2026-09-22T15:38:22.912Z"
