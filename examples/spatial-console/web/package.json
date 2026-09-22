@@ -8,7 +8,8 @@
     "build": "vite build",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
-    "verify:runtime": "node e2e/verify-runtime.mjs"
+    "verify:runtime": "node e2e/verify-runtime.mjs",
+    "verify:cat": "node e2e/verify-cat.mjs"
   },
   "dependencies": {
     "@full-stack-ds/lit": "workspace:*",

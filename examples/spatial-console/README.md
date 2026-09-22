@@ -67,3 +67,30 @@ web/e2e/verify-runtime.mjs   runtime verifier (see Evidence)
 - **No visual-quality or text-legibility claim at grazing angles.** Textures are 1× element pixels with linear filtering and no mipmaps.
 - **Accessibility is only partly covered.** A DevTools MCP review (flagged Chrome, DPR 2, dark mode) found every control in all three panels in the accessibility tree with the correct role, name and state. Tab reaches the drawn React switch and Space toggles the lamp. Not established: whether a focus indicator appears in the drawn texture (none was visible on the focused switch), screen-reader geometry on the older path, and focus order across panels.
 - **Not a rail member and not in CI.** The runtime verifier needs a flagged local Chrome and a running dev server.
+
+## Typing cat (`web/cat.html`)
+
+A second page on the same shim: the typing-cat meme seen over the cat's shoulder. A laptop, tablet and phone on a desk each show one live React site built from public `@full-stack-ds/react` exports. The cat is a puppet for **your** input and never types on its own.
+
+- **Three devices, one site.** Each screen is a same-origin `<iframe>` drawable at the device's CSS width (1280, 768, 390), so the site's media queries see a real viewport: the laptop gets the desktop layout, the tablet the tablet layout, the phone the mobile layout. The DS ships no responsive layout, so the three layouts are app-layer CSS in `src/cat/site/site.css`. The frames share one store (`src/cat/site-store.ts`, published on the parent window before the frames load), so what you type shows on all three screens.
+- **Each paw slaps its half of the keyboard.** The split is by `KeyboardEvent.code` (`src/cat/keyboard-layout.ts`, unit-tested): the first five character keys of each row (1–5, Q–T, A–G, Z–B) and the modifiers to their left go to the left paw. Everything else goes to the right paw, and Space takes both. `code` keeps the split on the physical key under any keyboard layout.
+- **The right paw rides the trackpad across the laptop's viewport.** The pointer's window position is mapped back through the laptop screen's projection (an inverted plane homography, `src/cat/trackpad.ts`, unit-tested) into laptop-viewport pixels. That fraction of the viewport is where the paw sits on the pad. A pointer off the laptop screen pins the paw to the nearest edge of the pad. Clicks tap, and a right-side key takes the paw back to the keys. Key and pointer events inside a frame never reach the parent, so the desk listens in every frame too and maps frame coordinates back to the window through that screen's projection.
+- **Screens are real input surfaces.** A click where a screen draws a control lands on that control, as on the spatial console.
+
+`e2e/verify-cat.mjs` (`pnpm -F @full-stack-ds/example-spatial-console-web verify:cat`, needs the dev server running) uses trusted input only. It checks:
+
+- **Layouts:** each frame's computed style matches the layout expected for its device.
+- **Paw split:** both sides of the split in every row (1/5/6/0, Q/T/Y/P, A/G/H/L, Z/B/N/M) are slapped by the expected paw, and that paw lands on the key.
+- **Typing:** the typed text reads back from all three screens.
+- **Space:** it is slapped by both paws.
+- **Trackpad:** at four points on the laptop screen, the paw's trackpad position equals the pointer's place in the laptop viewport. A point over the tablet pins it to the left edge.
+- **Clicks:** clicking where the tablet draws "Order treats" orders one, and the phone shows the count.
+- **Framing:** the tablet is left, the phone right, and the paws below the laptop screen.
+
+Screenshots and `report.json` go to `test-results/typing-cat/`.
+
+Non-claims beyond the spatial console's:
+
+- Paw pose is checked by position, not by how it looks.
+- The framing check is a coarse layout assertion. Whether the scene reads like the reference photo is a judgment from the screenshots.
+- The tablet and phone text is small at this camera distance.
