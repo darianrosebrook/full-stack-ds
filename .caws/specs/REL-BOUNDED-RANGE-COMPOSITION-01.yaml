@@ -89,3 +89,7 @@ evidence:
     status: pass
     evidence_ref: placeholder-A7
     recorded_at: "2026-09-22T13:54:47.884Z"
+  - criterion_id: A8
+    status: pass
+    evidence_ref: placeholder-A8
+    recorded_at: "2026-09-22T13:54:48.367Z"
