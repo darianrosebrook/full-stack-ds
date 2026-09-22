@@ -36,7 +36,7 @@ import type { AggregateOp, FieldDecl, RelationDecl, RelationalStructure, Tempora
 import type { GraphResult } from "./graph-projection.js";
 import { judge } from "./engines.js";
 import { codesOf, termsOf } from "./judgment.js";
-import { QUALIFIED_DIAG } from "./codes.js";
+import { COMPOSITION_DIAG, OBLIGATION, QUALIFIED_DIAG } from "./codes.js";
 import { CONTRACTS_DIR, loadOracle } from "./necessity.js";
 
 /* ------------------------------------------------------------------ types */
@@ -2061,9 +2061,37 @@ export type ScaleSharing = "shared" | "unshared";
  */
 export type AtomicRequest = { partitionDimension?: string };
 
+/**
+ * A QUALIFIED OPERAND: one field view of an ALREADY-QUALIFIED relational
+ * population, presented on one declared channel. The operand carries the
+ * qualified result itself — the ONE object, never the rows — so what the
+ * combinator rule sees is the structured source-grain observations the
+ * qualification produced, with their standing already attached.
+ */
+export type QualifiedPart = {
+  kind: "qualified";
+  result: QualifiedRelationResult;
+  /** The admitted field this view presents. A spelling declared by the relation, nothing more. */
+  field: string;
+  /** The channel the view presents the field on, from the fixed channel vocabulary. */
+  channel: Channel;
+};
+
 export type CompositePart =
   | { kind: "program"; program: Program; request?: AtomicRequest }
-  | { kind: "composite"; composite: Composite };
+  | { kind: "composite"; composite: Composite }
+  | QualifiedPart;
+
+/**
+ * The source-grain identity a qualified operand brings to composition: the
+ * normalized structured key of every observation it carries, SORTED, so the
+ * set can be compared as a set. Co-registration is set identity over these —
+ * never row order, never index, never cardinality, never field spelling.
+ */
+export type QualifiedOperandIdentity = { keys: readonly string[] };
+
+/** The canonical comparable form of one structured grain binding. */
+const normalizedKey = (key: QualifiedRelationResult["observations"][number]["key"]): string => JSON.stringify(key);
 
 export type LayerComposite = {
   combinator: "layer";
@@ -2126,6 +2154,8 @@ export type PartReading = {
   tasks: Task[];
   /** Present for an atomic part only: what `embed` needs to type a cell budget. */
   probe?: { coordinate: CoordinateSpace; baseline: BaselineDecl; task: Task; facts: ResultFacts };
+  /** Present for a qualified operand only: the structured source-grain identity it brings to composition. */
+  identity?: QualifiedOperandIdentity;
 };
 
 /**
@@ -2198,6 +2228,10 @@ export const COMPOSITION_NON_CLAIMS: readonly string[] = [
   "An embed reads its HOST for STANDING and not for its channels: a retained host establishes that the cell is a lawful projection, and the embed still presents the cell's channels upward. This experiment does not type a host frame inside a composite.",
   "The host is not required to be a tabular projection. The doctrine describes an embedded projection as the value of a cell in a tabular projection, and no cause names a host of the wrong coordinate, so inventing one here would be inventing vocabulary.",
   "`enumerate` enumerates ATOMIC projections. Composites are JUDGED by `judgeComposite` and are not enumerated as candidates, so this slice establishes that a composite's legality follows from its parts and the combinator, not that the lawful composite space is enumerable.",
+  "Co-registration between qualified operands is SET IDENTITY over structured source-grain keys, measured on the carried qualified results: it is not row order, not index, not cardinality, not field spelling, and not relation identity. The reordered-lawful and equal-cardinality/different-key controls exist to kill the positional implementations of exactly this.",
+  "The layer rule consumes the qualified operand's carried result; it never reopens rows and never re-runs qualification, so correspondence between operands is established by carried identity at the composition boundary and by nothing else.",
+  "A layer mixing a qualified operand with an aggregate program operand is outside this boundary and throws. Absent typing is neither a refusal nor a premise, and inventing a cross-family correspondence would be the claim-bearing decision this rule exists to keep analytical.",
+  "The co-registration rule adds no claim of its own: equal structured key sets establish that the operands refer to the same observations, not that their joint presentation carries any further analytical property.",
 ];
 
 const refusedComposition = (causes: string[], from: OperandRole, detail: string): CompositeRefusal => ({
@@ -2280,6 +2314,68 @@ function readPart(part: Extract<CompositePart, { kind: "program" }>, input: Comp
   };
 }
 
+/**
+ * Read a QUALIFIED operand. The operand's standing is ITS OWN verdict, reached
+ * before any combinator rule runs: a contradicted result refuses here with the
+ * operand's own cause and the violated observations' structured keys named; an
+ * unproven result leaves the composite unproven with the operand's own
+ * obligation. Composition cannot erase or summarize an operand's standing —
+ * it can only inherit it. A qualified result reads to a retained channel view
+ * whose identity is the SORTED SET of normalized structured keys, and whose
+ * unit and transformation come from the structure's DECLARATION of the
+ * presented field — never from the rows, which are not part of a qualified
+ * result and would make correspondence re-derivable rather than carried.
+ */
+function readQualifiedPart(part: QualifiedPart, input: CompositeInput): PartVerdict {
+  const { result, field, channel } = part;
+  const rel = input.structure.relations[result.relation];
+  if (!rel) {
+    throw new Error(`readQualifiedPart: the operand presents relation ${result.relation}, which the structure does not declare — an inapplicable request, not a judgment`);
+  }
+  const fields = (rel.fields ?? {}) as Record<string, Record<string, unknown>>;
+  if (!(field in fields) || result.grain.includes(field)) {
+    throw new Error(`readQualifiedPart: the operand presents ${result.relation}.${field}, which the relation does not declare as a non-grain field — an inapplicable request, not a judgment`);
+  }
+  if (result.judgment.standing === "contradicted") {
+    const where = result.judgment.boundsViolations.map((v) => JSON.stringify(v.key)).join("; ");
+    return refusedComposition(
+      [QUALIFIED_DIAG.BOUNDS_ROW_VIOLATED],
+      "part",
+      `the qualified operand ${result.relation} carries a readable bounds contradiction at ${where}; the layer cannot present it as an uncomplicated operand`,
+    );
+  }
+  if (result.judgment.standing === "unproven") {
+    const where = result.judgment.evidenceGaps.map((g) => `${JSON.stringify(g.key)} (${g.participant} unreadable)`).join("; ");
+    return unprovenComposition(
+      OBLIGATION.BOUNDS_ROW_CONSISTENT,
+      "part",
+      `the qualified operand ${result.relation} leaves its declared bounds relationship unevaluated at ${where}; the composite cannot be more decided than its operand`,
+    );
+  }
+  const decl = fields[field] ?? {};
+  const channels = [channel];
+  const units: Partial<Record<Channel, UnitDecl>> = {};
+  const transformations: Partial<Record<Channel, Transformation>> = {};
+  const profile: Partial<Record<Channel, ScalePolicy>> = {};
+  if (decl.unit) units[channel] = decl.unit as UnitDecl;
+  if (decl.transformation) transformations[channel] = decl.transformation as Transformation;
+  // A qualified operand IS one view, so its channel presents one scale — the
+  // same statement an atomic projection makes, and what a parent layer reads.
+  profile[channel] = "shared";
+  return {
+    kind: "retained",
+    channels,
+    units,
+    transformations,
+    unitConflict: [],
+    unitUnestablished: [],
+    profile,
+    claims: [],
+    tasks: [],
+    identity: { keys: result.observations.map((o) => normalizedKey(o.key)).sort() },
+  };
+}
+
 function mergeReadings(parts: PartReading[]): PartReading {
   const channels = [...new Set(parts.flatMap((p) => p.channels))].sort();
   const units: Partial<Record<Channel, UnitDecl>> = {};
@@ -2358,8 +2454,57 @@ function mergeReadings(parts: PartReading[]): PartReading {
  * shared: declaring it unshared IS the dual-axis illegality, and declaring
  * nothing does not make it unshared, because marks in one space imply one scale.
  * A channel only one part reads shares nothing, so a declaration there is inert.
+ *
+ * SOURCE-GRAIN CO-REGISTRATION is decided first, for layers carrying qualified
+ * operands: the operands may share one coordinate space only when the
+ * observations they refer to are the SAME observations — equal structured
+ * source-grain key SETS. Row order, index and cardinality decide nothing; the
+ * sets are compared as sets. An equal-cardinality mismatch is an observed
+ * unregistration (refused); a difference in extent leaves which observation
+ * corresponds to which unresolved, and the population premise stays explicit
+ * (unproven) rather than silently intersecting the operands. Every illegality
+ * wins over any outstanding premise, the same order `deriveStatus` uses.
  */
 function judgeLayer(c: LayerComposite, parts: PartReading[]): CompositeVerdict {
+  // The comparison is over the identity the operands CARRIED — the qualified
+  // result's own structured keys. No operand's rows are reopened and no
+  // qualification is re-run: correspondence is carried, not reconstructed.
+  // (Family homogeneity — no qualified operand beside a program or
+  // sub-composite — is enforced before the parts are read.)
+  const identified = parts.map((p, i) => ({ i, identity: p.identity })).filter((x): x is { i: number; identity: QualifiedOperandIdentity } => x.identity !== undefined);
+  if (identified.length > 0) {
+    let unregistered: { a: number; b: number; onlyA: string[]; onlyB: string[] } | undefined;
+    let unmatched: { a: number; b: number; onlyA: string[]; onlyB: string[] } | undefined;
+    for (let i = 0; i < identified.length; i++) {
+      for (let j = i + 1; j < identified.length; j++) {
+        const ka = identified[i]!.identity.keys;
+        const kb = identified[j]!.identity.keys;
+        const onlyA = ka.filter((k) => !kb.includes(k));
+        const onlyB = kb.filter((k) => !ka.includes(k));
+        if (onlyA.length === 0 && onlyB.length === 0) continue;
+        const record = { a: identified[i]!.i, b: identified[j]!.i, onlyA, onlyB };
+        // Equal cardinality with differing keys is an OBSERVED mismatch; a
+        // difference in extent is an unresolved population premise. An
+        // illegality, once observed, is not demoted by a missing premise.
+        if (ka.length === kb.length) unregistered ??= record;
+        else unmatched ??= record;
+      }
+    }
+    if (unregistered) {
+      return refusedComposition(
+        [COMPOSITION_DIAG.LAYER_OPERANDS_UNCOREGISTERED],
+        "combinator",
+        `operands ${unregistered.a} and ${unregistered.b} claim one population at equal cardinality, but their structured source-grain key sets differ — keys only the first carries: [${unregistered.onlyA.join(", ")}], keys only the second carries: [${unregistered.onlyB.join(", ")}]`,
+      );
+    }
+    if (unmatched) {
+      return unprovenComposition(
+        "grain:coregistered",
+        "combinator",
+        `operands ${unmatched.a} and ${unmatched.b} do not carry the same observations — keys only the first carries: [${unmatched.onlyA.join(", ")}], keys only the second carries: [${unmatched.onlyB.join(", ")}] — so which observation corresponds to which is unresolved; the population premise is explicit, not silently intersected`,
+      );
+    }
+  }
   const merged = mergeReadings(parts);
   for (const ch of merged.channels) {
     const users = parts.filter((p) => p.channels.includes(ch));
@@ -2538,6 +2683,17 @@ export function judgeComposite(input: CompositeInput): CompositeJudgment {
 function judgeCompositeAt(input: CompositeInput, path: Array<number | "host">): CompositeJudgment {
   const { composite } = input;
   const parts = composite.combinator === "embed" ? [composite.part] : composite.parts;
+  // A LAYER'S OPERAND FAMILY is decided before any part is read. Qualified
+  // operands carry source-grain identity; aggregate programs and sub-composites
+  // do not, so a layer mixing them would have to INVENT the correspondence
+  // between its operands — the claim-bearing decision this boundary exists to
+  // keep analytical. An inapplicable request is not a judgment.
+  if (composite.combinator === "layer") {
+    const kinds = new Set(parts.map((p) => p.kind));
+    if (kinds.has("qualified") && kinds.size > 1) {
+      throw new Error("judgeLayer: a layer mixing a qualified operand with an aggregate program operand is not typed by this boundary; co-registration is decided between qualified operands — an inapplicable request, not a judgment");
+    }
+  }
   const readings: PartReading[] = [];
   const record: Array<{ path: Array<number | "host">; verdict: PartVerdict }> = [];
   let fault: CompositeVerdict | undefined;
@@ -2565,6 +2721,8 @@ function judgeCompositeAt(input: CompositeInput, path: Array<number | "host">): 
       // The inner tree's origins are carried out, not summarised away.
       record.push(...inner.parts);
       verdict = inner.verdict;
+    } else if (part.kind === "qualified") {
+      verdict = readQualifiedPart(part, input);
     } else {
       verdict = readPart(part, input);
     }
