@@ -80,3 +80,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A4: an unproven operand keeps the composite unproven' — operand with one unreadable participating value: composite unproven with the operand's own obligation bounds:row-consistent attributed from part, and the operand's disposition on the record at path 0. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
     recorded_at: "2026-09-22T04:19:21.502Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "projection.test.ts 'A5: a scoped contradiction refuses the composite with the operand's own cause' — one-row bounds violator: composite refused with causes=[REL_FIELD_BOUNDS_VIOLATED] attributed from part, detail naming the violated observation's structured key (KSFO); operand disposition on the record at path 0. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
+    recorded_at: "2026-09-22T04:19:22.069Z"
