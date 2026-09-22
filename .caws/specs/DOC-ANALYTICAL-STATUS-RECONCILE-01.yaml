@@ -2,9 +2,10 @@ id: DOC-ANALYTICAL-STATUS-RECONCILE-01
 title: 'Reconcile the canonical snapshot''s analytical row with the four landed M3 composition capabilities'
 risk_tier: 3
 mode: doc
-lifecycle_state: draft
+lifecycle_state: active
+worktree: doc-analytical-status
 created_at: '2026-09-22T17:14:28.119Z'
-updated_at: '2026-09-22T17:14:28.119Z'
+updated_at: '2026-09-22T17:14:38.059Z'
 created_by_session: 'session-bd42da68-ec3b-4aed-b4b4-701f8fc1b865'
 blast_radius:
   modules:
