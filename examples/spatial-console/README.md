@@ -57,11 +57,13 @@ web/e2e/verify-runtime.mjs   runtime verifier (see Evidence)
 3. **On the older path `changedElements` names the canvas's direct child, not the drawable descendant.** It also names the mount when the mount's transform changes, so panels re-upload every frame while the camera moves.
 4. **`backface-visibility` can't be used for culling.** The projected matrix's z row holds clip depth, not surface orientation. Panels facing away are marked `inert` from a projected-winding test instead.
 5. **Package finding (outside this lane's scope): the generated Vue components drop a template-passed `data-testid`.** Seen on `ToggleSwitch` and `Button`: the rendered element has no `data-testid` attribute, while `aria-label` passes through. The Vue unit tests pass `data-testid` via `attrs` but never assert that it lands. The verifier selects the Vue switch by `role` for now.
+6. **Package finding (outside this lane's scope): the React and Vue `CardHeader`s are exposed as `banner` landmarks.** Two cards give two page-level banners. Lit's header sits in shadow DOM and is not exposed as a banner.
+7. **Theme and density come with the tokens.** Under dark mode the panels render the dark theme from token CSS alone, with no lane code for it, and text stays sharp at DPR 2.
 
 ## Non-claims
 
 - **No occlusion-aware input.** Hit testing follows DOM order, not 3D depth. A panel drawn behind another panel or behind the object can still take the click if it's later in the DOM.
 - **One Chromium build, one scene layout.** No other engine, no Canary, no explainer-path execution.
 - **No visual-quality or text-legibility claim at grazing angles.** Textures are 1× element pixels with linear filtering and no mipmaps.
-- **No accessibility claim.** The panels are in the accessibility tree, but on the older path they carry no geometry information for assistive tech. Keyboard focus into drawn panels has not been checked.
+- **Accessibility is only partly covered.** A DevTools MCP review (flagged Chrome, DPR 2, dark mode) found every control in all three panels in the accessibility tree with the correct role, name and state. Tab reaches the drawn React switch and Space toggles the lamp. Not established: whether a focus indicator appears in the drawn texture (none was visible on the focused switch), screen-reader geometry on the older path, and focus order across panels.
 - **Not a rail member and not in CI.** The runtime verifier needs a flagged local Chrome and a running dev server.
