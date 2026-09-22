@@ -91,3 +91,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A4: partition identity is sensitive' — moving one observation's station to S3 puts exactly that key in the S3 panel, removes exactly it from S2, and leaves the S1 panel byte-identical. Run on landed main@04774acc: vitest analytical 1095/1095."
     recorded_at: "2026-09-22T15:38:22.912Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "projection.test.ts 'A5: an unresolvable partition refuses before panels exist' — partition 'hour' refuses with causes [REL_FACET_PARTITION_UNBOUND] attributed to combinator, detail names hour, and panels are undefined (no row-value defaulting). Run on landed main@04774acc: vitest analytical 1095/1095."
+    recorded_at: "2026-09-22T15:38:23.430Z"
