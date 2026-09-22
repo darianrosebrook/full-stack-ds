@@ -91,5 +91,5 @@ evidence:
     recorded_at: "2026-09-22T13:55:33.301Z"
   - criterion_id: A8
     status: pass
-    evidence_ref: placeholder-A8
-    recorded_at: "2026-09-22T13:54:48.367Z"
+    evidence_ref: "projection.test.ts 'A8: the derivation lives in judgeComposite, flips only for the generic reason, and conserves the existing rules' — lawful vs topology-variant ranges differ for exactly the endpoint-pair change; same-channel views still refused REL_LAYER_SCALE_UNSHARED (derivation does not bypass shared-scale rules); SECOND WITNESS: the real FX_P_OHLC_PAIR fixture derives {low, high, [close, open]} through the same spelling-blind rule. Run on landed main@0cc625f5: vitest analytical 1085/1085."
+    recorded_at: "2026-09-22T13:55:33.772Z"
