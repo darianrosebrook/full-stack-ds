@@ -46,3 +46,8 @@ acceptance:
     then: 'every relative link in the touched docs resolves'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "docs/current-implementation-snapshot.md analytical row (landed main@b05d933e): grep -c finds REL-SOURCE-GRAIN-02, REL-COMPOSITION-COREGISTRATION-01, REL-BOUNDED-RANGE-COMPOSITION-01, REL-FACET-PARTITION-BINDING-01 each once, each with its own NON-CLAIM sentence (qualified-family vocabulary not ratifying stage-2; co-registration is reference not further property; range says lower/upper/members only; aggregate-family facets keep partition unadjudicated and per-panel standing is not built)."
+    recorded_at: "2026-09-22T17:17:48.407Z"
