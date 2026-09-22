@@ -456,6 +456,7 @@ One row per **cause**. Cases — the observations that exhibit a cause, with the
 | `REL_MEANINGFULNESS_ORDINAL_MEAN` | meaningfulness | 1 | the mean is not invariant under monotone transformation of an ordinal scale | average satisfaction score |
 | `REL_MEANINGFULNESS_INTERVAL_RATIO` | meaningfulness | 1 | a ratio is undefined without a meaningful zero | bar of temperatures |
 | `REL_MEANINGFULNESS_INTERVAL_SUM` | meaningfulness | 1 | a sum is not invariant under the affine transformations an interval scale admits | total degrees |
+| `REL_FIELD_BOUNDS_VIOLATED` | bounds | 1 | a supplied observation falsifies a declared sibling-bounds relationship | a close outside its declared low and high |
 | `REL_MEANINGFULNESS_NOMINAL_ORDER_STAT` | meaningfulness | 1 | an order statistic needs an order the scale does not have | the biggest region code |
 | `REL_MEANINGFULNESS_CYCLIC_LINEAR_MEAN` | meaningfulness | 1 | a cyclic scale needs a circular mean; the linear mean depends on where the period is cut | mean of 23:00 and 01:00 is noon |
 | `REL_IDENTITY_AGGREGATED` | meaningfulness | 1 | a key is not a quantity; no aggregate over it is meaningful | total of the user ids |
