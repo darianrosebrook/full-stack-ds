@@ -64,3 +64,8 @@ contracts:
   - name: 'bounds-diagnostic'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/engines.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 5 A1: four distinct structured observations with their own values (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
+    recorded_at: "2026-09-22T00:51:15.407Z"
