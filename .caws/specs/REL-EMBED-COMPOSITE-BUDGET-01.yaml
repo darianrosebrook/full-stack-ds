@@ -116,5 +116,5 @@ evidence:
     recorded_at: "2026-09-22T17:30:04.622Z"
   - criterion_id: A10
     status: pass
-    evidence_ref: "projection.test.ts 'A10: second witness' — the OHLC-derived faceted bounded-range composition embeds through the same implementation: retained, panels AAA/BBB, each carrying {low, high, [close, open]}, no form vocabulary. Run on landed main@5754a432: vitest analytical 1106/1106."
-    recorded_at: "2026-09-22T17:29:25.515Z"
+    evidence_ref: "projection.test.ts 'A11: a presented channel whose only host needs an uncarried fact leaves the premise unproven' — budget [angle] for a composite presenting ratio: angle carries ratio but requiresCyclicOrWhole and the reading carries no cyclicity, so the verdict is unproven with obligation budget:channel-licence from combinator, neither a refusal nor an invented default. Run on landed main@5754a432: vitest analytical 1106/1106."
+    recorded_at: "2026-09-22T17:30:05.077Z"
