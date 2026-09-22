@@ -73,3 +73,7 @@ evidence:
     status: pass
     evidence_ref: PLACEHOLDER-A1
     recorded_at: "2026-09-22T17:28:59.585Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: PLACEHOLDER-A2
+    recorded_at: "2026-09-22T17:29:00.059Z"
