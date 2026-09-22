@@ -76,3 +76,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A2: a violation is scoped to its own observation' — one-row violator yields exactly one REL_FIELD_BOUNDS_VIOLATED naming subject candles.close, observation 0 and its structured key; decoded contradicted=[0], unproven=[], other three rows carry their own values untouched. Run on landed main@5967ed73: vitest analytical 1068/1068."
     recorded_at: "2026-09-22T03:23:33.204Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts 'A3: selection is a declared-lowering fact' — undeclared intent {kind:'aggregate'} over a populated result = unsupported; declared readback intent over zero observations = nothing-to-realize; neither produces an artifact; baseline/swap/perturbation/unreadable are ALL selected under the same request, so selection moves with the request and instance-existence, never with evidence availability or observation count. Run on landed main@5967ed73: vitest analytical 1068/1068."
+    recorded_at: "2026-09-22T03:23:47.554Z"
