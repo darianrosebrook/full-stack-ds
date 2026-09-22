@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RESTART piece 6 'A1: two views of one population compose lawfully, and reordering one operand's rows changes nothing' — two disjoint-channel qualified views of one population retained with combinator layer; the same population with one operand reordered before qualification retained with an equal normalized verdict (kind, combinator, channels, claims). Run on landed main@e6b54cf8: vitest analytical 1076/1076."
     recorded_at: "2026-09-22T04:19:06.107Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "projection.test.ts 'A2: equal cardinality cannot rescue a changed key' — cardinality equality asserted before composing; composite refused with causes=[REL_LAYER_OPERANDS_UNCOREGISTERED] attributed to combinator, detail naming the structured keys (KSFO, wed) not indices. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
+    recorded_at: "2026-09-22T04:19:06.688Z"
