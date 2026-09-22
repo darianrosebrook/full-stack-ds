@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Typing cat — Full-Stack DS example</title>
+    <link rel="icon" href="data:," />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #6d6862;
+        font-family: system-ui, sans-serif;
+      }
+      #desk {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        touch-action: none;
+      }
+      /* Each device screen is a same-origin iframe at the device's CSS width,
+         so the site's media queries see a real phone/tablet/laptop viewport.
+         The mount carries the projected hit-test transform (see
+         html-in-canvas.ts); the iframe itself is the drawable. */
+      #desk > .panel-mount {
+        width: max-content;
+        transform-origin: 0 0;
+      }
+      #desk iframe {
+        display: block;
+        border: 0;
+        background: #fff;
+      }
+      #unsupported {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        padding: 2rem;
+      }
+      #unsupported[hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="desk" content="drawable" layoutsubtree>
+      <div class="panel-mount"><iframe drawable id="screen-laptop" title="Laptop" width="1152" height="720"></iframe></div>
+      <div class="panel-mount"><iframe drawable id="screen-tablet" title="Tablet" width="768" height="1024"></iframe></div>
+      <div class="panel-mount"><iframe drawable id="screen-phone" title="Phone" width="390" height="844"></iframe></div>
+    </canvas>
+    <section id="unsupported" hidden role="alert">
+      <p>
+        The typing cat needs HTML-in-Canvas: launch Chrome with
+        <code>--enable-features=CanvasDrawElement --enable-experimental-web-platform-features</code>.
+        <span id="unsupported-detail"></span>
+      </p>
+    </section>
+    <script type="module" src="/src/cat/main.ts"></script>
+  </body>
+</html>
