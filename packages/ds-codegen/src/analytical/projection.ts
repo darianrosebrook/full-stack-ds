@@ -2116,6 +2116,32 @@ export interface DerivedBoundedRange {
 /** The canonical comparable form of one structured grain binding. */
 const normalizedKey = (key: QualifiedRelationResult["observations"][number]["key"]): string => JSON.stringify(key);
 
+/**
+ * The SHARED source-grain population a composite's operands carry: the sorted
+ * normalized keys for set identity, and the per-observation structured
+ * bindings a facet needs to resolve a partition coordinate. It travels upward
+ * through `mergeReadings` only when every operand carries one and they agree —
+ * a partition is bound against THIS and nothing else, never against rows or
+ * the relation declaration.
+ */
+export type QualifiedOperandPopulation = {
+  keys: readonly string[];
+  bindings: ReadonlyArray<ReadonlyArray<{ field: string; value: string }>>;
+};
+
+/**
+ * A panel DERIVED by a facet's partition binding: the carried value of the
+ * partition coordinate and the observations that belong to it (normalized
+ * structured keys, sorted). Membership says which observations belong
+ * together; it says nothing about traversal order. `ranges` is the inner
+ * composite's derived structure, carried UNRECONSTRUCTED into the panel.
+ */
+export interface DerivedFacetPanel {
+  value: string;
+  keys: readonly string[];
+  ranges: readonly DerivedBoundedRange[];
+}
+
 export type LayerComposite = {
   combinator: "layer";
   parts: CompositePart[];
@@ -2126,7 +2152,13 @@ export type LayerComposite = {
 export type FacetComposite = {
   combinator: "facet";
   parts: CompositePart[];
-  /** The column the projection repeats over. Carried, not adjudicated: see COMPOSITION_NON_CLAIMS. */
+  /**
+   * The source-grain coordinate the projection repeats over. For operands that
+   * carry a shared qualified population it is ADJUDICATED: every carried
+   * binding must resolve it, and the resulting panel membership is exposed on
+   * the verdict. For the aggregate family, which carries no source-grain
+   * population, it stays carried and unadjudicated — see COMPOSITION_NON_CLAIMS.
+   */
   partition: string;
   /** Declared per channel the parts read. Both values are legal; they differ by a claim. */
   policy: Partial<Record<Channel, ScalePolicy>>;
@@ -2180,14 +2212,24 @@ export type PartReading = {
   /** Present for a qualified operand only: the structured source-grain identity it brings to composition. */
   identity?: QualifiedOperandIdentity;
   /**
+   * The shared source-grain population, present when every operand of a
+   * composite carries one and they agree. This is what a facet binds its
+   * `partition` against; it is carried, never re-derived from rows.
+   */
+  population?: QualifiedOperandPopulation;
+  /**
    * Present on a layer's retained verdict: the bounded-range groups the layer
    * DERIVED from its direct qualified operands' carried bounds facts. A group
    * exists only where two or more distinct member fields share one declared
-   * (lower, upper) pair. Derived facts travel only as far as the rule that
-   * derived them — a parent reading this composite as a sub-composite sees the
-   * channels and claims, not the child's groups.
+   * (lower, upper) pair. These do not silently merge into a parent's summary
+   * through `mergeReadings`; a combinator that needs them reads its operand's
+   * carried groups explicitly — as the facet does when it binds them into its
+   * panels — so a derived fact is never attributed to a rule that did not
+   * derive it.
    */
   ranges?: readonly DerivedBoundedRange[];
+  /** Present on a facet's retained verdict: the panels the partition binding derived from the carried population. */
+  panels?: readonly DerivedFacetPanel[];
 };
 
 /**
@@ -2251,7 +2293,7 @@ export type CompositeInput = {
  */
 export const COMPOSITION_NON_CLAIMS: readonly string[] = [
   "The cell budget is a CHANNEL budget, declared rather than measured. The experiment does not type the cell's coordinate space, so a budget channel is not required to be hostable by the host projection's own space.",
-  "The facet's partition is carried, not adjudicated: no doctrine cause names a partition a projection cannot repeat over, so inventing one here would be inventing vocabulary.",
+  "The facet's partition is ADJUDICATED for operands that carry a shared qualified population: it must resolve against the carried source-grain bindings, and the derived panel membership is exposed on the verdict. For the aggregate family, which carries no source-grain population, it remains carried and unadjudicated — no doctrine cause names a partition a projection cannot repeat over, and inventing one there would be inventing vocabulary.",
   "A layer adds no claim of its own. It requires that the parts' shared channels be commensurable over one space; what that buys is the parts' own claims holding on one scale, not a further claim the parts did not make.",
   "Commensurability is decided by DECLARED units and declared conversions. A unit the declaration does not carry leaves the judgment unproven; it is never treated as commensurable by default, and dimension is never consulted.",
   "The commensurability question is put only where two or more parts read a shared channel as a QUANTITY. A shared nominal or ordinal channel carries identity, and this experiment does not adjudicate what it means for two parts to share one; it neither refuses it nor claims it commensurable.",
@@ -2266,7 +2308,9 @@ export const COMPOSITION_NON_CLAIMS: readonly string[] = [
   "The co-registration rule adds no claim of its own: equal structured key sets establish that the operands refer to the same observations, not that their joint presentation carries any further analytical property.",
   "The bounded-range group is DERIVED from the operands' carried bounds facts at composition time; it states lower, upper and bounded members and nothing stronger. It does not name start/end roles, increasing/decreasing direction, or traversal order, and the sorted member order is canonical, never semantic.",
   "Range membership is decided by the declared (lower, upper) endpoint PAIR alone: sharing one endpoint, sharing a population, or sharing a relation groups nothing.",
-  "A derived range travels only as far as the rule that derived it: a parent reading the layer as a sub-composite operand sees the channels and claims, not the child's groups — and a layer mixing a qualified operand with any other operand family was already refused before derivation could run.",
+  "A derived range does not silently merge into a parent's summary through `mergeReadings`: a combinator that needs its operand's groups reads them explicitly and binds them, as the facet does into its panels. A layer mixing a qualified operand with any other operand family was already refused before derivation could run.",
+  "A facet panel's membership is a statement about which observations belong together, never about traversal order: partition is not ordering, and the canonical sort of member keys inside a panel is an artifact of comparison.",
+  "A facet never reopens source rows or the relation declaration to discover panel membership: the population it partitions is the carried source-grain binding set, and disagreement between its operands' populations refuses before any panel exists.",
 ];
 
 const refusedComposition = (causes: string[], from: OperandRole, detail: string): CompositeRefusal => ({
@@ -2416,6 +2460,13 @@ function readQualifiedPart(part: QualifiedPart, input: CompositeInput): PartVerd
       // declaration behind a carried result.
       bounds: result.fieldFacts[field]?.bounds ? { ...result.fieldFacts[field]!.bounds } : undefined,
     },
+    // The POPULATION the operand carries: the same structured bindings the
+    // qualification produced, per observation, so a facet can resolve a
+    // partition coordinate without ever touching rows.
+    population: {
+      keys: result.observations.map((o) => normalizedKey(o.key)).sort(),
+      bindings: result.observations.map((o) => o.key.map((pair) => ({ field: pair.field, value: pair.value }))),
+    },
   };
 }
 
@@ -2476,6 +2527,17 @@ function mergeReadings(parts: PartReading[]): PartReading {
       unitUnestablished.add(ch);
     }
   }
+  // A SHARED POPULATION travels upward only when it is genuinely shared: every
+  // operand must carry one AND they must agree on the key set. Anything less
+  // means no single population travels, and a parent that needs one (a facet)
+  // refuses rather than choosing among candidates.
+  const populations = parts.map((p) => p.population).filter((p): p is QualifiedOperandPopulation => p !== undefined);
+  let population: QualifiedOperandPopulation | undefined;
+  if (populations.length > 0 && populations.length === parts.length) {
+    const first = populations[0]!;
+    const firstKeys = JSON.stringify(first.keys);
+    if (populations.every((p) => JSON.stringify(p.keys) === firstKeys)) population = first;
+  }
   return {
     kind: "retained",
     channels,
@@ -2486,6 +2548,7 @@ function mergeReadings(parts: PartReading[]): PartReading {
     profile,
     claims: [...claims].sort(),
     tasks: [...tasks].sort(),
+    population,
   };
 }
 
@@ -2654,6 +2717,50 @@ function judgeLayer(c: LayerComposite, parts: PartReading[]): CompositeVerdict {
  */
 function judgeFacet(c: FacetComposite, parts: PartReading[]): CompositeVerdict {
   const merged = mergeReadings(parts);
+  // PARTITION BINDING, before any scale question: when the operands carry a
+  // shared source-grain population, the declared partition must resolve to a
+  // coordinate those CARRIED bindings bind on every observation, and the
+  // resulting panel membership is exposed on the verdict. An unresolvable
+  // partition refuses before panels exist — a supplied-or-absent row value
+  // never authorizes the reference. Operands carrying no population (the
+  // aggregate family) keep the partition carried and unadjudicated.
+  let panels: DerivedFacetPanel[] | undefined;
+  const carrying = parts.filter((p) => p.population !== undefined);
+  if (carrying.length > 0) {
+    if (carrying.length !== parts.length) {
+      throw new Error("judgeFacet: a facet mixing population-carrying operands with operands that carry no source-grain population is not typed by this boundary — an inapplicable request, not a judgment");
+    }
+    if (merged.population === undefined) {
+      return refusedComposition(
+        [COMPOSITION_DIAG.FACET_PARTITION_UNBOUND],
+        "combinator",
+        `the facet partitions one population, and its operands carry different source-grain populations, so there is no single population to partition`,
+      );
+    }
+    const bindings = merged.population.bindings;
+    const unresolved = bindings.filter((b) => !b.some((pair) => pair.field === c.partition));
+    if (unresolved.length > 0) {
+      return refusedComposition(
+        [COMPOSITION_DIAG.FACET_PARTITION_UNBOUND],
+        "combinator",
+        `the facet partitions by ${c.partition}, which the carried source-grain bindings do not bind on ${unresolved.length} of ${bindings.length} observations; a partition coordinate must be CARRIED, and a supplied-or-absent row value cannot authorize it`,
+      );
+    }
+    const byValue = new Map<string, string[]>();
+    for (const b of bindings) {
+      const value = b.find((pair) => pair.field === c.partition)!.value;
+      const keys = byValue.get(value) ?? [];
+      keys.push(normalizedKey(b));
+      byValue.set(value, keys);
+    }
+    // The inner composite's derived structure is CARRIED into each panel, not
+    // reconstructed and not re-derived: the facet reads its operand's groups.
+    const inner = parts.flatMap((p) => p.ranges ?? []);
+    const ranges = inner.filter((r, i) => inner.findIndex((x) => JSON.stringify(x) === JSON.stringify(r)) === i);
+    panels = [...byValue.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([value, keys]) => ({ value, keys: [...keys].sort(), ranges }));
+  }
   const profile: Partial<Record<Channel, ScalePolicy>> = {};
   let anyShared = false;
   for (const ch of merged.channels) {
@@ -2688,7 +2795,7 @@ function judgeFacet(c: FacetComposite, parts: PartReading[]): CompositeVerdict {
   }
   const claims = new Set(merged.claims);
   if (anyShared) claims.add("cross-panel-comparability");
-  return { ...merged, combinator: "facet", profile, claims: [...claims].sort() };
+  return { ...merged, combinator: "facet", profile, claims: [...claims].sort(), panels };
 }
 
 /**

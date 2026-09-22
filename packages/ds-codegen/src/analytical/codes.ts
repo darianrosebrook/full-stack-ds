@@ -118,12 +118,23 @@ export const QUALIFIED_DIAG = {
  * when two qualified operands claim one population at EQUAL cardinality while
  * their structured source-grain key sets differ — an observed unregistration,
  * not a missing premise. (An operand that merely LACKS an observation leaves
- * the premise unresolved and is an obligation, never this code.) Its semantic
- * authority is this declaration plus the layer co-registration rule in
- * `projection.ts`, NOT the doctrine's diagnostic catalogue. Nothing may be
- * added here speculatively.
+ * the premise unresolved and is an obligation, never this code.)
+ *
+ * `FACET_PARTITION_UNBOUND` is the same kind of boundary-owned vocabulary for
+ * the facet rule: emitted when the declared partition does not resolve to a
+ * coordinate the CARRIED source-grain bindings bind on every observation (or
+ * when the operands do not carry one shared population to partition). An
+ * unresolvable partition is refused before any panels exist — a supplied or
+ * absent row value never authorizes the reference, which is the same
+ * resolution-precedes-observation line the qualification boundary draws.
+ *
+ * The semantic authority for both is this declaration plus the combinator
+ * rules in `projection.ts`, NOT the doctrine's diagnostic catalogue. Nothing
+ * may be added here speculatively.
  */
 export const COMPOSITION_DIAG = {
   /** Equal-cardinality layer operands whose structured source-grain key sets differ. */
   LAYER_OPERANDS_UNCOREGISTERED: "REL_LAYER_OPERANDS_UNCOREGISTERED",
+  /** A declared facet partition the carried source-grain bindings do not resolve. */
+  FACET_PARTITION_UNBOUND: "REL_FACET_PARTITION_UNBOUND",
 } as const;

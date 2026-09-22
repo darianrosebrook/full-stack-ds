@@ -8,7 +8,7 @@
     "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "77d58f67c8c83070000a6175e0c0f5d2c474916656436ce7c6cc61978148b558"
+    "ruleDigest": "cbff8d3b94728775e856930e08f8ea4c280251721cc5a41567aa33c346d65fc2"
   },
   "fixtures": [
     "FX_SURVEY_MEAN_SATISFACTION",
@@ -914,9 +914,9 @@
   "transitions": [
     {
       "identity": "ruleDigest",
-      "from": "6427da7c2950c2ca6a90ce7b01b9148dca036a58e0b522be5d5d7d4492a83cc7",
-      "to": "77d58f67c8c83070000a6175e0c0f5d2c474916656436ce7c6cc61978148b558",
-      "reason": "REL-COMPOSITION-COREGISTRATION-01: codes.ts gained the composition boundary's COMPOSITION_DIAG block (REL_LAYER_OPERANDS_UNCOREGISTERED, the layer combinator's own vocabulary over qualified operands, authority stated at the declaration), and projection.ts — not a RULE_SOURCE — added the qualified operand part and the layer co-registration rule. The corpus-level judge never emits the new code and no fixture reaches projection.ts's composite path, so every erasure reach, digest and verdict below is unchanged — verified by the freeze --check divergence set, which is empty apart from this authority movement."
+      "from": "77d58f67c8c83070000a6175e0c0f5d2c474916656436ce7c6cc61978148b558",
+      "to": "cbff8d3b94728775e856930e08f8ea4c280251721cc5a41567aa33c346d65fc2",
+      "reason": "REL-FACET-PARTITION-BINDING-01: codes.ts gained the composition boundary's second code, FACET_PARTITION_UNBOUND (a declared facet partition the carried source-grain bindings do not resolve), and projection.ts — not a RULE_SOURCE — added the carried shared population on composite readings plus the facet partition binding over it. The corpus-level judge never emits the new code and no fixture reaches projection.ts's composite path, so every erasure reach, digest and verdict below is unchanged — verified by the freeze --check divergence set, which is empty apart from this authority movement."
     }
   ]
 }

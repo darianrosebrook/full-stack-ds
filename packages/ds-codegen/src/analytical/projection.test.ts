@@ -2931,3 +2931,240 @@ describe("RESTART piece 7: bounded-range composition from existing bounds author
     expect(rangesOf(ohlcJ.verdict)).toEqual([{ lower: "low", upper: "high", members: ["close", "open"] }]);
   });
 });
+
+/* ---------------------------------------------------------------------------
+ * RESTART piece 8 — FACET PARTITION BINDING (REL-FACET-PARTITION-BINDING-01)
+ *
+ * The question: can a facet over a qualified composite derive an EXACT
+ * partition of its source-grain observations from one declared grain
+ * coordinate, preserving the inner composite's structure and standing, without
+ * reopening rows or inferring anything from field names?
+ *
+ * Nested positive: qualified field views → layer (derives the bounded range) →
+ * facet by one grain coordinate → panels, each binding the same range
+ * structure. Two mutants are precommitted: panel assignment by input position
+ * (killed by the reorder control) and grouping that drops the inner derived
+ * structure (killed by the nested-structure control).
+ * ------------------------------------------------------------------------- */
+
+describe("RESTART piece 8: facet partition binding from carried source-grain identity", () => {
+  const neutral = {
+    relations: {
+      readings: {
+        grain: ["station", "day"],
+        fields: {
+          station: { transformation: "nominal" },
+          day: { transformation: "interval", temporality: { kind: "interval" } },
+          floor: { transformation: "ratio" },
+          ceiling: { transformation: "ratio" },
+          value_a: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling" } },
+          value_b: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling" } },
+        },
+      },
+    },
+  } as unknown as RelationalStructure;
+
+  const rows = [
+    { station: "S1", day: "d1", floor: 5, ceiling: 20, value_a: 10, value_b: 12 },
+    { station: "S1", day: "d2", floor: 6, ceiling: 21, value_a: 11, value_b: 14 },
+    { station: "S2", day: "d1", floor: 4, ceiling: 19, value_a: 9, value_b: 13 },
+    { station: "S2", day: "d2", floor: 7, ceiling: 22, value_a: 12, value_b: 15 },
+  ];
+  const reordered = [rows[2]!, rows[0]!, rows[3]!, rows[1]!];
+  const movedRow = rows.map((r) => (r.station === "S2" && r.day === "d2" ? { ...r, station: "S3" } : r));
+  const violated = rows.map((r, i) => (i === 3 ? { ...r, value_a: (r.ceiling as number) + 1 } : r));
+  const unreadable = rows.map((r, i) => (i === 0 ? { ...r, value_a: "N/A" } : r));
+
+  const keyOf = (b: ReadonlyArray<{ field: string; value: string }>) => JSON.stringify(b);
+  const view = (result: ReturnType<typeof qualifyRelation>, field: string, channel: "length" | "hue"): CompositePart => ({ kind: "qualified", result, field, channel });
+  // The nested positive: a LAYER over the two views, then a FACET over that layer.
+  const rangeViews = (structure: RelationalStructure, rs: Array<Record<string, unknown>>) => {
+    const q = qualifyRelation(structure, "readings", rs);
+    return [view(q, "value_a", "length"), view(q, "value_b", "hue")] as CompositePart[];
+  };
+  const layerPart = (structure: RelationalStructure, rs: Array<Record<string, unknown>>): CompositePart => ({
+    kind: "composite",
+    composite: { combinator: "layer", parts: rangeViews(structure, rs), sharing: {} },
+  });
+  const facetBy = (structure: RelationalStructure, partition: string, part: CompositePart, policy: Partial<Record<"length" | "hue", "shared" | "free">>) =>
+    judgeComposite({
+      structure,
+      inventory: EXPERIMENT_TARGET,
+      composite: { combinator: "facet", parts: [part], partition, policy: policy as never },
+    });
+  const freePolicy = { length: "free", hue: "free" } as const;
+  const panelsOf = (v: CompositeVerdict) => (v.kind === "retained" ? v.panels : undefined);
+  const normPanels = (panels: ReadonlyArray<{ value: string; keys: readonly string[]; ranges: readonly unknown[] }> | undefined) =>
+    JSON.stringify((panels ?? []).map((p) => ({ value: p.value, keys: [...p.keys].sort(), ranges: p.ranges })));
+
+  it("A1: the facet derives panel membership from the carried bindings, and each panel binds the inner layer's range unreconstructed", () => {
+    const j = facetBy(neutral, "station", layerPart(neutral, rows), freePolicy);
+    expect(j.verdict.kind).toBe("retained");
+    const panels = panelsOf(j.verdict)!;
+    expect(panels).toHaveLength(2);
+    const range = { lower: "floor", upper: "ceiling", members: ["value_a", "value_b"] };
+    expect(panels[0]).toEqual({
+      value: "S1",
+      keys: [keyOf([{ field: "station", value: "S1" }, { field: "day", value: "d1" }]), keyOf([{ field: "station", value: "S1" }, { field: "day", value: "d2" }])].sort(),
+      ranges: [range],
+    });
+    expect(panels[1]).toEqual({
+      value: "S2",
+      keys: [keyOf([{ field: "station", value: "S2" }, { field: "day", value: "d1" }]), keyOf([{ field: "station", value: "S2" }, { field: "day", value: "d2" }])].sort(),
+      ranges: [range],
+    });
+  });
+
+  it("A2: population is conserved exactly once — the union of panel keys equals the carried key set, with no drops or duplicates", () => {
+    const q = qualifyRelation(neutral, "readings", rows);
+    const j = facetBy(neutral, "station", layerPart(neutral, rows), freePolicy);
+    const panels = panelsOf(j.verdict)!;
+    const inputKeys = q.observations.map((o) => keyOf(o.key)).sort();
+    const panelKeys = panels.flatMap((p) => [...p.keys]);
+    // Exactly once: same multiset of keys, none dropped, none duplicated.
+    expect(panelKeys.length).toBe(inputKeys.length);
+    expect([...panelKeys].sort()).toEqual(inputKeys);
+    expect(new Set(panelKeys).size).toBe(panelKeys.length);
+  });
+
+  it("A3: row order is irrelevant — reordering the input leaves panels equivalent, while the positional mutant changes", () => {
+    const inOrder = facetBy(neutral, "station", layerPart(neutral, rows), freePolicy);
+    const shuffled = facetBy(neutral, "station", layerPart(neutral, reordered), freePolicy);
+    expect(normPanels(panelsOf(shuffled.verdict))).toEqual(normPanels(panelsOf(inOrder.verdict)));
+
+    // PRECOMMITTED MUTANT 1 — panel assignment by input position (alternating).
+    const positional = (bindings: ReadonlyArray<ReadonlyArray<{ field: string; value: string }>>) =>
+      bindings.map((b, i) => ({ value: `panel-${i % 2}`, keys: [keyOf(b)] }));
+    const mutantInOrder = positional(rows.map((r) => [{ field: "station", value: String(r.station) }, { field: "day", value: String(r.day) }]));
+    const mutantShuffled = positional(reordered.map((r) => [{ field: "station", value: String(r.station) }, { field: "day", value: String(r.day) }]));
+    // The mutant's own output changes under the same reorder the real rule ignores.
+    expect(JSON.stringify(mutantShuffled)).not.toEqual(JSON.stringify(mutantInOrder));
+    // ...and it never names the carried coordinate values as the real panels do.
+    expect(mutantInOrder.map((p) => p.value)).not.toContain("S1");
+  });
+
+  it("A4: partition identity is sensitive — changing one observation's coordinate moves exactly that observation", () => {
+    const before = panelsOf(facetBy(neutral, "station", layerPart(neutral, rows), freePolicy).verdict)!;
+    const after = panelsOf(facetBy(neutral, "station", layerPart(neutral, movedRow), freePolicy).verdict)!;
+    const movedKey = keyOf([{ field: "station", value: "S3" }, { field: "day", value: "d2" }]);
+    // The moved observation is now in the S3 panel...
+    expect(after.find((p) => p.value === "S3")!.keys).toEqual([movedKey]);
+    // ...the S2 panel lost exactly it...
+    expect(before.find((p) => p.value === "S2")!.keys).toContain(keyOf([{ field: "station", value: "S2" }, { field: "day", value: "d2" }]));
+    expect(after.find((p) => p.value === "S2")!.keys).toEqual([keyOf([{ field: "station", value: "S2" }, { field: "day", value: "d1" }])]);
+    // ...and the unrelated S1 panel is untouched.
+    expect(after.find((p) => p.value === "S1")).toEqual(before.find((p) => p.value === "S1"));
+  });
+
+  it("A5: an unresolvable partition refuses before panels exist — no row-value defaulting", () => {
+    const j = facetBy(neutral, "hour", layerPart(neutral, rows), freePolicy);
+    expect(j.verdict.kind).toBe("refused");
+    if (j.verdict.kind !== "refused") return;
+    expect(j.verdict.causes).toEqual([COMPOSITION_DIAG.FACET_PARTITION_UNBOUND]);
+    expect(j.verdict.from).toBe("combinator");
+    expect(j.verdict.detail).toContain("hour");
+    expect(panelsOf(j.verdict)).toBeUndefined();
+  });
+
+  it("A6: nested structure survives — the range-dropping mutant is distinguished from the real panels", () => {
+    const j = facetBy(neutral, "station", layerPart(neutral, rows), freePolicy);
+    const panels = panelsOf(j.verdict)!;
+    // Every panel carries the inner layer's derived group.
+    for (const p of panels) expect(p.ranges).toEqual([{ lower: "floor", upper: "ceiling", members: ["value_a", "value_b"] }]);
+    // PRECOMMITTED MUTANT 2 — correct grouping that drops the inner structure.
+    const rangeDropping = panels.map((p) => ({ ...p, ranges: [] as unknown[] }));
+    expect(normPanels(panels)).not.toEqual(normPanels(rangeDropping));
+    expect(normPanels(rangeDropping)).not.toContain("floor");
+  });
+
+  it("A7: standing is conserved — a faulted member never becomes clean panels", () => {
+    const refusedJ = facetBy(neutral, "station", layerPart(neutral, violated), freePolicy);
+    expect(refusedJ.verdict.kind).toBe("refused");
+    if (refusedJ.verdict.kind === "refused") {
+      expect(refusedJ.verdict.causes).toEqual([QUALIFIED_DIAG.BOUNDS_ROW_VIOLATED]);
+      expect(refusedJ.verdict.from).toBe("part");
+    }
+    expect(panelsOf(refusedJ.verdict)).toBeUndefined();
+
+    const unprovenJ = facetBy(neutral, "station", layerPart(neutral, unreadable), freePolicy);
+    expect(unprovenJ.verdict.kind).toBe("unproven");
+    if (unprovenJ.verdict.kind === "unproven") expect(unprovenJ.verdict.from).toBe("part");
+    expect(panelsOf(unprovenJ.verdict)).toBeUndefined();
+  });
+
+  it("A8: scale policy is orthogonal — shared vs free changes only the comparability claim, never membership", () => {
+    const sharedJ = facetBy(neutral, "station", layerPart(neutral, rows), { length: "shared", hue: "shared" });
+    const freeJ = facetBy(neutral, "station", layerPart(neutral, rows), freePolicy);
+    expect(sharedJ.verdict.kind).toBe("retained");
+    expect(freeJ.verdict.kind).toBe("retained");
+    expect(normPanels(panelsOf(sharedJ.verdict))).toEqual(normPanels(panelsOf(freeJ.verdict)));
+    if (sharedJ.verdict.kind === "retained" && freeJ.verdict.kind === "retained") {
+      expect(sharedJ.verdict.claims).toContain("cross-panel-comparability");
+      expect(freeJ.verdict.claims).not.toContain("cross-panel-comparability");
+      // ...and the profile is where the policy difference is recorded.
+      expect(sharedJ.verdict.profile).toEqual({ length: "shared", hue: "shared" });
+      expect(freeJ.verdict.profile).toEqual({ length: "free", hue: "free" });
+    }
+  });
+
+  it("A9: alpha invariance — a consistent rename yields equivalent normalized panels and ranges", () => {
+    const renamed = {
+      relations: {
+        samples: {
+          grain: ["site", "date"],
+          fields: {
+            site: { transformation: "nominal" },
+            date: { transformation: "interval", temporality: { kind: "interval" } },
+            base: { transformation: "ratio" },
+            cap: { transformation: "ratio" },
+            first_value: { transformation: "ratio", bounds: { lower: "base", upper: "cap" } },
+            second_value: { transformation: "ratio", bounds: { lower: "base", upper: "cap" } },
+          },
+        },
+      },
+    } as unknown as RelationalStructure;
+    const renamedRows = rows.map((r) => ({ site: r.station, date: r.day, base: r.floor, cap: r.ceiling, first_value: r.value_a, second_value: r.value_b }));
+    const renamedPart: CompositePart = {
+      kind: "composite",
+      composite: {
+        combinator: "layer",
+        parts: [
+          { kind: "qualified", result: qualifyRelation(renamed, "samples", renamedRows), field: "first_value", channel: "length" },
+          { kind: "qualified", result: qualifyRelation(renamed, "samples", renamedRows), field: "second_value", channel: "hue" },
+        ],
+        sharing: {},
+      },
+    };
+    const j = facetBy(renamed, "site", renamedPart, freePolicy);
+    expect(j.verdict.kind).toBe("retained");
+    const panels = panelsOf(j.verdict)!;
+    // Field NAMES were renamed; the coordinate VALUES are the same population.
+    expect(panels.map((p) => p.value)).toEqual(["S1", "S2"]);
+    // The keys carry the renamed grain spellings, and the range the renamed
+    // endpoint/member spellings — no original field name participates.
+    expect(panels.flatMap((p) => [...p.keys]).every((k) => k.includes('"site"') && k.includes('"date"'))).toBe(true);
+    for (const p of panels) expect(p.ranges).toEqual([{ lower: "base", upper: "cap", members: ["first_value", "second_value"] }]);
+  });
+
+  it("A10: second witness — the same implementation facets the qualified OHLC range by a carried grain coordinate", () => {
+    const load = loadOracle().fixtures.get("FX_P_OHLC_PAIR")!;
+    const ohlcStructure = load.structure as RelationalStructure;
+    const ohlcRows = (load.evidence as { rows: { candles: Array<Record<string, unknown>> } }).rows.candles;
+    const ohlcQ = qualifyRelation(ohlcStructure, "candles", ohlcRows);
+    const ohlcLayer: CompositePart = {
+      kind: "composite",
+      composite: {
+        combinator: "layer",
+        parts: [{ kind: "qualified", result: ohlcQ, field: "open", channel: "length" }, { kind: "qualified", result: ohlcQ, field: "close", channel: "hue" }],
+        sharing: {},
+      },
+    };
+    const j = facetBy(ohlcStructure, "symbol", ohlcLayer, freePolicy);
+    expect(j.verdict.kind).toBe("retained");
+    const panels = panelsOf(j.verdict)!;
+    expect(panels.map((p) => p.value).sort()).toEqual(["AAA", "BBB"]);
+    for (const p of panels) expect(p.ranges).toEqual([{ lower: "low", upper: "high", members: ["close", "open"] }]);
+    // Exactly-once over the real population too.
+    expect(panels.flatMap((p) => [...p.keys]).length).toBe(ohlcQ.observations.length);
+  });
+});
