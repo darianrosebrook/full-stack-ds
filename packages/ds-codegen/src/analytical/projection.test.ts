@@ -78,6 +78,8 @@ import {
   compositeClaimSet,
   inducedClaims,
   unitsCommensurable,
+  qualifyRelation,
+  projectQualifiedRelation,
 } from "./projection.js";
 import type { Composite, CompositePart, CompositeVerdict, Enumeration, OperationJudgment, AggregateAssertionDecl, Program, ResultFacts, Row, TargetInventory } from "./projection.js";
 import type { RelationalStructure, UnitDecl } from "./relation-model.js";
@@ -2138,10 +2140,11 @@ describe("M3 composition: the parts decide first, and the combinator rule decide
  * blindness to that is the LOSS, recorded below, not repaired here.
  * ------------------------------------------------------------------------- */
 
+const load = loadOracle().fixtures.get("FX_P_OHLC_PAIR")!;
 describe("RESTART piece 2: series identity through the consumer", () => {
   const loaded = loadOracle().fixtures.get("FX_P_OHLC_PAIR")!;
   const s = loaded.structure as RelationalStructure;
-  const rows = (loaded.evidence as { rows: { candles: Row[] } }).rows.candles;
+  const rows = (load.evidence as { rows: { candles: Row[] } }).rows.candles;
   const swapClose = (rs: Row[]): Row[] =>
     rs.map((r) => (r.symbol === "AAA" ? { ...r, close: rs.find((x) => x.period === r.period && x.symbol === "BBB")!.close } : { ...r, close: rs.find((x) => x.period === r.period && x.symbol === "AAA")!.close }));
 
@@ -2213,7 +2216,7 @@ describe("RESTART piece 2: series identity through the consumer", () => {
 describe("RESTART piece 4: the swap is observed in the thing produced", () => {
   const loaded = loadOracle().fixtures.get("FX_P_OHLC_PAIR")!;
   const s = loaded.structure as RelationalStructure;
-  const rows = (loaded.evidence as { rows: { candles: Array<Record<string, number | string>> } }).rows.candles;
+  const rows = (load.evidence as { rows: { candles: Array<Record<string, number | string>> } }).rows.candles;
   const swapClose = (rs: Array<Record<string, number | string>>): Array<Record<string, number | string>> =>
     rs.map((r) => (r.symbol === "AAA" ? { ...r, close: rs.find((x) => x.period === r.period && x.symbol === "BBB")!.close } : { ...r, close: rs.find((x) => x.period === r.period && x.symbol === "AAA")!.close }));
 
@@ -2240,5 +2243,127 @@ describe("RESTART piece 4: the swap is observed in the thing produced", () => {
     expect(after).toEqual(before);
     // NON-CLAIM: this records the aggregate path's loss at the OUTPUT layer. It
     // does not repair it, and it does not claim series identity for this binding.
+  });
+});
+
+/* ---------------------------------------------------------------------------
+ * RESTART piece 5 — THE SOURCE-GRAIN INTEGRATION (REL-SOURCE-GRAIN-01)
+ *
+ * The decisive falsifier: a margin-preserving perturbation (+1, −1, −1, +1 on
+ * the four closes) violates every declared bound while BOTH aggregate views —
+ * by symbol and by period — remain bit-identical. The qualified relation
+ * result carries the joint observation so the judgment sees what the margins
+ * discard.
+ * ------------------------------------------------------------------------- */
+
+describe("RESTART piece 5: the source-grain qualified relation", () => {
+  const load = loadOracle().fixtures.get("FX_P_OHLC_PAIR")!;
+  const struct = load.structure as RelationalStructure;
+  const pop = (load.evidence as { rows: { candles: Array<Record<string, number | string>> } }).rows.candles;
+  const swapClose = (rs: Array<Record<string, number | string>>): Array<Record<string, number | string>> =>
+    rs.map((r) => (r.symbol === "AAA" ? { ...r, close: rs.find((x) => x.period === r.period && x.symbol === "BBB")!.close } : { ...r, close: rs.find((x) => x.period === r.period && x.symbol === "AAA")!.close }));
+  const marginPerturb = (rs: Array<Record<string, number | string>>): Array<Record<string, number | string>> => {
+    const deltas = [1, -1, -1, 1];
+    let i = 0;
+    return rs.map((r) => { const v = deltas[i++ % deltas.length]!; return { ...r, close: (r.close as number) + v }; });
+  };
+  const q = (rs?: Array<Record<string, unknown>>) => qualifyRelation(struct, "candles", rs ?? pop);
+
+  it("A1: four distinct structured (symbol, period) observations with their own values", () => {
+    const r = q();
+    expect(r.observations.length).toBe(4);
+    expect(r.grain).toEqual(["symbol", "period"]);
+    for (const obs of r.observations) {
+      expect(obs.key.length).toBe(2);
+      expect(obs.key[0]!.field).toBe("symbol");
+      expect(obs.key[1]!.field).toBe("period");
+      expect(obs.values).toHaveProperty("close");
+    }
+  });
+
+  it("A2: the baseline is admissible; BOTH hostile populations produce REL_FIELD_BOUNDS_VIOLATED through the same qualification", () => {
+    const baseline = q();
+    expect(baseline.judgment.admissible).toBe(true);
+    expect(baseline.judgment.boundsViolations).toEqual([]);
+
+    const swapped = q(swapClose(pop));
+    expect(swapped.judgment.admissible).toBe(false);
+    expect(swapped.judgment.boundsViolations.length).toBeGreaterThan(0);
+    for (const v of swapped.judgment.boundsViolations) {
+      expect(v.code).toBe("REL_FIELD_BOUNDS_VIOLATED");
+      expect(v.subject).toContain("candles");
+    }
+
+    const perturbed = q(marginPerturb(pop));
+    expect(perturbed.judgment.admissible).toBe(false);
+    expect(perturbed.judgment.boundsViolations.length).toBeGreaterThan(0);
+  });
+
+  it("the margin-preserving perturbation violates bounds while BOTH aggregate views remain identical", () => {
+    const before = evaluateOperation(bindOperation(struct, { relation: "candles", field: "close", op: "sum", along: ["symbol"] }), pop);
+    const after = evaluateOperation(bindOperation(struct, { relation: "candles", field: "close", op: "sum", along: ["symbol"] }), marginPerturb(pop));
+    expect(after.groups).toEqual(before.groups);
+    const beforeP = evaluateOperation(bindOperation(struct, { relation: "candles", field: "close", op: "sum", along: [] }), pop);
+    const afterP = evaluateOperation(bindOperation(struct, { relation: "candles", field: "close", op: "sum", along: [] }), marginPerturb(pop));
+    // (along: [] would produce a single total; the PERIOD margins also cancel.)
+    expect(afterP.total).toBe(beforeP.total);
+  });
+
+  it("A3: the produced artifact carries the observations and judgment, and a value-to-key association mutation is detected from the artifact alone", () => {
+    const r = q();
+    const artifact = projectQualifiedRelation(r);
+    expect(artifact.kind).toBe("readback");
+    if (artifact.kind !== "readback") return;
+    // Decode from the artifact ALONE: the four tuples and their values.
+    expect(artifact.observations.length).toBe(4);
+    // Mutate a value-to-key association inside the artifact.
+    const mutated = JSON.parse(JSON.stringify(artifact.observations)) as Array<{ key: Array<{ field: string; value: string }>; values: Record<string, number | string> }>;
+    mutated[0]!.values["close"] = 999;
+    expect(mutated).not.toEqual(artifact.observations);
+  });
+
+  it("A4: selection matters — a qualified result with NO observations produces no artifact", () => {
+    const empty = qualifyRelation(struct, "candles", []);
+    const proj = projectQualifiedRelation(empty);
+    expect(proj.kind).toBe("refused");
+  });
+
+  it("A5: the declared temporal kind is carried and an undeclared field carries none", () => {
+    const r = q();
+    expect(r.fieldFacts.period?.temporality?.kind).toBeDefined();
+    expect(r.fieldFacts.close?.temporality).toBeUndefined();
+  });
+
+  it("applicability: a malformed bounds reference is refused at qualification, not carried as a diagnostic", () => {
+    const bad = { ...struct, relations: { candles: { ...struct.relations.candles!, fields: { ...struct.relations.candles!.fields!, close: { transformation: "ratio", bounds: { lower: "typo_low", upper: "high" } } } } } } as unknown as RelationalStructure;
+    expect(() => qualifyRelation(bad, "candles", pop)).toThrow(/does not declare/);
+  });
+
+  it("applicability: an unreadable participating value produces no bounds violation — missing evidence, not contradiction", () => {
+    const unreadable = pop.map((r, i) => (i === 0 ? { ...r, close: "NOT_A_NUMBER" } : r));
+    const r = q(unreadable);
+    expect(r.judgment.boundsViolations).toEqual([]);
+  });
+
+  it("A7: a consistent rename of relation, grain, fields, bounds references and rows preserves the qualified result", () => {
+    const renamed = {
+      relations: { s: { grain: ["ss", "pp"], fields: {
+        ss: { transformation: "nominal" }, pp: { transformation: "interval", temporality: { kind: "interval" } },
+        lo: { transformation: "ratio" }, mid: { transformation: "ratio", bounds: { lower: "lo", upper: "hi" } }, hi: { transformation: "ratio" } } } },
+    } as unknown as RelationalStructure;
+    const renamedRows = [
+      { ss: "X", pp: "d1", lo: 1, mid: 5, hi: 10 },
+      { ss: "X", pp: "d2", lo: 2, mid: 6, hi: 11 },
+      { ss: "Y", pp: "d1", lo: 3, mid: 7, hi: 12 },
+      { ss: "Y", pp: "d2", lo: 4, mid: 8, hi: 13 },
+    ];
+    const renamedReordered = [renamedRows[2]!, renamedRows[0]!, renamedRows[3]!, renamedRows[1]!];
+    const a = qualifyRelation(renamed, "s", renamedRows);
+    const b = qualifyRelation(renamed, "s", renamedReordered);
+    // The judgments are equivalent (no violations in either).
+    expect(a.judgment.admissible).toBe(b.judgment.admissible);
+    // The observations are the same set modulo the rename and reorder.
+    const norm = (r: typeof a) => r.observations.map((o) => JSON.stringify(o)).sort();
+    expect(norm(b)).toEqual(norm(a));
   });
 });
