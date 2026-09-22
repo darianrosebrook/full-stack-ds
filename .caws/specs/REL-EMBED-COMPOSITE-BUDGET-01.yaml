@@ -89,3 +89,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A5: a faulted inner composite keeps its own cause' — contradicted layer: verdict refused with [REL_FIELD_BOUNDS_VIOLATED] from part; unproven layer composed against an ADDITIONALLY insufficient budget still reports from part, so the budget disposition never replaces the part's standing. Run on landed main@5754a432: vitest analytical 1106/1106."
     recorded_at: "2026-09-22T17:29:13.711Z"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "projection.test.ts 'A6: host, part and combinator stay distinct repair loci' — unimplemented-task host gives unsupported from host; contradicted composite gives refused from part; insufficient budget gives refused from combinator. Run on landed main@5754a432: vitest analytical 1106/1106."
+    recorded_at: "2026-09-22T17:29:23.726Z"
