@@ -79,8 +79,8 @@ evidence:
     recorded_at: "2026-09-22T13:55:12.012Z"
   - criterion_id: A5
     status: pass
-    evidence_ref: placeholder-A5
-    recorded_at: "2026-09-22T13:54:46.914Z"
+    evidence_ref: "projection.test.ts 'A5: a missing participating observation is conserved' — three-member composition with one operand over a 3-row population: verdict unproven, ranges undefined — no silent intersection into a smaller valid range even though every surviving row lines up. Run on landed main@0cc625f5: vitest analytical 1085/1085."
+    recorded_at: "2026-09-22T13:55:32.361Z"
   - criterion_id: A6
     status: pass
     evidence_ref: placeholder-A6
