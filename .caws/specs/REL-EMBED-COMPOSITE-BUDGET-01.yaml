@@ -71,8 +71,8 @@ contracts:
 evidence:
   - criterion_id: A1
     status: pass
-    evidence_ref: PLACEHOLDER-A1
-    recorded_at: "2026-09-22T17:28:59.585Z"
+    evidence_ref: "projection.test.ts RESTART piece 9 'A1: a composed object reaches the embed rule and is typed from the complete reading' — the layer and the nested facet composites both return retained with combinator embed; the cell's induced claims include aggregate-magnitude and ratio-comparability through the same channelClaims authority the atomic path uses. Run on landed main@5754a432: vitest analytical 1106/1106."
+    recorded_at: "2026-09-22T17:29:11.835Z"
   - criterion_id: A2
     status: pass
     evidence_ref: PLACEHOLDER-A2
