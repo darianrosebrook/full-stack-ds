@@ -2,9 +2,10 @@ id: REL-COMPOSITION-COREGISTRATION-01
 title: 'M3 layer composition: qualified operands co-register by structured source-grain identity, not row position'
 risk_tier: 2
 mode: feature
-lifecycle_state: draft
+lifecycle_state: active
+worktree: coreg-01
 created_at: '2026-09-22T03:59:08.417Z'
-updated_at: '2026-09-22T03:59:08.417Z'
+updated_at: '2026-09-22T03:59:26.326Z'
 created_by_session: 'session-bd42da68-ec3b-4aed-b4b4-701f8fc1b865'
 blast_radius:
   modules:
