@@ -83,8 +83,8 @@ evidence:
     recorded_at: "2026-09-22T13:55:32.361Z"
   - criterion_id: A6
     status: pass
-    evidence_ref: placeholder-A6
-    recorded_at: "2026-09-22T13:54:47.383Z"
+    evidence_ref: "projection.test.ts 'A6: standing is conserved' — unproven member: composite unproven from part with ranges undefined; contradicted member: refused with [REL_FIELD_BOUNDS_VIOLATED] attributed from part with ranges undefined — grouping never launders operand standing. Run on landed main@0cc625f5: vitest analytical 1085/1085."
+    recorded_at: "2026-09-22T13:55:32.848Z"
   - criterion_id: A7
     status: pass
     evidence_ref: placeholder-A7
