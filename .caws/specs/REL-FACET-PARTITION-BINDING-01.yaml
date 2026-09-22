@@ -79,3 +79,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RESTART piece 8 'A1: the facet derives panel membership from the carried bindings, and each panel binds the inner layer's range unreconstructed' — nested layer→facet retained; panels exactly S1/S2 with their structured keys, each carrying ranges [{floor, ceiling, [value_a, value_b]}] read off the inner layer's verdict. Run on landed main@04774acc: vitest analytical 1095/1095."
     recorded_at: "2026-09-22T15:38:21.316Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "projection.test.ts 'A2: population is conserved exactly once' — union of panel keys equals the qualified population's key set as a multiset (same length, same sorted content), and no key is duplicated (Set size equals list length). Run on landed main@04774acc: vitest analytical 1095/1095."
+    recorded_at: "2026-09-22T15:38:21.895Z"
