@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spatial console — Full-Stack DS example</title>
+    <link rel="icon" href="data:," />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #0d0f14;
+        font-family: system-ui, sans-serif;
+      }
+      #scene {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        touch-action: none;
+      }
+      /* Each drawable panel sits in a mount. The browser lays the panel out,
+         the scene draws its snapshot, and — on builds without
+         updateElementGeometry — the mount carries the projected transform
+         that places the panel's hit-test geometry where the mesh is drawn.
+         The origin must be the border-box corner so the matrix maps local
+         (0,0) to the mesh's top-left corner. No backface-visibility: the
+         matrix's z row carries clip depth, not a surface orientation, so CSS
+         back-face culling would misjudge panels that face the camera; the
+         scene marks turned-away panels inert instead. */
+      #scene > .panel-mount {
+        width: max-content;
+        transform-origin: 0 0;
+      }
+      #scene [drawable] {
+        box-sizing: border-box;
+      }
+      #unsupported {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: #e8e8ea;
+        padding: 2rem;
+      }
+      #unsupported[hidden] {
+        display: none;
+      }
+      #unsupported code {
+        background: #1d2029;
+        padding: 0.1em 0.35em;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="scene" content="drawable" layoutsubtree>
+      <div class="panel-mount"><div drawable id="panel-lighting"></div></div>
+      <div class="panel-mount"><div drawable id="panel-motion"></div></div>
+      <div class="panel-mount"><div drawable id="panel-telemetry"></div></div>
+    </canvas>
+    <section id="unsupported" hidden role="alert">
+      <div>
+        <h1>HTML-in-Canvas is not available in this browser</h1>
+        <p>
+          This example draws live DOM into a WebGL scene with the WICG
+          HTML-in-Canvas API. Enable
+          <code>chrome://flags/#canvas-draw-element</code> and
+          <code>chrome://flags/#enable-experimental-web-platform-features</code>,
+          or launch Chrome with
+          <code>--enable-features=CanvasDrawElement --enable-experimental-web-platform-features</code>.
+        </p>
+        <p id="unsupported-detail"></p>
+      </div>
+    </section>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

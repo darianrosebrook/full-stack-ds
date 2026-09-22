@@ -1,0 +1,28 @@
+/* Panel hosts only: fixed border boxes so each texture has a stable aspect
+   ratio, and an opaque surface so the snapshot has no see-through gaps. The
+   DS components inside are styled solely by their own package CSS. */
+#panel-lighting,
+#panel-motion,
+#panel-telemetry {
+  width: 340px;
+  height: 340px;
+  overflow: hidden;
+  background: var(--fsds-semantic-color-background-primary, #ffffff);
+  color: var(--fsds-semantic-color-foreground-primary, #1d1d1f);
+  border-radius: 14px;
+}
+
+#panel-motion {
+  width: 440px;
+}
+
+.telemetry-stats {
+  display: flex;
+  gap: 24px;
+  margin-block: 12px;
+}
+
+.telemetry-stats small {
+  display: block;
+  opacity: 0.7;
+}
