@@ -87,8 +87,8 @@ evidence:
     recorded_at: "2026-09-22T13:55:32.848Z"
   - criterion_id: A7
     status: pass
-    evidence_ref: placeholder-A7
-    recorded_at: "2026-09-22T13:54:47.884Z"
+    evidence_ref: "projection.test.ts 'A7: the derived group says what the declaration says' — group keys exactly [lower, members, upper]; members canonically sorted; serialized verdict contains no start/direction/increasing vocabulary. Run on landed main@0cc625f5: vitest analytical 1085/1085."
+    recorded_at: "2026-09-22T13:55:33.301Z"
   - criterion_id: A8
     status: pass
     evidence_ref: placeholder-A8
