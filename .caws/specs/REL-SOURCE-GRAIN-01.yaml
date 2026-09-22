@@ -89,3 +89,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts applicability: a malformed bounds reference is refused at qualification (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
     recorded_at: "2026-09-22T00:51:18.074Z"
+  - criterion_id: A7
+    status: pass
+    evidence_ref: "projection.test.ts applicability: an unreadable participating value produces no bounds violation and A7: a consistent rename preserves the qualified result (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
+    recorded_at: "2026-09-22T00:51:18.617Z"
