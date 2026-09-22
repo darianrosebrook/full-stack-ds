@@ -99,3 +99,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A6: nested structure survives' — every panel carries the inner layer's derived group; the precommitted range-dropping mutant (correct grouping, empty ranges) is distinguished by normalized comparison and by the absence of the range spelling. Run on landed main@04774acc: vitest analytical 1095/1095."
     recorded_at: "2026-09-22T15:38:31.924Z"
+  - criterion_id: A7
+    status: pass
+    evidence_ref: "projection.test.ts 'A7: standing is conserved' — contradicted member: facet refused with [REL_FIELD_BOUNDS_VIOLATED] attributed from part, panels undefined; unproven member: facet unproven from part, panels undefined; no clean panels either way. Run on landed main@04774acc: vitest analytical 1095/1095."
+    recorded_at: "2026-09-22T15:38:32.397Z"
