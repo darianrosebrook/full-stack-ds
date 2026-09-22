@@ -96,3 +96,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A7: a malformed bounds reference is refused at qualification' AND 'A7: a malformed grain member is refused at the same boundary' — grain ['symbol','does_not_exist'] refuses /does not declare/ before any qualified result exists, closing the row[g] ?? \"\" key-manufacturing gap; malformed bounds reference unchanged. Run on landed main@5967ed73: vitest analytical 1068/1068."
     recorded_at: "2026-09-22T03:24:04.224Z"
+  - criterion_id: A8
+    status: pass
+    evidence_ref: "projection.test.ts 'A8: a consistent rename of relation, grain, fields, bounds references and rows preserves the qualified result' — rename + row reorder yields equal standing, equal violations/gaps, and observation sets equal modulo rename/reorder. Run on landed main@5967ed73: vitest analytical 1068/1068."
+    recorded_at: "2026-09-22T03:24:04.679Z"
