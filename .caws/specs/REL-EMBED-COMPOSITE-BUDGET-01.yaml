@@ -87,5 +87,5 @@ evidence:
     recorded_at: "2026-09-22T17:29:13.249Z"
   - criterion_id: A5
     status: pass
-    evidence_ref: PLACEHOLDER-A5
-    recorded_at: "2026-09-22T17:29:01.417Z"
+    evidence_ref: "projection.test.ts 'A5: a faulted inner composite keeps its own cause' — contradicted layer: verdict refused with [REL_FIELD_BOUNDS_VIOLATED] from part; unproven layer composed against an ADDITIONALLY insufficient budget still reports from part, so the budget disposition never replaces the part's standing. Run on landed main@5754a432: vitest analytical 1106/1106."
+    recorded_at: "2026-09-22T17:29:13.711Z"
