@@ -79,8 +79,8 @@ evidence:
     recorded_at: "2026-09-22T17:29:12.333Z"
   - criterion_id: A3
     status: pass
-    evidence_ref: PLACEHOLDER-A3
-    recorded_at: "2026-09-22T17:29:00.514Z"
+    evidence_ref: "projection.test.ts 'A3: a minimally changed budget that cannot host a presented channel refuses, naming it' — full budget [length, hue] retains; [hue] refuses REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET from combinator, detail names 'length:ratio', and the control asserts the budget is nonempty so nonemptiness is not the rule. Run on landed main@5754a432: vitest analytical 1106/1106."
+    recorded_at: "2026-09-22T17:29:12.788Z"
   - criterion_id: A4
     status: pass
     evidence_ref: PLACEHOLDER-A4
