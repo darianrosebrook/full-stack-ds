@@ -83,8 +83,8 @@ evidence:
     recorded_at: "2026-09-22T17:29:12.788Z"
   - criterion_id: A4
     status: pass
-    evidence_ref: PLACEHOLDER-A4
-    recorded_at: "2026-09-22T17:29:00.967Z"
+    evidence_ref: "projection.test.ts 'A4: the first-descendant mutant is refuted' — inner layer whose first view presents ratio on length and second presents NOMINAL on hue; budget [length] hosts the first descendant (mutant predicate returns true) while the real rule refuses naming 'hue:nominal'. Run on landed main@5754a432: vitest analytical 1106/1106."
+    recorded_at: "2026-09-22T17:29:13.249Z"
   - criterion_id: A5
     status: pass
     evidence_ref: PLACEHOLDER-A5
