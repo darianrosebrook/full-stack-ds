@@ -8,7 +8,7 @@
     "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "94e63ed497c089cbca605d4613ac7f788137ddf6e8ed107e4d33c58798f5700f"
+    "ruleDigest": "ef95b5fc0e775b16ac3aeede24493438838e1c7e444cf0cd9b6ea7a5f7520a9c"
   },
   "fixtures": [
     "FX_SURVEY_MEAN_SATISFACTION",
@@ -913,22 +913,10 @@
   "adjudicated": {},
   "transitions": [
     {
-      "identity": "coordinateBasisDigest",
-      "from": "637a8667f158099fdd3c1b565894cfe0f27700157e69ad716bcc331c6edc3643",
-      "to": "1196a0f0bd79fc2bcbfe4366c133ca1a4d97305f779b667b6dc3106caf7ca163",
-      "reason": "The census basis grew by design: the bounds declaration added field.bounds.lower and field.bounds.upper as reference coordinates, so the coordinate-set digest moved with the schema. No coordinate left and none was re-keyed."
-    },
-    {
-      "identity": "erasureAuthorityDigest",
-      "from": "ba5977bef52fd3302dbcdbf85f2c15929e5e337aa7c7f73eeecc13028436d497",
-      "to": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
-      "reason": "The erasure authority moved with the same holder-targeting repair; this is the movement a single-authority supersession would have stated had the others not moved with it."
-    },
-    {
       "identity": "ruleDigest",
-      "from": "31627ef1ba9385fab9d6c8e793cd6895322df473ffdbcb4f1527017e00600fa3",
-      "to": "94e63ed497c089cbca605d4613ac7f788137ddf6e8ed107e4d33c58798f5700f",
-      "reason": "The erasure rule moved with the holder-targeting repair: a presence erasure on a slot required by its holder now executes at the holder. The behavioural effect is authored in SUPERSESSION_EFFECT.delete-holder."
+      "from": "94e63ed497c089cbca605d4613ac7f788137ddf6e8ed107e4d33c58798f5700f",
+      "to": "ef95b5fc0e775b16ac3aeede24493438838e1c7e444cf0cd9b6ea7a5f7520a9c",
+      "reason": "The DIAG table gained REL_FIELD_BOUNDS_VIOLATED and projection.ts gained the qualified relation result and its projection; both are rule-surface modules whose digest is part of the rule authority."
     }
   ]
 }

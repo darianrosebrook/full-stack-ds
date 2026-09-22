@@ -2780,3 +2780,164 @@ export const OHLC_PROBE_NON_CLAIMS: readonly string[] = [
   "`partitionAdmitsSummation` answers an ADDITIVITY question. Naming a partition dimension and establishing additivity do not establish that the actual parts are exhaustive and mutually exclusive, and the two premises must not be described as discharged by one helper.",
 ];
 
+
+/* ---------------------------------------------------------------------------
+ * THE QUALIFIED RELATION RESULT — a source-grain analytical object
+ *
+ * The aggregate result contract defines its output by subtracting `along` from
+ * the source grain, so it cannot carry the joint `(symbol, period)` association
+ * that a row-local declared relationship governs. The graph-valued result set
+ * the precedent: when the analytical object is not an aggregate relation, give
+ * it the codomain it actually requires.
+ *
+ * The qualified result carries:
+ *   - the source relation identity and its DECLARED grain;
+ *   - observations keyed STRUCTURALLY by the complete grain (field + value
+ *     pairs, never a concatenated string);
+ *   - only the fields the declared relationships admit for this request;
+ *   - the declared field facts (bounds, temporality) needed downstream;
+ *   - a POPULATION-SCOPED judgment naming each observation that falsifies a
+ *     declared relationship, with no diagnostic for satisfying or unreadable
+ *     observations and none for other observations' violations.
+ * ------------------------------------------------------------------------- */
+
+export interface QualifiedObservation {
+  /** The structured grain binding: one field + value pair per declared grain column. */
+  key: ReadonlyArray<{ field: string; value: string }>;
+  /** The values of the fields this request admits, keyed by field name. */
+  values: Readonly<Record<string, number | string>>;
+}
+
+export interface QualifiedFieldFacts {
+  bounds?: { lower: string; upper: string };
+  temporality?: { kind: string };
+}
+
+export interface QualifiedBoundsViolation {
+  code: "REL_FIELD_BOUNDS_VIOLATED";
+  /** The violated relationship: `relation.field`. */
+  subject: string;
+  field: string;
+  lower: string;
+  upper: string;
+  /** The index into `observations` of the falsifying entry. */
+  observation: number;
+  /** The structured grain binding of the falsifying observation. */
+  key: ReadonlyArray<{ field: string; value: string }>;
+}
+
+export interface QualifiedRelationResult {
+  relation: string;
+  grain: readonly string[];
+  observations: readonly QualifiedObservation[];
+  fieldFacts: Readonly<Record<string, QualifiedFieldFacts>>;
+  judgment: {
+    admissible: boolean;
+    boundsViolations: readonly QualifiedBoundsViolation[];
+  };
+}
+
+/**
+ * Qualify one relation over one supplied population at the DECLARED grain.
+ *
+ * Every declared non-grain field is admitted; the declared relationships
+ * (bounds, temporality) travel as field facts; the judgment is scoped to the
+ * supplied population — readable falsifications are named per observation,
+ * unreadable participating values are absent evidence rather than contradiction,
+ * and no observation\\'s violation implicates another\\'s.
+ */
+export function qualifyRelation(
+  structure: RelationalStructure,
+  relationName: string,
+  population?: ReadonlyArray<Record<string, unknown>>,
+): QualifiedRelationResult {
+  const rel = structure.relations[relationName];
+  if (!rel) throw new Error(`qualify: relation ${relationName} is not declared by the structure`);
+  if (!Array.isArray(rel.grain) || rel.grain.length === 0) throw new Error(`qualify: relation ${relationName} declares no grain, so no source-grain observation can be keyed`);
+  const grain = rel.grain as readonly string[];
+  const fields = (rel.fields ?? {}) as Record<string, Record<string, unknown>>;
+  const admitted = Object.keys(fields).filter((f) => !grain.includes(f));
+
+  const observations: { key: { field: string; value: string }[]; values: Record<string, number | string> }[] = [];
+  if (population) {
+    for (const row of population) {
+      const key = grain.map((g) => ({ field: g, value: String(row[g] ?? "") }));
+      const values: Record<string, number | string> = {};
+      for (const f of admitted) {
+        const raw = row[f];
+        if (raw !== undefined) values[f] = raw as number | string;
+      }
+      observations.push({ key, values });
+    }
+  }
+
+  // RESOLUTION PRECEDES OBSERVATION: a bound naming no declared sibling field is
+  // a malformed declaration, refused before any observation or judgment exists.
+  for (const [name, decl] of Object.entries(fields)) {
+    const b = (decl as Record<string, unknown>).bounds as { lower: string; upper: string } | undefined;
+    if (!b) continue;
+    for (const [slot, endpoint] of [["lower", b.lower], ["upper", b.upper]] as const) {
+      if (!(endpoint in fields)) {
+        throw new Error(`the bounds declaration on ${relationName}.${name} names ${endpoint} at bounds.${slot}, which the relation does not declare; the declaration is malformed and no qualified result is manufactured for it`);
+      }
+    }
+  }
+
+  const fieldFacts: Record<string, QualifiedFieldFacts> = {};
+  for (const [name, decl] of Object.entries(fields)) {
+    const facts: QualifiedFieldFacts = {};
+    const b = (decl as Record<string, unknown>).bounds as { lower: string; upper: string } | undefined;
+    if (b) facts.bounds = { lower: String(b.lower), upper: String(b.upper) };
+    const tp = (decl as Record<string, unknown>).temporality as { kind: string } | undefined;
+    if (tp) facts.temporality = { kind: String(tp.kind) };
+    if (Object.keys(facts).length > 0) fieldFacts[name] = facts;
+  }
+
+  // THE BOUNDS JUDGMENT: readable falsifications only.
+  const boundsViolations: QualifiedBoundsViolation[] = [];
+  for (const [fieldName, facts] of Object.entries(fieldFacts)) {
+    if (!facts.bounds) continue;
+    const { lower, upper } = facts.bounds;
+    observations.forEach((obs, idx) => {
+      const v = obs.values[fieldName];
+      const lo = obs.values[lower];
+      const up = obs.values[upper];
+      if (typeof v !== "number" || typeof lo !== "number" || typeof up !== "number") return;
+      if (!(lo <= v && v <= up)) {
+        boundsViolations.push({
+          code: "REL_FIELD_BOUNDS_VIOLATED" as const,
+          subject: `${relationName}.${fieldName}`,
+          field: fieldName, lower, upper,
+          observation: idx,
+          key: obs.key,
+        });
+      }
+    });
+  }
+
+  return {
+    relation: relationName,
+    grain,
+    observations,
+    fieldFacts,
+    judgment: { admissible: boundsViolations.length === 0, boundsViolations },
+  };
+}
+
+/**
+ * Project a qualified relation result into a produced readback artifact.
+ *
+ * Selection matters: a qualified result with NO observations has no supported
+ * lowering (there is nothing to realize), so no artifact is produced. A
+ * supported result\\'s artifact carries the observations and the judgment — a
+ * truthful readback of problematic data is not a certification that the bounds
+ * hold, and the consumer sees the diagnostics alongside the data.
+ */
+export function projectQualifiedRelation(
+  q: QualifiedRelationResult,
+): { kind: "readback"; observations: QualifiedRelationResult["observations"]; judgment: QualifiedRelationResult["judgment"] } | { kind: "refused"; reason: string } {
+  if (q.observations.length === 0) {
+    return { kind: "refused", reason: `the qualified relation ${q.relation} carries no observations, so there is nothing to realize` };
+  }
+  return { kind: "readback", observations: q.observations, judgment: q.judgment };
+}
