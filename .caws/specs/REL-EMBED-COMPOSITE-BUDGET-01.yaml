@@ -63,6 +63,15 @@ acceptance:
     given: 'a presented channel whose hostability would need a fact the reading does not carry (a cyclic-or-whole channel with no carried cyclicity)'
     when: 'embed judges'
     then: 'the verdict is unproven with the named missing premise, never a refusal and never an invented default'
+  - id: A11
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: >-
+      given the retained embed verdict over a composite; when its population and
+      identity fields are read; then the population equals the inner composite
+      reading's carried population and no operand identity is present, because the
+      rule consumed the normalized merged reading rather than reopening rows or
+      declarations
 non_functional: {}
 contracts:
   - name: 'embed-composite-budget'
