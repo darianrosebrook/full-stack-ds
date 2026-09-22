@@ -72,3 +72,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A2: equal cardinality cannot rescue a changed key' — cardinality equality asserted before composing; composite refused with causes=[REL_LAYER_OPERANDS_UNCOREGISTERED] attributed to combinator, detail naming the structured keys (KSFO, wed) not indices. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
     recorded_at: "2026-09-22T04:19:06.688Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts 'A3: a missing observation leaves the population premise explicitly unresolved' — three-row operand against four-row: unproven with obligation grain:coregistered attributed to combinator, detail naming the unmatched key on the side that lacks it; no silent intersection. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
+    recorded_at: "2026-09-22T04:19:07.272Z"
