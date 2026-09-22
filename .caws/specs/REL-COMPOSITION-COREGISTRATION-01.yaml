@@ -63,3 +63,8 @@ contracts:
   - name: 'composition-vocabulary'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/codes.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 6 'A1: two views of one population compose lawfully, and reordering one operand's rows changes nothing' — two disjoint-channel qualified views of one population retained with combinator layer; the same population with one operand reordered before qualification retained with an equal normalized verdict (kind, combinator, channels, claims). Run on landed main@e6b54cf8: vitest analytical 1076/1076."
+    recorded_at: "2026-09-22T04:19:06.107Z"
