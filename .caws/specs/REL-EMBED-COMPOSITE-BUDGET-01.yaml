@@ -68,3 +68,8 @@ contracts:
   - name: 'embed-composite-budget'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/projection.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: PLACEHOLDER-A1
+    recorded_at: "2026-09-22T17:28:59.585Z"
