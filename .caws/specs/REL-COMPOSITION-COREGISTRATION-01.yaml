@@ -76,3 +76,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A3: a missing observation leaves the population premise explicitly unresolved' — three-row operand against four-row: unproven with obligation grain:coregistered attributed to combinator, detail naming the unmatched key on the side that lacks it; no silent intersection. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
     recorded_at: "2026-09-22T04:19:07.272Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "projection.test.ts 'A4: an unproven operand keeps the composite unproven' — operand with one unreadable participating value: composite unproven with the operand's own obligation bounds:row-consistent attributed from part, and the operand's disposition on the record at path 0. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
+    recorded_at: "2026-09-22T04:19:21.502Z"
