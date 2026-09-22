@@ -64,7 +64,7 @@ try {
       const d = w.document;
       out[id] = {
         innerWidth: w.innerWidth,
-        mainColumns: w.getComputedStyle(d.querySelector(".site__main")).gridTemplateColumns.split(" ").length,
+        mainColumns: w.getComputedStyle(d.querySelector(".site__columns")).gridTemplateColumns.split(" ").length,
         actionsDirection: w.getComputedStyle(d.querySelector(".site__actions")).flexDirection,
         linksWrapped: w.getComputedStyle(d.querySelector(".site__links")).order === "3",
         uploads: window.__typingCat.uploads()[id],
@@ -141,20 +141,40 @@ try {
     trackpadRuns.map(({ at, ...r }) => ({ at: { x: Math.round(at.x), y: Math.round(at.y) }, ...r })));
 
   // A3: a click on a drawn screen reaches the DS control drawn there.
-  const target = await page.evaluate(() => {
-    const frame = document.getElementById("screen-tablet");
-    const btn = [...frame.contentDocument.querySelectorAll("button")].find((b) => b.textContent.includes("Order treats"));
-    const r = btn.getBoundingClientRect();
-    return window.__typingCat.screenPoint(frame, r.left + r.width / 2, r.top + r.height / 2);
-  });
-  await page.mouse.click(target.x, target.y);
-  await page.waitForTimeout(250);
+  // 'Order treats' opens the tablet's treat shop; 'Order' on a product orders it.
+  const clickIn = async (id, selector, match) => {
+    const at = await page.evaluate(([id, selector, match]) => {
+      const frame = document.getElementById(id);
+      const el = [...frame.contentDocument.querySelectorAll(selector)].find((e) => !match || e.textContent.includes(match) || e.getAttribute("aria-label") === match);
+      const r = el.getBoundingClientRect();
+      return window.__typingCat.screenPoint(frame, r.left + r.width / 2, r.top + r.height / 2);
+    }, [id, selector, match]);
+    await page.mouse.move(at.x, at.y, { steps: 6 });
+    await page.mouse.click(at.x, at.y);
+    await page.waitForTimeout(350);
+    return at;
+  };
+  const toastsShowing = () => page.evaluate(() =>
+    ["screen-laptop", "screen-tablet", "screen-phone"].map((id) => {
+      const t = document.getElementById(id).contentDocument.querySelector("[data-site-toast] .toast__item");
+      return t ? `${t.closest("[data-site-toast]").getAttribute("data-site-toast")}: ${t.textContent.trim()}` : null;
+    }));
+  const shopTarget = await clickIn("screen-tablet", "button", "Order treats");
+  const tabletHash = await page.evaluate(() => document.getElementById("screen-tablet").contentWindow.location.hash);
+  const orderTarget = await clickIn("screen-tablet", "button", "Order Tuna flakes");
   const treats = await page.evaluate(() => ({
     store: window.__typingCat.store.get().treatsOrdered,
-    phoneStat: document.getElementById("screen-phone").contentDocument.querySelector("#treats [data-fsds-component=stat]")?.textContent.trim(),
+    tuna: window.__typingCat.store.get().treatOrders.tuna,
+    phoneStat: document.getElementById("screen-phone").contentDocument.querySelector("#treats-ordered [data-fsds-component=stat]")?.textContent.trim(),
   }));
-  check("A3 clicking 'Order treats' where the tablet draws it orders a treat, and the phone shows it", treats.store === 1 && treats.phoneStat === "1", { target, ...treats });
+  const orderToasts = await toastsShowing();
+  check("A3 clicking the tablet's drawn 'Order treats' opens its treat shop, and 'Order' there orders a treat the phone counts",
+    tabletHash === "#/treats" && treats.store === 1 && treats.tuna === 1 && treats.phoneStat === "1",
+    { shopTarget, tabletHash, orderTarget, ...treats });
+  check("A6 ordering a treat shows an 'ordered' toast on all three devices",
+    orderToasts.every((t) => t?.startsWith("ordered: Treat ordered") && t.includes("Tuna flakes")), orderToasts);
   await shot(page, "03-trackpad-and-treat");
+  await clickIn("screen-tablet", "a", "Draft");
 
   // A5: the mouse is only ever over one screen, so it says which device the
   // cat uses. Over the tablet (on its left) the cat leans left and works it
@@ -288,6 +308,126 @@ try {
   const upright = await page.evaluate(() => ({ attention: window.__typingCat.attention(), lean: +window.__typingCat.lean().toFixed(3), right: window.__typingCat.pawMode("right"), left: window.__typingCat.pawMode("left") }));
   check("A5 back over the laptop the cat sits upright: left paw on the keys, right paw on the trackpad",
     upright.attention === "laptop" && Math.abs(upright.lean) < 0.05 && upright.left === "keys" && upright.right === "trackpad", upright);
+
+  // A6: pages, the account menu, toasts and scrolling.
+  const hashes = () => page.evaluate(() =>
+    ["screen-laptop", "screen-tablet", "screen-phone"].map((id) => document.getElementById(id).contentWindow.location.hash || "#/draft"));
+  const pageShown = (id) => page.evaluate((id) => document.getElementById(id).contentDocument.querySelector(".site").dataset.page, id);
+
+  // The avatar opens a menu; its 'Your stats' opens that device's Stats page.
+  await clickIn("screen-laptop", ".site__avatar-button");
+  const menu = await page.evaluate(() => {
+    const d = document.getElementById("screen-laptop").contentDocument;
+    const m = d.querySelector("[data-account-menu]");
+    const trigger = d.querySelector(".site__avatar-button");
+    return {
+      items: m ? [...m.querySelectorAll("button")].map((b) => b.textContent.trim()) : null,
+      expanded: trigger.getAttribute("aria-expanded"),
+      belowAvatar: m ? m.getBoundingClientRect().top >= trigger.getBoundingClientRect().bottom - 1 : false,
+    };
+  });
+  check("A6 clicking the laptop's avatar drops down its account menu",
+    JSON.stringify(menu.items) === JSON.stringify(["Your stats", "Treat shop", "Start a nap", "Sign out"]) && menu.expanded === "true" && menu.belowAvatar,
+    menu);
+  await clickIn("screen-laptop", "[data-account-menu] button", "Your stats");
+  const afterStats = {
+    hashes: await hashes(),
+    laptopPage: await pageShown("screen-laptop"),
+    menuClosed: await page.evaluate(() => !document.getElementById("screen-laptop").contentDocument.querySelector("[data-account-menu]")),
+    activity: await page.evaluate(() => [...document.getElementById("screen-laptop").contentDocument.querySelectorAll("[data-activity] li")].map((li) => li.textContent.trim())),
+  };
+  check("A6 'Your stats' opens the Stats page on that device only, listing the treat order in recent activity",
+    afterStats.laptopPage === "stats" && JSON.stringify(afterStats.hashes) === JSON.stringify(["#/stats", "#/draft", "#/draft"]) &&
+      afterStats.menuClosed && afterStats.activity[0]?.startsWith("Treat ordered"),
+    afterStats);
+
+  // Sign out from the menu: a toast everywhere, and the cat is still signed in.
+  await clickIn("screen-laptop", ".site__avatar-button");
+  await clickIn("screen-laptop", "[data-account-menu] button", "Sign out");
+  const signoutToasts = await toastsShowing();
+  check("A6 'Sign out' in the menu shows a 'signout' toast on all three devices",
+    signoutToasts.every((t) => t?.startsWith("signout: Nice try")), signoutToasts);
+
+  // The draft page's actions toast on every device.
+  await clickIn("screen-laptop", "a", "Draft");
+  await clickIn("screen-laptop", "button", "Send to editor");
+  const sentToasts = await toastsShowing();
+  const sent = await page.evaluate(() => window.__typingCat.store.get().sentToEditor);
+  check("A6 'Send to editor' shows a 'sent' toast on all three devices",
+    sent === 1 && sentToasts.every((t) => t?.startsWith("sent: Sent to editor") && t.includes("notified 1 time.")), { sent, sentToasts });
+
+  // Scrolling: the wheel over a drawn screen scrolls that device's page, the
+  // new scroll position is re-uploaded, and the paw mimes it — a stroke on
+  // the laptop's trackpad, a swipe up the phone's screen.
+  await clickIn("screen-laptop", "a", "Treats");
+  await clickIn("screen-phone", "a", "Treats");
+  const scrollRuns = [];
+  for (const { id, device, paw } of [
+    { id: "screen-laptop", device: "laptop", paw: "right" },
+    { id: "screen-phone", device: "phone", paw: "right" },
+  ]) {
+    const at = await page.evaluate((id) => {
+      const f = document.getElementById(id);
+      const local = { x: f.offsetWidth / 2, y: f.offsetHeight / 2 };
+      return { local, window: window.__typingCat.screenPoint(f, local.x, local.y) };
+    }, id);
+    await page.mouse.move(at.window.x, at.window.y, { steps: 6 });
+    await page.waitForTimeout(700);
+    const before = await page.evaluate((id) => ({
+      scrollY: document.getElementById(id).contentWindow.scrollY,
+      uploads: window.__typingCat.uploads()[id],
+    }), id);
+    await page.mouse.wheel(0, 500);
+    await page.waitForTimeout(120);
+    const during = await page.evaluate(([id, device, paw, local]) => {
+      const c = window.__typingCat;
+      const got = c.pawWorld(paw);
+      // Where the paw rests without a stroke, and where a finger swiping
+      // toward the top of the screen / away from the cat would be.
+      let rest, up;
+      if (device === "laptop") {
+        const uv = c.trackpadUV();
+        rest = c.trackpadWorld(uv.u, uv.v);
+        up = { ...rest, z: rest.z - 1 };
+      } else {
+        const f = document.getElementById(id);
+        rest = c.screenWorld(f, local.x, local.y);
+        up = c.screenWorld(f, local.x, local.y - 100);
+      }
+      const moved = { x: got.x - rest.x, z: got.z - rest.z };
+      const toward = { x: up.x - rest.x, z: up.z - rest.z };
+      const len = Math.hypot(toward.x, toward.z);
+      return {
+        scrollY: document.getElementById(id).contentWindow.scrollY,
+        uploads: c.uploads()[id],
+        mode: c.pawMode(paw),
+        stroke: +c.scrollStroke().toFixed(1),
+        // Paw displacement projected on the "swipe up" direction, world units.
+        alongSwipe: +((moved.x * toward.x + moved.z * toward.z) / len).toFixed(3),
+      };
+    }, [id, device, paw, at.local]);
+    scrollRuns.push({ device, before, during });
+  }
+  check("A6 the mouse wheel scrolls the treat shop on the device under the pointer, and the drawn screen re-uploads",
+    scrollRuns.every((r) => r.during.scrollY > r.before.scrollY + 100 && r.during.uploads > r.before.uploads), scrollRuns);
+  check("A6 while scrolling, the paw strokes the laptop's trackpad and swipes up the phone's screen",
+    scrollRuns[0].during.mode === "trackpad" && scrollRuns[1].during.mode === "phone" &&
+      scrollRuns.every((r) => r.during.stroke < -20 && r.during.alongSwipe > 0.03),
+    scrollRuns.map((r) => ({ device: r.device, ...r.during })));
+  await shot(page, "05-scrolled-shop");
+
+  // Delete everything clears the draft and toasts; do it last, it wipes the text.
+  await clickIn("screen-tablet", "button", "Delete everything");
+  const deleted = await page.evaluate(() => ({
+    draft: window.__typingCat.store.get().draft,
+    deleted: window.__typingCat.store.get().deleted,
+  }));
+  const deleteToasts = await toastsShowing();
+  check("A6 'Delete everything' clears the draft and shows a 'deleted' toast on all three devices",
+    deleted.draft === "" && deleted.deleted === 1 && deleteToasts.every((t) => t?.startsWith("deleted: Draft deleted")), { ...deleted, deleteToasts });
+  await shot(page, "06-deleted-toast");
+  await page.mouse.move(laptopMid.x, laptopMid.y, { steps: 6 });
+  await page.waitForTimeout(1200);
 
   // A4: framing — the cat is in the foreground below the laptop, the laptop
   // screen is above its keyboard, tablet left and phone right.

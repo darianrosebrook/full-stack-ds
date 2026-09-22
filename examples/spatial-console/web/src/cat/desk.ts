@@ -111,6 +111,8 @@ export interface Desk {
     lean(): number;
     pawMode(side: "left" | "right"): PawMode;
     catWorld(): { x: number; y: number; z: number };
+    /** The paw's current scroll stroke, element px; decays to 0. */
+    scrollStroke(): number;
   };
 }
 
@@ -352,6 +354,8 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
   const deviceOf = (frame?: HTMLIFrameElement): Device =>
     frame === screens.tablet ? "tablet" : frame === screens.phone ? "phone" : "laptop";
   const pawFor = (device: "tablet" | "phone") => (device === "tablet" ? paws.left : paws.right);
+  // Where each handheld's paw last hovered or tapped, in screen element px.
+  const hoverAt: Record<"tablet" | "phone", { x: number; y: number } | null> = { tablet: null, phone: null };
   const screenFor = (device: Device) => all.find((s) => s.element === screens[device])!;
 
   const trackpadToWorld = (u: number, v: number) =>
@@ -390,12 +394,26 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
   const tapScreen = (device: "tablet" | "phone", x: number, y: number) => {
     const p = pawFor(device);
     const now = performance.now();
+    hoverAt[device] = { x, y };
     p.target.copy(screenWorld(screens[device], x, y));
     p.slapStart = now;
     lastTap = { device, paw: p.side, x, y, at: now };
   };
   const hoverScreen = (device: "tablet" | "phone", x: number, y: number) => {
+    hoverAt[device] = { x, y };
     pawFor(device).target.copy(screenWorld(screens[device], x, y));
+  };
+
+  // Scrolling: the wheel scrolls the frame under the pointer natively; the
+  // paw mimes it. On the laptop it strokes the trackpad (two-finger scroll),
+  // on a tablet or phone it swipes the screen. Negative = toward the top of
+  // the screen / away from the cat, the way a finger moves to scroll down.
+  let scrollStroke = 0;
+  const STROKE_LIMIT = 80;
+  const onWheel = (device: Device, deltaY: number) => {
+    attention = device;
+    if (device === "laptop") lastPointerAt = performance.now();
+    scrollStroke = THREE.MathUtils.clamp(scrollStroke - deltaY * 0.25, -STROKE_LIMIT, STROKE_LIMIT);
   };
 
   // Typing on a tablet or phone: the paw taps the key on the device's
@@ -453,6 +471,7 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       }
     };
     win.addEventListener("pointermove", move, true);
+    win.addEventListener("wheel", (e) => onWheel(device, e.deltaY), { capture: true, passive: true });
     win.addEventListener(
       "pointerdown",
       (e) => {
@@ -505,7 +524,13 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
   };
   const posePaw = (p: PawState, now: number, dt: number) => {
     const mode = pawMode(p.side, now);
-    if (mode === "trackpad") p.target.copy(trackpadToWorld(trackpadUV.x, trackpadUV.y));
+    if (mode === "trackpad") {
+      p.target.copy(trackpadToWorld(trackpadUV.x, trackpadUV.y));
+      p.target.z += (scrollStroke / STROKE_LIMIT) * TRACKPAD.depth * 0.4;
+    } else if ((mode === "tablet" || mode === "phone") && hoverAt[mode]) {
+      const at = hoverAt[mode]!;
+      p.target.copy(screenWorld(screens[mode], at.x, at.y + scrollStroke));
+    }
     // A paw not busy with a pointer or a recent key drifts home to the keys.
     if (mode === "keys" && now - p.slapStart > 600 && !(p.side === "right" && now - lastPointerAt < 2500)) {
       p.target.lerp(p.rest, 1 - Math.exp(-dt * 3));
@@ -535,6 +560,7 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     const now = performance.now();
     const dt = Math.min((now - lastFrame) / 1000, 0.1);
     lastFrame = now;
+    scrollStroke *= Math.exp(-dt * 4);
     // Lean toward the attended device: slide over, turn to face it, tilt in.
     const leanTarget = attention === "tablet" ? -1 : attention === "phone" ? 1 : 0;
     lean += (leanTarget - lean) * (1 - Math.exp(-dt * 6));
@@ -588,6 +614,7 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       lean: () => lean,
       pawMode: (side) => pawMode(side, performance.now()),
       catWorld: () => plain(cat.position),
+      scrollStroke: () => scrollStroke,
     },
   };
 }
