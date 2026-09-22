@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "verify-runtime.mjs: raycast pick of 3D object sets selected=Cube, Lit Stat reads Cube and telemetry uploads increase (e.g. 32->43); clicking the 3D lamp bulb sets lampOn=false and React Switch input.checked=false; DevTools MCP screenshot shows Lit Status 'Lamp off' + Selected 'Lamp'"
     recorded_at: "2026-09-22T21:56:15.975Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "verify-runtime.mjs 'A4 unflagged Chrome shows the unsupported notice naming the flags' (visible, canvas hidden, detail lists requestPaint + texElement*); independently confirmed by unflagged DevTools MCP browser screenshot"
+    recorded_at: "2026-09-22T21:56:24.881Z"
