@@ -13,9 +13,10 @@
  * corpus case; `checkCorpus` enforces both directions between the catalogue
  * and the corpus, and the fixture ledger enforces that each has a fixture and
  * a legal near-neighbour. Nothing may be added here speculatively. The
- * boundary-owned blocks (`DERIVATION_DIAG`, `QUALIFIED_DIAG`) deliberately sit
- * outside that rule — see their own statements. A `REL_*` spelling alone
- * therefore does NOT imply catalogue membership.
+ * boundary-owned blocks (`DERIVATION_DIAG`, `QUALIFIED_DIAG`,
+ * `COMPOSITION_DIAG`) deliberately sit outside that rule — see their own
+ * statements. A `REL_*` spelling alone therefore does NOT imply catalogue
+ * membership.
  */
 
 export const DIAG = {
@@ -105,4 +106,24 @@ export const DERIVATION_DIAG = {
 export const QUALIFIED_DIAG = {
   /** A readable observation falsifies an applicable declared bounds relationship. */
   BOUNDS_ROW_VIOLATED: "REL_FIELD_BOUNDS_VIOLATED",
+} as const;
+
+/**
+ * Codes the COMPOSITION boundary owns.
+ *
+ * `LAYER_OPERANDS_UNCOREGISTERED` is not in the doctrine catalogue and carries
+ * no corpus case, on the same line `DERIVATION_DIAG` and `QUALIFIED_DIAG`
+ * draw: the corpus-level judge (`engines.ts`) never emits it. It is the layer
+ * combinator's own vocabulary, emitted only by `projection.ts`'s layer rule
+ * when two qualified operands claim one population at EQUAL cardinality while
+ * their structured source-grain key sets differ — an observed unregistration,
+ * not a missing premise. (An operand that merely LACKS an observation leaves
+ * the premise unresolved and is an obligation, never this code.) Its semantic
+ * authority is this declaration plus the layer co-registration rule in
+ * `projection.ts`, NOT the doctrine's diagnostic catalogue. Nothing may be
+ * added here speculatively.
+ */
+export const COMPOSITION_DIAG = {
+  /** Equal-cardinality layer operands whose structured source-grain key sets differ. */
+  LAYER_OPERANDS_UNCOREGISTERED: "REL_LAYER_OPERANDS_UNCOREGISTERED",
 } as const;

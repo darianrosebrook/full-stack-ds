@@ -86,7 +86,7 @@ import {
 } from "./projection.js";
 import type { Composite, CompositePart, CompositeVerdict, Enumeration, OperationJudgment, AggregateAssertionDecl, Program, ResultFacts, Row, TargetInventory } from "./projection.js";
 import type { RelationalStructure, UnitDecl } from "./relation-model.js";
-import { QUALIFIED_DIAG } from "./codes.js";
+import { COMPOSITION_DIAG, OBLIGATION, QUALIFIED_DIAG } from "./codes.js";
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const DOCTRINE = path.resolve(HERE, "../../../../docs/architecture/analytical-relation-doctrine.md");
@@ -2537,5 +2537,198 @@ describe("RESTART piece 5: the source-grain qualified relation", () => {
     // The observations are the same set modulo the rename and reorder.
     const norm = (r: typeof a) => r.observations.map((o) => JSON.stringify(o)).sort();
     expect(norm(b)).toEqual(norm(a));
+  });
+});
+
+/* ---------------------------------------------------------------------------
+ * RESTART piece 6 — M3 COMPOSITION CO-REGISTRATION (REL-COMPOSITION-COREGISTRATION-01)
+ *
+ * The capability question: can `layer` combine two projections of one
+ * qualified relational population only when their operands are co-registered
+ * to the same structured source-grain observations — without matching by row
+ * order, cardinality, field spelling, or any form knowledge?
+ *
+ * The rule consumes the operands' CARRIED structured keys: the same object the
+ * qualification produced. The spellings below are deliberately neutral
+ * (stations, days, temperatures, humidity) — nothing in the rule or in these
+ * controls names a form, and nothing reopens rows.
+ * ------------------------------------------------------------------------- */
+
+describe("RESTART piece 6: layer co-registration by source-grain identity", () => {
+  const neutral = {
+    relations: {
+      readings: {
+        grain: ["station", "day"],
+        fields: {
+          station: { transformation: "nominal" },
+          day: { transformation: "interval", temporality: { kind: "interval" } },
+          lo: { transformation: "ratio" },
+          hi: { transformation: "ratio" },
+          temp: { transformation: "ratio", bounds: { lower: "lo", upper: "hi" } },
+          humidity: { transformation: "ratio" },
+        },
+      },
+    },
+  } as unknown as RelationalStructure;
+
+  const rows = [
+    { station: "KOAK", day: "mon", lo: 8, hi: 20, temp: 12, humidity: 60 },
+    { station: "KOAK", day: "tue", lo: 9, hi: 21, temp: 15, humidity: 55 },
+    { station: "KSFO", day: "mon", lo: 7, hi: 18, temp: 11, humidity: 80 },
+    { station: "KSFO", day: "tue", lo: 8, hi: 19, temp: 14, humidity: 75 },
+  ];
+  const reordered = [rows[2]!, rows[0]!, rows[3]!, rows[1]!];
+  const keyChanged = rows.map((r) => (r.station === "KSFO" && r.day === "tue" ? { ...r, day: "wed" } : r));
+  const shortPopulation = rows.filter((r) => !(r.station === "KSFO" && r.day === "tue"));
+  const unreadableTemp = rows.map((r, i) => (i === 0 ? { ...r, temp: "N/A" } : r));
+  const oneViolated = rows.map((r, i) => (i === 3 ? { ...r, temp: (r.hi as number) + 3 } : r));
+
+  const qualifiedOver = (rs: Array<Record<string, unknown>>) => qualifyRelation(neutral, "readings", rs);
+  const view = (result: ReturnType<typeof qualifiedOver>, field: string, channel: "length" | "hue"): CompositePart => ({ kind: "qualified", result, field, channel });
+  const compose = (a: CompositePart, b: CompositePart) =>
+    judgeComposite({ structure: neutral, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [a, b], sharing: {} } });
+  const norm = (v: CompositeVerdict): string => {
+    if (v.kind === "refused") return JSON.stringify({ kind: v.kind, causes: [...v.causes].sort(), from: v.from });
+    if (v.kind === "unproven") return JSON.stringify({ kind: v.kind, obligation: v.obligation, from: v.from });
+    if (v.kind === "unsupported") return JSON.stringify({ kind: v.kind, obligation: v.obligation, from: v.from });
+    return JSON.stringify({ kind: v.kind, combinator: v.combinator, channels: [...v.channels].sort(), claims: [...v.claims].sort() });
+  };
+
+  it("A1: two views of one population compose lawfully, and reordering one operand's rows changes nothing", () => {
+    const base = compose(view(qualifiedOver(rows), "temp", "length"), view(qualifiedOver(rows), "humidity", "hue"));
+    expect(base.verdict.kind).toBe("retained");
+    if (base.verdict.kind !== "retained") return;
+    expect(base.verdict.combinator).toBe("layer");
+
+    // The same population, one operand's rows reordered BEFORE qualification:
+    // alignment is the key SET, so the composition stays lawful with an equal
+    // normalized verdict.
+    const shuffled = compose(view(qualifiedOver(rows), "temp", "length"), view(qualifiedOver(reordered), "humidity", "hue"));
+    expect(shuffled.verdict.kind).toBe("retained");
+    expect(norm(shuffled.verdict)).toEqual(norm(base.verdict));
+  });
+
+  it("A2: equal cardinality cannot rescue a changed key — the composite is refused and the refusal cannot be read as cardinality-derived", () => {
+    const a = qualifiedOver(rows);
+    const b = qualifiedOver(keyChanged);
+    // Cardinality equality is ASSERTED, so the refusal below is attributable
+    // to the key mismatch alone.
+    expect(a.observations.length).toBe(b.observations.length);
+
+    const j = compose(view(a, "temp", "length"), view(b, "humidity", "hue"));
+    expect(j.verdict.kind).toBe("refused");
+    if (j.verdict.kind !== "refused") return;
+    expect(j.verdict.causes).toEqual([COMPOSITION_DIAG.LAYER_OPERANDS_UNCOREGISTERED]);
+    expect(j.verdict.from).toBe("combinator");
+    // The structured keys are named — not indices.
+    expect(j.verdict.detail).toContain("KSFO");
+    expect(j.verdict.detail).toContain("wed");
+  });
+
+  it("A3: a missing observation leaves the population premise explicitly unresolved — no silent intersection", () => {
+    const j = compose(view(qualifiedOver(rows), "temp", "length"), view(qualifiedOver(shortPopulation), "humidity", "hue"));
+    expect(j.verdict.kind).toBe("unproven");
+    if (j.verdict.kind !== "unproven") return;
+    expect(j.verdict.obligation).toBe("grain:coregistered");
+    expect(j.verdict.from).toBe("combinator");
+    // The unmatched key is named on the side that lacks it.
+    expect(j.verdict.detail).toContain("tue");
+    expect(j.verdict.detail).toContain("KSFO");
+  });
+
+  it("A4: an unproven operand keeps the composite unproven, attributed to the part at its recorded path", () => {
+    const j = compose(view(qualifiedOver(unreadableTemp), "temp", "length"), view(qualifiedOver(rows), "humidity", "hue"));
+    expect(j.verdict.kind).toBe("unproven");
+    if (j.verdict.kind !== "unproven") return;
+    expect(j.verdict.obligation).toBe(OBLIGATION.BOUNDS_ROW_CONSISTENT);
+    expect(j.verdict.from).toBe("part");
+    // The operand's own disposition is on the record at its own path.
+    const part0 = j.parts.find((x) => x.path.join(".") === "0")!;
+    expect(part0.verdict.kind).toBe("unproven");
+  });
+
+  it("A5: a scoped contradiction refuses the composite with the operand's own cause, naming the violated observation's key", () => {
+    const j = compose(view(qualifiedOver(oneViolated), "temp", "length"), view(qualifiedOver(rows), "humidity", "hue"));
+    expect(j.verdict.kind).toBe("refused");
+    if (j.verdict.kind !== "refused") return;
+    expect(j.verdict.causes).toEqual([QUALIFIED_DIAG.BOUNDS_ROW_VIOLATED]);
+    expect(j.verdict.from).toBe("part");
+    expect(j.verdict.detail).toContain("KSFO");
+    const part0 = j.parts.find((x) => x.path.join(".") === "0")!;
+    expect(part0.verdict.kind).toBe("refused");
+  });
+
+  it("A6: a consistent rename of relation, fields, bounds references, rows and views yields equivalent normalized verdicts", () => {
+    const renamed = {
+      relations: {
+        telemetry: {
+          grain: ["sensor", "date"],
+          fields: {
+            sensor: { transformation: "nominal" },
+            date: { transformation: "interval", temporality: { kind: "interval" } },
+            floor: { transformation: "ratio" },
+            ceiling: { transformation: "ratio" },
+            measure: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling" } },
+            dampness: { transformation: "ratio" },
+          },
+        },
+      },
+    } as unknown as RelationalStructure;
+    const renamedRows = rows.map((r) => ({ sensor: r.station, date: r.day, floor: r.lo, ceiling: r.hi, measure: r.temp, dampness: r.humidity }));
+    const renamedKeyChanged = renamedRows.map((r) => (r.sensor === "KSFO" && r.date === "tue" ? { ...r, date: "wed" } : r));
+    const renamedOver = (rs: Array<Record<string, unknown>>) => qualifyRelation(renamed, "telemetry", rs);
+    const renamedView = (result: ReturnType<typeof renamedOver>, field: string, channel: "length" | "hue"): CompositePart => ({ kind: "qualified", result, field, channel });
+    const composeRenamed = (a: CompositePart, b: CompositePart) =>
+      judgeComposite({ structure: renamed, inventory: EXPERIMENT_TARGET, composite: { combinator: "layer", parts: [a, b], sharing: {} } });
+
+    // Lawful path: equivalent modulo the rename.
+    const base = compose(view(qualifiedOver(rows), "temp", "length"), view(qualifiedOver(rows), "humidity", "hue"));
+    const renamedJ = composeRenamed(renamedView(renamedOver(renamedRows), "measure", "length"), renamedView(renamedOver(renamedRows), "dampness", "hue"));
+    expect(renamedJ.verdict.kind).toBe("retained");
+    expect(norm(renamedJ.verdict)).toEqual(norm(base.verdict));
+
+    // Refusal path: the cause vocabulary and attribution are rename-invariant;
+    // only the detail prose spells differently.
+    const refusedBase = compose(view(qualifiedOver(rows), "temp", "length"), view(qualifiedOver(keyChanged), "humidity", "hue"));
+    const refusedRenamed = composeRenamed(renamedView(renamedOver(renamedRows), "measure", "length"), renamedView(renamedOver(renamedKeyChanged), "dampness", "hue"));
+    expect(norm(refusedRenamed.verdict)).toEqual(norm(refusedBase.verdict));
+  });
+
+  it("A7: the precommitted positional mutants are killed in opposite directions by the reorder and key-changed controls", () => {
+    const a = qualifiedOver(rows);
+    const bShuffled = qualifiedOver(reordered);
+    const bKeyChanged = qualifiedOver(keyChanged);
+
+    // MUTANT 1 — key-positional: co-registered iff same length and key[i] matches key[i].
+    const keyPositional = (x: typeof a, y: typeof bShuffled) =>
+      x.observations.length === y.observations.length && x.observations.every((o, i) => JSON.stringify(o.key) === JSON.stringify(y.observations[i]!.key));
+    // MUTANT 2 — cardinality-only: co-registered iff same length.
+    const cardinalityOnly = (x: typeof a, y: typeof bShuffled) => x.observations.length === y.observations.length;
+
+    // The real rule: lawful on the reordered pair, refused on the key-changed pair.
+    expect(compose(view(a, "temp", "length"), view(bShuffled, "humidity", "hue")).verdict.kind).toBe("retained");
+    expect(compose(view(a, "temp", "length"), view(bKeyChanged, "humidity", "hue")).verdict.kind).toBe("refused");
+
+    // Mutant 1 refuses the LAWFUL reordered pair — killed by false refusal.
+    expect(keyPositional(a, bShuffled)).toBe(false);
+    // Mutant 2 accepts the UNLAWFUL key-changed pair — killed by false
+    // acceptance, with the cardinality genuinely equal so the real refusal
+    // cannot be cardinality-derived.
+    expect(cardinalityOnly(a, bKeyChanged)).toBe(true);
+  });
+
+  it("scope boundary: a layer mixing a qualified operand with an aggregate program operand throws — an inapplicable request, not a judgment", () => {
+    const program = bindOperation(neutral, { relation: "readings", field: "humidity", op: "sum", along: ["day"] });
+    // The program part is never READ: the family guard fires on the parts'
+    // kinds before any operand is read, so the bound operation's shape beyond
+    // its kind is immaterial here.
+    const programPart = { kind: "program", program: program as unknown as Program } as CompositePart;
+    expect(() =>
+      judgeComposite({
+        structure: neutral,
+        inventory: EXPERIMENT_TARGET,
+        composite: { combinator: "layer", parts: [view(qualifiedOver(rows), "temp", "length"), programPart], sharing: {} },
+      }),
+    ).toThrow(/not typed by this boundary/);
   });
 });
