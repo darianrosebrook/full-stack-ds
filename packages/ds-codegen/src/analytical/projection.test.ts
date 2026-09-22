@@ -3168,3 +3168,266 @@ describe("RESTART piece 8: facet partition binding from carried source-grain ide
     expect(panels.flatMap((p) => [...p.keys]).length).toBe(ohlcQ.observations.length);
   });
 });
+
+/* ---------------------------------------------------------------------------
+ * RESTART piece 9 — EMBED COMPOSITE BUDGET (REL-EMBED-COMPOSITE-BUDGET-01)
+ *
+ * The question: can `embed` type a COMPOSED analytical object against a cell
+ * budget without flattening it to one atomic descendant? The budget is typed
+ * against the complete outward reading — every channel the composite presents
+ * — and the derived structure travels through the verdict. The precommitted
+ * mutant is the first-descendant rule: it must be refuted by a budget that
+ * hosts the first child's channel and not the second's.
+ * ------------------------------------------------------------------------- */
+
+describe("RESTART piece 9: embed types a composed object from its complete reading", () => {
+  const neutral = {
+    relations: {
+      readings: {
+        grain: ["station", "day"],
+        fields: {
+          station: { transformation: "nominal" },
+          day: { transformation: "interval", temporality: { kind: "interval" } },
+          floor: { transformation: "ratio" },
+          ceiling: { transformation: "ratio" },
+          value_a: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling" } },
+          value_b: { transformation: "ratio", bounds: { lower: "floor", upper: "ceiling" } },
+          humidity: { transformation: "ratio" },
+          label: { transformation: "nominal" },
+        },
+      },
+    },
+  } as unknown as RelationalStructure;
+
+  const rows = [
+    { station: "S1", day: "d1", floor: 5, ceiling: 20, value_a: 10, value_b: 12, humidity: 60, label: "alpha" },
+    { station: "S1", day: "d2", floor: 6, ceiling: 21, value_a: 11, value_b: 14, humidity: 55, label: "beta" },
+    { station: "S2", day: "d1", floor: 4, ceiling: 19, value_a: 9, value_b: 13, humidity: 80, label: "gamma" },
+    { station: "S2", day: "d2", floor: 7, ceiling: 22, value_a: 12, value_b: 15, humidity: 75, label: "delta" },
+  ];
+  const reordered = [rows[2]!, rows[0]!, rows[3]!, rows[1]!];
+  const violated = rows.map((r, i) => (i === 3 ? { ...r, value_a: (r.ceiling as number) + 1 } : r));
+  const unreadable = rows.map((r, i) => (i === 0 ? { ...r, value_a: "N/A" } : r));
+
+  type Ch = "length" | "hue" | "angle" | "position";
+  const view = (result: ReturnType<typeof qualifyRelation>, field: string, channel: Ch): CompositePart => ({ kind: "qualified", result, field, channel });
+  const layerComposite = (rs: Array<Record<string, unknown>> = rows): Composite => {
+    const q = qualifyRelation(neutral, "readings", rs);
+    return { combinator: "layer", parts: [view(q, "value_a", "length"), view(q, "value_b", "hue")], sharing: {} };
+  };
+  const singleViewLayer = (rs: Array<Record<string, unknown>> = rows): Composite => {
+    const q = qualifyRelation(neutral, "readings", rs);
+    return { combinator: "layer", parts: [view(q, "value_a", "length")], sharing: {} };
+  };
+  const facetComposite = (rs: Array<Record<string, unknown>> = rows): Composite => ({
+    combinator: "facet",
+    parts: [{ kind: "composite", composite: layerComposite(rs) }],
+    partition: "station",
+    policy: { length: "free", hue: "free" } as never,
+  });
+  // A host that RETAINS against the neutral structure (magnitude comparison over
+  // the ratio measure `humidity`, grouped by `station`).
+  const host: Program = {
+    coordinate: "cartesian",
+    dimension: "position",
+    measure: "length",
+    baseline: "zero",
+    task: "magnitude-comparison",
+    claims: [],
+    operation: bindOperation(neutral, { relation: "readings", field: "humidity", op: "sum", along: ["day"] }),
+  };
+  const judgeIt = (c: Composite) => judgeComposite({ structure: neutral, inventory: EXPERIMENT_TARGET, composite: c });
+  const embedIt = (budget: Ch[], part: Composite, hostProgram: Program = host) =>
+    judgeComposite({
+      structure: neutral,
+      inventory: EXPERIMENT_TARGET,
+      composite: { combinator: "embed", host: hostProgram, budget: budget as never, cellBaseline: "zero", part: { kind: "composite", composite: part } },
+    });
+
+  it("A1: a composed object reaches the embed rule and is typed from the complete reading", () => {
+    const j = embedIt(["length", "hue"], layerComposite());
+    expect(j.verdict.kind).toBe("retained");
+    if (j.verdict.kind !== "retained") return;
+    expect(j.verdict.combinator).toBe("embed");
+    // The cell's own induced claims join the composite's, through the same
+    // channelClaims authority the atomic path uses.
+    expect(j.verdict.claims).toEqual(expect.arrayContaining(["aggregate-magnitude", "ratio-comparability"]));
+    // The nested facet composite reaches the same branch.
+    expect(embedIt(["length", "hue"], facetComposite()).verdict.kind).toBe("retained");
+  });
+
+  it("A2: the retained verdict preserves the inner composite's structure unreconstructed", () => {
+    const inner = judgeIt(facetComposite());
+    const outer = embedIt(["length", "hue"], facetComposite());
+    expect(inner.verdict.kind).toBe("retained");
+    expect(outer.verdict.kind).toBe("retained");
+    if (inner.verdict.kind !== "retained" || outer.verdict.kind !== "retained") return;
+    expect(outer.verdict.panels).toEqual(inner.verdict.panels);
+    expect(outer.verdict.population).toEqual(inner.verdict.population);
+    expect(outer.verdict.channels).toEqual(inner.verdict.channels);
+    expect(outer.verdict.transformations).toEqual(inner.verdict.transformations);
+  });
+
+  it("A3: a minimally changed budget that cannot host a presented channel refuses, naming it", () => {
+    const full = embedIt(["length", "hue"], layerComposite());
+    expect(full.verdict.kind).toBe("retained");
+    const j = embedIt(["hue"], layerComposite());
+    expect(j.verdict.kind).toBe("refused");
+    if (j.verdict.kind !== "refused") return;
+    expect(j.verdict.causes).toEqual(["REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET"]);
+    expect(j.verdict.from).toBe("combinator");
+    // The presented channel the budget cannot host is NAMED — and a nonempty
+    // budget is not what decides.
+    expect(j.verdict.detail).toContain("length:ratio");
+    expect(["hue"].length).toBeGreaterThan(0);
+  });
+
+  it("A4: the first-descendant mutant is refuted — the complete reading decides", () => {
+    // The first view presents value_a (a RATIO field) on `length`; the second
+    // presents `label` (NOMINAL) on `hue`. The budget ["length"] hosts the
+    // first descendant's transformation and cannot host the second's.
+    const mixedLayer = (): Extract<Composite, { combinator: "layer" }> => {
+      const q = qualifyRelation(neutral, "readings", rows);
+      return { combinator: "layer", parts: [view(q, "value_a", "length"), view(q, "label", "hue")], sharing: {} };
+    };
+    const budget: Ch[] = ["length"];
+    const j = embedIt(budget, mixedLayer());
+    expect(j.verdict.kind).toBe("refused");
+    if (j.verdict.kind === "refused") expect(j.verdict.detail).toContain("hue:nominal");
+
+    // PRECOMMITTED MUTANT: type only the FIRST operand's presented channel.
+    const fields = (neutral.relations as Record<string, { fields: Record<string, { transformation: string }> }>).readings.fields;
+    const firstDescendantHostable = (c: Extract<Composite, { combinator: "layer" }>, b: Ch[]) => {
+      const first = c.parts![0] as { kind: string; field: string };
+      const t = fields[first.field]!.transformation;
+      return b.some((x) => CAPACITY[x].carries.includes(t as never));
+    };
+    // The mutant would accept this budget (the first descendant's ratio is
+    // hostable by `length`)...
+    expect(firstDescendantHostable(mixedLayer(), budget)).toBe(true);
+    // ...while the real rule refuses, because the SECOND presented channel is not.
+    expect(j.verdict.kind).toBe("refused");
+  });
+
+  it("A5: a faulted inner composite keeps its own cause; the budget never replaces it", () => {
+    const refusedJ = embedIt(["length", "hue"], layerComposite(violated));
+    expect(refusedJ.verdict.kind).toBe("refused");
+    if (refusedJ.verdict.kind === "refused") {
+      expect(refusedJ.verdict.causes).toEqual([QUALIFIED_DIAG.BOUNDS_ROW_VIOLATED]);
+      expect(refusedJ.verdict.from).toBe("part");
+    }
+    // The budget here is ALSO insufficient — the part's standing still wins.
+    const unprovenJ = embedIt(["hue"], layerComposite(unreadable));
+    expect(unprovenJ.verdict.kind).toBe("unproven");
+    if (unprovenJ.verdict.kind === "unproven") expect(unprovenJ.verdict.from).toBe("part");
+  });
+
+  it("A6: host, part and combinator stay distinct repair loci", () => {
+    const badHost = { ...host, task: "trend" } as Program;
+    const hostJ = embedIt(["length", "hue"], layerComposite(), badHost);
+    expect(hostJ.verdict.kind).toBe("unsupported");
+    if (hostJ.verdict.kind === "unsupported") expect(hostJ.verdict.from).toBe("host");
+
+    const partJ = embedIt(["length", "hue"], layerComposite(violated));
+    if (partJ.verdict.kind === "refused") expect(partJ.verdict.from).toBe("part");
+
+    const budgetJ = embedIt(["hue"], layerComposite());
+    if (budgetJ.verdict.kind === "refused") expect(budgetJ.verdict.from).toBe("combinator");
+  });
+
+  it("A7: the embed rule reads the normalized reading only — no operand identity, no reopened rows", () => {
+    const inner = judgeIt(layerComposite());
+    const outer = embedIt(["length", "hue"], layerComposite());
+    if (inner.verdict.kind !== "retained" || outer.verdict.kind !== "retained") throw new Error("expected retained");
+    expect(outer.verdict.population).toEqual(inner.verdict.population);
+    // The embed consumed the MERGED reading (population travels), not an
+    // operand's identity: a merge carries no operand identity.
+    expect(outer.verdict.identity).toBeUndefined();
+    expect(outer.verdict.panels).toEqual(inner.verdict.panels);
+  });
+
+  it("A8: reordering source observations leaves the embed judgment equivalent", () => {
+    const a = embedIt(["length", "hue"], facetComposite(rows));
+    const b = embedIt(["length", "hue"], facetComposite(reordered));
+    expect(a.verdict.kind).toBe("retained");
+    expect(b.verdict.kind).toBe("retained");
+    if (a.verdict.kind !== "retained" || b.verdict.kind !== "retained") return;
+    expect(JSON.stringify(b.verdict.panels)).toEqual(JSON.stringify(a.verdict.panels));
+  });
+
+  it("A9: alpha invariance — a consistent rename leaves the embed judgment equivalent", () => {
+    const renamed = {
+      relations: {
+        samples: {
+          grain: ["site", "date"],
+          fields: {
+            site: { transformation: "nominal" },
+            date: { transformation: "interval", temporality: { kind: "interval" } },
+            base: { transformation: "ratio" },
+            cap: { transformation: "ratio" },
+            first_value: { transformation: "ratio", bounds: { lower: "base", upper: "cap" } },
+            second_value: { transformation: "ratio", bounds: { lower: "base", upper: "cap" } },
+            moisture: { transformation: "ratio" },
+          },
+        },
+      },
+    } as unknown as RelationalStructure;
+    const renamedRows = rows.map((r) => ({ site: r.station, date: r.day, base: r.floor, cap: r.ceiling, first_value: r.value_a, second_value: r.value_b, moisture: r.humidity }));
+    const q = qualifyRelation(renamed, "samples", renamedRows);
+    const renamedHost: Program = { ...host, operation: bindOperation(renamed, { relation: "samples", field: "moisture", op: "sum", along: ["date"] }) };
+    const layer: Composite = {
+      combinator: "layer",
+      parts: [
+        { kind: "qualified", result: q, field: "first_value", channel: "length" },
+        { kind: "qualified", result: q, field: "second_value", channel: "hue" },
+      ],
+      sharing: {},
+    };
+    const facet: Composite = { combinator: "facet", parts: [{ kind: "composite", composite: layer }], partition: "site", policy: { length: "free", hue: "free" } as never };
+    const j = judgeComposite({
+      structure: renamed,
+      inventory: EXPERIMENT_TARGET,
+      composite: { combinator: "embed", host: renamedHost, budget: ["length", "hue"] as never, cellBaseline: "zero", part: { kind: "composite", composite: facet } },
+    });
+    expect(j.verdict.kind).toBe("retained");
+    if (j.verdict.kind !== "retained") return;
+    const panels = j.verdict.panels!;
+    expect(panels.map((p) => p.value)).toEqual(["S1", "S2"]);
+    for (const p of panels) expect(p.ranges).toEqual([{ lower: "base", upper: "cap", members: ["first_value", "second_value"] }]);
+  });
+
+  it("A10: second witness — the OHLC-derived composition embeds without adaptation", () => {
+    const load = loadOracle().fixtures.get("FX_P_OHLC_PAIR")!;
+    const ohlcStructure = load.structure as RelationalStructure;
+    const ohlcRows = (load.evidence as { rows: { candles: Array<Record<string, unknown>> } }).rows.candles;
+    const q = qualifyRelation(ohlcStructure, "candles", ohlcRows);
+    const layer: Composite = {
+      combinator: "layer",
+      parts: [
+        { kind: "qualified", result: q, field: "open", channel: "length" },
+        { kind: "qualified", result: q, field: "close", channel: "hue" },
+      ],
+      sharing: {},
+    };
+    const facet: Composite = { combinator: "facet", parts: [{ kind: "composite", composite: layer }], partition: "symbol", policy: { length: "free", hue: "free" } as never };
+    const ohlcHost: Program = { ...host, operation: bindOperation(ohlcStructure, { relation: "candles", field: "volume", op: "sum", along: ["period"] }) };
+    const j = judgeComposite({
+      structure: ohlcStructure,
+      inventory: EXPERIMENT_TARGET,
+      composite: { combinator: "embed", host: ohlcHost, budget: ["length", "hue"] as never, cellBaseline: "zero", part: { kind: "composite", composite: facet } },
+    });
+    expect(j.verdict.kind).toBe("retained");
+    if (j.verdict.kind !== "retained") return;
+    const panels = j.verdict.panels!;
+    expect(panels.map((p) => p.value).sort()).toEqual(["AAA", "BBB"]);
+    for (const p of panels) expect(p.ranges).toEqual([{ lower: "low", upper: "high", members: ["close", "open"] }]);
+  });
+
+  it("A11: a presented channel whose only host needs an uncarried fact leaves the premise unproven", () => {
+    const j = embedIt(["angle"], singleViewLayer());
+    expect(j.verdict.kind).toBe("unproven");
+    if (j.verdict.kind !== "unproven") return;
+    expect(j.verdict.obligation).toBe("budget:channel-licence");
+    expect(j.verdict.from).toBe("combinator");
+  });
+});

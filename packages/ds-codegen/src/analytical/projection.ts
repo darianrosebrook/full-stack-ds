@@ -547,6 +547,18 @@ export function channelClaims(channel: Channel, baseline: BaselineDecl, facts: R
   return out;
 }
 
+/**
+ * The claims ONE channel induces for a measure of THIS transformation, at a
+ * declared baseline. `channelClaims` is the single authority for the
+ * capacity-to-claim consequences and reads only `facts.measure.transformation`
+ * for its verdict; this factor lets the COMPOSITE budget path ask the same
+ * question of a channel the reading carries without inventing the rest of a
+ * program's facts. A test pins the two agree over full facts across channels,
+ * transformations and baselines, so the narrowing cannot drift silently.
+ */
+const channelClaimsForTransformation = (channel: Channel, baseline: BaselineDecl, transformation: Transformation): Claim[] =>
+  channelClaims(channel, baseline, { measure: { transformation } } as ResultFacts);
+
 /* ------------------------------------------------------------ enumeration */
 
 export type EnumerationInput = {
@@ -2311,6 +2323,8 @@ export const COMPOSITION_NON_CLAIMS: readonly string[] = [
   "A derived range does not silently merge into a parent's summary through `mergeReadings`: a combinator that needs its operand's groups reads them explicitly and binds them, as the facet does into its panels. A layer mixing a qualified operand with any other operand family was already refused before derivation could run.",
   "A facet panel's membership is a statement about which observations belong together, never about traversal order: partition is not ordering, and the canonical sort of member keys inside a panel is an artifact of comparison.",
   "A facet never reopens source rows or the relation declaration to discover panel membership: the population it partitions is the carried source-grain binding set, and disagreement between its operands' populations refuses before any panel exists.",
+  "The composite budget check asks, per presented channel, whether SOME budget channel can host that channel's carried transformation. It does NOT adjudicate channel MULTIPLICITY — two presented channels may share one host channel in this rule — because no separating case in this slice distinguishes 'the cell has one slot' from 'the cell has enough slots'; that distinction would need its own evidence.",
+  "The composite branch reads only the facts a composite reading carries: channels and their transformations. A licence that would need a fact the reading does not carry (scale cyclicity for a cyclic-or-whole channel) leaves the premise unproven rather than defaulting, and the narrower claim-induction path is pinned against the atomic path's full-facts result.",
 ];
 
 const refusedComposition = (causes: string[], from: OperandRole, detail: string): CompositeRefusal => ({
@@ -2810,11 +2824,52 @@ function judgeFacet(c: FacetComposite, parts: PartReading[]): CompositeVerdict {
  */
 function judgeEmbed(c: EmbedComposite, part: PartReading, host: PartReading | undefined): CompositeVerdict {
   if (!part.probe) {
-    return unprovenComposition(
-      "invariant:cell-budget",
-      "combinator",
-      "the embedded part is a sub-composite, and this experiment types a cell budget against an atomic projection only",
-    );
+    // COMPOSITE BRANCH: the budget is typed against the COMPLETE outward
+    // reading, never against one atomic descendant. Every channel the
+    // composite presents must be hostable at its carried transformation by
+    // SOME budget channel; a presented channel whose only host needs a fact
+    // the reading does not carry (a cyclic-or-whole licence with no carried
+    // cyclicity) leaves the premise UNPROVEN rather than defaulting, and a
+    // presented channel no budget channel can host refuses with the same
+    // budget rule the atomic path uses. Nothing is re-read: the reading's own
+    // channels, transformations, claims, ranges, panels and population travel
+    // through the verdict untouched.
+    const presented = part.channels.filter((ch) => part.transformations[ch] !== undefined);
+    const unhostable: string[] = [];
+    const unlicensed: string[] = [];
+    const inCell = new Set<Claim>();
+    for (const ch of presented) {
+      const transformation = part.transformations[ch]!;
+      const hosts = c.budget.filter((b) => CAPACITY[b].carries.includes(transformation));
+      if (hosts.length === 0) {
+        unhostable.push(`${ch}:${transformation}`);
+        continue;
+      }
+      const licensed = hosts.filter((b) => !CAPACITY[b].requiresCyclicOrWhole);
+      if (licensed.length === 0) {
+        unlicensed.push(`${ch}:${transformation}`);
+        continue;
+      }
+      for (const b of licensed) for (const claim of channelClaimsForTransformation(b, c.cellBaseline, transformation)) inCell.add(claim);
+    }
+    if (unhostable.length > 0) {
+      return refusedComposition(
+        ["REL_EMBED_TASK_EXCEEDS_CHANNEL_BUDGET"],
+        "combinator",
+        `the cell budget [${[...c.budget].join(", ")}] at a ${c.cellBaseline} baseline cannot host the channel(s) the composite presents as ${unhostable.join(", ")}; every presented channel must be hosted, not one descendant's`,
+      );
+    }
+    if (unlicensed.length > 0) {
+      return unprovenComposition(
+        "budget:channel-licence",
+        "combinator",
+        `the cell budget [${[...c.budget].join(", ")}] offers only cyclic-or-whole channels for the composite's presented ${unlicensed.join(", ")}, and the reading carries no cyclicity, so the licence is not established`,
+      );
+    }
+    if (!host) {
+      return unprovenComposition("host:standing", "host", "the embed reached its rule with no retained host reading, which is a defect in this checker rather than in the declaration");
+    }
+    return { ...part, combinator: "embed", claims: [...new Set([...part.claims, ...inCell])].sort() };
   }
   const spec = TASK_INVARIANTS[part.probe.task];
   if ("notEnumerated" in spec) {
