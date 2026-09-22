@@ -84,3 +84,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A5: a scoped contradiction refuses the composite with the operand's own cause' — one-row bounds violator: composite refused with causes=[REL_FIELD_BOUNDS_VIOLATED] attributed from part, detail naming the violated observation's structured key (KSFO); operand disposition on the record at path 0. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
     recorded_at: "2026-09-22T04:19:22.069Z"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "projection.test.ts 'A6: a consistent rename of relation, fields, bounds references, rows and views yields equivalent normalized verdicts' — lawful and refusal paths both equivalent under the rename by normalized fields (kind, causes/obligation vocabulary, attribution, channels); detail prose differs by spelling and is excluded. Run on landed main@e6b54cf8: vitest analytical 1076/1076."
+    recorded_at: "2026-09-22T04:19:22.645Z"
