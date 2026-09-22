@@ -72,3 +72,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RESTART piece 5 'A1: the four populations stand qualified, contradicted, contradicted and unproven' — baseline=qualified, swap=contradicted, margin-perturbation=contradicted, unreadable-participant=unproven with named evidence gaps; making only the unreadable value readable moves solely standing/evidence facts (grain bindings, fieldFacts, relation identical; value delta confined to close on observation 0). Run on landed main@5967ed73: vitest analytical 1068/1068."
     recorded_at: "2026-09-22T03:23:32.737Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "projection.test.ts 'A2: a violation is scoped to its own observation' — one-row violator yields exactly one REL_FIELD_BOUNDS_VIOLATED naming subject candles.close, observation 0 and its structured key; decoded contradicted=[0], unproven=[], other three rows carry their own values untouched. Run on landed main@5967ed73: vitest analytical 1068/1068."
+    recorded_at: "2026-09-22T03:23:33.204Z"
