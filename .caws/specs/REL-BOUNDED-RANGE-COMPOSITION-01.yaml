@@ -75,8 +75,8 @@ evidence:
     recorded_at: "2026-09-22T13:55:11.537Z"
   - criterion_id: A4
     status: pass
-    evidence_ref: placeholder-A4
-    recorded_at: "2026-09-22T13:54:46.437Z"
+    evidence_ref: "projection.test.ts 'A4: range identity is structural' — full rename (readings→samples, station→site, floor→base, ceiling→cap, value_*→*_value): retained with the equivalent normalized group {base, cap, [first_value, second_value, third_value]}. Run on landed main@0cc625f5: vitest analytical 1085/1085."
+    recorded_at: "2026-09-22T13:55:12.012Z"
   - criterion_id: A5
     status: pass
     evidence_ref: placeholder-A5
