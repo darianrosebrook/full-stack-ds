@@ -83,3 +83,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts 'A2: population is conserved exactly once' — union of panel keys equals the qualified population's key set as a multiset (same length, same sorted content), and no key is duplicated (Set size equals list length). Run on landed main@04774acc: vitest analytical 1095/1095."
     recorded_at: "2026-09-22T15:38:21.895Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "projection.test.ts 'A3: row order is irrelevant' — reordering the input before qualification leaves normalized panels equal, while the precommitted positional mutant (panel value = index % 2) provably changes under the same reorder and never names the carried coordinate value. Run on landed main@04774acc: vitest analytical 1095/1095."
+    recorded_at: "2026-09-22T15:38:22.399Z"
