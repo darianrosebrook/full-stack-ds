@@ -67,3 +67,8 @@ contracts:
   - name: 'qualified-vocabulary'
     type: behavior
     path: 'packages/ds-codegen/src/analytical/codes.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 5 'A1: the four populations stand qualified, contradicted, contradicted and unproven' — baseline=qualified, swap=contradicted, margin-perturbation=contradicted, unreadable-participant=unproven with named evidence gaps; making only the unreadable value readable moves solely standing/evidence facts (grain bindings, fieldFacts, relation identical; value delta confined to close on observation 0). Run on landed main@5967ed73: vitest analytical 1068/1068."
+    recorded_at: "2026-09-22T03:23:32.737Z"
