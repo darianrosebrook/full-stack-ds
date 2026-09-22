@@ -8,7 +8,10 @@ updated_at: '2026-09-22T00:17:51.672Z'
 created_by_session: 'session-d9bf6cd4-ea13-4823-8ad3-db20bfcc705f'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-codegen/src/analytical/projection.ts (the qualified relation result, its judgment and its projection)'
+    - 'packages/ds-codegen/src/analytical/codes.ts (REL_FIELD_BOUNDS_VIOLATED)'
+    - 'docs/architecture/analytical-relation-doctrine.md (the diagnostic table row)'
+    - 'packages/ds-contracts/analytical-fixtures/fixtures.jsonl (the margin-preserving perturbation row)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -19,7 +22,11 @@ scope:
     - 'src/data/analytical-fixtures'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'JOINT IDENTITY: the qualified result carries structured (field, value) grain bindings, not concatenated keys and not marginal totals. Four observations with their own values are recovered from the produced artifact.'
+  - 'THE DIAGNOSTIC IS SCOPED: REL_FIELD_BOUNDS_VIOLATED fires only for a readable observation that falsifies an APPLICABLE declared bounds relationship. A malformed reference is a declaration refusal; an unreadable value is missing evidence; no rows is no instance finding; one observation violation does not invalidate other observations, other fields or every task.'
+  - 'THE PATH IS ONE: admission, selection, lowering and the produced artifact consume the SAME qualified result and the SAME population. No independently admitted object, no produce shortcut, no re-evaluation of rows to manufacture the output.'
+  - 'TEMPORAL TRANSPORT NOT INTERPRETATION: a declared kind is carried; an undeclared field carries none; no extent or duration is invented.'
+  - 'NO FORM LORE: nothing in the qualified path names OHLC, a candle or any form. The declaration\'s field names are the only spelling the code sees.'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
