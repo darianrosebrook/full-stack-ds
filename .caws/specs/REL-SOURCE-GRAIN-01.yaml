@@ -81,3 +81,7 @@ evidence:
     status: pass
     evidence_ref: "projection.test.ts RESTART piece 5 A4: a qualified result with NO observations produces no artifact (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
     recorded_at: "2026-09-22T00:51:16.967Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "projection.test.ts RESTART piece 5 A5: the declared temporal kind is carried and an undeclared field carries none (vitest analytical 1065/1065; typecheck lint rail root frameworks green)"
+    recorded_at: "2026-09-22T00:51:17.556Z"
