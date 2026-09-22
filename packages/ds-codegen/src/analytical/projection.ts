@@ -2087,8 +2087,31 @@ export type CompositePart =
  * normalized structured key of every observation it carries, SORTED, so the
  * set can be compared as a set. Co-registration is set identity over these —
  * never row order, never index, never cardinality, never field spelling.
+ *
+ * The identity also carries the presented view's own declared facts: the field
+ * spelling and — where the qualification carried one — its bounds topology
+ * ({lower, upper} endpoint field names, already validated at the
+ * qualification boundary). These are what a layer may DERIVE from; the rule
+ * never reopens the declaration behind a carried result.
  */
-export type QualifiedOperandIdentity = { keys: readonly string[] };
+export type QualifiedOperandIdentity = {
+  keys: readonly string[];
+  field: string;
+  bounds?: { lower: string; upper: string };
+};
+
+/**
+ * A bounded-range group DERIVED at composition from the operands' carried
+ * bounds facts. It states what the declarations state — the shared endpoint
+ * pair and the bounded member fields — and nothing stronger: no start/end
+ * roles, no traversal order, no direction. `members` is canonically SORTED;
+ * its order is an artifact of comparison, never a semantic claim.
+ */
+export interface DerivedBoundedRange {
+  lower: string;
+  upper: string;
+  members: readonly string[];
+}
 
 /** The canonical comparable form of one structured grain binding. */
 const normalizedKey = (key: QualifiedRelationResult["observations"][number]["key"]): string => JSON.stringify(key);
@@ -2156,6 +2179,15 @@ export type PartReading = {
   probe?: { coordinate: CoordinateSpace; baseline: BaselineDecl; task: Task; facts: ResultFacts };
   /** Present for a qualified operand only: the structured source-grain identity it brings to composition. */
   identity?: QualifiedOperandIdentity;
+  /**
+   * Present on a layer's retained verdict: the bounded-range groups the layer
+   * DERIVED from its direct qualified operands' carried bounds facts. A group
+   * exists only where two or more distinct member fields share one declared
+   * (lower, upper) pair. Derived facts travel only as far as the rule that
+   * derived them — a parent reading this composite as a sub-composite sees the
+   * channels and claims, not the child's groups.
+   */
+  ranges?: readonly DerivedBoundedRange[];
 };
 
 /**
@@ -2232,6 +2264,9 @@ export const COMPOSITION_NON_CLAIMS: readonly string[] = [
   "The layer rule consumes the qualified operand's carried result; it never reopens rows and never re-runs qualification, so correspondence between operands is established by carried identity at the composition boundary and by nothing else.",
   "A layer mixing a qualified operand with an aggregate program operand is outside this boundary and throws. Absent typing is neither a refusal nor a premise, and inventing a cross-family correspondence would be the claim-bearing decision this rule exists to keep analytical.",
   "The co-registration rule adds no claim of its own: equal structured key sets establish that the operands refer to the same observations, not that their joint presentation carries any further analytical property.",
+  "The bounded-range group is DERIVED from the operands' carried bounds facts at composition time; it states lower, upper and bounded members and nothing stronger. It does not name start/end roles, increasing/decreasing direction, or traversal order, and the sorted member order is canonical, never semantic.",
+  "Range membership is decided by the declared (lower, upper) endpoint PAIR alone: sharing one endpoint, sharing a population, or sharing a relation groups nothing.",
+  "A derived range travels only as far as the rule that derived it: a parent reading the layer as a sub-composite operand sees the channels and claims, not the child's groups — and a layer mixing a qualified operand with any other operand family was already refused before derivation could run.",
 ];
 
 const refusedComposition = (causes: string[], from: OperandRole, detail: string): CompositeRefusal => ({
@@ -2372,7 +2407,15 @@ function readQualifiedPart(part: QualifiedPart, input: CompositeInput): PartVerd
     profile,
     claims: [],
     tasks: [],
-    identity: { keys: result.observations.map((o) => normalizedKey(o.key)).sort() },
+    identity: {
+      keys: result.observations.map((o) => normalizedKey(o.key)).sort(),
+      field,
+      // The bounds topology AS THE QUALIFICATION CARRIED IT — declared
+      // endpoint names, already reference-validated at the qualification
+      // boundary. The layer may derive from this; it never re-reads the
+      // declaration behind a carried result.
+      bounds: result.fieldFacts[field]?.bounds ? { ...result.fieldFacts[field]!.bounds } : undefined,
+    },
   };
 }
 
@@ -2505,6 +2548,28 @@ function judgeLayer(c: LayerComposite, parts: PartReading[]): CompositeVerdict {
       );
     }
   }
+  // BOUNDED-RANGE DERIVATION, after co-registration has held: among the
+  // qualified operands, members group by the (lower, upper) endpoint pair
+  // their CARRIED bounds facts declare. The topology — not the population, not
+  // the observation count, not the spelling — determines membership: sharing a
+  // lower alone is not a group, and a group exists only where two or more
+  // DISTINCT member fields share one pair. The group states what the
+  // declarations state — lower, upper, members — and nothing stronger: no
+  // start/end roles, no traversal order, no direction. Member order is the
+  // canonical sort, an artifact of comparison, never a semantic claim.
+  const rangeGroups = new Map<string, { lower: string; upper: string; members: Set<string> }>();
+  for (const p of parts) {
+    const id = p.identity;
+    if (!id?.bounds) continue;
+    const pairKey = JSON.stringify([id.bounds.lower, id.bounds.upper]);
+    const group = rangeGroups.get(pairKey) ?? { lower: id.bounds.lower, upper: id.bounds.upper, members: new Set<string>() };
+    group.members.add(id.field);
+    rangeGroups.set(pairKey, group);
+  }
+  const ranges: DerivedBoundedRange[] = [...rangeGroups.values()]
+    .filter((g) => g.members.size >= 2)
+    .map((g) => ({ lower: g.lower, upper: g.upper, members: [...g.members].sort() }))
+    .sort((a, b) => (a.lower === b.lower ? a.upper.localeCompare(b.upper) : a.lower.localeCompare(b.lower)));
   const merged = mergeReadings(parts);
   for (const ch of merged.channels) {
     const users = parts.filter((p) => p.channels.includes(ch));
@@ -2572,7 +2637,7 @@ function judgeLayer(c: LayerComposite, parts: PartReading[]): CompositeVerdict {
       );
     }
   }
-  return { ...merged, combinator: "layer" };
+  return { ...merged, combinator: "layer", ranges };
 }
 
 /**
