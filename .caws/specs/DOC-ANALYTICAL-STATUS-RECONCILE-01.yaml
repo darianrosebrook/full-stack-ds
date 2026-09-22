@@ -59,3 +59,7 @@ evidence:
     status: pass
     evidence_ref: "Same row: the stale '(22 test files, 1037 tests, re-derived 2026-09-17)' is replaced by the deriving command 'pnpm exec vitest run packages/ds-codegen/src/analytical/'; grep -c for the old string returns 0. The spec list gains the four closed slice IDs, and REL-EMBED-COMPOSITE-BUDGET-01 is named as the next action."
     recorded_at: "2026-09-22T17:17:49.325Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "pnpm run docs:check-claims on landed main@b05d933e: 'OK — 84 marked claim(s) match derived values; 11 verified stamp(s) fresh or ledgered (5 ledgered stale)'; the frontmatter updated date (2026-09-22) and README's governed snapshot-updated marker agree, the marker rewritten by the sanctioned fixer (node scripts/docs-claims-check.mjs --fix) before commit."
+    recorded_at: "2026-09-22T17:17:49.774Z"
