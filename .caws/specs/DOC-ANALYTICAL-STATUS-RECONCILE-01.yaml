@@ -5,7 +5,7 @@ mode: doc
 lifecycle_state: active
 worktree: doc-analytical-status
 created_at: '2026-09-22T17:14:28.119Z'
-updated_at: '2026-09-22T17:14:38.059Z'
+updated_at: '2026-09-22T17:14:39.995Z'
 created_by_session: 'session-bd42da68-ec3b-4aed-b4b4-701f8fc1b865'
 blast_radius:
   modules:
@@ -17,6 +17,8 @@ scope:
   in:
     - 'docs/current-implementation-snapshot.md'
   out: []
+  support:
+    - README.md
 invariants:
   - 'NO NEW CAPABILITY CLAIMS: the row names only capabilities landed and closed with evidence; nothing is promoted beyond what its spec''s evidence records.'
   - 'M3 IS DESCRIBED AS PARTIAL: layer and facet compose qualified source-grain operands; embed remains atomic-only; stage-2 ratification stays open and separate.'
