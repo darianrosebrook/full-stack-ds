@@ -67,8 +67,8 @@ evidence:
     recorded_at: "2026-09-22T13:55:10.529Z"
   - criterion_id: A2
     status: pass
-    evidence_ref: placeholder-A2
-    recorded_at: "2026-09-22T13:54:45.435Z"
+    evidence_ref: "projection.test.ts 'A2: co-registration remains the prerequisite' — value_b operand over a 3-row population: composite unproven with grain:coregistered attributed to combinator and NO range composed from shared endpoint names. Run on landed main@0cc625f5: vitest analytical 1085/1085."
+    recorded_at: "2026-09-22T13:55:11.070Z"
   - criterion_id: A3
     status: pass
     evidence_ref: placeholder-A3
