@@ -104,8 +104,8 @@ evidence:
     recorded_at: "2026-09-22T17:29:23.726Z"
   - criterion_id: A7
     status: pass
-    evidence_ref: "projection.test.ts 'A7: the embed rule reads the normalized reading only' — the embed verdict's population equals the inner layer reading's population and its identity is undefined, proving the merged reading (not an operand identity) was consumed; panels equal too. Run on landed main@5754a432: vitest analytical 1106/1106."
-    recorded_at: "2026-09-22T17:29:24.191Z"
+    evidence_ref: "projection.test.ts 'A8: reordering source observations leaves the embed judgment equivalent' — reordered input yields byte-equal serialized panels on the embedded facet composite. Run on landed main@5754a432: vitest analytical 1106/1106."
+    recorded_at: "2026-09-22T17:30:03.707Z"
   - criterion_id: A8
     status: pass
     evidence_ref: "projection.test.ts 'A8: reordering source observations leaves the embed judgment equivalent' — reordered input yields byte-equal serialized panels on the embedded facet composite. Run on landed main@5754a432: vitest analytical 1106/1106."
