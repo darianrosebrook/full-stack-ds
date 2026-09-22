@@ -1,0 +1,46 @@
+id: DOC-ANALYTICAL-STATUS-RECONCILE-01
+title: 'Reconcile the canonical snapshot''s analytical row with the four landed M3 composition capabilities'
+risk_tier: 3
+mode: doc
+lifecycle_state: draft
+created_at: '2026-09-22T17:14:28.119Z'
+updated_at: '2026-09-22T17:14:28.119Z'
+created_by_session: 'session-bd42da68-ec3b-4aed-b4b4-701f8fc1b865'
+blast_radius:
+  modules:
+    - 'docs/current-implementation-snapshot.md (the analytical relation kernel row: capabilities, status, evidence surface, non-claims, next action)'
+    - 'README.md (the governed snapshot-updated marker, derived from the snapshot frontmatter)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'NO NEW CAPABILITY CLAIMS: the row names only capabilities landed and closed with evidence; nothing is promoted beyond what its spec''s evidence records.'
+  - 'M3 IS DESCRIBED AS PARTIAL: layer and facet compose qualified source-grain operands; embed remains atomic-only; stage-2 ratification stays open and separate.'
+  - 'NO VOLATILE COUNTS: derived numbers are cited by the command or evidence surface that derives them, not restated as prose.'
+  - 'docs/internal STAYS WORKING MATERIAL: the successor ledger is updated as a local ledger but is not promoted into current-state authority.'
+acceptance:
+  - id: A1
+    given: 'the canonical snapshot''s analytical row'
+    when: 'read after the edit'
+    then: 'it names the source-grain judgment-and-realization conservation, layer co-registration by structured identity, bounded-range derivation from existing bounds authority, and facet partition binding from carried identity, each with its non-claims'
+  - id: A2
+    given: 'the same row'
+    when: 'its status is read'
+    then: 'M3 is described as partial with embed atomic-only (citing where that boundary lives), and stage-2 ratification is retained as open and separate from composition success'
+  - id: A3
+    given: 'the row''s evidence column'
+    when: 'counts appear'
+    then: 'the stale hard-coded suite count is replaced by the deriving command, and the four new spec IDs join the spec list'
+  - id: A4
+    given: 'the edit'
+    when: 'pnpm run docs:check-claims runs'
+    then: 'the governed snapshot-updated marker matches the snapshot frontmatter and the claim check passes'
+  - id: A5
+    given: 'the edit'
+    when: 'pnpm run docs:check-links runs'
+    then: 'every relative link in the touched docs resolves'
+non_functional: {}
+contracts: []
