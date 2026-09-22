@@ -8,7 +8,7 @@
     "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "6427da7c2950c2ca6a90ce7b01b9148dca036a58e0b522be5d5d7d4492a83cc7"
+    "ruleDigest": "77d58f67c8c83070000a6175e0c0f5d2c474916656436ce7c6cc61978148b558"
   },
   "fixtures": [
     "FX_SURVEY_MEAN_SATISFACTION",
@@ -914,9 +914,9 @@
   "transitions": [
     {
       "identity": "ruleDigest",
-      "from": "ef95b5fc0e775b16ac3aeede24493438838e1c7e444cf0cd9b6ea7a5f7520a9c",
-      "to": "6427da7c2950c2ca6a90ce7b01b9148dca036a58e0b522be5d5d7d4492a83cc7",
-      "reason": "REL-SOURCE-GRAIN-02: codes.ts relocated REL_FIELD_BOUNDS_VIOLATED from the corpus judge's DIAG table into the boundary-owned QUALIFIED_DIAG block (the qualified source-grain path's vocabulary, authority stated at the declaration; DERIVATION_DIAG precedent). The corpus-level judge never emitted the code and no corpus fixture reaches it, so every erasure reach, digest and verdict below is unchanged — verified by the freeze --check divergence set, which is empty apart from this authority movement."
+      "from": "6427da7c2950c2ca6a90ce7b01b9148dca036a58e0b522be5d5d7d4492a83cc7",
+      "to": "77d58f67c8c83070000a6175e0c0f5d2c474916656436ce7c6cc61978148b558",
+      "reason": "REL-COMPOSITION-COREGISTRATION-01: codes.ts gained the composition boundary's COMPOSITION_DIAG block (REL_LAYER_OPERANDS_UNCOREGISTERED, the layer combinator's own vocabulary over qualified operands, authority stated at the declaration), and projection.ts — not a RULE_SOURCE — added the qualified operand part and the layer co-registration rule. The corpus-level judge never emits the new code and no fixture reaches projection.ts's composite path, so every erasure reach, digest and verdict below is unchanged — verified by the freeze --check divergence set, which is empty apart from this authority movement."
     }
   ]
 }
