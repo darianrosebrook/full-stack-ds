@@ -35,9 +35,9 @@ if (!support.supported) {
   const desk = createDesk(canvas, { laptop, tablet, phone });
   desk.listen(window);
   // Key and pointer events inside a frame never reach this window, so the
-  // puppet listens in each frame too, mapping frame coordinates back through
-  // the screen's projection.
-  for (const frame of frames) desk.listen(frame.contentWindow!, (x, y) => desk.screenToWindow(frame, x, y));
+  // puppet listens in each frame too; the frame says which device the cat
+  // should attend to.
+  for (const frame of frames) desk.listen(frame.contentWindow!, frame);
 
   // The cat types into the laptop's draft field from the first keystroke.
   frame(laptop).querySelector<HTMLInputElement>("input[name=draft]")?.focus();

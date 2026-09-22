@@ -77,12 +77,21 @@ interface PawState {
   slapStart: number;
   mesh: THREE.Mesh;
   arm: THREE.Mesh;
+  localShoulder: THREE.Vector3;
   shoulder: THREE.Vector3;
 }
 
+/** Which device the cat is attending to: the last one input came through. */
+export type Device = "laptop" | "tablet" | "phone";
+export type PawMode = "keys" | "trackpad" | "tablet" | "phone";
+
 export interface Desk {
-  /** Wire keyboard and pointer listeners on a window (the desk's or an iframe's). */
-  listen(win: Window, toDeskWindow?: (x: number, y: number) => { x: number; y: number }): void;
+  /**
+   * Wire keyboard and pointer listeners on the desk's window, or on a device
+   * frame's window when `frame` is given (input inside a frame never reaches
+   * the desk's window).
+   */
+  listen(win: Window, frame?: HTMLIFrameElement): void;
   screenToWindow(element: HTMLIFrameElement, x: number, y: number): { x: number; y: number };
   debug: {
     pawWorld(side: "left" | "right"): { x: number; y: number; z: number };
@@ -91,9 +100,17 @@ export interface Desk {
     trackpadWorld(u: number, v: number): { x: number; y: number; z: number };
     trackpadUV(): { u: number; v: number };
     screenPoint(element: HTMLIFrameElement, ex: number, ey: number): { x: number; y: number };
+    /** World point on a device screen for an element-px point on it. */
+    screenWorld(element: HTMLIFrameElement, ex: number, ey: number): { x: number; y: number; z: number };
     uploads(): Record<string, number>;
     lastSlap(): { code: string; paw: Paw; at: number } | null;
-    rightPawMode(): "keys" | "trackpad";
+    /** The last tap on a tablet or phone screen, in that screen's element px. */
+    lastTap(): { device: Device; paw: "left" | "right"; x: number; y: number; at: number } | null;
+    attention(): Device;
+    /** Smoothed lean: -1 fully toward the tablet, +1 toward the phone. */
+    lean(): number;
+    pawMode(side: "left" | "right"): PawMode;
+    catWorld(): { x: number; y: number; z: number };
   };
 }
 
@@ -201,7 +218,7 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
 
   // --- tablet and phone, lying flat --------------------------------------
   const tablet = new THREE.Group();
-  tablet.position.set(-3.35, 0, 0.25);
+  tablet.position.set(-2.95, 0, 0.35);
   tablet.rotation.y = 0.38;
   scene.add(tablet);
   const tabletBody = new THREE.Mesh(new THREE.BoxGeometry(1.46, 0.07, 1.98), blackGlass);
@@ -210,7 +227,7 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
   tablet.add(tabletBody);
 
   const phone = new THREE.Group();
-  phone.position.set(3.25, 0, 0.15);
+  phone.position.set(2.75, 0, 0.3);
   phone.rotation.y = -0.28;
   scene.add(phone);
   const phoneBody = new THREE.Mesh(new THREE.BoxGeometry(0.74, 0.06, 1.5), blackGlass);
@@ -288,11 +305,13 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
   body.position.set(0, 0.6, 0.9);
   cat.add(body);
 
-  const worldShoulder = (side: number) => new THREE.Vector3(side * 0.62, 1.05, 2.45);
+  // Shoulders are in the cat's frame, so they travel with a lean.
+  const catShoulder = (side: number) => new THREE.Vector3(side * 0.62 - 0.05, 1.05, -0.7);
   const makePaw = (side: "left" | "right"): PawState => {
     const sign = side === "left" ? -1 : 1;
     const restKey = side === "left" ? "KeyF" : "KeyJ";
-    const rest = keyToWorld(restKey)!.add(new THREE.Vector3(0, PAW_HOVER, 0.1));
+    // Targets are contact points on a surface; the pose adds the hover height.
+    const rest = keyToWorld(restKey)!.add(new THREE.Vector3(0, 0, 0.1));
     const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.15, 24, 16), whiteFur);
     mesh.scale.set(1, 0.6, 1.25);
     mesh.castShadow = true;
@@ -307,24 +326,41 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       slapStart: -Infinity,
       mesh,
       arm,
-      shoulder: worldShoulder(sign),
+      localShoulder: catShoulder(sign),
+      shoulder: cat.localToWorld(catShoulder(sign)),
     };
   };
   const paws = { left: makePaw("left"), right: makePaw("right") };
 
   // --- input -> puppet ------------------------------------------------------
   let lastSlap: { code: string; paw: Paw; at: number } | null = null;
+  let lastTap: { device: Device; paw: "left" | "right"; x: number; y: number; at: number } | null = null;
   let lastPointerAt = -Infinity;
   let lastRightKeyAt = -Infinity;
   const trackpadUV = new THREE.Vector2(0.5, 0.5);
   const keyDepress = new Map<number, number>();
+  // The tablet is on the cat's left, so the left paw works it; the phone is
+  // on the right, so the right paw does.
+  let attention: Device = "laptop";
+  let lean = 0;
+  const deviceOf = (frame?: HTMLIFrameElement): Device =>
+    frame === screens.tablet ? "tablet" : frame === screens.phone ? "phone" : "laptop";
+  const pawFor = (device: "tablet" | "phone") => (device === "tablet" ? paws.left : paws.right);
+  const screenFor = (device: Device) => all.find((s) => s.element === screens[device])!;
 
   const trackpadToWorld = (u: number, v: number) =>
     new THREE.Vector3(
       (u - 0.5) * TRACKPAD.width * 0.9,
-      LAPTOP.thickness + 0.1,
+      LAPTOP.thickness + 0.004,
       TRACKPAD.centerZ + (v - 0.5) * TRACKPAD.depth * 0.9,
     );
+
+  const screenWorld = (element: HTMLIFrameElement, ex: number, ey: number) => {
+    const s = all.find((sc) => sc.element === element)!;
+    const { width, height } = s.mesh.geometry.parameters;
+    s.mesh.updateWorldMatrix(true, false);
+    return s.mesh.localToWorld(new THREE.Vector3((ex / s.size.width - 0.5) * width, (0.5 - ey / s.size.height) * height, 0));
+  };
 
   const slap = (code: string) => {
     const paw = pawForCode(code);
@@ -336,12 +372,36 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       const p = paws[side];
       // Space: each paw hits its own half of the bar.
       const target = code === "Space" ? at.clone().add(new THREE.Vector3(side === "left" ? -0.35 : 0.35, 0, 0)) : at.clone();
-      p.target.copy(target.setY(keyTopY + PAW_HOVER));
+      p.target.copy(target);
       p.slapStart = now;
       if (side === "right") lastRightKeyAt = now;
     }
     const i = keyIndex.get(code);
     if (i !== undefined) keyDepress.set(i, now);
+  };
+
+  // A paw on a tablet or phone taps where it is told, in screen element px.
+  const tapScreen = (device: "tablet" | "phone", x: number, y: number) => {
+    const p = pawFor(device);
+    const now = performance.now();
+    p.target.copy(screenWorld(screens[device], x, y));
+    p.slapStart = now;
+    lastTap = { device, paw: p.side, x, y, at: now };
+  };
+  const hoverScreen = (device: "tablet" | "phone", x: number, y: number) => {
+    pawFor(device).target.copy(screenWorld(screens[device], x, y));
+  };
+
+  // Typing on a tablet or phone: the paw taps along the focused field, at the
+  // key's place across the keyboard, so a key-mash walks across the field.
+  const typeOnScreen = (device: "tablet" | "phone", code: string) => {
+    const doc = screens[device].contentDocument!;
+    const field = doc.activeElement && doc.activeElement !== doc.body ? doc.activeElement.getBoundingClientRect() : null;
+    const s = screenFor(device);
+    const cell = keyCell(code);
+    const across = cell ? (cell.x + cell.width / 2) / KEYBOARD_WIDTH_UNITS : 0.5;
+    if (field) tapScreen(device, field.left + field.width * (0.1 + 0.8 * across), field.top + field.height / 2);
+    else tapScreen(device, s.size.width * across, s.size.height / 2);
   };
 
   // The trackpad drives the laptop's viewport: the paw sits where the pointer
@@ -357,18 +417,35 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     trackpadUV.set(u, v);
   };
 
-  const listen: Desk["listen"] = (win, toDeskWindow) => {
-    win.addEventListener("keydown", (e) => slap(e.code), true);
+  // The device an event came through is the one the cat attends to: the
+  // mouse is only ever over one screen, and keys go to the focused frame.
+  const listen: Desk["listen"] = (win, frame) => {
+    const device = deviceOf(frame);
+    win.addEventListener(
+      "keydown",
+      (e) => {
+        attention = device;
+        if (device === "laptop") slap(e.code);
+        else typeOnScreen(device, e.code);
+      },
+      true,
+    );
     const move = (e: PointerEvent) => {
-      const p = toDeskWindow ? toDeskWindow(e.clientX, e.clientY) : { x: e.clientX, y: e.clientY };
-      pointerAt(p.x, p.y);
+      attention = device;
+      if (device === "laptop") {
+        const p = frame ? screenToWindow(frame, e.clientX, e.clientY) : { x: e.clientX, y: e.clientY };
+        pointerAt(p.x, p.y);
+      } else {
+        hoverScreen(device, e.clientX, e.clientY);
+      }
     };
     win.addEventListener("pointermove", move, true);
     win.addEventListener(
       "pointerdown",
       (e) => {
         move(e);
-        paws.right.slapStart = performance.now();
+        if (device === "laptop") paws.right.slapStart = performance.now();
+        else tapScreen(device, e.clientX, e.clientY);
       },
       true,
     );
@@ -408,20 +485,26 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
 
   // --- per-frame puppet pose -------------------------------------------------
   const up = new THREE.Vector3(0, 1, 0);
+  const pawMode = (side: "left" | "right", now: number): PawMode => {
+    if (side === "left") return attention === "tablet" ? "tablet" : "keys";
+    if (attention === "phone") return "phone";
+    return attention === "laptop" && now - lastPointerAt < 2500 && now - lastRightKeyAt > 450 ? "trackpad" : "keys";
+  };
   const posePaw = (p: PawState, now: number, dt: number) => {
-    if (p.side === "right") {
-      const onTrackpad = now - lastPointerAt < 2500 && now - lastRightKeyAt > 450;
-      if (onTrackpad) p.target.copy(trackpadToWorld(trackpadUV.x, trackpadUV.y));
-    }
-    if (now - p.slapStart > 600 && !(p.side === "right" && now - lastPointerAt < 2500)) {
+    const mode = pawMode(p.side, now);
+    if (mode === "trackpad") p.target.copy(trackpadToWorld(trackpadUV.x, trackpadUV.y));
+    // A paw not busy with a pointer or a recent key drifts home to the keys.
+    if (mode === "keys" && now - p.slapStart > 600 && !(p.side === "right" && now - lastPointerAt < 2500)) {
       p.target.lerp(p.rest, 1 - Math.exp(-dt * 3));
     }
     p.position.lerp(p.target, 1 - Math.exp(-dt * 28));
-    // Slap: a fast drop onto the key and a slower rebound.
+    // Slap: a fast drop onto the surface and a slower rebound.
     const t = (now - p.slapStart) / SLAP_MS;
     const drop = t >= 0 && t < 1 ? Math.sin(Math.PI * Math.min(1, t * 1.6)) * (1 - t * 0.4) : 0;
-    const hover = p.side === "right" && now - lastPointerAt < 2500 && now - lastRightKeyAt > 450 ? 0.04 : PAW_HOVER;
-    p.mesh.position.set(p.position.x, keyTopY + 0.07 + (hover - 0.07) * (1 - drop), p.position.z);
+    const hover = mode === "keys" ? PAW_HOVER : 0.05;
+    p.mesh.position.set(p.position.x, p.position.y + 0.07 + (hover - 0.07) * (1 - drop), p.position.z);
+    p.shoulder.copy(p.localShoulder);
+    cat.localToWorld(p.shoulder);
     const dir = new THREE.Vector3().subVectors(p.mesh.position, p.shoulder);
     const length = dir.length();
     p.arm.position.copy(p.shoulder).addScaledVector(dir, 0.5);
@@ -439,6 +522,12 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     const now = performance.now();
     const dt = Math.min((now - lastFrame) / 1000, 0.1);
     lastFrame = now;
+    // Lean toward the attended device: slide over, turn to face it, tilt in.
+    const leanTarget = attention === "tablet" ? -1 : attention === "phone" ? 1 : 0;
+    lean += (leanTarget - lean) * (1 - Math.exp(-dt * 6));
+    cat.position.set(0.05 + lean * 0.95, 0, 3.15 - Math.abs(lean) * 0.35);
+    cat.rotation.set(0, -lean * 0.42, -lean * 0.14);
+    cat.updateMatrixWorld();
     posePaw(paws.left, now, dt);
     posePaw(paws.right, now, dt);
     for (const [i, at] of keyDepress) {
@@ -479,11 +568,13 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       trackpadUV: () => ({ u: trackpadUV.x, v: trackpadUV.y }),
       screenPoint: (element, ex, ey) => screenToWindow(element, ex, ey),
       uploads: () => Object.fromEntries(all.map((s) => [s.element.id, s.surface.uploads])),
+      screenWorld: (element, ex, ey) => plain(screenWorld(element, ex, ey)),
       lastSlap: () => lastSlap,
-      rightPawMode: () => {
-        const now = performance.now();
-        return now - lastPointerAt < 2500 && now - lastRightKeyAt > 450 ? "trackpad" : "keys";
-      },
+      lastTap: () => lastTap,
+      attention: () => attention,
+      lean: () => lean,
+      pawMode: (side) => pawMode(side, performance.now()),
+      catWorld: () => plain(cat.position),
     },
   };
 }

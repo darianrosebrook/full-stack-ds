@@ -73,7 +73,7 @@ try {
     return out;
   });
   const L = layouts["screen-laptop"], T = layouts["screen-tablet"], P = layouts["screen-phone"];
-  check("A1 laptop renders the desktop layout (two columns)", L.innerWidth === 1280 && L.mainColumns === 2 && L.actionsDirection === "row" && L.uploads > 0, L);
+  check("A1 laptop renders the desktop layout (two columns)", L.innerWidth === 1152 && L.mainColumns === 2 && L.actionsDirection === "row" && L.uploads > 0, L);
   check("A1 tablet renders the tablet layout (one column, inline actions)", T.innerWidth === 768 && T.mainColumns === 1 && T.actionsDirection === "row" && !T.linksWrapped && T.uploads > 0, T);
   check("A1 phone renders the mobile layout (stacked actions, wrapped nav)", P.innerWidth === 390 && P.mainColumns === 1 && P.actionsDirection === "column" && P.linksWrapped && P.uploads > 0, P);
 
@@ -111,8 +111,8 @@ try {
 
   // A3: the trackpad follows the mouse across the laptop's viewport — the
   // right paw sits at the pointer's place within the laptop screen. The last
-  // point is over the tablet, off the laptop screen, so it pins to the pad's
-  // left edge.
+  // point is bare desk up and left of the laptop, off its screen, so it pins
+  // to the pad's top-left corner.
   const trackpadRuns = [];
   const laptopPoints = [[0.1, 0.1, 0.1, 0.1], [0.9, 0.1, 0.9, 0.1], [0.5, 0.5, 0.5, 0.5], [0.9, 0.9, 0.9, 0.9]];
   for (const [fx, fy, u, v] of laptopPoints) {
@@ -122,11 +122,7 @@ try {
     }, [fx, fy]);
     trackpadRuns.push({ at, u, v });
   }
-  const tabletCentre = await page.evaluate(() => {
-    const f = document.getElementById("screen-tablet");
-    return window.__typingCat.screenPoint(f, f.offsetWidth / 2, f.offsetHeight / 2);
-  });
-  trackpadRuns.push({ at: tabletCentre, u: 0, v: null });
+  trackpadRuns.push({ at: { x: 30, y: 30 }, u: 0, v: 0 });
   for (const run of trackpadRuns) {
     await page.mouse.move(run.at.x, run.at.y, { steps: 8 });
     await page.waitForTimeout(700);
@@ -135,13 +131,13 @@ try {
       const uv = c.trackpadUV();
       const want = c.trackpadWorld(uv.u, uv.v);
       const got = c.pawWorld("right");
-      return { mode: c.rightPawMode(), gotUV: { u: +uv.u.toFixed(3), v: +uv.v.toFixed(3) }, pawDx: +Math.abs(got.x - want.x).toFixed(4), pawDz: +Math.abs(got.z - want.z).toFixed(4) };
+      return { mode: c.pawMode("right"), gotUV: { u: +uv.u.toFixed(3), v: +uv.v.toFixed(3) }, pawDx: +Math.abs(got.x - want.x).toFixed(4), pawDz: +Math.abs(got.z - want.z).toFixed(4) };
     }));
   }
   check("A3 the right paw follows the mouse across the laptop's viewport on the trackpad (and pins to the edge off-screen)",
     trackpadRuns.every((r) =>
       r.mode === "trackpad" && r.pawDx < 0.02 && r.pawDz < 0.02 &&
-      Math.abs(r.gotUV.u - r.u) < 0.02 && (r.v === null || Math.abs(r.gotUV.v - r.v) < 0.02)),
+      Math.abs(r.gotUV.u - r.u) < 0.02 && Math.abs(r.gotUV.v - r.v) < 0.02),
     trackpadRuns.map(({ at, ...r }) => ({ at: { x: Math.round(at.x), y: Math.round(at.y) }, ...r })));
 
   // A3: a click on a drawn screen reaches the DS control drawn there.
@@ -159,6 +155,89 @@ try {
   }));
   check("A3 clicking 'Order treats' where the tablet draws it orders a treat, and the phone shows it", treats.store === 1 && treats.phoneStat === "1", { target, ...treats });
   await shot(page, "03-trackpad-and-treat");
+
+  // A5: the mouse is only ever over one screen, so it says which device the
+  // cat uses. Over the tablet (on its left) the cat leans left and works it
+  // with the left paw; over the phone (on its right), leans right and uses
+  // the right paw. Clicking the draft field there focuses it, and typing
+  // taps along that field instead of slapping laptop keys.
+  const handheld = [
+    { id: "screen-tablet", device: "tablet", paw: "left", leanSign: -1, text: "hi" },
+    { id: "screen-phone", device: "phone", paw: "right", leanSign: 1, text: "yo" },
+  ];
+  for (const h of handheld) {
+    const at = await page.evaluate((id) => {
+      const frame = document.getElementById(id);
+      const r = frame.contentDocument.querySelector("input[name=draft]").getBoundingClientRect();
+      const local = { x: r.left + r.width * 0.3, y: r.top + r.height / 2 };
+      return { local, window: window.__typingCat.screenPoint(frame, local.x, local.y) };
+    }, h.id);
+    await page.mouse.move(at.window.x, at.window.y, { steps: 10 });
+    await page.waitForTimeout(900);
+    const hover = await page.evaluate(([id, paw, local]) => {
+      const c = window.__typingCat;
+      const want = c.screenWorld(document.getElementById(id), local.x, local.y);
+      const got = c.pawWorld(paw);
+      return {
+        attention: c.attention(), lean: +c.lean().toFixed(3), mode: c.pawMode(paw), catX: +c.catWorld().x.toFixed(3),
+        dx: +Math.abs(got.x - want.x).toFixed(4), dz: +Math.abs(got.z - want.z).toFixed(4),
+      };
+    }, [h.id, h.paw, at.local]);
+    check(`A5 over the ${h.device} the cat leans ${h.paw} and its ${h.paw} paw follows the pointer on that screen`,
+      hover.attention === h.device && hover.lean * h.leanSign > 0.9 && hover.catX * h.leanSign > 0.8 &&
+        hover.mode === h.device && hover.dx < 0.03 && hover.dz < 0.03,
+      hover);
+
+    const slapBefore = await page.evaluate(() => window.__typingCat.lastSlap()?.at ?? null);
+    await page.mouse.click(at.window.x, at.window.y);
+    await page.waitForTimeout(200);
+    const click = await page.evaluate((id) => ({
+      tap: window.__typingCat.lastTap(),
+      focusedHere: document.getElementById(id).contentDocument.activeElement?.getAttribute("name") ?? null,
+    }), h.id);
+    await page.keyboard.press("End");
+    const draftBefore = await page.evaluate(() => window.__typingCat.store.get().draft);
+    const taps = [];
+    for (const ch of h.text) {
+      await page.keyboard.press(ch);
+      await page.waitForTimeout(220);
+      taps.push(await page.evaluate(([id, paw]) => {
+        const c = window.__typingCat;
+        const tap = c.lastTap();
+        const field = document.getElementById(id).contentDocument.querySelector("input[name=draft]").getBoundingClientRect();
+        const want = c.screenWorld(document.getElementById(id), tap.x, tap.y);
+        const got = c.pawWorld(paw);
+        return {
+          device: tap.device, paw: tap.paw,
+          onField: tap.x >= field.left && tap.x <= field.right && tap.y >= field.top && tap.y <= field.bottom,
+          dx: +Math.abs(got.x - want.x).toFixed(4), dz: +Math.abs(got.z - want.z).toFixed(4),
+        };
+      }, [h.id, h.paw]));
+    }
+    const after = await page.evaluate(() => ({
+      draft: window.__typingCat.store.get().draft,
+      slapAt: window.__typingCat.lastSlap()?.at ?? null,
+      laptopField: document.getElementById("screen-laptop").contentDocument.querySelector("input[name=draft]").value,
+    }));
+    check(`A5 clicking the ${h.device}'s field taps it with the ${h.paw} paw and focuses it there`,
+      click.tap?.device === h.device && click.tap?.paw === h.paw && click.focusedHere === "draft", click);
+    check(`A5 typing on the ${h.device} is tapped out by the ${h.paw} paw along its field, lands in the site, and slaps no laptop key`,
+      taps.every((t) => t.device === h.device && t.paw === h.paw && t.onField && t.dx < 0.03 && t.dz < 0.03) &&
+        after.draft === draftBefore + h.text && after.laptopField === after.draft && after.slapAt === slapBefore,
+      { taps, draftBefore, ...after });
+    await shot(page, `04-${h.device}`);
+  }
+
+  // Back over the laptop, the cat straightens up.
+  const laptopMid = await page.evaluate(() => {
+    const f = document.getElementById("screen-laptop");
+    return window.__typingCat.screenPoint(f, f.offsetWidth / 2, f.offsetHeight / 2);
+  });
+  await page.mouse.move(laptopMid.x, laptopMid.y, { steps: 10 });
+  await page.waitForTimeout(1200);
+  const upright = await page.evaluate(() => ({ attention: window.__typingCat.attention(), lean: +window.__typingCat.lean().toFixed(3), right: window.__typingCat.pawMode("right"), left: window.__typingCat.pawMode("left") }));
+  check("A5 back over the laptop the cat sits upright: left paw on the keys, right paw on the trackpad",
+    upright.attention === "laptop" && Math.abs(upright.lean) < 0.05 && upright.left === "keys" && upright.right === "trackpad", upright);
 
   // A4: framing — the cat is in the foreground below the laptop, the laptop
   // screen is above its keyboard, tablet left and phone right.
