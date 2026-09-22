@@ -1068,6 +1068,6 @@
     "erasureAuthorityDigest": "b91ecc00dc935ad4df260a18eb7112d7f7d509ea1ea233ae76d042557cf07176",
     "witnessAuthorityDigest": "0e439a4d09eec5d9ec50f7e868b6926fe9684b540ace972f7e232dd194ca4eb7",
     "quotientSchemaVersion": 1,
-    "ruleDigest": "77d58f67c8c83070000a6175e0c0f5d2c474916656436ce7c6cc61978148b558"
+    "ruleDigest": "cbff8d3b94728775e856930e08f8ea4c280251721cc5a41567aa33c346d65fc2"
   }
 }
