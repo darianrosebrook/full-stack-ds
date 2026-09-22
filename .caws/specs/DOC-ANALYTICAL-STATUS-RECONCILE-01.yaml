@@ -55,3 +55,7 @@ evidence:
     status: pass
     evidence_ref: "Same row: status cell now reads 'implemented / oracle-gated, ratification bounded to L0-L2; M3 composition is PARTIAL — layer and facet compose qualified source-grain operands (each with lawful/unlawful neighbours and a nested path), while embed still returns unproven for a sub-composite part'; the boundary is cited where it lives (projection.ts judgeEmbed), and the open stage-2 subtraction is retained with the statement that composition success does not discharge it. Verified by grep: 'M3 composition is PARTIAL' appears once."
     recorded_at: "2026-09-22T17:17:48.871Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Same row: the stale '(22 test files, 1037 tests, re-derived 2026-09-17)' is replaced by the deriving command 'pnpm exec vitest run packages/ds-codegen/src/analytical/'; grep -c for the old string returns 0. The spec list gains the four closed slice IDs, and REL-EMBED-COMPOSITE-BUDGET-01 is named as the next action."
+    recorded_at: "2026-09-22T17:17:49.325Z"
