@@ -68,3 +68,7 @@ evidence:
     status: pass
     evidence_ref: "Real hook invocation over the real range: printf \"refs/heads/main TIP refs/heads/main origin-main\" | .githooks/pre-push origin <url> exits 0 and prints \"[attribution-guard] clean — 7 commits checked in 5dcc2a63..76a8f321\"; the same run reports classifier 55/55 and guard 17/17. Backstop case \"the range scan catches a commit that bypassed the hook with --no-verify\" asserts the --no-verify precondition, then that the range scan exits 1 on that commit. The CI step runs the identical script; actionlint .github/workflows/ci.yml exits 0 including the embedded shell. NOT covered: the CI step never executed on GitHub because no push was made."
     recorded_at: "2026-09-23T01:17:55.695Z"
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "Case \"an obviously clean message passes\" and integration case \"a clean commit goes through — the hook is not a blanket refusal\" (real commit exits 0, rev-list count 1) pin the admitted direction; the default-deny direction is pinned separately by \"an unknown address is STILL refused\". Landed-revision scan: node scripts/attribution-guard.mjs --range origin/main..main exits 0 over 10 commits. That range excludes the three grandfathered Qwen-Coder commits by construction because they predate origin/main, which is the intended behavior; a full-history scan flags exactly 3."
+    recorded_at: "2026-09-23T01:17:56.354Z"
