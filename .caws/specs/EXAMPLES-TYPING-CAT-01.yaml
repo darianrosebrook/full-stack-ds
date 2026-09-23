@@ -48,3 +48,7 @@ evidence:
     status: pass
     evidence_ref: "verify-cat.mjs on main 0a87c614: A2 checks 16 boundary keys (1/5|6/0 Q/T|Y/P A/G|H/L Z/B|N/M) slapped by the correct paw landing on the key; typed text reads back on all three screens; Space uses both paws; keyboard-layout.test.ts"
     recorded_at: "2026-09-23T00:02:23.489Z"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "verify-cat.mjs on main 0a87c614: A3 checks right paw trackpad UV equals pointer place in the laptop viewport at 4 points (pins at edge off-screen); tablet drawn Order treats/Order clicks update the store and the phone; trackpad.test.ts homography inverse"
+    recorded_at: "2026-09-23T00:02:23.965Z"
