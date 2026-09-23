@@ -32,12 +32,15 @@ acceptance:
     given: 'the cat'
     when: 'idle, typing, on the trackpad, or reaching the tablet or phone'
     then: >-
-      it sits upright close to the laptop with shoulders at the front of the chest
-      below the chin; each arm is an upper arm and forearm solved by two-bone IK
-      that tucks the elbow unless that would sink it below the desk; bone lengths
-      are fixed for keys, trackpad, phone and the near tablet, and only past a 0.6
-      shoulder slide (the tablet's far corner) do both bones stretch, by at most
-      11%; ears are parented to the head; it has a swaying tail and breathing
+      it sits upright, set back from the laptop so its head stays below the main
+      camera's line of sight to the trackpad, with shoulders at the front of the
+      chest below the chin; each arm is a pole pinned at the shoulder socket and the
+      wrist (socket and wrist gaps 0 in every pose) that stretches to wherever the
+      paw goes, with a white sock at the wrist end; while it leans to the tablet or
+      phone the other paw rests at that side's trackpad corner and stays there; keys
+      going to one device hold its attention for 800 ms against pointer moves over
+      another device, and a held-off move is replayed when the hold ends; ears are
+      parented to the head; it has a swaying tail and breathing
   - id: A3
     given: 'the laptop, tablet, phone and cup'
     when: 'rendered'
