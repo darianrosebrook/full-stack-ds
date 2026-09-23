@@ -69,3 +69,10 @@ evidence:
     command: "pnpm --filter @full-stack-ds/vue test"
     exit_code: 0
     commit_sha: d822bc08cdd88d86e437e203101ce12ebeffedb9
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Post-merge on main: clean regen changes 0 files; generate:check 52/52. Worktree serial run at ca126245: governed:rail PASS, svelte-check 0 errors, audit:custom-regions 89/89 ledgered, vue 761, svelte 666, lit 535 (+2 skipped), angular 499, rn 175. Root vitest 4366/4368: 2 x 5s timeouts in ds-codegen/src/analytical (untouched by this change), 106/106 when rerun alone twice."
+    recorded_at: "2026-09-23T04:12:24.130Z"
+    command: "pnpm run generate:check; pnpm run governed:rail; pnpm run audit:custom-regions; framework suites"
+    exit_code: 0
+    commit_sha: d822bc08cdd88d86e437e203101ce12ebeffedb9
