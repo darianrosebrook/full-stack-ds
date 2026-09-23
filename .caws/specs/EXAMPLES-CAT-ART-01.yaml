@@ -1,0 +1,43 @@
+id: EXAMPLES-CAT-ART-01
+title: 'Typing cat: lighting, materials, cat anatomy and geometry refinement'
+risk_tier: 3
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-23T04:08:35.966Z'
+updated_at: '2026-09-23T04:08:35.966Z'
+created_by_session: '15bd2efa-0b44-4a06-8e50-d925effe6a05'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'examples/spatial-console/web/src/cat'
+    - 'examples/spatial-console/web/cat.html'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the cat page in flagged Chrome; when it renders; then the scene uses an environment map and tone mapping, the device screens stay colour-exact, and shadows are soft and tightly framed'
+  - id: A2
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the cat; when idle or reaching a key/trackpad/tablet/phone; then it is scaled closer to a real cat, arms are two-segment with a bent elbow and fixed bone lengths, ears follow the head, and it has a tail and breathing'
+  - id: A3
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the laptop, tablet, phone and cup; when rendered; then bodies use rounded geometry, the laptop has a hinge, the cup has wall thickness and a handle'
+  - id: A4
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the desk texture; when the page loads twice; then the wood is identical (seeded) and has plank joints and variation'
+  - id: A5
+    given: 'The spec implementation is complete.'
+    when: 'The acceptance statement is evaluated.'
+    then: 'given the changed scene; when verify:cat runs; then every paw/key/screen check still passes'
+non_functional: {}
+contracts: []
