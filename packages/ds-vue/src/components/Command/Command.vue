@@ -32,7 +32,7 @@ interface Props {
   shouldFilter?: boolean;
   filter?: ((value: string, search: string) => number) | undefined;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -77,7 +77,7 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="command" data-fsds-box="">
+    <div :class="classNames" :data-testid="props.dataTestid" data-fsds-component="command" data-fsds-box="">
       <div v-if="behavior.open.value" :class="'command__overlay'" aria-hidden="true" @click.self="behavior.setOpen(false)"></div>
       <div v-if="behavior.open.value" :class="'command__dialog'" role="dialog" aria-modal="true" :aria-label="props.label">
         <div :class="'command__inputWrapper'">

@@ -32,6 +32,11 @@ describe("Card — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Card as Component, { props: {}, attrs: { "data-testid": "card" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="card"]').exists()).toBe(true);
+  });
+
   it("has the correct ARIA role", () => {
     const wrapper = mount(Card as Component, { props: {}, attrs: { "data-testid": "card" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("group");
@@ -58,6 +63,7 @@ describe("Card — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import { defineComponent, h } from "vue";
 import CardContent from "../CardContent.vue";
 import CardDescription from "../CardDescription.vue";
 import CardFooter from "../CardFooter.vue";
@@ -90,7 +96,7 @@ describe("Card — compound parts", () => {
       slots: { default: "Card part" },
       attrs: { "data-testid": "card-cardfooter" },
     });
-    expect(wrapper.element.tagName.toLowerCase()).toBe("footer");
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
     expect(wrapper.classes()).toContain("card__footer");
     expect(wrapper.text()).toContain("Card part");
   });
@@ -100,9 +106,33 @@ describe("Card — compound parts", () => {
       slots: { default: "Card part" },
       attrs: { "data-testid": "card-cardheader" },
     });
-    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
     expect(wrapper.classes()).toContain("card__header");
     expect(wrapper.text()).toContain("Card part");
+  });
+});
+
+describe("Card — landmarks", () => {
+  // A card's header and footer belong to the card, not the page: two cards
+  // on one page must not contribute two banner/contentinfo landmarks.
+  it("exposes no banner or contentinfo landmark for two cards with headers and footers", async () => {
+    const card = (label: string) =>
+      h(Card as Component, { "aria-label": label }, {
+        default: () => [
+          h(CardHeader as Component, null, { default: () => label }),
+          h(CardContent as Component, null, { default: () => "Body" }),
+          h(CardFooter as Component, null, { default: () => "Foot" }),
+        ],
+      });
+    const wrapper = mount(defineComponent({ render: () => h("div", [card("First"), card("Second")]) }), { attachTo: document.body });
+    try {
+      expect(wrapper.findAll(".card__header")).toHaveLength(2);
+      expect(wrapper.element.querySelectorAll("header, footer, [role='banner'], [role='contentinfo']")).toHaveLength(0);
+      const results = await axe(document.documentElement, { runOnly: ["landmark-no-duplicate-banner", "landmark-no-duplicate-contentinfo", "landmark-banner-is-top-level", "landmark-contentinfo-is-top-level"] });
+      expect(results.violations.map((v) => v.id)).toEqual([]);
+    } finally {
+      wrapper.unmount();
+    }
   });
 });
 // @custom:end

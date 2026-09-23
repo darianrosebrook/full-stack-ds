@@ -24,7 +24,7 @@ interface Props {
   size?: LinkSize;
   disabled?: boolean;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -49,7 +49,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <a :class="classNames" :href="props.href" :target="props.target" :rel="props.rel" :data-testid="props['data-testid']" data-fsds-component="links" data-fsds-box="">
+  <a :class="classNames" :href="props.href" :target="props.target" :rel="props.rel" :data-testid="props.dataTestid" data-fsds-component="links" data-fsds-box="">
     <slot />
   </a>
 </template>

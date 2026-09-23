@@ -40,6 +40,11 @@ describe("Sheet — unit", () => {
     expect(root?.classList.contains("custom")).toBe(true);
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    mount(Sheet as Component, { props: { "open": true }, attrs: { "data-testid": "sheet" }, slots: { "default": "content" }, attachTo: document.body });
+    expect(document.body.querySelector('[data-testid="sheet"]')).not.toBeNull();
+  });
+
   it("applies side=top variant class", () => {
     mount(Sheet as Component, { props: { "open": true, "side": "top" }, attrs: { "data-testid": "sheet" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".sheet");
@@ -142,7 +147,7 @@ describe("Sheet — compound parts", () => {
       slots: { default: "Sheet part" },
       attrs: { "data-testid": "sheet-sheetfooter" },
     });
-    expect(wrapper.element.tagName.toLowerCase()).toBe("footer");
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
     expect(wrapper.classes()).toContain("sheet__footer");
     expect(wrapper.text()).toContain("Sheet part");
   });
@@ -152,7 +157,7 @@ describe("Sheet — compound parts", () => {
       slots: { default: "Sheet part" },
       attrs: { "data-testid": "sheet-sheetheader" },
     });
-    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
     expect(wrapper.classes()).toContain("sheet__header");
     expect(wrapper.text()).toContain("Sheet part");
   });

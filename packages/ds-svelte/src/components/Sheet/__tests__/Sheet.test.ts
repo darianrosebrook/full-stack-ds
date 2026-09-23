@@ -142,7 +142,7 @@ describe("Sheet — compound parts", () => {
     });
     const root = container.querySelector('[data-testid="sheet-sheetfooter"]');
     expect(root).toBeTruthy();
-    expect(root!.tagName.toLowerCase()).toBe("footer");
+    expect(root!.tagName.toLowerCase()).toBe("div");
     expect(root!.className.split(/\s+/)).toContain("sheet__footer");
   });
 
@@ -152,7 +152,7 @@ describe("Sheet — compound parts", () => {
     });
     const root = container.querySelector('[data-testid="sheet-sheetheader"]');
     expect(root).toBeTruthy();
-    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.tagName.toLowerCase()).toBe("div");
     expect(root!.className.split(/\s+/)).toContain("sheet__header");
   });
 

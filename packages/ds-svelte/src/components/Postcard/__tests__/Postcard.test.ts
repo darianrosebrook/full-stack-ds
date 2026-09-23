@@ -79,7 +79,7 @@ describe("Postcard — compound parts", () => {
     });
     const root = container.querySelector('[data-testid="postcard-postcardfooter"]');
     expect(root).toBeTruthy();
-    expect(root!.tagName.toLowerCase()).toBe("footer");
+    expect(root!.tagName.toLowerCase()).toBe("div");
     expect(root!.className.split(/\s+/)).toContain("postcard__footer");
   });
 
@@ -89,7 +89,7 @@ describe("Postcard — compound parts", () => {
     });
     const root = container.querySelector('[data-testid="postcard-postcardheader"]');
     expect(root).toBeTruthy();
-    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.tagName.toLowerCase()).toBe("div");
     expect(root!.className.split(/\s+/)).toContain("postcard__header");
   });
 });

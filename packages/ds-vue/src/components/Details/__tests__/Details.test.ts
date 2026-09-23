@@ -32,6 +32,11 @@ describe("Details — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="details"]').exists()).toBe(true);
+  });
+
   it("applies variant=default variant class", () => {
     const wrapper = mount(Details as Component, { props: { "summary": "placeholder", "open": true, "variant": "default" }, attrs: { "data-testid": "details" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("details--default");

@@ -26,6 +26,6 @@ const classes = $derived(["card__header", className].filter(Boolean).join(" "));
 // @custom:end
 </script>
 
-<Stack as="header" class={classes} data-testid={dataTestid}>
+<Stack class={classes} data-testid={dataTestid}>
   {@render children?.()}
 </Stack>

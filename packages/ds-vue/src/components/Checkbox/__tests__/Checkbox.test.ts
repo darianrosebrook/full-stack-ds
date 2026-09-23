@@ -32,6 +32,11 @@ describe("Checkbox — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Checkbox as Component, { props: {}, attrs: { "data-testid": "checkbox" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="checkbox"]').exists()).toBe(true);
+  });
+
   it("applies size=sm variant class", () => {
     const wrapper = mount(Checkbox as Component, { props: { "size": "sm" }, attrs: { "data-testid": "checkbox" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("checkbox--sm");

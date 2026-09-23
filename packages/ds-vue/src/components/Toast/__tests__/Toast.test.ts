@@ -40,6 +40,11 @@ describe("Toast — unit", () => {
     expect(root?.classList.contains("custom")).toBe(true);
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast" }, slots: { "default": "content" }, attachTo: document.body });
+    expect(document.body.querySelector('[data-testid="toast"]')).not.toBeNull();
+  });
+
   it("has the correct ARIA role", () => {
     mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".toast");

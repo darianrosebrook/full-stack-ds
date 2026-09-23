@@ -32,6 +32,11 @@ describe("Select — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Select as Component, { props: { "open": true }, attrs: { "data-testid": "select" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="select"]').exists()).toBe(true);
+  });
+
   it("applies size=sm variant class", () => {
     const wrapper = mount(Select as Component, { props: { "open": true, "size": "sm" }, attrs: { "data-testid": "select" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("select--sm");

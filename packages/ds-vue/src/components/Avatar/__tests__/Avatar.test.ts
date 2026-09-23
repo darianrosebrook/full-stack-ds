@@ -32,6 +32,11 @@ describe("Avatar — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Avatar as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="avatar"]').exists()).toBe(true);
+  });
+
   it("has the correct ARIA role", () => {
     const wrapper = mount(Avatar as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "avatar" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("img");

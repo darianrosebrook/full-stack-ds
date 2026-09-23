@@ -31,6 +31,11 @@ describe("Label — unit", () => {
     expect(wrapper.classes()).toContain("label");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Label as Component, { props: {}, attrs: { "data-testid": "label" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="label"]').exists()).toBe(true);
+  });
 });
 
 describe("Label — accessibility", () => {

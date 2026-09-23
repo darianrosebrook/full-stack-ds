@@ -21,7 +21,7 @@ interface Props {
   size?: StatSize;
   trend?: StatTrend;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -46,7 +46,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="stat" data-fsds-box="">
+  <div :class="classNames" :data-testid="props.dataTestid" data-fsds-component="stat" data-fsds-box="">
     <slot />
   </div>
 </template>

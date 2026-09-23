@@ -11,7 +11,7 @@ import { Stack } from "../../primitives/index.js";
 // @generated:start props
 interface Props {
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 
 const props = defineProps<Props>();
@@ -29,7 +29,7 @@ const classNames = computed(() =>
 </script>
 
 <template>
-  <Stack as="h3" :class="classNames" :data-testid="props['data-testid']">
+  <Stack as="h3" :class="classNames" :data-testid="props.dataTestid">
     <slot />
   </Stack>
 </template>

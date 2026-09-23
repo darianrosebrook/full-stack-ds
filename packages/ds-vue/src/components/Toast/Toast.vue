@@ -27,7 +27,7 @@ interface Props {
   politeness?: ToastPoliteness;
   duration?: number | null;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -72,7 +72,7 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" aria-label="Notifications" :aria-live="props.politeness" role="region" :data-testid="props['data-testid']" data-fsds-component="toast" data-fsds-box="" v-on="autoDismiss.pauseListeners">
+    <div :class="classNames" aria-label="Notifications" :aria-live="props.politeness" role="region" :data-testid="props.dataTestid" data-fsds-component="toast" data-fsds-box="" v-on="autoDismiss.pauseListeners">
       <div v-if="behavior.open.value" :class="'toast__item'" role="status" :aria-labelledby="props.title ? `${instanceId}-title` : undefined">
         <div :class="'toast__row'">
           <div v-if="props.title" :class="'toast__title'" :id="`${instanceId}-title`">

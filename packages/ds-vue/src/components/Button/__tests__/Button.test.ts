@@ -32,6 +32,11 @@ describe("Button — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Button as Component, { props: {}, attrs: { "data-testid": "button" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="button"]').exists()).toBe(true);
+  });
+
   it("applies size=small variant class", () => {
     const wrapper = mount(Button as Component, { props: { "size": "small" }, attrs: { "data-testid": "button" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("button--small");

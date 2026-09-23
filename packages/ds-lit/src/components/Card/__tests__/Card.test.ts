@@ -93,5 +93,31 @@ async function renderElement(tagName: string, props: Record<string, unknown> = {
 // @generated:end
 
 // @custom:start tests
-
+describe("Card — landmarks", () => {
+  // A card's header and footer belong to the card, not the page: two cards
+  // on one page must not contribute two banner/contentinfo landmarks.
+  it("exposes no banner or contentinfo landmark for two cards with headers and footers", async () => {
+    const container = document.createElement("div");
+    container.innerHTML = ["First", "Second"]
+      .map((label) => `<fsds-card aria-label="${label}"><fsds-card-header>${label}</fsds-card-header><fsds-card-content>Body</fsds-card-content><fsds-card-footer>Foot</fsds-card-footer></fsds-card>`)
+      .join("");
+    document.body.append(container);
+    try {
+      const hosts = Array.from(container.querySelectorAll<LitTestElement>("fsds-card, fsds-card-header, fsds-card-content, fsds-card-footer"));
+      await Promise.all(hosts.map((host) => host.updateComplete));
+      // Landmark-bearing elements may sit in any (nested) shadow root.
+      const deepElements = (scope: Element | ShadowRoot): Element[] =>
+        Array.from(scope.querySelectorAll("*")).flatMap((el) => [el, ...(el.shadowRoot ? deepElements(el.shadowRoot) : [])]);
+      const all = deepElements(container);
+      const headers = all.filter((el) => el.classList.contains("card__header"));
+      const landmarks = all.filter((el) => el.matches("header, footer, [role='banner'], [role='contentinfo']"));
+      expect(headers).toHaveLength(2);
+      expect(landmarks).toHaveLength(0);
+      const results = await axe(document.documentElement, { runOnly: ["landmark-no-duplicate-banner", "landmark-no-duplicate-contentinfo", "landmark-banner-is-top-level", "landmark-contentinfo-is-top-level"] });
+      expect(results.violations.map((v) => v.id)).toEqual([]);
+    } finally {
+      container.remove();
+    }
+  });
+});
 // @custom:end

@@ -32,6 +32,11 @@ describe("Calendar — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Calendar as Component, { props: {}, attrs: { "data-testid": "calendar" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="calendar"]').exists()).toBe(true);
+  });
+
   it("has the correct ARIA role", () => {
     const wrapper = mount(Calendar as Component, { props: {}, attrs: { "data-testid": "calendar" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("application");
@@ -67,7 +72,7 @@ describe("Calendar — compound parts", () => {
       slots: { default: "Calendar part" },
       attrs: { "data-testid": "calendar-calendarheader" },
     });
-    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
     expect(wrapper.classes()).toContain("calendar__header");
     expect(wrapper.text()).toContain("Calendar part");
   });

@@ -6,11 +6,18 @@ import type {
 } from "./contract.js";
 import { getParts } from "./contract.js";
 
-/** Map well-known anatomy parts to semantic HTML elements */
+/**
+ * Map well-known anatomy parts to semantic HTML elements.
+ *
+ * `header` and `footer` parts render as `div`: a component's header or footer
+ * sits inside that component, and a `<header>`/`<footer>` outside a sectioning
+ * ancestor is exposed as the page's banner/contentinfo landmark. A contract
+ * that wants the element anyway declares `anatomy.details.<part>.tag`.
+ */
 export const SEMANTIC_ELEMENTS: Record<string, string | undefined> = {
   root: undefined,
-  header: "header",
-  footer: "footer",
+  header: "div",
+  footer: "div",
   title: "h3",
   label: "label",
   body: "div",

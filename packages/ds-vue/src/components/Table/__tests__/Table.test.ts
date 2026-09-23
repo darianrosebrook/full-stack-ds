@@ -31,6 +31,11 @@ describe("Table — unit", () => {
     expect(wrapper.classes()).toContain("table");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Table as Component, { props: {}, attrs: { "data-testid": "table" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="table"]').exists()).toBe(true);
+  });
 });
 
 describe("Table — accessibility", () => {

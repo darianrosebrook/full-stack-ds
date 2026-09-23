@@ -28,7 +28,7 @@ interface Props {
   ariaLabelledby?: string;
   ariaDescribedby?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -71,7 +71,7 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="sheet" data-fsds-box="">
+    <div :class="classNames" :data-testid="props.dataTestid" data-fsds-component="sheet" data-fsds-box="">
       <div v-if="behavior.openness.value" :class="'sheet__overlay'" aria-hidden="true" @click.self="behavior.setOpenness(false)"></div>
       <div v-if="behavior.openness.value" :class="'sheet__content'" :ref="bindInteractionPanel" role="dialog" :aria-modal="props.modal" :aria-label="props.ariaLabel" :data-side="props.side" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[$slots.description ? `${instanceId}-description` : null, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
         <div :class="'sheet__header'">

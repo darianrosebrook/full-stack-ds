@@ -27,7 +27,7 @@ interface Props {
   spacing?: ListSpacing;
   size?: ListSize;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -56,7 +56,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <component :is="props.as ?? 'ul'" :class="classNames" :data-testid="props['data-testid']" data-fsds-component="list" data-fsds-box="">
+  <component :is="props.as ?? 'ul'" :class="classNames" :data-testid="props.dataTestid" data-fsds-component="list" data-fsds-box="">
     <slot />
   </component>
 </template>

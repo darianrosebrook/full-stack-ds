@@ -29,7 +29,7 @@ interface Props {
   decorative?: boolean;
   ariaLabel?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -58,7 +58,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :role="(props.decorative ? 'presentation' : 'status')" :aria-busy="(props.decorative ? 'false' : 'true')" :aria-hidden="(props.decorative ? 'true' : 'false')" :aria-label="props.ariaLabel" :data-testid="props['data-testid']" data-fsds-component="skeleton" data-fsds-box="">
+  <div :class="classNames" :role="(props.decorative ? 'presentation' : 'status')" :aria-busy="(props.decorative ? 'false' : 'true')" :aria-hidden="(props.decorative ? 'true' : 'false')" :aria-label="props.ariaLabel" :data-testid="props.dataTestid" data-fsds-component="skeleton" data-fsds-box="">
     <div v-if="props.lines" :class="'skeleton__stack'">
       <div v-for="(_, index) in Array(props.lines)" :key="index" :class="'skeleton__row'">
         <div :class="'skeleton__shape'" aria-hidden="true"></div>

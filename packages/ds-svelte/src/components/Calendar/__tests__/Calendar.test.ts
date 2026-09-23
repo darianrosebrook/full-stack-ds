@@ -67,7 +67,7 @@ describe("Calendar — compound parts", () => {
     });
     const root = container.querySelector('[data-testid="calendar-calendarheader"]');
     expect(root).toBeTruthy();
-    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.tagName.toLowerCase()).toBe("div");
     expect(root!.className.split(/\s+/)).toContain("calendar__header");
   });
 });

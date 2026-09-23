@@ -13,7 +13,7 @@ interface Props {
   value: string;
   disabled?: boolean;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 
 const props = defineProps<Props>();
@@ -56,7 +56,7 @@ onUnmounted(() => {
     type="button"
     :class="classNames"
     :data-value="props.value"
-    :data-testid="props['data-testid']"
+    :data-testid="props.dataTestid"
     :id="`${ctx.idBase}-tab-${props.value}`"
     :aria-controls="`${ctx.idBase}-panel-${props.value}`"
     :aria-selected="isActive"

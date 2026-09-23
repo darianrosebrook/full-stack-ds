@@ -32,6 +32,11 @@ describe("Links — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Links as Component, { props: {}, attrs: { "data-testid": "links" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="links"]').exists()).toBe(true);
+  });
+
   it("applies size=small variant class", () => {
     const wrapper = mount(Links as Component, { props: { "size": "small" }, attrs: { "data-testid": "links" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("links--small");

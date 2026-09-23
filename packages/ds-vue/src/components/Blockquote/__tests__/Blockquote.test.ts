@@ -32,6 +32,11 @@ describe("Blockquote — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Blockquote as Component, { props: {}, attrs: { "data-testid": "blockquote" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="blockquote"]').exists()).toBe(true);
+  });
+
   it("applies variant=default variant class", () => {
     const wrapper = mount(Blockquote as Component, { props: { "variant": "default" }, attrs: { "data-testid": "blockquote" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("blockquote--default");

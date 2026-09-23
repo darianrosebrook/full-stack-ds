@@ -20,7 +20,7 @@ interface Props {
   responsive?: boolean;
   ariaLabel?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -43,7 +43,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="table" data-fsds-box="">
+  <div :class="classNames" :data-testid="props.dataTestid" data-fsds-component="table" data-fsds-box="">
     <table :class="'table__container'" :aria-label="props.ariaLabel">
       <slot />
     </table>

@@ -32,6 +32,11 @@ describe("Status — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Status as Component, { props: { "status": "info" }, attrs: { "data-testid": "status" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="status"]').exists()).toBe(true);
+  });
+
   it("applies status=info variant class", () => {
     const wrapper = mount(Status as Component, { props: { "status": "info" }, attrs: { "data-testid": "status" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("status--info");

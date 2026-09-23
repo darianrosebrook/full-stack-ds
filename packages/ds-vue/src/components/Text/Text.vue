@@ -30,7 +30,7 @@ interface Props {
   transform?: TextTransform;
   truncate?: boolean;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -58,7 +58,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <component :is="props.as ?? 'p'" :class="classNames" :data-truncate="(props.truncate ? 'true' : 'false')" :data-testid="props['data-testid']" data-fsds-component="text" data-fsds-box="">
+  <component :is="props.as ?? 'p'" :class="classNames" :data-truncate="(props.truncate ? 'true' : 'false')" :data-testid="props.dataTestid" data-fsds-component="text" data-fsds-box="">
     <slot />
   </component>
 </template>

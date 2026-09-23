@@ -40,6 +40,11 @@ describe("Walkthrough — unit", () => {
     expect(root?.classList.contains("custom")).toBe(true);
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough" }, slots: { "default": "content" }, attachTo: document.body });
+    expect(document.body.querySelector('[data-testid="walkthrough"]')).not.toBeNull();
+  });
+
   it("has the correct ARIA role", () => {
     mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".walkthrough");

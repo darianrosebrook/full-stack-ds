@@ -37,7 +37,7 @@ interface Props {
   nextLabel?: string;
   progressLabel?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -104,7 +104,7 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" role="status" :aria-label="props.label" :data-testid="props['data-testid']" data-fsds-component="walkthrough" data-fsds-box="" :ref="setAnchoredRootEl" :data-placement="anchoredPosition.placement" :style="{ position: 'fixed', top: `${anchoredPosition.top}px`, left: `${anchoredPosition.left}px`, visibility: anchoredPosition.ready ? 'visible' : 'hidden' }">
+    <div :class="classNames" role="status" :aria-label="props.label" :data-testid="props.dataTestid" data-fsds-component="walkthrough" data-fsds-box="" :ref="setAnchoredRootEl" :data-placement="anchoredPosition.placement" :style="{ position: 'fixed', top: `${anchoredPosition.top}px`, left: `${anchoredPosition.left}px`, visibility: anchoredPosition.ready ? 'visible' : 'hidden' }">
       <div :class="'walkthrough__content'" role="group" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="$slots.description ? `${instanceId}-description` : undefined">
         <h3 :class="'walkthrough__title'" :aria-label="props.label" :id="`${instanceId}-title`">
           <slot name="title" />

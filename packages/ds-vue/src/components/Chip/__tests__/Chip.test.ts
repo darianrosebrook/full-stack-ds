@@ -32,6 +32,11 @@ describe("Chip — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Chip as Component, { props: {}, attrs: { "data-testid": "chip" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="chip"]').exists()).toBe(true);
+  });
+
   it("applies variant=default variant class", () => {
     const wrapper = mount(Chip as Component, { props: { "variant": "default" }, attrs: { "data-testid": "chip" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("chip--default");

@@ -32,6 +32,11 @@ describe("CodeSnippet — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(CodeSnippet as Component, { props: { "text": "placeholder" }, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="code-snippet"]').exists()).toBe(true);
+  });
+
   it("applies as=code variant class", () => {
     const wrapper = mount(CodeSnippet as Component, { props: { "text": "placeholder", "as": "code" }, attrs: { "data-testid": "code-snippet" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("code-snippet--code");

@@ -40,7 +40,7 @@ export function CardHeader({
 }: CardHeaderProps) {
   const classNames = ["card__header", className].filter(Boolean).join(" ");
   return (
-    <Stack as="header" className={classNames} data-testid={testId}>
+    <Stack className={classNames} data-testid={testId}>
       {children}
     </Stack>
   );
@@ -97,7 +97,7 @@ export function CardFooter({
 }: CardFooterProps) {
   const classNames = ["card__footer", className].filter(Boolean).join(" ");
   return (
-    <Stack as="footer" variant="horizontal" className={classNames} data-testid={testId}>
+    <Stack variant="horizontal" className={classNames} data-testid={testId}>
       {children}
     </Stack>
   );

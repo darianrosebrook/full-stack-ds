@@ -32,6 +32,11 @@ describe("Postcard — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Postcard as Component, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {} }, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="postcard"]').exists()).toBe(true);
+  });
+
   it("applies type=image variant class", () => {
     const wrapper = mount(Postcard as Component, { props: { "postId": "placeholder", "author": {}, "timestamp": "placeholder", "stats": {}, "type": "image" }, attrs: { "data-testid": "postcard" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("postcard--image");
@@ -79,7 +84,7 @@ describe("Postcard — compound parts", () => {
       slots: { default: "Postcard part" },
       attrs: { "data-testid": "postcard-postcardfooter" },
     });
-    expect(wrapper.element.tagName.toLowerCase()).toBe("footer");
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
     expect(wrapper.classes()).toContain("postcard__footer");
     expect(wrapper.text()).toContain("Postcard part");
   });
@@ -89,7 +94,7 @@ describe("Postcard — compound parts", () => {
       slots: { default: "Postcard part" },
       attrs: { "data-testid": "postcard-postcardheader" },
     });
-    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
     expect(wrapper.classes()).toContain("postcard__header");
     expect(wrapper.text()).toContain("Postcard part");
   });

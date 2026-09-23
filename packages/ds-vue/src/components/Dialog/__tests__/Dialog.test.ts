@@ -40,6 +40,11 @@ describe("Dialog — unit", () => {
     expect(root?.classList.contains("custom")).toBe(true);
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    mount(Dialog as Component, { props: { "open": true }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
+    expect(document.body.querySelector('[data-testid="dialog"]')).not.toBeNull();
+  });
+
   it("applies size=sm variant class", () => {
     mount(Dialog as Component, { props: { "open": true, "size": "sm" }, attrs: { "data-testid": "dialog" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".dialog");
@@ -156,7 +161,7 @@ describe("Dialog — compound parts", () => {
       slots: { default: "Dialog part" },
       attrs: { "data-testid": "dialog-dialogfooter" },
     });
-    expect(wrapper.element.tagName.toLowerCase()).toBe("footer");
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
     expect(wrapper.classes()).toContain("dialog__footer");
     expect(wrapper.text()).toContain("Dialog part");
   });
@@ -166,7 +171,7 @@ describe("Dialog — compound parts", () => {
       slots: { default: "Dialog part" },
       attrs: { "data-testid": "dialog-dialogheader" },
     });
-    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
     expect(wrapper.classes()).toContain("dialog__header");
     expect(wrapper.text()).toContain("Dialog part");
   });

@@ -23,7 +23,7 @@ interface Props {
   defaultValue?: string[];
   onValueChange?: (value: string[]) => void;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -54,7 +54,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <ul :class="classNames" role="listbox" :aria-label="props.ariaLabel" :data-testid="props['data-testid']" data-fsds-component="shuttle" data-fsds-box="">
+  <ul :class="classNames" role="listbox" :aria-label="props.ariaLabel" :data-testid="props.dataTestid" data-fsds-component="shuttle" data-fsds-box="">
     <li v-for="(item, index) in (behavior.selection.value ?? [])" :key="index" :class="'shuttle__item'" role="option" aria-selected="true">
       <span>
         {{ item }}

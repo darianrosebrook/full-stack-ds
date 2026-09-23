@@ -32,6 +32,11 @@ describe("Stat — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Stat as Component, { props: {}, attrs: { "data-testid": "stat" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="stat"]').exists()).toBe(true);
+  });
+
   it("applies size=sm variant class", () => {
     const wrapper = mount(Stat as Component, { props: { "size": "sm" }, attrs: { "data-testid": "stat" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("stat--sm");

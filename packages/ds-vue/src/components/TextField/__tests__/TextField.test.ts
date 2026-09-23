@@ -31,6 +31,11 @@ describe("TextField — unit", () => {
     expect(wrapper.classes()).toContain("text-field");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(TextField as Component, { props: {}, attrs: { "data-testid": "text-field" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="text-field"]').exists()).toBe(true);
+  });
 });
 
 describe("TextField — accessibility", () => {

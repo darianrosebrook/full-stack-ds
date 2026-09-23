@@ -588,7 +588,7 @@ export class DialogHeaderElement extends LitElement {
   `;
 
   override render() {
-    return html`<fsds-stack as="header" class="dialog__header"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack class="dialog__header"><slot></slot></fsds-stack>`;
   }
 }
 
@@ -1305,7 +1305,7 @@ export class DialogFooterElement extends LitElement {
   `;
 
   override render() {
-    return html`<fsds-stack as="footer" variant="horizontal" class="dialog__footer"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack variant="horizontal" class="dialog__footer"><slot></slot></fsds-stack>`;
   }
 }
 

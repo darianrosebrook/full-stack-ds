@@ -31,6 +31,11 @@ describe("Shuttle — unit", () => {
     expect(wrapper.classes()).toContain("shuttle");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Shuttle as Component, { props: {}, attrs: { "data-testid": "shuttle" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="shuttle"]').exists()).toBe(true);
+  });
 });
 
 describe("Shuttle — accessibility", () => {

@@ -789,7 +789,7 @@ export class SheetHeaderElement extends LitElement {
   `;
 
   override render() {
-    return html`<fsds-stack as="header" class="sheet__header"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack class="sheet__header"><slot></slot></fsds-stack>`;
   }
 }
 
@@ -1701,7 +1701,7 @@ export class SheetFooterElement extends LitElement {
   `;
 
   override render() {
-    return html`<fsds-stack as="footer" variant="horizontal" class="sheet__footer"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack variant="horizontal" class="sheet__footer"><slot></slot></fsds-stack>`;
   }
 }
 

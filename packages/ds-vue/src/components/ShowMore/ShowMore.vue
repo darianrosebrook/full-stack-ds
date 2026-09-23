@@ -26,7 +26,7 @@ interface Props {
   showMoreLabel?: string;
   showLessLabel?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -62,7 +62,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="show-more" data-fsds-box="">
+  <div :class="classNames" :data-testid="props.dataTestid" data-fsds-component="show-more" data-fsds-box="">
     <div :class="'show-more__content'" :style="{ '--fsds-show-more-content-max-lines': props.maxLines }">
       <slot />
     </div>

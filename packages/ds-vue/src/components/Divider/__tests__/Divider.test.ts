@@ -32,6 +32,11 @@ describe("Divider — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Divider as Component, { props: {}, attrs: { "data-testid": "divider" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="divider"]').exists()).toBe(true);
+  });
+
   it("applies orientation=horizontal variant class", () => {
     const wrapper = mount(Divider as Component, { props: { "orientation": "horizontal" }, attrs: { "data-testid": "divider" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("divider--horizontal");

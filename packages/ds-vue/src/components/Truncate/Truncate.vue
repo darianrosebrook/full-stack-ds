@@ -26,7 +26,7 @@ interface Props {
   expandText?: string;
   collapseText?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -62,7 +62,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="truncate" data-fsds-box="">
+  <div :class="classNames" :data-testid="props.dataTestid" data-fsds-component="truncate" data-fsds-box="">
     <span :class="'truncate__content'" :style="{ '--fsds-truncate-content-lines': props.lines }">
       <slot />
     </span>

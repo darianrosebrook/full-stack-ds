@@ -34,7 +34,7 @@ interface Props {
   fallbackSrc?: string;
   size?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -59,5 +59,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <img :class="classNames" :src="props.src" :alt="props.alt" :width="props.width" :height="props.height" :loading="props.loading" :sizes="props.sizes" :style="{ '--fsds-image-prop-aspect-ratio': (props.aspectRatio === 'square' ? '1 / 1' : (props.aspectRatio === 'video' ? '16 / 9' : (props.aspectRatio === 'photo' ? '4 / 3' : (props.aspectRatio === 'wide' ? '21 / 9' : (props.aspectRatio === 'portrait' ? '2 / 3' : 'auto'))))), '--fsds-image-prop-object-fit': props.objectFit, '--fsds-image-prop-object-position': props.objectPosition }" :data-testid="props['data-testid']" data-fsds-component="image" data-fsds-box="" />
+  <img :class="classNames" :src="props.src" :alt="props.alt" :width="props.width" :height="props.height" :loading="props.loading" :sizes="props.sizes" :style="{ '--fsds-image-prop-aspect-ratio': (props.aspectRatio === 'square' ? '1 / 1' : (props.aspectRatio === 'video' ? '16 / 9' : (props.aspectRatio === 'photo' ? '4 / 3' : (props.aspectRatio === 'wide' ? '21 / 9' : (props.aspectRatio === 'portrait' ? '2 / 3' : 'auto'))))), '--fsds-image-prop-object-fit': props.objectFit, '--fsds-image-prop-object-position': props.objectPosition }" :data-testid="props.dataTestid" data-fsds-component="image" data-fsds-box="" />
 </template>

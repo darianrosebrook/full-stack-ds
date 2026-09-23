@@ -31,6 +31,11 @@ describe("ShowMore — unit", () => {
     expect(wrapper.classes()).toContain("show-more");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(ShowMore as Component, { props: {}, attrs: { "data-testid": "show-more" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="show-more"]').exists()).toBe(true);
+  });
 });
 
 describe("ShowMore — accessibility", () => {

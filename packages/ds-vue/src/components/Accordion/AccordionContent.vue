@@ -12,7 +12,7 @@ import { useAccordionContext } from "./useAccordion.js";
 interface Props {
   value: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 
 const props = defineProps<Props>();
@@ -40,7 +40,7 @@ const classNames = computed(() =>
     :id="`${ctx.idBase}-content-${props.value}`"
     :aria-labelledby="`${ctx.idBase}-trigger-${props.value}`"
     :hidden="!isOpen ? true : undefined"
-    :data-testid="props['data-testid']"
+    :data-testid="props.dataTestid"
   >
     <div class="accordion__contentInner">
       <slot />

@@ -19,7 +19,7 @@ export type ProfileFlagData = { id: string; username: string; full_name: string;
 interface Props {
   profile?: ProfileFlagData;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -40,7 +40,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="profile-flag" data-fsds-box="">
+  <div :class="classNames" :data-testid="props.dataTestid" data-fsds-component="profile-flag" data-fsds-box="">
     <slot />
   </div>
 </template>

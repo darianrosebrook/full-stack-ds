@@ -32,6 +32,11 @@ describe("Text — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Text as Component, { props: {}, attrs: { "data-testid": "text" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="text"]').exists()).toBe(true);
+  });
+
   it("applies variant=display variant class", () => {
     const wrapper = mount(Text as Component, { props: { "variant": "display" }, attrs: { "data-testid": "text" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("text--display");

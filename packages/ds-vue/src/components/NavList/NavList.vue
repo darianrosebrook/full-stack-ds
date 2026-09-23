@@ -20,7 +20,7 @@ interface Props {
   orientation?: NavListOrientation;
   ariaLabel?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -44,7 +44,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <nav :class="classNames" :aria-label="props.ariaLabel" :data-testid="props['data-testid']" data-fsds-component="nav-list" data-fsds-box="">
+  <nav :class="classNames" :aria-label="props.ariaLabel" :data-testid="props.dataTestid" data-fsds-component="nav-list" data-fsds-box="">
     <ul :class="'nav-list__list'">
       <slot />
     </ul>

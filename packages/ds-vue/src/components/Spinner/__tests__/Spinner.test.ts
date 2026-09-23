@@ -32,6 +32,11 @@ describe("Spinner — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Spinner as Component, { props: {}, attrs: { "data-testid": "spinner" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="spinner"]').exists()).toBe(true);
+  });
+
   it("has the correct ARIA role", () => {
     const wrapper = mount(Spinner as Component, { props: {}, attrs: { "data-testid": "spinner" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("status");

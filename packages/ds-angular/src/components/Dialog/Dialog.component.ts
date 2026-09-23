@@ -133,7 +133,7 @@ export class DialogComponent implements OnInit, OnDestroy {
   selector: "fsds-dialog-header",
   standalone: true,
   imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="header" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogHeaderComponent {
@@ -181,7 +181,7 @@ export class DialogBodyComponent {
   selector: "fsds-dialog-footer",
   standalone: true,
   imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="footer" variant="horizontal" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack variant="horizontal" [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogFooterComponent {

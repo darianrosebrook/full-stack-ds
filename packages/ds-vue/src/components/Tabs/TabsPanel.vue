@@ -12,7 +12,7 @@ import { useTabsContext } from "./useTabs.js";
 interface Props {
   value: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 
 const props = defineProps<Props>();
@@ -41,7 +41,7 @@ const classNames = computed(() =>
     :id="`${ctx.idBase}-panel-${props.value}`"
     :aria-labelledby="`${ctx.idBase}-tab-${props.value}`"
     :tabindex="0"
-    :data-testid="props['data-testid']"
+    :data-testid="props.dataTestid"
     :hidden="!isActive ? true : undefined"
   >
     <slot />

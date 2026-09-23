@@ -77,7 +77,7 @@ describe("Field — compound parts", () => {
     });
     const root = container.querySelector('[data-testid="field-fieldheader"]');
     expect(root).toBeTruthy();
-    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.tagName.toLowerCase()).toBe("div");
     expect(root!.className.split(/\s+/)).toContain("field__header");
   });
 });

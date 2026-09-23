@@ -31,6 +31,11 @@ describe("Markdown — unit", () => {
     expect(wrapper.classes()).toContain("markdown");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Markdown as Component, { props: { "content": "placeholder" }, attrs: { "data-testid": "markdown" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="markdown"]').exists()).toBe(true);
+  });
 });
 
 describe("Markdown — accessibility", () => {

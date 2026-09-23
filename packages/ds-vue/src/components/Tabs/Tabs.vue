@@ -30,7 +30,7 @@ interface Props {
   unmountInactive?: boolean;
   idBase?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -82,7 +82,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div data-fsds-component="tabs" data-fsds-box="" :class="classNames" :data-testid="props['data-testid']">
+  <div data-fsds-component="tabs" data-fsds-box="" :class="classNames" :data-testid="props.dataTestid">
     <slot />
   </div>
 </template>

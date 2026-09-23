@@ -103,6 +103,21 @@ export function generateVueTest(ir: ComponentIR): string {
     lines.push(`    expect(wrapper.classes()).toContain("custom");`);
   }
   lines.push(`  });`);
+  lines.push(``);
+
+  // A consumer-passed data-testid must reach the rendered DOM. The attribute
+  // is a declared prop, so it does not fall through: the template binding is
+  // the only path, and a mis-keyed prop read drops it silently.
+  const testIdSelector = `[data-testid="${plan.testId}"]`;
+  lines.push(`  it("forwards data-testid to the rendered element", () => {`);
+  if (portalRoot) {
+    lines.push(`    ${mountExpression(plan.name, plan, { attachTo: "document.body" })};`);
+    lines.push(`    expect(document.body.querySelector('${testIdSelector}')).not.toBeNull();`);
+  } else {
+    lines.push(`    const wrapper = ${mountExpression(plan.name, plan)};`);
+    lines.push(`    expect(wrapper.find('${testIdSelector}').exists()).toBe(true);`);
+  }
+  lines.push(`  });`);
 
   if (plan.role) {
     lines.push(``);

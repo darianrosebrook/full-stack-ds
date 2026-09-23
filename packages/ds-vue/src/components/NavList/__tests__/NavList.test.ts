@@ -32,6 +32,11 @@ describe("NavList — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(NavList as Component, { props: {}, attrs: { "data-testid": "nav-list" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="nav-list"]').exists()).toBe(true);
+  });
+
   it("applies orientation=vertical variant class", () => {
     const wrapper = mount(NavList as Component, { props: { "orientation": "vertical" }, attrs: { "data-testid": "nav-list" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("nav-list--vertical");

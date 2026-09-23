@@ -32,6 +32,11 @@ describe("RadioGroup — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(RadioGroup as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "radio-group" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="radio-group"]').exists()).toBe(true);
+  });
+
   it("has the correct ARIA role", () => {
     const wrapper = mount(RadioGroup as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "radio-group" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("radiogroup");
