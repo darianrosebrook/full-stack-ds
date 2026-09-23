@@ -54,3 +54,11 @@ contracts:
   - name: 'vue-testid-passthrough'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/vue/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "e2e/card-landmark-rail.spec.ts: Chromium getByRole on main post-merge -> no card__header banner, no card__footer contentinfo (pre-fix counterfactual: 3 banners + 3 contentinfo). Card landmark tests pass on main: react 9/9, vue (761/761 suite), svelte 12/12, lit 6/6, angular 5/5; React/Vue/Svelte fail on pre-fix output; Lit/Angular never rendered <header> (as is advisory) and their detectors fire on a planted <header>. Non-claim: only React is composed in a real browser; no screen-reader check."
+    recorded_at: "2026-09-23T04:12:03.909Z"
+    command: FSDS_E2E_PORT=5397 npx playwright test e2e/card-landmark-rail.spec.ts; per-framework Card suites (react/vue/svelte/lit/angular)
+    exit_code: 0
+    commit_sha: d822bc08cdd88d86e437e203101ce12ebeffedb9
