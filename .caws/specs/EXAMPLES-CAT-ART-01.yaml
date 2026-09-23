@@ -41,9 +41,11 @@ acceptance:
       the bodies use rounded-box geometry, the laptop has a hinge barrel, and the
       cup is a lathe with wall thickness and a handle
   - id: A4
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
-    then: 'given the desk texture; when the page loads twice; then the wood is identical (seeded) and has plank joints and variation'
+    given: 'the desk texture'
+    when: 'the page loads twice'
+    then: >-
+      the wood is byte-identical because it uses a seeded RNG, and it has plank end
+      joints and per-plank variation
   - id: A5
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
