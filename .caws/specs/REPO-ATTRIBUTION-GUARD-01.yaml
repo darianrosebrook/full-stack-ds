@@ -60,11 +60,8 @@ evidence:
     commit_sha: "6645e4a0"
   - criterion_id: A2
     status: pass
-    evidence_ref: "Pins both the exact-address rule (noreply@anthropic.com) and the domain rule (agent@anthropic.com), and asserts the human identity darianrosebrook <hello@darianrosebrook.com> is admitted. Reinforced by the integration case \"git commit is REFUSED when the author identity is an agent\", which drives a real git commit in a temp repo whose core.hooksPath points at this repo .githooks and asserts non-zero exit, stderr matching /AI agent commit identity/, and git rev-list --count --all == 0."
-    recorded_at: "2026-09-23T01:19:25.770Z"
-    test_nodeid: "scripts/attribution-guard.test.mjs::AI commit identities are refused; human identities are not"
-    command: node --test scripts/attribution-guard.test.mjs
-    exit_code: 0
+    evidence_ref: "Reproduce: node --test scripts/attribution-guard.test.mjs (17/17 pass). Cited node test: \"AI commit identities are refused; human identities are not\" — pins the exact-address rule (noreply@anthropic.com) and the domain rule (agent@anthropic.com), and asserts the human identity darianrosebrook <hello@darianrosebrook.com> is admitted. Reinforced by the integration case \"git commit is REFUSED when the author identity is an agent\": a real git commit in a temp repo whose core.hooksPath points at this repo .githooks, asserting non-zero exit, stderr matching /AI agent commit identity/, and git rev-list --count --all == 0."
+    recorded_at: "2026-09-23T01:20:49.483Z"
     artifact_path: scripts/attribution-guard.mjs
     commit_sha: "6645e4a0"
   - criterion_id: A3
