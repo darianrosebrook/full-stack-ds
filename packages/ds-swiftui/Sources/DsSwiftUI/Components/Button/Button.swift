@@ -68,9 +68,9 @@ enum ButtonTokens {
             "button.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-button-color-border-default", name: "button.color.border.default", literal: .string("transparent")),
         ],
         "variant_destructive": [
-            "button.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-button-color-background-default", name: "button.color.background.default", ref: "semantic.color.action.background.danger.default", fallback: .string("#d92d2e")),
-            "button.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-button-color-foreground-default", name: "button.color.foreground.default", ref: "semantic.color.foreground.inverse", fallback: .adaptive(light: "#fafafa", dark: "#fafafa")),
-            "button.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-button-color-border-default", name: "button.color.border.default", ref: "semantic.color.action.background.danger.default", fallback: .string("#d92d2e")),
+            "button.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-button-color-background-default", name: "button.color.background.default", literal: .string("transparent")),
+            "button.color.foreground.default": FsdsComponentTokenDefinition(cssVar: "--fsds-button-color-foreground-default", name: "button.color.foreground.default", ref: "semantic.color.foreground.on.danger.subtle", fallback: .adaptive(light: "#900909", dark: "#ee8181")),
+            "button.color.border.default": FsdsComponentTokenDefinition(cssVar: "--fsds-button-color-border-default", name: "button.color.border.default", ref: "semantic.color.border.danger", fallback: .adaptive(light: "#b31b1b", dark: "#d92d2e")),
         ],
         "variant_ghost": [
             "button.color.background.default": FsdsComponentTokenDefinition(cssVar: "--fsds-button-color-background-default", name: "button.color.background.default", literal: .string("transparent")),

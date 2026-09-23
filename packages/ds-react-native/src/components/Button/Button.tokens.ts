@@ -302,14 +302,13 @@ export const buttonTokenScopes = {
     "button.color.background.default": {
       name: "button.color.background.default",
       cssVar: "--fsds-button-color-background-default",
-      ref: "semantic.color.action.background.danger.default",
-      fallback: "#d92d2e",
+      literal: "transparent",
     },
     "button.color.background.active": {
       name: "button.color.background.active",
       cssVar: "--fsds-button-color-background-active",
-      ref: "semantic.color.action.background.danger.active",
-      fallback: "#900909",
+      ref: "semantic.color.background.danger.subtle",
+      fallback: "#fac2c2",
     },
     "button.color.background.disabled": {
       name: "button.color.background.disabled",
@@ -320,14 +319,14 @@ export const buttonTokenScopes = {
     "button.color.foreground.default": {
       name: "button.color.foreground.default",
       cssVar: "--fsds-button-color-foreground-default",
-      ref: "semantic.color.foreground.inverse",
-      fallback: "#fafafa",
+      ref: "semantic.color.foreground.on.danger.subtle",
+      fallback: "#900909",
     },
     "button.color.border.default": {
       name: "button.color.border.default",
       cssVar: "--fsds-button-color-border-default",
-      ref: "semantic.color.action.background.danger.default",
-      fallback: "#d92d2e",
+      ref: "semantic.color.border.danger",
+      fallback: "#b31b1b",
     },
   },
   "variant_ghost": {
