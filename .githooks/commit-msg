@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# commit-msg — refuse AI-agent attribution before it enters history.
+#
+# GitHub publishes every `Co-authored-by:` trailer whose email maps to an
+# account as a repository contributor, and it offers no UI to remove one
+# afterwards. This hook is the only point where a bad trailer costs nothing, so
+# it runs before the commit object exists rather than after the push.
+#
+# The rule set, the allowlist, and the "why this is range-scoped, not
+# full-history" caveat all live in scripts/attribution-guard.mjs — this file is
+# only the wiring. `.githooks/pre-push` re-scans the pushed range with the same
+# script as a backstop for commits made with --no-verify, and CI runs it again
+# so a machine without hooks cannot publish one.
+#
+# `git commit --no-verify` bypasses this; CI is what catches that. Do not use it
+# for a violation you have not actually resolved.
+#
+# Activate per clone:  git config core.hooksPath .githooks
+
+set -euo pipefail
+
+MESSAGE_FILE="${1:-}"
+if [ -z "$MESSAGE_FILE" ]; then
+  echo "[commit-msg] no message file supplied; nothing to check" >&2
+  exit 0
+fi
+
+# Resolve the guard from the repository being committed to (the normal case),
+# then from the hook's own directory (an out-of-tree core.hooksPath, which the
+# guard's own tests use to exercise this hook in a throwaway repo).
+GUARD=""
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+if [ -n "$REPO_ROOT" ] && [ -f "$REPO_ROOT/scripts/attribution-guard.mjs" ]; then
+  GUARD="$REPO_ROOT/scripts/attribution-guard.mjs"
+else
+  HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+  if [ -f "$HOOK_DIR/../scripts/attribution-guard.mjs" ]; then
+    GUARD="$(cd "$HOOK_DIR/.." && pwd)/scripts/attribution-guard.mjs"
+  fi
+fi
+
+# Fail closed. A guard that could not run must not read as a guard that passed.
+if [ -z "$GUARD" ]; then
+  echo "[commit-msg] FATAL: scripts/attribution-guard.mjs not found — refusing the commit," >&2
+  echo "            because an unrun guard is indistinguishable from a clean one." >&2
+  exit 1
+fi
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "[commit-msg] FATAL: Node is required to run the attribution guard (CI pins Node 22)." >&2
+  exit 1
+fi
+
+node "$GUARD" --message-file "$MESSAGE_FILE"

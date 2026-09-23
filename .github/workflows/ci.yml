@@ -49,6 +49,36 @@ jobs:
           node --test scripts/prepush-scope.test.mjs
           node scripts/rail-toolchain-coupling-audit.mjs --check
 
+      # Attribution guard — the authority for a rule the local hooks can only
+      # advise on. GitHub derives the repository contributors list from commit
+      # authors AND from `Co-authored-by:` trailers whose email maps to an
+      # account, publishes no UI to remove one, and charges a full history
+      # rewrite to clear it afterwards (measured 2026-09-23: 3,826 of main's
+      # 5,702 commits). `.githooks/commit-msg` refuses the trailer at creation
+      # and `.githooks/pre-push` re-scans the pushed range, but both live on the
+      # committing machine and both yield to --no-verify. This step is what
+      # makes the rule hold regardless of who or what authored the commit.
+      #
+      # The scan is range-scoped, never full-history: three grandfathered
+      # Qwen-Coder trailers from 2026-08-15 are already in main, and a
+      # full-history scan would fail every run until someone rewrites them.
+      # `fetch-depth: 0` above is what makes the range resolvable here.
+      - name: Attribution guard (no AI-agent authorship)
+        run: |
+          set -euo pipefail
+          ZERO="0000000000000000000000000000000000000000"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            node scripts/attribution-guard.mjs \
+              --range "${{ github.event.pull_request.base.sha }}..${{ github.sha }}"
+          elif [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "$ZERO" ]; then
+            node scripts/attribution-guard.mjs --range "${{ github.event.before }}..${{ github.sha }}"
+          else
+            # New branch (no `before`): the tip is the only commit CI can name
+            # without guessing a base. The pre-push hook and the PR run cover
+            # the rest once a base exists.
+            node scripts/attribution-guard.mjs --range "${{ github.sha }}^!"
+          fi
+
       # Contract-oracle catalog integrity. This is the cheap, deterministic
       # guard: every curated mutation must still resolve to its reviewed source
       # value and change exactly one contract leaf. The expensive execution of
