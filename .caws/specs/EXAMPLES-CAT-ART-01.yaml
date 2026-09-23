@@ -21,9 +21,12 @@ invariants:
   - 'Device screen meshes stay unlit and excluded from tone mapping so DOM colours render exactly'
 acceptance:
   - id: A1
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
-    then: 'given the cat page in flagged Chrome; when it renders; then the scene uses an environment map and tone mapping, the device screens stay colour-exact, and shadows are soft and tightly framed'
+    given: 'the cat page in flagged Chrome'
+    when: 'it renders'
+    then: >-
+      the scene uses a PMREM environment map and tone mapping, device screens stay
+      colour-exact (toneMapped false), and shadows are soft with a shadow camera
+      framed to the visible desk
   - id: A2
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
