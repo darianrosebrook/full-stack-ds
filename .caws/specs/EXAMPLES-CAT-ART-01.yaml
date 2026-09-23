@@ -36,11 +36,14 @@ acceptance:
       camera's line of sight to the trackpad, with shoulders at the front of the
       chest below the chin; each arm is a pole pinned at the shoulder socket and the
       wrist (socket and wrist gaps 0 in every pose) that stretches to wherever the
-      paw goes, with a white sock at the wrist end; while it leans to the tablet or
-      phone the other paw rests at that side's trackpad corner and stays there; keys
-      going to one device hold its attention for 800 ms against pointer moves over
-      another device, and a held-off move is replayed when the hold ends; ears are
-      parented to the head; it has a swaying tail and breathing
+      paw goes, with a white sock at the wrist end; paws never reach outside a
+      top-down box from the back row of keys to the back of the cat and out to the
+      outermost tablet and phone corners, even when a pointer is dragged off a
+      screen; while it leans to the tablet or phone the other paw rests at that
+      side's trackpad corner and stays there; keys going to one device hold its
+      attention for 800 ms against pointer moves over another device, and a held-off
+      move is replayed when the hold ends; ears are parented to the head; it has a
+      swaying tail and breathing
   - id: A3
     given: 'the laptop, tablet, phone and cup'
     when: 'rendered'
