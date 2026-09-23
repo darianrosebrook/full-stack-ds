@@ -2,9 +2,11 @@ id: DS-RN-MODALITY-GATE-01
 title: 'React Native Dialog/Sheet honor modal=false'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'RN Dialog/Sheet honor modal=false: in-tree host with no Modal/overlay, BackHandler escape dismissal while open and non-modal, unchanged when modal omitted/true. Also fixed DS-CONSUMER-FINDINGS-01 leftovers found by the pre-push gate: 3 stale doc stamps, stale SwiftUI semantic-defaults entry.'
 created_at: '2026-09-23T04:23:59.975Z'
-updated_at: '2026-09-23T04:50:36.537Z'
+updated_at: '2026-09-23T04:59:16.416Z'
 created_by_session: '40ac09ec-5e89-4d7a-a01d-85b6bee26253'
 blast_radius:
   modules:
