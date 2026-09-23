@@ -3,7 +3,6 @@ title: 'Consumer findings: outlined destructive Button, prop-gated Sheet/Dialog 
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: ds-consumer-findings
 created_at: '2026-09-23T00:39:46.278Z'
 updated_at: '2026-09-23T02:26:22.339Z'
 created_by_session: '40ac09ec-5e89-4d7a-a01d-85b6bee26253'
