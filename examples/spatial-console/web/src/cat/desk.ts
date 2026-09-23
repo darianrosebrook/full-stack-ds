@@ -5,7 +5,7 @@ import { untransformPoint, viewportToTrackpadUV } from "./trackpad";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { KEY_CELLS, KEYBOARD_ROWS, KEYBOARD_WIDTH_UNITS, keyCell, pawForCode, type Paw } from "./keyboard-layout";
-import { type ArmPose, TaperedTube, contactShadowTexture, flatSlab, roundedRect, slab, solveArmAboveFloor, woodPlan, woodTexture } from "./art";
+import { TaperedTube, contactShadowTexture, flatSlab, roundedRect, slab, woodPlan, woodTexture } from "./art";
 
 // World units: 1 = 10 cm. The laptop sits at the origin with its keyboard
 // facing the camera (+z); the typist — the cat — is behind the camera side.
@@ -18,13 +18,14 @@ const TRACKPAD = { width: 1.15, depth: 0.72, centerZ: 0.6 };
 const PAW_HOVER = 0.28;
 const SLAP_MS = 150;
 // The cat is modelled at head radius 0.72 and drawn at CAT_SCALE, which puts
-// its head near a real cat's ~11 cm; like the reference cat, its chest is at
-// the laptop's front edge. Arm bones are world lengths.
+// its head near a real cat's ~11 cm. It sits back from the laptop so that its
+// head stays below the main camera's line of sight to the trackpad.
 const CAT_SCALE = 0.75;
-const CAT_Z = 2.05;
-const ARM = { upper: 1.1, fore: 1.15, maxSlide: 0.6 };
-// Lowest an elbow may sit: clear of the desk and the laptop's keys.
-const ELBOW_FLOOR = 0.16;
+const CAT_Z = 2.9;
+// Arms are poles, as in the reference gif: pinned at the armpit and the
+// wrist, no elbow, and they stretch to wherever the paw goes. The white sock
+// at the wrist keeps its length; only the black pole stretches.
+const SOCK_LENGTH = 0.3;
 const WOOD_SEED = 20260922;
 
 /** Unlit, colour-exact material for a drawn DOM snapshot (see scene.ts). */
@@ -58,12 +59,13 @@ interface PawState {
   target: THREE.Vector3;
   position: THREE.Vector3;
   slapStart: number;
+  /** Smoothed height above the surface, so changing rest spots never pops. */
+  hover: number;
   /** The paw; its position is the wrist the arm solves to. */
   mesh: THREE.Group;
-  bones: { upper: THREE.Mesh; fore: THREE.Mesh; sock: THREE.Mesh; elbow: THREE.Mesh; shoulder: THREE.Mesh };
+  arm: { pole: THREE.Mesh; sock: THREE.Mesh; armpit: THREE.Mesh };
   localShoulder: THREE.Vector3;
   shoulder: THREE.Vector3;
-  pose: ArmPose | null;
 }
 
 /** Which device the cat is attending to: the last one input came through. */
@@ -98,8 +100,11 @@ export interface Desk {
     catWorld(): { x: number; y: number; z: number };
     /** The paw's current scroll stroke, element px; decays to 0. */
     scrollStroke(): number;
-    /** Measured arm segment lengths this frame, and how the solver reached. */
-    arm(side: "left" | "right"): { upper: number; fore: number; slide: number; stretch: number };
+    /**
+     * The arm this frame: its length armpit-to-wrist, and how far its root and
+     * tip sit from the live shoulder socket and the paw (both pinned, so 0).
+     */
+    arm(side: "left" | "right"): { length: number; socketGap: number; wristGap: number };
   };
 }
 
@@ -521,28 +526,25 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       toe.position.set(Math.sin(a) * 0.12, 0.012, -Math.cos(a) * 0.15);
       mesh.add(toe);
     }
-    // Upper arm and forearm taper toward the paw; the last stretch of the
-    // forearm is a white sock matching the paw. Cylinders are unit height,
-    // scaled to bone length each frame.
+    // The pole tapers from armpit to sock; cylinders are unit height, scaled
+    // to length each frame.
     const bone = (bottom: number, top: number, material: THREE.Material = fur) =>
       furMesh(new THREE.CylinderGeometry(top, bottom, 1, 18, 1, true), material);
-    const upper = bone(0.135, 0.115);
-    const fore = bone(0.115, 0.098);
-    const sock = bone(0.098, 0.09, whiteFur);
-    const elbow = furMesh(new THREE.SphereGeometry(0.115, 18, 12));
-    const shoulderJoint = furMesh(new THREE.SphereGeometry(0.125, 18, 12));
-    scene.add(mesh, upper, fore, sock, elbow, shoulderJoint);
+    const pole = bone(0.13, 0.1);
+    const sock = bone(0.1, 0.092, whiteFur);
+    const armpit = furMesh(new THREE.SphereGeometry(0.13, 18, 12));
+    scene.add(mesh, pole, sock, armpit);
     return {
       side,
       rest,
       target: rest.clone(),
       position: rest.clone(),
       slapStart: -Infinity,
+      hover: PAW_HOVER,
       mesh,
-      bones: { upper, fore, sock, elbow, shoulder: shoulderJoint },
+      arm: { pole, sock, armpit },
       localShoulder: catShoulder(sign),
       shoulder: cat.localToWorld(catShoulder(sign)),
-      pose: null,
     };
   };
   const paws = { left: makePaw("left"), right: makePaw("right") };
@@ -657,18 +659,32 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
 
   // The device an event came through is the one the cat attends to: the
   // mouse is only ever over one screen, and keys go to the focused frame.
+  // Typing holds the cat's attention on the device taking the keys: the
+  // pointer drifting over another device does not pull the cat (and a paw)
+  // across until the keys go quiet. A click still does; it is deliberate.
+  const KEY_HOLD_MS = 800;
+  let keysHeld: { device: Device; until: number } | null = null;
+  // The latest held-off pointer move, replayed when the hold ends so a pointer
+  // that came to rest over another device still turns the cat to it.
+  let deferredMove: ReturnType<typeof setTimeout> | undefined;
   const listen: Desk["listen"] = (win, frame) => {
     const device = deviceOf(frame);
     win.addEventListener(
       "keydown",
       (e) => {
         attention = device;
+        keysHeld = { device, until: performance.now() + KEY_HOLD_MS };
         if (device === "laptop") slap(e.code);
         else typeOnScreen(device, e.code);
       },
       true,
     );
     const move = (e: PointerEvent) => {
+      clearTimeout(deferredMove);
+      if (keysHeld && keysHeld.device !== device && performance.now() < keysHeld.until) {
+        deferredMove = setTimeout(() => move(e), keysHeld.until - performance.now() + 1);
+        return;
+      }
       attention = device;
       if (device === "laptop") {
         const p = frame ? screenToWindow(frame, e.clientX, e.clientY) : { x: e.clientX, y: e.clientY };
@@ -682,6 +698,7 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     win.addEventListener(
       "pointerdown",
       (e) => {
+        keysHeld = null;
         move(e);
         if (device === "laptop") paws.right.slapStart = performance.now();
         else tapScreen(device, e.clientX, e.clientY);
@@ -738,40 +755,35 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       const at = hoverAt[mode]!;
       p.target.copy(screenWorld(screens[mode], at.x, at.y + scrollStroke));
     }
-    // A paw not busy with a pointer or a recent key drifts home to the keys.
+    // While the cat leans over to the tablet or phone, its other paw rests on
+    // the trackpad's corner on that side instead of stretching back across
+    // its body to the home keys.
+    const resting = mode === "keys" && attention === (p.side === "right" ? "tablet" : "phone");
+    // A paw not busy with a pointer or a recent key drifts home: to the keys,
+    // or to that trackpad corner while leaning.
     if (mode === "keys" && now - p.slapStart > 600 && !(p.side === "right" && now - lastPointerAt < 2500)) {
-      p.target.lerp(p.rest, 1 - Math.exp(-dt * 3));
+      const home = resting ? trackpadToWorld(p.side === "right" ? 0.08 : 0.92, 0.92) : p.rest;
+      p.target.lerp(home, 1 - Math.exp(-dt * 3));
     }
     p.position.lerp(p.target, 1 - Math.exp(-dt * 28));
     // Slap: a fast drop onto the surface and a slower rebound.
     const t = (now - p.slapStart) / SLAP_MS;
     const drop = t >= 0 && t < 1 ? Math.sin(Math.PI * Math.min(1, t * 1.6)) * (1 - t * 0.4) : 0;
-    const hover = mode === "keys" ? PAW_HOVER : 0.05;
-    p.mesh.position.set(p.position.x, p.position.y + 0.07 + (hover - 0.07) * (1 - drop), p.position.z);
+    p.hover += ((mode === "keys" && !resting ? PAW_HOVER : 0.05) - p.hover) * (1 - Math.exp(-dt * 12));
+    p.mesh.position.set(p.position.x, p.position.y + 0.07 + (p.hover - 0.07) * (1 - drop), p.position.z);
+  };
+  const placeArm = (p: PawState) => {
     p.shoulder.copy(p.localShoulder);
     cat.localToWorld(p.shoulder);
-    // Like the reference cat, elbows tuck back and down under the chest so
-    // only a short forearm shows; where that would sink an elbow into the
-    // desk, the arm bends back-and-out, and only then flares up and out.
-    const outward = new THREE.Vector3(p.side === "left" ? -1 : 1, 0, 0).applyQuaternion(cat.quaternion);
-    const back = new THREE.Vector3(0, 0, 1).applyQuaternion(cat.quaternion);
-    const down = new THREE.Vector3(0, -1, 0);
-    const poles = [
-      back.clone().addScaledVector(down, 0.6).addScaledVector(outward, 0.25),
-      back.clone().multiplyScalar(0.5).addScaledVector(outward, 0.7),
-      outward.clone().multiplyScalar(0.7).add(new THREE.Vector3(0, 0.6, 0)),
-    ];
     const wrist = p.mesh.position;
-    const pose = solveArmAboveFloor(p.shoulder, wrist, ARM.upper, ARM.fore, poles, ARM.maxSlide, ELBOW_FLOOR);
-    p.pose = pose;
-    const sockStart = new THREE.Vector3().lerpVectors(pose.elbow, wrist, 0.72);
-    placeBone(p.bones.upper, pose.shoulder, pose.elbow);
-    placeBone(p.bones.fore, pose.elbow, sockStart);
-    placeBone(p.bones.sock, sockStart, wrist);
-    p.bones.elbow.position.copy(pose.elbow);
-    p.bones.shoulder.position.copy(pose.shoulder);
-    // The paw points along the forearm.
-    p.mesh.rotation.y = Math.atan2(-(wrist.x - pose.elbow.x), -(wrist.z - pose.elbow.z));
+    const along = new THREE.Vector3().subVectors(wrist, p.shoulder);
+    const length = along.length();
+    const sockStart = wrist.clone().addScaledVector(along, -Math.min(SOCK_LENGTH, length * 0.5) / (length || 1));
+    placeBone(p.arm.pole, p.shoulder, sockStart);
+    placeBone(p.arm.sock, sockStart, wrist);
+    p.arm.armpit.position.copy(p.shoulder);
+    // The paw points along the arm.
+    p.mesh.rotation.y = Math.atan2(-along.x, -along.z);
   };
   const placeBone = (bone: THREE.Mesh, from: THREE.Vector3, to: THREE.Vector3) => {
     const dir = new THREE.Vector3().subVectors(to, from);
@@ -801,6 +813,8 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     cat.updateMatrixWorld();
     posePaw(paws.left, now, dt);
     posePaw(paws.right, now, dt);
+    placeArm(paws.left);
+    placeArm(paws.right);
     for (const [i, at] of keyDepress) {
       const age = now - at;
       keyMatrix(i, age < 120 ? 0.018 : 0);
@@ -863,13 +877,16 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       scrollStroke: () => scrollStroke,
       arm: (side) => {
         const p = paws[side];
-        const pose = p.pose;
-        if (!pose) return { upper: 0, fore: 0, slide: 0, stretch: 1 };
+        const socket = p.localShoulder.clone();
+        cat.localToWorld(socket);
+        const { pole, sock } = p.arm;
+        // Recover each cylinder's ends from its placement.
+        const end = (bone: THREE.Mesh, sign: 1 | -1) =>
+          new THREE.Vector3(0, sign * 0.5, 0).applyQuaternion(bone.quaternion).multiplyScalar(bone.scale.y).add(bone.position);
         return {
-          upper: pose.elbow.distanceTo(pose.shoulder),
-          fore: pose.elbow.distanceTo(p.mesh.position),
-          slide: pose.slide,
-          stretch: pose.stretch,
+          length: +end(pole, -1).distanceTo(end(sock, 1)).toFixed(4),
+          socketGap: +end(pole, -1).distanceTo(socket).toFixed(4),
+          wristGap: +end(sock, 1).distanceTo(p.mesh.position).toFixed(4),
         };
       },
     },

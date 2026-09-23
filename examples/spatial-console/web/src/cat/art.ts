@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 // Scene-art helpers for the typing-cat desk: a seeded RNG so the desk looks
 // the same every load, the wood-plank plan and its painter, rounded slabs for
-// device bodies, a two-bone arm solver, and a tapered tube for the tail.
+// device bodies, and a tapered tube for the tail.
 
 /** mulberry32: a small, fast, seeded PRNG returning floats in [0, 1). */
 export function seededRandom(seed: number): () => number {
@@ -49,7 +49,7 @@ export interface WoodPlan {
 }
 
 /**
- * Lay out planks: each row is split into two to four boards at random end
+ * Lay out planks: each row is split into two or three boards at random end
  * joints, each board gets its own tone, and grain lines and knots are placed
  * per row. Pure data, so the same seed always yields the same desk.
  */
@@ -192,79 +192,6 @@ export function flatSlab(width: number, depth: number, thickness: number, corner
   const geo = slab(width, depth, thickness, corner, bevel);
   geo.rotateX(-Math.PI / 2);
   return geo;
-}
-
-export interface ArmPose {
-  shoulder: THREE.Vector3;
-  elbow: THREE.Vector3;
-  /** How far the shoulder slid toward the target to reach it. */
-  slide: number;
-  /** Bone-length multiplier, 1 unless the target is beyond reach and slide. */
-  stretch: number;
-}
-
-/**
- * Two-bone IK: place an elbow so that upper (length a) and forearm (length
- * b) join the shoulder to the wrist, bending toward `pole`. A wrist out of
- * reach first slides the shoulder toward it (a cat's shoulder blade moves)
- * up to `maxSlide`; only past that do both bones stretch. The wrist is never
- * moved: the paw has to land where input put it.
- */
-export function solveArm(
-  shoulder: THREE.Vector3,
-  wrist: THREE.Vector3,
-  a: number,
-  b: number,
-  pole: THREE.Vector3,
-  maxSlide: number,
-): ArmPose {
-  const reach = (a + b) * 0.995;
-  const s = shoulder.clone();
-  const toWrist = new THREE.Vector3().subVectors(wrist, s);
-  let d = toWrist.length();
-  let slide = 0;
-  if (d > reach) {
-    slide = Math.min(d - reach, maxSlide);
-    s.addScaledVector(toWrist.clone().normalize(), slide);
-    d -= slide;
-  }
-  const stretch = d > reach ? d / reach : 1;
-  const la = a * stretch;
-  const lb = b * stretch;
-  const dir = new THREE.Vector3().subVectors(wrist, s);
-  d = Math.max(dir.length(), Math.abs(la - lb) + 1e-4);
-  dir.normalize();
-  const bend = pole.clone().addScaledVector(dir, -pole.dot(dir));
-  if (bend.lengthSq() < 1e-8) bend.set(0, 1, 0).addScaledVector(dir, -dir.y);
-  bend.normalize();
-  const cos = THREE.MathUtils.clamp((la * la + d * d - lb * lb) / (2 * la * d), -1, 1);
-  const sin = Math.sqrt(1 - cos * cos);
-  const elbow = s.clone().addScaledVector(dir, la * cos).addScaledVector(bend, la * sin);
-  return { shoulder: s, elbow, slide, stretch };
-}
-
-/**
- * Solve the arm with the first pole, in preference order, whose elbow stays
- * at or above `floorY`, so a tucked elbow never sinks through the desk; if
- * none does, use the pole whose elbow is highest. Bone lengths are whatever
- * solveArm keeps; only the bend direction changes.
- */
-export function solveArmAboveFloor(
-  shoulder: THREE.Vector3,
-  wrist: THREE.Vector3,
-  a: number,
-  b: number,
-  poles: readonly THREE.Vector3[],
-  maxSlide: number,
-  floorY: number,
-): ArmPose {
-  let best: ArmPose | null = null;
-  for (const pole of poles) {
-    const pose = solveArm(shoulder, wrist, a, b, pole, maxSlide);
-    if (pose.elbow.y >= floorY) return pose;
-    if (!best || pose.elbow.y > best.elbow.y) best = pose;
-  }
-  return best!;
 }
 
 /**
