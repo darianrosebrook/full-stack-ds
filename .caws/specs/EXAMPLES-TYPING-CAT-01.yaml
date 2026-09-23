@@ -2,9 +2,11 @@ id: EXAMPLES-TYPING-CAT-01
 title: 'Typing cat: over-the-shoulder cat puppet driving a live DS site on laptop, tablet and phone'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Typing cat merged; verify-cat 31/31 and spatial console verify-runtime 15/15 on main'
 created_at: '2026-09-22T22:32:43.136Z'
-updated_at: '2026-09-22T22:33:00.334Z'
+updated_at: '2026-09-23T00:02:38.443Z'
 created_by_session: '40ac09ec-5e89-4d7a-a01d-85b6bee26253'
 blast_radius:
   modules:
