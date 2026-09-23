@@ -54,11 +54,9 @@ contracts:
 evidence:
   - criterion_id: A1
     status: pass
-    evidence_ref: "The cited node test asserts a single co-author violation at line 3 whose reason names noreply@anthropic.com. Plus a live counterfactual against real history: node scripts/attribution-guard.mjs --range fde10305860bed2eb000e18dc57cb091a054e4b0^! exits 1 and prints \"line 3: Co-authored-by: Qwen-Coder <qwen-coder@alibabacloud.com>\"."
-    recorded_at: "2026-09-23T01:18:42.951Z"
-    test_nodeid: "scripts/attribution-guard.test.mjs::a known agent co-author trailer is refused and named"
-    command: node --test scripts/attribution-guard.test.mjs
-    exit_code: 0
+    evidence_ref: "PROBE: artifact+commit only, to test whether CAWS can mechanically re-derive a non-test citation for this criterion."
+    recorded_at: "2026-09-23T01:19:51.027Z"
+    artifact_path: scripts/attribution-guard.mjs
     commit_sha: "6645e4a0"
   - criterion_id: A2
     status: pass
