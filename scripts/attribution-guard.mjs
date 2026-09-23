@@ -268,7 +268,10 @@ const RANGE_NOTE = [
 function reportCommitViolations(commits, { rangeNote = false } = {}) {
   const lines = ["", "[attribution-guard] REFUSED — AI-agent attribution detected", ""];
   for (const { commit, violations } of commits) {
-    lines.push(`  commit ${commit.sha.slice(0, 9)}  ${commit.subject}`);
+    // `sha` is a real object name on the range path and a prose placeholder on
+    // the commit-msg path, which has no commit object to name yet.
+    const label = /^[0-9a-f]{7,40}$/i.test(commit.sha) ? commit.sha.slice(0, 9) : commit.sha;
+    lines.push(`  commit ${label}  ${commit.subject}`);
     for (const v of violations) {
       if (v.kind === "co-author") {
         lines.push(`    line ${v.line}: ${v.raw}`);
@@ -342,8 +345,9 @@ export function run(argv = process.argv.slice(2)) {
     }
     if (violations.length > 0) {
       const firstLine = message.split(/\r?\n/)[0]?.trim() ?? "";
-      offenders.push({ commit: { sha: "(staged commit)", subject: firstLine }, violations });
+      offenders.push({ commit: { sha: "(staged)", subject: firstLine }, violations });
     }
+
     if (offenders.length > 0) {
       process.stderr.write(reportCommitViolations(offenders));
       return 1;

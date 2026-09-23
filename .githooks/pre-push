@@ -120,6 +120,12 @@ node --test scripts/prepush-scope.test.mjs
 #     someone rewrites 3,826 commits — a decision this hook must not force.
 #     `set -e` above turns a violation into a refused push, which is the intent.
 echo ""; say "attribution guard (AI-agent authorship)"
+# Its contract test runs unconditionally alongside the scan: the rules and the
+# scan that applies them are one concern, and the classifier maps no
+# `scripts/*.mjs` edit onto the test group, so this is the only local place a
+# change to the rules is exercised before the push. ~2s, and the alternative is
+# a guard that can rot silently until an agent re-attribution campaign lands.
+node --test scripts/attribution-guard.test.mjs
 if [ -n "$BASE" ]; then
   node scripts/attribution-guard.mjs --range "${BASE}..${TIP}"
 else

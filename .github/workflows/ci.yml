@@ -66,6 +66,13 @@ jobs:
       - name: Attribution guard (no AI-agent authorship)
         run: |
           set -euo pipefail
+          # The guard's own contract test runs unconditionally, for the same
+          # reason the pre-push classifier's does: a guard that silently broke
+          # would read as a guard that passed. The classifier does not map a
+          # `scripts/*.mjs` edit onto the test group, so this is the only place
+          # a change to the rules is exercised before it ships.
+          node --test scripts/attribution-guard.test.mjs
+
           ZERO="0000000000000000000000000000000000000000"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             node scripts/attribution-guard.mjs \
