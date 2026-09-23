@@ -1,0 +1,53 @@
+id: REPO-ATTRIBUTION-GUARD-01
+title: 'Attribution guard: refuse AI co-author trailers and agent commit identities'
+risk_tier: 2
+mode: feature
+lifecycle_state: draft
+created_at: '2026-09-23T01:00:54.541Z'
+updated_at: '2026-09-23T01:00:54.541Z'
+created_by_session: 'session-b7064ea9-728e-401b-b2ed-29e7e9483e9a'
+blast_radius:
+  modules:
+    - 'commit attribution guard (hooks + CI)'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/attribution-guard.mjs'
+    - 'scripts/attribution-guard.test.mjs'
+    - '.githooks/commit-msg'
+    - '.githooks/pre-push'
+    - 'package.json'
+    - '.github/workflows/ci.yml'
+    - 'AGENTS.md'
+    - 'CLAUDE.md'
+  out: []
+invariants:
+  - 'No commit reaching the default branch carries a Co-authored-by trailer for an AI agent identity'
+  - 'The guard is range-scoped so grandfathered history does not red the gate'
+acceptance:
+  - id: A1
+    given: 'a commit message carrying a Co-authored-by trailer naming a known AI agent'
+    when: 'the guard evaluates it'
+    then: 'it exits non-zero and names the offending line'
+  - id: A2
+    given: 'a commit whose author or committer email is a known AI identity'
+    when: 'the guard evaluates the range'
+    then: 'it exits non-zero and names the identity'
+  - id: A3
+    given: 'a developer runs git commit with a blocked trailer'
+    when: 'the commit-msg hook runs'
+    then: 'the commit is refused and the trailer never enters history'
+  - id: A4
+    given: 'commits in the pushed range that bypassed the local hook'
+    when: 'git push runs'
+    then: 'the pre-push backstop scans them and CI runs the same guard'
+  - id: A5
+    given: 'a message with no attribution trailer and a human identity'
+    when: 'the guard evaluates it'
+    then: 'it exits zero'
+non_functional: {}
+contracts:
+  - name: 'attribution-guard'
+    type: behavior
+    path: 'scripts/attribution-guard.mjs'
