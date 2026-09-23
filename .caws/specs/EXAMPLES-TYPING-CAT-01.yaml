@@ -52,3 +52,7 @@ evidence:
     status: pass
     evidence_ref: "verify-cat.mjs on main 0a87c614: A3 checks right paw trackpad UV equals pointer place in the laptop viewport at 4 points (pins at edge off-screen); tablet drawn Order treats/Order clicks update the store and the phone; trackpad.test.ts homography inverse"
     recorded_at: "2026-09-23T00:02:23.965Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "verify-cat.mjs on main 0a87c614: A4 framing check (tablet left, phone right, paws below laptop screen, all in view) plus screenshots test-results/typing-cat/*.png reviewed against the reference angle; user confirmed on screen recording"
+    recorded_at: "2026-09-23T00:02:24.451Z"
