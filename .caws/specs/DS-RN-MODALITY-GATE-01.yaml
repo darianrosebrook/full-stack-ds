@@ -42,3 +42,10 @@ contracts:
   - name: 'rn-surface-modality'
     type: behavior
     path: 'packages/ds-codegen/src/frameworks/react-native/component-source.ts'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "Generated RN surface tests for Dialog and Sheet: in-tree with no Modal host and no overlay (modal={false}); null while closed; hardware back dismisses only while open and non-modal, listener removed on unmount; back press not consumed when closeOnEscape is false. Pre-fix output fails 3 new tests per component; deleting the closeOnEscape guard fails the hand-back test. Non-claim: react-test-renderer with a host shim, not a device; in-tree placement follows the consumer's layout (no fixed positioning outside RN Modal)."
+    recorded_at: "2026-09-23T04:57:44.470Z"
+    test_nodeid: "packages/ds-react-native/src/components/Dialog/__tests__/Dialog.test.tsx > Dialog React Native > renders in-tree with no Modal host and no overlay when modal is false"
+    commit_sha: "109314ba1b072dc92bbe74620931f2cfaef05d32"
