@@ -62,3 +62,10 @@ evidence:
     command: FSDS_E2E_PORT=5397 npx playwright test e2e/card-landmark-rail.spec.ts; per-framework Card suites (react/vue/svelte/lit/angular)
     exit_code: 0
     commit_sha: d822bc08cdd88d86e437e203101ce12ebeffedb9
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Vue suite on main post-merge: 63 files, 761/761. Generated test 'forwards data-testid to the rendered element' emitted for 50/52 Vue components; it failed on pre-fix ToggleSwitch.vue (mounted probe showed data-testid dropped via attrs, render-fn prop, and camelCase prop). Emitter declares/reads dataTestid via vuePropKey(); vue-tsc clean for ds-vue and both Vue examples. Non-claim: Popover and Tooltip (surface-tests.ts generator) carry the fix but no test pins it."
+    recorded_at: "2026-09-23T04:12:14.434Z"
+    command: "pnpm --filter @full-stack-ds/vue test"
+    exit_code: 0
+    commit_sha: d822bc08cdd88d86e437e203101ce12ebeffedb9
