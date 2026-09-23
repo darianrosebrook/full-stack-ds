@@ -1656,10 +1656,20 @@ export interface SurfaceTimingIR {
   autoDismissProp: string | undefined;
 }
 
+export interface SurfaceModalityGateIR {
+  prop: string;
+  /** The prop's contract default: the modality when the consumer omits it. */
+  defaultModal: boolean;
+}
+
 export interface SurfaceIR {
   kind: ContractSurfaceKind;
   presence: ContractSurfacePresence;
   modality: ContractSurfaceModality;
+  /** Boolean prop that makes a blocking surface non-blocking when false
+   * (validated fail-loud in buildSurfaceIR). Hook emitters AND it into the
+   * focus-trap and scroll-lock activity. */
+  modalityGate: SurfaceModalityGateIR | undefined;
   /** Axis-derived attachment target used to select shared surface machinery. */
   attachment: SurfaceAttachment;
   anchor: SurfaceAnchorIR | undefined;
@@ -4668,6 +4678,28 @@ export function buildSurfaceIR(
       }
     : undefined;
 
+  const modalityProp = surface.modalityProp;
+  let modalityGate: SurfaceModalityGateIR | undefined;
+  if (modalityProp !== undefined) {
+    if (surface.modality !== "blocking") {
+      throw new Error(
+        `Contract "${contract.name}": surface.modalityProp requires surface.modality "blocking" (got "${surface.modality}").`,
+      );
+    }
+    const member = getPropMembers(contract).find((m) => m.name === modalityProp);
+    if (!member || canonicalTsType(normalizePropType(member)) !== "boolean") {
+      throw new Error(
+        `Contract "${contract.name}": surface.modalityProp "${modalityProp}" must name a declared boolean prop.`,
+      );
+    }
+    if (typeof member.default !== "boolean") {
+      throw new Error(
+        `Contract "${contract.name}": surface.modalityProp "${modalityProp}" must declare a boolean default (the modality when the prop is omitted).`,
+      );
+    }
+    modalityGate = { prop: modalityProp, defaultModal: member.default };
+  }
+
   const openTriggers = surface.openTriggers ?? [];
   // Selector-anchored surfaces (coachmarks / guided tours) open
   // programmatically — there is no in-tree trigger element to attach an
@@ -4687,6 +4719,7 @@ export function buildSurfaceIR(
     kind: surface.kind,
     presence: surface.presence,
     modality: surface.modality,
+    modalityGate,
     attachment: resolveSurfaceAttachment(surface),
     anchor,
     selectorAnchor,

@@ -1505,6 +1505,10 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       const accessor = jsAccessorFor(gate);
       hookLines.push(`  ${gate}: () => ${accessor},`);
     }
+    const modalityGate = ir.surface?.modalityGate;
+    if (modalityGate) {
+      hookLines.push(`  ${modalityGate.prop}: () => ${jsAccessorFor(modalityGate.prop)},`);
+    }
     hookLines.push(`});`);
   }
   // Ephemeral-surface auto-dismiss (WCAG 2.2.1). House style: the behavior

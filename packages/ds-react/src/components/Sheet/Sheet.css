@@ -22,6 +22,10 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
+
+  &:has(> .sheet__content[aria-modal="false"]) > .sheet__overlay {
+    display: none;
+  }
 }
 
 .sheet__overlay {

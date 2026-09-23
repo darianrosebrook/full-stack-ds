@@ -48,6 +48,7 @@ const behavior = useDialog({
   onOpenChange: () => onOpenChange,
   closeOnEscape: () => closeOnEscape,
   closeOnBackdropClick: () => closeOnBackdropClick,
+  modal: () => modal,
 });
 // @generated:end
 
@@ -75,7 +76,7 @@ const instanceId = $props.id();
   <div class={'dialog__backdrop'} aria-hidden="true" onclick={(e) => { if (e.target === e.currentTarget) { closeOnBackdropClick !== false && behavior.setOpenness(false); } }}></div>
   {/if}
   {#if behavior.openness}
-  <div class={'dialog__modal'} bind:this={behavior.panelRef.el} role="dialog" aria-modal="true" aria-label={ariaLabel} aria-labelledby={[title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(' ') || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(' ') || undefined}>
+  <div class={'dialog__modal'} bind:this={behavior.panelRef.el} role="dialog" aria-modal={modal} aria-label={ariaLabel} aria-labelledby={[title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(' ') || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(' ') || undefined}>
     <div class={'dialog__header'}>
       <h2 class={'dialog__title'} id={`${instanceId}-title`}>
         {@render title?.()}

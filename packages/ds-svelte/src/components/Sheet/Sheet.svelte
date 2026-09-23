@@ -42,6 +42,7 @@ const behavior = useSheet({
   open: () => open,
   defaultOpen: () => defaultOpen,
   onOpenChange: () => onOpenChange,
+  modal: () => modal,
 });
 // @generated:end
 
@@ -70,7 +71,7 @@ const instanceId = $props.id();
   <div class={'sheet__overlay'} aria-hidden="true" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpenness(false); } }}></div>
   {/if}
   {#if behavior.openness}
-  <div class={'sheet__content'} bind:this={behavior.panelRef.el} role="dialog" aria-modal="true" aria-label={ariaLabel} data-side={side} aria-labelledby={[title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(' ') || undefined} aria-describedby={[description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(' ') || undefined}>
+  <div class={'sheet__content'} bind:this={behavior.panelRef.el} role="dialog" aria-modal={modal} aria-label={ariaLabel} data-side={side} aria-labelledby={[title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(' ') || undefined} aria-describedby={[description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(' ') || undefined}>
     <div class={'sheet__header'}>
       <h2 class={'sheet__title'} id={`${instanceId}-title`}>
         {@render title?.()}

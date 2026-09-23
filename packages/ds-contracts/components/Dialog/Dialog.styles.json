@@ -638,5 +638,13 @@
         "slot": "dialog.design.condition-aa10b66155cb.shape.radius"
       }
     }
+  },
+  ".dialog:has(> .dialog__modal[aria-modal=\"false\"]) > .dialog__backdrop": {
+    "display": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    }
   }
 }

@@ -46,6 +46,7 @@ const behavior = useSheet({
   open: () => props.open,
   defaultOpen: props.defaultOpen,
   onOpenChange: props.onOpenChange,
+  modal: () => props.modal,
 });
 function bindInteractionPanel(element: unknown): void { behavior.panelRef.value = element instanceof HTMLElement ? element : null; }
 // @generated:end
@@ -72,7 +73,7 @@ const instanceId = useId();
   <Teleport to="body">
     <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="sheet" data-fsds-box="">
       <div v-if="behavior.openness.value" :class="'sheet__overlay'" aria-hidden="true" @click.self="behavior.setOpenness(false)"></div>
-      <div v-if="behavior.openness.value" :class="'sheet__content'" :ref="bindInteractionPanel" role="dialog" aria-modal="true" :aria-label="props.ariaLabel" :data-side="props.side" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[$slots.description ? `${instanceId}-description` : null, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
+      <div v-if="behavior.openness.value" :class="'sheet__content'" :ref="bindInteractionPanel" role="dialog" :aria-modal="props.modal" :aria-label="props.ariaLabel" :data-side="props.side" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[$slots.description ? `${instanceId}-description` : null, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
         <div :class="'sheet__header'">
           <h2 :class="'sheet__title'" :id="`${instanceId}-title`">
             <slot name="title" />

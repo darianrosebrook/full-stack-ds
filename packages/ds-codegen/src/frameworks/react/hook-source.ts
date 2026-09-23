@@ -242,6 +242,18 @@ interface PrimitiveBindings {
 }
 
 /**
+ * The surface's blocking condition: its openness, ANDed with the modality
+ * gate prop when the contract declares one (`surface.modalityProp`). An
+ * omitted prop reads as the contract default.
+ */
+function blockingExpr(ir: ComponentIR, openExpr: string): string {
+  const gate = ir.surface?.modalityGate;
+  if (!gate) return openExpr;
+  const modal = `(options.${gate.prop} ?? ${gate.defaultModal})`;
+  return openExpr === "true" ? modal : `${openExpr} && ${modal}`;
+}
+
+/**
  * Determine which primitive hooks the contract's behavior fields map onto.
  * Returns `null` when no primitive is required (the contract has no
  * behavior worth lifting and the generator should skip emission).
@@ -368,6 +380,12 @@ function generateOptionsInterface(
   for (const gateProp of keyboardModeGateProps(ir)) {
     lines.push(`  /** Mode gate the keyboard select behavior reads. */`);
     lines.push(`  ${gateProp}?: boolean;`);
+  }
+
+  const modalityGate = ir.surface?.modalityGate;
+  if (modalityGate) {
+    lines.push(`  /** When false the surface is non-blocking: no focus trap, no scroll lock. */`);
+    lines.push(`  ${modalityGate.prop}?: boolean;`);
   }
 
   if (bindings.useFocusTrap) {
@@ -909,7 +927,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     const channel = bindings.useControllableState.find(
       (c) => c.isDisclosureChannel,
     );
-    const activeExpr = channel ? channel.name : "true";
+    const activeExpr = blockingExpr(ir, channel ? channel.name : "true");
     const initial = ir.behavior.focus?.initialFocus;
     const returnTo = ir.behavior.focus?.returnFocus;
     const initialRef =
@@ -934,7 +952,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     const channel = bindings.useControllableState.find(
       (c) => c.isDisclosureChannel,
     );
-    lines.push(`  useScrollLock(${channel?.name ?? "true"});`);
+    lines.push(`  useScrollLock(${blockingExpr(ir, channel?.name ?? "true")});`);
     lines.push(``);
   }
 

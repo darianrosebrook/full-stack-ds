@@ -15,6 +15,8 @@ export interface UseSheetOptions {
   defaultOpen?: boolean;
   /** Called when "openness" changes. */
   onOpenChange?: (value: boolean) => void;
+  /** When false the surface is non-blocking: no focus trap, no scroll lock. */
+  modal?: boolean;
 }
 
 export interface UseSheetResult {
@@ -44,10 +46,10 @@ export function useSheet(options: UseSheetOptions = {}): UseSheetResult {
   });
 
   useFocusTrap(panelRef, {
-    active: openness,
+    active: openness && (options.modal ?? true),
   });
 
-  useScrollLock(openness);
+  useScrollLock(openness && (options.modal ?? true));
 
   const portal = usePortal({
     enabled: true,

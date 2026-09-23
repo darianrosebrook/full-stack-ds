@@ -1898,6 +1898,10 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     for (const gate of keyboardModeGateProps(ir)) {
       lines.push(`    ${gate}: () => this.${gate},`);
     }
+    const modalityGate = ir.surface?.modalityGate;
+    if (modalityGate) {
+      lines.push(`    ${modalityGate.prop}: () => this.${modalityGate.prop},`);
+    }
     lines.push(`  });`);
     lines.push(`  }`);
     // Ephemeral-surface auto-dismiss (WCAG 2.2.1). The controller re-syncs

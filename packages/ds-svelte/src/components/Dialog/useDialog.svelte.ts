@@ -13,6 +13,8 @@ export interface UseDialogOptions {
   onOpenChange?: () => ((value: boolean) => void) | undefined;
   closeOnEscape?: () => boolean | undefined;
   closeOnBackdropClick?: () => boolean | undefined;
+  /** When false the surface is non-blocking: no focus trap, no scroll lock. */
+  modal?: () => boolean | undefined;
 }
 
 export interface UseDialogResult {
@@ -35,9 +37,9 @@ export function useDialog(opts: UseDialogOptions = {}): UseDialogResult {
   });
 
   const panelRef = { el: null as HTMLElement | null };
-  createFocusTrap({ getActive: () => opennessState.value, containerRef: panelRef });
+  createFocusTrap({ getActive: () => opennessState.value && (opts.modal?.() ?? true), containerRef: panelRef });
 
-  createScrollLock(() => opennessState.value);
+  createScrollLock(() => opennessState.value && (opts.modal?.() ?? true));
 
   createDismissal({
     open: () => opennessState.value,

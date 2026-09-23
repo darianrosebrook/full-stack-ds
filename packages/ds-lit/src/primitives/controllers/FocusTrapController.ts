@@ -36,10 +36,14 @@ export class FocusTrapController {
     if (els.length === 0) { e.preventDefault(); return; }
     const first = els[0];
     const last = els[els.length - 1];
+    // Inside a shadow root document.activeElement is retargeted to the host,
+    // so read focus from the container's own root.
+    const root = this.opts.getContainer()?.getRootNode() as Document | ShadowRoot | undefined;
+    const active = root?.activeElement ?? document.activeElement;
     if (e.shiftKey) {
-      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      if (active === first) { e.preventDefault(); last.focus(); }
     } else {
-      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      if (active === last) { e.preventDefault(); first.focus(); }
     }
   };
 

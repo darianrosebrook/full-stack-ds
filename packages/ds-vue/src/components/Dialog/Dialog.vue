@@ -56,6 +56,7 @@ const behavior = useDialog({
   onOpenChange: props.onOpenChange,
   closeOnEscape: props.closeOnEscape,
   closeOnBackdropClick: props.closeOnBackdropClick,
+  modal: () => props.modal,
 });
 function bindInteractionPanel(element: unknown): void { behavior.panelRef.value = element instanceof HTMLElement ? element : null; }
 // @generated:end
@@ -81,7 +82,7 @@ const instanceId = useId();
   <Teleport to="body">
     <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="dialog" data-fsds-box="">
       <div v-if="behavior.openness.value" :class="'dialog__backdrop'" aria-hidden="true" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)"></div>
-      <div v-if="behavior.openness.value" :class="'dialog__modal'" :ref="bindInteractionPanel" role="dialog" aria-modal="true" :aria-label="props.ariaLabel" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[`${instanceId}-body`, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
+      <div v-if="behavior.openness.value" :class="'dialog__modal'" :ref="bindInteractionPanel" role="dialog" :aria-modal="props.modal" :aria-label="props.ariaLabel" :aria-labelledby="[$slots.title && !props.ariaLabel ? `${instanceId}-title` : null, props.ariaLabelledby].filter(Boolean).join(' ') || undefined" :aria-describedby="[`${instanceId}-body`, props.ariaDescribedby].filter(Boolean).join(' ') || undefined">
         <div :class="'dialog__header'">
           <h2 :class="'dialog__title'" :id="`${instanceId}-title`">
             <slot name="title" />

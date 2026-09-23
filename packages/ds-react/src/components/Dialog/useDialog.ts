@@ -19,6 +19,8 @@ export interface UseDialogOptions {
   closeOnEscape?: boolean;
   /** Whether "overlayClick" dismissal is enabled. */
   closeOnBackdropClick?: boolean;
+  /** When false the surface is non-blocking: no focus trap, no scroll lock. */
+  modal?: boolean;
   /** Element to focus when the component activates. */
   initialFocus?: RefObject<HTMLElement | null>;
 }
@@ -51,11 +53,11 @@ export function useDialog(options: UseDialogOptions = {}): UseDialogResult {
   });
 
   useFocusTrap(panelRef, {
-    active: openness,
+    active: openness && (options.modal ?? true),
     initialFocusRef: options.initialFocus,
   });
 
-  useScrollLock(openness);
+  useScrollLock(openness && (options.modal ?? true));
 
   const portal = usePortal({
     enabled: true,

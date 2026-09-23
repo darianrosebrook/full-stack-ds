@@ -1,5 +1,5 @@
 // @generated:start imports
-import { DestroyRef, type Signal } from "@angular/core";
+import { DestroyRef, computed, type Signal } from "@angular/core";
 import { createControllableState, createDismissal, createFocusTrap, createScrollLock } from "../../primitives/index.js";
 // @generated:end
 
@@ -12,6 +12,8 @@ export interface UseSheetOptions {
   open?: () => boolean | undefined;
   defaultOpen?: boolean;
   onOpenChange?: (value: boolean) => void;
+  /** When false the surface is non-blocking: no focus trap, no scroll lock. */
+  modal?: () => boolean | undefined;
   destroyRef: DestroyRef;
 }
 
@@ -35,9 +37,10 @@ export function useSheet(options: UseSheetOptions): UseSheetResult {
   });
 
   const panelRef: { nativeElement: HTMLElement | null } = { nativeElement: null };
-  createFocusTrap(panelRef, { active: openness, destroyRef: options.destroyRef });
+  const blocking = computed(() => openness() && (options.modal?.() ?? true));
+  createFocusTrap(panelRef, { active: blocking, destroyRef: options.destroyRef });
 
-  createScrollLock(openness, options.destroyRef);
+  createScrollLock(blocking, options.destroyRef);
 
   createDismissal({
     open: () => openness(),

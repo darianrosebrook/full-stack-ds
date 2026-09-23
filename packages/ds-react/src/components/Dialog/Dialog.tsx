@@ -146,6 +146,7 @@ export function Dialog({
     open: controlledOpen,
     defaultOpen,
     onOpenChange,
+    modal,
     closeOnEscape,
     closeOnBackdropClick,
   });
@@ -167,7 +168,7 @@ export function Dialog({
         <div className="dialog__backdrop" aria-hidden="true" onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} />
       ) : null}
       {openness ? (
-        <div className="dialog__modal" role="dialog" aria-modal="true" aria-label={ariaLabel} ref={panelRef} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(" ") || undefined}>
+        <div className="dialog__modal" role="dialog" aria-modal={modal} aria-label={ariaLabel} ref={panelRef} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[`${instanceId}-body`, ariaDescribedby].filter(Boolean).join(" ") || undefined}>
           <div className="dialog__header">
             <h2 className="dialog__title" id={`${instanceId}-title`}>
               {slots?.title}

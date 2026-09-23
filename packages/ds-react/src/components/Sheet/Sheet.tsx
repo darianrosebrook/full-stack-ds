@@ -175,6 +175,7 @@ export function Sheet({
     open: controlledOpen,
     defaultOpen,
     onOpenChange,
+    modal,
   });
 
   const classNames = [
@@ -195,7 +196,7 @@ export function Sheet({
         <div className="sheet__overlay" aria-hidden="true" onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} />
       ) : null}
       {openness ? (
-        <div className="sheet__content" role="dialog" aria-modal="true" aria-label={ariaLabel} data-side={side} ref={panelRef} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[slots?.description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(" ") || undefined}>
+        <div className="sheet__content" role="dialog" aria-modal={modal} aria-label={ariaLabel} data-side={side} ref={panelRef} aria-labelledby={[slots?.title && !ariaLabel ? `${instanceId}-title` : null, ariaLabelledby].filter(Boolean).join(" ") || undefined} aria-describedby={[slots?.description ? `${instanceId}-description` : null, ariaDescribedby].filter(Boolean).join(" ") || undefined}>
           <div className="sheet__header">
             <h2 className="sheet__title" id={`${instanceId}-title`}>
               {slots?.title}

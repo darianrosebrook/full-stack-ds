@@ -31,7 +31,7 @@ let nextInstanceId = 0;
     <div [ngClass]="'dialog__backdrop'" aria-hidden="true" role="presentation" (click)="closeOnBackdropClick !== false && behavior.setOpenness(false)"></div>
   </ng-container>
   <ng-container *ngIf="behavior.openness()">
-    <div [ngClass]="'dialog__modal'" #interactionPanel role="dialog" aria-modal="true" [attr.aria-label]="ariaLabel" [attr.aria-labelledby]="modalAriaLabelledby" [attr.aria-describedby]="modalAriaDescribedby">
+    <div [ngClass]="'dialog__modal'" #interactionPanel role="dialog" [attr.aria-modal]="(modal ?? true)" [attr.aria-label]="ariaLabel" [attr.aria-labelledby]="modalAriaLabelledby" [attr.aria-describedby]="modalAriaDescribedby">
       <div [ngClass]="'dialog__header'">
         <h2 [ngClass]="'dialog__title'" [attr.id]="instanceId + '-title'">
           <ng-content select="[slot=title]" />
@@ -82,6 +82,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     onOpenChange: (v) => this.onOpenChange?.(v),
     closeOnEscape: this.closeOnEscape,
     closeOnBackdropClick: this.closeOnBackdropClick,
+    modal: () => this.modal,
     destroyRef: this.destroyRef,
   })));
   }

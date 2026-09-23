@@ -15,6 +15,8 @@ export interface DialogBehaviorOptions {
   closeOnEscape?: boolean;
   closeOnBackdropClick?: boolean;
   containerEl?: HTMLElement;
+  /** When false the surface is non-blocking: no focus trap, no scroll lock. */
+  modal?: () => boolean | undefined;
 }
 // @generated:end
 
@@ -36,11 +38,11 @@ export class DialogBehavior {
       onChange: opts.onOpenChange,
     });
     this.focusTrap = new FocusTrapController(host, {
-      getActive: () => this.opennessState.value,
+      getActive: () => this.opennessState.value && (opts.modal?.() ?? true),
       getContainer: () => opts.containerEl ?? null,
     });
     this.scrollLock = new ScrollLockController(host, {
-      getActive: () => this.opennessState.value,
+      getActive: () => this.opennessState.value && (opts.modal?.() ?? true),
     });
     this.dismissal = new DismissalController(host, {
       open: () => this.opennessState.value,

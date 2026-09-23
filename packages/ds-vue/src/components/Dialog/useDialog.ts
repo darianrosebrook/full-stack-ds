@@ -1,5 +1,5 @@
 // @generated:start imports
-import { ref, type Ref } from "vue";
+import { computed, ref, type Ref } from "vue";
 import { useControllableState, useDismissal, useFocusTrap, useScrollLock } from "../../primitives/index.js";
 // @generated:end
 
@@ -14,6 +14,8 @@ export interface UseDialogOptions {
   onOpenChange?: (value: boolean) => void;
   closeOnEscape?: boolean;
   closeOnBackdropClick?: boolean;
+  /** When false the surface is non-blocking: no focus trap, no scroll lock. */
+  modal?: () => boolean | undefined;
 }
 
 export interface UseDialogResult {
@@ -36,9 +38,10 @@ export function useDialog(options: UseDialogOptions = {}): UseDialogResult {
   });
 
   const panelRef = ref<HTMLElement | null>(null);
-  useFocusTrap(panelRef, { active: openness });
+  const blocking = computed(() => openness.value && (options.modal?.() ?? true));
+  useFocusTrap(panelRef, { active: blocking });
 
-  useScrollLock(openness);
+  useScrollLock(blocking);
 
   useDismissal({
     open: () => openness.value,

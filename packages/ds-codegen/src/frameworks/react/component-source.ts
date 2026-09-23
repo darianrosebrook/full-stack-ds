@@ -1983,6 +1983,19 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
       gateProp === safe ? `    ${safe}` : `    ${gateProp}: ${safe}`,
     );
   }
+  // The modality gate decides whether the hook's focus trap and scroll lock
+  // engage (surface.modalityProp).
+  const modalityGate = ir.surface?.modalityGate;
+  if (modalityGate) {
+    const safe =
+      ir.styledProps.find((p) => p.name === modalityGate.prop)?.safeName ??
+      modalityGate.prop;
+    hookOptionsLines.push(
+      modalityGate.prop === safe
+        ? `    ${safe}`
+        : `    ${modalityGate.prop}: ${safe}`,
+    );
+  }
   // Forward dismissal-trigger enabledBy props (closeOnEscape, etc.) to the
   // generated hook so its useDismissal call sees the user's settings.
   for (const trigger of ir.behavior.normalizedDismissalTriggers) {

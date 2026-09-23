@@ -1946,6 +1946,10 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     for (const gate of keyboardModeGateProps(ir)) {
       lines.push(`    ${gate}: () => this.${gate},`);
     }
+    const modalityGate = ir.surface?.modalityGate;
+    if (modalityGate) {
+      lines.push(`    ${modalityGate.prop}: () => this.${modalityGate.prop},`);
+    }
     lines.push(`    destroyRef: this.destroyRef,`);
     lines.push(`  });`);
     if (controlledChannels.size > 0) {

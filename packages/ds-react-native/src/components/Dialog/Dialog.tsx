@@ -40,6 +40,7 @@ export interface DialogProps {
 // @generated:start component
 export function Dialog({
   open: controlledOpenness,
+  modal = true,
   closeOnEscape = true,
   closeOnBackdropClick = true,
   ariaLabel,

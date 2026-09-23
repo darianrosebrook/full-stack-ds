@@ -1652,6 +1652,10 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     for (const gate of keyboardModeGateProps(ir)) {
       hookLines.push(`  ${gate}: () => props.${propAccess(gate)},`);
     }
+    const modalityGate = ir.surface?.modalityGate;
+    if (modalityGate) {
+      hookLines.push(`  ${modalityGate.prop}: () => props.${propAccess(modalityGate.prop)},`);
+    }
     hookLines.push(`});`);
   }
   if (domHasKeyboardPanel(ir)) hookLines.push(`function bindInteractionAnchor(element: unknown): void { behavior.anchorRef.value = element instanceof HTMLElement ? element : null; }`);

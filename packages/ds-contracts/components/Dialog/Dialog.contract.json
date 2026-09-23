@@ -89,10 +89,10 @@
           "part": "modal",
           "if": "open",
           "attrs": {
-            "role": "dialog",
-            "aria-modal": "true"
+            "role": "dialog"
           },
           "bindings": {
+            "aria-modal": "prop:modal",
             "aria-label": "prop:ariaLabel",
             "aria-labelledby": "prop:ariaLabelledby",
             "aria-describedby": "prop:ariaDescribedby"
@@ -168,7 +168,7 @@
         {
           "name": "modal",
           "type": "boolean",
-          "description": "When true, renders a modal dialog with backdrop and focus trap.",
+          "description": "When true, renders a modal dialog with backdrop, focus trap, and scroll lock. When false the dialog is non-blocking: no backdrop, no focus trap, no scroll lock, and aria-modal is false.",
           "default": true
         },
         {
@@ -406,6 +406,7 @@
     "kind": "dialog",
     "presence": "persistent",
     "modality": "blocking",
+    "modalityProp": "modal",
     "content": {
       "part": "modal",
       "interactive": true

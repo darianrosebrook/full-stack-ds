@@ -2259,6 +2259,11 @@
           ],
           "description": "Whether the surface blocks interaction with content outside itself. Blocking surfaces require focus trap, outside inertness, and overlay scrim (specifics live in the top-level focus and portal blocks)."
         },
+        "modalityProp": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Boolean prop that makes a blocking surface non-blocking when false. Requires modality \"blocking\". When the prop is false the focus trap and scroll lock stay inactive; the contract binds aria-modal and the backdrop's visibility to the same prop."
+        },
         "anchor": {
           "description": "Relationship to the element the surface is positioned against. Omit for unanchored surfaces (centered modal dialogs, viewport-edge toasts). Two source forms: a trigger anatomy part (popover/tooltip \u2014 the invoking element lives in the component's own tree), or a runtime CSS selector carried in a prop (coachmark/guided tour \u2014 the anchor is an arbitrary page element outside the component).",
           "oneOf": [

@@ -21,6 +21,7 @@ import type {
   ComponentIR,
   KeyboardActionIR,
   NormalizedChannelIR,
+  SurfaceModalityGateIR,
 } from "../../ir.js";
 import {
   keyboardHandlerParts,
@@ -34,6 +35,7 @@ import { isCompoundStateContainer, isDisclosureContainer } from "../react/hook-s
 interface PrimitiveBindings {
   useControllableState: NormalizedChannelIR[];
   useFocusTrap: boolean;
+  modalityGate: SurfaceModalityGateIR | undefined;
   useScrollLock: boolean;
   usePortal: boolean;
   useAnchorToggle: boolean;
@@ -97,6 +99,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   return {
     useControllableState: channels,
     useFocusTrap: hasFocusTrap,
+    modalityGate: ir.surface?.modalityGate,
     useScrollLock: hasScrollLock,
     usePortal: hasPortal,
     useAnchorToggle: useAnchor,
@@ -122,6 +125,9 @@ function generateImports(
   }
   if (bindings.useFocusTrap || bindings.useScrollLock || bindings.useAnchorToggle) {
     coreNamed.add("type Signal");
+  }
+  if (bindings.modalityGate && (bindings.useFocusTrap || bindings.useScrollLock)) {
+    coreNamed.add("computed");
   }
   if (bindings.isCompoundStateContainer) {
     coreNamed.add("signal");
@@ -224,6 +230,11 @@ function generateOptionsInterface(
   for (const gate of keyboardModeGateProps(ir)) {
     lines.push(`  /** Mode gate the keyboard select behavior reads. */`);
     lines.push(`  ${gate}?: () => boolean | undefined;`);
+  }
+  const modalityGate = ir.surface?.modalityGate;
+  if (modalityGate) {
+    lines.push(`  /** When false the surface is non-blocking: no focus trap, no scroll lock. */`);
+    lines.push(`  ${modalityGate.prop}?: () => boolean | undefined;`);
   }
 
   // DestroyRef is always required — the consuming component injects it
@@ -562,20 +573,28 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     );
   }
 
-  if (bindings.useFocusTrap) {
-    const channel = bindings.useControllableState.find(
-      (c) => c.isDisclosureChannel,
+  // The modality gate (surface.modalityProp) folds into one derived signal
+  // the focus trap and scroll lock share.
+  const gate = bindings.modalityGate;
+  const disclosureChannel = bindings.useControllableState.find(
+    (c) => c.isDisclosureChannel,
+  );
+  if (gate && (bindings.useFocusTrap || bindings.useScrollLock)) {
+    const openExpr = disclosureChannel ? `${disclosureChannel.name}()` : "true";
+    lines.push(
+      `  const blocking = computed(() => ${openExpr} && (options.${gate.prop}?.() ?? ${gate.defaultModal}));`,
     );
-    const activeRef = channel ? channel.name : `{ value: true } as unknown as Signal<boolean>`;
-    lines.push(`  createFocusTrap(panelRef, { active: ${activeRef}, destroyRef: options.destroyRef });`);
+  }
+  const activeSignal = gate
+    ? "blocking"
+    : disclosureChannel?.name ?? "{ value: true } as unknown as Signal<boolean>";
+
+  if (bindings.useFocusTrap) {
+    lines.push(`  createFocusTrap(panelRef, { active: ${activeSignal}, destroyRef: options.destroyRef });`);
     lines.push(``);
   }
 
   if (bindings.useScrollLock) {
-    const channel = bindings.useControllableState.find(
-      (c) => c.isDisclosureChannel,
-    );
-    const activeSignal = channel?.name ?? "{ value: true } as unknown as Signal<boolean>";
     lines.push(`  createScrollLock(${activeSignal}, options.destroyRef);`);
     lines.push(``);
   }
