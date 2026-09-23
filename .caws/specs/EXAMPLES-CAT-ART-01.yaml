@@ -8,7 +8,7 @@ updated_at: '2026-09-23T04:08:35.966Z'
 created_by_session: '15bd2efa-0b44-4a06-8e50-d925effe6a05'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'examples/spatial-console/web/src/cat'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -17,7 +17,8 @@ scope:
     - 'examples/spatial-console/web/cat.html'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Paw contact targets (keyToWorld, trackpadToWorld, screenWorld) and screen plane placement are unchanged, so input->pose mapping and hit-test projection keep their meaning'
+  - 'Device screen meshes stay unlit and excluded from tone mapping so DOM colours render exactly'
 acceptance:
   - id: A1
     given: 'The spec implementation is complete.'
