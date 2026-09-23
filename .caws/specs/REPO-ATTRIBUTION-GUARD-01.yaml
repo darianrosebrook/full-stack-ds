@@ -54,8 +54,12 @@ contracts:
 evidence:
   - criterion_id: A1
     status: pass
-    evidence_ref: "node --test scripts/attribution-guard.test.mjs on landed main 6645e4a0: 17/17 pass. Case \"a known agent co-author trailer is refused and named\" asserts a single violation of kind co-author at line 3 whose reason names noreply@anthropic.com. Live counterfactual against real history: node scripts/attribution-guard.mjs --range fde10305860bed2eb000e18dc57cb091a054e4b0^! exits 1 and prints \"line 3: Co-authored-by: Qwen-Coder <qwen-coder@alibabacloud.com>\"."
-    recorded_at: "2026-09-23T01:17:53.597Z"
+    evidence_ref: "The cited node test asserts a single co-author violation at line 3 whose reason names noreply@anthropic.com. Plus a live counterfactual against real history: node scripts/attribution-guard.mjs --range fde10305860bed2eb000e18dc57cb091a054e4b0^! exits 1 and prints \"line 3: Co-authored-by: Qwen-Coder <qwen-coder@alibabacloud.com>\"."
+    recorded_at: "2026-09-23T01:18:42.951Z"
+    test_nodeid: "scripts/attribution-guard.test.mjs::a known agent co-author trailer is refused and named"
+    command: node --test scripts/attribution-guard.test.mjs
+    exit_code: 0
+    commit_sha: "6645e4a0"
   - criterion_id: A2
     status: pass
     evidence_ref: "Case \"AI commit identities are refused; human identities are not\" pins both the exact-address rule (noreply@anthropic.com) and the domain rule (agent@anthropic.com), and asserts the human identity darianrosebrook <hello@darianrosebrook.com> is admitted. Integration case \"git commit is REFUSED when the author identity is an agent\" drives a real git commit in a temp repo whose core.hooksPath points at this repo .githooks: non-zero exit, stderr matching /AI agent commit identity/, and git rev-list --count --all == 0, so nothing entered history."
