@@ -89,5 +89,10 @@ evidence:
     commit_sha: "6645e4a0"
   - criterion_id: A5
     status: pass
-    evidence_ref: "Case \"an obviously clean message passes\" and integration case \"a clean commit goes through — the hook is not a blanket refusal\" (real commit exits 0, rev-list count 1) pin the admitted direction; the default-deny direction is pinned separately by \"an unknown address is STILL refused\". Landed-revision scan: node scripts/attribution-guard.mjs --range origin/main..main exits 0 over 10 commits. That range excludes the three grandfathered Qwen-Coder commits by construction because they predate origin/main, which is the intended behavior; a full-history scan flags exactly 3."
-    recorded_at: "2026-09-23T01:17:56.354Z"
+    evidence_ref: "Asserts a real clean commit exits 0 and rev-list count is 1. Paired with \"an obviously clean message passes\" for the admitted direction and \"an unknown address is STILL refused\" for the default-deny direction. Landed-revision scan: node scripts/attribution-guard.mjs --range origin/main..main exits 0 over 10 commits; that range excludes the three grandfathered Qwen-Coder commits by construction because they predate origin/main, which is the intended behavior, while a full-history scan flags exactly 3."
+    recorded_at: "2026-09-23T01:19:28.216Z"
+    test_nodeid: "scripts/attribution-guard.test.mjs::a clean commit goes through — the hook is not a blanket refusal"
+    command: node --test scripts/attribution-guard.test.mjs
+    exit_code: 0
+    artifact_path: scripts/attribution-guard.mjs
+    commit_sha: "6645e4a0"
