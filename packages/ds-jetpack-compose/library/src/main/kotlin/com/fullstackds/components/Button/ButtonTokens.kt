@@ -306,20 +306,19 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
         "button.color.background.default" to ComponentTokenDefinition(
             name = "button.color.background.default",
             cssVar = "--fsds-button-color-background-default",
-            ref = "semantic.color.action.background.danger.default",
-            fallback = "#d92d2e",
+            literal = "transparent",
         ),
         "button.color.background.hover" to ComponentTokenDefinition(
             name = "button.color.background.hover",
             cssVar = "--fsds-button-color-background-hover",
-            ref = "semantic.color.action.background.danger.hover",
-            fallback = "#b31b1b",
+            ref = "semantic.color.background.danger.softer",
+            fallback = "#fee4e4",
         ),
         "button.color.background.active" to ComponentTokenDefinition(
             name = "button.color.background.active",
             cssVar = "--fsds-button-color-background-active",
-            ref = "semantic.color.action.background.danger.active",
-            fallback = "#900909",
+            ref = "semantic.color.background.danger.subtle",
+            fallback = "#fac2c2",
         ),
         "button.color.background.disabled" to ComponentTokenDefinition(
             name = "button.color.background.disabled",
@@ -330,14 +329,14 @@ val buttonTokenScopes: ComponentTokenScopes = mapOf(
         "button.color.foreground.default" to ComponentTokenDefinition(
             name = "button.color.foreground.default",
             cssVar = "--fsds-button-color-foreground-default",
-            ref = "semantic.color.foreground.inverse",
-            fallback = "#fafafa",
+            ref = "semantic.color.foreground.on.danger.subtle",
+            fallback = "#900909",
         ),
         "button.color.border.default" to ComponentTokenDefinition(
             name = "button.color.border.default",
             cssVar = "--fsds-button-color-border-default",
-            ref = "semantic.color.action.background.danger.default",
-            fallback = "#d92d2e",
+            ref = "semantic.color.border.danger",
+            fallback = "#b31b1b",
         ),
         "button.color.border.focus" to ComponentTokenDefinition(
             name = "button.color.border.focus",

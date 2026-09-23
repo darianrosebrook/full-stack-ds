@@ -1734,6 +1734,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     channelByName,
     styledByName,
     isRoot: true,
+    rootRole: ir.root.rootRole,
     autoDismissPause: autoDismissActive,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
@@ -1945,6 +1946,10 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     // values on every keydown.
     for (const gate of keyboardModeGateProps(ir)) {
       lines.push(`    ${gate}: () => this.${gate},`);
+    }
+    const modalityGate = ir.surface?.modalityGate;
+    if (modalityGate) {
+      lines.push(`    ${modalityGate.prop}: () => this.${modalityGate.prop},`);
     }
     lines.push(`    destroyRef: this.destroyRef,`);
     lines.push(`  });`);
@@ -2474,6 +2479,12 @@ interface AngularRenderContext {
   /** Prop-name → resolved styled-prop lookup, mirroring the lit emitter's `styledByName`. Populated at root construction and carried into nested contexts via the `{ ...ctx }` spread. */
   styledByName: Map<string, { type: string; defaultExpr?: string }>;
   isRoot: boolean;
+  /**
+   * Role synthesized on the rendered DOM root from `a11y.role` when the
+   * authored tree does not already assign it. Parity with the React, Vue,
+   * and Svelte render contexts.
+   */
+  rootRole?: string;
   /** When true, bind auto-dismiss pause listeners on the template root. */
   autoDismissPause?: boolean;
   overlayClickSetter?: string;
@@ -2751,6 +2762,9 @@ function renderAngularDomNode(
   if (ctx.isRoot) {
     attrs.push(`data-fsds-box=""`);
     attrs.unshift(`[ngClass]="classes()"`);
+    if (ctx.rootRole && !("role" in node.attrs) && !("role" in node.bindings)) {
+      attrs.push(`role="${ctx.rootRole}"`);
+    }
     if (ctx.autoDismissPause) {
       attrs.push(
         `(pointerenter)="autoDismiss.pauseListeners.pointerenter()"`,
@@ -2804,6 +2818,9 @@ function renderAngularDomNode(
     }
   }
 
+  // `if: "slot:<name>"` (node.ifSlot) renders unconditionally: which named
+  // projections are filled is not statically knowable in Angular (same
+  // divergence as IdRefIR.slotGate). An unfilled slot leaves the wrapper empty.
   let ifWrap = "";
   if (node.ifProp) {
     // Angular's *ngIf belongs to the structural directive system. Wrap the

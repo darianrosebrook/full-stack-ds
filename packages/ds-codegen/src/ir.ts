@@ -978,6 +978,14 @@ export interface DomNodeIR {
   /** When true, the guard fires when `ifProp` is FALSY (i.e. `if: "!src"`). Emitters render `!prop && ...`. */
   ifNegated: boolean;
   /**
+   * Named-slot presence guard (`if: "slot:<name>"`): the node renders only
+   * when the consumer fills that named slot. The named-slot sibling of
+   * `ifProp: "children"`; the slot must sit inside the guarded subtree
+   * (validated at IR build). `ifNegated` inverts it. Mutually exclusive
+   * with `ifProp`.
+   */
+  ifSlot?: string;
+  /**
    * Iteration directive. When set, the framework emitter wraps this node and
    * its subtree in its idiomatic iteration construct (React `Array.from(...).map`,
    * Vue `v-for`, Svelte `{#each}`, Angular `*ngFor`, Lit `repeat()`/`.map`).
@@ -1656,10 +1664,20 @@ export interface SurfaceTimingIR {
   autoDismissProp: string | undefined;
 }
 
+export interface SurfaceModalityGateIR {
+  prop: string;
+  /** The prop's contract default: the modality when the consumer omits it. */
+  defaultModal: boolean;
+}
+
 export interface SurfaceIR {
   kind: ContractSurfaceKind;
   presence: ContractSurfacePresence;
   modality: ContractSurfaceModality;
+  /** Boolean prop that makes a blocking surface non-blocking when false
+   * (validated fail-loud in buildSurfaceIR). Hook emitters AND it into the
+   * focus-trap and scroll-lock activity. */
+  modalityGate: SurfaceModalityGateIR | undefined;
   /** Axis-derived attachment target used to select shared surface machinery. */
   attachment: SurfaceAttachment;
   anchor: SurfaceAnchorIR | undefined;
@@ -2703,6 +2721,14 @@ function validateDomNode(
         componentName,
       );
     }
+  }
+  // `if: "slot:<name>"` gates a wrapper on its own named slot; a guard on a
+  // slot the subtree never renders could never become true.
+  if (node.ifSlot !== undefined && !subtreeHasNamedSlot(node, node.ifSlot)) {
+    throw new Error(
+      `[${componentName}] DOM node 'if: "slot:${node.ifSlot}"' guards a subtree ` +
+      `that renders no {"tag": "slot", "name": "${node.ifSlot}"}.`,
+    );
   }
   // `if: "<name>"` must resolve to a declared prop, a channel name, a
   // channel's value-prop, or the special literal "children". The React
@@ -3968,12 +3994,21 @@ function parseCssVarBindings(node: ContractDomNode): CssVarBindingIR[] {
  * (`&&`, `||`, equality) would force the IR to carry an expression tree
  * and each emitter to walk it. Not worth it for current contract needs.
  */
-function parseIfGuard(value: string | undefined): { ifProp: string | undefined; ifNegated: boolean } {
+function parseIfGuard(
+  value: string | undefined,
+): { ifProp: string | undefined; ifNegated: boolean; ifSlot?: string } {
   if (!value) return { ifProp: undefined, ifNegated: false };
-  if (value.startsWith("!")) {
-    return { ifProp: value.slice(1), ifNegated: true };
+  const ifNegated = value.startsWith("!");
+  const name = ifNegated ? value.slice(1) : value;
+  if (name.startsWith("slot:")) {
+    return { ifProp: undefined, ifNegated, ifSlot: name.slice("slot:".length) };
   }
-  return { ifProp: value, ifNegated: false };
+  return { ifProp: name, ifNegated };
+}
+
+function subtreeHasNamedSlot(node: DomNodeIR, name: string): boolean {
+  if (node.tag === "slot" && node.slotName === name) return true;
+  return node.children.some((child) => subtreeHasNamedSlot(child, name));
 }
 
 /**
@@ -4668,6 +4703,28 @@ export function buildSurfaceIR(
       }
     : undefined;
 
+  const modalityProp = surface.modalityProp;
+  let modalityGate: SurfaceModalityGateIR | undefined;
+  if (modalityProp !== undefined) {
+    if (surface.modality !== "blocking") {
+      throw new Error(
+        `Contract "${contract.name}": surface.modalityProp requires surface.modality "blocking" (got "${surface.modality}").`,
+      );
+    }
+    const member = getPropMembers(contract).find((m) => m.name === modalityProp);
+    if (!member || canonicalTsType(normalizePropType(member)) !== "boolean") {
+      throw new Error(
+        `Contract "${contract.name}": surface.modalityProp "${modalityProp}" must name a declared boolean prop.`,
+      );
+    }
+    if (typeof member.default !== "boolean") {
+      throw new Error(
+        `Contract "${contract.name}": surface.modalityProp "${modalityProp}" must declare a boolean default (the modality when the prop is omitted).`,
+      );
+    }
+    modalityGate = { prop: modalityProp, defaultModal: member.default };
+  }
+
   const openTriggers = surface.openTriggers ?? [];
   // Selector-anchored surfaces (coachmarks / guided tours) open
   // programmatically — there is no in-tree trigger element to attach an
@@ -4687,6 +4744,7 @@ export function buildSurfaceIR(
     kind: surface.kind,
     presence: surface.presence,
     modality: surface.modality,
+    modalityGate,
     attachment: resolveSurfaceAttachment(surface),
     anchor,
     selectorAnchor,

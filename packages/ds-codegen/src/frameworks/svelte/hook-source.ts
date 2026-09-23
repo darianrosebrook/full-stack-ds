@@ -39,6 +39,18 @@ interface PrimitiveBindings {
  * Identical dispatch logic to the Vue hook emitter — the IR is
  * framework-neutral so the same heuristics apply.
  */
+/**
+ * The surface's blocking condition: its openness, ANDed with the modality
+ * gate prop when the contract declares one (`surface.modalityProp`). An
+ * omitted prop reads as the contract default.
+ */
+function blockingGetter(ir: ComponentIR, openExpr: string): string {
+  const gate = ir.surface?.modalityGate;
+  if (!gate) return `() => ${openExpr}`;
+  const modal = `(opts.${gate.prop}?.() ?? ${gate.defaultModal})`;
+  return openExpr === "true" ? `() => ${modal}` : `() => ${openExpr} && ${modal}`;
+}
+
 function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   const channels = ir.behavior.normalizedChannels;
   const focus = ir.behavior.focus;
@@ -178,6 +190,11 @@ function generateOptionsInterface(
   for (const gate of keyboardModeGateProps(ir)) {
     lines.push(`  /** Mode gate the keyboard select behavior reads. */`);
     lines.push(`  ${gate}?: () => boolean | undefined;`);
+  }
+  const modalityGate = ir.surface?.modalityGate;
+  if (modalityGate) {
+    lines.push(`  /** When false the surface is non-blocking: no focus trap, no scroll lock. */`);
+    lines.push(`  ${modalityGate.prop}?: () => boolean | undefined;`);
   }
 
   lines.push(`}`);
@@ -539,9 +556,10 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     const channel = bindings.useControllableState.find(
       (c) => c.isDisclosureChannel,
     );
-    const activeGetter = channel
-      ? `() => ${channel.name}State.value`
-      : `() => true`;
+    const activeGetter = blockingGetter(
+      ir,
+      channel ? `${channel.name}State.value` : "true",
+    );
     lines.push(
       `  createFocusTrap({ getActive: ${activeGetter}, containerRef: panelRef });`,
     );
@@ -552,9 +570,10 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     const channel = bindings.useControllableState.find(
       (c) => c.isDisclosureChannel,
     );
-    const activeGetter = channel
-      ? `() => ${channel.name}State.value`
-      : `() => true`;
+    const activeGetter = blockingGetter(
+      ir,
+      channel ? `${channel.name}State.value` : "true",
+    );
     lines.push(`  createScrollLock(${activeGetter});`);
     lines.push(``);
   }

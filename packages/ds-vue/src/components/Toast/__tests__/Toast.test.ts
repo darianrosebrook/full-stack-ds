@@ -44,7 +44,7 @@ describe("Toast — unit", () => {
     mount(Toast as Component, { props: { "open": true }, attrs: { "data-testid": "toast" }, slots: { "default": "content" }, attachTo: document.body });
     const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
-    expect(root?.getAttribute("role")).toBe("alert");
+    expect(root?.getAttribute("role")).toBe("region");
   });
 
   it("applies variant=info variant class", () => {
@@ -143,6 +143,91 @@ describe("Toast — compound parts", () => {
     expect(wrapper.element.tagName.toLowerCase()).toBe("h3");
     expect(wrapper.classes()).toContain("toast__title");
     expect(wrapper.text()).toContain("Toast part");
+  });
+});
+
+describe("Toast — action slot", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
+  // a filled action slot renders exactly one wrapper holding that content
+  it("renders exactly one toast__action wrapper containing the passed action content", () => {
+    mount(Toast as Component, {
+      props: { "open": true },
+      attrs: { "data-testid": "toast" },
+      slots: { "default": "content", "action": "<button>Undo</button>" },
+      attachTo: document.body,
+    });
+    const actions = document.body.querySelectorAll(".toast__action");
+    expect(actions.length).toBe(1);
+    expect(actions[0].querySelector("button")?.textContent).toBe("Undo");
+  });
+
+  // an unfilled action slot renders no empty action wrapper
+  it("renders no toast__action wrapper when the action slot is unfilled", () => {
+    mount(Toast as Component, {
+      props: { "open": true },
+      attrs: { "data-testid": "toast" },
+      slots: { "default": "content" },
+      attachTo: document.body,
+    });
+    expect(document.body.querySelector(".toast__action")).toBeNull();
+  });
+});
+
+describe("Toast — live region roles", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
+  // the viewport root is a labeled region, live-announced politely by default
+  it("marks the viewport root as a labeled region with default polite aria-live", () => {
+    mount(Toast as Component, {
+      props: { "open": true },
+      attrs: { "data-testid": "toast" },
+      slots: { "default": "content" },
+      attachTo: document.body,
+    });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root?.getAttribute("role")).toBe("region");
+    expect(root?.getAttribute("aria-label")).toBe("Notifications");
+    expect(root?.getAttribute("aria-live")).toBe("polite");
+  });
+
+  // politeness="assertive" raises the root's aria-live to assertive
+  it("sets aria-live to assertive when politeness is assertive", () => {
+    mount(Toast as Component, {
+      props: { "open": true, "politeness": "assertive" },
+      attrs: { "data-testid": "toast" },
+      slots: { "default": "content" },
+      attachTo: document.body,
+    });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root?.getAttribute("aria-live")).toBe("assertive");
+  });
+
+  // the open toast item is announced as a status, not an interruptive alert
+  it("marks the open item with role=status", () => {
+    mount(Toast as Component, {
+      props: { "open": true },
+      attrs: { "data-testid": "toast" },
+      slots: { "default": "content" },
+      attachTo: document.body,
+    });
+    const item = document.body.querySelector<HTMLElement>(".toast__item");
+    expect(item?.getAttribute("role")).toBe("status");
+  });
+
+  // no part of the rendered toast uses the interruptive alert role
+  it("never renders any element with role=alert", () => {
+    mount(Toast as Component, {
+      props: { "open": true },
+      attrs: { "data-testid": "toast" },
+      slots: { "default": "content" },
+      attachTo: document.body,
+    });
+    expect(document.body.querySelector('[role="alert"]')).toBeNull();
   });
 });
 // @custom:end

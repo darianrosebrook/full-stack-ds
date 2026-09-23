@@ -588,6 +588,27 @@
       "kind": "test",
       "spec": "INTEGRATE-INTERACTION-SUBSTRATE-01",
       "note": "Hand-authored channel lifecycle regression coverage merged in f0e85046 and integrated by INTEGRATE-INTERACTION-SUBSTRATE-01: defaults apply once after inputs arrive; controlled updates preserve parent authority and notify exactly once. Reviewed during FIX-NATIVE-TOKEN-CONSUMPTION-01. This registers existing test coverage, not a component-source exception or deferred implementation."
+    },
+    {
+      "file": "packages/ds-angular/src/components/Toast/__tests__/Toast.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "DS-CONSUMER-FINDINGS-01",
+      "note": "Toast action-slot and live-region coverage (DS-CONSUMER-FINDINGS-01). The generated suite cannot fill a named slot, so the filled/unfilled `if: \"slot:action\"` shapes and the region/status role split are asserted here against mounted output. Angular renders the action wrapper unconditionally (named projections are not statically knowable), so the unfilled case pins an empty wrapper rather than its absence. If slot-filled fixtures become contract-derived, this region empties and the entry surfaces as stale."
+    },
+    {
+      "file": "packages/ds-lit/src/components/Toast/__tests__/Toast.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "DS-CONSUMER-FINDINGS-01",
+      "note": "Toast action-slot and live-region coverage (DS-CONSUMER-FINDINGS-01). The generated suite cannot fill a named slot, so the filled/unfilled `if: \"slot:action\"` shapes and the region/status role split are asserted here against mounted output. Lit additionally pins the SlotPresenceController: appending and removing a slotted child after mount adds and removes the wrapper. If slot-filled fixtures become contract-derived, this region empties and the entry surfaces as stale."
+    },
+    {
+      "file": "packages/ds-react/src/components/Toast/__tests__/Toast.test.tsx",
+      "label": "tests",
+      "kind": "test",
+      "spec": "DS-CONSUMER-FINDINGS-01",
+      "note": "Toast action-slot and live-region coverage (DS-CONSUMER-FINDINGS-01). The generated suite cannot fill a named slot, so the filled/unfilled `if: \"slot:action\"` shapes and the region/status role split are asserted here against mounted output. If slot-filled fixtures become contract-derived, this region empties and the entry surfaces as stale."
     }
   ]
 }

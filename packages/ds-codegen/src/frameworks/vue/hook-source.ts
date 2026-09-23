@@ -18,6 +18,7 @@ import {
   type ComponentIR,
   type KeyboardActionIR,
   type NormalizedChannelIR,
+  type SurfaceModalityGateIR,
   keyboardHandlerParts,
   keyboardModeGateProps,
   pickPrimaryDisclosureChannel,
@@ -33,6 +34,7 @@ import {
 interface PrimitiveBindings {
   useControllableState: NormalizedChannelIR[];
   useFocusTrap: boolean;
+  modalityGate: SurfaceModalityGateIR | undefined;
   useScrollLock: boolean;
   usePortal: boolean;
   useAnchorToggle: boolean;
@@ -95,6 +97,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   return {
     useControllableState: channels,
     useFocusTrap: hasFocusTrap,
+    modalityGate: ir.surface?.modalityGate,
     useScrollLock: hasScrollLock,
     usePortal: hasPortal,
     useAnchorToggle: useAnchor,
@@ -123,6 +126,9 @@ function generateImports(
   // controllable channels — even without focus/portal/anchor primitives.
   if (bindings.useControllableState.length > 0) {
     vueNamed.add("type Ref");
+  }
+  if (bindings.modalityGate && (bindings.useFocusTrap || bindings.useScrollLock)) {
+    vueNamed.add("computed");
   }
   if (bindings.isCompoundStateContainer) {
     vueNamed.add("ref");
@@ -214,6 +220,11 @@ function generateOptionsInterface(
   for (const gate of keyboardModeGateProps(ir)) {
     lines.push(`  /** Mode gate the keyboard select behavior reads. */`);
     lines.push(`  ${gate}?: () => boolean | undefined;`);
+  }
+  const modalityGate = ir.surface?.modalityGate;
+  if (modalityGate) {
+    lines.push(`  /** When false the surface is non-blocking: no focus trap, no scroll lock. */`);
+    lines.push(`  ${modalityGate.prop}?: () => boolean | undefined;`);
   }
 
   lines.push(`}`);
@@ -544,20 +555,31 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     lines.push(`  });`, ``);
   }
 
-  if (bindings.useFocusTrap) {
-    const channel = bindings.useControllableState.find(
-      (c) => c.isDisclosureChannel,
+  // The modality gate (surface.modalityProp) folds into one derived ref the
+  // focus trap and scroll lock share.
+  const gate = bindings.modalityGate;
+  const disclosureChannel = bindings.useControllableState.find(
+    (c) => c.isDisclosureChannel,
+  );
+  if (gate && (bindings.useFocusTrap || bindings.useScrollLock)) {
+    const openExpr = disclosureChannel ? `${disclosureChannel.name}.value` : "true";
+    lines.push(
+      `  const blocking = computed(() => ${openExpr} && (options.${gate.prop}?.() ?? ${gate.defaultModal}));`,
     );
-    const activeRef = channel ? channel.name : `ref(true)`;
+  }
+  const activeRef = gate
+    ? "blocking"
+    : disclosureChannel
+      ? disclosureChannel.name
+      : "ref(true)";
+
+  if (bindings.useFocusTrap) {
     lines.push(`  useFocusTrap(panelRef, { active: ${activeRef} });`);
     lines.push(``);
   }
 
   if (bindings.useScrollLock) {
-    const channel = bindings.useControllableState.find(
-      (c) => c.isDisclosureChannel,
-    );
-    lines.push(`  useScrollLock(${channel?.name ?? "ref(true)"});`);
+    lines.push(`  useScrollLock(${activeRef});`);
     lines.push(``);
   }
 

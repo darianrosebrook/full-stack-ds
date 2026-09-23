@@ -291,31 +291,35 @@
   },
   "--destructive": {
     "button.color.background.default": {
-      "resolvesTo": "semantic.color.action.background.danger.default",
-      "fallback": "#d92d2e"
+      "literal": "transparent",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ]
     },
     "button.color.background.hover": {
-      "resolvesTo": "semantic.color.action.background.danger.hover",
-      "fallback": "#b31b1b"
+      "resolvesTo": "semantic.color.background.danger.softer",
+      "fallback": "#fee4e4"
     },
     "button.color.background.active": {
-      "resolvesTo": "semantic.color.action.background.danger.active",
-      "fallback": "#900909"
+      "resolvesTo": "semantic.color.background.danger.subtle",
+      "fallback": "#fac2c2"
     },
     "button.color.background.disabled": {
       "resolvesTo": "semantic.color.action.background.danger.disabled",
       "fallback": "#b8b8b8"
     },
     "button.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.inverse",
-      "fallback": "#fafafa"
+      "resolvesTo": "semantic.color.foreground.on.danger.subtle",
+      "fallback": "#900909"
     },
     "button.color.border.default": {
-      "resolvesTo": "semantic.color.action.background.danger.default",
-      "fallback": "#d92d2e"
+      "resolvesTo": "semantic.color.border.danger",
+      "fallback": "#b31b1b"
     },
     "button.color.border.hover": {
-      "resolvesTo": "semantic.color.action.background.danger.hover",
+      "resolvesTo": "semantic.color.border.danger",
       "fallback": "#b31b1b"
     },
     "button.color.border.focus": {

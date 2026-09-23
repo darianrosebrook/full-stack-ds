@@ -36,6 +36,7 @@ export interface SheetProps {
 // @generated:start component
 export function Sheet({
   open: controlledOpenness,
+  modal = true,
   ariaLabel,
   defaultOpen = false,
   onOpenChange,

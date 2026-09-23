@@ -123,7 +123,7 @@
       "safeName": "modal",
       "type": "boolean",
       "required": false,
-      "description": "When true, renders a modal sheet with backdrop and focus trap.",
+      "description": "When true, renders a modal sheet with backdrop, focus trap, and scroll lock. When false the sheet is non-blocking: no backdrop, no focus trap, no scroll lock, and aria-modal is false.",
       "defaultExpr": "true",
       "nodeKind": null
     },
@@ -1061,6 +1061,12 @@
           "max-height": "var(--fsds-sheet-size-height, 300px)",
           "border-radius": "var(--fsds-sheet-border-radius, 6px)"
         }
+      },
+      {
+        "selector": ".sheet:has(> .sheet__content[aria-modal=\"false\"]) > .sheet__overlay",
+        "declarations": {
+          "display": "none"
+        }
       }
     ],
     "keyframes": []
@@ -1147,6 +1153,10 @@
     "kind": "sheet",
     "presence": "persistent",
     "modality": "blocking",
+    "modalityGate": {
+      "prop": "modal",
+      "defaultModal": true
+    },
     "attachment": "viewport",
     "content": {
       "part": {

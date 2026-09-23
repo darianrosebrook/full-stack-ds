@@ -95,10 +95,10 @@
           "part": "content",
           "if": "open",
           "attrs": {
-            "role": "dialog",
-            "aria-modal": "true"
+            "role": "dialog"
           },
           "bindings": {
+            "aria-modal": "prop:modal",
             "aria-label": "prop:ariaLabel",
             "aria-labelledby": "prop:ariaLabelledby",
             "aria-describedby": "prop:ariaDescribedby",
@@ -191,7 +191,7 @@
         {
           "name": "modal",
           "type": "boolean",
-          "description": "When true, renders a modal sheet with backdrop and focus trap.",
+          "description": "When true, renders a modal sheet with backdrop, focus trap, and scroll lock. When false the sheet is non-blocking: no backdrop, no focus trap, no scroll lock, and aria-modal is false.",
           "default": true
         },
         {
@@ -393,6 +393,7 @@
     "kind": "sheet",
     "presence": "persistent",
     "modality": "blocking",
+    "modalityProp": "modal",
     "content": {
       "part": "content",
       "interactive": true

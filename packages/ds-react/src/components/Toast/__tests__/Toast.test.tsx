@@ -38,7 +38,7 @@ describe("Toast — unit", () => {
 
   it("has the correct ARIA role", () => {
     render(<Toast data-testid="toast"><span>content</span></Toast>);
-    expect(screen.getByTestId("toast")).toHaveAttribute("role", "alert");
+    expect(screen.getByTestId("toast")).toHaveAttribute("role", "region");
   });
 
   it("applies variant=info variant class", () => {
@@ -98,5 +98,34 @@ describe("Toast — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+describe("Toast — action slot and live-region roles", () => {
+  it("renders a filled action slot inside the action wrapper", () => {
+    render(
+      <Toast open={true} slots={{ action: <button type="button">Undo</button> }}>
+        Deleted
+      </Toast>,
+    );
+    const wrappers = document.body.querySelectorAll(".toast__action");
+    expect(wrappers).toHaveLength(1);
+    expect(wrappers[0].querySelector("button")?.textContent).toBe("Undo");
+  });
 
+  it("renders no empty action wrapper when the slot is unfilled", () => {
+    render(<Toast open={true}>Deleted</Toast>);
+    expect(document.body.querySelector(".toast__action")).toBeNull();
+  });
+
+  it("is a labelled region whose aria-live follows politeness, never an alert", () => {
+    const { rerender } = render(<Toast data-testid="toast" open={true}>Saved</Toast>);
+    const root = screen.getByTestId("toast");
+    expect(root.getAttribute("role")).toBe("region");
+    expect(root.getAttribute("aria-label")).toBe("Notifications");
+    expect(root.getAttribute("aria-live")).toBe("polite");
+    expect(root.querySelector(".toast__item")?.getAttribute("role")).toBe("status");
+    expect(document.body.querySelector('[role="alert"]')).toBeNull();
+
+    rerender(<Toast data-testid="toast" open={true} politeness="assertive">Saved</Toast>);
+    expect(screen.getByTestId("toast").getAttribute("aria-live")).toBe("assertive");
+  });
+});
 // @custom:end

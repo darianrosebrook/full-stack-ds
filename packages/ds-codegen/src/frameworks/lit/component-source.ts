@@ -1668,6 +1668,9 @@ function generateDomTreeImports(ir: ComponentIR): string {
   ) {
     lines.push(`import { AutoDismissController } from '../../primitives/index.js';`);
   }
+  if (ir.dom && treeHasSlotGuard(ir.dom)) {
+    lines.push(`import { SlotPresenceController } from '../../primitives/index.js';`);
+  }
   // iconGlyph: import the catalog resolver from the committed package-root
   // module of @full-stack-ds/iconography (ICON-CATALOG-RUNTIME-DELIVERY-01).
   if (hasIconGlyph) {
@@ -1697,6 +1700,12 @@ function generateDomTreeImports(ir: ComponentIR): string {
     );
   }
   return lines.join("\n");
+}
+
+/** Walk a DomNodeIR tree and return true if any node has an `if: "slot:<name>"` guard. */
+function treeHasSlotGuard(node: DomNodeIR): boolean {
+  if (node.ifSlot !== undefined) return true;
+  return node.children.some(treeHasSlotGuard);
 }
 
 /** Walk a DomNodeIR tree and return true if any node has ifProp === "children". */
@@ -1841,6 +1850,14 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     declared.add(dim);
   }
 
+  // `if: "slot:<name>"` guards read named-slot presence from a controller that
+  // observes the host's light DOM (the guarded slot is absent while hidden, so
+  // no slotchange can fire).
+  if (treeHasSlotGuard(ir.dom)) {
+    lines.push(``);
+    lines.push(`  private readonly slotPresence = new SlotPresenceController(this);`);
+  }
+
   // If any dom node uses `if: "children"`, emit a reactive boolean that tracks
   // slot content presence — mirrors Vue's $slots.default / Svelte's {#if children}.
   if (hasChildrenGuard) {
@@ -1897,6 +1914,10 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     // keyboard select handler reads the live gate on every keydown.
     for (const gate of keyboardModeGateProps(ir)) {
       lines.push(`    ${gate}: () => this.${gate},`);
+    }
+    const modalityGate = ir.surface?.modalityGate;
+    if (modalityGate) {
+      lines.push(`    ${modalityGate.prop}: () => this.${modalityGate.prop},`);
     }
     lines.push(`  });`);
     lines.push(`  }`);
@@ -2925,7 +2946,10 @@ function renderLitDomNode(
   }
 
   let withIfGuard = body;
-  if (node.ifProp) {
+  if (node.ifSlot) {
+    const condition = `${node.ifNegated ? "!" : ""}this.slotPresence.has(${JSON.stringify(node.ifSlot)})`;
+    withIfGuard = `${pad}\${${condition} ? html\`${separator}${body}${separator}${pad}\` : nothing}`;
+  } else if (node.ifProp) {
     if (node.ifProp === "children") {
       // Guard the label wrapper on slot presence, mirroring Vue's `v-if="$slots.default"`
       // and Svelte's `{#if children}`. Lit doesn't expose a synchronous

@@ -13,6 +13,8 @@ export interface SheetBehaviorOptions {
   defaultOpen?: boolean;
   onOpenChange?: (value: boolean) => void;
   containerEl?: HTMLElement;
+  /** When false the surface is non-blocking: no focus trap, no scroll lock. */
+  modal?: () => boolean | undefined;
 }
 // @generated:end
 
@@ -34,11 +36,11 @@ export class SheetBehavior {
       onChange: opts.onOpenChange,
     });
     this.focusTrap = new FocusTrapController(host, {
-      getActive: () => this.opennessState.value,
+      getActive: () => this.opennessState.value && (opts.modal?.() ?? true),
       getContainer: () => opts.containerEl ?? null,
     });
     this.scrollLock = new ScrollLockController(host, {
-      getActive: () => this.opennessState.value,
+      getActive: () => this.opennessState.value && (opts.modal?.() ?? true),
     });
     this.dismissal = new DismissalController(host, {
       open: () => this.opennessState.value,

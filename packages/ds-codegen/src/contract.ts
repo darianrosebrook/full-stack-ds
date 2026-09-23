@@ -747,6 +747,12 @@ export interface ContractSurface {
   kind: ContractSurfaceKind;
   presence: ContractSurfacePresence;
   modality: ContractSurfaceModality;
+  /**
+   * Boolean prop that downgrades a blocking surface to non-blocking when
+   * false: the focus trap and scroll lock stay inactive. Requires
+   * `modality: 'blocking'`.
+   */
+  modalityProp?: string;
   anchor?: ContractSurfaceAnchor;
   content?: ContractSurfaceContent;
   positioning?: ContractSurfacePositioning;

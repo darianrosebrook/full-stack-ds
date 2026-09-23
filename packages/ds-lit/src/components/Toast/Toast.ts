@@ -3,6 +3,7 @@ import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ToastBehavior } from './ToastBehavior.js';
 import { AutoDismissController } from '../../primitives/index.js';
+import { SlotPresenceController } from '../../primitives/index.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
@@ -184,6 +185,10 @@ export class ToastElement extends LitElement {
       color: var(--fsds-toast-design-close-foreground-color, var(--fsds-toast-color-default, #141414));
       flex-shrink: 0;
     }
+
+    .toast__action:empty {
+      display: none;
+    }
     }
   `;
 
@@ -191,8 +196,9 @@ export class ToastElement extends LitElement {
   @property({ attribute: false }) onOpenChange?: (open: boolean) => void;
   @property({ type: String }) variant?: ToastVariant = "info";
   @property({ type: String }) politeness?: ToastPoliteness = "polite";
-  @property({ attribute: false }) action?: unknown;
   @property({ attribute: false }) duration?: number | null;
+
+  private readonly slotPresence = new SlotPresenceController(this);
 
   private initializedBehavior?: ToastBehavior;
   private get behavior(): ToastBehavior {
@@ -247,7 +253,7 @@ export class ToastElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" aria-label="Notifications" role="alert" aria-live=${ifDefined((this.politeness ?? "polite"))} data-fsds-box="" @pointerenter=${this.autoDismiss.pauseListeners.pointerenter} @pointerleave=${this.autoDismiss.pauseListeners.pointerleave} @focusin=${this.autoDismiss.pauseListeners.focusin} @focusout=${this.autoDismiss.pauseListeners.focusout}>
+    return html`<div class="${this.computeClasses()}" aria-label="Notifications" role="region" aria-live=${ifDefined((this.politeness ?? "polite"))} data-fsds-box="" @pointerenter=${this.autoDismiss.pauseListeners.pointerenter} @pointerleave=${this.autoDismiss.pauseListeners.pointerleave} @focusin=${this.autoDismiss.pauseListeners.focusin} @focusout=${this.autoDismiss.pauseListeners.focusout}>
   ${this.behavior.open ? html`
   <div class=${'toast__item'} role="status" aria-labelledby=${ifDefined([this.title ? 'toast-title' : null].filter(Boolean).join(' ') || undefined)} data-fsds-channel-renders="open">
     <div class=${'toast__row'}>
@@ -257,8 +263,10 @@ export class ToastElement extends LitElement {
       <div class=${'toast__description'}>
         <slot></slot>
       </div>
-      ${this.action ? html`
-      <div class=${'toast__action'}></div>
+      ${this.slotPresence.has("action") ? html`
+      <div class=${'toast__action'}>
+        <slot name="action"></slot>
+      </div>
       ` : nothing}
       <button class=${'toast__close'} type="button" aria-label="Dismiss" @click=${() => this.behavior.setOpen(!this.behavior.open)}></button>
     </div>
@@ -434,6 +442,10 @@ export class ToastItemElement extends LitElement {
       cursor: pointer;
       color: var(--fsds-toast-design-close-foreground-color, var(--fsds-toast-color-default, #141414));
       flex-shrink: 0;
+    }
+
+    .toast__action:empty {
+      display: none;
     }
     }
   `;
@@ -614,6 +626,10 @@ export class ToastTitleElement extends LitElement {
       color: var(--fsds-toast-design-close-foreground-color, var(--fsds-toast-color-default, #141414));
       flex-shrink: 0;
     }
+
+    .toast__action:empty {
+      display: none;
+    }
     }
   `;
 
@@ -787,6 +803,10 @@ export class ToastDescriptionElement extends LitElement {
       cursor: pointer;
       color: var(--fsds-toast-design-close-foreground-color, var(--fsds-toast-color-default, #141414));
       flex-shrink: 0;
+    }
+
+    .toast__action:empty {
+      display: none;
     }
     }
   `;

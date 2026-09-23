@@ -7,6 +7,7 @@ export {
   FocusTrapController,
   ScrollLockController,
   PortalController,
+  SlotPresenceController,
   createCompoundContext,
   provideContext,
   ContextConsumerController,

@@ -22,6 +22,10 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
+
+  &:has(> .dialog__modal[aria-modal="false"]) > .dialog__backdrop {
+    display: none;
+  }
 }
 
 .dialog__backdrop {

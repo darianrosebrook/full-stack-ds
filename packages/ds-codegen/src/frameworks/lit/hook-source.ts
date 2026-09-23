@@ -50,6 +50,18 @@ interface PrimitiveBindings {
  * ReactiveControllers are needed. Returns `null` when no behavior is
  * required (the emitter skips the file entirely in that case).
  */
+/**
+ * The surface's blocking condition: its openness, ANDed with the modality
+ * gate prop when the contract declares one (`surface.modalityProp`). An
+ * omitted prop reads as the contract default.
+ */
+function blockingExpr(ir: ComponentIR, openExpr: string): string {
+  const gate = ir.surface?.modalityGate;
+  if (!gate) return openExpr;
+  const modal = `(opts.${gate.prop}?.() ?? ${gate.defaultModal})`;
+  return openExpr === "true" ? modal : `${openExpr} && ${modal}`;
+}
+
 function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   const channels = ir.behavior.normalizedChannels;
   const focus = ir.behavior.focus;
@@ -190,6 +202,11 @@ function generateOptionsInterface(
   for (const gate of keyboardModeGateProps(ir)) {
     lines.push(`  /** Mode gate the keyboard select behavior reads. */`);
     lines.push(`  ${gate}?: () => boolean | undefined;`);
+  }
+  const modalityGate = ir.surface?.modalityGate;
+  if (modalityGate) {
+    lines.push(`  /** When false the surface is non-blocking: no focus trap, no scroll lock. */`);
+    lines.push(`  ${modalityGate.prop}?: () => boolean | undefined;`);
   }
 
   lines.push(`}`);
@@ -464,9 +481,10 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
     const boolChannel = bindings.useControllableState.find(
       (c) => c.isDisclosureChannel,
     );
-    const activeExpr = boolChannel
-      ? `this.${boolChannel.name}State.value`
-      : "true";
+    const activeExpr = blockingExpr(
+      ir,
+      boolChannel ? `this.${boolChannel.name}State.value` : "true",
+    );
     lines.push(`    this.focusTrap = new FocusTrapController(host, {`);
     lines.push(`      getActive: () => ${activeExpr},`);
     lines.push(`      getContainer: () => opts.containerEl ?? null,`);
@@ -477,9 +495,10 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
     const boolChannel = bindings.useControllableState.find(
       (c) => c.isDisclosureChannel,
     );
-    const activeExpr = boolChannel
-      ? `this.${boolChannel.name}State.value`
-      : "true";
+    const activeExpr = blockingExpr(
+      ir,
+      boolChannel ? `this.${boolChannel.name}State.value` : "true",
+    );
     lines.push(`    this.scrollLock = new ScrollLockController(host, {`);
     lines.push(`      getActive: () => ${activeExpr},`);
     lines.push(`    });`);

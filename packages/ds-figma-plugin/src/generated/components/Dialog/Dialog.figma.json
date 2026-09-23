@@ -106,7 +106,7 @@
       "safeName": "modal",
       "type": "boolean",
       "required": false,
-      "description": "When true, renders a modal dialog with backdrop and focus trap.",
+      "description": "When true, renders a modal dialog with backdrop, focus trap, and scroll lock. When false the dialog is non-blocking: no backdrop, no focus trap, no scroll lock, and aria-modal is false.",
       "defaultExpr": "true",
       "nodeKind": null
     },
@@ -1074,6 +1074,12 @@
           "max-height": "100vh",
           "border-radius": "0"
         }
+      },
+      {
+        "selector": ".dialog:has(> .dialog__modal[aria-modal=\"false\"]) > .dialog__backdrop",
+        "declarations": {
+          "display": "none"
+        }
       }
     ],
     "keyframes": []
@@ -1162,6 +1168,10 @@
     "kind": "dialog",
     "presence": "persistent",
     "modality": "blocking",
+    "modalityGate": {
+      "prop": "modal",
+      "defaultModal": true
+    },
     "attachment": "viewport",
     "content": {
       "part": {

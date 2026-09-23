@@ -79,6 +79,10 @@
   color: var(--fsds-toast-design-close-foreground-color, var(--fsds-toast-color-default, #141414));
   flex-shrink: 0;
 }
+
+.toast__action:empty {
+  display: none;
+}
 /* @generated:end */
 
 }

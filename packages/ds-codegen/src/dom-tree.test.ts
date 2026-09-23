@@ -652,6 +652,40 @@ describe("if-prop validation", () => {
     ).toThrow(/'if: "bogus"' does not resolve/);
   });
 
+  function slotGuarded(slotName: string, guard: string): ComponentContract {
+    return {
+      name: "SlotGuard",
+      anatomy: {
+        parts: ["root", "action"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            { tag: "div", part: "action", if: guard, children: [{ tag: "slot", name: slotName }] },
+          ],
+        },
+      },
+    } as ComponentContract;
+  }
+
+  it("lowers if: \"slot:<name>\" to a named-slot presence guard, not a prop guard", () => {
+    const ir = buildComponentIR(slotGuarded("action", "slot:action"));
+    const action = ir.dom!.children[0];
+    expect(action.ifSlot).toBe("action");
+    expect(action.ifProp).toBeUndefined();
+    expect(action.ifNegated).toBe(false);
+    const negated = buildComponentIR(slotGuarded("action", "!slot:action")).dom!.children[0];
+    expect(negated.ifSlot).toBe("action");
+    expect(negated.ifNegated).toBe(true);
+  });
+
+  it("rejects a slot guard whose subtree never renders that slot", () => {
+    // The guard could never become true: nothing inside it is slottable.
+    expect(() => buildComponentIR(slotGuarded("other", "slot:action"))).toThrow(
+      /'if: "slot:action"' guards a subtree that renders no \{"tag": "slot", "name": "action"\}/,
+    );
+  });
+
   it("accepts if-prop matching a declared prop", () => {
     expect(() =>
       buildComponentIR({

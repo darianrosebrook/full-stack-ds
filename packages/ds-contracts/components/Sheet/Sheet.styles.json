@@ -668,5 +668,13 @@
         "slot": "sheet.design.condition-82e96a66a421.shape.radius"
       }
     }
+  },
+  ".sheet:has(> .sheet__content[aria-modal=\"false\"]) > .sheet__overlay": {
+    "display": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    }
   }
 }

@@ -17,6 +17,7 @@
     ],
     "details": {
       "root": {
+        "tag": "div",
         "description": "Toast system host represented by the notification viewport and visible toast item.",
         "role": "root"
       },
@@ -114,7 +115,13 @@
                 {
                   "tag": "div",
                   "part": "action",
-                  "if": "action"
+                  "if": "slot:action",
+                  "children": [
+                    {
+                      "tag": "slot",
+                      "name": "action"
+                    }
+                  ]
                 },
                 {
                   "tag": "button",
@@ -164,11 +171,6 @@
           "type": "ToastPoliteness",
           "description": "ARIA live region politeness level.",
           "default": "polite"
-        },
-        {
-          "name": "action",
-          "propType": { "kind": "node", "of": "content" },
-          "description": "Optional action slot rendered next to the toast description (e.g. an undo button)."
         },
         {
           "name": "duration",
@@ -372,7 +374,11 @@
     }
   ],
   "a11y": {
-    "role": "alert",
+    "role": "region",
+    "roles": [
+      "region",
+      "status"
+    ],
     "apgPattern": "alert",
     "labeling": [
       "aria-label",

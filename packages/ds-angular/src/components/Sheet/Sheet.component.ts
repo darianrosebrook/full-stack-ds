@@ -31,7 +31,7 @@ let nextInstanceId = 0;
     <div [ngClass]="'sheet__overlay'" aria-hidden="true" role="presentation" (click)="behavior.setOpenness(false)"></div>
   </ng-container>
   <ng-container *ngIf="behavior.openness()">
-    <div [ngClass]="'sheet__content'" #interactionPanel role="dialog" aria-modal="true" [attr.aria-label]="ariaLabel" [attr.data-side]="(side ?? 'right')" [attr.aria-labelledby]="contentAriaLabelledby" [attr.aria-describedby]="contentAriaDescribedby">
+    <div [ngClass]="'sheet__content'" #interactionPanel role="dialog" [attr.aria-modal]="(modal ?? true)" [attr.aria-label]="ariaLabel" [attr.data-side]="(side ?? 'right')" [attr.aria-labelledby]="contentAriaLabelledby" [attr.aria-describedby]="contentAriaDescribedby">
       <div [ngClass]="'sheet__header'">
         <h2 [ngClass]="'sheet__title'" [attr.id]="instanceId + '-title'">
           <ng-content select="[slot=title]" />
@@ -78,6 +78,7 @@ export class SheetComponent implements OnInit, OnDestroy {
     open: () => this.open,
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
+    modal: () => this.modal,
     destroyRef: this.destroyRef,
   })));
   }

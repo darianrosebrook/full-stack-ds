@@ -326,6 +326,36 @@ export function extractCanonicalPairs(
       bg: 'semantic.color.action.background.danger.default',
       context: 'Button label on danger action background',
     },
+    // The destructive Button is outlined: no fill at rest, so its label sits
+    // on whatever page surface holds it, and on the danger washes when
+    // hovered/pressed. Outlined so a brand whose primary is red never makes a
+    // primary action look destructive.
+    {
+      fg: 'semantic.color.foreground.on.danger.subtle',
+      bg: 'semantic.color.background.primary',
+      context: 'Outlined destructive Button label at rest, primary surface',
+    },
+    {
+      fg: 'semantic.color.foreground.on.danger.subtle',
+      bg: 'semantic.color.background.secondary',
+      context: 'Outlined destructive Button label at rest, secondary surface',
+    },
+    {
+      fg: 'semantic.color.foreground.on.danger.subtle',
+      bg: 'semantic.color.background.danger.softer',
+      context: 'Outlined destructive Button label on its hover wash',
+    },
+    {
+      fg: 'semantic.color.foreground.on.danger.subtle',
+      bg: 'semantic.color.background.danger.subtle',
+      context: 'Outlined destructive Button label on its pressed wash',
+    },
+    {
+      fg: 'semantic.color.border.danger',
+      bg: 'semantic.color.background.primary',
+      context: 'Outlined destructive Button border (non-text UI boundary, 3:1)',
+      level: 'AA_LARGE',
+    },
     {
       fg: 'semantic.color.foreground.onColor',
       bg: 'semantic.color.background.accent',

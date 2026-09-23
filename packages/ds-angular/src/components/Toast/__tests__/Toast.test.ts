@@ -80,4 +80,123 @@ function classTokens(component: { classes: () => string }): string[] {
 
 // @custom:start tests
 
+import { afterEach } from "@jest/globals";
+import { Component } from "@angular/core";
+
+// Host that projects real `[slot=action]` content, mirroring the
+// Popover/Tooltip fixture-component idiom above: Angular's *ngIf can't
+// statically know which named ng-content projections are filled, so
+// Toast.component.ts renders the `.toast__action` wrapper unconditionally
+// (a documented cross-framework divergence) — these tests pin both the
+// filled and unfilled shapes plus the live-region a11y roles.
+@Component({
+  standalone: true,
+  imports: [ToastComponent],
+  template: `<fsds-toast
+    data-testid="toast-root"
+    [open]="open"
+    [politeness]="politeness"
+  >
+    <button slot="action">Undo</button>
+  </fsds-toast>`,
+})
+class ToastActionHostComponent {
+  open = true;
+  politeness?: "polite" | "assertive";
+}
+
+function getPortaledRoot(
+  fixtureHost: HTMLElement,
+  testid: string,
+): HTMLElement {
+  // Toast moves its own host element (`<fsds-toast>`) to document.body in
+  // ngOnInit, so the fixture tree no longer contains it once mounted —
+  // fall back to a document.body lookup, the same idiom Popover/Tooltip
+  // use above for their portaled content.
+  const root = (fixtureHost.querySelector(`[data-testid="${testid}"]`) ??
+    document.body.querySelector(
+      `[data-testid="${testid}"]`,
+    )) as HTMLElement | null;
+  if (!root) throw new Error(`expected [data-testid="${testid}"] in fixture or document.body`);
+  return root;
+}
+
+describe("Toast — action slot projection", () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [ToastActionHostComponent] });
+  });
+
+  afterEach(() => {
+    // Portaled toast hosts append directly to document.body; TestBed
+    // teardown does not remove them, so sweep stray nodes between tests
+    // (see Popover's afterEach above for the same idiom).
+    document.body
+      .querySelectorAll('[data-testid="toast-root"]')
+      .forEach((n) => n.remove());
+  });
+
+  it("renders a projected [slot=action] button inside .toast__action", () => {
+    const fixture = TestBed.createComponent(ToastActionHostComponent);
+    fixture.detectChanges();
+    const root = getPortaledRoot(fixture.nativeElement as HTMLElement, "toast-root");
+    const action = root.querySelector(".toast__action");
+    const button = action?.querySelector("button");
+    expect(button?.textContent?.trim()).toBe("Undo");
+  });
+
+  it("renders .toast__action with no element children when nothing is projected into it (Angular cannot statically detect named-slot fill, so the wrapper is unconditional by design — unlike frameworks that omit it)", () => {
+    const fixture = TestBed.createComponent(ToastComponent);
+    fixture.componentInstance.open = true;
+    fixture.detectChanges();
+    const action = (fixture.nativeElement as HTMLElement).querySelector(".toast__action");
+    expect(action).not.toBeNull();
+    expect(action!.children.length).toBe(0);
+  });
+});
+
+describe("Toast — live-region a11y roles", () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [ToastComponent] });
+  });
+
+  it("gives the viewport root role=region and aria-label=Notifications", () => {
+    const fixture = TestBed.createComponent(ToastComponent);
+    fixture.detectChanges();
+    const viewport = (fixture.nativeElement as HTMLElement).querySelector(".toast");
+    expect(viewport?.getAttribute("role")).toBe("region");
+    expect(viewport?.getAttribute("aria-label")).toBe("Notifications");
+  });
+
+  it("defaults aria-live to polite", () => {
+    const fixture = TestBed.createComponent(ToastComponent);
+    fixture.detectChanges();
+    const viewport = (fixture.nativeElement as HTMLElement).querySelector(".toast");
+    expect(viewport?.getAttribute("aria-live")).toBe("polite");
+  });
+
+  it("sets aria-live to assertive when politeness=assertive", () => {
+    const fixture = TestBed.createComponent(ToastComponent);
+    fixture.componentInstance.politeness = "assertive";
+    fixture.detectChanges();
+    const viewport = (fixture.nativeElement as HTMLElement).querySelector(".toast");
+    expect(viewport?.getAttribute("aria-live")).toBe("assertive");
+  });
+
+  it("gives the open toast item role=status", () => {
+    const fixture = TestBed.createComponent(ToastComponent);
+    fixture.componentInstance.open = true;
+    fixture.detectChanges();
+    const item = (fixture.nativeElement as HTMLElement).querySelector(".toast__item");
+    expect(item?.getAttribute("role")).toBe("status");
+  });
+
+  it("never assigns role=alert anywhere in the rendered toast", () => {
+    const fixture = TestBed.createComponent(ToastComponent);
+    fixture.componentInstance.open = true;
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.querySelector('[role="alert"]')).toBeNull();
+  });
+});
+
 // @custom:end

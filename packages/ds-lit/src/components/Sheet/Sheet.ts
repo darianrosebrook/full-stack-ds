@@ -111,6 +111,10 @@ export class SheetElement extends LitElement {
       align-items: center;
       justify-content: center;
       pointer-events: none;
+
+      &:has(> .sheet__content[aria-modal="false"]) > .sheet__overlay {
+        display: none;
+      }
     }
 
     .sheet__overlay {
@@ -256,6 +260,7 @@ export class SheetElement extends LitElement {
     open: () => this.open,
     defaultOpen: this.defaultOpen,
     onOpenChange: (v) => this.onOpenChange?.(v),
+    modal: () => this.modal,
   });
   }
 
@@ -309,7 +314,7 @@ export class SheetElement extends LitElement {
   <div class=${'sheet__overlay'} aria-hidden="true" data-fsds-channel-renders="openness"></div>
   ` : nothing}
   ${this.behavior.openness ? html`
-  <div class=${'sheet__content'} ${ref(element => { this.interactionPanel = element instanceof HTMLElement ? element : undefined; })} role="dialog" aria-modal="true" aria-label=${ifDefined(this.ariaLabel ?? undefined)} data-side=${ifDefined((this.side ?? "right"))} aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null && !this.ariaLabel ? 'sheet-title' : null, this.ariaLabelledby].filter(Boolean).join(' ') || undefined)} aria-describedby=${ifDefined([this.querySelector('[slot="description"]') !== null ? 'sheet-description' : null, this.ariaDescribedby].filter(Boolean).join(' ') || undefined)} data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
+  <div class=${'sheet__content'} ${ref(element => { this.interactionPanel = element instanceof HTMLElement ? element : undefined; })} role="dialog" aria-modal=${ifDefined((this.modal ?? true) === undefined ? undefined : ((this.modal ?? true) ? 'true' : 'false'))} aria-label=${ifDefined(this.ariaLabel ?? undefined)} data-side=${ifDefined((this.side ?? "right"))} aria-labelledby=${ifDefined([this.querySelector('[slot="title"]') !== null && !this.ariaLabel ? 'sheet-title' : null, this.ariaLabelledby].filter(Boolean).join(' ') || undefined)} aria-describedby=${ifDefined([this.querySelector('[slot="description"]') !== null ? 'sheet-description' : null, this.ariaDescribedby].filter(Boolean).join(' ') || undefined)} data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'sheet__header'}>
       <h2 class=${'sheet__title'} id="sheet-title">
         <slot name="title" @slotchange=${() => this.requestUpdate()}></slot>
@@ -425,6 +430,10 @@ export class SheetContentElement extends LitElement {
       align-items: center;
       justify-content: center;
       pointer-events: none;
+
+      &:has(> .sheet__content[aria-modal="false"]) > .sheet__overlay {
+        display: none;
+      }
     }
 
     .sheet__overlay {
@@ -649,6 +658,10 @@ export class SheetHeaderElement extends LitElement {
       align-items: center;
       justify-content: center;
       pointer-events: none;
+
+      &:has(> .sheet__content[aria-modal="false"]) > .sheet__overlay {
+        display: none;
+      }
     }
 
     .sheet__overlay {
@@ -873,6 +886,10 @@ export class SheetTitleElement extends LitElement {
       align-items: center;
       justify-content: center;
       pointer-events: none;
+
+      &:has(> .sheet__content[aria-modal="false"]) > .sheet__overlay {
+        display: none;
+      }
     }
 
     .sheet__overlay {
@@ -1097,6 +1114,10 @@ export class SheetDescriptionElement extends LitElement {
       align-items: center;
       justify-content: center;
       pointer-events: none;
+
+      &:has(> .sheet__content[aria-modal="false"]) > .sheet__overlay {
+        display: none;
+      }
     }
 
     .sheet__overlay {
@@ -1321,6 +1342,10 @@ export class SheetBodyElement extends LitElement {
       align-items: center;
       justify-content: center;
       pointer-events: none;
+
+      &:has(> .sheet__content[aria-modal="false"]) > .sheet__overlay {
+        display: none;
+      }
     }
 
     .sheet__overlay {
@@ -1545,6 +1570,10 @@ export class SheetFooterElement extends LitElement {
       align-items: center;
       justify-content: center;
       pointer-events: none;
+
+      &:has(> .sheet__content[aria-modal="false"]) > .sheet__overlay {
+        display: none;
+      }
     }
 
     .sheet__overlay {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ComponentContract } from "./contract.js";
+import type { ComponentContract, StyledPropMember } from "./contract.js";
 import { buildComponentIR } from "./ir.js";
 import {
   isPartAnchoredSurface,
@@ -624,6 +624,64 @@ describe("buildSurfaceIR — selector-sourced anchor (coachmark tour)", () => {
         }),
       ),
     ).toThrow(/surface\.anchor\.selector\.path must be a non-empty member name/);
+  });
+});
+
+describe("buildSurfaceIR — modality gate (surface.modalityProp)", () => {
+  function gated(
+    member: StyledPropMember | null,
+    modality: "blocking" | "non-blocking" = "blocking",
+  ): ComponentContract {
+    return makeContract({
+      name: "GatedDialog",
+      anatomy: {
+        parts: ["root", "content"],
+        details: { content: { role: "content", aria: { role: "dialog" } } },
+      },
+      props: { styled: { members: member ? [member] : [] } },
+      surface: {
+        kind: "dialog",
+        presence: "persistent",
+        modality,
+        modalityProp: "modal",
+        content: { part: "content", interactive: true },
+        positioning: { strategy: "centered" },
+      },
+    } as Partial<ComponentContract>);
+  }
+
+  it("carries the prop and its contract default into the IR", () => {
+    const on = buildComponentIR(gated({ name: "modal", type: "boolean", default: true }));
+    expect(on.surface?.modalityGate).toEqual({ prop: "modal", defaultModal: true });
+    const off = buildComponentIR(gated({ name: "modal", type: "boolean", default: false }));
+    expect(off.surface?.modalityGate).toEqual({ prop: "modal", defaultModal: false });
+  });
+
+  it("is absent when the contract declares no modalityProp", () => {
+    const contract = gated({ name: "modal", type: "boolean", default: true });
+    delete (contract.surface as { modalityProp?: string }).modalityProp;
+    expect(buildComponentIR(contract).surface?.modalityGate).toBeUndefined();
+  });
+
+  it("throws when the surface is already non-blocking (nothing to gate)", () => {
+    expect(() =>
+      buildComponentIR(gated({ name: "modal", type: "boolean", default: true }, "non-blocking")),
+    ).toThrow(/surface\.modalityProp requires surface\.modality "blocking" \(got "non-blocking"\)/);
+  });
+
+  it("throws when the prop is undeclared or not boolean", () => {
+    expect(() => buildComponentIR(gated(null))).toThrow(
+      /surface\.modalityProp "modal" must name a declared boolean prop/,
+    );
+    expect(() =>
+      buildComponentIR(gated({ name: "modal", type: "string", default: "yes" })),
+    ).toThrow(/surface\.modalityProp "modal" must name a declared boolean prop/);
+  });
+
+  it("throws when the prop has no boolean default (an omitted prop would be ambiguous)", () => {
+    expect(() => buildComponentIR(gated({ name: "modal", type: "boolean" }))).toThrow(
+      /surface\.modalityProp "modal" must declare a boolean default/,
+    );
   });
 });
 

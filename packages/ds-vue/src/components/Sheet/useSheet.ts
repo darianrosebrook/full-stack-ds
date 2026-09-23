@@ -1,5 +1,5 @@
 // @generated:start imports
-import { ref, type Ref } from "vue";
+import { computed, ref, type Ref } from "vue";
 import { useControllableState, useDismissal, useFocusTrap, useScrollLock } from "../../primitives/index.js";
 // @generated:end
 
@@ -12,6 +12,8 @@ export interface UseSheetOptions {
   open?: () => boolean | undefined;
   defaultOpen?: boolean;
   onOpenChange?: (value: boolean) => void;
+  /** When false the surface is non-blocking: no focus trap, no scroll lock. */
+  modal?: () => boolean | undefined;
 }
 
 export interface UseSheetResult {
@@ -34,9 +36,10 @@ export function useSheet(options: UseSheetOptions = {}): UseSheetResult {
   });
 
   const panelRef = ref<HTMLElement | null>(null);
-  useFocusTrap(panelRef, { active: openness });
+  const blocking = computed(() => openness.value && (options.modal?.() ?? true));
+  useFocusTrap(panelRef, { active: blocking });
 
-  useScrollLock(openness);
+  useScrollLock(blocking);
 
   useDismissal({
     open: () => openness.value,

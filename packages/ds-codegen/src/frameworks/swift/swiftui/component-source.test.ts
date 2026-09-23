@@ -138,7 +138,12 @@ describe("generateSwiftUIComponentSource — projected-children action (Button)"
     expect(source).toContain("enum ButtonTokens {");
     expect(source).toContain("public static let scopes: FsdsComponentTokenScopes = [");
     expect(source).toContain('"variant_destructive": [');
-    expect(source).toContain('fallback: .string("#d92d2e")');
+    expect(source).toContain('fallback: .string("#0566fe")');
+    // The outlined destructive label ships its themed fallback pair, so an
+    // unthemed app still reads dark red on light and light red on dark.
+    expect(source).toContain(
+      'ref: "semantic.color.foreground.on.danger.subtle", fallback: .adaptive(light: "#900909", dark: "#ee8181")',
+    );
     // The ref arm (FEAT-SWIFTUI-TOKEN-CARRIER-PARITY-01): sidecar
     // resolvesTo paths must reach the runtime so semantic-keyed theme
     // tables can override component slots like RN/Compose.
