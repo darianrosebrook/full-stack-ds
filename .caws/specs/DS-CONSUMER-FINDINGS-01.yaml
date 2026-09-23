@@ -71,3 +71,11 @@ contracts:
   - name: 'toast-anatomy'
     type: schema
     path: 'packages/ds-contracts/components/Toast/Toast.contract.json'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "e2e/button-intent-rail.spec.ts on main a88dc10d: 5/5 frameworks rest transparent (rgba(0,0,0,0)), border rgb(179,27,27), label rgb(144,9,9), primary filled; counterfactual with pre-change React tokens fails (rgb(217,45,46)). Hover wash rgb(254,228,228) observed in 24/24 browser samples across all five (one-off tmp probe; a single cold-start Svelte reading of rgb(179,27,27) did not reproduce). tokens:check-contrast 594 pairs pass."
+    recorded_at: "2026-09-23T02:42:18.632Z"
+    command: FSDS_E2E_PORT=5392 pnpm exec playwright test e2e/button-intent-rail.spec.ts
+    exit_code: 0
+    commit_sha: a88dc10d
