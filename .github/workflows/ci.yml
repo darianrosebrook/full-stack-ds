@@ -49,6 +49,13 @@ jobs:
           node --test scripts/prepush-scope.test.mjs
           node scripts/rail-toolchain-coupling-audit.mjs --check
 
+      # worktree-install decides which node_modules a worktree install may
+      # write; its contract test runs unconditionally for the same reason the
+      # classifier's does. CI has no worktrees, so the live --check runs only
+      # in the pre-push hook.
+      - name: Check worktree dependency isolation contract
+        run: node --test scripts/worktree-install.test.mjs
+
       # Attribution guard — the authority for a rule the local hooks can only
       # advise on. GitHub derives the repository contributors list from commit
       # authors AND from `Co-authored-by:` trailers whose email maps to an

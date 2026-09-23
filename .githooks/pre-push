@@ -106,6 +106,15 @@ eval "$FLAGS"
 echo ""; say "pre-push classifier contract"
 node --test scripts/prepush-scope.test.mjs
 
+# Dependency isolation: every gate below resolves through this tree's
+# node_modules, so a link repointed into a caws worktree (a worktree install
+# writing through a shared node_modules) would make them prove another tree's
+# packages. Unconditional because the drift is in gitignored state no changed
+# path can reveal.
+echo ""; say "dependency isolation (worktree-install contract + check)"
+node --test scripts/worktree-install.test.mjs
+node scripts/worktree-install.mjs --check
+
 # --- attribution guard: unconditional, range-scoped, and cheap enough to run
 #     before everything else. GitHub publishes every `Co-authored-by:` trailer
 #     whose email maps to an account as a repository contributor and offers no
