@@ -101,3 +101,9 @@ evidence:
     command: "CAT_URL=http://localhost:5199/cat.html pnpm run verify:cat"
     exit_code: 0
     commit_sha: "55d82d23"
+  - criterion_id: A6
+    status: pass
+    evidence_ref: "mug.mjs: tablet drag across laptop left paw max x -0.575, phone drag right paw min x 0.575; saucer click peak tilt 0.34 (limit 0.5), 0.003 at 3.4s; tablet and desk drags onto mug paw-to-centre 0.46 == wall, tilt 0.15-0.18, slosh 0.138, spin 0.32; drag.mjs phone up drags stay x>=0.575; reach.test.ts 14 tests pass"
+    recorded_at: "2026-09-23T05:44:51.446Z"
+    command: node tmp/cat-review/mug.mjs; pnpm exec vitest run src/cat/reach.test.ts
+    commit_sha: "55d82d23"
