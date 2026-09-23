@@ -47,8 +47,8 @@ acceptance:
       the wood is byte-identical because it uses a seeded RNG, and it has plank end
       joints and per-plank variation
   - id: A5
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
-    then: 'given the changed scene; when verify:cat runs; then every paw/key/screen check still passes'
+    given: 'the changed scene'
+    when: 'verify:cat runs against a dev server'
+    then: 'every check passes'
 non_functional: {}
 contracts: []
