@@ -1,7 +1,7 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { Modal, Pressable, Text as RNText, View } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { BackHandler, Modal, Pressable, Text as RNText, View } from "react-native";
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createSheetStyles } from "./Sheet.styles";
 // @generated:end
@@ -56,6 +56,69 @@ export function Sheet({
     onOpenChange?.(next);
   }, [controlledOpenness, onOpenChange]);
 
+  useEffect(() => {
+    if (modal || !openness) return undefined;
+    const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
+      setOpennessValue(false);
+      return true;
+    });
+    return () => subscription.remove();
+  }, [modal, openness, setOpennessValue]);
+
+  const surfaceTree = (
+    <View
+      testID={testID}
+      style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
+    >
+      {openness && modal ? (
+      <Pressable
+        style={styles.overlay}
+        onPress={() => setOpennessValue(false)}
+        accessible={false}
+      />
+      ) : null}
+      {openness ? (
+      <View
+        style={styles.content}
+        accessibilityLabel={ariaLabel}
+      >
+        <View
+          style={styles.header}
+        >
+          <View
+            style={styles.title}
+          >
+            {slots?.title}
+          </View>
+          <RNText
+            style={styles.description}
+            accessibilityRole="text"
+          >
+            {slots?.description}
+          </RNText>
+          <Pressable
+            style={styles.close}
+            onPress={() => setOpennessValue(false)}
+            accessibilityRole="button"
+          />
+        </View>
+        <View
+          style={styles.body}
+        >
+          {typeof children === "string" ? <RNText>{children}</RNText> : children}
+        </View>
+        <View
+          style={styles.footer}
+        >
+          {slots?.footer}
+        </View>
+      </View>
+      ) : null}
+    </View>
+  );
+  if (!modal) return openness ? surfaceTree : null;
   return (
     <Modal
       visible={Boolean(openness)}
@@ -63,57 +126,7 @@ export function Sheet({
       animationType="slide"
       onRequestClose={() => setOpennessValue(false)}
     >
-      <View
-        testID={testID}
-        style={[styles.root, style]}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityLabelledBy={accessibilityLabelledBy}
-      >
-        {openness ? (
-        <Pressable
-          style={styles.overlay}
-          onPress={() => setOpennessValue(false)}
-          accessible={false}
-        />
-        ) : null}
-        {openness ? (
-        <View
-          style={styles.content}
-          accessibilityLabel={ariaLabel}
-        >
-          <View
-            style={styles.header}
-          >
-            <View
-              style={styles.title}
-            >
-              {slots?.title}
-            </View>
-            <RNText
-              style={styles.description}
-              accessibilityRole="text"
-            >
-              {slots?.description}
-            </RNText>
-            <Pressable
-              style={styles.close}
-              onPress={() => setOpennessValue(false)}
-              accessibilityRole="button"
-            />
-          </View>
-          <View
-            style={styles.body}
-          >
-            {typeof children === "string" ? <RNText>{children}</RNText> : children}
-          </View>
-          <View
-            style={styles.footer}
-          >
-            {slots?.footer}
-          </View>
-        </View>
-        ) : null}
-      </View>
+      {surfaceTree}
     </Modal>
   );
 }

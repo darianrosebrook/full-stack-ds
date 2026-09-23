@@ -1,7 +1,7 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { Modal, Pressable, Text as RNText, View } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { BackHandler, Modal, Pressable, Text as RNText, View } from "react-native";
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createDialogStyles } from "./Dialog.styles";
 // @generated:end
@@ -62,6 +62,64 @@ export function Dialog({
     onOpenChange?.(next);
   }, [controlledOpenness, onOpenChange]);
 
+  useEffect(() => {
+    if (modal || !openness) return undefined;
+    const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
+      if (!(closeOnEscape ?? true)) return false;
+      setOpennessValue(false);
+      return true;
+    });
+    return () => subscription.remove();
+  }, [modal, openness, setOpennessValue, closeOnEscape]);
+
+  const surfaceTree = (
+    <View
+      testID={testID}
+      style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
+    >
+      {openness && modal ? (
+      <Pressable
+        style={styles.backdrop}
+        onPress={() => { if (closeOnBackdropClick ?? true) setOpennessValue(false); }}
+        accessible={false}
+      />
+      ) : null}
+      {openness ? (
+      <View
+        style={styles.modal}
+        accessibilityLabel={ariaLabel}
+      >
+        <View
+          style={styles.header}
+        >
+          <View
+            style={styles.title}
+          >
+            {slots?.title}
+          </View>
+          <Pressable
+            style={styles.closeButton}
+            onPress={() => setOpennessValue(false)}
+            accessibilityRole="button"
+          />
+        </View>
+        <View
+          style={styles.body}
+        >
+          {typeof children === "string" ? <RNText>{children}</RNText> : children}
+        </View>
+        <View
+          style={styles.footer}
+        >
+          {slots?.footer}
+        </View>
+      </View>
+      ) : null}
+    </View>
+  );
+  if (!modal) return openness ? surfaceTree : null;
   return (
     <Modal
       visible={Boolean(openness)}
@@ -69,51 +127,7 @@ export function Dialog({
       animationType="fade"
       onRequestClose={() => { if (closeOnEscape ?? true) setOpennessValue(false); }}
     >
-      <View
-        testID={testID}
-        style={[styles.root, style]}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityLabelledBy={accessibilityLabelledBy}
-      >
-        {openness ? (
-        <Pressable
-          style={styles.backdrop}
-          onPress={() => { if (closeOnBackdropClick ?? true) setOpennessValue(false); }}
-          accessible={false}
-        />
-        ) : null}
-        {openness ? (
-        <View
-          style={styles.modal}
-          accessibilityLabel={ariaLabel}
-        >
-          <View
-            style={styles.header}
-          >
-            <View
-              style={styles.title}
-            >
-              {slots?.title}
-            </View>
-            <Pressable
-              style={styles.closeButton}
-              onPress={() => setOpennessValue(false)}
-              accessibilityRole="button"
-            />
-          </View>
-          <View
-            style={styles.body}
-          >
-            {typeof children === "string" ? <RNText>{children}</RNText> : children}
-          </View>
-          <View
-            style={styles.footer}
-          >
-            {slots?.footer}
-          </View>
-        </View>
-        ) : null}
-      </View>
+      {surfaceTree}
     </Modal>
   );
 }

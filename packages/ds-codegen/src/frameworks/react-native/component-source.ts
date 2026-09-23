@@ -455,6 +455,7 @@ function emitImports(ir: ComponentIR): string {
     rnValueImports.add("Modal");
     if (surfaceOverlayDismiss(ir)) rnValueImports.add("Pressable");
   }
+  if (rnInTreeBackDismiss(ir)) rnValueImports.add("BackHandler");
   if (rnAnchoredSurface(ir)) {
     rnValueImports.add("Dimensions");
     rnValueImports.add("Modal");
@@ -481,7 +482,7 @@ function emitImports(ir: ComponentIR): string {
   if (usage.channelSetters.size > 0) {
     reactImports.add("useCallback");
   }
-  if (rnAutoDismiss(ir)) {
+  if (rnAutoDismiss(ir) || rnInTreeBackDismiss(ir)) {
     reactImports.add("useEffect");
   }
   if (rnAnchoredSurface(ir)) {
@@ -991,7 +992,8 @@ function emitComponent(ir: ComponentIR): string {
     lines.push(...emitVariantStyleConsts(ir));
     const surfaceModal =
       ir.dom !== undefined ? rnSurfaceModalLowering(ir) : null;
-    const rendered = emitNode(ir.dom, ir, surfaceModal ? 3 : 2) ?? [
+    const modalProp = surfaceModal ? rnModalityGateProp(ir) : undefined;
+    const rendered = emitNode(ir.dom, ir, surfaceModal && !modalProp ? 3 : 2) ?? [
       `${INDENT}${INDENT}<View`,
       `${INDENT}${INDENT}${INDENT}testID={testID}`,
       `${INDENT}${INDENT}${INDENT}style={[styles.root, style]}`,
@@ -1001,6 +1003,12 @@ function emitComponent(ir: ComponentIR): string {
       `${INDENT}${INDENT}${INDENT}{children}`,
       `${INDENT}${INDENT}</View>`,
     ].join("\n");
+    if (surfaceModal && modalProp) {
+      if (rnInTreeBackDismiss(ir)) lines.push(...emitInTreeBackDismiss(ir, surfaceModal, modalProp));
+      lines.push(`${INDENT}const surfaceTree = (`, rendered, `${INDENT});`);
+      // Non-modal: the panel lives in the consumer's tree, not a Modal host.
+      lines.push(`${INDENT}if (!${modalProp}) return ${surfaceModal.openChannel!.name} ? surfaceTree : null;`);
+    }
     lines.push(`${INDENT}return (`);
     if (surfaceModal) {
       const channel = surfaceModal.openChannel!;
@@ -1016,7 +1024,7 @@ function emitComponent(ir: ComponentIR): string {
         );
       }
       lines.push(`${INDENT}${INDENT}>`);
-      lines.push(rendered);
+      lines.push(modalProp ? `${INDENT}${INDENT}${INDENT}{surfaceTree}` : rendered);
       lines.push(`${INDENT}${INDENT}</Modal>`);
     } else {
       lines.push(rendered);
@@ -1033,6 +1041,52 @@ function rnSurfaceModalLowering(ir: ComponentIR): RnSurfaceLowering | null {
   const lowering = rnSurfaceLowering(ir);
   if (!lowering || lowering.mode !== "modal" || !lowering.openChannel) return null;
   return lowering;
+}
+
+/**
+ * The modality prop of a Modal-hosted surface (`surface.modalityProp`), or
+ * undefined when the contract declares none. RN's Modal is modal by
+ * construction, so a false value must leave the Modal host entirely: the
+ * panel renders in-tree, touches outside it reach the rest of the screen,
+ * and no overlay renders.
+ */
+export function rnModalityGateProp(ir: ComponentIR): string | undefined {
+  const gate = ir.surface?.modalityGate;
+  if (!gate || !rnSurfaceModalLowering(ir)) return undefined;
+  return safePropName(ir, gate.prop);
+}
+
+/**
+ * In-tree back dismissal: Modal.onRequestClose carries the escape dismissal
+ * while modal; once the panel is in-tree nothing delivers the Android back
+ * press, so a BackHandler subscription takes over while open and non-modal.
+ */
+function rnInTreeBackDismiss(ir: ComponentIR): boolean {
+  const lowering = rnSurfaceModalLowering(ir);
+  return rnModalityGateProp(ir) !== undefined && lowering?.escapeDeclared === true;
+}
+
+function emitInTreeBackDismiss(ir: ComponentIR, lowering: RnSurfaceLowering, modalProp: string): string[] {
+  const channel = lowering.openChannel!.name;
+  const setter = `set${capitalize(channel)}Value`;
+  const trigger = lowering.escapeTrigger;
+  const enabledBy = trigger?.enabledByProp ? safePropName(ir, trigger.enabledByProp) : undefined;
+  const deps = [modalProp, channel, setter, ...(enabledBy ? [enabledBy] : [])];
+  return [
+    `${INDENT}useEffect(() => {`,
+    `${INDENT}${INDENT}if (${modalProp} || !${channel}) return undefined;`,
+    `${INDENT}${INDENT}const subscription = BackHandler.addEventListener("hardwareBackPress", () => {`,
+    // Returning false hands the press back to navigation when dismissal is off.
+    ...(enabledBy
+      ? [`${INDENT}${INDENT}${INDENT}if (!(${enabledBy} ?? ${trigger!.defaultEnabled})) return false;`]
+      : []),
+    `${INDENT}${INDENT}${INDENT}${setter}(false);`,
+    `${INDENT}${INDENT}${INDENT}return true;`,
+    `${INDENT}${INDENT}});`,
+    `${INDENT}${INDENT}return () => subscription.remove();`,
+    `${INDENT}}, [${deps.join(", ")}]);`,
+    "",
+  ];
 }
 
 /**
@@ -1601,10 +1655,8 @@ function emitNode(
     return applyIfGuard(rendered, node, ir, pad);
   }
 
-  const component =
-    node.part !== undefined && node.part === surfaceOverlayPartName(ir)
-      ? "Pressable"
-      : rnComponentForNodeInIr(ir, node);
+  const isOverlay = node.part !== undefined && node.part === surfaceOverlayPartName(ir);
+  const component = isOverlay ? "Pressable" : rnComponentForNodeInIr(ir, node);
   const attrs = emitNodeProps(node, ir, component, depth + 1, keyExpr);
   const childLines = emitNodeChildren(node, ir, depth + 1);
   const pad = INDENT.repeat(depth);
@@ -1614,7 +1666,8 @@ function emitNode(
   } else {
     rendered = [`${pad}<${component}`, ...attrs, `${pad}>`, ...childLines, `${pad}</${component}>`].join("\n");
   }
-  return applyIfGuard(rendered, node, ir, pad);
+  // A non-modal surface renders no overlay (the web backdrop is hidden too).
+  return applyIfGuard(rendered, node, ir, pad, isOverlay ? rnModalityGateProp(ir) : undefined);
 }
 
 /**
@@ -2041,14 +2094,18 @@ function applyIfGuard(
   node: DomNodeIR,
   ir: ComponentIR,
   pad: string,
+  extraGuard?: string,
 ): string {
-  if (!node.ifProp && !node.ifSlot) return rendered;
+  if (!node.ifProp && !node.ifSlot && !extraGuard) return rendered;
   // `if: "slot:<name>"`: the named slot arrives on the same `slots` prop the
   // slot node itself renders from.
   const expr = node.ifSlot
     ? `slots?.${node.ifSlot}`
-    : ifGuardExpr(node.ifProp!, ir);
-  const guard = node.ifNegated ? `!(${expr})` : expr;
+    : node.ifProp
+      ? ifGuardExpr(node.ifProp, ir)
+      : undefined;
+  const nodeGuard = expr === undefined ? undefined : node.ifNegated ? `!(${expr})` : expr;
+  const guard = [nodeGuard, extraGuard].filter(Boolean).join(" && ");
   return [`${pad}{${guard} ? (`, rendered, `${pad}) : null}`].join("\n");
 }
 
