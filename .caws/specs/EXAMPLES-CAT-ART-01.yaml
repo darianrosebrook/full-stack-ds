@@ -60,5 +60,15 @@ acceptance:
     given: 'the changed scene'
     when: 'verify:cat runs against a dev server'
     then: 'every check passes'
+  - id: A6
+    given: 'the mug on its saucer, and a paw working the tablet or phone'
+    when: >-
+      a pointer is dragged from a handheld across the laptop, dragged into the mug,
+      or clicks the saucer or mug
+    then: >-
+      a handheld's paw never crosses the trackpad's nearest edge; only the left paw
+      reaches the mug, stopping at its near wall; a press leans it slightly and
+      spins it, a click rocks it on its base rim toward but never past 0.5 rad and
+      it settles upright, and the coffee sloshes
 non_functional: {}
 contracts: []
