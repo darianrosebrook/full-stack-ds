@@ -62,3 +62,7 @@ evidence:
     status: pass
     evidence_ref: "node --test scripts/worktree-install.test.mjs @ b8eb5fa1 (12/12): 'canonical check flags a dependency link repointed into a worktree, and passes a local one'; mutation 'no nested-worktree rule' killed"
     recorded_at: "2026-09-23T04:07:47.485Z"
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "live: node scripts/worktree-install.mjs (unlinked 16, frozen install 14.4s) then --check exit 0 in worktree; canonical isolationViolations=0 with link digest 8a8037ce89289529 (163 links) identical before/after the worktree install; pnpm test in worktree 305 files/4367 tests passed"
+    recorded_at: "2026-09-23T04:07:49.091Z"
