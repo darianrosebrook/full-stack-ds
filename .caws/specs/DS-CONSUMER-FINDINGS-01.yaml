@@ -93,3 +93,10 @@ evidence:
     command: per-framework Toast suites + e2e/toast-live-region-rail.spec.ts
     exit_code: 0
     commit_sha: a88dc10d
+  - criterion_id: A4
+    status: pass
+    evidence_ref: "Viewport role=region aria-label=Notifications, aria-live polite by default and assertive when set, item role=status, zero role=alert: 5/5 browser rail on main and per-framework unit tests (fail against pre-change components). Angular DOM-tree emitter now applies ir.root.rootRole (parity with React for Toast, Avatar, Field, NavTree, Spinner, ToggleSwitch). Not checked with a screen reader."
+    recorded_at: "2026-09-23T02:42:30.000Z"
+    command: e2e/toast-live-region-rail.spec.ts + Toast framework suites
+    exit_code: 0
+    commit_sha: a88dc10d
