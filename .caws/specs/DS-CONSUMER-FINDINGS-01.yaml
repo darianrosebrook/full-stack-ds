@@ -86,3 +86,10 @@ evidence:
     command: FSDS_E2E_PORT=5392 pnpm exec playwright test e2e/modality-rail.spec.ts
     exit_code: 0
     commit_sha: a88dc10d
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Action is a named slot: filled slot renders in .toast__action in React/Vue/Svelte/Lit/Angular Toast custom-region tests (each fails against pre-change components). if: \"slot:<name>\" guard omits the wrapper when unfilled in React/Vue/Svelte/Lit/RN; Angular renders it empty and .toast__action:empty hides it (toast-live-region-rail angular row fails without the rule). Content-less if-guards were already honoured by all five emitters at base (spec premise corrected); dom-tree.test.ts pins slot-guard lowering and validation."
+    recorded_at: "2026-09-23T02:42:29.414Z"
+    command: per-framework Toast suites + e2e/toast-live-region-rail.spec.ts
+    exit_code: 0
+    commit_sha: a88dc10d
