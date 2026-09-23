@@ -79,3 +79,10 @@ evidence:
     command: FSDS_E2E_PORT=5392 pnpm exec playwright test e2e/button-intent-rail.spec.ts
     exit_code: 0
     commit_sha: a88dc10d
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "e2e/modality-rail.spec.ts on main a88dc10d: 20/20 (Sheet+Dialog x 5 frameworks x {default, modal=false}) assert aria-modal, backdrop display, body overflow lock, Tab escape; ungated React useSheet counterfactual fails (overflow hidden). surface-ir.test.ts pins modalityGate validation. Includes Lit FocusTrapController shadow-DOM fix (Lit default trap previously never wrapped)."
+    recorded_at: "2026-09-23T02:42:28.828Z"
+    command: FSDS_E2E_PORT=5392 pnpm exec playwright test e2e/modality-rail.spec.ts
+    exit_code: 0
+    commit_sha: a88dc10d
