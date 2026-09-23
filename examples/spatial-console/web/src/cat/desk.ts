@@ -6,6 +6,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { KEY_CELLS, KEYBOARD_ROWS, KEYBOARD_WIDTH_UNITS, keyCell, pawForCode, type Paw } from "./keyboard-layout";
 import { TaperedTube, contactShadowTexture, flatSlab, roundedRect, slab, woodPlan, woodTexture } from "./art";
+import { Wobble, clampToReach, pressAgainst } from "./reach";
 
 // World units: 1 = 10 cm. The laptop sits at the origin with its keyboard
 // facing the camera (+z); the typist — the cat — is behind the camera side.
@@ -28,6 +29,13 @@ const CAT_Z = 2.9;
 // wrist, no elbow, and they stretch to wherever the paw goes. The white sock
 // at the wrist keeps its length; only the black pole stretches.
 const SOCK_LENGTH = 0.3;
+// The mug: a paw stops against its wall (rim radius plus a paw) and can reach
+// anywhere within CUP_REACH of it, past the keyboard's back line.
+const CUP_CONTACT = 0.36 + 0.1;
+const CUP_REACH = 0.85;
+// A bat at the saucer rocks the mug toward, but never past, MUG_MAX_TILT.
+const MUG_MAX_TILT = 0.5;
+const MUG_TIP_SPEED = 3.4;
 const WOOD_SEED = 20260922;
 
 /** Unlit, colour-exact material for a drawn DOM snapshot (see scene.ts). */
@@ -100,8 +108,12 @@ export interface Desk {
     lean(): number;
     pawMode(side: "left" | "right"): PawMode;
     catWorld(): { x: number; y: number; z: number };
-    /** The top-down box, in world x/z, that paws never reach beyond. */
-    reach(): { minX: number; maxX: number; minZ: number; maxZ: number };
+    /** Where paws may reach: a top-down box, plus a disc around the mug. */
+    reach(): { minX: number; maxX: number; minZ: number; maxZ: number; cup: { x: number; z: number; r: number } };
+    /** The mug: its centre, its tilt and the coffee's slosh (radians), its spin. */
+    cup(): { x: number; z: number; tilt: number; slosh: number; spin: number; contact: number };
+    /** Window px for a world point. */
+    project(x: number, y: number, z: number): { x: number; y: number };
     /** The paw's current scroll stroke, element px; decays to 0. */
     scrollStroke(): number;
     /**
@@ -339,8 +351,17 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
   const coffee = new THREE.Mesh(new THREE.CircleGeometry(0.328, 48), new THREE.MeshPhysicalMaterial({ color: 0x1f130b, roughness: 0.1, clearcoat: 1 }));
   coffee.rotation.x = -Math.PI / 2;
   coffee.position.y = 0.52;
-  cup.add(saucer, mug, handle, coffee);
+  cup.add(saucer);
   contactShadow(cup, 1.6, 1.6, 0.5);
+  // The mug rocks on its base rim in a world-aligned rig; it spins inside it,
+  // and the coffee stays in the rig (a disc does not care about spin).
+  const mugRig = new THREE.Group();
+  mugRig.position.copy(cup.position);
+  scene.add(mugRig);
+  const mugSpin = new THREE.Group();
+  mugSpin.rotation.y = cup.rotation.y;
+  mugSpin.add(mug, handle);
+  mugRig.add(mugSpin, coffee);
 
   // --- notebook and pencil, to balance the cup ------------------------------
   const notebook = new THREE.Group();
@@ -573,8 +594,9 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
 
   // How far a paw reaches, as a top-down box around the scene: from the back
   // row of keys (so a paw never pushes into the lid) to the back of the cat,
-  // and out to the outermost corners of the tablet and phone. A pointer
-  // dragged off a screen's edge pins the paw at the box's edge.
+  // and out to the outermost corners of the tablet and phone; plus a disc
+  // around the mug, so it can just be reached. A pointer dragged off a
+  // screen's edge pins the paw at the edge of that region.
   const outermostX = (device: THREE.Group, size: { width: number; depth: number }, side: number) => {
     device.updateMatrixWorld(true);
     const corners = [-1, 1].flatMap((sx) => [-1, 1].map((sz) => new THREE.Vector3((sx * size.width) / 2, 0, (sz * size.depth) / 2)));
@@ -586,6 +608,53 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     maxX: outermostX(phone, PHONE, 1),
     minZ: KEYBOARD_BACK_Z,
     maxZ: new THREE.Box3().setFromObject(body).max.z,
+  };
+  const cupDisc = { x: cup.position.x, z: cup.position.z, r: CUP_REACH };
+
+  // The mug. A paw pressing into it bumps it (it leans away, by how hard) and
+  // spins it a little by which side it was hit; a bat at the saucer rocks it
+  // on its rim to the edge of tipping. The coffee lags the mug, so it sloshes.
+  const mugTilt = new Wobble(40, 3, MUG_MAX_TILT);
+  const slosh = new Wobble(110, 2.2, 0.14);
+  let mugSpinSpeed = 0;
+  let pressing = false;
+  const bump = { x: 0, z: 0 };
+  // A click (or a drag) on the mug or saucer: the left paw goes there; a
+  // click also knocks the mug when the paw arrives.
+  let cupPoke: { point: THREE.Vector3; until: number; knock: boolean } | null = null;
+  const raycaster = new THREE.Raycaster();
+  const cupHit = (clientX: number, clientY: number) => {
+    const rect = canvas.getBoundingClientRect();
+    raycaster.setFromCamera(new THREE.Vector2(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1), camera);
+    return raycaster.intersectObjects([saucer, mug, handle, coffee], false)[0]?.point ?? null;
+  };
+  const pokeCup = (at: THREE.Vector3, knock: boolean) => {
+    const now = performance.now();
+    cupPoke = { point: new THREE.Vector3(at.x, 0.04, at.z), until: now + 700, knock };
+    if (knock) paws.left.slapStart = now;
+  };
+  // Rock on the base rim: the rim point on the side the mug leans toward
+  // stays put while the mug turns about it.
+  const MUG_RIM = { radius: 0.295, y: 0.035 };
+  const tiltQuaternion = (t: { x: number; z: number }) => {
+    const angle = Math.hypot(t.x, t.z);
+    return angle < 1e-6 ? new THREE.Quaternion() : new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(t.z / angle, 0, -t.x / angle), angle);
+  };
+  const flat = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
+  const poseMug = (dt: number) => {
+    // Leaning away from a pressing paw, by how hard it presses.
+    mugTilt.step(dt, bump);
+    const angle = mugTilt.magnitude;
+    const q = tiltQuaternion(mugTilt.tilt);
+    const rim = angle < 1e-6 ? new THREE.Vector3() : new THREE.Vector3((mugTilt.tilt.x / angle) * MUG_RIM.radius, MUG_RIM.y, (mugTilt.tilt.z / angle) * MUG_RIM.radius);
+    mugRig.quaternion.copy(q);
+    mugRig.position.copy(cup.position).add(rim).sub(rim.clone().applyQuaternion(q));
+    // The coffee wants to stay level, so relative to the mug it tilts back
+    // against it, and overshoots.
+    slosh.step(dt, { x: -mugTilt.tilt.x * 0.8, z: -mugTilt.tilt.z * 0.8 });
+    coffee.quaternion.copy(tiltQuaternion(slosh.tilt)).multiply(flat);
+    mugSpin.rotation.y += mugSpinSpeed * dt;
+    mugSpinSpeed *= Math.exp(-dt * 3);
   };
 
   const trackpadToWorld = (u: number, v: number) =>
@@ -702,6 +771,9 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     );
     const move = (e: PointerEvent) => {
       clearTimeout(deferredMove);
+      // Dragging across the mug or saucer on the desk reaches for it.
+      const onCup = !frame && e.buttons & 1 ? cupHit(e.clientX, e.clientY) : null;
+      if (onCup) return pokeCup(onCup, false);
       if (keysHeld && keysHeld.device !== device && performance.now() < keysHeld.until) {
         deferredMove = setTimeout(() => move(e), keysHeld.until - performance.now() + 1);
         return;
@@ -720,6 +792,9 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       "pointerdown",
       (e) => {
         keysHeld = null;
+        // A click on the mug or saucer bats at it.
+        const onCup = frame ? null : cupHit(e.clientX, e.clientY);
+        if (onCup) return pokeCup(onCup, true);
         move(e);
         if (device === "laptop") paws.right.slapStart = performance.now();
         else tapScreen(device, e.clientX, e.clientY);
@@ -780,14 +855,34 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     // the trackpad's corner on that side instead of stretching back across
     // its body to the home keys.
     const resting = mode === "keys" && attention === (p.side === "right" ? "tablet" : "phone");
-    // A paw not busy with a pointer or a recent key drifts home: to the keys,
-    // or to that trackpad corner while leaning.
-    if (mode === "keys" && now - p.slapStart > 600 && !(p.side === "right" && now - lastPointerAt < 2500)) {
+    // A click or drag on the mug sends the left paw there. Otherwise a paw not
+    // busy with a pointer or a recent key drifts home: to the keys, or to that
+    // trackpad corner while leaning.
+    const poking = p.side === "left" && cupPoke !== null && now < cupPoke.until;
+    if (poking) p.target.copy(cupPoke!.point);
+    else if (mode === "keys" && now - p.slapStart > 600 && !(p.side === "right" && now - lastPointerAt < 2500)) {
       const home = resting ? trackpadToWorld(p.side === "right" ? 0.08 : 0.92, 0.92) : p.rest;
       p.target.lerp(home, 1 - Math.exp(-dt * 3));
     }
-    p.target.x = THREE.MathUtils.clamp(p.target.x, REACH.minX, REACH.maxX);
-    p.target.z = THREE.MathUtils.clamp(p.target.z, REACH.minZ, REACH.maxZ);
+    // A paw working a handheld stays on its own side of the laptop: no
+    // further in than the trackpad's nearest edge, however far a drag goes.
+    if (mode === "tablet") p.target.x = Math.min(p.target.x, -TRACKPAD.width / 2);
+    if (mode === "phone") p.target.x = Math.max(p.target.x, TRACKPAD.width / 2);
+    // Only the left paw, on the tablet's side, can reach the mug.
+    if (p.side === "right") {
+      const reached = clampToReach(p.target, REACH);
+      p.target.x = reached.x;
+      p.target.z = reached.z;
+    } else {
+      const against = pressAgainst(clampToReach(p.target, REACH, cupDisc), p.shoulder, cupDisc, CUP_CONTACT);
+      p.target.x = against.x;
+      p.target.z = against.z;
+      const lean = Math.min(against.press * 0.3, 0.12);
+      bump.x = against.away.x * lean;
+      bump.z = against.away.z * lean;
+      if (against.press > 0 && !pressing) mugSpinSpeed += Math.sign(against.lateral || 1) * 1.2;
+      pressing = against.press > 0;
+    }
     p.position.lerp(p.target, 1 - Math.exp(-dt * 28));
     // Slap: a fast drop onto the surface and a slower rebound.
     const t = (now - p.slapStart) / SLAP_MS;
@@ -838,6 +933,13 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     posePaw(paws.right, now, dt);
     placeArm(paws.left);
     placeArm(paws.right);
+    if (cupPoke?.knock && paws.left.position.distanceTo(cupPoke.point) < 0.25) {
+      const away = new THREE.Vector3().subVectors(cupPoke.point, paws.left.shoulder).setY(0).normalize();
+      mugTilt.kick({ x: away.x, z: away.z }, MUG_TIP_SPEED);
+      mugSpinSpeed += 0.8;
+      cupPoke.knock = false;
+    }
+    poseMug(dt);
     for (const [i, at] of keyDepress) {
       const age = now - at;
       keyMatrix(i, age < 120 ? 0.018 : 0);
@@ -897,7 +999,9 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       lean: () => lean,
       pawMode: (side) => pawMode(side, performance.now()),
       catWorld: () => plain(cat.position),
-      reach: () => ({ ...REACH }),
+      reach: () => ({ ...REACH, cup: { ...cupDisc } }),
+      cup: () => ({ x: cupDisc.x, z: cupDisc.z, tilt: mugTilt.magnitude, slosh: slosh.magnitude, spin: mugSpin.rotation.y - cup.rotation.y, contact: CUP_CONTACT }),
+      project: (x, y, z) => toScreen(new THREE.Vector3(x, y, z)),
       scrollStroke: () => scrollStroke,
       arm: (side) => {
         const p = paws[side];
