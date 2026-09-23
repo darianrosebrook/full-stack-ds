@@ -14,6 +14,8 @@ const LAPTOP = { width: 3.1, depth: 2.15, thickness: 0.08 };
 const KEY_UNIT = 0.178;
 const KEY_SIZE = 0.155;
 const KEYBOARD_BACK_Z = -0.92;
+const TABLET = { width: 1.46, depth: 1.98 };
+const PHONE = { width: 0.74, depth: 1.5 };
 const TRACKPAD = { width: 1.15, depth: 0.72, centerZ: 0.6 };
 const PAW_HOVER = 0.28;
 const SLAP_MS = 150;
@@ -98,6 +100,8 @@ export interface Desk {
     lean(): number;
     pawMode(side: "left" | "right"): PawMode;
     catWorld(): { x: number; y: number; z: number };
+    /** The top-down box, in world x/z, that paws never reach beyond. */
+    reach(): { minX: number; maxX: number; minZ: number; maxZ: number };
     /** The paw's current scroll stroke, element px; decays to 0. */
     scrollStroke(): number;
     /**
@@ -304,10 +308,10 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
     scene.add(group);
     return group;
   };
-  const tablet = handheld(1.46, 1.98, 0.07, 0.13);
+  const tablet = handheld(TABLET.width, TABLET.depth, 0.07, 0.13);
   tablet.position.set(-2.95, 0, 0.35);
   tablet.rotation.y = 0.38;
-  const phone = handheld(0.74, 1.5, 0.06, 0.1);
+  const phone = handheld(PHONE.width, PHONE.depth, 0.06, 0.1);
   phone.position.set(2.75, 0, 0.3);
   phone.rotation.y = -0.28;
 
@@ -567,6 +571,23 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
   const hoverAt: Record<"tablet" | "phone", { x: number; y: number } | null> = { tablet: null, phone: null };
   const screenFor = (device: Device) => all.find((s) => s.element === screens[device])!;
 
+  // How far a paw reaches, as a top-down box around the scene: from the back
+  // row of keys (so a paw never pushes into the lid) to the back of the cat,
+  // and out to the outermost corners of the tablet and phone. A pointer
+  // dragged off a screen's edge pins the paw at the box's edge.
+  const outermostX = (device: THREE.Group, size: { width: number; depth: number }, side: number) => {
+    device.updateMatrixWorld(true);
+    const corners = [-1, 1].flatMap((sx) => [-1, 1].map((sz) => new THREE.Vector3((sx * size.width) / 2, 0, (sz * size.depth) / 2)));
+    return side * Math.max(...corners.map((c) => side * c.applyMatrix4(device.matrixWorld).x));
+  };
+  cat.updateMatrixWorld(true);
+  const REACH = {
+    minX: outermostX(tablet, TABLET, -1),
+    maxX: outermostX(phone, PHONE, 1),
+    minZ: KEYBOARD_BACK_Z,
+    maxZ: new THREE.Box3().setFromObject(body).max.z,
+  };
+
   const trackpadToWorld = (u: number, v: number) =>
     new THREE.Vector3(
       (u - 0.5) * TRACKPAD.width * 0.9,
@@ -765,6 +786,8 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       const home = resting ? trackpadToWorld(p.side === "right" ? 0.08 : 0.92, 0.92) : p.rest;
       p.target.lerp(home, 1 - Math.exp(-dt * 3));
     }
+    p.target.x = THREE.MathUtils.clamp(p.target.x, REACH.minX, REACH.maxX);
+    p.target.z = THREE.MathUtils.clamp(p.target.z, REACH.minZ, REACH.maxZ);
     p.position.lerp(p.target, 1 - Math.exp(-dt * 28));
     // Slap: a fast drop onto the surface and a slower rebound.
     const t = (now - p.slapStart) / SLAP_MS;
@@ -874,6 +897,7 @@ export function createDesk(canvas: HTMLCanvasElement, screens: {
       lean: () => lean,
       pawMode: (side) => pawMode(side, performance.now()),
       catWorld: () => plain(cat.position),
+      reach: () => ({ ...REACH }),
       scrollStroke: () => scrollStroke,
       arm: (side) => {
         const p = paws[side];
