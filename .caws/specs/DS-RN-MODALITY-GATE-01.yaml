@@ -49,3 +49,10 @@ evidence:
     recorded_at: "2026-09-23T04:57:44.470Z"
     test_nodeid: "packages/ds-react-native/src/components/Dialog/__tests__/Dialog.test.tsx > Dialog React Native > renders in-tree with no Modal host and no overlay when modal is false"
     commit_sha: "109314ba1b072dc92bbe74620931f2cfaef05d32"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "Post-merge on main: 'renders a native modal bound to the open channel', 'hides the modal when closed', 'keeps the Modal host and overlay when modal is omitted' and 'dismisses on overlay press' pass for Dialog and Sheet; the omitted-modal test also passes on pre-fix output (regression pin: behavior unchanged when modal is omitted/true)."
+    recorded_at: "2026-09-23T04:58:59.968Z"
+    command: "pnpm --filter @full-stack-ds/react-native exec vitest run src/components/Dialog src/components/Sheet --reporter=verbose"
+    exit_code: 0
+    commit_sha: "109314ba1b072dc92bbe74620931f2cfaef05d32"
