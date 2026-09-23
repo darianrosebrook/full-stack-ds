@@ -39,3 +39,8 @@ acceptance:
     then: 'the frame reads as over-the-cat''s-shoulder looking down at the desk, per the reference layout'
 non_functional: {}
 contracts: []
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "node examples/spatial-console/web/e2e/verify-cat.mjs on main 0a87c614 (31/31): A1 checks laptop innerWidth 1152 two columns, tablet 768 one column, phone 390 stacked actions + wrapped nav, all uploaded"
+    recorded_at: "2026-09-23T00:02:22.973Z"
