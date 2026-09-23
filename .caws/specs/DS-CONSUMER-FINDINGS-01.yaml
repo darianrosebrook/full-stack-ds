@@ -100,3 +100,10 @@ evidence:
     command: e2e/toast-live-region-rail.spec.ts + Toast framework suites
     exit_code: 0
     commit_sha: a88dc10d
+  - criterion_id: A5
+    status: pass
+    evidence_ref: "On main a88dc10d: governed:rail Overall PASS (6 frameworks), generate:check 52/52, regeneration leaves tree clean (committed bytes match). In worktree: pnpm test 305 files / 4367 tests; test:frameworks vue 710, lit 534, svelte 665, angular 498, RN 175 all pass (Toast suites re-run after the final :empty change). Audits pass: a11y-realization, behavior-realization, dead-slots, pseudo-state, state-suppression, carrier-reachability, variant-realization, token-resolvability, custom-regions (3 new Toast test regions ledgered). Pre-existing, not this spec: e2e slot-binding-rail 'Command disabled' fails deterministically (opacity 0.16 vs 0.5); branch touches no Command or token source."
+    recorded_at: "2026-09-23T02:42:46.468Z"
+    command: "pnpm run governed:rail && pnpm run generate:check && pnpm test && pnpm run test:frameworks && audits"
+    exit_code: 0
+    commit_sha: a88dc10d
