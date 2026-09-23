@@ -4,6 +4,7 @@ import {
   compoundSelectionSubcomponentNames,
   isCompoundSelectionContainer,
   rnAutoDismiss,
+  rnModalityGateProp,
   stateStyleFacts,
   variantStyleFacts,
   type JoinedStyleEntry,
@@ -624,6 +625,78 @@ function anchoredSurfaceTest(ir: ComponentIR, lowering: RnAnchoredSurfaceLowerin
  *                   callback with false.
  *   non-blocking  → no Modal in the tree; content toggles with the channel.
  */
+/**
+ * `surface.modalityProp` false: RN's Modal is modal by construction, so the
+ * panel must leave the Modal host — in-tree, no overlay, and the Android back
+ * press delivered by BackHandler instead of Modal.onRequestClose.
+ */
+function nonModalSurfaceTests(ir: ComponentIR, lowering: RnSurfaceLowering, modalProp: string): string[] {
+  const channel = lowering.openChannel!;
+  const openProp = channel.valueProp;
+  const handler = channel.changeHandlerProp;
+  // Host nodes only: the shim's components wrap a host element with the same props.
+  const overlayQuery = `renderer!.root.findAll((node) => typeof node.type === "string" && node.props.accessible === false && typeof node.props.onPress === "function")`;
+  const bodyQuery = `renderer!.root.findAll((node) => typeof node.type === "string" && node.props.children === "Body")`;
+  // An open non-modal mount holds a BackHandler listener; unmount so it cannot leak into later tests.
+  const unmount = `${INDENT}${INDENT}act(() => { renderer!.unmount(); });`;
+  const lines = [
+    `${INDENT}it("renders in-tree with no Modal host and no overlay when ${modalProp} is false", () => {`,
+    ...rendererHelper(`<${ir.name} ${openProp} ${modalProp}={false} testID="subject">Body</${ir.name}>`),
+    `${INDENT}${INDENT}expect(renderer!.root.findAllByType(Modal)).toHaveLength(0);`,
+    `${INDENT}${INDENT}expect(${bodyQuery}.length).toBeGreaterThan(0);`,
+    `${INDENT}${INDENT}expect(${overlayQuery}).toHaveLength(0);`,
+    unmount,
+    `${INDENT}});`,
+    `${INDENT}it("renders nothing in-tree while closed when ${modalProp} is false", () => {`,
+    ...rendererHelper(`<${ir.name} ${openProp}={false} ${modalProp}={false} testID="subject">Body</${ir.name}>`),
+    `${INDENT}${INDENT}expect(renderer!.toJSON()).toBeNull();`,
+    unmount,
+    `${INDENT}});`,
+  ];
+  if (lowering.outsideDeclared) {
+    lines.push(
+      `${INDENT}it("keeps the Modal host and overlay when ${modalProp} is omitted", () => {`,
+      ...rendererHelper(`<${ir.name} ${openProp} testID="subject">Body</${ir.name}>`),
+      `${INDENT}${INDENT}expect(renderer!.root.findAllByType(Modal)).toHaveLength(1);`,
+      `${INDENT}${INDENT}expect(${overlayQuery}).toHaveLength(1);`,
+      unmount,
+      `${INDENT}});`,
+    );
+  }
+  if (lowering.escapeDeclared) {
+    const enabledBy = lowering.escapeTrigger?.enabledByProp;
+    lines.push(
+      `${INDENT}it("dismisses on hardware back only while open and non-modal", () => {`,
+      `${INDENT}${INDENT}const seen: boolean[] = [];`,
+      ...rendererHelper(`<${ir.name} ${openProp} ${handler}={(next: boolean) => seen.push(next)} testID="subject">Body</${ir.name}>`),
+      // Modal: Modal.onRequestClose owns the back press, so no listener.
+      `${INDENT}${INDENT}expect(BackHandler.listenerCount()).toBe(0);`,
+      `${INDENT}${INDENT}act(() => { renderer!.update(<${ir.name} ${openProp} ${modalProp}={false} ${handler}={(next: boolean) => seen.push(next)} testID="subject">Body</${ir.name}>); });`,
+      `${INDENT}${INDENT}let consumed = false;`,
+      `${INDENT}${INDENT}act(() => { consumed = BackHandler.press(); });`,
+      `${INDENT}${INDENT}expect(consumed).toBe(true);`,
+      `${INDENT}${INDENT}expect(seen).toEqual([false]);`,
+      unmount,
+      `${INDENT}${INDENT}expect(BackHandler.listenerCount()).toBe(0);`,
+      `${INDENT}});`,
+    );
+    if (enabledBy) {
+      lines.push(
+        `${INDENT}it("hands hardware back to navigation when ${enabledBy} is false", () => {`,
+        `${INDENT}${INDENT}const seen: boolean[] = [];`,
+        ...rendererHelper(`<${ir.name} ${openProp} ${modalProp}={false} ${enabledBy}={false} ${handler}={(next: boolean) => seen.push(next)} testID="subject">Body</${ir.name}>`),
+        `${INDENT}${INDENT}let consumed = true;`,
+        `${INDENT}${INDENT}act(() => { consumed = BackHandler.press(); });`,
+        `${INDENT}${INDENT}expect(consumed).toBe(false);`,
+        `${INDENT}${INDENT}expect(seen).toEqual([]);`,
+        unmount,
+        `${INDENT}});`,
+      );
+    }
+  }
+  return lines;
+}
+
 function surfaceTest(ir: ComponentIR, lowering: RnSurfaceLowering): string {
   const channel = lowering.openChannel!;
   const openProp = channel.valueProp;
@@ -641,6 +714,9 @@ function surfaceTest(ir: ComponentIR, lowering: RnSurfaceLowering): string {
     `import { describe, expect, it${usesTimers ? ", vi" : ""} } from "vitest";`,
     `import TestRenderer, { act, type ReactTestRenderer } from "react-test-renderer";`,
     `import { Modal } from "react-native";`,
+    ...(rnModalityGateProp(ir) && lowering.escapeDeclared
+      ? [`import { BackHandler } from "../../../test-react-native";`]
+      : []),
     `import { ${ir.name} } from "../${ir.name}";`,
     "// @generated:end",
     "",
@@ -672,6 +748,8 @@ function surfaceTest(ir: ComponentIR, lowering: RnSurfaceLowering): string {
       `${INDENT}${INDENT}expect(modal.props.visible).toBe(false);`,
       `${INDENT}});`,
     );
+    const modalProp = rnModalityGateProp(ir);
+    if (modalProp) lines.push(...nonModalSurfaceTests(ir, lowering, modalProp));
     if (lowering.outsideDeclared) {
       lines.push(
         `${INDENT}it("dismisses on overlay press", () => {`,

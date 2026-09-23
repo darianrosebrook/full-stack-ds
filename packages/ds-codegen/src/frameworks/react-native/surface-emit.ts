@@ -15,6 +15,8 @@ import type {
  *       outside-click         → overlay-part Pressable onPress
  *       positioning centered  → animationType "fade"
  *       positioning viewport-edge / fullscreen → animationType "slide"
+ *       surface.modalityProp false → in-tree host, no Modal and no overlay;
+ *         escape dismissal moves to a BackHandler subscription while open
  *   - non-blocking modality (toast)            → in-tree host, no Modal
  *       aria-live on the dom tree lowers to accessibilityLiveRegion
  *

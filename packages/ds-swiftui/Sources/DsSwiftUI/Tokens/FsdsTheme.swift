@@ -285,7 +285,6 @@ public enum FsdsSemanticDefaults {
         "semantic.action.size.medium.min-height": .string("32px"),
         "semantic.action.size.medium.padding-block": .string("4px"),
         "semantic.action.size.medium.padding-inline": .string("8px"),
-        "semantic.color.action.background.danger.default": .string("#d92d2e"),
         "semantic.color.action.background.primary.default": .string("#0566fe"),
         "semantic.color.action.background.secondary.default": .adaptive(light: "#fafafa", dark: "#141414"),
         "semantic.color.background.accentSubtle": .adaptive(light: "#95dafb", dark: "#002782"),
