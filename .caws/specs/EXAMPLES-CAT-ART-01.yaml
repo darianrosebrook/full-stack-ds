@@ -28,9 +28,12 @@ acceptance:
       colour-exact (toneMapped false), and shadows are soft with a shadow camera
       framed to the visible desk
   - id: A2
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
-    then: 'given the cat; when idle or reaching a key/trackpad/tablet/phone; then it is scaled closer to a real cat, arms are two-segment with a bent elbow and fixed bone lengths, ears follow the head, and it has a tail and breathing'
+    given: 'the cat'
+    when: 'idle, typing, on the trackpad, or reaching the tablet or phone'
+    then: >-
+      it is smaller and seated closer to the laptop, each arm is an upper arm and
+      forearm of fixed lengths with an elbow bent by two-bone IK, ears are parented
+      to the head, and it has a swaying tail and breathing
   - id: A3
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
