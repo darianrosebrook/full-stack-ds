@@ -56,3 +56,10 @@ evidence:
     command: "pnpm --filter @full-stack-ds/react-native exec vitest run src/components/Dialog src/components/Sheet --reporter=verbose"
     exit_code: 0
     commit_sha: "109314ba1b072dc92bbe74620931f2cfaef05d32"
+  - criterion_id: A3
+    status: pass
+    evidence_ref: "Real pre-push gate over the whole unpushed range dd516a975..34200775: 'all selected checks passed' (lint, typecheck, token gates, generate:check, docs claims+links, root+vue tests, governed:rail, compose/RN parity, swiftui semantic defaults, 11 realization audits). Post-merge on main: eslint --max-warnings=0 clean, RN 184/184, generate:check 52/52. The gate also surfaced and this spec fixed two leftovers of DS-CONSUMER-FINDINGS-01: three stale doc stamps (re-verified, restamped at 7ff7e877) and a stale SwiftUI semantic-defaults entry (34200775)."
+    recorded_at: "2026-09-23T04:59:00.591Z"
+    command: ".githooks/pre-push fed origin/main..34200775; post-merge on main: pnpm run lint; RN test; generate:check"
+    exit_code: 0
+    commit_sha: "109314ba1b072dc92bbe74620931f2cfaef05d32"
