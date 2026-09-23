@@ -26,6 +26,6 @@ const classes = $derived(["dialog__footer", className].filter(Boolean).join(" ")
 // @custom:end
 </script>
 
-<Stack as="footer" variant="horizontal" class={classes} data-testid={dataTestid}>
+<Stack variant="horizontal" class={classes} data-testid={dataTestid}>
   {@render children?.()}
 </Stack>

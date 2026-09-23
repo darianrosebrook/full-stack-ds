@@ -22,7 +22,7 @@ interface Props {
   language: CodeBlockLanguage;
   highlight?: boolean;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -45,5 +45,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-<pre :class="classNames" :data-language="props.language" :data-testid="props['data-testid']" data-fsds-component="code-block" data-fsds-box=""><code :class="'code-block__code'" spellcheck="false" :data-language="props.language"><slot /><span v-if="!$slots.default" :class="'code-block__source'"><template v-if="props.highlight"><span v-for="(token, tokenIndex) in tokenizeCode(props.code, props.language)" :key="tokenIndex" class="code-block__token" :data-token="token.kind">{{ token.text }}</span></template><template v-else>{{ props.code }}</template></span></code></pre>
+<pre :class="classNames" :data-language="props.language" :data-testid="props.dataTestid" data-fsds-component="code-block" data-fsds-box=""><code :class="'code-block__code'" spellcheck="false" :data-language="props.language"><slot /><span v-if="!$slots.default" :class="'code-block__source'"><template v-if="props.highlight"><span v-for="(token, tokenIndex) in tokenizeCode(props.code, props.language)" :key="tokenIndex" class="code-block__token" :data-token="token.kind">{{ token.text }}</span></template><template v-else>{{ props.code }}</template></span></code></pre>
 </template>

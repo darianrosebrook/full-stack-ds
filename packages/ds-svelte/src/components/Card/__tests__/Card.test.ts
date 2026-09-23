@@ -62,6 +62,7 @@ import CardContent from "../CardContent.svelte";
 import CardDescription from "../CardDescription.svelte";
 import CardFooter from "../CardFooter.svelte";
 import CardHeader from "../CardHeader.svelte";
+import CardLandmarksFixture from "./CardLandmarksFixture.svelte";
 
 describe("Card — compound parts", () => {
   it("mounts CardContent with tag and base class", () => {
@@ -90,7 +91,7 @@ describe("Card — compound parts", () => {
     });
     const root = container.querySelector('[data-testid="card-cardfooter"]');
     expect(root).toBeTruthy();
-    expect(root!.tagName.toLowerCase()).toBe("footer");
+    expect(root!.tagName.toLowerCase()).toBe("div");
     expect(root!.className.split(/\s+/)).toContain("card__footer");
   });
 
@@ -100,10 +101,21 @@ describe("Card — compound parts", () => {
     });
     const root = container.querySelector('[data-testid="card-cardheader"]');
     expect(root).toBeTruthy();
-    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.tagName.toLowerCase()).toBe("div");
     expect(root!.className.split(/\s+/)).toContain("card__header");
   });
 });
 
+describe("Card — landmarks", () => {
+  // A card's header and footer belong to the card, not the page: two cards
+  // on one page must not contribute two banner/contentinfo landmarks.
+  it("exposes no banner or contentinfo landmark for two cards with headers and footers", async () => {
+    const { container } = render(CardLandmarksFixture as Component);
+    expect(container.querySelectorAll(".card__header")).toHaveLength(2);
+    expect(container.querySelectorAll("header, footer, [role='banner'], [role='contentinfo']")).toHaveLength(0);
+    const results = await axe(document.documentElement, { runOnly: ["landmark-no-duplicate-banner", "landmark-no-duplicate-contentinfo", "landmark-banner-is-top-level", "landmark-contentinfo-is-top-level"] });
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+});
 
 // @custom:end

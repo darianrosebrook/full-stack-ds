@@ -29,7 +29,7 @@ interface Props {
   disabled?: boolean;
   idBase?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -115,7 +115,7 @@ const classNames = computed(() => [
     data-fsds-component="accordion" data-fsds-box=""
     ref="rootRef"
     :class="classNames"
-    :data-testid="props['data-testid']"
+    :data-testid="props.dataTestid"
     @keydown="handleKeyDown"
   >
     <slot />

@@ -20,7 +20,7 @@ interface Props {
   ariaLabel?: string;
   separator?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -43,7 +43,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <nav :class="classNames" :aria-label="props.ariaLabel" :data-testid="props['data-testid']" data-fsds-component="breadcrumbs" data-fsds-box="">
+  <nav :class="classNames" :aria-label="props.ariaLabel" :data-testid="props.dataTestid" data-fsds-component="breadcrumbs" data-fsds-box="">
     <ol :class="'breadcrumbs__list'">
       <slot />
     </ol>

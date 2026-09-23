@@ -421,7 +421,7 @@ export class PostcardHeaderElement extends LitElement {
   `;
 
   override render() {
-    return html`<fsds-stack as="header" class="postcard__header"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack class="postcard__header"><slot></slot></fsds-stack>`;
   }
 }
 
@@ -793,7 +793,7 @@ export class PostcardFooterElement extends LitElement {
   `;
 
   override render() {
-    return html`<fsds-stack as="footer" variant="horizontal" class="postcard__footer"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack variant="horizontal" class="postcard__footer"><slot></slot></fsds-stack>`;
   }
 }
 

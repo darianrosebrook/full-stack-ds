@@ -21,7 +21,7 @@ interface Props {
   interactive?: boolean;
   density?: CardDensity;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -47,7 +47,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <Stack role="group" :data-testid="props['data-testid']" data-fsds-component="card" data-fsds-box="" :class="classNames">
+  <Stack role="group" :data-testid="props.dataTestid" data-fsds-component="card" data-fsds-box="" :class="classNames">
     <slot />
   </Stack>
 </template>

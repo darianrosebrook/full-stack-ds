@@ -25,7 +25,7 @@ interface Props {
   icon?: unknown;
   showStatusIcon?: boolean;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -51,7 +51,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <span :class="classNames" :data-testid="props['data-testid']" data-fsds-component="badge" data-fsds-box="">
+  <span :class="classNames" :data-testid="props.dataTestid" data-fsds-component="badge" data-fsds-box="">
     <span v-if="props.icon" :class="'badge__icon'" aria-hidden="true">
       {{ props.icon }}
     </span>

@@ -30,7 +30,7 @@ interface Props {
   ariaLabel?: string;
   ariaLabelledby?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -72,7 +72,7 @@ const fieldAssociation = useFieldAssociation();
 </script>
 
 <template>
-  <label :class="classNames" :data-testid="props['data-testid']" data-fsds-component="checkbox" data-fsds-box="">
+  <label :class="classNames" :data-testid="props.dataTestid" data-fsds-component="checkbox" data-fsds-box="">
     <input :class="'checkbox__input'" type="checkbox" @change="(e) => behavior.setChecked((e.target as HTMLInputElement).checked)" :checked="behavior.checked.value" :disabled="props.disabled" :name="props.name" :value="props.value" :aria-label="props.ariaLabel" :aria-labelledby="props.ariaLabelledby" :aria-checked="(props.indeterminate ? 'mixed' : behavior.checked.value)" :indeterminate="props.indeterminate" :id="fieldAssociation?.controlId" :aria-describedby="fieldAssociation?.describedBy" />
     <span :class="'checkbox__indicator'" aria-hidden="true"></span>
   </label>

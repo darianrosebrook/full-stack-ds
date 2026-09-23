@@ -34,7 +34,7 @@
     },
     {
       "name": "header",
-      "semanticElement": "header",
+      "semanticElement": "div",
       "nativeTag": "h3",
       "isCompound": true,
       "isRootOnly": false,

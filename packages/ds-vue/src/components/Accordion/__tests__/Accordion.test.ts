@@ -32,6 +32,11 @@ describe("Accordion — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Accordion as Component, { props: {}, attrs: { "data-testid": "accordion" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="accordion"]').exists()).toBe(true);
+  });
+
   it("applies type=single variant class", () => {
     const wrapper = mount(Accordion as Component, { props: { "type": "single" }, attrs: { "data-testid": "accordion" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("accordion--single");

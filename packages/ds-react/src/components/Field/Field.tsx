@@ -57,7 +57,7 @@ export function FieldHeader({
 }: FieldHeaderProps) {
   const classNames = ["field__header", className].filter(Boolean).join(" ");
   return (
-    <Stack as="header" className={classNames} data-testid={testId}>
+    <Stack className={classNames} data-testid={testId}>
       {children}
     </Stack>
   );

@@ -23,7 +23,7 @@ interface Props {
   decorative?: boolean;
   ariaLabel?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -54,7 +54,7 @@ const iconGlyph = computed(() => resolveIcon(props.name, iconGlyphPx.value ?? Nu
 </script>
 
 <template>
-  <span :class="classNames" :role="(props.decorative ? 'presentation' : 'img')" :aria-hidden="(props.decorative ? 'true' : 'false')" :aria-label="props.ariaLabel" :data-testid="props['data-testid']" data-fsds-component="icon" data-fsds-box="">
+  <span :class="classNames" :role="(props.decorative ? 'presentation' : 'img')" :aria-hidden="(props.decorative ? 'true' : 'false')" :aria-label="props.ariaLabel" :data-testid="props.dataTestid" data-fsds-component="icon" data-fsds-box="">
     <svg v-if="iconGlyph" fill="none" xmlns="http://www.w3.org/2000/svg" :data-fsds-icon="iconGlyph.name" :viewBox="iconGlyph.viewBox" :width="iconGlyphPx ?? iconGlyph.size" :height="iconGlyphPx ?? iconGlyph.size">
       <path v-for="(glyphPath, glyphIndex) in iconGlyph.paths" :key="glyphIndex" :d="glyphPath.d" :fill="glyphPath.fill" :stroke="glyphPath.stroke" :stroke-width="glyphPath.strokeWidth" :stroke-linecap="glyphPath.strokeLineCap" :stroke-linejoin="glyphPath.strokeLineJoin" :stroke-dasharray="glyphPath.strokeDasharray" :fill-rule="glyphPath.fillRule" :clip-rule="glyphPath.clipRule" />
     </svg>

@@ -80,4 +80,21 @@ describe("Card — interactive affordance", () => {
   });
 });
 
+describe("Card — landmarks", () => {
+  // A card's header and footer belong to the card, not the page: two cards
+  // on one page must not contribute two banner/contentinfo landmarks.
+  it("exposes no banner or contentinfo landmark for two cards with headers and footers", async () => {
+    const { container } = render(
+      <>
+        <Card aria-label="First"><CardHeader>One</CardHeader><CardContent>Body</CardContent><CardFooter>Foot</CardFooter></Card>
+        <Card aria-label="Second"><CardHeader>Two</CardHeader><CardContent>Body</CardContent><CardFooter>Foot</CardFooter></Card>
+      </>,
+    );
+    expect(container.querySelectorAll(".card__header")).toHaveLength(2);
+    expect(container.querySelectorAll("header, footer, [role='banner'], [role='contentinfo']")).toHaveLength(0);
+    const results = await axe(document.documentElement, { runOnly: ["landmark-no-duplicate-banner", "landmark-no-duplicate-contentinfo", "landmark-banner-is-top-level", "landmark-contentinfo-is-top-level"] }) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+});
+
 // @custom:end

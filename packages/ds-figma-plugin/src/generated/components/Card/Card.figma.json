@@ -18,7 +18,7 @@
     },
     {
       "name": "header",
-      "semanticElement": "header",
+      "semanticElement": "div",
       "nativeTag": null,
       "isCompound": true,
       "isRootOnly": false,
@@ -42,7 +42,7 @@
     },
     {
       "name": "footer",
-      "semanticElement": "footer",
+      "semanticElement": "div",
       "nativeTag": null,
       "isCompound": true,
       "isRootOnly": false,

@@ -609,6 +609,20 @@
       "kind": "test",
       "spec": "DS-CONSUMER-FINDINGS-01",
       "note": "Toast action-slot and live-region coverage (DS-CONSUMER-FINDINGS-01). The generated suite cannot fill a named slot, so the filled/unfilled `if: \"slot:action\"` shapes and the region/status role split are asserted here against mounted output. If slot-filled fixtures become contract-derived, this region empties and the entry surfaces as stale."
+    },
+    {
+      "file": "packages/ds-angular/src/components/Card/__tests__/Card.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "DS-CARD-HEADER-VUE-TESTID-01",
+      "note": "Card landmark coverage (DS-CARD-HEADER-VUE-TESTID-01): two composed Cards expose no header/footer element and no banner/contentinfo role. The generated suite cannot compose subcomponents, so this is a hand-written instance of the rule 'a part's computed platform role must agree with its contract anatomy role'. When that rule is emitted from the IR for every compound part, this region empties and the entry surfaces as stale."
+    },
+    {
+      "file": "packages/ds-lit/src/components/Card/__tests__/Card.test.ts",
+      "label": "tests",
+      "kind": "test",
+      "spec": "DS-CARD-HEADER-VUE-TESTID-01",
+      "note": "Card landmark coverage (DS-CARD-HEADER-VUE-TESTID-01): two composed Cards expose no header/footer element and no banner/contentinfo role, walking nested shadow roots, plus axe's duplicate-landmark rules. The generated suite cannot compose subcomponents, so this is a hand-written instance of the rule 'a part's computed platform role must agree with its contract anatomy role'. When that rule is emitted from the IR for every compound part, this region empties and the entry surfaces as stale."
     }
   ]
 }

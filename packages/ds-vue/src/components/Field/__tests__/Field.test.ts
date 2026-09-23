@@ -32,6 +32,11 @@ describe("Field — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Field as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="field"]').exists()).toBe(true);
+  });
+
   it("has the correct ARIA role", () => {
     const wrapper = mount(Field as Component, { props: { "name": "placeholder" }, attrs: { "data-testid": "field" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("group");
@@ -77,7 +82,7 @@ describe("Field — compound parts", () => {
       slots: { default: "Field part" },
       attrs: { "data-testid": "field-fieldheader" },
     });
-    expect(wrapper.element.tagName.toLowerCase()).toBe("header");
+    expect(wrapper.element.tagName.toLowerCase()).toBe("div");
     expect(wrapper.classes()).toContain("field__header");
     expect(wrapper.text()).toContain("Field part");
   });

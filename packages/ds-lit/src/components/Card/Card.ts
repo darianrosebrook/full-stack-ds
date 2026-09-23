@@ -442,7 +442,7 @@ export class CardHeaderElement extends LitElement {
   `;
 
   override render() {
-    return html`<fsds-stack as="header" class="card__header"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack class="card__header"><slot></slot></fsds-stack>`;
   }
 }
 
@@ -1063,7 +1063,7 @@ export class CardFooterElement extends LitElement {
   `;
 
   override render() {
-    return html`<fsds-stack as="footer" variant="horizontal" class="card__footer"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack variant="horizontal" class="card__footer"><slot></slot></fsds-stack>`;
   }
 }
 

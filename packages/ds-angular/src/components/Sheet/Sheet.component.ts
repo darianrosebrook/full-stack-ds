@@ -146,7 +146,7 @@ export class SheetContentComponent {
   selector: "fsds-sheet-header",
   standalone: true,
   imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="header" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SheetHeaderComponent {
@@ -210,7 +210,7 @@ export class SheetBodyComponent {
   selector: "fsds-sheet-footer",
   standalone: true,
   imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="footer" variant="horizontal" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack variant="horizontal" [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SheetFooterComponent {

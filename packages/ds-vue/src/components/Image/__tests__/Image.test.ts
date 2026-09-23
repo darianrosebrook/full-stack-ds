@@ -32,6 +32,11 @@ describe("Image — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Image as Component, { props: { "alt": "placeholder" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="image"]').exists()).toBe(true);
+  });
+
   it("applies size=xs variant class", () => {
     const wrapper = mount(Image as Component, { props: { "alt": "placeholder", "size": "xs" }, attrs: { "data-testid": "image" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("image--size-xs");

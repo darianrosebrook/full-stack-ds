@@ -20,7 +20,7 @@ interface Props {
   text: string;
   as?: CodeSnippetElement;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -44,7 +44,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <component :is="props.as ?? 'code'" :class="classNames" spellcheck="false" :data-testid="props['data-testid']" data-fsds-component="code-snippet" data-fsds-box="">
+  <component :is="props.as ?? 'code'" :class="classNames" spellcheck="false" :data-testid="props.dataTestid" data-fsds-component="code-snippet" data-fsds-box="">
     {{ props.text }}
   </component>
 </template>

@@ -100,7 +100,7 @@ export class FieldComponent {
   selector: "fsds-field-header",
   standalone: true,
   imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="header" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FieldHeaderComponent {

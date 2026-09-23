@@ -41,7 +41,7 @@ export class CardComponent {
   selector: "fsds-card-header",
   standalone: true,
   imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="header" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardHeaderComponent {
@@ -89,7 +89,7 @@ export class CardContentComponent {
   selector: "fsds-card-footer",
   standalone: true,
   imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="footer" variant="horizontal" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack variant="horizontal" [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardFooterComponent {

@@ -127,7 +127,7 @@ describe("Dialog — compound parts", () => {
     });
     const root = container.querySelector('[data-testid="dialog-dialogfooter"]');
     expect(root).toBeTruthy();
-    expect(root!.tagName.toLowerCase()).toBe("footer");
+    expect(root!.tagName.toLowerCase()).toBe("div");
     expect(root!.className.split(/\s+/)).toContain("dialog__footer");
   });
 
@@ -137,7 +137,7 @@ describe("Dialog — compound parts", () => {
     });
     const root = container.querySelector('[data-testid="dialog-dialogheader"]');
     expect(root).toBeTruthy();
-    expect(root!.tagName.toLowerCase()).toBe("header");
+    expect(root!.tagName.toLowerCase()).toBe("div");
     expect(root!.className.split(/\s+/)).toContain("dialog__header");
   });
 

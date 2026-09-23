@@ -23,7 +23,7 @@ interface Props {
   closeOnOutsideClick?: boolean;
   closeOnBlur?: boolean;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // Vue runtime coerces unpassed Boolean props to `false` by
 // default; `withDefaults` with `undefined` keeps the
@@ -73,7 +73,7 @@ const classNames = computed(() => [
 // @custom:end
 </script>
 <template>
-  <span data-fsds-component="popover" data-fsds-box="" :class="classNames" :data-testid="props['data-testid']">
+  <span data-fsds-component="popover" data-fsds-box="" :class="classNames" :data-testid="props.dataTestid">
     <slot />
   </span>
 </template>

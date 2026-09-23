@@ -31,6 +31,11 @@ describe("ProfileFlag — unit", () => {
     expect(wrapper.classes()).toContain("profile-flag");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(ProfileFlag as Component, { props: {}, attrs: { "data-testid": "profile-flag" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="profile-flag"]').exists()).toBe(true);
+  });
 });
 
 describe("ProfileFlag — accessibility", () => {

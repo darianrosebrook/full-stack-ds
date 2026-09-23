@@ -20,7 +20,7 @@ interface Props {
   htmlFor?: string;
   form?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -41,7 +41,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <label :class="classNames" :for="props.htmlFor" :form="props.form" :data-testid="props['data-testid']" data-fsds-component="label" data-fsds-box="">
+  <label :class="classNames" :for="props.htmlFor" :form="props.form" :data-testid="props.dataTestid" data-fsds-component="label" data-fsds-box="">
     <slot />
   </label>
 </template>

@@ -25,7 +25,7 @@ interface Props {
   inline?: boolean;
   showAfterMs?: number;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -51,7 +51,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :aria-label="props.label" :aria-hidden="props.ariaHidden" role="status" :data-testid="props['data-testid']" data-fsds-component="spinner" data-fsds-box="">
+  <div :class="classNames" :aria-label="props.label" :aria-hidden="props.ariaHidden" role="status" :data-testid="props.dataTestid" data-fsds-component="spinner" data-fsds-box="">
     <span :class="'spinner__visual'" aria-hidden="true"></span>
   </div>
 </template>

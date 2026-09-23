@@ -32,6 +32,11 @@ describe("AlertNotice — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(AlertNotice as Component, { props: {}, attrs: { "data-testid": "alert-notice" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="alert-notice"]').exists()).toBe(true);
+  });
+
   it("has the correct ARIA role", () => {
     const wrapper = mount(AlertNotice as Component, { props: {}, attrs: { "data-testid": "alert-notice" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("alert");

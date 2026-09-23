@@ -32,6 +32,11 @@ describe("Progress — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Progress as Component, { props: {}, attrs: { "data-testid": "progress" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="progress"]').exists()).toBe(true);
+  });
+
   it("has the correct ARIA role", () => {
     const wrapper = mount(Progress as Component, { props: {}, attrs: { "data-testid": "progress" }, slots: { "default": "content" } });
     expect(wrapper.attributes("role")).toBe("progressbar");

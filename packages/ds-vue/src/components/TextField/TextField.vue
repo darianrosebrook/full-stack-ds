@@ -28,7 +28,7 @@ interface Props {
   name?: string;
   ariaDescribedby?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -67,7 +67,7 @@ const instanceId = useId();
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="text-field" data-fsds-box="">
+  <div :class="classNames" :data-testid="props.dataTestid" data-fsds-component="text-field" data-fsds-box="">
     <label :class="'text-field__label'" :id="`${instanceId}-label`">
       <slot name="label" />
     </label>

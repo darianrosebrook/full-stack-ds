@@ -32,6 +32,11 @@ describe("Tabs — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Tabs as Component, { props: {}, attrs: { "data-testid": "tabs" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="tabs"]').exists()).toBe(true);
+  });
+
   it("applies orientation=horizontal variant class", () => {
     const wrapper = mount(Tabs as Component, { props: { "orientation": "horizontal" }, attrs: { "data-testid": "tabs" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("tabs--horizontal");

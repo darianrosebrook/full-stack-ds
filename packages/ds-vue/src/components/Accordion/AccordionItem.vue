@@ -10,7 +10,7 @@ import { computed } from "vue";
 // @generated:start props
 interface Props {
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 
 const props = defineProps<Props>();
@@ -28,7 +28,7 @@ const classNames = computed(() =>
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']">
+  <div :class="classNames" :data-testid="props.dataTestid">
     <slot />
   </div>
 </template>

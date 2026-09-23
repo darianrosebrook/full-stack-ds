@@ -13,7 +13,7 @@ import Icon from "../Icon/Icon.vue";
 interface Props {
   value: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 
 const props = defineProps<Props>();
@@ -51,7 +51,7 @@ const classNames = computed(() =>
       :aria-controls="`${ctx.idBase}-content-${props.value}`"
       :aria-expanded="isOpen"
       :disabled="ctx.disabled"
-      :data-testid="props['data-testid']"
+      :data-testid="props.dataTestid"
       @click="ctx.toggleItem(props.value)"
     >
       <slot />

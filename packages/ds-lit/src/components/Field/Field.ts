@@ -448,7 +448,7 @@ export class FieldHeaderElement extends LitElement {
   `;
 
   override render() {
-    return html`<fsds-stack as="header" class="field__header"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack class="field__header"><slot></slot></fsds-stack>`;
   }
 }
 

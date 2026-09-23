@@ -32,6 +32,11 @@ describe("Skeleton — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Skeleton as Component, { props: {}, attrs: { "data-testid": "skeleton" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="skeleton"]').exists()).toBe(true);
+  });
+
   it("applies variant=block variant class", () => {
     const wrapper = mount(Skeleton as Component, { props: { "variant": "block" }, attrs: { "data-testid": "skeleton" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("skeleton--block");

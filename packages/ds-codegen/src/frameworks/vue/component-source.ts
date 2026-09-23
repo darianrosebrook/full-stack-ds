@@ -188,7 +188,7 @@ function generatePropsInterface(ir: ComponentIR): string {
     // call site even if the contract marks it required — the
     // component supplies the default via `withDefaults`.
     const optional = p.required && p.defaultExpr === undefined ? "" : "?";
-    const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
+    const propName = vuePropKey(p.name);
     lines.push(`  ${propName}${optional}: ${lowerVuePropType(p.propType)};`);
   }
   for (const dim of Object.keys(ir.variants)) {
@@ -200,7 +200,7 @@ function generatePropsInterface(ir: ComponentIR): string {
   // appear in the Props interface. `children` is handled via <slot/> so we
   // don't declare it; `className` is React-only (Vue uses `class`).
   if (!propNames.has("class")) lines.push(`  class?: string;`);
-  if (!propNames.has("data-testid")) lines.push(`  "data-testid"?: string;`);
+  if (!propNames.has("data-testid")) lines.push(`  dataTestid?: string;`);
   lines.push(`}`);
   return lines.join("\n");
 }
@@ -212,7 +212,7 @@ function generateDefineProps(ir: ComponentIR): string {
   }
   const lines: string[] = [`const props = withDefaults(defineProps<Props>(), {`];
   for (const [name, value, needsFactory] of defaults) {
-    const propKey = name.includes("-") ? `"${name}"` : name;
+    const propKey = vuePropKey(name);
     // Vue's withDefaults requires a factory function whenever the prop type
     // covers non-primitive shapes — including `unknown`, which is what
     // ReactNode / ReactElement / etc. translate to. Wrap the literal value
@@ -344,12 +344,19 @@ function generateClassesComputed(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
+/**
+ * Vue normalizes declared prop keys to camelCase at runtime: a prop declared
+ * as `"data-testid"` is stored under `props.dataTestid`, so a
+ * `props['data-testid']` read is always undefined and the value is dropped.
+ * Declare and read every hyphenated prop by its camelized key; a consumer's
+ * hyphenated attribute (`data-testid="x"`) still resolves to it.
+ */
+function vuePropKey(name: string): string {
+  return name.replace(/-([a-z0-9])/g, (_, c: string) => c.toUpperCase());
+}
+
 function propAccessor(propName: string): string {
-  // Use single-quoted bracket notation for hyphenated names so the
-  // accessor can be safely embedded inside a double-quoted template
-  // attribute binding (e.g. :aria-label="props['aria-label']").
-  if (propName.includes("-")) return `props['${propName}']`;
-  return `props.${propName}`;
+  return `props.${vuePropKey(propName)}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -466,7 +473,7 @@ export function generateVueCompoundPartSource(
       `// @generated:start props`,
       `interface Props {`,
       `  class?: string;`,
-      `  "data-testid"?: string;`,
+      `  dataTestid?: string;`,
       ...attrPropLines,
       `}`,
       ``,
@@ -485,7 +492,7 @@ export function generateVueCompoundPartSource(
       `</script>`,
       ``,
       `<template>`,
-      `  <${tag} :class="classNames" :data-testid="props['data-testid']"${attrBindings}>`,
+      `  <${tag} :class="classNames" :data-testid="props.dataTestid"${attrBindings}>`,
       `    <slot />`,
       `  </${tag}>`,
       `</template>`,
@@ -517,7 +524,7 @@ export function generateVueCompoundPartSource(
     `// @generated:start props`,
     `interface Props {`,
     `  class?: string;`,
-    `  "data-testid"?: string;`,
+    `  dataTestid?: string;`,
     `}`,
     ``,
     `const props = defineProps<Props>();`,
@@ -535,7 +542,7 @@ export function generateVueCompoundPartSource(
     `</script>`,
     ``,
     `<template>`,
-    `  <Stack${asAttr}${variantAttr} :class="classNames" :data-testid="props['data-testid']">`,
+    `  <Stack${asAttr}${variantAttr} :class="classNames" :data-testid="props.dataTestid">`,
     `    <slot />`,
     `  </Stack>`,
     `</template>`,
@@ -575,7 +582,7 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
     // call site even if the contract marks it required — the
     // component supplies the default via `withDefaults`.
     const optional = p.required && p.defaultExpr === undefined ? "" : "?";
-    const propKey = p.name.includes("-") ? `"${p.name}"` : p.name;
+    const propKey = vuePropKey(p.name);
     propsLines.push(`  ${propKey}${optional}: ${lowerVuePropType(p.propType)};`);
   }
   for (const dim of Object.keys(ir.variants)) {
@@ -585,7 +592,7 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
   if (!propNames.has("idBase")) propsLines.push(`  idBase?: string;`);
   if (!propNames.has("unmountInactive")) propsLines.push(`  unmountInactive?: boolean;`);
   if (!propNames.has("class")) propsLines.push(`  class?: string;`);
-  if (!propNames.has("data-testid")) propsLines.push(`  "data-testid"?: string;`);
+  if (!propNames.has("data-testid")) propsLines.push(`  dataTestid?: string;`);
   propsLines.push(`}`);
   const propsInterfaceBody = propsLines.join("\n");
 
@@ -605,7 +612,7 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
       ? `const props = defineProps<Props>();`
       : [
           `const props = withDefaults(defineProps<Props>(), {`,
-          ...defaults.map(([k, v]) => `  ${k.includes("-") ? `"${k}"` : k}: ${v},`),
+          ...defaults.map(([k, v]) => `  ${vuePropKey(k)}: ${v},`),
           `});`,
         ].join("\n");
 
@@ -671,7 +678,7 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
 
   const templateBody = [
     `<template>`,
-    `  <div data-fsds-component="${ir.cssPrefix}" data-fsds-box="" :class="classNames" :data-testid="props['data-testid']">`,
+    `  <div data-fsds-component="${ir.cssPrefix}" data-fsds-box="" :class="classNames" :data-testid="props.dataTestid">`,
     `    <slot />`,
     `  </div>`,
     `</template>`,
@@ -745,7 +752,7 @@ function generateVueDisclosureStateRootSource(ir: ComponentIR): string {
   for (const p of ir.styledProps) {
     if (VUE_SKIP_PROPS.has(p.name)) continue;
     const optional = p.required && p.defaultExpr === undefined ? "" : "?";
-    const propKey = p.name.includes("-") ? `"${p.name}"` : p.name;
+    const propKey = vuePropKey(p.name);
     propsLines.push(`  ${propKey}${optional}: ${lowerVuePropType(p.propType)};`);
   }
   for (const dim of Object.keys(ir.variants)) {
@@ -753,7 +760,7 @@ function generateVueDisclosureStateRootSource(ir: ComponentIR): string {
   }
   if (!propNames.has("idBase")) propsLines.push(`  idBase?: string;`);
   if (!propNames.has("class")) propsLines.push(`  class?: string;`);
-  if (!propNames.has("data-testid")) propsLines.push(`  "data-testid"?: string;`);
+  if (!propNames.has("data-testid")) propsLines.push(`  dataTestid?: string;`);
   propsLines.push(`}`);
   const propsInterfaceBody = propsLines.join("\n");
 
@@ -768,7 +775,7 @@ function generateVueDisclosureStateRootSource(ir: ComponentIR): string {
       ? `const props = defineProps<Props>();`
       : [
           `const props = withDefaults(defineProps<Props>(), {`,
-          ...defaults.map(([k, v]) => `  ${k.includes("-") ? `"${k}"` : k}: ${v},`),
+          ...defaults.map(([k, v]) => `  ${vuePropKey(k)}: ${v},`),
           `});`,
         ].join("\n");
 
@@ -875,7 +882,7 @@ function generateVueDisclosureStateRootSource(ir: ComponentIR): string {
     `    data-fsds-component="${ir.cssPrefix}" data-fsds-box=""`,
     `    ref="rootRef"`,
     `    :class="classNames"`,
-    `    :data-testid="props['data-testid']"`,
+    `    :data-testid="props.dataTestid"`,
     `    @keydown="handleKeyDown"`,
     `  >`,
     `    <slot />`,
@@ -944,7 +951,7 @@ export function generateVueDisclosureStateParts(
     `// @generated:start props`,
     `interface Props {`,
     `  class?: string;`,
-    `  "data-testid"?: string;`,
+    `  dataTestid?: string;`,
     `}`,
     ``,
     `const props = defineProps<Props>();`,
@@ -962,7 +969,7 @@ export function generateVueDisclosureStateParts(
     `</script>`,
     ``,
     `<template>`,
-    `  <div :class="classNames" :data-testid="props['data-testid']">`,
+    `  <div :class="classNames" :data-testid="props.dataTestid">`,
     `    <slot />`,
     `  </div>`,
     `</template>`,
@@ -985,7 +992,7 @@ export function generateVueDisclosureStateParts(
   triggerInner.push(`${triggerIndent}  :aria-controls="\`\${ctx.idBase}-content-\${props.value}\`"`);
   triggerInner.push(`${triggerIndent}  :aria-expanded="isOpen"`);
   triggerInner.push(`${triggerIndent}  :disabled="ctx.disabled"`);
-  triggerInner.push(`${triggerIndent}  :data-testid="props['data-testid']"`);
+  triggerInner.push(`${triggerIndent}  :data-testid="props.dataTestid"`);
   triggerInner.push(`${triggerIndent}  @click="ctx.toggleItem(props.value)"`);
   triggerInner.push(`${triggerIndent}>`);
   triggerInner.push(`${triggerIndent}  <slot />`);
@@ -1018,7 +1025,7 @@ export function generateVueDisclosureStateParts(
     `interface Props {`,
     `  value: string;`,
     `  class?: string;`,
-    `  "data-testid"?: string;`,
+    `  dataTestid?: string;`,
     `}`,
     ``,
     `const props = defineProps<Props>();`,
@@ -1076,7 +1083,7 @@ export function generateVueDisclosureStateParts(
     `interface Props {`,
     `  value: string;`,
     `  class?: string;`,
-    `  "data-testid"?: string;`,
+    `  dataTestid?: string;`,
     `}`,
     ``,
     `const props = defineProps<Props>();`,
@@ -1104,7 +1111,7 @@ export function generateVueDisclosureStateParts(
     `    :id="\`\${ctx.idBase}-content-\${props.value}\`"`,
     `    :aria-labelledby="\`\${ctx.idBase}-trigger-\${props.value}\`"`,
     `    :hidden="!isOpen ? true : undefined"`,
-    `    :data-testid="props['data-testid']"`,
+    `    :data-testid="props.dataTestid"`,
     `  >`,
     ...contentInnerLines,
     `  </div>`,
@@ -1167,7 +1174,7 @@ export function generateVueCompoundStateParts(
     `// @generated:start props`,
     `interface Props {`,
     `  class?: string;`,
-    `  "data-testid"?: string;`,
+    `  dataTestid?: string;`,
     `}`,
     ``,
     `const props = defineProps<Props>();`,
@@ -1251,7 +1258,7 @@ export function generateVueCompoundStateParts(
     // it must be programmatically focusable (APG) but stays out of tab order.
     `    tabindex="-1"`,
     `    :class="classNames"`,
-    `    :data-testid="props['data-testid']"`,
+    `    :data-testid="props.dataTestid"`,
     `    :aria-orientation="ctx.orientation"`,
     `    @keydown="handleKeyDown"`,
     `  >`,
@@ -1288,7 +1295,7 @@ export function generateVueCompoundStateParts(
     `  value: string;`,
     `  disabled?: boolean;`,
     `  class?: string;`,
-    `  "data-testid"?: string;`,
+    `  dataTestid?: string;`,
     `}`,
     ``,
     `const props = defineProps<Props>();`,
@@ -1331,7 +1338,7 @@ export function generateVueCompoundStateParts(
     `    type="button"`,
     `    :class="classNames"`,
     `    :data-value="props.value"`,
-    `    :data-testid="props['data-testid']"`,
+    `    :data-testid="props.dataTestid"`,
     `    :id="\`\${ctx.idBase}-tab-\${props.value}\`"`,
     `    :aria-controls="\`\${ctx.idBase}-panel-\${props.value}\`"`,
     `    :aria-selected="isActive"`,
@@ -1363,7 +1370,7 @@ export function generateVueCompoundStateParts(
     `interface Props {`,
     `  value: string;`,
     `  class?: string;`,
-    `  "data-testid"?: string;`,
+    `  dataTestid?: string;`,
     `}`,
     ``,
     `const props = defineProps<Props>();`,
@@ -1392,7 +1399,7 @@ export function generateVueCompoundStateParts(
     `    :id="\`\${ctx.idBase}-panel-\${props.value}\`"`,
     `    :aria-labelledby="\`\${ctx.idBase}-tab-\${props.value}\`"`,
     `    :tabindex="0"`,
-    `    :data-testid="props['data-testid']"`,
+    `    :data-testid="props.dataTestid"`,
     `    :hidden="!isActive ? true : undefined"`,
     `  >`,
     `    <slot />`,
@@ -1424,7 +1431,7 @@ function generateTemplate(ir: ComponentIR): string {
   const styledNames = new Set(ir.styledProps.map((p) => p.name));
   const testIdAttr = styledNames.has("data-testid")
     ? ""
-    : ` :data-testid="props['data-testid']"`;
+    : ` :data-testid="props.dataTestid"`;
 
   return [
     `<template>`,
@@ -2413,7 +2420,7 @@ function renderVueDomNode(
     if (ctx.rootRole && !node.attrs["role"] && !node.bindings["role"]) {
       attrs.push(`role="${ctx.rootRole}"`);
     }
-    attrs.push(`:data-testid="props['data-testid']"`);
+    attrs.push(`:data-testid="props.dataTestid"`);
     if (ctx.cssPrefix) {
       attrs.push(`data-fsds-component="${ctx.cssPrefix}" data-fsds-box=""`);
     }
@@ -3056,10 +3063,10 @@ function mapJsxEventToVue(attr: string): string {
   return attr;
 }
 
-/** Vue prop access helper: bracket notation for hyphenated names. */
+/** Vue prop access helper: the camelized key Vue stores the prop under. */
 function propAccess(name: string): string {
   if (!name) return "";
-  return name.includes("-") ? `['${name}']` : name;
+  return vuePropKey(name);
 }
 
 function capitalize(s: string): string {

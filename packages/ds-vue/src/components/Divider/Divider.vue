@@ -22,7 +22,7 @@ interface Props {
   thickness?: string;
   title?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -46,5 +46,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <hr :class="classNames" :data-testid="props['data-testid']" data-fsds-component="divider" data-fsds-box="" />
+  <hr :class="classNames" :data-testid="props.dataTestid" data-fsds-component="divider" data-fsds-box="" />
 </template>

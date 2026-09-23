@@ -32,6 +32,11 @@ describe("ToggleSwitch — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(ToggleSwitch as Component, { props: {}, attrs: { "data-testid": "toggle-switch" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="toggle-switch"]').exists()).toBe(true);
+  });
+
   it("applies size=small variant class", () => {
     const wrapper = mount(ToggleSwitch as Component, { props: { "size": "small" }, attrs: { "data-testid": "toggle-switch" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("toggle-switch--small");

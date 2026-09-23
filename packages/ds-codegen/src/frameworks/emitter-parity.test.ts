@@ -15,12 +15,12 @@ import { createSvelteEmitter } from "./svelte/factory.js";
  * the same IR is rendered through React and Vue, the externally observable
  * surface (the props interface) must declare every attribute the template
  * binds. Concretely: a Vue template that binds `:data-testid` must declare
- * `data-testid` in `interface Props {}`, otherwise consumers get TS errors
- * at usage sites.
+ * the prop in `interface Props {}`, otherwise consumers get TS errors at
+ * usage sites.
  *
- * This test exists because the Vue emitter previously omitted `class` and
- * `data-testid` from its Props interface even though it bound both in the
- * template — caught while porting portfolio contracts (Batch 1 pilot).
+ * Vue stores a declared prop under its camelized key, so `data-testid` is
+ * declared and read as `dataTestid`; a `props['data-testid']` read is always
+ * undefined and silently drops the consumer's value.
  */
 describe("emitter parity: Vue Props interface declares every bound attribute", () => {
   it("simple primitive without dom tree binds class + data-testid", () => {
@@ -29,11 +29,13 @@ describe("emitter parity: Vue Props interface declares every bound attribute", (
 
     // Template should bind these
     expect(vue).toContain(`:class="classNames"`);
-    expect(vue).toContain(`:data-testid="props['data-testid']"`);
+    expect(vue).toContain(`:data-testid="props.dataTestid"`);
+    // A hyphenated bracket read never matches Vue's camelized prop key.
+    expect(vue).not.toContain(`props['`);
 
     // Props interface must declare them
     expect(propsInterface(vue)).toContain(`class?: string;`);
-    expect(propsInterface(vue)).toContain(`"data-testid"?: string;`);
+    expect(propsInterface(vue)).toContain(`dataTestid?: string;`);
   });
 
   it("dom-tree primitive (Spinner-shaped) declares class + data-testid in Props", () => {
@@ -41,7 +43,7 @@ describe("emitter parity: Vue Props interface declares every bound attribute", (
     const vue = generateVueComponentSource(buildComponentIR(contract));
 
     expect(propsInterface(vue)).toContain(`class?: string;`);
-    expect(propsInterface(vue)).toContain(`"data-testid"?: string;`);
+    expect(propsInterface(vue)).toContain(`dataTestid?: string;`);
   });
 
   it("dialog labeling props come from the contract rather than emitter injection", () => {
@@ -67,7 +69,7 @@ describe("emitter parity: Vue Props interface declares every bound attribute", (
     expect(react).toContain(`className?: string;`);
     expect(react).toContain(`"data-testid"?: string;`);
     expect(propsInterface(vue)).toContain(`class?: string;`);
-    expect(propsInterface(vue)).toContain(`"data-testid"?: string;`);
+    expect(propsInterface(vue)).toContain(`dataTestid?: string;`);
   });
 });
 

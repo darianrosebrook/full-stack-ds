@@ -25,7 +25,7 @@ interface Props {
   dismissLabel?: string;
   icon?: unknown;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -51,7 +51,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="alert" :data-testid="props['data-testid']" data-fsds-component="alert-notice" data-fsds-box="">
+  <div :class="classNames" role="alert" :data-testid="props.dataTestid" data-fsds-component="alert-notice" data-fsds-box="">
     <span v-if="props.icon" :class="'alert-notice__icon'" aria-hidden="true">
       {{ props.icon }}
     </span>

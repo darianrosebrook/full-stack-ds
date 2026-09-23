@@ -27,7 +27,7 @@ interface Props {
   ariaLabel?: string;
   orientation?: RadioGroupOrientation;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -60,7 +60,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <fieldset :class="classNames" role="radiogroup" :aria-label="props.ariaLabel" :data-testid="props['data-testid']" data-fsds-component="radio-group" data-fsds-box="">
+  <fieldset :class="classNames" role="radiogroup" :aria-label="props.ariaLabel" :data-testid="props.dataTestid" data-fsds-component="radio-group" data-fsds-box="">
     <label v-for="(item, index) in (props.options ?? [])" :key="index" :class="'radio-group__item'" :data-checked="(item.value === behavior.selection.value)" :data-disabled="item.disabled" :title="item.description">
       <input :class="'radio-group__option'" type="radio" @change="() => behavior.setSelection(item.value)" :name="props.name" :value="item.value" :checked="(item.value === behavior.selection.value)" :disabled="item.disabled" :aria-label="item.label" :aria-checked="(item.value === behavior.selection.value)" />
       <span :class="'radio-group__label'">

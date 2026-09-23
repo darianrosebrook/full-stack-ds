@@ -31,6 +31,11 @@ describe("Truncate — unit", () => {
     expect(wrapper.classes()).toContain("truncate");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Truncate as Component, { props: {}, attrs: { "data-testid": "truncate" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="truncate"]').exists()).toBe(true);
+  });
 });
 
 describe("Truncate — accessibility", () => {

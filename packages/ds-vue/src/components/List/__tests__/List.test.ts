@@ -32,6 +32,11 @@ describe("List — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(List as Component, { props: {}, attrs: { "data-testid": "list" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="list"]').exists()).toBe(true);
+  });
+
   it("applies as=ul variant class", () => {
     const wrapper = mount(List as Component, { props: { "as": "ul" }, attrs: { "data-testid": "list" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("list--ul");

@@ -21,7 +21,7 @@ import { h, Fragment, defineComponent, type VNode } from "vue";
 interface Props {
   content: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -86,7 +86,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']" data-fsds-component="markdown" data-fsds-box="">
+  <div :class="classNames" :data-testid="props.dataTestid" data-fsds-component="markdown" data-fsds-box="">
     <MarkdownTree />
   </div>
 </template>

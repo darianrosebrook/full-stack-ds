@@ -31,6 +31,11 @@ describe("Input — unit", () => {
     expect(wrapper.classes()).toContain("input");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Input as Component, { props: {}, attrs: { "data-testid": "input" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="input"]').exists()).toBe(true);
+  });
 });
 
 describe("Input — accessibility", () => {

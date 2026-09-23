@@ -40,6 +40,11 @@ describe("Command — unit", () => {
     expect(root?.classList.contains("custom")).toBe(true);
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    mount(Command as Component, { props: { "open": true }, attrs: { "data-testid": "command" }, slots: { "default": "content" }, attachTo: document.body });
+    expect(document.body.querySelector('[data-testid="command"]')).not.toBeNull();
+  });
+
   it("closes on Escape key", async () => {
     const onOpenChangeSpy = vi.fn();
     mount(Command as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "command" }, slots: { "default": "content" }, attachTo: document.body });

@@ -32,6 +32,11 @@ describe("Badge — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Badge as Component, { props: {}, attrs: { "data-testid": "badge" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="badge"]').exists()).toBe(true);
+  });
+
   it("applies variant=default variant class", () => {
     const wrapper = mount(Badge as Component, { props: { "variant": "default" }, attrs: { "data-testid": "badge" }, slots: { "default": "content" } });
     expect(wrapper.classes()).toContain("badge--default");

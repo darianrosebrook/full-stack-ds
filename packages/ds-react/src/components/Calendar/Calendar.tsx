@@ -49,7 +49,7 @@ export function CalendarHeader({
 }: CalendarHeaderProps) {
   const classNames = ["calendar__header", className].filter(Boolean).join(" ");
   return (
-    <Stack as="header" className={classNames} data-testid={testId}>
+    <Stack className={classNames} data-testid={testId}>
       {children}
     </Stack>
   );

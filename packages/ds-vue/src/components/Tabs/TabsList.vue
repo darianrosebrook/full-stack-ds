@@ -11,7 +11,7 @@ import { useTabsContext } from "./useTabs.js";
 // @generated:start props
 interface Props {
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 
 const props = defineProps<Props>();
@@ -93,7 +93,7 @@ function handleKeyDown(e: KeyboardEvent): void {
     role="tablist"
     tabindex="-1"
     :class="classNames"
-    :data-testid="props['data-testid']"
+    :data-testid="props.dataTestid"
     :aria-orientation="ctx.orientation"
     @keydown="handleKeyDown"
   >

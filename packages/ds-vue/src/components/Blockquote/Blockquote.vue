@@ -22,7 +22,7 @@ interface Props {
   variant?: BlockquoteVariant;
   size?: BlockquoteSize;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -45,7 +45,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <blockquote :class="classNames" :data-testid="props['data-testid']" data-fsds-component="blockquote" data-fsds-box="">
+  <blockquote :class="classNames" :data-testid="props.dataTestid" data-fsds-component="blockquote" data-fsds-box="">
     <slot />
   </blockquote>
 </template>

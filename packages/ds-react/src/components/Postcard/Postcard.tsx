@@ -48,7 +48,7 @@ export function PostcardHeader({
 }: PostcardHeaderProps) {
   const classNames = ["postcard__header", className].filter(Boolean).join(" ");
   return (
-    <Stack as="header" className={classNames} data-testid={testId}>
+    <Stack className={classNames} data-testid={testId}>
       {children}
     </Stack>
   );
@@ -86,7 +86,7 @@ export function PostcardFooter({
 }: PostcardFooterProps) {
   const classNames = ["postcard__footer", className].filter(Boolean).join(" ");
   return (
-    <Stack as="footer" variant="horizontal" className={classNames} data-testid={testId}>
+    <Stack variant="horizontal" className={classNames} data-testid={testId}>
       {children}
     </Stack>
   );

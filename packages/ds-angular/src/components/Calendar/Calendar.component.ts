@@ -90,7 +90,7 @@ export class CalendarComponent {
   selector: "fsds-calendar-header",
   standalone: true,
   imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="header" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarHeaderComponent {

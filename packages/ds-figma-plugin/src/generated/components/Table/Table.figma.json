@@ -50,7 +50,7 @@
     },
     {
       "name": "footer",
-      "semanticElement": "footer",
+      "semanticElement": "div",
       "nativeTag": "tfoot",
       "isCompound": true,
       "isRootOnly": false,

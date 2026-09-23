@@ -34,7 +34,7 @@ interface Props {
   onDismiss?: () => void;
   dismissLabel?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -64,7 +64,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <span :class="classNames" :data-testid="props['data-testid']" data-fsds-component="chip" data-fsds-box="">
+  <span :class="classNames" :data-testid="props.dataTestid" data-fsds-component="chip" data-fsds-box="">
     <Button :class="'chip__action'" variant="ghost" @click="props.onClick?.()" :type="props.type" :disabled="props.disabled" :ariaLabel="props.ariaLabel" :ariaExpanded="props.ariaExpanded" :ariaPressed="props.ariaPressed">
       <span v-if="props.icon" :class="'chip__icon'" aria-hidden="true">
         {{ props.icon }}

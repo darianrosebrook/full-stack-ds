@@ -31,6 +31,11 @@ describe("Breadcrumbs — unit", () => {
     expect(wrapper.classes()).toContain("breadcrumbs");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(Breadcrumbs as Component, { props: {}, attrs: { "data-testid": "breadcrumbs" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="breadcrumbs"]').exists()).toBe(true);
+  });
 });
 
 describe("Breadcrumbs — accessibility", () => {

@@ -31,7 +31,7 @@ interface Props {
   title?: string;
   onClick?: () => void;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -63,7 +63,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <button :class="classNames" @click="props.onClick?.()" :type="props.type" :disabled="props.disabled" :aria-label="props.ariaLabel" :aria-expanded="props.ariaExpanded" :aria-pressed="props.ariaPressed" :aria-busy="props.loading" :data-testid="props['data-testid']" data-fsds-component="button" data-fsds-box="">
+  <button :class="classNames" @click="props.onClick?.()" :type="props.type" :disabled="props.disabled" :aria-label="props.ariaLabel" :aria-expanded="props.ariaExpanded" :aria-pressed="props.ariaPressed" :aria-busy="props.loading" :data-testid="props.dataTestid" data-fsds-component="button" data-fsds-box="">
     <Spinner v-if="props.loading" :class="'button__spinner'" size="sm" :inline="props.loading" :ariaHidden="props.loading" />
     <span :class="'button__loadingText'">
       <slot />

@@ -27,7 +27,7 @@ interface Props {
   name?: string;
   value?: string;
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -68,7 +68,7 @@ const fieldAssociation = useFieldAssociation();
 </script>
 
 <template>
-  <label :class="classNames" :data-testid="props['data-testid']" data-fsds-component="switch" data-fsds-box="">
+  <label :class="classNames" :data-testid="props.dataTestid" data-fsds-component="switch" data-fsds-box="">
     <input :class="'switch__input'" type="checkbox" role="switch" @change="(e) => behavior.setChecked((e.target as HTMLInputElement).checked)" :checked="behavior.checked.value" :disabled="props.disabled" :name="props.name" :value="props.value" :id="fieldAssociation?.controlId" :aria-describedby="fieldAssociation?.describedBy" />
     <span :class="'switch__track'" aria-hidden="true">
       <span :class="'switch__thumb'"></span>

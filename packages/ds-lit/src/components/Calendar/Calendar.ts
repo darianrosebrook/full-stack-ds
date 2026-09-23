@@ -472,7 +472,7 @@ export class CalendarHeaderElement extends LitElement {
   `;
 
   override render() {
-    return html`<fsds-stack as="header" class="calendar__header"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack class="calendar__header"><slot></slot></fsds-stack>`;
   }
 }
 

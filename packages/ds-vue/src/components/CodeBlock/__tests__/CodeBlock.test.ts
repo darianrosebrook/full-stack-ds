@@ -31,6 +31,11 @@ describe("CodeBlock — unit", () => {
     expect(wrapper.classes()).toContain("code-block");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("forwards data-testid to the rendered element", () => {
+    const wrapper = mount(CodeBlock as Component, { props: { "code": "placeholder", "language": "bash" }, attrs: { "data-testid": "code-block" }, slots: { "default": "content" } });
+    expect(wrapper.find('[data-testid="code-block"]').exists()).toBe(true);
+  });
 });
 
 describe("CodeBlock — accessibility", () => {

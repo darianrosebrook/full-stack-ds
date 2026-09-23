@@ -30,7 +30,7 @@ interface Props {
   shouldCloseOnSelect?: boolean;
   days?: Date[];
   class?: string;
-  "data-testid"?: string;
+  dataTestid?: string;
 }
 // @generated:end
 
@@ -68,7 +68,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="application" :data-testid="props['data-testid']" data-fsds-component="calendar" data-fsds-box="">
+  <div :class="classNames" role="application" :data-testid="props.dataTestid" data-fsds-component="calendar" data-fsds-box="">
     <div :class="'calendar__header'">
       <button :class="'calendar__nav'" aria-label="Previous month"></button>
       <span :class="'calendar__caption'">
