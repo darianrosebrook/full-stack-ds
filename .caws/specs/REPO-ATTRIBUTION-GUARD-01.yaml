@@ -62,8 +62,13 @@ evidence:
     commit_sha: "6645e4a0"
   - criterion_id: A2
     status: pass
-    evidence_ref: "Case \"AI commit identities are refused; human identities are not\" pins both the exact-address rule (noreply@anthropic.com) and the domain rule (agent@anthropic.com), and asserts the human identity darianrosebrook <hello@darianrosebrook.com> is admitted. Integration case \"git commit is REFUSED when the author identity is an agent\" drives a real git commit in a temp repo whose core.hooksPath points at this repo .githooks: non-zero exit, stderr matching /AI agent commit identity/, and git rev-list --count --all == 0, so nothing entered history."
-    recorded_at: "2026-09-23T01:17:54.278Z"
+    evidence_ref: "Pins both the exact-address rule (noreply@anthropic.com) and the domain rule (agent@anthropic.com), and asserts the human identity darianrosebrook <hello@darianrosebrook.com> is admitted. Reinforced by the integration case \"git commit is REFUSED when the author identity is an agent\", which drives a real git commit in a temp repo whose core.hooksPath points at this repo .githooks and asserts non-zero exit, stderr matching /AI agent commit identity/, and git rev-list --count --all == 0."
+    recorded_at: "2026-09-23T01:19:25.770Z"
+    test_nodeid: "scripts/attribution-guard.test.mjs::AI commit identities are refused; human identities are not"
+    command: node --test scripts/attribution-guard.test.mjs
+    exit_code: 0
+    artifact_path: scripts/attribution-guard.mjs
+    commit_sha: "6645e4a0"
   - criterion_id: A3
     status: pass
     evidence_ref: "Case \"the commit-msg hook is present and executable\" asserts the executable bit, which is what makes the other refusal cases meaningful: git silently skips a non-executable hook. Case \"git commit is REFUSED when the message carries an agent co-author trailer\" asserts non-zero exit, /attribution-guard/ on stderr, and rev-list --count --all == 0. Live in the canonical checkout: git hook run commit-msg -- <message file carrying a Claude trailer> exits 1 with the refusal text; the identical command on a clean message exits 0."
