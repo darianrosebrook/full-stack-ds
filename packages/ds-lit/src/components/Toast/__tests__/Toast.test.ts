@@ -158,4 +158,68 @@ async function renderElement(tagName: string, props: Record<string, unknown> = {
 
 // @custom:start tests
 
+describe("Toast — action slot presence (SlotPresenceController)", () => {
+  it("wraps a light-DOM action child present at mount in exactly one .toast__action, with the slot assigning that child", async () => {
+    const { element } = await renderElement("fsds-toast", { open: true }, [
+      { html: '<button slot="action">Undo</button>' },
+    ]);
+    const actionButton = element.querySelector('[slot="action"]');
+    const wrappers = element.shadowRoot?.querySelectorAll(".toast__action");
+    expect(wrappers?.length).toBe(1);
+    const slot = element.shadowRoot?.querySelector('slot[name="action"]') as HTMLSlotElement | null | undefined;
+    expect(slot?.assignedElements()).toContain(actionButton);
+  });
+
+  it("renders no .toast__action wrapper when mounted with no action child", async () => {
+    const { element } = await renderElement("fsds-toast", { open: true });
+    expect(element.shadowRoot?.querySelector(".toast__action")).toBeNull();
+  });
+
+  it("adds .toast__action when an action child is appended post-mount, and removes it when the child is removed", async () => {
+    const { element } = await renderElement("fsds-toast", { open: true });
+    const el = element as LitTestElement;
+    expect(element.shadowRoot?.querySelector(".toast__action")).toBeNull();
+
+    const actionButton = document.createElement("button");
+    actionButton.slot = "action";
+    actionButton.textContent = "Undo";
+    element.append(actionButton);
+    // SlotPresenceController learns of the new child via MutationObserver,
+    // which schedules its callback as a microtask after the current task.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await el.updateComplete;
+    expect(element.shadowRoot?.querySelector(".toast__action")).not.toBeNull();
+
+    actionButton.remove();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await el.updateComplete;
+    expect(element.shadowRoot?.querySelector(".toast__action")).toBeNull();
+  });
+});
+
+describe("Toast — live-region roles", () => {
+  it("marks the root as a labeled, polite-by-default live region", async () => {
+    const { element } = await renderElement("fsds-toast", { open: true });
+    const region = element.shadowRoot?.querySelector(".toast");
+    expect(region?.getAttribute("role")).toBe("region");
+    expect(region?.getAttribute("aria-label")).toBe("Notifications");
+    expect(region?.getAttribute("aria-live")).toBe("polite");
+  });
+
+  it("sets aria-live to assertive when politeness=assertive", async () => {
+    const { element } = await renderElement("fsds-toast", { open: true, politeness: "assertive" });
+    expect(element.shadowRoot?.querySelector(".toast")?.getAttribute("aria-live")).toBe("assertive");
+  });
+
+  it("marks the toast item with role=status", async () => {
+    const { element } = await renderElement("fsds-toast", { open: true });
+    expect(element.shadowRoot?.querySelector(".toast__item")?.getAttribute("role")).toBe("status");
+  });
+
+  it("never uses role=alert anywhere in the shadow root", async () => {
+    const { element } = await renderElement("fsds-toast", { open: true });
+    expect(element.shadowRoot?.querySelector('[role="alert"]')).toBeNull();
+  });
+});
+
 // @custom:end

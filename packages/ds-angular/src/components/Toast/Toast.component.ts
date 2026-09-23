@@ -27,7 +27,7 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgIf],
   host: { "data-fsds-component": "toast" },
-  template: `<div [ngClass]="classes()" aria-label="Notifications" [attr.aria-live]="(politeness ?? 'polite')" data-fsds-box="" (pointerenter)="autoDismiss.pauseListeners.pointerenter()" (pointerleave)="autoDismiss.pauseListeners.pointerleave()" (focusin)="autoDismiss.pauseListeners.focusin()" (focusout)="autoDismiss.pauseListeners.focusout()">
+  template: `<div [ngClass]="classes()" aria-label="Notifications" [attr.aria-live]="(politeness ?? 'polite')" data-fsds-box="" role="region" (pointerenter)="autoDismiss.pauseListeners.pointerenter()" (pointerleave)="autoDismiss.pauseListeners.pointerleave()" (focusin)="autoDismiss.pauseListeners.focusin()" (focusout)="autoDismiss.pauseListeners.focusout()">
   <ng-container *ngIf="behavior.open()">
     <div [ngClass]="'toast__item'" role="status" [attr.aria-labelledby]="itemAriaLabelledby">
       <div [ngClass]="'toast__row'">
@@ -39,9 +39,9 @@ let nextInstanceId = 0;
         <div [ngClass]="'toast__description'">
           <ng-content />
         </div>
-        <ng-container *ngIf="action">
-          <div [ngClass]="'toast__action'"></div>
-        </ng-container>
+        <div [ngClass]="'toast__action'">
+          <ng-content select="[slot=action]" />
+        </div>
         <button [ngClass]="'toast__close'" type="button" aria-label="Dismiss" (click)="behavior.setOpen(!behavior.open())"></button>
       </div>
     </div>
@@ -57,7 +57,6 @@ export class ToastComponent implements OnInit, OnDestroy {
   @Input() title?: string;
   @Input() variant?: ToastVariant = "info";
   @Input() politeness?: ToastPoliteness = "polite";
-  @Input() action?: unknown;
   @Input() duration?: number | null;
   @Input() class?: string;
 

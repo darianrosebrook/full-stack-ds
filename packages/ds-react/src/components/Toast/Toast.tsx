@@ -21,17 +21,19 @@ export type ToastPoliteness = "polite" | "assertive";
 // @custom:end
 
 // @generated:start props
-export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, "action" | "children" | "className" | "data-testid" | "duration" | "onOpenChange" | "open" | "politeness" | "title" | "variant"> {
+export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "duration" | "onOpenChange" | "open" | "politeness" | "title" | "variant"> {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   title?: string;
   variant?: ToastVariant;
   politeness?: ToastPoliteness;
-  action?: ReactNode;
   duration?: number | null;
   className?: string;
   "data-testid"?: string;
   children?: ReactNode;
+  slots?: {
+    action?: ReactNode;
+  };
 }
 // @generated:end
 
@@ -104,8 +106,8 @@ export function Toast({
   "data-testid": testId,
   children,
   title,
-  action,
   duration,
+  slots,
   ...rest
 }: ToastProps) {
   const { open, setOpen, renderInPortal } = useToast({
@@ -132,7 +134,7 @@ export function Toast({
 
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} aria-label="Notifications" aria-live={politeness} role="alert" data-testid={testId} data-fsds-component="toast" data-fsds-box="" {...autoDismissPauseProps} {...rest}>
+    <Stack layout="native" className={`${classNames}`} aria-label="Notifications" aria-live={politeness} role="region" data-testid={testId} data-fsds-component="toast" data-fsds-box="" {...autoDismissPauseProps} {...rest}>
       {open ? (
         <div className="toast__item" role="status" aria-labelledby={title ? `${instanceId}-title` : undefined}>
           <div className="toast__row">
@@ -144,8 +146,10 @@ export function Toast({
             <div className="toast__description">
               {children}
             </div>
-            {action ? (
-              <div className="toast__action" />
+            {slots?.action ? (
+              <div className="toast__action">
+                {slots?.action}
+              </div>
             ) : null}
             <button className="toast__close" type="button" aria-label="Dismiss" onClick={() => setOpen(!open)} />
           </div>

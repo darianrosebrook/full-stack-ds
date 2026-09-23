@@ -25,7 +25,6 @@ interface Props {
   title?: string;
   variant?: ToastVariant;
   politeness?: ToastPoliteness;
-  action?: unknown;
   duration?: number | null;
   class?: string;
   "data-testid"?: string;
@@ -73,7 +72,7 @@ const instanceId = useId();
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" aria-label="Notifications" :aria-live="props.politeness" role="alert" :data-testid="props['data-testid']" data-fsds-component="toast" data-fsds-box="" v-on="autoDismiss.pauseListeners">
+    <div :class="classNames" aria-label="Notifications" :aria-live="props.politeness" role="region" :data-testid="props['data-testid']" data-fsds-component="toast" data-fsds-box="" v-on="autoDismiss.pauseListeners">
       <div v-if="behavior.open.value" :class="'toast__item'" role="status" :aria-labelledby="props.title ? `${instanceId}-title` : undefined">
         <div :class="'toast__row'">
           <div v-if="props.title" :class="'toast__title'" :id="`${instanceId}-title`">
@@ -82,7 +81,9 @@ const instanceId = useId();
           <div :class="'toast__description'">
             <slot />
           </div>
-          <div v-if="props.action" :class="'toast__action'"></div>
+          <div v-if="$slots.action" :class="'toast__action'">
+            <slot name="action" />
+          </div>
           <button :class="'toast__close'" type="button" aria-label="Dismiss" @click="() => behavior.setOpen(!behavior.open.value)"></button>
         </div>
       </div>

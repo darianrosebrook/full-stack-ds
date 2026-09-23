@@ -5,13 +5,13 @@
     "name": "Toast",
     "cssPrefix": "toast",
     "rootElement": "div",
-    "effectiveRole": "alert"
+    "effectiveRole": "region"
   },
   "anatomy": [
     {
       "name": "root",
       "semanticElement": null,
-      "nativeTag": null,
+      "nativeTag": "div",
       "isCompound": false,
       "isRootOnly": true,
       "layoutVariant": null
@@ -118,15 +118,6 @@
       "description": "ARIA live region politeness level.",
       "defaultExpr": "\"polite\"",
       "nodeKind": null
-    },
-    {
-      "name": "action",
-      "safeName": "action",
-      "type": "ReactNode",
-      "required": false,
-      "description": "Optional action slot rendered next to the toast description (e.g. an undo button).",
-      "defaultExpr": null,
-      "nodeKind": "node-ref"
     },
     {
       "name": "duration",
@@ -471,9 +462,9 @@
   },
   "root": {
     "element": "div",
-    "explicitRole": "alert",
-    "effectiveRole": "alert",
-    "rootRole": "alert",
+    "explicitRole": "region",
+    "effectiveRole": "region",
+    "rootRole": "region",
     "labeling": [
       "aria-label",
       "aria-live",
@@ -634,6 +625,12 @@
           "--fsds-toast-surface-bg": "var(--fsds-semantic-color-background-danger-subtle, #fac2c2)",
           "--fsds-toast-color-default": "var(--fsds-semantic-color-foreground-on-danger-subtle, #900909)",
           "--fsds-toast-surface-border": "var(--fsds-semantic-color-border-danger, #b31b1b)"
+        }
+      },
+      {
+        "selector": ".toast__action:empty",
+        "declarations": {
+          "display": "none"
         }
       }
     ],

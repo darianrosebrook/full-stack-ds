@@ -25,13 +25,13 @@ interface Props {
   title?: string;
   variant?: ToastVariant;
   politeness?: ToastPoliteness;
-  action?: unknown;
   duration?: number | null;
   class?: string;
   children?: import('svelte').Snippet;
+  action?: import('svelte').Snippet;
 }
 
-let { open, onOpenChange, title, variant = "info", politeness = "polite", action, duration, class: className, children }: Props = $props();
+let { open, onOpenChange, title, variant = "info", politeness = "polite", duration, class: className, children, action }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -71,7 +71,7 @@ const instanceId = $props.id();
 // @custom:end
 </script>
 
-<div class={classes} aria-label="Notifications" aria-live={politeness} data-fsds-component="toast" data-fsds-box="" use:portal={{ enabled: true }} onpointerenter={autoDismiss.pauseListeners.onpointerenter} onpointerleave={autoDismiss.pauseListeners.onpointerleave} onfocusin={autoDismiss.pauseListeners.onfocusin} onfocusout={autoDismiss.pauseListeners.onfocusout} role="alert">
+<div class={classes} aria-label="Notifications" aria-live={politeness} data-fsds-component="toast" data-fsds-box="" use:portal={{ enabled: true }} onpointerenter={autoDismiss.pauseListeners.onpointerenter} onpointerleave={autoDismiss.pauseListeners.onpointerleave} onfocusin={autoDismiss.pauseListeners.onfocusin} onfocusout={autoDismiss.pauseListeners.onfocusout} role="region">
   {#if behavior.open}
   <div class={'toast__item'} role="status" aria-labelledby={title ? `${instanceId}-title` : undefined}>
     <div class={'toast__row'}>
@@ -82,7 +82,9 @@ const instanceId = $props.id();
         {@render children?.()}
       </div>
       {#if action}
-      <div class={'toast__action'}></div>
+      <div class={'toast__action'}>
+        {@render action?.()}
+      </div>
       {/if}
       <button class={'toast__close'} type="button" aria-label="Dismiss" onclick={() => behavior.setOpen(!behavior.open)}></button>
     </div>

@@ -2286,11 +2286,14 @@ function renderSvelteDomNode(
   }
 
   let withIfGuard = body;
-  if (node.ifProp) {
+  if (node.ifProp || node.ifSlot) {
     let expr: string;
-    if (node.ifProp === "children") {
+    if (node.ifSlot) {
+      // A named slot is a snippet prop of the same name.
+      expr = node.ifSlot;
+    } else if (node.ifProp === "children") {
       expr = "children";
-    } else if (ctx.iterationScope?.has(node.ifProp)) {
+    } else if (node.ifProp && ctx.iterationScope?.has(node.ifProp)) {
       // IR-DOM-ITERATE-CAPABILITY-01: bare iteration-alias reference.
       expr = node.ifProp;
     } else {
@@ -2299,7 +2302,7 @@ function renderSvelteDomNode(
       );
       expr = matchingChannel
         ? `${ctx.hookVar}.${matchingChannel.name}`
-        : jsAccessorFor(node.ifProp);
+        : jsAccessorFor(node.ifProp!);
     }
     const condition = node.ifNegated ? `!${expr}` : expr;
     withIfGuard = [`${pad}{#if ${condition}}`, body, `${pad}{/if}`].join(separator);

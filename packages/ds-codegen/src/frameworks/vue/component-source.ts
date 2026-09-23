@@ -2440,7 +2440,10 @@ function renderVueDomNode(
   }
 
   const ifGuard = node.ifProp;
-  if (ifGuard) {
+  if (node.ifSlot) {
+    const expr = `$slots.${node.ifSlot}`;
+    attrs.unshift(`v-if="${node.ifNegated ? `!${expr}` : expr}"`);
+  } else if (ifGuard) {
     let expr: string;
     if (ifGuard === "children") {
       expr = "$slots.default";

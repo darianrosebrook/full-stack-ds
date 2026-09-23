@@ -2042,8 +2042,12 @@ function applyIfGuard(
   ir: ComponentIR,
   pad: string,
 ): string {
-  if (!node.ifProp) return rendered;
-  const expr = ifGuardExpr(node.ifProp, ir);
+  if (!node.ifProp && !node.ifSlot) return rendered;
+  // `if: "slot:<name>"`: the named slot arrives on the same `slots` prop the
+  // slot node itself renders from.
+  const expr = node.ifSlot
+    ? `slots?.${node.ifSlot}`
+    : ifGuardExpr(node.ifProp!, ir);
   const guard = node.ifNegated ? `!(${expr})` : expr;
   return [`${pad}{${guard} ? (`, rendered, `${pad}) : null}`].join("\n");
 }

@@ -25,7 +25,7 @@ const ICON_GLYPH_SIZE_HINTS: Record<string, number> = { "sm": 16, "md": 20 };
   standalone: true,
   imports: [NgClass, NgIf, NgFor],
   host: { "data-fsds-component": "nav-tree" },
-  template: `<li [ngClass]="classes()" data-fsds-box="">
+  template: `<li [ngClass]="classes()" data-fsds-box="" role="listitem">
   <div [ngClass]="'nav-tree__heading'">
     <ng-container *ngIf="icon">
       <span [ngClass]="'nav-tree__icon'" aria-hidden="true">

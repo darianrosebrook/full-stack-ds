@@ -19,8 +19,10 @@ export interface ToastProps {
   title?: string;
   variant?: ToastVariant;
   politeness?: ToastPoliteness;
-  action?: ReactNode;
   duration?: number | null;
+  slots?: {
+    action?: ReactNode;
+  };
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -34,9 +36,9 @@ export function Toast({
   open: controlledOpen,
   title,
   politeness = "polite",
-  action,
   duration,
   onOpenChange,
+  slots,
   children,
   style,
   testID,
@@ -87,10 +89,12 @@ export function Toast({
           >
             {typeof children === "string" ? <RNText>{children}</RNText> : children}
           </View>
-          {action ? (
+          {slots?.action ? (
           <View
             style={styles.action}
-          />
+          >
+            {slots?.action}
+          </View>
           ) : null}
           <Pressable
             style={styles.close}

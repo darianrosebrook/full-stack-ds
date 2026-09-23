@@ -729,7 +729,7 @@
         },
         "if": {
           "type": "string",
-          "description": "Render guard. \"<prop>\" renders when prop is truthy; \"!<prop>\" renders when prop is FALSY; \"children\" renders when consumer-provided children exist."
+          "description": "Render guard. \"<prop>\" renders when prop is truthy; \"!<prop>\" renders when prop is FALSY; \"children\" renders when consumer-provided children exist; \"slot:<name>\" renders when the consumer fills that named slot, which must sit inside the guarded subtree."
         },
         "iterate": {
           "type": "object",

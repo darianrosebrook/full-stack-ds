@@ -45,7 +45,7 @@ describe("Toast — unit", () => {
     render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
     const root = document.body.querySelector<HTMLElement>(".toast");
     expect(root).not.toBeNull();
-    expect(root?.getAttribute("role")).toBe("alert");
+    expect(root?.getAttribute("role")).toBe("region");
   });
 
   it("applies variant=info variant class", () => {
@@ -113,6 +113,74 @@ describe("Toast — accessibility", () => {
 import ToastDescription from "../ToastDescription.svelte";
 import ToastItem from "../ToastItem.svelte";
 import ToastTitle from "../ToastTitle.svelte";
+
+describe("Toast — action snippet", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
+  const undoSnippet = () =>
+    createRawSnippet(() => ({
+      render: () => "<button>Undo</button>",
+    }));
+
+  it("renders exactly one .toast__action containing the Undo button when an action snippet is provided", () => {
+    render(Toast as unknown as Component<Record<string, unknown>>, {
+      props: { open: true, action: undoSnippet() },
+    });
+    const actions = document.body.querySelectorAll(".toast__action");
+    expect(actions.length).toBe(1);
+    const button = actions[0].querySelector("button");
+    expect(button).not.toBeNull();
+    expect(button?.textContent).toBe("Undo");
+  });
+
+  it("renders no .toast__action element when no action snippet is provided", () => {
+    render(Toast as unknown as Component<Record<string, unknown>>, {
+      props: { open: true },
+    });
+    const action = document.body.querySelector(".toast__action");
+    expect(action).toBeNull();
+  });
+});
+
+describe("Toast — live-region roles", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
+  it("sets role=region and aria-label=Notifications on the viewport root, and aria-live=polite by default", () => {
+    render(Toast as unknown as Component<Record<string, unknown>>, {
+      props: { open: true },
+    });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.getAttribute("role")).toBe("region");
+    expect(root?.getAttribute("aria-label")).toBe("Notifications");
+    expect(root?.getAttribute("aria-live")).toBe("polite");
+  });
+
+  it("sets aria-live=assertive on the viewport root when politeness=assertive", () => {
+    render(Toast as unknown as Component<Record<string, unknown>>, {
+      props: { open: true, politeness: "assertive" },
+    });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.getAttribute("aria-live")).toBe("assertive");
+  });
+
+  it("sets role=status on .toast__item and never uses role=alert anywhere in the tree", () => {
+    render(Toast as unknown as Component<Record<string, unknown>>, {
+      props: { open: true },
+    });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    const item = root?.querySelector(".toast__item");
+    expect(item).not.toBeNull();
+    expect(item?.getAttribute("role")).toBe("status");
+    expect(root?.querySelectorAll('[role="alert"]').length).toBe(0);
+  });
+});
 
 describe("Toast — compound parts", () => {
   it("mounts ToastDescription with tag and base class", () => {

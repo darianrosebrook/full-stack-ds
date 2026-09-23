@@ -386,5 +386,13 @@
       "resolvesTo": "semantic.color.border.danger",
       "fallback": "#b31b1b"
     }
+  },
+  ".toast__action:empty": {
+    "display": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    }
   }
 }

@@ -3007,15 +3007,17 @@ function renderReactDomNode(
   // INSIDE the loop (each iteration re-evaluates the guard against the
   // per-iteration scope). See IR-DOM-ITERATE-CAPABILITY-01.
   let withIfGuard = body;
-  if (node.ifProp) {
+  if (node.ifProp || node.ifSlot) {
     let guard: string;
-    if (node.ifProp === "children") {
+    if (node.ifSlot) {
+      guard = `slots?.${node.ifSlot}`;
+    } else if (node.ifProp === "children") {
       guard = "children";
     } else {
       const matchingChannel = [...ctx.channelByName.values()].find(
         (c) => c.valueProp === node.ifProp || c.name === node.ifProp,
       );
-      guard = matchingChannel ? matchingChannel.name : node.ifProp;
+      guard = matchingChannel ? matchingChannel.name : node.ifProp!;
     }
     const condition = node.ifNegated ? `!${guard}` : guard;
     // A ternary, not `&&`. React renders a falsy NUMBER as text, so
@@ -3033,7 +3035,7 @@ function renderReactDomNode(
   // or array prop) means an index-based key is sufficient.
   if (node.iteration) {
     const { kind, source, indexVar, itemVar } = node.iteration;
-    const innerBody = node.ifProp ? withIfGuard : body;
+    const innerBody = node.ifProp || node.ifSlot ? withIfGuard : body;
     // For multi-line bodies the inner JSX needs to live inside a
     // parenthesized return expression in the arrow function.
     const isMultiLine = innerBody.includes("\n");
