@@ -1,0 +1,50 @@
+id: WORKTREE-INSTALL-WORKSPACE-ISOLATION-01
+title: 'worktree-install derives node_modules importers from pnpm-workspace and refuses write-through'
+risk_tier: 2
+mode: fix
+lifecycle_state: draft
+created_at: '2026-09-23T03:55:20.743Z'
+updated_at: '2026-09-23T03:55:20.743Z'
+created_by_session: '06123efd-fe17-4416-ace9-a7cc530e56a8'
+blast_radius:
+  modules:
+    - 'scripts/worktree-install.mjs'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/worktree-install.mjs'
+    - 'scripts/worktree-install.test.mjs'
+    - 'package.json'
+    - '.githooks/pre-push'
+    - '.github/workflows/ci.yml'
+  out: []
+invariants:
+  - 'Every pnpm importer''s node_modules (root plus each pnpm-workspace.yaml glob match, minus negations) is unlinked when it is a symlink; no hardcoded package-directory list'
+  - 'pnpm install never runs while any importer node_modules path is a symlink or realpaths outside the worktree'
+  - 'Unlink removes only the link, never recurses into the target'
+  - '--check fails when any importer node_modules is a symlink or any direct dependency link realpaths outside the checked tree (or, in canonical, into .caws/worktrees)'
+acceptance:
+  - id: A1
+    given: 'a worktree fixture whose examples/*/* importer node_modules is a symlink to canonical'
+    when: 'importer discovery runs'
+    then: 'that path is listed and packages/* negations are excluded'
+  - id: A2
+    given: 'a fixture importer node_modules symlink'
+    when: 'the install preflight runs after unlinking is skipped'
+    then: 'it refuses before pnpm runs and names the path'
+  - id: A3
+    given: 'a canonical fixture whose importer node_modules entry links into .caws/worktrees/<name>'
+    when: '--check runs from canonical'
+    then: 'it fails naming the entry'
+  - id: A4
+    given: 'a clean worktree and a clean canonical checkout'
+    when: 'worktree:check runs'
+    then: 'it exits 0 against the real repo'
+rollback:
+  - 'git revert the fix commit; script falls back to the packages/* list'
+non_functional: {}
+contracts:
+  - name: 'worktree-install-isolation'
+    type: contract-test
+    path: 'scripts/worktree-install.test.mjs'
