@@ -49,3 +49,8 @@ contracts:
   - name: 'worktree-install-isolation'
     type: contract-test
     path: 'scripts/worktree-install.test.mjs'
+evidence:
+  - criterion_id: A1
+    status: pass
+    evidence_ref: "node --test scripts/worktree-install.test.mjs @ b8eb5fa1 (12/12): 'an examples/*/* importer's symlinked node_modules is found' + 'importers come from pnpm-workspace.yaml ... minus negations'; live: --check listed all 16 symlinked node_modules incl. 5 examples/*/* in fresh worktree worktree-install-isolation"
+    recorded_at: "2026-09-23T04:07:44.580Z"
