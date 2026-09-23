@@ -32,9 +32,12 @@ acceptance:
     given: 'the cat'
     when: 'idle, typing, on the trackpad, or reaching the tablet or phone'
     then: >-
-      it is smaller and seated closer to the laptop, each arm is an upper arm and
-      forearm of fixed lengths with an elbow bent by two-bone IK, ears are parented
-      to the head, and it has a swaying tail and breathing
+      it sits upright close to the laptop with shoulders at the front of the chest
+      below the chin; each arm is an upper arm and forearm solved by two-bone IK
+      that tucks the elbow unless that would sink it below the desk; bone lengths
+      are fixed for keys, trackpad, phone and the near tablet, and only past a 0.6
+      shoulder slide (the tablet's far corner) do both bones stretch, by at most
+      11%; ears are parented to the head; it has a swaying tail and breathing
   - id: A3
     given: 'the laptop, tablet, phone and cup'
     when: 'rendered'
