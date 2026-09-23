@@ -2,9 +2,11 @@ id: REPO-ATTRIBUTION-GUARD-01
 title: 'Attribution guard: refuse AI co-author trailers and agent commit identities'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Attribution guard landed on main: commit-msg hook, pre-push backstop, and an unconditional CI step refuse AI-agent Co-authored-by trailers and agent commit identities, default-deny with an empty allowlist, range-scoped so the three grandfathered Qwen-Coder trailers do not red every push'
 created_at: '2026-09-23T01:00:54.541Z'
-updated_at: '2026-09-23T01:01:13.349Z'
+updated_at: '2026-09-23T01:21:02.342Z'
 created_by_session: 'session-b7064ea9-728e-401b-b2ed-29e7e9483e9a'
 blast_radius:
   modules:
