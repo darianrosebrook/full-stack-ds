@@ -72,11 +72,8 @@ evidence:
     commit_sha: "6645e4a0"
   - criterion_id: A4
     status: pass
-    evidence_ref: "Asserts the --no-verify precondition, then that the range scan exits 1 on the smuggled commit and 0 on the clean control. Real invocation over the real range: printf \"refs/heads/main TIP refs/heads/main origin-main\" | .githooks/pre-push origin <url> exits 0 and prints \"[attribution-guard] clean — 7 commits checked in 5dcc2a63..76a8f321\", with classifier 55/55 and guard 17/17. The CI step runs the identical script; actionlint .github/workflows/ci.yml exits 0 including the embedded shell. NOT covered: the CI step never executed on GitHub because no push was made."
-    recorded_at: "2026-09-23T01:19:27.350Z"
-    test_nodeid: "scripts/attribution-guard.test.mjs::the range scan catches a commit that bypassed the hook with --no-verify"
-    command: node --test scripts/attribution-guard.test.mjs
-    exit_code: 0
+    evidence_ref: "Reproduce: node --test scripts/attribution-guard.test.mjs (17/17 pass). Cited node test: \"the range scan catches a commit that bypassed the hook with --no-verify\" — asserts the --no-verify precondition, then that the range scan exits 1 on the smuggled commit and 0 on the clean control. Real invocation over the real range: printf \"refs/heads/main TIP refs/heads/main origin-main\" | .githooks/pre-push origin <url> exits 0 and prints \"[attribution-guard] clean — 7 commits checked in 5dcc2a63..76a8f321\", with classifier 55/55 and guard 17/17. The CI step runs the identical script; actionlint .github/workflows/ci.yml exits 0 including the embedded shell. NOT covered: the CI step never executed on GitHub because no push was made."
+    recorded_at: "2026-09-23T01:20:51.406Z"
     artifact_path: .githooks/pre-push
     commit_sha: "6645e4a0"
   - criterion_id: A5
