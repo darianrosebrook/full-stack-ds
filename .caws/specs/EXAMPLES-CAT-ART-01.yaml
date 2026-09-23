@@ -35,9 +35,11 @@ acceptance:
       forearm of fixed lengths with an elbow bent by two-bone IK, ears are parented
       to the head, and it has a swaying tail and breathing
   - id: A3
-    given: 'The spec implementation is complete.'
-    when: 'The acceptance statement is evaluated.'
-    then: 'given the laptop, tablet, phone and cup; when rendered; then bodies use rounded geometry, the laptop has a hinge, the cup has wall thickness and a handle'
+    given: 'the laptop, tablet, phone and cup'
+    when: 'rendered'
+    then: >-
+      the bodies use rounded-box geometry, the laptop has a hinge barrel, and the
+      cup is a lathe with wall thickness and a handle
   - id: A4
     given: 'The spec implementation is complete.'
     when: 'The acceptance statement is evaluated.'
