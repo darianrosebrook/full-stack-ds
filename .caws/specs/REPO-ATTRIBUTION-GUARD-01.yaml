@@ -66,11 +66,8 @@ evidence:
     commit_sha: "6645e4a0"
   - criterion_id: A3
     status: pass
-    evidence_ref: "Asserts non-zero exit, /attribution-guard/ on stderr, and rev-list --count --all == 0, so nothing entered history. The companion case \"the commit-msg hook is present and executable\" asserts the executable bit, which is what makes the refusal meaningful because git silently skips a non-executable hook. Live in the canonical checkout: git hook run commit-msg -- <message file carrying a Claude trailer> exits 1 with the refusal text; the identical command on a clean message exits 0."
-    recorded_at: "2026-09-23T01:19:26.526Z"
-    test_nodeid: "scripts/attribution-guard.test.mjs::git commit is REFUSED when the message carries an agent co-author trailer"
-    command: node --test scripts/attribution-guard.test.mjs
-    exit_code: 0
+    evidence_ref: "Reproduce: node --test scripts/attribution-guard.test.mjs (17/17 pass). Cited node test: \"git commit is REFUSED when the message carries an agent co-author trailer\" — asserts non-zero exit, /attribution-guard/ on stderr, and rev-list --count --all == 0, so nothing entered history. Companion case \"the commit-msg hook is present and executable\" asserts the executable bit, which is what makes the refusal meaningful because git silently skips a non-executable hook. Live in the canonical checkout: git hook run commit-msg -- <message file carrying a Claude trailer> exits 1 with the refusal text; the identical command on a clean message exits 0."
+    recorded_at: "2026-09-23T01:20:50.415Z"
     artifact_path: .githooks/commit-msg
     commit_sha: "6645e4a0"
   - criterion_id: A4
