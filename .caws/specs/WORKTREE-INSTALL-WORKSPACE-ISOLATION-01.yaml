@@ -54,3 +54,7 @@ evidence:
     status: pass
     evidence_ref: "node --test scripts/worktree-install.test.mjs @ b8eb5fa1 (12/12): 'an examples/*/* importer's symlinked node_modules is found' + 'importers come from pnpm-workspace.yaml ... minus negations'; live: --check listed all 16 symlinked node_modules incl. 5 examples/*/* in fresh worktree worktree-install-isolation"
     recorded_at: "2026-09-23T04:07:44.580Z"
+  - criterion_id: A2
+    status: pass
+    evidence_ref: "node --test scripts/worktree-install.test.mjs @ b8eb5fa1 (12/12): 'preflight refuses while an importer node_modules is still a symlink, naming it' + 'install never spawns pnpm when an importer directory itself realpaths outside the worktree'; mutation probe (preflight emptied / install skips preflight) killed both"
+    recorded_at: "2026-09-23T04:07:46.139Z"
